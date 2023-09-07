@@ -14,6 +14,6 @@ cp .env.example .env
 
 # Generate an app encryption key
 php artisan key:generate
-
+```
 
 
