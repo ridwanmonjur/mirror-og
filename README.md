@@ -2,6 +2,15 @@
 
 Depends on the team description 
 
+# Admin Login for Test
+```bash
+
+Email: admin@example.com
+
+password: 12345678
+
+```
+
 ### Local Installation
 
 
