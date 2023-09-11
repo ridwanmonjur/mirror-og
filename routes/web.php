@@ -19,4 +19,8 @@ Route::get('/', [AuthController::class, 'signIn']); // Route for Sign In Page
 
 Route::get('/signup', [AuthController::class, 'signUp']); // Route for Sign In Page
 
+Route::redirect('/login', '/admin/users')->name('login');
+
+// Route::redirect('/laravel/login', '/admin')->name('admin');
+
 
