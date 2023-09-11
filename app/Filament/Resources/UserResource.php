@@ -46,13 +46,15 @@ class UserResource extends Resource
                     'organizer' => 'Organizer',
                     'participant' => 'Participant',
                     'admin' => 'Admin',
-                ]),
+                ])
+                ,
             Forms\Components\Select::make('status')
                 ->options([
                     'draft' => 'Draft',
                     'reviewing' => 'Reviewing',
                     'published' => 'Published',
-                ]),
+                ])
+                ,
             ]);
     }
 
@@ -64,10 +66,10 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')->searchable(),
                 Tables\Columns\TextColumn::make('role'),
                 Tables\Columns\TextColumn::make('status'),
-                // Tables\Columns\TextColumn::make('email_verified_at')
-                //     ->label('Verified')
-                //     ->dateTime('M j, Y')
-                //     ->sortable(),       
+                Tables\Columns\TextColumn::make('email_verified_at')
+                    ->label('Verified')
+                    ->dateTime('M j, Y')
+                    ->sortable(),       
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('M j, Y')
                     ->sortable(),
