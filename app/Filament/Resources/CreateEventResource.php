@@ -1,0 +1,94 @@
+<?php
+
+namespace App\Filament\Resources;
+use Filament\Forms\Components\FileUpload;
+use App\Filament\Resources\CreateEventResource\Pages;
+use App\Filament\Resources\CreateEventResource\RelationManagers;
+use App\Models\CreateEvent;
+use Filament\Forms;
+use Filament\Resources\Form;
+use Filament\Resources\Resource;
+use Filament\Resources\Table;
+use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+class CreateEventResource extends Resource
+{
+    protected static ?string $model = CreateEvent::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-calendar';
+    public static ?string $navigationGroup = 'Manage Event';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\TextInput::make('eventName')
+                    ->required()
+                    ->maxLength(255)->columnSpan($span = 4),
+                Forms\Components\Textarea::make('eventDescription')
+                    ->required()
+                    ->maxLength(955)->columnSpan($span = 4),
+                Forms\Components\DatePicker::make('startDate')
+                    ->required(),
+                Forms\Components\DatePicker::make('endDate')
+                    ->required(),
+                Forms\Components\TimePicker::make('startTime')
+                    ->required(),
+                Forms\Components\TimePicker::make('endTime')
+                    ->required(),
+                Forms\Components\FileUpload::make('eventBanner')
+                    ->required()->columnSpan($span = 4),
+                Forms\Components\TagsInput::make('eventTags')
+                    ->required()->columnSpan($span = 4),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+
+            ->columns([
+                Tables\Columns\TextColumn::make('eventName')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('startDate')
+                    ->date(),
+                Tables\Columns\TextColumn::make('endDate')
+                    ->date(),
+                Tables\Columns\TextColumn::make('startTime'),
+                Tables\Columns\TextColumn::make('endTime'),
+                Tables\Columns\TextColumn::make('eventDescription')->limit(30)->toggleable(),
+                Tables\Columns\ImageColumn::make('eventBanner'),
+                Tables\Columns\TextColumn::make('eventTags'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime(),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime(),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make(),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListCreateEvents::route('/'),
+            'create' => Pages\CreateCreateEvent::route('/create'),
+            'edit' => Pages\EditCreateEvent::route('/{record}/edit'),
+        ];
+    }
+}
