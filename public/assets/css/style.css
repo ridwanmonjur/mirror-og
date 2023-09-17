@@ -14,15 +14,7 @@ body {
     padding: 20px 100px;
     align-items: center;
     justify-content: center;
-    /* background-image: url("images/signinbg.png"); */
-    background-image: url("./signinbg.png");
-
-
-
-
-
-
-
+    background-image: url("images/signinbg.png");
 }
 
 .wrapper {
@@ -226,15 +218,6 @@ form input[type="submit"]:hover {
     font-size: smaller;
 }
 
-.section-bottoms {
-    margin-top: 5px;
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    font-size: medium;
-
-}
-
 
 label.placeholder-moves-up-container {
     margin: 0px 0;
@@ -309,11 +292,11 @@ input:not(:focus):valid+span.placeholder-moves-up {
         padding: 60px 0;
         align-items: center;
         justify-content: center;
-        background-image: url("./signinbg.png");
+        background-image: url("images/signinbg.png");
     }
 
     .wrapper {
-        width: 500px;
+        width: 600px;
         padding-left: 20px;
         padding-right: 20px;
         margin-left: 0px;

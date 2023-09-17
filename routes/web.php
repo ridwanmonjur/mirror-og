@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-
+use App\Http\Controllers\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +18,11 @@ use App\Http\Controllers\Auth\AuthController;
 Route::get('/', [AuthController::class, 'signIn']); // Route for Sign In Page
 
 Route::get('/signup', [AuthController::class, 'signUp']); // Route for Sign In Page
+
+Route::get('/dashboard', [AuthController::class, 'dashboard']); // Route for Dashboard Page
+
+Route::resource('/event', EventController::class);
+Route::get('/event/manage/events', [EventController::class, 'manage']);
 
 Route::redirect('/login', '/admin/users')->name('login');
 
