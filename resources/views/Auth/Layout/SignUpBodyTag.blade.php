@@ -4,6 +4,6 @@
 
         @yield('signUpbody')
 
-                </div>
+    </div>
 
 </body>

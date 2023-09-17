@@ -1,21 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event management</title>
-    <!-- Don't remove this css -->
-    <link rel="stylesheet" href="css/event-management.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-</head>
+@include('Organizer.Layout.ManageEventHeadTag')
 
 <body>
     <nav class="navbar">
         <div class="logo">
-            <img width="160px" height="60px" src="images/logo-default.png" alt="">
+            <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        <svg 
+            style="margin-top: 10px; margin-right: 10px;"
+            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
             class="feather feather-menu menu-toggle" onclick="toggleNavbar()">
             <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -33,13 +25,13 @@
         </div>
         <div class="nav-buttons">
             <button class="oceans-gaming-default-button oceans-gaming-gray-button"> Where is moop? </button>
-            <img width="50px" height="40px" src="images/navbar-account.png" alt="">
-            <img width="70px" height="40px" src="images/navbar-crown.png" alt="">
+            <img style="position: relative; top: 15px;" width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
+            <img style="position: relative; top: 15px;" width="70px" height="40px" src="{{ asset('/assets/images/navbar-crown.png') }}" alt="">
         </div>
     </nav>
     <nav class="mobile-navbar d-centered-at-mobile d-none">
         <div class="search-bar search-bar-mobile ">
-            <input type="text" name="search" id="search" placeholder="Search for events">
+            <input type="text" name="search" id="search" placeholder="Search for events">   
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="feather feather-search" style="left: 40px;">
@@ -48,19 +40,20 @@
             </svg>
         </div>
         <div class="nav-buttons search-bar-mobile d-centered-at-mobile">
-            <img width="50px" height="40px" src="images/navbar-account.png" alt="">
-            <img width="70px" height="40px" src="images/navbar-crown.png" alt="">
+            <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
+            <img width="70px" height="40px" src="{{ asset('/assets/images/navbar-crown.png') }}" alt="">
         </div>
     </nav>
     <main>
-        <div class="" id="step-0">
+        <br class="d-none-at-desktop">
+        <div class="">
             <header class="welcome flexbox-welcome">
                 <u>
                     <h3>
                         Manage your events
                     </h3>
                 </u>
-                <input type="submit" onclick="goToNextScreen('step-1', 'timeline-1')" value="Create Event">
+                <input type="submit" value="Create Event">
 
             </header>
             <div class="flexbox-filter">
@@ -80,6 +73,7 @@
                     Ended
                 </p>
             </div>
+            <br>        
             <div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -112,17 +106,16 @@
         <div class="grid-container">
             <div class="rounded-box">
                 <div class="centered-absolute-game-tier">
-                    <img src="images/turtle.png" width="120" height="80">
+                    <img src="{{ asset('/assets/images/turtle.png') }}" width="120" height="80">
                 </div>
                 <div class="card-image">
-                    <img src="images/1.png" alt="">
+                    <img src="{{ asset('/assets/images/1.png') }}" alt="">
                 </div>
                 <div class="card-text">
                     <div>
-                        <div>
-                            <img src="images/menu.png" alt="menu" width="50" height="40">
-                            &nbsp; &nbsp; &nbsp;
-                            <button class="oceans-gaming-default-button">
+                        <div class="flexbox-centered-space ">                           
+                            <img src="{{ asset('/assets/images/menu.png') }}" alt="menu" width="50" height="40">
+                            <button class="oceans-gaming-default-button" style="padding-top: -150px;">
                                 <u>UPCOMING</u>
                             </button>
                         </div>
@@ -131,15 +124,18 @@
                         <p class="small-text"><i>Ocean's Gaming</i></p>
                         <div class="flexbox-welcome">
                             <div>01 Sep, 8:00 PM</div>
-                            <button class="oceans-gaming-default-button oceans-gaming-default-button-small">
+                            <button 
+                                class="oceans-gaming-default-button oceans-gaming-default-button-small flexbox-centered-space">
+                                &nbsp;
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="feather feather-user">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                16/16
-                            </button>
+                                <span>16/16</span>
+                                &nbsp;
+                                </button>
                         </div>
                         <div>
                             <div>
@@ -182,10 +178,6 @@
 
     </main>
 
-    <script src="js/navbar/toggleNavbar.js"></script>
+    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
 
     <!-- <script src="script.js"></script> -->
-
-</body>
-
-</html>

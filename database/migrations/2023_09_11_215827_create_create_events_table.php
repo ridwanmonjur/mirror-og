@@ -11,16 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('create_events', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('eventName');
-            $table->date('startDate');
-            $table->date('endDate');
-            $table->time('startTime');
-            $table->time('endTime');
+            $table->dateTime('startDateTime');
+            $table->dateTime('endDateTime');
             $table->string('eventDescription');
+            $table->string('organizerName');
             $table->string('eventBanner');
             $table->string('eventTags');
+            $table->string('eventTier');
+            $table->string('eventType');
+            $table->string('eventStatus');
+            $table->integer('totalParticipants');
+            $table->integer('registeredParticipants');
+            $table->float('fee');
+            $table->string('region');
+            $table->string('prize');
             $table->timestamps();
         });
     }

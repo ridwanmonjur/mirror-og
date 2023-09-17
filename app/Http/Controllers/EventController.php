@@ -83,6 +83,7 @@ class EventController extends Controller {
 
     public function manage()
     {
+        
         return view('Organizer.ManageEvent');
 
     }
