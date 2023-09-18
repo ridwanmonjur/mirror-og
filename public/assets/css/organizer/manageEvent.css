@@ -68,6 +68,9 @@ nav svg:hover,
     transform: scale(1.1);
 }
 
+.search-bar2-adjust{
+    margin-left: 30px;
+}
 
 .navbar img:active,
 nav img:active,
@@ -152,7 +155,7 @@ input[type="submit"], .oceans-gaming-default-button {
     display: flex;
     justify-content: space-between;
     text-decoration: underline;
-    width: 50%;
+    width: 100%;
 }
 
 .flexbox-centered-space {
@@ -165,7 +168,7 @@ input[type="submit"], .oceans-gaming-default-button {
     display: grid;
     grid-template-columns: 1fr;
     grid-gap: 1%;
-    padding: 15%;
+    padding: 5% 15% 15% 15%;
 }
 
 
@@ -203,11 +206,13 @@ input[type="submit"]:active {
 
 .rounded-box .centered-absolute-game-tier{
     position: absolute;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     top: -40px;
-    left: 75px;
+    text-align: center;
+    margin: auto;
 }
 
 .rounded-box a {
@@ -265,13 +270,21 @@ input[type="submit"]:active {
 
 @media screen and (min-width: 600px) {
     .grid-container{
-        padding: 10%;
+        padding: 5% 10% 10% 10%;
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 
 @media screen and (min-width: 992px) {
+    .flexbox-filter{
+        width: 50%;
+    }
+
+    .search-bar2-adjust{
+        margin-left: 0px;
+    }
+
     main {
         padding: 20px 100px;
     }
@@ -315,7 +328,7 @@ input[type="submit"]:active {
 
     .grid-container{
         padding: 0px;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 
    }
@@ -324,5 +337,9 @@ input[type="submit"]:active {
     .search-bar input {
         width: 600px;
     }
-    
+
+    .grid-container{
+        padding: 0px;
+        grid-template-columns: repeat(4, 1fr);
+    }
 }

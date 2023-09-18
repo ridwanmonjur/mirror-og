@@ -47,7 +47,7 @@
     <main>
         <br class="d-none-at-desktop">
         <div class="">
-            <header class="welcome flexbox-welcome">
+            <header class="flexbox-welcome">
                 <u>
                     <h3>
                         Manage your events
@@ -92,10 +92,11 @@
                 </span>
             </div>
             <br>
-            <div class="search-bar ">
+            <div class="search-bar">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-search">
+                    class="feather feather-search search-bar2-adjust"
+                    >
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
@@ -140,7 +141,7 @@
                 </div>
                 <div class="card-text">
                     <div>
-                        <div class="flexbox-centered-space ">                           
+                        <div class="flexbox-centered-space">                           
                             <img src="{{ asset('/assets/images/menu.png') }}" alt="menu" width="50" height="40">
                             <button class="oceans-gaming-default-button" 
                                 style="@php echo $stylesEventStatus; @endphp">
@@ -148,7 +149,7 @@
                             </button>
                         </div>
                         <br>
-                        <p><u>{{$event->eventName}}</u></p>
+                        <p style="height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->eventName}}</u></p>
                         <p class="small-text"><i>{{$event->organizerName}}</i></p>
                         <div class="flexbox-welcome">
                             @php
