@@ -18,25 +18,77 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
-        // DB::table('events')->insert([
-        //     'name' => Str::random(10),
-        //     'email' => Str::random(10).'@gmail.com',
-        //     'eventDescription' => "This is a test event",
-        //     'organizerName' => "Ocean's Gaming",
-        //     'eventBanner' => "/events/1.png",
-        //     'eventTags' => "DOTA 2",
-        //     'fee' => 0,
-        //     'eventTier'=> "Turtle",
-        //     'eventType' => 'Type A',
-        //     'eventStatus' => 'UPCOMING',
-        //     'totalParticipants' => 16, 
-        //     'registeredParticipants' => 8, 
-        //     'region' => "SEA",
-        //     'prize' => "Exclusive prize",
-        //     'startDateTime' => Carbon::now()->format('Y-m-d H:i:s'),
-        //     'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
-        // ]);
+        DB::table('events')->insert([
+            'eventName' => Str::random(10),
+            'eventDescription' => "This is a test event",
+            'organizerName' => "Ocean's Gaming",
+            'eventBanner' => "/events/1.png",
+            'eventTags' => "DOTA 2",
+            'fee' => 0,
+            'eventTier'=> "Turtle",
+            'eventType' => 'Type A',
+            'eventStatus' => 'UPCOMING',
+            'totalParticipants' => 16, 
+            'registeredParticipants' => 16, 
+            'region' => "SEA",
+            'prize' => "Exclusive prize",
+            'startDateTime' => Carbon::now()->format('Y-m-d H:i:s'),
+            'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
+        ]);
 
+        DB::table('events')->insert([
+            'eventName' => "Casual Dota Tourney for Everyone and Anyone",
+            'eventDescription' => "This is a test event",
+            'organizerName' => "Open water",
+            'eventBanner' => "/events/1.png",
+            'eventTags' => "DOTA 2",
+            'fee' => 0,
+            'eventTier'=> "Turtle",
+            'eventType' => 'Type A',
+            'eventStatus' => 'DRAFT',
+            'totalParticipants' => 16, 
+            'registeredParticipants' => 0, 
+            'region' => "SEA",
+            'prize' => "Exclusive prize",
+            'startDateTime' => Carbon::now()->format('Y-m-d H:i:s'),
+            'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
+        ]);
+
+        DB::table('events')->insert([
+            'eventName' => "The Tryhard Trials: Dota 2",
+            'eventDescription' => "This is a test event",
+            'organizerName' => "Open water",
+            'eventBanner' => "/events/1.png",
+            'eventTags' => "DOTA 2",
+            'fee' => 0,
+            'eventTier'=> "Dolphin",
+            'eventType' => 'Type A',
+            'eventStatus' => 'ONGOING',
+            'totalParticipants' => 16, 
+            'registeredParticipants' => 9, 
+            'region' => "SEA",
+            'prize' => "Exclusive prize",
+            'startDateTime' => Carbon::now()->format('Y-m-d H:i:s'),
+            'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
+        ]);
+
+        DB::table('events')->insert([
+            'eventName' => "The Oceans Gaming Dota Collegiate League: Season 1",
+            'eventDescription' => "This is a test event",
+            'organizerName' => "Open water",
+            'eventBanner' => "/events/1.png",
+            'eventTags' => "DOTA 2",
+            'fee' => 0,
+            'eventTier'=> "Starfish",
+            'eventType' => 'Type A',
+            'eventStatus' => 'ENDED',
+            'totalParticipants' => 16, 
+            'registeredParticipants' => 7, 
+            'region' => "SEA",
+            'prize' => "Exclusive prize",
+            'startDateTime' => Carbon::now()->format('Y-m-d H:i:s'),
+            'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
+        ]);
         
     }
 }

@@ -104,27 +104,60 @@
         </div>
         <br><br>
         <div class="grid-container">
-            <div class="rounded-box">
+            @foreach ($eventList as $event)
+            @php
+                $stylesEventStatus = '';
+                $stylesEventStatus .= 'padding-top: -150px; ';
+                $stylesEventStatus .= 'background-color: ' . $mappingEventState[$event->eventStatus]['buttonBackgroundColor'] .' ;' ;
+                $stylesEventStatus .= 'color: ' . $mappingEventState[$event->eventStatus]['buttonTextColor'] .' ; ' ;
+                $stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$event->eventStatus]['borderColor'] .' ; '; 
+                
+                $stylesEventRatio = '';
+                $ratio = $event->registeredParticipants / $event->totalParticipants;
+                switch ($ratio) {
+                    case ($ratio == 1):
+                        $stylesEventRatio .= "background-color: red; color: white;";
+                        break;
+                    case ($ratio == 0):
+                        $stylesEventRatio .= "background-color: #BFD684; color: white;";
+                        break;
+                    case ($ratio > 0.5):
+                        $stylesEventRatio .= "background-color: #FA831F; color: white;";
+                        break;
+                    case ($ratio <= 0.5):
+                        $stylesEventRatio .= "background-color: #FFE325; color: black;";
+                        break;
+                }
+            @endphp
+            <div 
+                class="{{'rounded-box ' . $mappingTier[$event->eventTier]['class'][0] }}"   
+            >
                 <div class="centered-absolute-game-tier">
-                    <img src="{{ asset('/assets/images/turtle.png') }}" width="120" height="80">
+                    <img src="{{ asset($mappingTier[$event->eventTier]['background']) }}" width="120" height="80">
                 </div>
-                <div class="card-image">
+                <div class="{{'card-image ' . $mappingTier[$event->eventTier]['class'][1] }}">
                     <img src="{{ asset('/assets/images/1.png') }}" alt="">
                 </div>
                 <div class="card-text">
                     <div>
                         <div class="flexbox-centered-space ">                           
                             <img src="{{ asset('/assets/images/menu.png') }}" alt="menu" width="50" height="40">
-                            <button class="oceans-gaming-default-button" style="padding-top: -150px;">
-                                <u>UPCOMING</u>
+                            <button class="oceans-gaming-default-button" 
+                                style="@php echo $stylesEventStatus; @endphp">
+                                <u>{{$event->eventStatus}}</u>
                             </button>
                         </div>
                         <br>
-                        <p><u>The Great Dota Tournament 2023</u></p>
-                        <p class="small-text"><i>Ocean's Gaming</i></p>
+                        <p><u>{{$event->eventName}}</u></p>
+                        <p class="small-text"><i>{{$event->organizerName}}</i></p>
                         <div class="flexbox-welcome">
-                            <div>01 Sep, 8:00 PM</div>
+                            @php
+                                $date = \Carbon\Carbon::parse($event->startDateTime);
+                                $dateStr = $date->toFormattedDateString() . " " . $date->toTimeString();
+                            @endphp
+                            <div>@php echo $dateStr; @endphp</div>
                             <button 
+                                style="@php echo $stylesEventRatio; @endphp"
                                 class="oceans-gaming-default-button oceans-gaming-default-button-small flexbox-centered-space">
                                 &nbsp;
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -133,7 +166,10 @@
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                <span>16/16</span>
+                                
+                                <span> 
+                                    {{$event->registeredParticipants}} / {{$event->totalParticipants}} 
+                                </span>
                                 &nbsp;
                                 </button>
                         </div>
@@ -146,7 +182,7 @@
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
                                 &nbsp;
-                                <span>Exclusive prizes</span>
+                                <span>{{$event->prize}}</span>
                             </div>
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -156,7 +192,7 @@
                                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                 </svg>
                                 &nbsp;
-                                <span>Free</span>
+                                <span>{{$event->fee ? $event->fee : 'Free'}}</span>
                             </div>
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -166,14 +202,14 @@
                                     <circle cx="12" cy="10" r="3"></circle>
                                 </svg>
                                 &nbsp;
-                                <span>SEA</span>
+                                <span>{{ $event->region }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <br>
             </div>
-
+            @endforeach
         </div>
 
     </main>

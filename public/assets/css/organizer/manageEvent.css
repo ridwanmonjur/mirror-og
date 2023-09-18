@@ -62,7 +62,9 @@ nav img:hover,
 .search-bar svg:hover,
 .navbar svg:hover,
 nav button:hover,
-nav svg:hover {
+nav svg:hover,
+.oceans-gaming-default-button:hover
+{
     transform: scale(1.1);
 }
 
@@ -72,7 +74,9 @@ nav img:active,
 nav button:active,
 .search-bar svg:active,
 .navbar svg:active,
-nav svg:active {
+nav svg:active, 
+.oceans-gaming-default-button:active
+{
     transform: scale(1.1);
 }
 
@@ -135,27 +139,6 @@ input[type="submit"], .oceans-gaming-default-button {
     cursor: pointer;
 }
 
-.oceans-gaming-default-button:click{
-    border: 0px solid black;
-}
-
-.oceans-gaming-transparent-button{
-    background: transparent;
-    border: 1px solid black;
-    color: black;
-}
-
-.oceans-gaming-green-button{
-    background: #8CCD39;
-    color: white;
-    
-}
-
-.oceans-gaming-gray-button{
-    background: #A6A6A6;
-    color: white;
-}
-
 
 .flexbox-welcome{
     display: flex;
@@ -198,10 +181,24 @@ input[type="submit"]:active {
 .rounded-box {
     position: relative;
     border-radius: 30px 30px;
-    border: 3px solid #8CCD39;
+    border-width: 3px;
+    border-style: solid;
+    /* #8CCD39 */
     min-width: 160px;
     /* box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); */
     z-index: 1;
+}
+
+.rounded-box-turtle{
+    border-color: #8CCD39;
+}
+
+.rounded-box-dolphin{
+    border-color: #43A4D7;
+}
+
+.rounded-box-starfish{
+    border-color: #2E4B59;
 }
 
 .rounded-box .centered-absolute-game-tier{
@@ -233,7 +230,20 @@ input[type="submit"]:active {
 
 .card-image{
     width: 100%;
-    border-bottom: 3px solid #8CCD39;
+    border-bottom-width: 3px;
+    border-bottom-style: solid;
+}
+
+.card-image-turtle{
+    border-bottom-color: #8CCD39;
+}
+
+.card-image-dolphin{
+    border-bottom-color: #43A4D7;
+}
+
+.card-image-starfish{
+    border-bottom-color: #2E4B59;
 }
 
 .card-image img{

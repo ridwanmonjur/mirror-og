@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 use Illuminate\Http\Request;
 
 class EventController extends Controller {
@@ -83,8 +84,20 @@ class EventController extends Controller {
 
     public function manage()
     {
-        
-        return view('Organizer.ManageEvent');
+        $eventList = Event::all();  
+        $mappingEventState = [
+            'UPCOMING' => ['buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'],
+            'ONGOING' => ['buttonBackgroundColor' => '#FFFBFB', 'buttonTextColor' => 'black', 'borderColor' => 'black'],
+            'DRAFT' => ['buttonBackgroundColor' => '#8CCD39', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'],
+            'ENDED' => ['buttonBackgroundColor' => '#A6A6A6', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'],
+        ];
+        $mappingTier = [
+            'Turtle' => ['background'=> '/assets/images/turtle.png', 'class' => [ 'rounded-box-turtle', 'card-image-turtle' ] ],
+            'Dolphin' => ['background'=> '/assets/images/dolphin.png', 'class' => [ 'rounded-box-dolphin', 'card-image-dolphin' ] ],
+            'Starfish' => ['background'=> '/assets/images/starfish.png', 'class' => [ 'rounded-box-starfish', 'card-image-starfish' ] ],
+          
+        ]; 
+        return view('Organizer.ManageEvent', ['eventList' => $eventList, 'mappingTier'=> $mappingTier,  'mappingEventState'=> $mappingEventState]);
 
     }
 

@@ -22,7 +22,7 @@ Route::get('/signup', [AuthController::class, 'signUp']); // Route for Sign In P
 Route::get('/dashboard', [AuthController::class, 'dashboard']); // Route for Dashboard Page
 
 Route::resource('/event', EventController::class);
-Route::get('/event/manage/events', [EventController::class, 'manage']);
+Route::get('/event/organizer/manage', [EventController::class, 'manage']);
 
 Route::redirect('/login', '/admin/users')->name('login');
 
