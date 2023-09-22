@@ -62,9 +62,9 @@ class CreateEventResource extends Resource
                 Tables\Columns\ImageColumn::make('eventBanner'),
                 Tables\Columns\TextColumn::make('eventTags'),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
+                ->toggleable()->dateTime(),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
+                ->toggleable()->dateTime(),
             ])
             ->filters([
                 //
