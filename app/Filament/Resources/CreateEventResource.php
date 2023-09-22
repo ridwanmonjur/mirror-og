@@ -39,6 +39,7 @@ class CreateEventResource extends Resource
                 Forms\Components\TimePicker::make('endTime')
                     ->required(),
                 Forms\Components\FileUpload::make('eventBanner')
+                    ->preserveFilenames()
                     ->required()->columnSpan($span = 4),
                 Forms\Components\TagsInput::make('eventTags')
                     ->required()->columnSpan($span = 4),

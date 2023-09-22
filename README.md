@@ -26,3 +26,11 @@ php artisan key:generate
 ```
 
 
+### Admin Filament Installation
+```bash
+# Create Admin Credentials
+php artisan make:filament-user
+
+#update Images
+php artisan storage:link
+```
