@@ -201,6 +201,10 @@ input[type="submit"]:active {
 }
 
 .rounded-box-starfish{
+    border-color: pink;
+}
+
+.rounded-box-mermaid{
     border-color: #2E4B59;
 }
 
@@ -247,8 +251,12 @@ input[type="submit"]:active {
     border-bottom-color: #43A4D7;
 }
 
-.card-image-starfish{
+.card-image-mermaid{
     border-bottom-color: #2E4B59;
+}
+
+.card-image-starfish{
+    border-bottom-color: pink;
 }
 
 .card-image img{

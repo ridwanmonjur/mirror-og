@@ -94,8 +94,9 @@ class EventController extends Controller {
         $mappingTier = [
             'Turtle' => ['background'=> '/assets/images/turtle.png', 'class' => [ 'rounded-box-turtle', 'card-image-turtle' ] ],
             'Dolphin' => ['background'=> '/assets/images/dolphin.png', 'class' => [ 'rounded-box-dolphin', 'card-image-dolphin' ] ],
+            'Mermaid' => ['background'=> '/assets/images/mermaid.png', 'class' => [ 'rounded-box-mermaid', 'card-image-mermaid' ] ],
             'Starfish' => ['background'=> '/assets/images/starfish.png', 'class' => [ 'rounded-box-starfish', 'card-image-starfish' ] ],
-          
+
         ]; 
         return view('Organizer.ManageEvent', ['eventList' => $eventList, 'mappingTier'=> $mappingTier,  'mappingEventState'=> $mappingEventState]);
 
