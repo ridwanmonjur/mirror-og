@@ -79,10 +79,10 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
             <br><br>
             <div class="grid-container">
                 <div class="{{'side-image side-image-' . $eventTierLower }}">
-                    <img class="side-image-absolute-bottom" src="{{  asset( '/assets/images/'. $eventTierLower . '.png' ) }}" width="240" height="160">
+                    <img class="side-image-absolute-bottom" src="{{  asset( '/assets/images/'. $eventTierLower . '.png' ) }}" width="180" height="125">
                 </div>
                 <div>
-                    <div>
+                    <div style="padding-left: 20px;padding-right:20px;">
                         <div>
                             <img class="{{'card-image card-image-' . $eventTierLower }}" src="{{ asset('/assets/images/1.png') }}" alt="">
                         </div>
@@ -91,7 +91,9 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                 <div>
                                     <br>
                                     <div class="flexbox-centered-space">
-                                        <p style="height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->eventName}}</u></p>
+                                        <p style="height:60px;text-overflow:ellipsis; overflow:hidden;font-size:20px;margin-right:60px;margin-bottom:20px">
+                                            <u>{{$event->eventName}}</u>
+                                        </p>
                                         <svg style="margin-top: -30px; margin-left: -60px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
                                             <circle cx="18" cy="5" r="3"></circle>
                                             <circle cx="6" cy="12" r="3"></circle>
@@ -122,7 +124,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <button class="{{ 'side-image-' . $eventTierLower . ' tablinks' }}" onclick="openTab(event, 'Result')">Result</button>
 
                                         </div>
-
+                                        <br>
                                         <div id="Overview" class="tabcontent" style="display: block;">
                                             <h3><u>About this event</u></h3>
                                             <p>{{ $event->eventDescription }}</p>
@@ -190,6 +192,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <line x1="12" y1="16" x2="12" y2="12"></line>
                                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                         </svg>
+                                        &nbsp;
                                         <span>{{$event->eventGroupStructure}}</span>
                                     </div>
                                 </div>
@@ -199,7 +202,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                     </div>
                 </div>
                 <div class="{{'side-image side-image-' . $eventTierLower }} ">
-                    <img class="side-image-absolute-top" src="{{ '/assets/images/'. $eventTierLower . '.png' }}" width="240" height="160">
+                    <img class="side-image-absolute-top" src="{{  asset( '/assets/images/'. $eventTierLower . '.png' ) }}" width="180" height="125">
                 </div>
             </div>
         </main>
