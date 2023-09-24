@@ -11,6 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // if problems 
+        // Schema::dropIfExists('events');
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('eventName');
@@ -20,10 +22,10 @@ return new class extends Migration
             $table->string('organizerName');
             $table->string('eventBanner');
             $table->string('eventTags');
-            $table->string('eventTier');
+            $table->string('eventTier'); // DOLPHIN, TURTLE
             $table->string('eventType');
-            $table->string('eventStatus');
-            $table->integer('totalParticipants');
+            $table->string('eventStatus'); // CLOSED, PENDING, OPEN
+            $table->integer('totalParticipants'); 
             $table->integer('registeredParticipants');
             $table->float('fee');
             $table->string('region');
@@ -37,6 +39,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('create_events');
+        Schema::dropIfExists('events');
+        // Schema::dropIfExists('create_events');
     }
 };

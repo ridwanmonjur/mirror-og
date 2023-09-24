@@ -18,6 +18,8 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::table('events')->delete();
+        
         DB::table('events')->insert([
             'eventName' => Str::random(10),
             'eventDescription' => "This is a test event",
@@ -28,6 +30,7 @@ class EventSeeder extends Seeder
             'eventTier'=> "Turtle",
             'eventType' => 'Type A',
             'eventStatus' => 'UPCOMING',
+            'eventGroupStructure' => 'ROUND ROBIN',
             'totalParticipants' => 16, 
             'registeredParticipants' => 16, 
             'region' => "SEA",
@@ -46,6 +49,7 @@ class EventSeeder extends Seeder
             'eventTier'=> "Turtle",
             'eventType' => 'Type A',
             'eventStatus' => 'DRAFT',
+            'eventGroupStructure' => 'ROUND ROBIN',
             'totalParticipants' => 16, 
             'registeredParticipants' => 0, 
             'region' => "SEA",
@@ -64,6 +68,7 @@ class EventSeeder extends Seeder
             'eventTier'=> "Dolphin",
             'eventType' => 'Type A',
             'eventStatus' => 'ONGOING',
+            'eventGroupStructure' => 'ROUND ROBIN',
             'totalParticipants' => 16, 
             'registeredParticipants' => 9, 
             'region' => "SEA",
@@ -82,6 +87,7 @@ class EventSeeder extends Seeder
             'eventTier'=> "Mermaid",
             'eventType' => 'Type A',
             'eventStatus' => 'ENDED',
+            'eventGroupStructure' => 'ROUND ROBIN',
             'totalParticipants' => 16, 
             'registeredParticipants' => 7, 
             'region' => "SEA",
@@ -100,6 +106,7 @@ class EventSeeder extends Seeder
             'eventTier'=> "Starfish",
             'eventType' => 'Type A',
             'eventStatus' => 'ENDED',
+            'eventGroupStructure' => 'ROUND ROBIN',
             'totalParticipants' => 16, 
             'registeredParticipants' => 7, 
             'region' => "SEA",

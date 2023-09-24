@@ -127,14 +127,15 @@
                 elseif ($ratio <= 0.5){
                     $stylesEventRatio .= "background-color: #FFE325; color: black;";
                 }
+                $eventTierLower = strtolower($event->eventTier);
             @endphp
             <div 
-                class="{{'rounded-box ' . $mappingTier[$event->eventTier]['class'][0] }}"   
+                class="{{'rounded-box rounded-box-' . $eventTierLower }}"   
             >
                 <div class="centered-absolute-game-tier">
-                    <img src="{{ asset($mappingTier[$event->eventTier]['background']) }}" width="120" height="80">
+                    <img src="{{ asset( '/assets/images/'. $eventTierLower . '.png' ) }}" width="120" height="80">
                 </div>
-                <div class="{{'card-image ' . $mappingTier[$event->eventTier]['class'][1] }}">
+                <div class="{{'card-image card-image-' . $eventTierLower }}">
                     <img src="{{ asset('/assets/images/1.png') }}" alt="">
                 </div>
                 <div class="card-text">

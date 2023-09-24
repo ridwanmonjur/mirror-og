@@ -25,4 +25,24 @@ cp .env.example .env
 php artisan key:generate
 ```
 
+### Migrate
+
+
+```bash
+# Seed
+php artisan db:seed
+
+# Run this one
+php artisan db:seed --class=EventSeeder
+
+# Changes
+php artisan make:migration add_eventGroupStructure_to_events
+
+# Development only reset database
+php artisan migrate:reset
+
+```
+
+
+
 
