@@ -58,7 +58,6 @@ https://realrashid.github.io/sweet-alert/config
 
 # Include 'sweetalert::alert' in master layout
 @include('sweetalert::alert')
-
 # and run the below command to publish the package assets.
 php artisan sweetalert:publish
 

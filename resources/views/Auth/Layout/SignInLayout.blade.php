@@ -8,9 +8,8 @@
 <header><u>Sign in to your account</u></header>
 <form name="signin-form" id="signin-form" method="post" action="{{route('signinAction')}}">
     @csrf
-    <div class="flash-message">
-        <i class="fas fa-exclamation-circle form_icon__error"></i>
-        <span>Invalid email or password</span>
+    <<div class="flash-message">
+        @include('Auth.Layout.Flash')
     </div>
     <div class="field">
         <label for="email" class="placeholder-moves-up-container">

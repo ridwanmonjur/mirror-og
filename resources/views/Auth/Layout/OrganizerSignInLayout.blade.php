@@ -9,8 +9,7 @@
 <form name="organizer-signin-form" id="organizer-signin-form" method="post" action="{{route('organizerSigninAction')}}">
     @csrf
     <div class="flash-message">
-        <i class="fas fa-exclamation-circle form_icon__error"></i>
-        <span>Invalid email or password</span>
+        @include('Auth.Layout.Flash')
     </div>
     <div class="field">
         <label for="email" class="placeholder-moves-up-container">

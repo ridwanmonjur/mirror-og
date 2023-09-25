@@ -7,10 +7,9 @@
 <header><u>Create an Account</u></header>
 <form name="signup-form" id="signup-form" method="post" action="{{route('signupAction')}}">
     @csrf
-    <!-- <div class="flash-message">
-        <i class="fas fa-exclamation-circle form_icon__error"></i>
-        <span>Invalid email or password</span>
-    </div> -->
+    <div class="flash-message">
+        @include('Auth.Layout.Flash')
+    </div>
     <div class="field">
         <label for="username" class="placeholder-moves-up-container">
             <input type="username" name="username" id="username" required="true" class="input-area">
