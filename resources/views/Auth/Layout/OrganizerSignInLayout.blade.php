@@ -6,7 +6,7 @@
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
 <header><u>Sign in to your account</u></header>
-<form name="signin-form" id="signin-form" method="post" action="{{url('signin-form')}}">
+<form name="organizer-signin-form" id="organizer-signin-form" method="post" action="{{route('organizerSigninAction')}}">
     @csrf
     <div class="flash-message">
         <i class="fas fa-exclamation-circle form_icon__error"></i>

@@ -6,7 +6,8 @@
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
 <header><u>Sign in to your account</u></header>
-<form action="#">
+<form name="signin-form" id="signin-form" method="post" action="{{route('signinAction')}}">
+    @csrf
     <div class="flash-message">
         <i class="fas fa-exclamation-circle form_icon__error"></i>
         <span>Invalid email or password</span>

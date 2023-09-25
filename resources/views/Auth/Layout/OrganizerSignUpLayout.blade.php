@@ -5,7 +5,8 @@
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
 <header><u>Create an Account</u></header>
-<form action="#">
+<form name="organizer-signup-form" id="organizer-signup-form" method="post" action="{{route('organizerSignupAction')}}">
+    @csrf
     <!-- <div class="flash-message">
         <i class="fas fa-exclamation-circle form_icon__error"></i>
         <span>Invalid email or password</span>

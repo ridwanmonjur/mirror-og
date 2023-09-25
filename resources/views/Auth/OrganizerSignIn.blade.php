@@ -4,4 +4,4 @@
 
 {{-- extended the Sign page --}}
 
-@extends('Auth.Layout.SignInLayout')
+@extends('Auth.Layout.OrganizerSignInLayout')

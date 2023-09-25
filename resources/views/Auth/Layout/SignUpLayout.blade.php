@@ -5,7 +5,8 @@
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
 <header><u>Create an Account</u></header>
-<form action="#">
+<form name="signup-form" id="signup-form" method="post" action="{{route('signupAction')}}">
+    @csrf
     <!-- <div class="flash-message">
         <i class="fas fa-exclamation-circle form_icon__error"></i>
         <span>Invalid email or password</span>

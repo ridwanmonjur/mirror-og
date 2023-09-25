@@ -15,10 +15,14 @@ use App\Http\Controllers\EventController;
 |
 */
 
-Route::get('/', [AuthController::class, 'signIn']); // Route for Sign In Page
-Route::get('/organizerSignin', [AuthController::class, 'organizerSignin']); // Route for Sign In Page
-Route::get('/signup', [AuthController::class, 'signUp']); // Route for Sign In Page
-Route::get('/organizerSignup', [AuthController::class, 'organizerSignup']); // Route for Sign up Page
+Route::get('/', [AuthController::class, 'signIn']);
+Route::get('/organizerSignin', [AuthController::class, 'organizerSignin']); 
+Route::get('/signup', [AuthController::class, 'signUp']); 
+Route::get('/organizerSignup', [AuthController::class, 'organizerSignup']);
+Route::post('/', [AuthController::class, 'accessParticipant'])->name("signinAction");
+Route::post('/organizerSignin', [AuthController::class, 'accessOrganizer'])->name("organizerSigninAction"); 
+Route::post('/signup', [AuthController::class, 'storeParticipant'])->name("signupAction"); 
+Route::post('/organizerSignup', [AuthController::class, 'storeOrganizer'])->name("organizerSignupAction");
 
 Route::get('/dashboard', [AuthController::class, 'dashboard']); // Route for Dashboard Page
 
