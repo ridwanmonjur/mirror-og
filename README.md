@@ -29,20 +29,46 @@ php artisan key:generate
 
 
 ```bash
-# Seed
-php artisan db:seed
 
+
+# making migration
+php artisan make:migration create_oganizer_table
+php artisan make:migration create_participant_table
+php artisan make:migration add_eventGroupStructure_to_events
+
+# edit tables in those files, then run:
+php artisan migrate
+php artisan make:model Organizer
+php artisan make:model Participant
+
+# Changes Development only reset database
+php artisan migrate:reset
+
+# Seed
+php artisan make:seeder EventSeeder
 # Run this one
 php artisan db:seed --class=EventSeeder
 
-# Changes
-php artisan make:migration add_eventGroupStructure_to_events
-
-# Development only reset database
-php artisan migrate:reset
-
 ```
 
+```bash
+
+# docs
+https://realrashid.github.io/sweet-alert/config
+
+# Include 'sweetalert::alert' in master layout
+@include('sweetalert::alert')
+
+# and run the below command to publish the package assets.
+php artisan sweetalert:publish
+
+bash```
 
 
 
+
+php artisan make:migration add_fkkeys_to_organizers
+php artisan make:migration add_fkkeys_to_participants
+
+# http://localhost:8000/organizerSignin
+# http://localhost:8000/organizerSignup

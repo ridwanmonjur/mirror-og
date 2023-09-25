@@ -16,8 +16,9 @@ use App\Http\Controllers\EventController;
 */
 
 Route::get('/', [AuthController::class, 'signIn']); // Route for Sign In Page
-
+Route::get('/organizerSignin', [AuthController::class, 'organizerSignin']); // Route for Sign In Page
 Route::get('/signup', [AuthController::class, 'signUp']); // Route for Sign In Page
+Route::get('/organizerSignup', [AuthController::class, 'organizerSignup']); // Route for Sign up Page
 
 Route::get('/dashboard', [AuthController::class, 'dashboard']); // Route for Dashboard Page
 

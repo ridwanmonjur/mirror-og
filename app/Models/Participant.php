@@ -5,13 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CreateEvent extends Model
+class Participant extends Model
 {
     use HasFactory;
-
-    protected $guarded = [];
-
-    protected $casts = [
-        'eventTags' => 'array',
-    ];
 }

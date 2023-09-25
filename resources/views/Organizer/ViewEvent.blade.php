@@ -23,8 +23,8 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
 
     $date = \Carbon\Carbon::parse($event->startDateTime)->setTimezone('Asia/Singapore');
     $dayStr = $date->englishDayOfWeek;
-    $timeStr = $date->toFormattedDateString();
-    $dateStr = $date->isoFormat('h:mm a');
+    $dateStr = $date->toFormattedDateString();
+    $timeStr = $date->isoFormat('h:mm a');
 
     @endphp
 
@@ -70,7 +70,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                 <header class="flexbox-welcome">
                     <u>
                         <h3>
-                            Manage your events
+                            View your events
                         </h3>
                     </u>
                     <input type="submit" value="Create Event">
@@ -113,8 +113,8 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                         </div>
                                     </div>
                                     <br>
-                                    <h4> <u> @php echo $dayStr .', ' . $dateStr; @endphp </u> </h4>
-                                    <h4> <u> @php echo $timeStr; @endphp </u> </h4>
+                                    <h4> <u> @php echo $dateStr . ' ( ' . $dayStr .' )'; @endphp </u> </h4>
+                                    <h4> <u> @php echo strtoupper($timeStr); @endphp </u> </h4>
                                     <br>
                                     <div>
                                         <div class="tab">
