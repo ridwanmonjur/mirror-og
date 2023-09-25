@@ -109,11 +109,8 @@ class AuthController extends Controller
             if ($user->role != "ORGANIZER"):
                 throw new \ErrorException("Invalid Role for Organizer");
             endif;
-            dd($user);
             $request->session()->regenerate();
-            dd($request->session()->all());
         }
-        dd("not logged in");
         return redirect('/organizerSignin');
     }
 
@@ -130,11 +127,8 @@ class AuthController extends Controller
             if ($user->role != "PARTICIPANT"):
                 throw new \ErrorException("Invalid Role for Participant");
             endif;
-            dd($user);
             $request->session()->regenerate();
-            dd($request->session()->all());
         }
-        dd("not logged in");
         return redirect('/');
     }
 }
