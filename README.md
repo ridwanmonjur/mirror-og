@@ -35,6 +35,7 @@ php artisan key:generate
 php artisan make:migration create_oganizer_table
 php artisan make:migration create_participant_table
 php artisan make:migration add_eventGroupStructure_to_events
+php artisan make:migration add_tokens_to_users
 
 # edit tables in those files, then run:
 php artisan migrate

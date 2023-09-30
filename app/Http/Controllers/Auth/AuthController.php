@@ -84,7 +84,7 @@ class AuthController extends Controller
                 ]
             );
             $organizer->save();
-            return redirect()->route('organizer.signin.view')->with('success', 'Organizer Account Created Successfully. Now sign in!');
+            return redirect()->route('organizer.signin.view')->with('success', 'Organizer Account Created Successfully. Now verify email!');
         } 
         catch (\Throwable $th) {
             return redirect()->route('organizer.signup.view')->with('error', $th->getMessage());
@@ -115,7 +115,7 @@ class AuthController extends Controller
                 ]
             );
             $participant->save();
-            return redirect()->route('participant.signin.view')->with('success', 'Participant Account Created Successfully. Now sign in!');
+            return redirect()->route('participant.signin.view')->with('success', 'Participant Account Created Successfully. Now verify email!');
         }
         catch (\Throwable $th) {
             return redirect()->route('participant.signup.view')->with('error', $th->getMessage());
@@ -132,9 +132,7 @@ class AuthController extends Controller
             // dd($validatedData);
             if(Auth::attempt($validatedData))
             {
-                $request->session()->regenerate();
                 $user = Auth::getProvider()->retrieveByCredentials($validatedData);
-                
                 if ($user->role != "ORGANIZER"):
                     throw new \ErrorException("Invalid Role for Organizer");
                 endif;
@@ -159,14 +157,15 @@ class AuthController extends Controller
             ]);
             if(Auth::attempt($validatedData))
             {
-                $request->session()->regenerate();
                 $user = Auth::getProvider()->retrieveByCredentials($validatedData);
                 if ($user->role != "PARTICIPANT"):
                     throw new \ErrorException("Invalid Role for Participant");
                 endif;
                 $request->session()->regenerate();
             }
-            Alert::success('Success', 'Organizer Account Signed In Successfully!');
+            else{
+                throw new \ErrorException("Can't find user!");
+            }
         }
         catch (\Throwable $th) {
             return redirect()->route("organizerSignin")->with('error', $th->getMessage());

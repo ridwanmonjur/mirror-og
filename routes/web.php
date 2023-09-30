@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\PermissionController;
-
+use App\Mail\TestEmail;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,6 +16,9 @@ use App\Http\Controllers\PermissionController;
 |
 */
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
+
+Route::get('/reset-password', [AuthController::class, 'reset'])->name("participant.reset.view");
+Route::post('/reset-password', [AuthController::class, 'createReset'])->name("participant.reset.view");
 
 Route::group(['prefix' => 'participant'], function () {
 	Route::get('/signin', [AuthController::class, 'signIn'])->name("participant.signin.view");
@@ -47,14 +50,12 @@ Route::group(['prefix' => 'organizer'], function () {
 });
 
 Route::group(['middleware' => ['auth']], function() {
-    
     /**
     * Verification Routes
     */
     Route::get('/email/verify', 'VerificationController@show')->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', 'VerificationController@verify')->name('verification.verify')->middleware(['signed']);
     Route::post('/email/resend', 'VerificationController@resend')->name('verification.resend');
-  
 });
 
 Route::get('/dashboard', [AuthController::class, 'dashboard']); // Route for Dashboard Page
