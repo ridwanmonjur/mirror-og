@@ -23,6 +23,11 @@ class AuthController extends Controller
         }
     }
 
+    public function showLandingPage(Request $request)
+    {
+        return view('LandingPage');
+    }
+
     public function signIn(Request $request)
     {
         $this->showAlert($request->session());
@@ -79,10 +84,10 @@ class AuthController extends Controller
                 ]
             );
             $organizer->save();
-            return redirect('/organizerSignin')->with('success', 'Organizer Account Created Successfully. Now sign in!');
+            return redirect()->route('organizerSigninView')->with('success', 'Organizer Account Created Successfully. Now sign in!');
         } 
         catch (\Throwable $th) {
-            return redirect('/organizerSignup')->with('error', $th->getMessage());
+            return redirect()->route('organizerSignupView')->with('error', $th->getMessage());
         }
         
     }
@@ -110,10 +115,10 @@ class AuthController extends Controller
                 ]
             );
             $participant->save();
-            return redirect('/signup')->with('success', 'Participant Account Created Successfully. Now sign in!');
+            return redirect()->route('signinView')->with('success', 'Participant Account Created Successfully. Now sign in!');
         }
         catch (\Throwable $th) {
-            return redirect('/')->with('error', $th->getMessage());
+            return redirect()->route('signupView')->with('error', $th->getMessage());
         }
     }
 
@@ -136,9 +141,9 @@ class AuthController extends Controller
             }
         }
         catch (\Throwable $th) {
-            return redirect('/')->with('error', $th->getMessage());
+            return redirect()->route("organizerSigninView")->with('error', $th->getMessage());
         }
-        return redirect('/')->with('success', 'Organizer Account Signed In Successfully!');
+        return redirect()->route("organizerSigninView")->with('success', 'Organizer Account Signed In Successfully!');
     }
 
     public function accessParticipant(Request $request)
@@ -160,8 +165,8 @@ class AuthController extends Controller
             Alert::success('Success', 'Organizer Account Signed In Successfully!');
         }
         catch (\Throwable $th) {
-            return redirect('/organizerSignin')->with('error', $th->getMessage());
+            return redirect()->route("organizerSignin")->with('error', $th->getMessage());
         }
-        return redirect('/organizerSignin')->with('success', 'Participant Account Signed In Successfully!');
+        return redirect()->route("organizerSignin")->with('success', 'Participant Account Signed In Successfully!');
     }
 }

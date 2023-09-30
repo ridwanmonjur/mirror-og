@@ -55,7 +55,7 @@
 </form>
 
 <div class="section-bottom">
-    <p>New to Splash? <a href="/signup">Create an account</a></p>
+    <p>New to Splash? <a href="{{ route('signupView') }}">Create an account</a></p>
 </div>
 
 

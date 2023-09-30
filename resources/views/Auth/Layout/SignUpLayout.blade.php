@@ -52,7 +52,7 @@
         href="#">Privacy Policy</a>.</div>
 
         <div class="section-bottoms">
-            <p>Already have an account? <a href="/">Sign in</a></p>
+            <p>Already have an account? <a href="{{ route('signinView') }}">Sign in</a></p>
         </div>
 
         </form>

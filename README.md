@@ -62,12 +62,22 @@ https://realrashid.github.io/sweet-alert/config
 php artisan sweetalert:publish
 
 bash```
-
-
-
-
 php artisan make:migration add_fkkeys_to_organizers
 php artisan make:migration add_fkkeys_to_participants
 
 # http://localhost:8000/organizerSignin
 # http://localhost:8000/organizerSignup
+
+php artisan make:middleware CheckPermission
+
+http://localhost:8000/participant/signin
+http://localhost:8000/participant/signup
+http://localhost:8000/organizer/siginin
+http://localhost:8000/organizer/signup
+
+
+http://localhost:8000/authenticated
+http://localhost:8000/showNoAuth
+http://localhost:8000/permissions-admin-participant
+http://localhost:8000/permissions-admin-organizer
+```
