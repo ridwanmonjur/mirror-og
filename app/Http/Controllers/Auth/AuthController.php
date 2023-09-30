@@ -84,10 +84,10 @@ class AuthController extends Controller
                 ]
             );
             $organizer->save();
-            return redirect()->route('organizerSigninView')->with('success', 'Organizer Account Created Successfully. Now sign in!');
+            return redirect()->route('organizer.signin.view')->with('success', 'Organizer Account Created Successfully. Now sign in!');
         } 
         catch (\Throwable $th) {
-            return redirect()->route('organizerSignupView')->with('error', $th->getMessage());
+            return redirect()->route('organizer.signup.view')->with('error', $th->getMessage());
         }
         
     }
@@ -115,10 +115,10 @@ class AuthController extends Controller
                 ]
             );
             $participant->save();
-            return redirect()->route('signinView')->with('success', 'Participant Account Created Successfully. Now sign in!');
+            return redirect()->route('participant.signin.view')->with('success', 'Participant Account Created Successfully. Now sign in!');
         }
         catch (\Throwable $th) {
-            return redirect()->route('signupView')->with('error', $th->getMessage());
+            return redirect()->route('participant.signup.view')->with('error', $th->getMessage());
         }
     }
 
@@ -134,16 +134,20 @@ class AuthController extends Controller
             {
                 $request->session()->regenerate();
                 $user = Auth::getProvider()->retrieveByCredentials($validatedData);
+                
                 if ($user->role != "ORGANIZER"):
                     throw new \ErrorException("Invalid Role for Organizer");
                 endif;
                 $request->session()->regenerate();
+                return redirect()->route("organizer.signin.view")->with('success', 'Organizer Account Signed In Successfully!');
+            }
+            else{
+                throw new \ErrorException("Can't find user!");
             }
         }
         catch (\Throwable $th) {
-            return redirect()->route("organizerSigninView")->with('error', $th->getMessage());
+            return redirect()->route("organizer.signin.view")->with('error', $th->getMessage());
         }
-        return redirect()->route("organizerSigninView")->with('success', 'Organizer Account Signed In Successfully!');
     }
 
     public function accessParticipant(Request $request)

@@ -5,7 +5,7 @@
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
 <header><u>Create an Account</u></header>
-<form name="signup-form" id="signup-form" method="post" action="{{route('signupAction')}}">
+<form name="signup-form" id="signup-form" method="post" action="{{route('participant.signup.action')}}">
     @csrf
     <div class="flash-message">
         @include('Auth.Layout.Flash')
@@ -52,7 +52,7 @@
         href="#">Privacy Policy</a>.</div>
 
         <div class="section-bottoms">
-            <p>Already have an account? <a href="{{ route('signinView') }}">Sign in</a></p>
+            <p>Already have an account? <a href="{{ route('participant.signin.view') }}">Sign in</a></p>
         </div>
 
         </form>

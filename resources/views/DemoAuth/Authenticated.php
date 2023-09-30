@@ -1,4 +1,3 @@
-@include('DemoAuth.Layout.HeadTag')
 <body>
     <div class="container">
         <div class="row">

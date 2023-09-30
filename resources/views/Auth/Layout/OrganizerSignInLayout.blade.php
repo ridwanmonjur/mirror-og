@@ -6,7 +6,7 @@
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
 <header><u>Sign in to your account</u></header>
-<form name="organizer-signin-form" id="organizer-signin-form" method="post" action="{{route('organizerSigninAction')}}">
+<form name="organizer-signin-form" id="organizer-signin-form" method="post" action="{{route('organizer.signin.action')}}">
     @csrf
     <div class="flash-message">
         @include('Auth.Layout.Flash')
@@ -55,7 +55,7 @@
 </form>
 
 <div class="section-bottom">
-    <p>New to Splash? <a href="{{ route('organizerSignupView') }}">Create an account</a></p>
+    <p>New to Splash? <a href="{{ route('organizer.signup.view') }}">Create an account</a></p>
 </div>
 
 

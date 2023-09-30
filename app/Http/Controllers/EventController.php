@@ -56,8 +56,6 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($id);
 
-        // dd($event);
-
         return view(
             'Organizer.ViewEvent',
             ['event' => $event, 'mappingEventState' => $this->mappingEventState]
