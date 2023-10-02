@@ -17,8 +17,16 @@ use App\Mail\TestEmail;
 */
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
 
-Route::get('/reset-password', [AuthController::class, 'reset'])->name("participant.reset.view");
-Route::post('/reset-password', [AuthController::class, 'createReset'])->name("participant.reset.view");
+Route::get('/forget-password', [AuthController::class, 'createForget'])->name("user.forget.view");
+Route::post('/forget-password', [AuthController::class, 'storeForget'])->name("user.forget.action");
+Route::get('/reset-password', [AuthController::class, 'createReset'])->name("user.reset.view");
+Route::post('/reset-password', [AuthController::class, 'storeReset'])->name("user.reset.action");
+
+// TODO: Add verify email login in login
+Route::get('/account/verify/{token}', [AuthController::class, 'verifyAccount'])->name('user.verify.action'); 
+Route::get('/account/verify-success/', [AuthController::class, 'verifySuccess'])->name('user.verify.success'); 
+
+Route::post('/logout', [AuthController::class, 'logout'])->name("participant.logout.action");
 
 Route::group(['prefix' => 'participant'], function () {
 	Route::get('/signin', [AuthController::class, 'signIn'])->name("participant.signin.view");

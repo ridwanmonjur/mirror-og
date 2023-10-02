@@ -11,11 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::create('otp_tokens', function (Blueprint $table) {
+            $table->foreignId('user_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->string('otp')->nullable();
+            $table->timestamp('otp_expiry')->nullable();
             $table->string('otp_method')->nullable();
             $table->string('password_reset_token')->nullable();
-            $table->string('email_verification_token')->nullable();
         });
     }
 
@@ -24,11 +28,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('otp')->nullable();
-            $table->dropColumn('otp_method')->nullable();
-            $table->dropColumn('password_reset_token')->nullable();
-            $table->dropColumn('email_verification_token')->nullable();
+        Schema::table('otp-tokens', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
         });
+        Schema::dropIfExists('tokens');
     }
 };

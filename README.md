@@ -47,6 +47,7 @@ php artisan migrate:reset
 
 # Seed
 php artisan make:seeder EventSeeder
+php artisan make:seeder UserSeeder
 # Run this one
 php artisan db:seed --class=EventSeeder
 

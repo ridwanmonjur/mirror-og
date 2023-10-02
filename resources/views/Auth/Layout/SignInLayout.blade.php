@@ -32,7 +32,7 @@
             <input type="checkbox" name="" id="">
             <label class="text-checkbox">Remember me</label>
         </div>
-        <a href="">Forgot password?</a>
+        <a href="{{ route('user.forget.view' }}">Forgot password?</a>
     </div>
     <input type="submit" value="Sign in">
 

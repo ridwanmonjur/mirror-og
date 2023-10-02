@@ -16,13 +16,10 @@ body {
     justify-content: center;
     /* background-image: url("images/signinbg.png"); */
     background-image: url("./signinbg.png");
+}
 
-
-
-
-
-
-
+button{
+    cursor: pointer;
 }
 
 .wrapper {
@@ -138,6 +135,7 @@ form input[type="submit"] {
     border-radius: 30px;
     background: #43A4D7;
     border: none;
+    cursor: pointer;
     /* border-bottom: 2px solid rgba(0, 0, 0, 0.1); */
 }
 

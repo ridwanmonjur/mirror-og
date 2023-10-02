@@ -40,6 +40,29 @@ class AuthController extends Controller
         return view('Auth.OrganizerSignIn');
     }
 
+    public function storeReset(Request $request){
+        
+    }
+
+    public function createReset(Request $request){
+        return view('Auth.ResetPassword');
+    }
+
+    public function storeForget(Request $request){
+
+    }
+
+    public function createForget(Request $request){
+        return view('Auth.ForgetPassword');
+    }
+
+    public function verifyAccount(Request $request){
+       
+    }
+
+    public function verifySuccess(Request $request){
+        return view('Auth.VerifySuccess');
+    }
 
     //SignUp Auth View
 
@@ -108,6 +131,8 @@ class AuthController extends Controller
                     "role" => "PARTICIPANT",
                 ]
             );
+            $user->is_verified = false;
+            $user->sendEmailVerificationNotification();
             $user->save();
             $participant = new Participant(
                 [

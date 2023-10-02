@@ -21,11 +21,11 @@ class Authenticate extends Middleware
         else if ($request->is('participant/*')) {
             return route('participant.signin.view');
         }
-        // else if ($request->is('organizer/*')) {
-        //     return route('organizer.signin.view');
-        // }
-        // else {
-        //     return route('participant.signin.view');
-        // }
+        else if ($request->is('organizer/*')) {
+            return route('organizer.signin.view');
+        }
+        else {
+            return route('participant.signin.view');
+        }
     }
 }

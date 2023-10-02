@@ -1,0 +1,43 @@
+@include('Auth.Layout.HeadTag')
+
+@section('signUpbody')
+
+<img src="{{ asset('/assets/images/auth/logo.png') }}">
+<br>
+<header><u>Reset Password</u></header>
+<br><br>
+<p> Enter your old password and your new password</p>
+<form name="reset-password-form" id="reset-password-form" method="post" action="{{route('user.reset.action')}}">
+    @csrf
+    <div class="flash-message">
+        @include('Auth.Layout.Flash')
+    </div>
+    <div class="field password">
+        <label for="password" class="placeholder-moves-up-container">
+            <input type="password" name="password" id="password" minlength="6" maxlength="24" required="true"
+                class="input-area">
+            <span class="placeholder-moves-up">Password</span>
+            <i class="fa fa-eye" id="togglePassword" onclick="togglePassword()" style="cursor: pointer; margin-top: 10px"></i>
+            <div class="field-error-message d-none"></div>
+        </label>
+    </div>
+
+    <div class="field password">
+        <label for="password" class="placeholder-moves-up-container">
+            <input type="password" name="password" id="password" minlength="6" maxlength="24" required="true"
+                class="input-area">
+            <span class="placeholder-moves-up">Confirm Password</span>
+            <i class="fa fa-eye" id="togglePassword" onclick="togglePassword()" style="cursor: pointer; margin-top: 10px"></i>
+            <div class="field-error-message d-none"></div>
+        </label>
+    </div>
+    <div class="field">
+        <input type="submit" value="Reset Password" class="oceans-gaming-default-button oceans-gaming-green-button">
+        </input>
+    <br>
+    <br><br>
+</form>
+
+@endsection
+
+@include('Auth.Layout.SignUpBodyTag')
