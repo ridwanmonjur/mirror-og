@@ -19,10 +19,11 @@ Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view"
 
 Route::get('/forget-password', [AuthController::class, 'createForget'])->name("user.forget.view");
 Route::post('/forget-password', [AuthController::class, 'storeForget'])->name("user.forget.action");
-Route::get('/reset-password', [AuthController::class, 'createReset'])->name("user.reset.view");
+Route::get('/reset-password/{token}', [AuthController::class, 'createReset'])->name("user.reset.view");
 Route::post('/reset-password', [AuthController::class, 'storeReset'])->name("user.reset.action");
 
 // TODO: Add verify email login in login
+Route::get('/account/verify-resend/{email}', [AuthController::class, 'verifyResend'])->name('user.verify.resend'); 
 Route::get('/account/verify/{token}', [AuthController::class, 'verifyAccount'])->name('user.verify.action'); 
 Route::get('/account/verify-success/', [AuthController::class, 'verifySuccess'])->name('user.verify.success'); 
 

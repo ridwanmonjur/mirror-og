@@ -4,5 +4,7 @@
 
 </head>
 <body> 
+    @include('Auth.Layout.Flash')
+    
     Just wait for our awesome landing page...
 </body>

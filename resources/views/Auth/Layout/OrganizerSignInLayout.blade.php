@@ -10,6 +10,16 @@
     @csrf
     <div class="flash-message">
         @include('Auth.Layout.Flash')
+        @if(session('email'))
+        <br>
+        Click 
+        <a 
+            style="font-weight: bold; text-decoration: underline;"
+            href="{{ route('user.verify.resend', ['email' => session('email')]) }}">
+            here
+        </a>
+        to resend verification email.
+        @endif
     </div>
     <div class="field">
         <label for="email" class="placeholder-moves-up-container">
@@ -32,7 +42,7 @@
             <input type="checkbox" name="" id="">
             <label class="text-checkbox">Remember me</label>
         </div>
-        <a href="{{ route('user.forget.view' }}">Forgot password?</a>
+        <a href="{{ route('user.forget.view') }}">Forgot password?</a>
     </div>
     <input type="submit" value="Sign in">
 
