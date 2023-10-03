@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\Organizer\EventController;
+use App\Http\Controllers\Organizer\PermissionController;
 use App\Mail\TestEmail;
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +23,9 @@ Route::get('/reset-password/{token}', [AuthController::class, 'createReset'])->n
 Route::post('/reset-password', [AuthController::class, 'storeReset'])->name("user.reset.action");
 
 // TODO: Add verify email login in login
-Route::get('/account/verify-resend/{email}', [AuthController::class, 'verifyResend'])->name('user.verify.resend'); 
-Route::get('/account/verify/{token}', [AuthController::class, 'verifyAccount'])->name('user.verify.action'); 
-Route::get('/account/verify-success/', [AuthController::class, 'verifySuccess'])->name('user.verify.success'); 
+Route::get('/account/verify-resend/{email}', [AuthController::class, 'verifyResend'])->name('user.verify.resend');
+Route::get('/account/verify/{token}', [AuthController::class, 'verifyAccount'])->name('user.verify.action');
+Route::get('/account/verify-success/', [AuthController::class, 'verifySuccess'])->name('user.verify.success');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name("participant.logout.action");
 
