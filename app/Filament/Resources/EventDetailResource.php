@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Filament\Resources;
-use Filament\Forms\Components\FileUpload;
-use App\Filament\Resources\CreateEventResource\Pages;
-use App\Filament\Resources\CreateEventResource\RelationManagers;
-use App\Models\CreateEvent;
+
+use App\Filament\Resources\EventDetailResource\Pages;
+use App\Filament\Resources\EventDetailResource\RelationManagers;
+use App\Models\EventDetail;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CreateEventResource extends Resource
+class EventDetailResource extends Resource
 {
-    protected static ?string $model = CreateEvent::class;
+    protected static ?string $model = EventDetail::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
     public static ?string $navigationGroup = 'Manage Event';
@@ -50,31 +50,31 @@ class CreateEventResource extends Resource
     {
         return $table
 
-            ->columns([
-                Tables\Columns\TextColumn::make('eventName')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('startDate')
-                    ->date(),
-                Tables\Columns\TextColumn::make('endDate')
-                    ->date(),
-                Tables\Columns\TextColumn::make('startTime'),
-                Tables\Columns\TextColumn::make('endTime'),
-                Tables\Columns\TextColumn::make('eventDescription')->limit(30)->toggleable(),
-                Tables\Columns\ImageColumn::make('eventBanner'),
-                Tables\Columns\TextColumn::make('eventTags'),
-                Tables\Columns\TextColumn::make('created_at')
-                ->toggleable()->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
-                ->toggleable()->dateTime(),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]);
+        ->columns([
+            Tables\Columns\TextColumn::make('eventName')->searchable()->sortable(),
+            Tables\Columns\TextColumn::make('startDate')
+                ->date(),
+            Tables\Columns\TextColumn::make('endDate')
+                ->date(),
+            Tables\Columns\TextColumn::make('startTime'),
+            Tables\Columns\TextColumn::make('endTime'),
+            Tables\Columns\TextColumn::make('eventDescription')->limit(30)->toggleable(),
+            Tables\Columns\ImageColumn::make('eventBanner'),
+            Tables\Columns\TextColumn::make('eventTags'),
+            Tables\Columns\TextColumn::make('created_at')
+            ->toggleable()->dateTime(),
+            Tables\Columns\TextColumn::make('updated_at')
+            ->toggleable()->dateTime(),
+        ])
+        ->filters([
+            //
+        ])
+        ->actions([
+            Tables\Actions\EditAction::make(),
+        ])
+        ->bulkActions([
+            Tables\Actions\DeleteBulkAction::make(),
+        ]);
     }
 
     public static function getRelations(): array
@@ -87,9 +87,9 @@ class CreateEventResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCreateEvents::route('/'),
-            'create' => Pages\CreateCreateEvent::route('/create'),
-            'edit' => Pages\EditCreateEvent::route('/{record}/edit'),
+            'index' => Pages\ListEventDetails::route('/'),
+            'create' => Pages\CreateEventDetail::route('/create'),
+            'edit' => Pages\EditEventDetail::route('/{record}/edit'),
         ];
     }
 }
