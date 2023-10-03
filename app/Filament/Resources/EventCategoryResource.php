@@ -31,6 +31,15 @@ class EventCategoryResource extends Resource
                 Forms\Components\FileUpload::make('gameIcon')
                     ->preserveFilenames()
                     ->required()->columnSpan($span = 1),
+                Forms\Components\TextInput::make('eventType')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('eventTier')
+                    ->required()
+                    ->maxLength(255),
+                    Forms\Components\FileUpload::make('tierIcon')
+                    ->preserveFilenames()
+                    ->required()->columnSpan($span = 1),
             ]);
     }
 
