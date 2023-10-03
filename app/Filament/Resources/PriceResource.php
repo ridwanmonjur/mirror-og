@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\EventCategoryResource\Pages;
-use App\Filament\Resources\EventCategoryResource\RelationManagers;
-use App\Models\EventCategory;
+use App\Filament\Resources\PriceResource\Pages;
+use App\Filament\Resources\PriceResource\RelationManagers;
+use App\Models\Price;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -13,24 +13,17 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class EventCategoryResource extends Resource
+class PriceResource extends Resource
 {
-    protected static ?string $model = EventCategory::class;
+    protected static ?string $model = Price::class;
     public static ?string $navigationGroup = 'Manage Event';
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
-
+    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 //
-                Forms\Components\TextInput::make('gameTitle')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\FileUpload::make('gameIcon')
-                    ->preserveFilenames()
-                    ->required()->columnSpan($span = 1),
             ]);
     }
 
@@ -61,9 +54,9 @@ class EventCategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEventCategories::route('/'),
-            'create' => Pages\CreateEventCategory::route('/create'),
-            'edit' => Pages\EditEventCategory::route('/{record}/edit'),
+            'index' => Pages\ListPrices::route('/'),
+            'create' => Pages\CreatePrice::route('/create'),
+            'edit' => Pages\EditPrice::route('/{record}/edit'),
         ];
     }
 }
