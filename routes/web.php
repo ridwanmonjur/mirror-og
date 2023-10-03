@@ -32,8 +32,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name("participant.log
 Route::group(['prefix' => 'participant'], function () {
 	Route::get('/signin', [AuthController::class, 'signIn'])->name("participant.signin.view");
 	Route::get('/signup', [AuthController::class, 'signUp'])->name("participant.signup.view");
-	Route::post('/signin', [AuthController::class, 'accessParticipant'])->name("participant.signin.action");
-	Route::post('/signup', [AuthController::class, 'storeParticipant'])->name("participant.signup.action");
+	Route::post('/signin', [AuthController::class, 'accessUser'])->name("participant.signin.action");
+	Route::post('/signup', [AuthController::class, 'storeUser'])->name("participant.signup.action");
 	Route::group(['middleware' => 'auth'], function () {
 		Route::get('/authDone', [PermissionController::class, 'showAuthenticated']);
 		Route::get(
@@ -45,8 +45,8 @@ Route::group(['prefix' => 'participant'], function () {
 Route::group(['prefix' => 'organizer'], function () {
 	Route::get('/signin', [AuthController::class, 'organizerSignin'])->name("organizer.signin.view");
 	Route::get('/signup', [AuthController::class, 'organizerSignup'])->name("organizer.signup.view");
-	Route::post('/signin', [AuthController::class, 'accessOrganizer'])->name("organizer.signin.action");
-	Route::post('/signup', [AuthController::class, 'storeOrganizer'])->name("organizer.signup.action");
+	Route::post('/signin', [AuthController::class, 'accessUser'])->name("organizer.signin.action");
+	Route::post('/signup', [AuthController::class, 'storeUser'])->name("organizer.signup.action");
 	Route::group(['middleware' => 'auth'], function () {
 		Route::resource('/event', EventController::class);
 		Route::get('/event/manage', [EventController::class, 'manage']);
