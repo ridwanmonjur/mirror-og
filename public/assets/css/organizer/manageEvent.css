@@ -1,0 +1,353 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+.d-none {
+    display: none !important;
+}
+
+.d-none-at-mobile {
+    display: none;
+    margin: auto;
+}
+
+.d-none-at-desktop {
+    display: auto;
+}
+
+.d-centered-at-mobile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+main {
+    width: 100%;
+    min-height: 115vh;
+    height: fit-content ;
+    display: block !important;
+    padding: 0px 10px;
+    align-items: center;
+    justify-content: center;
+    background-image: url("/assets/images/event-management-bg.png");
+}
+
+.navbar {
+    min-height: 5vh;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.navbar img,
+.navbar svg,
+.search-bar svg,
+nav button,
+nav img,
+nav svg {
+    cursor: pointer;
+}
+
+.navbar img:hover,
+nav img:hover,
+.search-bar svg:hover,
+.navbar svg:hover,
+nav button:hover,
+nav svg:hover,
+.oceans-gaming-default-button:hover
+{
+    transform: scale(1.1);
+}
+
+.search-bar2-adjust{
+    margin-left: 30px;
+}
+
+.navbar img:active,
+nav img:active,
+nav button:active,
+.search-bar svg:active,
+.navbar svg:active,
+nav svg:active, 
+.oceans-gaming-default-button:active
+{
+    transform: scale(1.1);
+}
+
+.navbar .nav-buttons {
+    display: none;
+}
+
+
+.menu-toggle {
+    display: block;
+}
+
+
+.search-bar {
+    position: relative;
+}
+
+.search-bar input {
+    border-radius: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 90px;
+    width: 450px;
+    max-width: 80vw;
+    /* caret-color: #43A4D7;
+    color: #43A4D7; */
+
+}
+
+.search-bar svg {
+    position: absolute;
+    top: 12px;
+}
+
+
+input[type="submit"], .oceans-gaming-default-button {
+    width: 200px;
+    padding-top: 12px;
+    padding-bottom: 13px;
+    font-size: normal;
+    margin-top: 0px;
+    color: #fff;
+    padding: 10px;
+    border-radius: 30px;
+    background: #43A4D7;
+    border: none;
+    cursor: pointer;
+    /* border-bottom: 2px solid rgba(0, 0, 0, 0.1); */
+}
+
+.oceans-gaming-default-button-small{
+    width: 80px !important;
+    padding: 2px 3px !important;
+}
+
+.oceans-gaming-default-button{
+    width: fit-content;
+    padding-left: 20px;
+    padding-right: 20px;
+    cursor: pointer;
+}
+
+
+.flexbox-welcome{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: lighter;
+}
+
+.flexbox-filter{
+    display: flex;
+    justify-content: space-between;
+    text-decoration: underline;
+    width: 100%;
+}
+
+.flexbox-centered-space {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.grid-container{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 1%;
+    padding: 5% 15% 15% 15%;
+}
+
+
+input[type="submit"]:hover {
+    background: #a3c3d3;
+    cursor: pointer;
+}
+
+input[type="submit"]:active {
+    background: #79b0cc;
+}
+
+.rounded-box {
+    position: relative;
+    border-radius: 30px 30px;
+    border-width: 3px;
+    border-style: solid;
+    /* #8CCD39 */
+    min-width: 160px;
+    /* box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); */
+    z-index: 1;
+}
+
+.rounded-box-turtle{
+    border-color: #8CCD39;
+}
+
+.rounded-box-dolphin{
+    border-color: #43A4D7;
+}
+
+.rounded-box-starfish{
+    border-color: pink;
+}
+
+.rounded-box-mermaid{
+    border-color: #2E4B59;
+}
+
+.rounded-box .centered-absolute-game-tier{
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: -40px;
+    text-align: center;
+    margin: auto;
+}
+
+.rounded-box a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.rounded-box a:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.box-width{
+    width: 600px !important;
+    max-width: 80vw !important;
+    margin: auto !important;
+}
+
+.card-image{
+    width: 100%;
+    border-bottom-width: 3px;
+    border-bottom-style: solid;
+}
+
+.card-image-turtle{
+    border-bottom-color: #8CCD39;
+}
+
+.card-image-dolphin{
+    border-bottom-color: #43A4D7;
+}
+
+.card-image-mermaid{
+    border-bottom-color: #2E4B59;
+}
+
+.card-image-starfish{
+    border-bottom-color: pink;
+}
+
+.card-image img{
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    overflow: hidden;   
+    border-radius: 30px 30px 0 0;
+}
+
+.card-text{
+    padding: 10px 20px;
+}
+
+.card-text .small-text{
+    margin-top: 0px;
+    font-size: smaller;
+}
+
+@media screen and (min-width: 600px) {
+    .grid-container{
+        padding: 5% 10% 10% 10%;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+@media screen and (min-width: 992px) {
+    .flexbox-filter{
+        width: 50%;
+    }
+
+    .search-bar2-adjust{
+        margin-left: 0px;
+    }
+
+    main {
+        padding: 20px 100px;
+    }
+
+    .d-none-at-desktop {
+        display: none;
+    }
+    
+    .flexbox {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .search-bar {
+        display: block;
+    }
+
+    .search-bar input {
+        padding-left: 60px;
+    }
+
+    .navbar .nav-buttons {
+        display: block;
+    }
+
+    .d-none-at-mobile {
+        display: block;
+    }
+
+    .menu-toggle {
+        display: none;
+    }
+
+    .d-centered-at-mobile {
+        display: none;
+    }
+
+    .search-bar svg {
+        left: 20px;
+    }
+
+    .grid-container{
+        padding: 0px;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+   }
+
+@media screen and (min-width: 1200px) {
+    .search-bar input {
+        width: 600px;
+    }
+
+    .grid-container{
+        padding: 0px;
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

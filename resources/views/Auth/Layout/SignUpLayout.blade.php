@@ -5,11 +5,11 @@
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
 <header><u>Create an Account</u></header>
-<form action="#">
-    <!-- <div class="flash-message">
-        <i class="fas fa-exclamation-circle form_icon__error"></i>
-        <span>Invalid email or password</span>
-    </div> -->
+<form name="signup-form" id="signup-form" method="post" action="{{route('participant.signup.action')}}">
+    @csrf
+    <div class="flash-message">
+        @include('Auth.Layout.Flash')
+    </div>
     <div class="field">
         <label for="username" class="placeholder-moves-up-container">
             <input type="username" name="username" id="username" required="true" class="input-area">
@@ -52,7 +52,7 @@
         href="#">Privacy Policy</a>.</div>
 
         <div class="section-bottoms">
-            <p>Already have an account? <a href="/">Sign in</a></p>
+            <p>Already have an account? <a href="{{ route('participant.signin.view') }}">Sign in</a></p>
         </div>
 
         </form>
