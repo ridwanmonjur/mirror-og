@@ -48,6 +48,13 @@ class EventCategoryResource extends Resource
         return $table
             ->columns([
                 //
+
+                Tables\Columns\TextColumn::make('gameTitle')->searchable()->sortable(),
+                Tables\Columns\ImageColumn::make('gameIcon'),
+                Tables\Columns\TextColumn::make('eventType'),
+                Tables\Columns\TextColumn::make('eventTier'),
+                Tables\Columns\ImageColumn::make('tierIcon'),
+
             ])
             ->filters([
                 //
