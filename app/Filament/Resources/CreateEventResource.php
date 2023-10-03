@@ -39,6 +39,7 @@ class CreateEventResource extends Resource
                 Forms\Components\TimePicker::make('endTime')
                     ->required(),
                 Forms\Components\FileUpload::make('eventBanner')
+                    ->preserveFilenames()
                     ->required()->columnSpan($span = 4),
                 Forms\Components\TagsInput::make('eventTags')
                     ->required()->columnSpan($span = 4),
@@ -61,9 +62,9 @@ class CreateEventResource extends Resource
                 Tables\Columns\ImageColumn::make('eventBanner'),
                 Tables\Columns\TextColumn::make('eventTags'),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
+                ->toggleable()->dateTime(),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
+                ->toggleable()->dateTime(),
             ])
             ->filters([
                 //
