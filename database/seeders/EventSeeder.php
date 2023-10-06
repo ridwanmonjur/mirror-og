@@ -18,9 +18,9 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('events')->delete();
+        DB::table('event_details')->delete();
         
-        DB::table('events')->insert([
+        DB::table('event_details')->insert([
             'eventName' => Str::random(10),
             'eventDescription' => "This is a test event",
             'organizerName' => "Ocean's Gaming",
@@ -39,7 +39,7 @@ class EventSeeder extends Seeder
             'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
-        DB::table('events')->insert([
+        DB::table('event_details')->insert([
             'eventName' => "Casual Dota Tourney for Everyone and Anyone",
             'eventDescription' => "This is a test event",
             'organizerName' => "Open water",
@@ -58,7 +58,7 @@ class EventSeeder extends Seeder
             'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
-        DB::table('events')->insert([
+        DB::table('event_details')->insert([
             'eventName' => "The Tryhard Trials: Dota 2",
             'eventDescription' => "This is a test event",
             'organizerName' => "Open water",
@@ -77,7 +77,7 @@ class EventSeeder extends Seeder
             'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
-        DB::table('events')->insert([
+        DB::table('event_details')->insert([
             'eventName' => "The Oceans Gaming Dota Collegiate League: Season 1",
             'eventDescription' => "This is a test event",
             'organizerName' => "Open water",
@@ -96,7 +96,7 @@ class EventSeeder extends Seeder
             'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
-        DB::table('events')->insert([
+        DB::table('event_details')->insert([
             'eventName' => "The Oceans Gaming Dota Collegiate League: Season 2",
             'eventDescription' => "This is a test event",
             'organizerName' => "Open water",

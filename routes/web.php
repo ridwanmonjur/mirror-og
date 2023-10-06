@@ -15,6 +15,17 @@ use App\Mail\TestEmail;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+// Route::any('/admin', 'AdminController@index')->middleware('check-permission:admin');
+
+Route::group([
+	'prefix' => 'admin',
+	'middleware' => ['check-permission:admin'],
+	'excluded_middleware' => ['login'],
+  ], function () {
+	
+  }); 
+
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
 
 Route::get('/forget-password', [AuthController::class, 'createForget'])->name("user.forget.view");
@@ -35,6 +46,7 @@ Route::group(['prefix' => 'participant'], function () {
 	Route::post('/signin', [AuthController::class, 'accessUser'])->name("participant.signin.action");
 	Route::post('/signup', [AuthController::class, 'storeUser'])->name("participant.signup.action");
 	Route::group(['middleware' => 'auth'], function () {
+		Route::get('/home', [EventController::class, 'home'])->name("participant.home.view");
 		Route::get('/authDone', [PermissionController::class, 'showAuthenticated']);
 		Route::get(
 			'/permissions',
@@ -48,8 +60,12 @@ Route::group(['prefix' => 'organizer'], function () {
 	Route::post('/signin', [AuthController::class, 'accessUser'])->name("organizer.signin.action");
 	Route::post('/signup', [AuthController::class, 'storeUser'])->name("organizer.signup.action");
 	Route::group(['middleware' => 'auth'], function () {
-		Route::resource('/event', EventController::class);
-		Route::get('/event/manage', [EventController::class, 'manage']);
+		Route::get('/home', [EventController::class, 'home'])->name("organizer.home.view");
+		Route::resource('/event', EventController::class, [
+			'index'=> "event.index",
+			'create'=> "event.create"
+		]);
+		// Route::get('/event/view/manage/', [EventController::class, 'manage'])->name('organizer.event.manage');
 		Route::get('/authDone', [PermissionController::class, 'showAuthenticated']);
 		Route::get(
 			'/permissions',

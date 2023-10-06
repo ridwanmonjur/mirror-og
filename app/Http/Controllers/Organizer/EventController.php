@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Event;
+use App\Models\EventDetail;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -21,9 +21,19 @@ class EventController extends Controller
      *
      * @return Response
      */
+    public function home(): View
+    {
+        return view('Organizer.Home');
+    }
+
     public function index()
     {
-        //
+        $eventList = EventDetail::all();
+
+        return view(
+            'Organizer.ManageEvent',
+            ['eventList' => $eventList, 'mappingEventState' => $this->mappingEventState]
+        );
     }
 
     /**
@@ -97,7 +107,7 @@ class EventController extends Controller
 
     public function manage()
     {
-        $eventList = Event::all();
+        $eventList = EventDetail::all();
 
         return view(
             'Organizer.ManageEvent',

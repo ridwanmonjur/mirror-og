@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('eventType');
             $table->string('eventTier');
             $table->string('tierIcon');
-
+            
             // $table->unsignedBigInteger('eventID');
             // $table->foreign('eventID')->references('id')->on('event_details');
             $table->timestamps();

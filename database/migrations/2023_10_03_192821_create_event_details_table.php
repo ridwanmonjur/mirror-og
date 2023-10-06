@@ -20,7 +20,7 @@ return new class extends Migration
             $table->time('endTime');
             $table->string('eventDescription');
             $table->string('eventBanner');
-            $table->string('eventTags');
+            $table->string('eventTags');      
             $table->timestamps();
         });
     }

@@ -33,7 +33,7 @@ button{
     background: #FFFBFB;
     border-radius: 40px;
     text-align: center;
-    box-shadow: 10px 10px 14px rgba(0, 0, 0, 0.1);
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
 }
 
 .wrapper img {
@@ -73,7 +73,7 @@ form .field {
     padding: 5px 25px;
     margin-top: 0;
     margin-bottom: 0;
-    font-size: 14px;
+    font-size: 15px;
     caret-color: #43A4D7;
     border-radius: 30px;
     border: 1px solid #bfbfbf;
@@ -88,11 +88,11 @@ form {
 
 form input::placeholder {
     color: #bfbfbf;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 input:-webkit-autofill:placeholder{
-    font-size: 14px;
+    font-size: 15px;
 }
 
 input:-webkit-autofill,
@@ -102,7 +102,7 @@ input:-webkit-autofill:active
 {
     transition: background-color 5000s ease-in-out 0s;
     box-shadow: inset 0 0 20px 20px #d9d9d929;
-    font-size: 14px
+    font-size: 15px
 }
 
 .input__error {
@@ -200,7 +200,7 @@ form input[type="submit"]:hover {
     width: 100%;
     text-align: left;
     border-radius: 30px;
-    margin-bottom: 14px;
+    margin-bottom: 15px;
 }
 
 .btn-login:hover {
@@ -246,7 +246,7 @@ form input[type="submit"]:hover {
     display: flex;
     text-align: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 15px;
 
 }
 
@@ -257,14 +257,14 @@ label.placeholder-moves-up-container {
     width: 100%;
     display: inline-block;
     z-index: 99;
-    font-size: 14px !important;
+    font-size: 15px !important;
 }
 
 span.placeholder-moves-up {
     padding: 8px;
     pointer-events: none;
     position: absolute;
-    left: 14px;
+    left: 15px;
     top: -2px;
     transition: 0.2s;
     transition-timing-function: ease;
@@ -342,6 +342,6 @@ input:not(:focus):valid+span.placeholder-moves-up {
         background: #FFFBFB;
         border-radius: 40px;
         text-align: center;
-        box-shadow: 10px 10px 14px rgba(0, 0, 0, 0.1);
+        box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     }
 }
