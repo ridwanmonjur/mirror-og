@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\EventController;
 use App\Http\Controllers\Organizer\PermissionController;
 use App\Mail\TestEmail;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,9 +23,9 @@ Route::group([
 	'prefix' => 'admin',
 	'middleware' => ['check-permission:admin'],
 	'excluded_middleware' => ['login'],
-  ], function () {
-	
-  }); 
+], function () {
+
+});
 
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
 
@@ -46,11 +47,13 @@ Route::group(['prefix' => 'participant'], function () {
 	Route::post('/signin', [AuthController::class, 'accessUser'])->name("participant.signin.action");
 	Route::post('/signup', [AuthController::class, 'storeUser'])->name("participant.signup.action");
 	Route::group(['middleware' => 'auth'], function () {
-		Route::get('/home', [EventController::class, 'home'])->name("participant.home.view");
+		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
+			Route::get('/home', [EventController::class, 'home'])->name("participant.home.view");
+		});
 		Route::get('/authDone', [PermissionController::class, 'showAuthenticated']);
 		Route::get(
 			'/permissions',
-			['middleware' => 'check-permission:participant|admin', 'uses' => 'PermissionController@showParticipantPage']
+			['middleware' => 'check-permission:admin|organizer', 'uses' => 'PermissionController@showOrganizerPage']
 		);
 	});
 });
@@ -60,11 +63,13 @@ Route::group(['prefix' => 'organizer'], function () {
 	Route::post('/signin', [AuthController::class, 'accessUser'])->name("organizer.signin.action");
 	Route::post('/signup', [AuthController::class, 'storeUser'])->name("organizer.signup.action");
 	Route::group(['middleware' => 'auth'], function () {
-		Route::get('/home', [EventController::class, 'home'])->name("organizer.home.view");
-		Route::resource('/event', EventController::class, [
-			'index'=> "event.index",
-			'create'=> "event.create"
-		]);
+		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
+			Route::get('/home', [EventController::class, 'home'])->name("organizer.home.view");
+			Route::resource('/event', EventController::class, [
+				'index' => "event.index",
+				'create' => "event.create"
+			]);
+		});
 		// Route::get('/event/view/manage/', [EventController::class, 'manage'])->name('organizer.event.manage');
 		Route::get('/authDone', [PermissionController::class, 'showAuthenticated']);
 		Route::get(
@@ -74,13 +79,13 @@ Route::group(['prefix' => 'organizer'], function () {
 	});
 });
 
-Route::group(['middleware' => ['auth']], function() {
-    /**
-    * Verification Routes
-    */
-    Route::get('/email/verify', 'VerificationController@show')->name('verification.notice');
-    Route::get('/email/verify/{id}/{hash}', 'VerificationController@verify')->name('verification.verify')->middleware(['signed']);
-    Route::post('/email/resend', 'VerificationController@resend')->name('verification.resend');
+Route::group(['middleware' => ['auth']], function () {
+	/**
+	 * Verification Routes
+	 */
+	Route::get('/email/verify', 'VerificationController@show')->name('verification.notice');
+	Route::get('/email/verify/{id}/{hash}', 'VerificationController@verify')->name('verification.verify')->middleware(['signed']);
+	Route::post('/email/resend', 'VerificationController@resend')->name('verification.resend');
 });
 
 Route::get('/dashboard', [AuthController::class, 'dashboard']); // Route for Dashboard Page
