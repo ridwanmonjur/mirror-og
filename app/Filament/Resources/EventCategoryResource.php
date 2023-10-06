@@ -17,7 +17,7 @@ class EventCategoryResource extends Resource
 {
     protected static ?string $model = EventCategory::class;
     public static ?string $navigationGroup = 'Manage Event';
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
 
 
     public static function form(Form $form): Form
@@ -31,6 +31,15 @@ class EventCategoryResource extends Resource
                 Forms\Components\FileUpload::make('gameIcon')
                     ->preserveFilenames()
                     ->required()->columnSpan($span = 1),
+                Forms\Components\TextInput::make('eventType')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('eventTier')
+                    ->required()
+                    ->maxLength(255),
+                    Forms\Components\FileUpload::make('tierIcon')
+                    ->preserveFilenames()
+                    ->required()->columnSpan($span = 1),
             ]);
     }
 
@@ -39,6 +48,13 @@ class EventCategoryResource extends Resource
         return $table
             ->columns([
                 //
+
+                Tables\Columns\TextColumn::make('gameTitle')->searchable()->sortable(),
+                Tables\Columns\ImageColumn::make('gameIcon'),
+                Tables\Columns\TextColumn::make('eventType'),
+                Tables\Columns\TextColumn::make('eventTier'),
+                Tables\Columns\ImageColumn::make('tierIcon'),
+
             ])
             ->filters([
                 //
