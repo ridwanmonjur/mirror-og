@@ -7,7 +7,7 @@
 <header><u>Reset Password</u></header>
 <br><br>
 <p> Enter your old password and your new password</p>
-<form name="reset-password-form" id="reset-password-form" method="post" action="{{route('user.reset.action')}}">
+<form autocomplete="off" name="reset-password-form" id="reset-password-form" method="post" action="{{route('user.reset.action')}}">
     @csrf
     <div class="flash-message">
         @include('Auth.Layout.Flash')

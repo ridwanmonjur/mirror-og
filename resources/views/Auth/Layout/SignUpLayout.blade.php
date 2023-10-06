@@ -5,7 +5,7 @@
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
 <header><u>Create an Account</u></header>
-<form name="signup-form" id="signup-form" method="post" action="{{route('participant.signup.action')}}">
+<form autocomplete="off" readonly name="signup-form" id="signup-form" method="post" action="{{route('participant.signup.action')}}">
     @csrf
     <div class="flash-message">
         @include('Auth.Layout.Flash')
