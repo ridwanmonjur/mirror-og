@@ -244,8 +244,9 @@ class AuthController extends Controller
                 endif;
 
                 $request->session()->regenerate();
-
-                return redirect()->route($redirectRoute)->with('success', $userRoleCapital .' Account Signed In Successfully!');
+                $route= $userRole . ".home.view";
+                $message = 'Account signed in successfully as $userRole!';
+                return redirect()->route($route)->with('success', $message);
             } else {
                 throw new \ErrorException("Can't find user!");
             }

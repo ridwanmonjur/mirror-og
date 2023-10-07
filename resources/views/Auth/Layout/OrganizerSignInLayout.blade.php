@@ -5,7 +5,7 @@
 
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
-<header><u>Sign in to your account</u></header>
+<header><u>Sign in to your organizer account</u></header>
 <form autocomplete="off" readonly name="organizer-signin-form" id="organizer-signin-form" method="post" action="{{route('organizer.signin.action')}}">
     @csrf
     <div class="flash-message">

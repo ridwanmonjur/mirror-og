@@ -34,7 +34,7 @@ Route::post('/forget-password', [AuthController::class, 'storeForget'])->name("u
 Route::get('/reset-password/{token}', [AuthController::class, 'createReset'])->name("user.reset.view");
 Route::post('/reset-password', [AuthController::class, 'storeReset'])->name("user.reset.action");
 
-// TODO: Add verify email login in login
+// Add verify email login in login
 Route::get('/account/verify-resend/{email}', [AuthController::class, 'verifyResend'])->name('user.verify.resend');
 Route::get('/account/verify/{token}', [AuthController::class, 'verifyAccount'])->name('user.verify.action');
 Route::get('/account/verify-success/', [AuthController::class, 'verifySuccess'])->name('user.verify.success');
@@ -63,7 +63,7 @@ Route::group(['prefix' => 'organizer'], function () {
 	Route::post('/signin', [AuthController::class, 'accessUser'])->name("organizer.signin.action");
 	Route::post('/signup', [AuthController::class, 'storeUser'])->name("organizer.signup.action");
 	Route::group(['middleware' => 'auth'], function () {
-		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
+		Route::group(['middleware' => 'check-permission:organizer|admin'], function () {
 			Route::get('/home', [EventController::class, 'home'])->name("organizer.home.view");
 			Route::resource('/event', EventController::class, [
 				'index' => "event.index",

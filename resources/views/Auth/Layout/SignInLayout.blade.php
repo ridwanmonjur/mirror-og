@@ -5,7 +5,7 @@
 
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
-<header><u>Sign in to your account</u></header>
+<header><u>Sign in to your participant account</u></header>
 <form autocomplete="off" readonly name="signin-form" id="signin-form" method="post" action="{{route('participant.signin.action')}}">
     @csrf
     <<div class="flash-message">

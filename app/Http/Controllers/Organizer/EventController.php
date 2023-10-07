@@ -21,9 +21,17 @@ class EventController extends Controller
      *
      * @return Response
      */
-    public function home(): View
+    public function home(Request $request): View
     {
-        return view('Organizer.Home');
+        if ($request->is('organizer/*')) {
+            return view('Organizer.Home');
+        }
+        else if ($request->is('admin/*')) {
+            return view('Admin.Home');
+        } else {
+            return view('Participant.Home');
+        }
+
     }
 
     public function index()
