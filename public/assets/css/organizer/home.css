@@ -14,6 +14,21 @@ body {
     color: #2E4B59;
 }
 
+a {
+    text-decoration: none;
+}
+
+.clickable-box {
+    display: inline-block;
+    transition: transform 0.2s ease;
+    /* Smooth transition effect */
+}
+
+.clickable-box:hover {
+    transform: scale(1.05);
+    /* Increase the size by 5% on hover */
+}
+
 nav {
     background-color: #fff;
     display: flex;

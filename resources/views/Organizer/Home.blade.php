@@ -44,67 +44,57 @@
     </div>
 
     <section class="featured-events">
-        <!-- EVENTS -->
-        <div class="event">
-            <div class="event_head_container">
-                Create an Event
-            </div>
-
-            <div class="frame1">
-
-                <a href="{{ route('event.create') }}" id="imageLink">
-                    <img src="{{ asset('/assets/images/events/edit.png') }}" width="200px" height="200px" alt="Clickable Image" />
-                </a>
-
-            </div><br>
-
-            <div class="caption">
-                Choose from a list of catagories and customize your event card to reflect your brand
-
-            </div>
+    <!-- EVENTS -->
+    <!-- Box 1 -->
+    <a href="{{ route('event.create') }}" class="clickable-box" id="imageLink1">
+    <div class="event">
+        <div class="event_head_container">
+            Create an Event
         </div>
 
-        <!-- EVENTS -->
+        <div class="frame1">
+            <img src="{{ asset('/assets/images/events/edit.png') }}" width="200px" height="200px" alt="Clickable Image" />
+        </div><br>
 
-        <!-- EVENTS -->
-        <div class="event">
-            <div class="event_head_container">
-                Manage your events
-            </div>
+        <div class="caption">
+            Choose from a list of categories and customize your event card to reflect your brand
+        </div>
+    </div>
+    </a>
 
-            <div class="frame1">
-
-                <a href="{{ route('event.index') }}" id="imageLink">
-                    <img src="{{ asset('/assets/images/events/settings.png') }}" width="200px" height="200px" alt="Clickable Image" />
-                </a>
-
-            </div><br>
-
-            <div class="caption">
-                Edit your unpublished events, get updates for your live events, get insights from your past events
-            </div>
+    <!-- Box 2 -->
+    <a href="{{ route('event.index') }}" class="clickable-box" id="imageLink2">
+    <div class="event">
+        <div class="event_head_container">
+            Manage your events
         </div>
 
-        <!-- EVENTS -->
+        <div class="frame1">
+            <img src="{{ asset('/assets/images/events/settings.png') }}" width="200px" height="200px" alt="Clickable Image" />
+        </div><br>
 
-        <!-- EVENTS -->
-        <div class="event">
-            <div class="event_head_container">
-                Manage your shop
-            </div>
-
-            <div class="frame1">
-
-                <a href="#" id="imageLink">
-                    <img src="{{ asset('/assets/images/events/shop.png') }}" width="200px" height="200px" alt="Clickable Image" />
-                </a>
-
-            </div><br>
-
-            <div class="caption">
-                See what you have listed in the official store view you sales, and get buyer insights for your listings
-            </div>
+        <div class="caption">
+            Edit your unpublished events, get updates for your live events, get insights from your past events
         </div>
+    </div>
+    </a>
+
+    <!-- Box 3 -->
+    <a href="#" class="clickable-box" id="imageLink3">
+    <div class="event">
+        <div class="event_head_container">
+            Manage your shop
+        </div>
+
+        <div class="frame1">
+            <img src="{{ asset('/assets/images/events/shop.png') }}" width="200px" height="200px" alt="Clickable Image" />
+        </div><br>
+
+        <div class="caption">
+            See what you have listed in the official store view your sales, and get buyer insights for your listings
+        </div>
+    </div>
+    </a>
 
     </section>
 </body>
