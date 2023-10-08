@@ -1,7 +1,7 @@
 /* Reset some default styles */
 
 body {
-    background-image: url("/assets/images/home_bg.png");
+    background-image: url("/assets/images/home.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
