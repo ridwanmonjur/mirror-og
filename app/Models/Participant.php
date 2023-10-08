@@ -9,6 +9,6 @@ class Participant extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id', 'name', 'status', 'venue', 'caption',
+        'user_id',
     ];
 }
