@@ -20,13 +20,13 @@ use App\Mail\TestEmail;
 
 // Route::any('/admin', 'AdminController@index')->middleware('check-permission:admin');
 
-Route::group([
-	'prefix' => 'admin',
-	'middleware' => ['check-permission:admin'],
-	'excluded_middleware' => ['login'],
-], function () {
+// Route::group([
+// 	'prefix' => 'admin',
+// 	'middleware' => ['check-permission:admin'],
+// 	'excluded_middleware' => ['login'],
+// ], function () {
 
-});
+// });
 
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
 

@@ -114,6 +114,50 @@ nav ul li a:hover {
     color: #000000;
 }
 
+/* @import "node_modules/bootstrap/scss/bootstrap"; */
+/* Dropdown Section */
+
+.dropbtn {
+    border: none;
+    cursor: pointer;
+}
+
+.dropbtn:hover,
+.dropbtn:focus {
+    background-color: #2980B9;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0px;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown a:hover {
+    background-color: #ddd;
+}
+
+.show {
+    display: block;
+}
 
 /* Hero Section */
 
@@ -276,6 +320,7 @@ nav ul li a:hover {
 }
 
 @media (max-width: 1100px) {
+
     .featured-events .event_head,
     .event_1 .event_head,
     .event_2 .event_head {
@@ -287,13 +332,16 @@ nav ul li a:hover {
     .nav__items ul {
         display: none;
     }
+
     .hamburger-menu {
         display: block;
         cursor: pointer;
     }
+
     .hamburger-menu i {
         cursor: pointer;
     }
+
     .nav__items.active ul {
         display: flex;
         flex-direction: column;
@@ -305,6 +353,7 @@ nav ul li a:hover {
         border: 1px solid #ccc;
         padding: 10px;
     }
+
     li {
         padding: 10px;
     }
@@ -396,6 +445,7 @@ footer {
         justify-content: space-between;
         padding: 0 10px;
     }
+
     .nav__items {
         display: none;
         flex-direction: column;
@@ -406,25 +456,31 @@ footer {
         top: 65px;
         z-index: 1;
     }
+
     .nav__items.active {
         display: flex;
     }
+
     .nav__items ul {
         flex-direction: column;
     }
+
     .nav__items ul li {
         margin: 10px 0;
     }
+
     .search-form {
         margin-top: 20px;
         text-align: center;
     }
+
     .search-form input[type="text"] {
         width: 80%;
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
     }
+
     .search-form button {
         margin-top: 10px;
         background-color: #FF6C00;
@@ -434,15 +490,19 @@ footer {
         border-radius: 5px;
         cursor: pointer;
     }
+
     .hero h1 {
         font-size: 1.8rem;
     }
+
     .text__middle p {
         font-size: 24px;
     }
+
     .featured-events {
         padding: 1rem 0;
     }
+
     .event,
     .event_1,
     .event_2 {
@@ -458,6 +518,7 @@ footer {
     .nav__items {
         display: flex;
     }
+
     .nav__items ul {
         flex-direction: row;
     }

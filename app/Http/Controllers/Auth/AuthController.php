@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 use App\Models\Organizer;
 use App\Models\Participant;
 use App\Models\User;
@@ -28,7 +29,9 @@ class AuthController extends Controller
 
     public function showLandingPage(Request $request)
     {
-        return view('LandingPage');
+        $events = Event::all();
+
+        return view('LandingPage', ['events' => $events]);
     }
 
     public function signIn(Request $request)
@@ -223,9 +226,11 @@ class AuthController extends Controller
         if ($request->is("organizer/signin")) {
             $userRole = "organizer";
             $userRoleCapital = "ORGANIZER";
+            $userRoleSentence = "Organizer";
         } else if ($request->is("participant/signin")) {
             $userRole = "participant";
             $userRoleCapital = "PARTICIPANT";
+            $userRoleSentence = "Participant";
         } else {
             return redirect()->route("landing.view");
         }
@@ -239,8 +244,8 @@ class AuthController extends Controller
             if (Auth::attempt($validatedData)) {
                 $user = Auth::getProvider()->retrieveByCredentials($validatedData);
 
-                if ($user->role != $userRoleCapital):
-                    throw new \ErrorException("Invalid Role for $userRoleCapital");
+                if ($user->role != $userRoleCapital && $user->role != "ADMIN"):
+                    throw new \ErrorException("Invalid Role for $userRoleSentence");
                 endif;
 
                 $request->session()->regenerate();

@@ -21,13 +21,27 @@
         <div class="hamburger-menu">
             <i class="fa fa-bars"></i>
         </div>
-
+        @guest
         <div class="nav__items">
             <ul>
                 <li><a href="#" id='nav-but' class="moop">Where's Moop?</a></li>
                 <li><a href="#" id='nav-but' class="sign">Sign In</a></li>
             </ul>
         </div>
+        @endguest
+        @auth
+        <div class="nav__items">
+            <ul>
+                <li><a href="#" id='nav-but' class="moop">Where's Moop?</a></li>
+                <li> 
+                    <img style="position: relative; top: 0px; cursor: pointer;" width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
+                </li>
+                <li>
+                    <img style="position: relative; top: 0px; left: -20px; cursor: pointer;" width="70px" height="40px" src="{{ asset('/assets/images/navbar-crown.png') }}" alt="">
+                </li>
+            </ul>
+        </div>
+        @endauth
     </nav>
 
     <section class="hero">
