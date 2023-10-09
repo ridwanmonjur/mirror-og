@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\EventController;
+use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Organizer\PermissionController;
 use App\Mail\TestEmail;
 
@@ -48,7 +49,7 @@ Route::group(['prefix' => 'participant'], function () {
 	Route::post('/signup', [AuthController::class, 'storeUser'])->name("participant.signup.action");
 	Route::group(['middleware' => 'auth'], function () {
 		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
-			Route::get('/home', [EventController::class, 'home'])->name("participant.home.view");
+			Route::get('/home', [ParticipantEventController::class, 'home'])->name("participant.home.view");
 		});
 		Route::get('/authDone', [PermissionController::class, 'showAuthenticated']);
 		Route::get(
