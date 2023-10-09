@@ -10,12 +10,12 @@
     @csrf
     <div class="flash-message">
         @include('Auth.Layout.Flash')
-        @if(session('email'))
+        @if(session('errorEmail'))
         <br>
         Click 
         <a 
             style="font-weight: bold; text-decoration: underline;"
-            href="{{ route('user.verify.resend', ['email' => session('email')]) }}">
+            href="{{ route('user.verify.resend', ['email' => session('errorEmail')]) }}">
             here
         </a>
         to resend verification email.

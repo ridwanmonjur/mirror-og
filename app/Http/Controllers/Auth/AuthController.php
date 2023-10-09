@@ -276,20 +276,20 @@ class AuthController extends Controller
                 $participant->save();
             }
 
-            // Mail::send('Email.verify', ['token' => $token], function ($message) use ($user) {
-            //     $message->to($user->email);
-            //     $message->subject('Reset Password');
-            // });
+            Mail::send('Email.verify', ['token' => $token], function ($message) use ($user) {
+                $message->to($user->email);
+                $message->subject('Reset Password');
+            });
 
             return redirect()->route($redirectSuccessRoute)->with(
-                // [
-                //     'success' => 'Organizer Account created and verification email sent. Now verify email!',
-                //     'email' => $user->email
-                // ]
                 [
-                    'success' => $userRoleCapital . ' Account created successfully!',
-                    // 'email' => $user->email
+                    'success' => 'Organizer Account created and verification email sent. Now verify email!',
+                    'email' => $user->email
                 ]
+                // [
+                //     'success' => $userRoleCapital . ' Account created successfully!',
+                //     // 'email' => $user->email
+                // ]
             );
         } catch (\Throwable $th) {
             return redirect()->route( $redirectErrorRoute )->with('error', $th->getMessage());
@@ -322,6 +322,13 @@ class AuthController extends Controller
 
             if (Auth::attempt($validatedData)) {
                 $user = Auth::getProvider()->retrieveByCredentials($validatedData);
+
+                if (!$user->email_verified_at) {
+                    return redirect()->back()->with([
+                        'errorEmail'=> $request->email,
+                        'error' => 'Email not verified. Please verify email first!',
+                    ]);
+                }
 
                 if ($user->role != $userRoleCapital && $user->role != "ADMIN"):
                     throw new \ErrorException("Invalid Role for $userRoleSentence");
