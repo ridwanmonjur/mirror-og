@@ -14,6 +14,7 @@
     </div>
     <div class="field password">
         <label for="password" class="placeholder-moves-up-container">
+            <input type="hidden" name="token" value="{{ $token }}">
             <input type="password" name="password" id="password" minlength="6" maxlength="24" required="true"
                 class="input-area">
             <span class="placeholder-moves-up">Password</span>
@@ -24,7 +25,7 @@
 
     <div class="field password">
         <label for="password" class="placeholder-moves-up-container">
-            <input type="password" name="password" id="password" minlength="6" maxlength="24" required="true"
+            <input type="password" name="password_confirmation" id="password_confirmation" minlength="6" maxlength="24" required="true"
                 class="input-area">
             <span class="placeholder-moves-up">Confirm Password</span>
             <i class="fa fa-eye" id="togglePassword" onclick="togglePassword()" style="cursor: pointer; margin-top: 10px"></i>

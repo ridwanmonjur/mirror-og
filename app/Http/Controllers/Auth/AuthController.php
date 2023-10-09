@@ -10,9 +10,13 @@ use App\Models\User;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -49,16 +53,91 @@ class AuthController extends Controller
     public function storeReset(Request $request)
     {
 
+        // dd($request->all());
+        $request->validate([
+            'token' => 'required',
+            'password' => 'required|min:6',
+            'password_confirmation' => 'required|min:6',
+        ]);
+
+        if ($request->password != $request->password_confirmation) {
+            return back()
+                ->with(['error' => 'Password confirmation does not match.']);
+        }
+
+        $tokenData = DB::table('password_reset_tokens')
+            ->where('token', $request->token)
+            ->first();
+
+
+        if (!$tokenData) {
+            return back()
+                ->with(['error' => 'Invalid token or email address.']);
+        }
+
+        if (now() > $tokenData->expires_at) {
+            return back()
+                ->with(['error' => 'Token has expired. Please request a new password reset.']);
+        }
+
+        $user = User::where('email', $tokenData->email)->first();
+        if ($user) {
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+            // dd($user);
+            DB::table('password_reset_tokens')
+                ->where('email', $tokenData->email)
+                ->delete();
+            
+            return view('Auth.ResetSuccess');
+        }
+
+        return back()
+            ->with(['error' => 'User not found.']);
+
     }
 
     public function createReset(Request $request)
     {
-        return view('Auth.ResetPassword');
+        return view('Auth.ResetPassword', ['token' => $request->token]);
     }
 
     public function storeForget(Request $request)
     {
+        {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+            ]);
+    
+            if ($validator->fails()) {
+                return back()
+                    ->with('error', $validator);
+            }
+    
+            $token = $this->generateToken();
+    
+            $email = $request->email;
 
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                return back()->with(['error' => 'User not found with this email.']);
+            }
+            
+            DB::table('password_reset_tokens')->updateOrInsert(
+                ['email' => $request->email],
+                ['token' => $token, 'expires_at' => Carbon::now()->addDay()]
+            );
+            
+            Mail::send('Email.reset', ['token' => $token], function ($message) use ($email) {
+                $message->to($email);
+                $message->subject('Reset Password');
+            });
+    
+            // Redirect back with a success message
+            return back()->with('status', 'Password reset link sent. Please check your email.');
+        }
     }
 
     public function createForget(Request $request)

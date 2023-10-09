@@ -33,7 +33,7 @@
                             aria-expanded="false">Sign In</a></li>
                 </div>
                 <div id="myDropdown" class="dropdown-content">
-                    <a class="dropdown-item" href="{{ route('organizer  .signin.view') }}">Organizer</a>
+                    <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">Organizer</a>
                     <a class="dropdown-item" href="{{ route('participant.signin.view') }}">Participant</a>
                 </div>
                
