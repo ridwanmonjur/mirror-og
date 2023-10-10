@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Models\EventDetail;
+use App\Models\EventCategory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\Event;
@@ -53,7 +54,16 @@ class EventController extends Controller
     public function create()
     {
         //
+        $eventCategory = EventCategory::all();
+        // return view('Organizer.CreateEvent.event');
+        return view('Organizer.CreateEvent.event', ['eventCategory' => $eventCategory ]);
     }
+
+    // public function viewEventCategory()
+    // {
+    //     $eventCategory = EventCategory::all();
+    //     return view('Organizer.CreateEvent.event', ['eventCategory ' => $eventCategory ]);
+    // }
 
     /**
      * Store a newly created resource in storage.
