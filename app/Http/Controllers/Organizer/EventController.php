@@ -38,11 +38,19 @@ class EventController extends Controller
 
     public function index()
     {
-        $eventList = EventDetail::all();
-
+        $eventDetailList = EventDetail::all();
+        $eventList = Event::all();
+        $eventCategoryList = EventCategory::all();
+        $length = count($eventList);
         return view(
             'Organizer.ManageEvent',
-            ['eventList' => $eventList, 'mappingEventState' => $this->mappingEventState]
+            [
+                'count' => $length,
+                'eventList' => $eventList, 
+                'detailList' => $eventDetailList,
+                'categoryList' => $eventCategoryList,
+                'mappingEventState' => $this->mappingEventState
+            ]
         );
     }
 

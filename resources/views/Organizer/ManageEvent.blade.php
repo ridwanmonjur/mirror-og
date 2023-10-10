@@ -105,15 +105,17 @@
         </div>
         <br><br>
         <div class="grid-container">
-            @foreach ($eventList as $event)
+            @for ($i = 0; $i < $count; $i++)
+
             @php
                 $stylesEventStatus = '';
                 $stylesEventStatus .= 'padding-top: -150px; ';
-                $stylesEventStatus .= 'background-color: ' . $mappingEventState[$event->eventStatus]['buttonBackgroundColor'] .' ;' ;
-                $stylesEventStatus .= 'color: ' . $mappingEventState[$event->eventStatus]['buttonTextColor'] .' ; ' ;
-                $stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$event->eventStatus]['borderColor'] .' ; '; 
+                $stylesEventStatus .= 'background-color: ' . $mappingEventState[$eventList[$i]->status]['buttonBackgroundColor'] .' ;' ;
+                $stylesEventStatus .= 'color: ' . $mappingEventState[$eventList[$i]->status]['buttonTextColor'] .' ; ' ;
+                $stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$eventList[$i]->status]['borderColor'] .' ; '; 
                 
-                $stylesEventRatio = '';
+                /*
+                 $stylesEventRatio = '';
                 $ratio = (double) $event->registeredParticipants / $event->totalParticipants;
                 if ($ratio > 0.9){
                     $stylesEventRatio .= "background-color: red; color: white;";
@@ -126,9 +128,13 @@
                 }
                 elseif ($ratio <= 0.5){
                     $stylesEventRatio .= "background-color: #FFE325; color: black;";
-                }
-                $eventTierLower = strtolower($event->eventTier);
+                } 
+                */
+
+                $stylesEventRatio ="background-color: #FFE325; color: black;";
+                $eventTierLower = strtolower($categoryList[$i]->eventTier);
             @endphp
+            
             <div 
                 class="{{'rounded-box rounded-box-' . $eventTierLower }}"   
             >
@@ -143,17 +149,24 @@
                         <div class="flexbox-centered-space">                           
                             <img src="{{ asset('/assets/images/menu.png') }}" alt="menu" width="50" height="40">
                             <button class="oceans-gaming-default-button" 
-                                style="@php echo $stylesEventStatus; @endphp">
-                                <u>{{$event->eventStatus}}</u>
+                                style="@php echo $stylesEventStatus; @endphp"
+                                >
+                                <u>{{$eventList[$i]->status}}</u>
                             </button>
                         </div>
                         <br>
-                        <p style="height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->eventName}}</u></p>
-                        <p class="small-text"><i>{{$event->organizerName}}</i></p>
+                        <p style="height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$detailList[$i]->eventName}}</u></p>
+                        <p class="small-text"><i>
+                            Ocean's Gaming
+                        </i></p>
                         <div class="flexbox-welcome">
                             @php
+                               /*
                                 $date = \Carbon\Carbon::parse($event->startDateTime);
-                                $dateStr = $date->toFormattedDateString() . " " . $date->toTimeString();
+                                $dateStr = $date->toFormattedDateString() . " " . $date->toTimeString(); -->
+                                */
+                                $dateStr = $detailList[$i]->startDate . " " . $detailList[$i]->startTime;
+
                             @endphp
                             <div>@php echo $dateStr; @endphp</div>
                             <button 
@@ -168,7 +181,7 @@
                                 </svg>
                                 
                                 <span> 
-                                    {{$event->registeredParticipants}} / {{$event->totalParticipants}} 
+                                    8 / 14
                                 </span>
                                 &nbsp;
                                 </button>
@@ -182,7 +195,7 @@
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
                                 &nbsp;
-                                <span>{{$event->prize}}</span>
+                                <span>Prize</span>
                             </div>
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -192,7 +205,7 @@
                                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                 </svg>
                                 &nbsp;
-                                <span>{{$event->fee ? $event->fee : 'Free'}}</span>
+                                <span>Free</span>
                             </div>
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -202,14 +215,14 @@
                                     <circle cx="12" cy="10" r="3"></circle>
                                 </svg>
                                 &nbsp;
-                                <span>{{ $event->region }}</span>
+                                <span>{{ $eventList[$i]->venue }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <br>
             </div>
-            @endforeach
+            @endfor
         </div>
 
     </main>
