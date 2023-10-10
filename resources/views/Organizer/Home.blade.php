@@ -8,7 +8,6 @@
     <title>Manage Events</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/home.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>SECOND PAGE</title>
     <script src="script.js"></script>
 </head>
 
@@ -25,7 +24,7 @@
         <div class="nav__items">
             <ul>
                 <li><a href="#" id='nav-but' class="moop">Where's Moop?</a></li>
-                <li><a href="{{ route('organizer.signin.view') }}" id='nav-but' class="sign">Sign In</a></li>
+                <li><a href="{{ route('organizer.signin.view') }}" id='nav-but' class="sign">Sign Out</a></li>
             </ul>
 
             <div class="hamburger-menu">
