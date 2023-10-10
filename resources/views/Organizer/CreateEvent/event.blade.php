@@ -103,7 +103,7 @@
                         @foreach ($eventCategory as $eventc)
                         <div class="dropdown-content d-none">
                             <div class="drop">
-                                <img src="{{ $eventc->gamegameIcon}}" alt="" height="30px" width="50px">
+                                <img src="{{ asset('storage/'. $eventc->gameIcon) }}" alt="" height="30px" width="50px">
                                 <a href="#">{{ $eventc->gameTitle}}</a>
                             </div>
                         </div>
@@ -140,7 +140,8 @@
                         @foreach ($eventCategory as $eventc)
                         <div class="dropdown-content d-none">
                             <div class="drop">
-                                <img src="{{$eventc->tiericon}}" alt="" height="40px" width="40px">
+                                <img src="{{ asset('storage/'. $eventc->tierIcon) }}" alt="" height="40px" width="40px">
+
                                 <a href="#">{{$eventc->eventTier}}</a>
                             </div>
                             @endforeach
