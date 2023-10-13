@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -18,9 +17,9 @@ return new class extends Migration
             $table->string('eventType');
             $table->string('eventTier');
             $table->string('tierIcon');
-            
-            // $table->unsignedBigInteger('eventID');
-            // $table->foreign('eventID')->references('id')->on('event_details');
+            $table->foreignId('event_id')->constrained(
+                table: 'events', indexName: 'categories_events_id'
+            );
             $table->timestamps();
         });
     }
@@ -30,6 +29,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('event_categories', function (Blueprint $table) {
+            $table->dropForeign(['event_id']);
+        });
         Schema::dropIfExists('event_category');
     }
 };

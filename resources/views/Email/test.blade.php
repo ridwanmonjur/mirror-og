@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en-US">
-  <head>
-    <meta charset="utf-8" />
-  </head>
-  <body>
+@include('Auth.Layout.HeadTag')
+<body>
+<div class="wrapper">
     <h2>Test Email</h2>
     <p>{{ $test_message }}</p>
-  </body>
-</html>
+    </div> 
+</body>
+
+
+ 

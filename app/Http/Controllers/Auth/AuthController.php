@@ -136,7 +136,7 @@ class AuthController extends Controller
             });
     
             // Redirect back with a success message
-            return back()->with('status', 'Password reset link sent. Please check your email.');
+            return back()->with('success', 'Password reset link sent. Please check your email.');
         }
     }
 

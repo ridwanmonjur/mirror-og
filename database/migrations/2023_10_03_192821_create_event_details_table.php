@@ -20,7 +20,10 @@ return new class extends Migration
             $table->time('endTime');
             $table->string('eventDescription');
             $table->string('eventBanner');
-            $table->string('eventTags');      
+            $table->string('eventTags');  
+            $table->foreignId('event_id')->constrained(
+                table: 'event_details', indexName: 'categories_events_id'
+            );    
             $table->timestamps();
         });
     }
@@ -30,6 +33,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('event_detail');
+        Schema::table('event_details', function (Blueprint $table) {
+            $table->dropForeign(['event_id']);
+        });
+        Schema::dropIfExists('event_details');
     }
 };
