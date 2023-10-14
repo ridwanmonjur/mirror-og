@@ -74,7 +74,11 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                             View your events
                         </h3>
                     </u>
-                    <input type="submit" value="Create Event">
+                    @if ($isUser == true)
+                        <input type="submit" value="Create Event" onclick="goToCreateScreen();" >
+                    @else
+                        <input type="submit" value="Create Event" disabled>
+                    @endif
                 </header>
             </div>
             <br><br>
@@ -108,7 +112,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <img style="display: inline;" src="{{ asset('/assets/images/menu.png') }}" class="{{ 'rounded-image rounded-box-' . $eventTierLower }}" alt="menu">
                                             &nbsp;
                                             <div class="card-organizer">
-                                                <p style="display: inline;"><u> {{$event->organizerName}} </u> </p>
+                                                <p style="display: inline;"><u> {{$event->user->organizer->companyName}} </u> </p>
                                                 <p class="small-text"> <i> 104 followers </i> </p>
                                             </div>
                                         </div>
@@ -128,7 +132,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                         <br>
                                         <div id="Overview" class="tabcontent" style="display: block;">
                                             <h3><u>About this event</u></h3>
-                                            <p>{{ $event->eventDescription }}</p>
+                                            <p>{{ $event->eventDetail->eventDescription }}</p>
                                         </div>
 
                                         <div id="Bracket" class="tabcontent">
@@ -150,7 +154,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                             <div>
                                 <br><br>
                                 <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
-                                    <u>{{$event->eventStatus}}</u>
+                                    <u>{{$event->status}}</u>
                                 </button>
                                 <br><br>
                                 <div>
@@ -160,7 +164,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <circle cx="12" cy="7" r="4"></circle>
                                         </svg>
                                         &nbsp;
-                                        <span>{{$event->prize}}</span>
+                                        <span>Amazing prizes</span>
                                     </div>
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
@@ -176,7 +180,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <circle cx="12" cy="10" r="3"></circle>
                                         </svg>
                                         &nbsp;
-                                        <span>{{ $event->region }}</span>
+                                        <span>{{ $event->venue }}</span>
                                     </div>
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2">
@@ -185,7 +189,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <line x1="6" y1="20" x2="6" y2="14"></line>
                                         </svg>
                                         &nbsp;
-                                        <span>{{$event->registeredParticipants}} / {{$event->totalParticipants}}</span>
+                                        <span>12/14</span>
                                     </div>
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
@@ -194,7 +198,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                         </svg>
                                         &nbsp;
-                                        <span>{{$event->eventGroupStructure}}</span>
+                                        <span>Round Robin</span>
                                     </div>
                                 </div>
                             </div>
@@ -207,7 +211,11 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                 </div>
             </div>
         </main>
-
+        <script>
+            function goToCreateScreen(){
+                window.location.href = "{{ route('event.create') }}";
+            }
+        </script>
         <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
         <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
         <!-- <script src="script.js"></script> -->

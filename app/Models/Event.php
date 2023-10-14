@@ -16,5 +16,10 @@ class Event extends Model
     {
         return $this->hasOne(EventDetail::class, 'event_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
     
 }

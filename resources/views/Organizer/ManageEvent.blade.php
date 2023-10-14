@@ -133,7 +133,7 @@
                 $stylesEventRatio ="background-color: #FFE325; color: black;";
                 $eventTierLower = strtolower($event->eventCategory->eventTier);
             @endphp
-            
+            <a href="{{ route('event.show', $event->id) }}" style="text-decoration: none;">
             <div 
                 class="{{'rounded-box rounded-box-' . $eventTierLower }}"   
             >
@@ -217,6 +217,7 @@
                 </div>
                 <br>
             </div>
+            </a>        
             @endforeach
         </div>
 
