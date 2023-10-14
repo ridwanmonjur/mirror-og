@@ -14,6 +14,72 @@ use Illuminate\Support\Facades\Auth;
 class EventController extends Controller
 {
 
+   
+    public function home(): View
+    {
+        return view('Organizer.Home');
+    }
+
+    public function index()
+    {
+        $user = Auth::user();
+        $eventList = Event::with('eventDetail', 'eventCategory')
+            ->where('user_id', $user->id)
+            ->get();
+        $organizer = Organizer::where('user_id', $user->id)->first();
+        $count = $eventList->count();
+        return view(
+            'Organizer.ManageEvent',
+            [
+                'eventList' => $eventList,
+                'count' => $count,
+                'user' => $user,
+                'organizer' => $organizer,
+                'mappingEventState' => $this->mappingEventState
+            ]
+        );
+    }
+    
+    public function create(): View
+    {
+        // return view('Organizer.CreateEvent.event');
+        return view('Organizer.CreateEvent');
+    }
+
+    public function store(Request $request)
+    {
+
+        dd($request->all());
+        return view('Organizer.CreateEvent');
+    }
+
+    public function show($id): View
+    {
+        $event = Event::findOrFail($id);
+        $isUser = Auth::user()->id == $event->user_id;
+        return view(
+            'Organizer.ViewEvent',
+            ['event' => $event, 'mappingEventState' => $this->mappingEventState, 'isUser' => $isUser]
+        );
+    }
+
+    
+    public function edit($id)
+    {
+        //
+    }
+
+   
+    public function update($id)
+    {
+        //
+    }
+
+    public function destroy($id)
+    {
+        //
+    }
+
     private $mappingEventState = [
         'UPCOMING' => [
             'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
@@ -28,129 +94,4 @@ class EventController extends Controller
             'buttonBackgroundColor' => '#A6A6A6', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
         ],
     ];
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function home(Request $request): View
-    {
-        if ($request->is('organizer/*')) {
-            return view('Organizer.Home');
-        }
-        else if ($request->is('admin/*')) {
-            return view('Admin.Home');
-        } else {
-            return view('Participant.Home');
-        }
-
-    }
-
-    public function index()
-    {
-        $user = Auth::user();
-        $eventList = Event::with('eventDetail', 'eventCategory')
-            ->where('user_id', $user->id)
-            ->get();
-        $organizer = Organizer::where('user_id', $user->id)->first();
-        $count = $eventList->count();
-        return view(
-            'Organizer.ManageEvent',
-            [
-                'eventList' => $eventList, 
-                'count' => $count,
-                'user' => $user,
-                'organizer' => $organizer,  
-                'mappingEventState' => $this->mappingEventState
-            ]
-        );
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-        $eventCategory = EventCategory::all();
-        // return view('Organizer.CreateEvent.event');
-        return view('Organizer.CreateEvent', ['eventCategory' => $eventCategory ]);
-    }
-
-    // public function viewEventCategory()
-    // {
-    //     $eventCategory = EventCategory::all();
-    //     return view('Organizer.CreateEvent.event', ['eventCategory ' => $eventCategory ]);
-    // }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return Response
-     */
-    public function store()
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function show($id): View
-    {
-        $event = Event::findOrFail($id);
-        $isUser = Auth::user()->id == $event->user_id;
-        return view(
-            'Organizer.ViewEvent',
-            ['event' => $event, 'mappingEventState' => $this->mappingEventState, 'isUser' => $isUser]
-        );
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function update($id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    public function manage()
-    {
-        $eventList = EventDetail::all();
-
-        return view(
-            'Organizer.ManageEvent',
-            ['eventList' => $eventList, 'mappingEventState' => $this->mappingEventState]
-        );
-    }
 }

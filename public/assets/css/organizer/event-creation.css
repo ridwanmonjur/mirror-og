@@ -6,6 +6,14 @@
     --timeline-normal-width-mobile: 120px;
 }
 
+body{
+    background-image: url("/assets/images/event-management-bg.png");
+}
+
+.d-none{
+    display: none;
+}
+
 .container {
     display: flex;
     justify-content: space-between;
@@ -411,7 +419,14 @@ nav svg:active {
     text-decoration: underline;
 }
 
+.drop:hover a, .drop:hover img{
+    transform: scale(1.2);
+
+}
+
 input[type="submit"],
+input#submit,
+button#submit,
 .oceans-gaming-default-button {
     width: 200px;
     padding-top: 12px;
@@ -419,6 +434,8 @@ input[type="submit"],
     font-size: normal;
     margin-top: 0px;
     color: #fff;
+    text-align: center;
+    cursor: submit;
     padding: 10px;
     border-radius: 30px;
     background: #43A4D7;
@@ -452,11 +469,15 @@ input[type="submit"],
     color: white;
 }
 
-input[type="submit"]:hover {
+input[type="submit"]:hover,
+input#submit:hover
+ {
     background: #a3c3d3;
 }
 
-input[type="submit"]:active {
+input[type="submit"]:active,
+input#submit:active
+{
     background: #79b0cc;
 }
 

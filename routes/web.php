@@ -66,12 +66,12 @@ Route::group(['prefix' => 'organizer'], function () {
 			Route::resource('/event', EventController::class, [
 				'index' => "event.index",
 				'create' => "event.create",
+				'store' => "event.store",
 				'show' => "event.show",
 			]);
             // Route::get('/event/create', [EventController::class, 'viewEventCategory']);
 
 		});
-		// Route::get('/event/view/manage/', [EventController::class, 'manage'])->name('organizer.event.manage');
 		Route::get('/authDone', [PermissionController::class, 'showAuthenticated']);
 		Route::get(
 			'/permissions',

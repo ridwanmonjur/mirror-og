@@ -74,11 +74,8 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                             View your events
                         </h3>
                     </u>
-                    @if ($isUser == true)
-                        <input type="submit" value="Create Event" onclick="goToCreateScreen();" >
-                    @else
-                        <input type="submit" value="Create Event" disabled>
-                    @endif
+                    <input type="submit" value="Create Event" onclick="goToCreateScreen();">
+
                 </header>
             </div>
             <br><br>
@@ -212,8 +209,10 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
             </div>
         </main>
         <script>
-            function goToCreateScreen(){
-                window.location.href = "{{ route('event.create') }}";
+            function goToCreateScreen() {
+                let url = "{{ route('event.create') }}";
+                window.alert(url);
+                window.location.href = url;
             }
         </script>
         <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>

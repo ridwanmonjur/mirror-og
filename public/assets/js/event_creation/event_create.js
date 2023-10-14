@@ -9,6 +9,8 @@ function openDropDown(element){
     element.nextElementSibling.classList.toggle("d-none");
 }
 
+
+
 function toggleRadio(_input, message) {
     const elements = document.querySelectorAll(`.radio-indent-hidden`);
     elements.forEach(element => {
