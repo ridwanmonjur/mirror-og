@@ -10,6 +10,7 @@
     <div class="flash-message">
         @include('Auth.Layout.Flash')
     </div>
+    <br>
     <div class="field">
         <label for="username" class="placeholder-moves-up-container">
             <input type="username" name="username" id="username" required="true" class="input-area">

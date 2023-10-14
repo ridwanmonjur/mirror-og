@@ -18,9 +18,8 @@ return new class extends Migration {
             $table->string('eventTier');
             $table->string('tierIcon');
             $table->foreignId('event_id')->constrained(
-                table: 'events', indexName: 'categories_events_id'
+                table: 'events', indexName: 'event_categories_event_id_foreign'
             );
-            $table->timestamps();
         });
     }
 
@@ -29,9 +28,9 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('event_categories', function (Blueprint $table) {
-            $table->dropForeign(['event_id']);
-        });
-        Schema::dropIfExists('event_category');
+        // Schema::table('event_categories', function (Blueprint $table) {
+        //     $table->dropForeign(['event_id']);
+        // });
+        Schema::dropIfExists('event_categories');
     }
 };

@@ -105,14 +105,13 @@
         </div>
         <br><br>
         <div class="grid-container">
-            @for ($i = 0; $i < $count; $i++)
-
+            @foreach ($eventList as $event)
             @php
                 $stylesEventStatus = '';
                 $stylesEventStatus .= 'padding-top: -150px; ';
-                $stylesEventStatus .= 'background-color: ' . $mappingEventState[$eventList[$i]->status]['buttonBackgroundColor'] .' ;' ;
-                $stylesEventStatus .= 'color: ' . $mappingEventState[$eventList[$i]->status]['buttonTextColor'] .' ; ' ;
-                $stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$eventList[$i]->status]['borderColor'] .' ; '; 
+                $stylesEventStatus .= 'background-color: ' . $mappingEventState[$event->status]['buttonBackgroundColor'] .' ;' ;
+                $stylesEventStatus .= 'color: ' . $mappingEventState[$event->status]['buttonTextColor'] .' ; ' ;
+                $stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$event->status]['borderColor'] .' ; '; 
                 
                 /*
                  $stylesEventRatio = '';
@@ -132,7 +131,7 @@
                 */
 
                 $stylesEventRatio ="background-color: #FFE325; color: black;";
-                $eventTierLower = strtolower($categoryList[$i]->eventTier);
+                $eventTierLower = strtolower($event->eventCategory->eventTier);
             @endphp
             
             <div 
@@ -151,22 +150,18 @@
                             <button class="oceans-gaming-default-button" 
                                 style="@php echo $stylesEventStatus; @endphp"
                                 >
-                                <u>{{$eventList[$i]->status}}</u>
+                                <u>{{$event->status}}</u>
                             </button>
                         </div>
                         <br>
-                        <p style="height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$detailList[$i]->eventName}}</u></p>
+                        <p style="height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->name}}</u></p>
                         <p class="small-text"><i>
-                            Ocean's Gaming
+                            {{ $organizer->companyName  }}
                         </i></p>
                         <div class="flexbox-welcome">
                             @php
-                               /*
-                                $date = \Carbon\Carbon::parse($event->startDateTime);
-                                $dateStr = $date->toFormattedDateString() . " " . $date->toTimeString(); -->
-                                */
-                                $dateStr = $detailList[$i]->startDate . " " . $detailList[$i]->startTime;
-
+                                $date = \Carbon\Carbon::parse($event->eventDetail->startDateTime);
+                                $dateStr = $date->toFormattedDateString() . " " . $date->toTimeString(); 
                             @endphp
                             <div>@php echo $dateStr; @endphp</div>
                             <button 
@@ -215,14 +210,14 @@
                                     <circle cx="12" cy="10" r="3"></circle>
                                 </svg>
                                 &nbsp;
-                                <span>{{ $eventList[$i]->venue }}</span>
+                                <span>{{ $event->venue }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <br>
             </div>
-            @endfor
+            @endforeach
         </div>
 
     </main>

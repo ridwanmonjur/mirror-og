@@ -4,12 +4,13 @@
 
 $stylesEventStatus = '';
 $stylesEventStatus .= 'padding-top: -150px; ';
-$stylesEventStatus .= 'background-color: ' . $mappingEventState[$event->eventStatus]['buttonBackgroundColor'] .' ;' ;
-$stylesEventStatus .= 'color: ' . $mappingEventState[$event->eventStatus]['buttonTextColor'] .' ; ' ;
-$stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$event->eventStatus]['borderColor'] .' ; ';
+$stylesEventStatus .= 'background-color: ' . $mappingEventState[$event->status]['buttonBackgroundColor'] .' ;' ;
+$stylesEventStatus .= 'color: ' . $mappingEventState[$event->status]['buttonTextColor'] .' ; ' ;
+$stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$event->status]['borderColor'] .' ; ';
 
 $stylesEventRatio = '';
-$ratio = (double) $event->registeredParticipants / $event->totalParticipants;
+$ratio = 0.8;
+/* $ratio = (double) $event->registeredParticipants / $event->totalParticipants; */
 if ($ratio > 0.9){
 $stylesEventRatio .= "background-color: red; color: white;";
 }
@@ -19,9 +20,9 @@ $stylesEventRatio .= "background-color: #8CCD39; color: white;";
 elseif ($ratio > 0.5){
 $stylesEventRatio .= "background-color: #FA831F; color: white;";
 }
-elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } $eventTierLower=strtolower($event->eventTier);
+elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } $eventTierLower=strtolower($event->eventCategory->eventTier);
 
-    $date = \Carbon\Carbon::parse($event->startDateTime)->setTimezone('Asia/Singapore');
+    $date = \Carbon\Carbon::parse($event->eventDetail->startDateTime)->setTimezone('Asia/Singapore');
     $dayStr = $date->englishDayOfWeek;
     $dateStr = $date->toFormattedDateString();
     $timeStr = $date->isoFormat('h:mm a');
@@ -92,7 +93,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                     <br>
                                     <div class="flexbox-centered-space">
                                         <p style="height:60px;text-overflow:ellipsis; overflow:hidden;font-size:20px;margin-right:60px;margin-bottom:20px">
-                                            <u>{{$event->eventName}}</u>
+                                            <u>{{$event->name}}</u>
                                         </p>
                                         <svg style="margin-top: -30px; margin-left: -60px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
                                             <circle cx="18" cy="5" r="3"></circle>

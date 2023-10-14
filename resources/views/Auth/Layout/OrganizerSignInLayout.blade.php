@@ -9,18 +9,16 @@
 <form autocomplete="off" readonly name="organizer-signin-form" id="organizer-signin-form" method="post" action="{{route('organizer.signin.action')}}">
     @csrf
     <div class="flash-message">
-        @include('Auth.Layout.Flash')
+    @include('Auth.Layout.Flash')
         @if(session('errorEmail'))
-        <br>
         Click 
-        <a 
-            style="font-weight: bold; text-decoration: underline;"
+        <a style="font-weight: bold; text-decoration: underline;"
             href="{{ route('user.verify.resend', ['email' => session('errorEmail')]) }}">
-            here
-        </a>
-        to resend verification email.
+            here</a>
+        &nbsp;to resend verification email.
         @endif
     </div>
+    <br>
     <div class="field">
         <label for="email" class="placeholder-moves-up-container">
             <input type="email" name="email" id="email" required="true" class="input-area">

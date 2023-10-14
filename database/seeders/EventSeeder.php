@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Organizer;
+use App\Models\User;
+use Exception;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
@@ -10,6 +13,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\DateFactory;
 use Illuminate\Support\Timebox;
+use Faker\Factory as Faker;
+
+use function PHPUnit\Framework\isNull;
 
 class EventSeeder extends Seeder
 {
@@ -18,102 +24,140 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('event_details')->delete();
-        
+        $userId = null;
+        if (isNull($userId)){
+            $user = User::where('email', 'ridwanmonjur@gmail.com')->first();
+            if (!$user){
+                throw new Exception("User not found! Seed user class first");
+            }
+            $userId = $user->id;
+        } 
+
+        $faker = Faker::create();
+
+        $eventsArray = [
+            DB::table('events')->insertGetId([
+                'name' => 'Event 1',
+                'status' => 'UPCOMING',
+                'venue' => 'SEA',
+                'caption' => $faker->sentence(),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'user_id' => $userId,
+            ]),
+            DB::table('events')->insertGetId([
+                'name' => 'Event 2',
+                'status' => 'DRAFT',
+                'venue' => 'SEA',
+                'caption' => $faker->sentence(),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'user_id' => $userId,
+            ]),
+            DB::table('events')->insertGetId([
+                'name' => 'Event 3',
+                'status' => 'ONGOING',
+                'venue' => 'SEA',
+                'caption' => $faker->sentence(),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'user_id' => $userId,
+            ]),
+            DB::table('events')->insertGetId([
+                'name' => 'Event 4',
+                'status' => 'ENDED',
+                'venue' => 'SEA',
+                'caption' => $faker->sentence(),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'user_id' => $userId,
+            ])
+        ];
+
         DB::table('event_details')->insert([
-            'eventName' => Str::random(10),
-            'eventDescription' => "This is a test event",
-            'organizerName' => "Ocean's Gaming",
-            'eventBanner' => "/events/1.png",
-            'eventTags' => "DOTA 2",
-            'fee' => 0,
-            'eventTier'=> "Turtle",
-            'eventType' => 'Type A',
-            'eventStatus' => 'UPCOMING',
-            'eventGroupStructure' => 'ROUND ROBIN',
-            'totalParticipants' => 16, 
-            'registeredParticipants' => 16, 
-            'region' => "SEA",
-            'prize' => "Exclusive prize",
-            'startDateTime' => Carbon::now()->format('Y-m-d H:i:s'),
-            'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
+            'startDateTime' => now()->toDateTime(),
+            'endDateTime' => now()->addDays(2)->toDateTime(),
+            'eventDescription' => $faker->sentence(),
+            'eventTags' => 'gaming,esports,dota2',
+            'eventBanner' => '/events/1.png',
+            'event_id' => $eventsArray[0],
+        ]);
+        DB::table('event_categories')->insert([
+            'gameTitle' => $faker->sentence(),
+            'gameIcon' => now()->addDays(2)->toDateTime(),
+            'eventType' => "Type A",
+            'tierIcon' => 'gaming,esports,dota2',
+            'eventTier' => "Turtle",
+            'event_id' => $eventsArray[0],
         ]);
 
         DB::table('event_details')->insert([
-            'eventName' => "Casual Dota Tourney for Everyone and Anyone",
-            'eventDescription' => "This is a test event",
-            'organizerName' => "Open water",
-            'eventBanner' => "/events/1.png",
-            'eventTags' => "DOTA 2",
-            'fee' => 0,
-            'eventTier'=> "Turtle",
-            'eventType' => 'Type A',
-            'eventStatus' => 'DRAFT',
-            'eventGroupStructure' => 'ROUND ROBIN',
-            'totalParticipants' => 16, 
-            'registeredParticipants' => 0, 
-            'region' => "SEA",
-            'prize' => "Exclusive prize",
-            'startDateTime' => Carbon::now()->format('Y-m-d H:i:s'),
-            'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
+            'startDateTime' => now()->toDateTime(),
+            'endDateTime' => now()->addDays(2)->toDateTime(),
+            'eventDescription' => $faker->sentence(),
+            'eventTags' => 'gaming,esports,dota2',
+            'eventBanner' => '/events/1.png',
+            'event_id' => $eventsArray[1],
+        ]);
+        DB::table('event_categories')->insert([
+            'gameTitle' => $faker->sentence(),
+            'gameIcon' => now()->addDays(2)->toDateTime(),
+            'eventType' => "Type A",
+            'tierIcon' => 'gaming,esports,dota2',
+            'eventTier' => "Mermaid",
+            'event_id' => $eventsArray[1],
         ]);
 
         DB::table('event_details')->insert([
-            'eventName' => "The Tryhard Trials: Dota 2",
-            'eventDescription' => "This is a test event",
-            'organizerName' => "Open water",
-            'eventBanner' => "/events/1.png",
-            'eventTags' => "DOTA 2",
-            'fee' => 0,
-            'eventTier'=> "Dolphin",
-            'eventType' => 'Type A',
-            'eventStatus' => 'ONGOING',
-            'eventGroupStructure' => 'ROUND ROBIN',
-            'totalParticipants' => 16, 
-            'registeredParticipants' => 9, 
-            'region' => "SEA",
-            'prize' => "Exclusive prize",
-            'startDateTime' => Carbon::now()->format('Y-m-d H:i:s'),
-            'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
+            'startDateTime' => now()->toDateTime(),
+            'endDateTime' => now()->addDays(2)->toDateTime(),
+            'eventDescription' => $faker->sentence(),
+            'eventTags' => 'gaming,esports,dota2',
+            'eventBanner' => '/events/1.png',
+            'event_id' => $eventsArray[2],
+        ]);
+        DB::table('event_categories')->insert([
+            'gameTitle' => $faker->sentence(),
+            'gameIcon' => now()->addDays(2)->addHours(3)->toDateTime(),
+            'eventType' => "Type C",
+            'tierIcon' => 'gaming,esports,dota2',
+            'eventTier' => "Dolphin",
+            'event_id' => $eventsArray[2],
         ]);
 
         DB::table('event_details')->insert([
-            'eventName' => "The Oceans Gaming Dota Collegiate League: Season 1",
-            'eventDescription' => "This is a test event",
-            'organizerName' => "Open water",
-            'eventBanner' => "/events/1.png",
-            'eventTags' => "DOTA 2",
-            'fee' => 0,
-            'eventTier'=> "Mermaid",
-            'eventType' => 'Type A',
-            'eventStatus' => 'ENDED',
-            'eventGroupStructure' => 'ROUND ROBIN',
-            'totalParticipants' => 16, 
-            'registeredParticipants' => 7, 
-            'region' => "SEA",
-            'prize' => "Exclusive prize",
-            'startDateTime' => Carbon::now()->format('Y-m-d H:i:s'),
-            'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
+            'startDateTime' => now()->toDateTime(),
+            'endDateTime' => now()->addDays(3)->addHours(4)->toDateTime(),
+            'eventDescription' => $faker->sentence(),
+            'eventTags' => 'gaming,esports,dota2',
+            'eventBanner' => '/events/1.png',
+            'event_id' => $eventsArray[3],
+        ]);
+        DB::table('event_categories')->insert([
+            'gameTitle' => $faker->sentence(),
+            'gameIcon' => now()->addDays(2)->toDateTime(),
+            'eventType' => "Type C",
+            'tierIcon' => 'gaming,esports,dota2',
+            'eventTier' => "Starfish",
+            'event_id' => $eventsArray[3],
         ]);
 
-        DB::table('event_details')->insert([
-            'eventName' => "The Oceans Gaming Dota Collegiate League: Season 2",
-            'eventDescription' => "This is a test event",
-            'organizerName' => "Open water",
-            'eventBanner' => "/events/1.png",
-            'eventTags' => "DOTA 2",
-            'fee' => 0,
-            'eventTier'=> "Starfish",
-            'eventType' => 'Type A',
-            'eventStatus' => 'ENDED',
-            'eventGroupStructure' => 'ROUND ROBIN',
-            'totalParticipants' => 16, 
-            'registeredParticipants' => 7, 
-            'region' => "SEA",
-            'prize' => "Exclusive prize",
-            'startDateTime' => Carbon::now()->format('Y-m-d H:i:s'),
-            'endDateTime' =>  Carbon::now()->format('Y-m-d H:i:s'),
-        ]);
-        
+
+        // Seed event category and establish the one-to-one relationship
+        // DB::table('event_categories')->insert([
+        //     'event_id' => $events[0], // Use the ID of the related event
+        //     'name' => 'Category 1',
+        //     // Add more category data as needed
+        // ]);
+
+        // DB::table('event_details')->insert([
+        //     'organizerName' => "Ocean's Gaming",
+        //     'fee' => 0,
+        //     'eventGroupStructure' => 'ROUND ROBIN',
+        //     'totalParticipants' => 16, 
+        //     'registeredParticipants' => 16, 
+        //     'prize' => "Exclusive prize",
+        // ]);
+
     }
 }

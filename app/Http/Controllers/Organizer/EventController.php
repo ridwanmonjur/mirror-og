@@ -8,6 +8,8 @@ use App\Models\EventCategory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\Event;
+use App\Models\Organizer;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -38,17 +40,19 @@ class EventController extends Controller
 
     public function index()
     {
-        $eventDetailList = EventDetail::all();
-        $eventList = Event::all();
-        $eventCategoryList = EventCategory::all();
-        $length = count($eventList);
+        $user = Auth::user();
+        $eventList = Event::with('eventDetail', 'eventCategory')
+            ->where('user_id', $user->id)
+            ->get();
+        $organizer = Organizer::where('user_id', $user->id)->first();
+        $count = $eventList->count();
         return view(
             'Organizer.ManageEvent',
             [
-                'count' => $length,
                 'eventList' => $eventList, 
-                'detailList' => $eventDetailList,
-                'categoryList' => $eventCategoryList,
+                'count' => $count,
+                'user' => $user,
+                'organizer' => $organizer,  
                 'mappingEventState' => $this->mappingEventState
             ]
         );

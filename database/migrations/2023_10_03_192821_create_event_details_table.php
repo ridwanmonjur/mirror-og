@@ -13,18 +13,14 @@ return new class extends Migration
     {
         Schema::create('event_details', function (Blueprint $table) {
             $table->id();
-            $table->string('eventName');
-            $table->date('startDate');
-            $table->date('endDate');
-            $table->time('startTime');
-            $table->time('endTime');
+            $table->dateTime('startDateTime');
+            $table->dateTime('endDateTime');
             $table->string('eventDescription');
             $table->string('eventBanner');
             $table->string('eventTags');  
             $table->foreignId('event_id')->constrained(
-                table: 'event_details', indexName: 'categories_events_id'
+                table: 'events', indexName: 'event_details_event_id_foreign'
             );    
-            $table->timestamps();
         });
     }
 
@@ -33,9 +29,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('event_details', function (Blueprint $table) {
-            $table->dropForeign(['event_id']);
-        });
+        // Schema::table('event_details', function (Blueprint $table) {
+        //     $table->dropForeign(['event_id']);
+        // });
         Schema::dropIfExists('event_details');
     }
 };

@@ -17,6 +17,8 @@ use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -89,7 +91,7 @@ class AuthController extends Controller
             DB::table('password_reset_tokens')
                 ->where('email', $tokenData->email)
                 ->delete();
-            
+
             return view('Auth.ResetSuccess');
         }
 
@@ -104,19 +106,18 @@ class AuthController extends Controller
     }
 
     public function storeForget(Request $request)
-    {
-        {
+    { {
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email',
             ]);
-    
+
             if ($validator->fails()) {
                 return back()
                     ->with('error', $validator);
             }
-    
+
             $token = $this->generateToken();
-    
+
             $email = $request->email;
 
             $user = User::where('email', $request->email)->first();
@@ -124,17 +125,17 @@ class AuthController extends Controller
             if (!$user) {
                 return back()->with(['error' => 'User not found with this email.']);
             }
-            
+
             DB::table('password_reset_tokens')->updateOrInsert(
                 ['email' => $request->email],
                 ['token' => $token, 'expires_at' => Carbon::now()->addDay()]
             );
-            
+
             Mail::send('Email.reset', ['token' => $token], function ($message) use ($email) {
                 $message->to($email);
                 $message->subject('Reset Password');
             });
-    
+
             // Redirect back with a success message
             return back()->with('success', 'Password reset link sent. Please check your email.');
         }
@@ -241,7 +242,7 @@ class AuthController extends Controller
         } else {
             return redirect()->route("landing.view");
         }
-    
+
         $redirectErrorRoute = $userRole . ".signup.view";
         $redirectSuccessRoute = $userRole . ".signin.view";
         try {
@@ -291,8 +292,16 @@ class AuthController extends Controller
                 //     // 'email' => $user->email
                 // ]
             );
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+
+            if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
+                return redirect()->route($redirectErrorRoute)->with('error', 'The email already exists. Add another email!');
+            } else {
+                return redirect()->route($redirectErrorRoute)->with('error', 'An error occurred while processing your request.');
+            }
         } catch (\Throwable $th) {
-            return redirect()->route( $redirectErrorRoute )->with('error', $th->getMessage());
+            return redirect()->route($redirectErrorRoute)->with('error', $th->getMessage());
         }
 
     }
@@ -325,7 +334,7 @@ class AuthController extends Controller
 
                 if (!$user->email_verified_at) {
                     return redirect()->back()->with([
-                        'errorEmail'=> $request->email,
+                        'errorEmail' => $request->email,
                         'error' => 'Email not verified. Please verify email first!',
                     ]);
                 }
@@ -335,12 +344,16 @@ class AuthController extends Controller
                 endif;
 
                 $request->session()->regenerate();
-                $route= $userRole . ".home.view";
+                $route = $userRole . ".home.view";
                 $message = 'Account signed in successfully as $userRole!';
                 return redirect()->route($route)->with('success', $message);
             } else {
-                throw new \ErrorException("Can't find user!");
+                throw new \ErrorException("The email or password you entered is incorrect!");
             }
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+
+            return redirect()->route($redirectRoute)->with('error', 'An error occurred while processing your request.');
         } catch (\Throwable $th) {
             return redirect()->route($redirectRoute)->with('error', $th->getMessage());
         }

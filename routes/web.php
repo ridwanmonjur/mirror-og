@@ -5,7 +5,6 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\EventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Organizer\PermissionController;
-use App\Mail\TestEmail;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,15 +17,13 @@ use App\Mail\TestEmail;
 |
 */
 
-// Route::any('/admin', 'AdminController@index')->middleware('check-permission:admin');
+Route::group([
+	'prefix' => 'admin',
+	'middleware' => ['check-permission:admin'],
+	'excluded_middleware' => ['login'],
+], function () {
 
-// Route::group([
-// 	'prefix' => 'admin',
-// 	'middleware' => ['check-permission:admin'],
-// 	'excluded_middleware' => ['login'],
-// ], function () {
-
-// });
+});
 
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
 
@@ -68,7 +65,8 @@ Route::group(['prefix' => 'organizer'], function () {
 			Route::get('/home', [EventController::class, 'home'])->name("organizer.home.view");
 			Route::resource('/event', EventController::class, [
 				'index' => "event.index",
-				'create' => "event.create"
+				'create' => "event.create",
+				'show' => "event.show",
 			]);
             // Route::get('/event/create', [EventController::class, 'viewEventCategory']);
 

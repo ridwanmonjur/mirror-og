@@ -49,4 +49,15 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function organizer()
+    {
+        return $this->hasOne(Organizer::class, 'user_id');
+    }
+
+    public function participant()
+    {
+        return $this->hasOne(Participant::class, 'user_id');
+    }
+    
 }

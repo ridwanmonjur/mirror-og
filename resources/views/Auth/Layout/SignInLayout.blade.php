@@ -8,20 +8,19 @@
 <header><u>Sign in to your participant account</u></header>
 <form autocomplete="off" readonly name="signin-form" id="signin-form" method="post" action="{{route('participant.signin.action')}}">
     @csrf
-    <<div class="flash-message">
+    <div class="flash-message">
         @include('Auth.Layout.Flash')
-        @if(session('email'))
-        <br>
+        @if(session('errorEmail'))
         Click 
         <a 
             style="font-weight: bold; text-decoration: underline;"
-            href="{{ route('user.verify.resend', ['email' => session('email')]) }}">
+            href="{{ route('user.verify.resend', ['email' => session('errorEmail')]) }}">
             here
         </a>
         to resend verification email.
         @endif
     </div>
-    
+    <br>
     <div class="field">
         <label for="email" class="placeholder-moves-up-container">
             <input type="email" name="email" id="email" required="true" class="input-area">

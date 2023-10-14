@@ -14,4 +14,9 @@ class EventCategory extends Model
     protected $casts = [
         'eventTags' => 'array',
     ];
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class, 'event_id');
+    }
 }

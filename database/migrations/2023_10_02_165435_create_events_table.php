@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::dropIfExists('events');
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('status');
             $table->string('venue');
             $table->string('caption')->nullable();
+            $table->foreignId('user_id')->constrained(
+                table: 'users', indexName: 'events_user_id_foreign'
+            );
             $table->timestamps();
         });
     }
