@@ -19,9 +19,52 @@ use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
+use Laravel\Socialite\Facades\Socialite;
+use Exception;
 
 class AuthController extends Controller
 {
+    public function redirectToGoogle(Request $request)
+    {
+        // dd($request->all());
+        // dd('redirected');
+        return Socialite::driver('google')->stateless()->redirect();
+    }
+        
+    public function handleGoogleCallback(Request $request)
+    {
+        // try {
+            // dd($request->all());
+
+            $user = Socialite::driver('google')->stateless()->user();
+       
+            $finduser = User::where('google_id', $user->id)->first();
+       
+            if($finduser){
+       
+                Auth::login($finduser);
+      
+                return redirect()->route('participant.home.view');
+       
+            }else{
+                $newUser = User::create([
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'password' => bcrypt('123456dummy'),
+                    
+                ]);
+                $newUser->email_verified_at = now();
+                $newUser->google_id = $user->id;
+                $newUser->save();
+                Auth::login($newUser);
+      
+                return redirect()->route('participant.home.view');
+            }
+        // } catch (Exception $e) {
+        //     dd($e->getMessage());
+        // }
+    }
+
     //SignIn Auth 
     private function showAlert($session)
     {

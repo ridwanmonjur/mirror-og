@@ -54,7 +54,7 @@
         <div class="straight-line"></div>
     </div>
 
-    <button class="btn-login">
+    <button type="button" class="btn-login" onclick="redirectToGoogle();">
         <img class="image-login" src="{{ asset('/assets/images/auth/google.svg') }}" alt="">
         <p>Continue with Google</p>
     </button>
@@ -67,7 +67,11 @@
 <div class="section-bottom">
     <p>New to Splash? <a href="{{ route('participant.signup.view') }}">Create an account</a></p>
 </div>
-
+<script>
+    function redirectToGoogle() {
+        window.location.href = "{{ route('google.login') }}";
+    }
+</script>
 
 @endsection
 
