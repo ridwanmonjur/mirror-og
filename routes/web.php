@@ -30,6 +30,10 @@ Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view"
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name("google.login");
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
+// Steam login
+Route::get('auth/steam', [App\Http\Controllers\Auth\AuthController::class, 'redirectToSteam'])->name('login.steam');
+Route::get('auth/steam/callback', [App\Http\Controllers\Auth\AuthController::class, 'handleSteamCallback']);
+
 Route::get('/forget-password', [AuthController::class, 'createForget'])->name("user.forget.view");
 Route::post('/forget-password', [AuthController::class, 'storeForget'])->name("user.forget.action");
 Route::get('/reset-password/{token}', [AuthController::class, 'createReset'])->name("user.reset.view");

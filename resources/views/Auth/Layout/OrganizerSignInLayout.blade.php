@@ -11,7 +11,7 @@
     <div class="flash-message">
     @include('Auth.Layout.Flash')
         @if(session('errorEmail'))
-        Click 
+        Click
         <a style="font-weight: bold; text-decoration: underline;"
             href="{{ route('user.verify.resend', ['email' => session('errorEmail')]) }}">
             here</a>
@@ -56,7 +56,7 @@
         <img class="image-login" src="{{ asset('/assets/images/auth/google.svg') }}" alt="">
         <p>Continue with Google</p>
     </button>
-    <button class="btn-login btn-steam">
+    <button class="btn-login btn-steam" class="btn-login" onclick="redirectToSteam();">
         <img class="image-login" src="{{ asset('/assets/images/auth/steam.svg') }}" alt="">
         <p>Continue with Steam</p>
     </button>
@@ -68,6 +68,11 @@
 <script>
     function redirectToGoogle() {
         window.location.href = "{{ route('google.login') }}";
+    }
+
+    function redirectToSteam() {
+        window.location.href = "{{ route('login.steam') }}";
+
     }
 </script>
 

@@ -30,34 +30,34 @@ class AuthController extends Controller
         // dd('redirected');
         return Socialite::driver('google')->stateless()->redirect();
     }
-        
+
     public function handleGoogleCallback(Request $request)
     {
         // try {
             // dd($request->all());
 
             $user = Socialite::driver('google')->stateless()->user();
-       
+
             $finduser = User::where('google_id', $user->id)->first();
-       
+
             if($finduser){
-       
+
                 Auth::login($finduser);
-      
+
                 return redirect()->route('participant.home.view');
-       
+
             }else{
                 $newUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,
                     'password' => bcrypt('123456dummy'),
-                    
+
                 ]);
                 $newUser->email_verified_at = now();
                 $newUser->google_id = $user->id;
                 $newUser->save();
                 Auth::login($newUser);
-      
+
                 return redirect()->route('participant.home.view');
             }
         // } catch (Exception $e) {
@@ -65,7 +65,24 @@ class AuthController extends Controller
         // }
     }
 
-    //SignIn Auth 
+     // Steam login
+     public function redirectToSteam()
+     {
+         return Socialite::driver('steam')->redirect();
+     }
+
+     // Steam callback
+     public function handleSteamCallback()
+     {
+         $user = Socialite::driver('steam')->user();
+
+         $this->_registerOrLoginUser($user);
+
+         // Return home after login
+         return redirect()->route('participant.home.view');
+     }
+
+    //SignIn Auth
     private function showAlert($session)
     {
         if ($message = $session->get('success')) {

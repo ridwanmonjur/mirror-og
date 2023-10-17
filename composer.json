@@ -13,7 +13,8 @@
         "laravel/socialite": "^5.9",
         "laravel/tinker": "^2.8",
         "realrashid/sweet-alert": "^7.1",
-        "sendgrid/sendgrid": "~7"
+        "sendgrid/sendgrid": "~7",
+        "socialiteproviders/steam": "^4.2"
     },
     "require-dev": {
         "doctrine/dbal": "^3.6",
