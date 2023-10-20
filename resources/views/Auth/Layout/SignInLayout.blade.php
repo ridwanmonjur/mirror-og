@@ -11,8 +11,8 @@
     <div class="flash-message">
         @include('Auth.Layout.Flash')
         @if(session('errorEmail'))
-        Click 
-        <a 
+        Click
+        <a
             style="font-weight: bold; text-decoration: underline;"
             href="{{ route('user.verify.resend', ['email' => session('errorEmail')]) }}">
             here
@@ -28,6 +28,7 @@
             <div class="field-error-message d-none"></div>
         </label>
     </div>
+
     <div class="field password">
         <label for="password" class="placeholder-moves-up-container">
             <input type="password" name="password" id="password" minlength="6" maxlength="24" required="true"
