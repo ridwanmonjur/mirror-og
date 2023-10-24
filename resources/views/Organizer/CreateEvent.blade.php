@@ -23,7 +23,7 @@
             <img width="70px" height="40px" src="{{ asset('/assets/images/createEvent/navbar-crown.png') }}" alt="">
         </div>
     </nav>
-    <nav class="mobile-navbar d-centered-at-mobile d-none">
+    <nav class="mobile-navbar d-centered-at-mobile d-none" style="border-bottom: 0.4px solid black; border-top: 0.4px solid black; background: white; padding-top: 10px;">
         <div class="search-bar search-bar-mobile ">
             <input type="text" name="search" id="search" placeholder="Search for events">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" style="left: 40px;">
@@ -34,7 +34,6 @@
         <div class="nav-buttons search-bar-mobile d-centered-at-mobile">
             <img width="50px" height="40px" src="{{ asset('/assets/images/createEvent/navbar-account.png') }}" alt="">
             <img width="70px" height="40px" src="{{ asset('/assets/images/createEvent/navbar-crown.png') }}" alt="">
-
         </div>
     </nav>
     <main>
@@ -62,7 +61,7 @@
                     </div>
                 </div>
 
-                <div class="text-center" id="step-0">
+                <div class="text-center d-none" id="step-0">
                     <header class="welcome">
                         <u>
                             <h2>
@@ -178,85 +177,84 @@
                         </u>
                     </header>
                     <div class="event-details-form">
-                        <form action="#" method="POST">
-                            <div class="form-group">
-                                <label for="eventName">Name of Event</label>
-                                <p class="description">Pick a good name for your event (max. 60 characters)</p>
-                                <input type="text" id="eventName" name="eventName" placeholder=" Name of Event" required>
-                            </div>
+                        <!-- <form action="#" method="POST"> -->
+                        <div class="form-group">
+                            <label for="eventName">Name of Event</label>
+                            <p class="description">Pick a good name for your event (max. 60 characters)</p>
+                            <input type="text" id="eventName" name="eventName" placeholder=" Name of Event" required>
+                        </div>
 
-                            <div class="form-group">
-                                <label for="startDate">Date of Event</label>
-                                <p class="description">Tell your players when to mark their calendars</p>
-                                <div class="container">
-                                    <div class="box">
-                                        <p class="description"><b>Start</b></p>
-                                        <input type="date" id="startDate" name="startDate" placeholder=" Select a start date" required>
-                                    </div>
-                                    <div class="box">
-                                        <p class="description"><b>End</b></p>
-                                        <input type="date" id="endDate" name="endDate" placeholder=" Select an end date" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="startTime">Time of Event</label>
-                                <p class="description">So that your players can set their alarms</p>
-                                <div class="container">
-                                    <div class="box">
-                                        <p class="description"><b>Start</b></p>
-                                        <input type="time" id="startTime" name="startTime" placeholder=" Select a start time" required>
-                                    </div>
-                                    <div class="box">
-                                        <p class="description"><b>End</b></p>
-                                        <input type="time" id="endTime" name="endTime" placeholder=" Select an end time" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="eventDescription">Event Description</label>
-                                <p class="description">So, tell us a little bit about your event (max. 3, 000 characters)</p>
-                                <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event" required></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="eventBanner">Event Banner</label>
-                                <p class="description">How about some visual aid for your event? (resolution to be decided)</p>
-                                <div class="banner-upload">
-                                    <input type="file" id="eventBanner" name="eventBanner" accept="image/*" required>
-                                    <div class="banner-preview">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
-                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                            <polyline points="21 15 16 10 5 21"></polyline>
-                                        </svg>
-                                    </div>
-                                    Supported files: JPEG, JPG, PNG<br>
-                                    <label class="upload-button" for="eventBanner">Upload Image</label>
-                                    <br>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="eventTags">Event Tags</label>
-                                <p class="description">Add some relevant keywords to help players find your event more easily</p>
+                        <div class="form-group">
+                            <label for="startDate">Date of Event</label>
+                            <p class="description">Tell your players when to mark their calendars</p>
+                            <div class="container">
                                 <div class="box">
-                                    <input type="text" id="eventTags" name="eventTags" placeholder="Add tags" required>
+                                    <p class="description"><b>Start</b></p>
+                                    <input type="date" id="startDate" name="startDate" placeholder=" Select a start date" required>
+                                </div>
+                                <div class="box">
+                                    <p class="description"><b>End</b></p>
+                                    <input type="date" id="endDate" name="endDate" placeholder=" Select an end date" required>
                                 </div>
                             </div>
+                        </div>
 
+                        <div class="form-group">
+                            <label for="startTime">Time of Event</label>
+                            <p class="description">So that your players can set their alarms</p>
+                            <div class="container">
+                                <div class="box">
+                                    <p class="description"><b>Start</b></p>
+                                    <input type="time" id="startTime" name="startTime" placeholder=" Select a start time" required>
+                                </div>
+                                <div class="box">
+                                    <p class="description"><b>End</b></p>
+                                    <input type="time" id="endTime" name="endTime" placeholder=" Select an end time" required>
+                                </div>
+                            </div>
+                        </div>
 
-                        </form>
+                        <div class="form-group">
+                            <label for="eventDescription">Event Description</label>
+                            <p class="description">So, tell us a little bit about your event (max. 3, 000 characters)</p>
+                            <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventBanner">Event Banner</label>
+                            <p class="description">How about some visual aid for your event? (resolution to be decided)</p>
+                            <div class="banner-upload">
+                                <input type="file" id="eventBanner" name="eventBanner" accept="image/*" required>
+                                <div class="banner-preview">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                        <polyline points="21 15 16 10 5 21"></polyline>
+                                    </svg>
+                                </div>
+                                Supported files: JPEG, JPG, PNG<br>
+                                <label class="upload-button" for="eventBanner">Upload Image</label>
+                                <br>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventTags">Event Tags</label>
+                            <p class="description">Add some relevant keywords to help players find your event more easily</p>
+                            <div class="box">
+                                <input type="text" id="eventTags" name="eventTags" placeholder="Add tags" required>
+                            </div>
+                        </div>
+                        <!-- </form> -->
                     </div>
                     <div class="flexbox box-width">
                         <button type="button" onclick="goToNextScreen('step-1', 'timeline-1')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
                         <button type="button" onclick="goToNextScreen('step-3', 'timeline-3')" id="submit" class="oceans-gaming-default-button"> Next > </button>
                     </div>
+                    <br><br><br>
                 </div>
 
-                <div class="text-center d-none" id="step-3">
+                <div class="text-center" id="step-3">
                     <header class="welcome">
                         <u>
                             <h5>
@@ -283,7 +281,25 @@
                         </div>
                         <br>
                         <div class="text-center">
-                            <button type="button" id="submit" class="choose-payment-method" value="Choose a payment method">
+                            <button onclick="" type="button" id="submit" class="choose-payment-method" data-bs-toggle="modal" data-bs-target="#payment-modal">
+                                Choose a payment method
+                            </button>
+                        </div>
+                        <div class="modal fade" id="payment-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="payment-modal-label">Modal title</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ...
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button" data-bs-dismiss="modal"> Back </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <br>
                         <div class="text-center">
@@ -295,6 +311,7 @@
                         <button type="button" onclick="goToNextScreen('step-2', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
                         <button type="button" onclick="goToNextScreen('step-4', 'timeline-4')" id="submit" class="oceans-gaming-default-button"> Next > </button>
                     </div>
+                    <br><br><br>
                 </div>
 
 
@@ -384,8 +401,11 @@
 
     <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
     <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
+    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
+    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
     <!-- Including the Tagify library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         // Initializing Tagify on the input field

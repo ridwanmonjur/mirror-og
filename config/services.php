@@ -34,7 +34,10 @@ return [
     'google' => [
         'client_id' => '646564419111-qrjhqfommnl1oakv14kigb5eqcjmeh4o.apps.googleusercontent.com',
         'client_secret' => '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',
-        'redirect' => 'http://localhost:8000/auth/google/callback',
+        'redirect' => env('MAIL_REDIRECT_URL'),
+        'allowed_hosts' => [
+            'driftwood.gg',
+          ]
     ],
 
 
@@ -43,7 +46,7 @@ return [
         'client_secret' => env('STEAM_CLIENT_SECRET'),
         'redirect' => env('STEAM_REDIRECT_URI'),
         'allowed_hosts' => [
-          'example.com',
+          'driftwood.gg',
         ]
       ],
 
