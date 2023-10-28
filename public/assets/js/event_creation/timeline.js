@@ -45,6 +45,26 @@ function setFormValues(values) {
 
 }
 
+function getFormValues(keyList) {
+    let allFormkeyList = {};
+    var createEventForm = document.forms['create-event-form'];
+
+    if (!createEventForm) {
+        return false;
+    }
+
+    for (var key of keyList) {
+        var formField = createEventForm.elements[key];
+        if (formField) {
+            var value = formField.value;
+            allFormkeyList[key] = value;
+        }
+
+    }
+    return allFormkeyList;
+}
+
+
 function closeDropDown(element, id, keyValues, key) {
     element.parentElement.previousElementSibling.classList.toggle("dropbtn-open");
     element.parentElement.classList.toggle("d-none");
@@ -59,6 +79,42 @@ function closeDropDown(element, id, keyValues, key) {
     setFormValues(keyValues)
 }
 
+
+function getElementByIdAndSetInnerHTML(id, innerHTML) {
+    let documentElement = document.getElementById(id);
+    if (documentElement) {  
+        documentElement.innerHTML = innerHTML;
+    }
+    else {
+        console.error(`Element with id ${id} not found`);
+    }
+}
+
+
+{/* <div>&nbsp;&nbsp;&nbsp;&nbsp;Type: <span id="paymentType"> </span></div>
+<br>
+<div class="flexbox">
+    <span>Subtotal</span>
+    <span id="paymentSubtotal"id="subtotal"></span>
+</div>
+<div class="flexbox">
+    <span>Event Creation Fee Rate</span>
+    <span id="paymentRate"></span>
+</div>
+<div class="flexbox">
+    <span>Event Creation Fee total</span>
+    <span id="paymentFee"></span>
+</div>
+<br>
+<div class="flexbox">
+    <h5> TOTAL </h5>
+    <h5 id="paymentTotal"></h5>
+</div> */}
+
+function numberToLocaleString(number){
+   return Number(number).toLocaleString()
+}
+
 function goToNextScreen(nextId, nextTimeline) {
     document.getElementsByClassName("navbar")[0].scrollIntoView({ behavior: 'smooth' });
     const allIDs = [
@@ -68,21 +124,56 @@ function goToNextScreen(nextId, nextTimeline) {
     const allTimelines = ['timeline-1', 'timeline-2', 'timeline-3', 'timeline-4'];
 
     let isFormValid = true;
-    allTimelines.forEach((index) => {
 
-        if (index == 3) {
-            isFormValid =validateFormValuesEmpty([
-                'launch_type'
-            ])
+    if (nextTimeline == allTimelines[2]) {
+        let eventRate = 20, eventSubTotal = 0, eventFee = 0, eventTotal = 0;
+        let eventRateToTierMap = { 'Starfish': 5000, 'Turtle': 10000, 'Dolphin': 15000 };
+        let formValues = getFormValues(['eventTier', 'eventType']);
+        if (
+            'eventTier' in formValues &&
+            'eventType' in formValues) {
+                let eventTier = formValues['eventTier'];
+                let eventType = formValues['eventType'];
+                let eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
+                if (eventRate == -1 ){
+                    throw new Error("Invalid event tier");
+                }
+                let eventFee = eventSubTotal*(eventRate/100);
+                let eventTotal = eventSubTotal + eventFee;
+                getElementByIdAndSetInnerHTML('paymentType', eventType);
+                getElementByIdAndSetInnerHTML('paymentTier', eventTier);
+                getElementByIdAndSetInnerHTML('paymentSubtotal', numberToLocaleString(eventSubTotal));
+                getElementByIdAndSetInnerHTML('paymentRate', `${eventRate}%`);
+                getElementByIdAndSetInnerHTML('paymentFee', numberToLocaleString(eventFee));
+                getElementByIdAndSetInnerHTML('paymentTotal', numberToLocaleString(eventTotal));
         }
-    })
+        else {
+            throw new Error("Invalid form values for payment screen");
+        }
+        console.log({ formValues });
+        console.log({ formValues });
+        console.log({ formValues });
+        console.log({ formValues });
+        console.log({ formValues });
+    }
+
+
+    // validate form values
+
+    // allTimelines.forEach((value, index) => {
+    //     if (index == 3) {
+    //         isFormValid =validateFormValuesEmpty([
+    //             'launch_type'
+    //         ])
+    //     }
+    // })
 
     if (!isFormValid) {
         alert("Please fill all the fields");
         return;
     }
 
-    allTimelines.forEach((timeline, index) => {
+    allTimelines.forEach((timeline, _index) => {
 
         const paragraph = document.querySelector(`#${timeline} .timestamp span`);
         const cicle = document.querySelector(`#${timeline} small`);

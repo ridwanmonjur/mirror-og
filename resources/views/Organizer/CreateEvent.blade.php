@@ -76,7 +76,7 @@
                     <button id="submit" type="button" onclick="goToNextScreen('step-1', 'timeline-1')"> Continue </button>
                 </div>
 
-                <div id="step-1" class="d-none">
+                <div id="step-1" class="">
                     <header class="welcome text-center">
                         <u>
                             <h5>
@@ -224,7 +224,13 @@
                             <label for="eventBanner">Event Banner</label>
                             <p class="description">How about some visual aid for your event? (resolution to be decided)</p>
                             <div class="banner-upload">
-                                <input type="file" id="eventBanner" name="eventBanner" accept="image/*" required>
+                                <input 
+                                    type="file" 
+                                    id="eventBanner" 
+                                    name="eventBanner" 
+                                    accept="image/*" 
+                                    required
+                                >
                                 <div class="banner-preview">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
                                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -254,7 +260,7 @@
                     <br><br><br>
                 </div>
 
-                <div class="text-center" id="step-3">
+                <div class="text-center d-none" id="step-3">
                     <header class="welcome">
                         <u>
                             <h5>
@@ -270,14 +276,27 @@
                     </header>
                     <div class="payment-summary" style="margin-top: -30px;">
                         <h5>Payment Summary </h5>
-                        <div>Event Creation</div>
                         <br>
-                        <div>&nbsp;&nbsp;&nbsp;&nbsp;Type: League</div>
-                        <div>&nbsp;&nbsp;&nbsp;&nbsp;Tier: Dolphin</div>
+                        <div>Event Categories</div>
+                        <div>&nbsp;&nbsp;&nbsp;&nbsp;Type: <span id="paymentType"> </span></div>
+                        <div>&nbsp;&nbsp;&nbsp;&nbsp;Tier: <span id="paymentTier"> </span></div>
                         <br>
                         <div class="flexbox">
-                            <span>TOTAL</span>
-                            <span>RM 5, 000.00</span>
+                            <span>Subtotal</span>
+                            <span id="paymentSubtotal" id="subtotal"></span>
+                        </div>
+                        <div class="flexbox">
+                            <span>Event Creation Fee Rate</span>
+                            <span id="paymentRate"></span>
+                        </div>
+                        <div class="flexbox">
+                            <span>Event Creation Fee total</span>
+                            <span id="paymentFee"></span>
+                        </div>
+                        <br>
+                        <div class="flexbox">
+                            <h5> TOTAL </h5>
+                            <h5 id="paymentTotal"></h5>
                         </div>
                         <br>
                         <div class="text-center">
@@ -285,26 +304,10 @@
                                 Choose a payment method
                             </button>
                         </div>
-                        <div class="modal fade" id="payment-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="payment-modal-label">Modal title</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        ...
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button" data-bs-dismiss="modal"> Back </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="text-center">
+
+                        <!-- <div class="text-center">
                             <button type="button" class="oceans-gaming-default-button oceans-gaming-green-button"> <u>Payment successful</u></button>
-                        </div>
+                        </div> -->
                     </div>
                     <br>
                     <div class="flexbox box-width">
@@ -397,12 +400,118 @@
 
             </section>
         </form>
+        <div class="modal fade" id="payment-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="payment-modal-label">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <h4>Make A Payment</h4>
+                                @if (session()->has('success'))
+                                <div class="alert alert-success">
+                                    {{ session()->get('success') }}
+                                </div>
+                                @endif
+                                <form id="card-form">
+                                    @csrf
+                                    <div class="form-group form-group2">
+                                        <label for="card-name" class="">Your name</label>
+                                        <input type="text" name="name" id="card-name" class="">
+                                    </div>
+                                    <div class="form-group form-group2">
+                                        <label for="email" class="">Email</label>
+                                        <input type="email" name="email" id="email" class="">
+                                    </div>
+                                    <div class="form-group form-group2">
+                                        <label for="card" class="">Card details</label>
+
+                                        <div class="form-group form-group2">
+                                            <div id="card"></div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="oceans-gaming-default-button">Pay 👉</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"  class="oceans-gaming-default-button oceans-gaming-transparent-button" data-bs-dismiss="modal"> Back </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        let stripe = Stripe('{{ env("STRIPE_KEY") }}')
+        const elements = stripe.elements()
+        const cardElement = elements.create('card', {
+            style: {
+                base: {
+                    fontSize: '16px'
+                }
+            }
+        })
+        const cardForm = document.getElementById('card-form')
+        const cardName = document.getElementById('card-name')
+        cardElement.mount('#card')
+        cardForm.addEventListener('submit', async (e) => {
+            e.preventDefault()
+            const {
+                paymentMethod,
+                error
+            } = await stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+                billing_details: {
+                    name: cardName.value
+                }
+            })
+            if (error) {
+                console.log(error)
+            } else {
+                let input = document.createElement('input')
+                input.setAttribute('type', 'hidden')
+                input.setAttribute('name', 'payment_method')
+                input.setAttribute('value', paymentMethod.id)
+                cardForm.appendChild(input)
+
+                const form = new FormData(cardForm);
+                const data = {};
+                form.forEach((value, key) => {
+                    data[key] = value;
+                });
+
+                fetch("{{ route('stripe.organizerTeamPay') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(responseData => {
+                        // Handle the response data here
+                        console.log(responseData);
+                    })
+                    .catch(error => {
+                        // Handle errors here
+                        console.error(error);
+                    });
+            }
+        })
+    </script>
 
     <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
     <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
     <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
-    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
+
     <!-- Including the Tagify library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

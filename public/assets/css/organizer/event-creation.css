@@ -43,6 +43,7 @@ input[type="time"] {
 .form-group input[type="text"],
 .form-group input[type="date"],
 .form-group input[type="time"],
+.form-group input[type="email"],
 .form-group textarea,
 .form-group input[type="file"] {
     width: 100%;
@@ -53,6 +54,11 @@ input[type="time"] {
     background-color: transparent;
     /* Make the background transparent */
     transition: border-color 0.3s;
+}
+
+.form-group2 input{
+    margin-bottom: 0px !important;
+    padding: 6px 30px !important;
 }
 
 .form-group input[type="text"]:focus,

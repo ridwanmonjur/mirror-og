@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\EventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Organizer\PermissionController;
+use App\Http\Controllers\StripeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +98,8 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 Route::get('/dashboard', [AuthController::class, 'dashboard']); // Route for Dashboard Page
+
+
 
 // Route::redirect('/login', '/admin/login')->name('login');
 
