@@ -35,11 +35,6 @@ function validateFormValuesPresent(values) {
     }
 
     for (var key of values) {
-        console.log({key})
-        console.log({key})
-        console.log({key})
-        console.log({key})
-        console.log({key})
         var formField = createEventForm.elements[key];
         if (formField) {
             console.log({ formField, formFieldValue: formField.value })
@@ -99,5 +94,27 @@ function getFormValues(keyList) {
     return allFormkeyList;
 }
 
+function previewSelectedImage(imageId, previewImageId) {
+    const imageInput = document.getElementById(imageId);
+    if (!imageInput){
+        throw new Error("Image input not found!")
+    }
+    const previewImage = document.getElementById(previewImageId);
+    if (!previewImage){
+        throw new Error("Preview not found!")
+    }
+    if (previewImage.classList.contains("d-none")){
+        previewImage.classList.remove("d-none");
+    }
+    const file = imageInput.files[0];
+    if (file) {
+       const reader = new FileReader();
+       reader.readAsDataURL(file);
+       reader.onload = function(e) {
+          previewImage.src = e.target.result;
+       }
+    }
+ }
 
-export { addFormValues, getFormValues, setFormValues, validateFormValuesPresent };
+
+export { addFormValues, getFormValues, setFormValues, validateFormValuesPresent, previewSelectedImage };

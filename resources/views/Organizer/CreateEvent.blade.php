@@ -225,7 +225,7 @@
                             <label for="eventBanner">Event Banner</label>
                             <p class="description">How about some visual aid for your event? (resolution to be decided)</p>
                             <div class="banner-upload">
-                                <input type="file" id="eventBanner" name="eventBanner" accept="image/*" required>
+                                <input onchange="handleFile('eventBanner', 'previewImage');" type="file" id="eventBanner" name="eventBanner" accept="image/*" required>
                                 <div class="banner-preview">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
                                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -237,6 +237,8 @@
                                 <label class="upload-button" for="eventBanner">Upload Image</label>
                                 <br>
                             </div>
+                            <img class="d-none banner-preview" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px;">
+
                         </div>
 
                         <div class="form-group">
@@ -299,7 +301,6 @@
                                 Choose a payment method
                             </button>
                         </div>
-
                         <!-- <div class="text-center">
                             <button type="button" class="oceans-gaming-default-button oceans-gaming-green-button"> <u>Payment successful</u></button>
                         </div> -->
@@ -443,6 +444,21 @@
     <link href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        function handleFile(inputFileId, previewImageId) {
+            var selectedFile = document.getElementById(inputFileId).files[0];
+            var allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+            if (!allowedTypes.includes(selectedFile.type)) {
+                selectedFile.value = '';
+                Toast.fire({
+                    icon: 'error',
+                    text: "Invalid file type. Please upload a JPEG, PNG, or JPG file."
+                })
+            }
+            else formHelper.previewSelectedImage('eventBanner', 'previewImage');
+        }
+    </script>
     <script>
         let stripe = Stripe('{{ env("STRIPE_KEY") }}')
         const elements = stripe.elements()

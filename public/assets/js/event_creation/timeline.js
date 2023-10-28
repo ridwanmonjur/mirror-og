@@ -1,7 +1,15 @@
 let inputKeyToInputNameMapping = {
-    eventTier: 'event tier',
-    eventType: 'event type',
-    gameTitle: 'game title'
+    'event name': 'name of the event',
+    eventTier: 'tier of the event',
+    eventType: 'type of the event',
+    gameTitle: 'title of the game',
+    eventBanner: 'event image',
+    startDate: 'the start date of the event', 
+    startTime: 'the start time of the event', 
+    endDate: 'the end date of the event', 
+    endTime: 'the end time of the event', 
+    eventDescription: 'the event description', 
+    eventTags: 'the event tags'
 }
 
 function closeDropDown(element, id, keyValues, key) {
@@ -43,7 +51,7 @@ function goToNextScreen(nextId, nextTimeline) {
 
     const allTimelines = ['timeline-1', 'timeline-2', 'timeline-3', 'timeline-4'];
 
-    let isFormValid = true, invalidKey = '';
+    let isFormValid = true, invalidKey = '', formValidation = null;
 
     let currentId = 'step-0';
     allIDs.forEach(id => {
@@ -53,15 +61,27 @@ function goToNextScreen(nextId, nextTimeline) {
         }
     })
     if (currentId == allIDs[1]) {
-        let formValidation = formHelper.validateFormValuesPresent(['eventTier', 'eventType', 'gameTitle']);
+        formValidation = formHelper.validateFormValuesPresent(['eventTier', 'eventType', 'gameTitle']);
+
+    }
+    else if (currentId == allIDs[2]) {
+        formValidation = formHelper.validateFormValuesPresent(
+            ['eventBanner', 'startDate', 'startTime', 'endDate', 'endTime', 'eventDescription', 'eventTags']
+        );
+    }
+    else if (currentId == allIDs[3]) {
+        formValidation = formHelper.validateFormValuesPresent(
+            ['eventTier', 'eventType', 'gameTitle']
+        );
+    }
+    if (formValidation != null) {
         isFormValid = formValidation[0];
         invalidKey = formValidation[1];
     }
-
     if (!isFormValid) {
         Toast.fire({
             icon: 'error',
-            text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey]?? ""}! It is a required field.`
+            text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
         })
     }
 
