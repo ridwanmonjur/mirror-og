@@ -191,11 +191,11 @@
                             <div class="container">
                                 <div class="box">
                                     <p class="description"><b>Start</b></p>
-                                    <input type="date" id="startDate" name="startDate" placeholder=" Select a start date" required>
+                                    <input type="date" id="startDate" onchange="checkValidDate('startDate', 'endDate');" name="startDate" placeholder=" Select a start date" required>
                                 </div>
                                 <div class="box">
                                     <p class="description"><b>End</b></p>
-                                    <input type="date" id="endDate" name="endDate" placeholder=" Select an end date" required>
+                                    <input type="date" id="endDate" onchange="checkValidDate('startDate', 'endDate');" name="endDate" placeholder=" Select an end date" required>
                                 </div>
                             </div>
                         </div>
@@ -206,11 +206,11 @@
                             <div class="container">
                                 <div class="box">
                                     <p class="description"><b>Start</b></p>
-                                    <input type="time" id="startTime" name="startTime" placeholder=" Select a start time" required>
+                                    <input type="time" id="startTime" onchange="checkValidTime('startTime', 'endTime', 'startDate', 'endDate');" name="startTime" placeholder=" Select a start time" required>
                                 </div>
                                 <div class="box">
                                     <p class="description"><b>End</b></p>
-                                    <input type="time" id="endTime" name="endTime" placeholder=" Select an end time" required>
+                                    <input type="time" id="endTime" name="endTime" onchange="checkValidTime('startTime', 'endTime', 'startDate', 'endDate');" placeholder=" Select an end time" required>
                                 </div>
                             </div>
                         </div>
@@ -445,6 +445,72 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
     <script>
+        function checkValidDate(startDateId, endDateId) {
+            var startDateInput = document.getElementById(startDateId);
+            var endDateInput = document.getElementById(endDateId);
+            var today = new Date();
+            today.setHours(0, 0, 0, 0); // Set the time to midnight for comparison
+
+            
+            var startDate = new Date(startDateInput.value);
+            var endDate = new Date(endDateInput.value);
+            if (startDate < today || endDate <= today) {
+                if (startDate < today) {
+                    startDateInput.value = ""
+                }
+                if (endDate <= today) {
+                    endDateInput.value = ""
+                }
+                Toast.fire({
+                    icon: 'error',
+                    text: "Start date or end date cannot be earlier than today."
+                });
+            }
+            if (startDateInput.value === "" || endDateInput.value === "") {
+                return;
+            }
+            if (endDate < startDate) {
+                Toast.fire({
+                    icon: 'error',
+                    text: "End date cannot be earlier than start date and time."
+                });
+                startDateInput.value = "";
+            }
+        }
+
+        function checkValidTime(startTimeId, endTimeId, startDateId, endDateId) {
+            var startDateInput = document.getElementById(startDateId);
+            var endDateInput = document.getElementById(endDateId);
+            var startTimeInput = document.getElementById(startTimeId);
+            var endTimeInput = document.getElementById(endTimeId);
+           
+            var now = new Date();
+            var startDate = new Date(startDateInput.value + " " + startTimeInput.value);
+            var endDate = new Date(endDateInput.value + " " + endTimeInput.value);
+            if (startDate < now || endDate <= now) {
+                Toast.fire({
+                    icon: 'error',
+                    text: "Start date or end date cannot be earlier than current time."
+                });
+                if (startDate < now) {
+                    startDateInput.value = ""
+                } else if (endDate < now) {
+                    endDateInput.value = ""
+                }
+            }
+            if (startTimeInput.value === "" || endTimeInput.value === "") {
+                return;
+            }
+            if (endDate < startDate) {
+                Toast.fire({
+                    icon: 'error',
+                    text: "End  and time cannot be earlier than start date and time."
+                });
+                startDateInput.value = "";
+                startTimeInput.value = "";
+            }
+        }
+
         function handleFile(inputFileId, previewImageId) {
             var selectedFile = document.getElementById(inputFileId).files[0];
             var allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
@@ -455,8 +521,7 @@
                     icon: 'error',
                     text: "Invalid file type. Please upload a JPEG, PNG, or JPG file."
                 })
-            }
-            else formHelper.previewSelectedImage('eventBanner', 'previewImage');
+            } else formHelper.previewSelectedImage('eventBanner', 'previewImage');
         }
     </script>
     <script>

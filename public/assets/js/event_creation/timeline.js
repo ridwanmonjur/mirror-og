@@ -4,11 +4,11 @@ let inputKeyToInputNameMapping = {
     eventType: 'type of the event',
     gameTitle: 'title of the game',
     eventBanner: 'event image',
-    startDate: 'the start date of the event', 
-    startTime: 'the start time of the event', 
-    endDate: 'the end date of the event', 
-    endTime: 'the end time of the event', 
-    eventDescription: 'the event description', 
+    startDate: 'the start date of the event',
+    startTime: 'the start time of the event',
+    endDate: 'the end date of the event',
+    endTime: 'the end time of the event',
+    eventDescription: 'the event description',
     eventTags: 'the event tags'
 }
 
@@ -91,7 +91,8 @@ function goToNextScreen(nextId, nextTimeline) {
         let formValues = formHelper.getFormValues(['eventTier', 'eventType']);
         if (
             'eventTier' in formValues &&
-            'eventType' in formValues) {
+            'eventType' in formValues
+        ) {
             let eventTier = formValues['eventTier'];
             let eventType = formValues['eventType'];
             let eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
@@ -108,7 +109,12 @@ function goToNextScreen(nextId, nextTimeline) {
             getElementByIdAndSetInnerHTML('paymentTotal', numberToLocaleString(eventTotal));
         }
         else {
-            throw new Error("Invalid form values for payment screen");
+            nextTimeline = allTimelines[0]
+            nextId = allIDs[1]
+            Toast.fire({
+                icon: 'error',
+                text: `Please enter the game title and game tier first!`
+            })
         }
     }
 
