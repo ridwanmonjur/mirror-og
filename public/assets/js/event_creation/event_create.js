@@ -1,10 +1,4 @@
 function openDropDown(element){
-    // if (!element.classList.contains('dropbtn-open')){
-    //     element.classList.add("dropbtn-open");
-    // }
-    // if (element.nextElementSibling.classList.contains('d-none')){
-    //     element.nextElementSibling.classList.remove("d-none");
-    // }
     element.classList.toggle("dropbtn-open");
     element.nextElementSibling.classList.toggle("d-none");
 }

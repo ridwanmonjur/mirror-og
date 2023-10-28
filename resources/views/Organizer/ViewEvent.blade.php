@@ -211,7 +211,6 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
         <script>
             function goToCreateScreen() {
                 let url = "{{ route('event.create') }}";
-                window.alert(url);
                 window.location.href = url;
             }
         </script>

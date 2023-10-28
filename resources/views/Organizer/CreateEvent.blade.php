@@ -60,7 +60,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="text-center d-none" id="step-0">
                     <header class="welcome">
                         <u>
@@ -156,14 +155,16 @@
                         </div>
                     </div>
 
-                    <br><br><br><br><br><br><br><br>
+                    <br><br><br><br><br>
+
+                    <br><br><br>
                     <div class="flexbox box-width">
                         <button type="button" onclick="goToNextScreen('step-0', 'timeline-1')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
                         <button type="button" onclick="goToNextScreen('step-2', 'timeline-2')" id="submit" class="oceans-gaming-default-button"> Next > </button>
                     </div>
                 </div>
 
-                <div class="text-center d-none create" id="step-2" height="300vh">
+                <div class="text-center d-none" id="step-2" height="300vh">
                     <header class="welcome text-center">
                         <u>
                             <h5>
@@ -224,13 +225,7 @@
                             <label for="eventBanner">Event Banner</label>
                             <p class="description">How about some visual aid for your event? (resolution to be decided)</p>
                             <div class="banner-upload">
-                                <input 
-                                    type="file" 
-                                    id="eventBanner" 
-                                    name="eventBanner" 
-                                    accept="image/*" 
-                                    required
-                                >
+                                <input type="file" id="eventBanner" name="eventBanner" accept="image/*" required>
                                 <div class="banner-preview">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
                                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -439,13 +434,14 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button"  class="oceans-gaming-default-button oceans-gaming-transparent-button" data-bs-dismiss="modal"> Back </button>
+                        <button type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button" data-bs-dismiss="modal"> Back </button>
                     </div>
                 </div>
             </div>
         </div>
     </main>
-
+    <link href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
     <script>
         let stripe = Stripe('{{ env("STRIPE_KEY") }}')
