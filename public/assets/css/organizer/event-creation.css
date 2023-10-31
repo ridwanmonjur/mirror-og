@@ -6,14 +6,6 @@
     --timeline-normal-width-mobile: 120px;
 }
 
-body{
-    background-image: url("/assets/images/event-management-bg.png");
-}
-
-.d-none{
-    display: none;
-}
-
 .container {
     display: flex;
     justify-content: space-between;
@@ -123,6 +115,158 @@ input[type="time"] {
 
 /* Style for the banner upload container */
 
+.featured-events {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 0;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.selectable-box {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 20px;
+    width: 30%;
+    margin: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    text-decoration: none;
+    color: black;
+    /* Set text color to black */
+}
+
+.selectable-box:hover {
+    transform: scale(1.05);
+}
+
+.image-scroll-container {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    /* Center align the images */
+}
+
+.scroll-images {
+    margin-right: 20px;
+    /* Adjust the spacing between images */
+    transition: opacity 0.3s, transform 0.3s;
+    text-align: center;
+    transform: scale(0.8);
+    /* Make other images smaller */
+    cursor: pointer;
+}
+
+.scroll-images.focused {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.selectable-image {
+    border-radius: 20px;
+    transition: transform 0.3s;
+}
+
+.event_extra {
+    margin-bottom: 3rem;
+    overflow: visible;
+    width: 230px;
+    height: 350px;
+    background: transparent;
+    border: 2px solid rgb(90, 150, 230);
+    border-radius: 40px;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.event {
+    margin-bottom: 3rem;
+    overflow: visible;
+    width: 300px;
+    height: 380px;
+    background: transparent;
+    border: 2px solid rgb(242, 93, 123);
+    border-radius: 40px;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.event_1 {
+    margin-bottom: 3rem;
+    overflow: visible;
+    width: 300px;
+    height: 380px;
+    background: transparent;
+    border: 2px solid rgb(55, 186, 66);
+    border-radius: 40px;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.event_2 {
+    margin-bottom: 3rem;
+    overflow: visible;
+    width: 300px;
+    height: 380px;
+    background: transparent;
+    border: 2px solid rgb(42, 139, 235);
+    border-radius: 40px;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.event_status_1 {
+    background-color: #bfc4c7;
+    color: #fff;
+    border-radius: 25px;
+    padding-left: 30px;
+    padding-right: 30px;
+    width: 20%;
+}
+
+.event_status_2 {
+    background-color: #78da1d;
+    color: #fff;
+    border-radius: 25px;
+    padding-left: 30px;
+    padding-right: 30px;
+    width: 20%;
+}
+
+.event_status_3 {
+    background-color: #43A4D7;
+    color: #fff;
+    border-radius: 25px;
+    padding-left: 27px;
+    padding-right: 30px;
+    width: 20%;
+    text-align: center;
+}
+
+.event_head {
+    max-width: 5rem;
+    max-height: 5rem;
+    position: absolute;
+    top: -3.5rem;
+    left: 50%;
+    /* Center horizontally */
+    transform: translateX(-50%);
+    /* Center horizontally */
+    z-index: 2;
+    /* Ensure it's above other content */
+}
+
+.event_head_container {
+    text-align: center;
+    position: relative;
+    /* Add relative positioning to the container */
+    z-index: 1;
+    /* Set a lower z-index to keep the content below the image */
+}
+
 
 /* Style for the banner upload container */
 
@@ -158,6 +302,36 @@ input[type="time"] {
     max-height: 100%;
 }
 
+.event_row {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px;
+    /* Add padding here */
+}
+
+.icon_container {
+    width: 20%;
+    padding-left: 10px;
+    /* Add right padding to create space */
+}
+
+.event_icon {
+    width: 30px;
+    height: 30px;
+    display: block;
+}
+
+.info_container {
+    flex-grow: 1;
+    /* Expand to fill available space */
+}
+
+.info_container p {
+    font-size: 16px;
+    margin: 0;
+}
+
 
 /* Style for the upload button */
 
@@ -186,6 +360,16 @@ input[type="time"] {
     color: #fff;
 }
 
+.selectable-image {
+    transition: transform 0.2s;
+    /* Add a transform animation */
+}
+
+.selectable-image:hover {
+    transform: scale(1.05);
+    /* Scale the image to 120% on hover */
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -211,14 +395,58 @@ input[type="time"] {
     margin-bottom: 5px;
 }
 
+.cont {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.box_2nd {
+    border: 1px solid black;
+    flex: auto;
+    background: transparent;
+    padding: 20px;
+    text-align: center;
+    height: 300px;
+    border-radius: 20px;
+    transition: transform 0.2s;
+    /* Add a transform animation */
+    text-decoration: none;
+    /* Remove underlines from links */
+    color: black;
+    /* Set text color to black */
+}
+
+.selectable-box {
+    cursor: pointer;
+    /* Add pointer cursor for selectable behavior */
+}
+
+.selectable-box:hover {
+    transform: scale(1.05);
+    /* Scale the box to 105% on hover */
+}
+
+.box_3rd {
+    border: 1px solid black;
+    flex: content;
+    background: transparent;
+    padding: 20px;
+    text-align: center;
+    height: 350px;
+    width: 230px;
+    border-radius: 20px;
+}
+
 main {
     width: 100%;
-    height: 210vh;
+    height: 120vh;
     display: block !important;
     padding: 0px 10px;
     align-items: center;
     justify-content: center;
     background-image: url("images/event-creation-bg.png");
+    margin: 0;
 }
 
 .navbar {
@@ -419,14 +647,7 @@ nav svg:active {
     text-decoration: underline;
 }
 
-.drop:hover a, .drop:hover img{
-    transform: scale(1.2);
-
-}
-
 input[type="submit"],
-input#submit,
-button#submit,
 .oceans-gaming-default-button {
     width: 200px;
     padding-top: 12px;
@@ -434,8 +655,6 @@ button#submit,
     font-size: normal;
     margin-top: 0px;
     color: #fff;
-    text-align: center;
-    cursor: submit;
     padding: 10px;
     border-radius: 30px;
     background: #43A4D7;
@@ -469,15 +688,11 @@ button#submit,
     color: white;
 }
 
-input[type="submit"]:hover,
-input#submit:hover
- {
+input[type="submit"]:hover {
     background: #a3c3d3;
 }
 
-input[type="submit"]:active,
-input#submit:active
-{
+input[type="submit"]:active {
     background: #79b0cc;
 }
 
@@ -487,6 +702,14 @@ input#submit:active
     padding-right: 20px;
     margin: auto !important;
     text-align: center;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.selected-option.selected {
+    background-color: #e6f7ff;
 }
 
 .drop {
@@ -678,16 +901,3 @@ input#submit:active
         width: var(--timeline-start-width-desktop) ! important;
     }
 }
-
-
-/* .dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown:hover .dropbtn {
-    background-color: #3e8e41;
-} */

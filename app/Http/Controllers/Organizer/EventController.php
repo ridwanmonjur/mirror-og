@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 class EventController extends Controller
 {
 
-   
+
     public function home(): View
     {
         return view('Organizer.Home');
@@ -39,12 +39,14 @@ class EventController extends Controller
             ]
         );
     }
-    
+
     public function create(): View
     {
+        $eventCategory = EventCategory::all();
         // return view('Organizer.CreateEvent.event');
-        return view('Organizer.CreateEvent');
+        return view('Organizer.CreateEvent', ['eventCategory' => $eventCategory ]);
     }
+
 
     public function store(Request $request)
     {
@@ -63,13 +65,13 @@ class EventController extends Controller
         );
     }
 
-    
+
     public function edit($id)
     {
         //
     }
 
-   
+
     public function update($id)
     {
         //

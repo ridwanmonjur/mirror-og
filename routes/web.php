@@ -75,8 +75,9 @@ Route::group(['prefix' => 'organizer'], function () {
 				'create' => "event.create",
 				'store' => "event.store",
 				'show' => "event.show",
+
 			]);
-            // Route::get('/event/create', [EventController::class, 'viewEventCategory']);
+
 
 		});
 		Route::get('/authDone', [PermissionController::class, 'showAuthenticated']);
