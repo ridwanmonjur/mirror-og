@@ -14,13 +14,19 @@ return new class extends Migration
         Schema::dropIfExists('events');
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('status');
-            $table->string('venue');
+            $table->string('eventName')->nullable();
+            $table->string('status')->nullable();
+            $table->string('venue')->nullable();
+            $table->string('sub_action_public_date')->nullable();
+            $table->string('sub_action_public_time')->nullable();
+            $table->string('sub_action_private')->nullable();
+            $table->string('action')->nullable();
             $table->string('caption')->nullable();
-            $table->foreignId('user_id')->constrained(
-                table: 'users', indexName: 'events_user_id_foreign'
-            );
+            $table->unsignedBigInteger('id')->nullable();
+            // $table->foreignId('user_id')->constrained(
+            //     table: 'users', indexName: 'events_user_id_foreign'
+            // );
+            $table->foreign('id')->references('id')->on('users');
             $table->timestamps();
         });
     }

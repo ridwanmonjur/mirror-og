@@ -37,6 +37,8 @@
         </div>
     </nav>
     <main>
+        <form action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
+            @csrf
         <section class="time-line-box">
             <div class="swiper-container text-center">
                 <div class="swiper-wrapper">
@@ -96,7 +98,7 @@
                 </header>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-0', 'none')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-2', 'timeline-1')" type="submit" class="oceans-gaming-default-button"> Next > </button>
+                    <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
 
@@ -120,7 +122,7 @@
                 @endforeach
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-1', 'none')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-3', 'timeline-1')" type="submit" class="oceans-gaming-default-button"> Next > </button>
+                    <button onclick="goToNextScreen('step-3', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
 
             </div>
@@ -177,7 +179,7 @@
 
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-2', 'none')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-4', 'timeline-1')" type="submit" class="oceans-gaming-default-button"> Next > </button>
+                    <button onclick="goToNextScreen('step-4', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
 
@@ -235,7 +237,7 @@
 
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-3', 'none')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-5', 'timeline-2')" type="submit" class="oceans-gaming-default-button"> Step 2 > </button>
+                    <button onclick="goToNextScreen('step-5', 'timeline-2')" type="button" class="oceans-gaming-default-button"> Step 2 > </button>
                 </div>
             </div>
 
@@ -283,7 +285,7 @@
                 </div>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-4', 'timeline-1')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-6', 'timeline-2')" type="submit" class="oceans-gaming-default-button"> Next > </button>
+                    <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
 
@@ -307,7 +309,7 @@
                 </div>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-5', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-7', 'timeline-2')" type="submit" class="oceans-gaming-default-button"> Next > </button>
+                    <button onclick="goToNextScreen('step-7', 'timeline-2')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
 
@@ -331,7 +333,7 @@
                 </div>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-6', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-8', 'timeline-2')" type="submit" class="oceans-gaming-default-button"> Next > </button>
+                    <button onclick="goToNextScreen('step-8', 'timeline-2')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
 
@@ -357,7 +359,7 @@
                 </div>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-7', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-9', 'timeline-2')" type="submit" class="oceans-gaming-default-button"> Next > </button>
+                    <button onclick="goToNextScreen('step-9', 'timeline-2')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
 
@@ -393,7 +395,7 @@
                 </div>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-8', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-10', 'timeline-3')" type="submit" class="oceans-gaming-default-button"> Step 3 > </button>
+                    <button onclick="goToNextScreen('step-10', 'timeline-3')" type="button" class="oceans-gaming-default-button"> Step 3 > </button>
                 </div>
             </div>
 
@@ -408,11 +410,13 @@
                 <div class="payment-summary" style="margin-top: -30px;">
                     <h5>Payment Summary </h5>
                     <div>Event Categories</div>
+                    @foreach ($eventCategory as $eventc)
                     <br>
-                    <div>&nbsp;&nbsp;&nbsp;&nbsp;Title&nbsp;&nbsp;&nbsp;: Dota 2</div>
-                    <div>&nbsp;&nbsp;&nbsp;&nbsp;Type&nbsp;&nbsp;: League</div>
-                    <div>&nbsp;&nbsp;&nbsp;&nbsp;Tier&nbsp;&nbsp;&nbsp;&nbsp;: Dolphin</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;Title&nbsp;&nbsp;&nbsp;: {{ $eventc->gameTitle}}</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;Type&nbsp;&nbsp;: {{ $eventc->eventType}}</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;Tier&nbsp;&nbsp;&nbsp;&nbsp;: {{ $eventc->eventTier}}</div>
                     <br>
+                    @endforeach
                     <div class="flexbox">
                         <span>Subtotal</span>
                         <span>RM 15, 000.00</span>
@@ -432,7 +436,7 @@
                     </div>
                     <br>
                     <div class="text-center">
-                        <input type="submit" class="choose-payment-method" value="Choose a payment method">
+                        <input type="button" class="choose-payment-method" value="Choose a payment method">
                     </div>
                     <br>
                     <!-- <div class="text-center">
@@ -442,7 +446,7 @@
                 <br>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-9', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-11', 'timeline-4')" type="submit" class="oceans-gaming-default-button"> Step 4 > </button>
+                    <button onclick="goToNextScreen('step-11', 'timeline-4')" type="button" class="oceans-gaming-default-button"> Step 4 > </button>
                 </div>
             </div>
 
@@ -561,10 +565,8 @@
             </div>
 
         </section>
+        </form>
     </main>
-
-
-
     <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
     <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
 

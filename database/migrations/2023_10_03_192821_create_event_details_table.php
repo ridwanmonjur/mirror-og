@@ -12,15 +12,28 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('event_details', function (Blueprint $table) {
+            // $table->id();
+            // $table->dateTime('startDateTime');
+            // $table->dateTime('endDateTime');
+            // $table->string('eventDescription');
+            // $table->string('eventBanner');
+            // $table->string('eventTags');
+            // $table->foreignId('event_id')->constrained(
+            //     table: 'events', indexName: 'event_details_event_id_foreign'
+            // );
             $table->id();
-            $table->dateTime('startDateTime');
-            $table->dateTime('endDateTime');
+            $table->string('eventName');
+            $table->date('startDate');
+            $table->date('endDate');
+            $table->time('startTime');
+            $table->time('endTime');
             $table->string('eventDescription');
             $table->string('eventBanner');
-            $table->string('eventTags');  
+            $table->string('eventTags');
             $table->foreignId('event_id')->constrained(
-                table: 'events', indexName: 'event_details_event_id_foreign'
-            );    
+            table: 'events', indexName: 'event_details_event_id_foreign'
+            )->nullable();
+            $table->timestamps();
         });
     }
 

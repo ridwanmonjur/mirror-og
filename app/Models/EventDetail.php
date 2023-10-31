@@ -15,8 +15,8 @@ class EventDetail extends Model
         'eventTags' => 'array',
     ];
 
-    public function event()
-    {
-        return $this->belongsTo(Event::class, 'event_id');
-    }
+    // public function event()
+    // {
+    //     return $this->belongsTo(Event::class, 'event_id');
+    // }
 }

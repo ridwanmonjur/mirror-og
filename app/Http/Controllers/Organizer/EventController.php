@@ -51,8 +51,34 @@ class EventController extends Controller
     public function store(Request $request)
     {
 
-        dd($request->all());
-        return view('Organizer.CreateEvent');
+        // dd($request->all());
+        // return view('Organizer.CreateEvent');
+
+        $eventDetail = new EventDetail;
+        $eventDetail->startDate = $request->startDate;
+        $eventDetail->endDate = $request->endDate;
+        $eventDetail->startTime = $request->startTime;
+        $eventDetail->endTime  = $request->endTime;
+        $eventDetail->eventName  = $request->eventName;
+        $eventDetail->eventDescription  = $request->eventDescription;
+        $eventDetail->eventTags  = $request->eventTags;
+        $eventDetail->eventBanner  = $request->eventBanner;
+        $eventDetail->save();
+
+        $event = new Event;
+        $event->eventName = $request->eventName;
+        $event->status = $request->status;
+        $event->venue = $request->venue;
+        $event->sub_action_public_date  = $request->sub_action_public_date;
+        $event->sub_action_public_time  = $request->sub_action_public_time;
+        $event->sub_action_private  = $request->sub_action_private;
+        $event->action  = $request->action;
+        $event->save();
+
+        return redirect('event.index');
+
+
+
     }
 
     public function show($id): View
