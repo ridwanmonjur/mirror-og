@@ -647,7 +647,7 @@ nav svg:active {
     text-decoration: underline;
 }
 
-input[type="submit"],
+input[type="button"],
 .oceans-gaming-default-button {
     width: 200px;
     padding-top: 12px;

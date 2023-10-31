@@ -71,7 +71,7 @@
                         Create online esports events all on your own, right here on Splash, in just 4 steps.
                     </p>
                 </header>
-                <input type="submit" onclick="goToNextScreen('step-1', 'timeline-1')" value="Continue">
+                <input type="button" onclick="goToNextScreen('step-1', 'timeline-1')" value="Continue">
             </div>
 
             <div id="step-1" class="d-none">
@@ -135,16 +135,18 @@
                     <br>
                     <p>Finally, choose a tier for your event.</p>
                 </header>
+                @foreach ($eventCategory as $eventc)
                 <section class="featured-events">
                     <a href="" class="event selectable-box">
                         <div class="event_head_container">
-                            <img id='starfish' src="css/images/logo/3.png" class="event_head">
+                            <img id='starfish' src="{{ asset('storage/'. $eventc->tierIcon) }}" class="event_head">
                         </div>
                         <br>
                         <h4 style="text-align: center;">Starfish</h4>
                         <div class="event_row">
                             <div class="icon_container">
-                                <img src="css/images/user.png" class="event_icon">
+                                <img src="{{ asset('/assets/images/createEvent/user.png') }}" class="event_icon">
+
                             </div>
                             <div class="info_container">
                                 <p>16</p>
@@ -153,7 +155,7 @@
                         </div>
                         <div class="event_row">
                             <div class="icon_container">
-                                <img src="css/images/trophy.png" class="event_icon">
+                                <img src="{{ asset('/assets/images/createEvent/trophy.png') }}" class="event_icon">
                             </div>
                             <div class="info_container">
                                 <p>RM 5000</p>
@@ -162,7 +164,7 @@
                         </div>
                         <div class="event_row">
                             <div class="icon_container">
-                                <img src="css/images/dollar.png" class="event_icon">
+                                <img src="{{ asset('/assets/images/createEvent/dollar.png') }}" class="event_icon">
                             </div>
                             <div class="info_container">
                                 <p>RM 20</p>
@@ -170,76 +172,7 @@
                             </div>
                         </div>
                     </a>
-
-                    <a href="" class="event_1 selectable-box">
-                        <div class="event_head_container">
-                            <img id="turtle" src="css/images/logo/3.png" class="event_head">
-                        </div>
-                        <br>
-                        <h4 style="text-align: center;">Turtle</h4>
-                        <div class="event_row">
-                            <div class="icon_container">
-                                <img src="css/images/user.png" class="event_icon">
-                            </div>
-                            <div class="info_container">
-                                <p>32</p>
-                                <small>team slots</small>
-                            </div>
-                        </div>
-                        <div class="event_row">
-                            <div class="icon_container">
-                                <img src="css/images/trophy.png" class="event_icon">
-                            </div>
-                            <div class="info_container">
-                                <p>RM 10000</p>
-                                <small>prize pool</small>
-                            </div>
-                        </div>
-                        <div class="event_row">
-                            <div class="icon_container">
-                                <img src="css/images/dollar.png" class="event_icon">
-                            </div>
-                            <div class="info_container">
-                                <p>RM 50</p>
-                                <small>team entry fee</small>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="" class="event_2 selectable-box">
-                        <div class="event_head_container">
-                            <img id="dolphin" src="css/images/logo/6.png" class="event_head">
-                        </div>
-                        <br>
-                        <h4 style="text-align: center;">Dolphin</h4>
-                        <div class="event_row">
-                            <div class="icon_container">
-                                <img src="css/images/user.png" class="event_icon">
-                            </div>
-                            <div class="info_container">
-                                <p>64</p>
-                                <small>team slots</small>
-                            </div>
-                        </div>
-                        <div class="event_row">
-                            <div class="icon_container">
-                                <img src="css/images/trophy.png" class="event_icon">
-                            </div>
-                            <div class="info_container">
-                                <p>RM 15000</p>
-                                <small>prize pool</small>
-                            </div>
-                        </div>
-                        <div class="event_row">
-                            <div class="icon_container">
-                                <img src="css/images/dollar.png" class="event_icon">
-                            </div>
-                            <div class="info_container">
-                                <p>RM 100</p>
-                                <small>team entry fee</small>
-                            </div>
-                        </div>
-                    </a>
+                   @endforeach
                 </section>
 
                 <div class="flexbox box-width">
@@ -318,8 +251,6 @@
                     </p>
                 </header>
                 <div class="event-details-form">
-                    <form action="#" method="POST">
-
                         <div class="form-group">
                             <label for="startDate">Date of Event</label>
                             <p class="description">Tell your players when to mark their calendars</p>
@@ -349,9 +280,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-                    </form>
                 </div>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-4', 'timeline-1')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
@@ -371,13 +299,11 @@
                     </p>
                 </header>
                 <div class="event-details-form">
-                    <form action="#" method="POST">
                         <div class="form-group">
                             <label for="eventName">Name of Event</label>
                             <p class="description">Pick a good name for your event (max. 60 characters)</p>
                             <input type="text" id="eventName" name="eventName" placeholder=" Name of Event" required>
                         </div>
-                    </form>
                 </div>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-5', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
@@ -397,13 +323,11 @@
                     </p>
                 </header>
                 <div class="event-details-form">
-                    <form action="#" method="POST">
                         <div class="form-group">
                             <label for="eventDescription">Event Description</label>
                             <p class="description">So, tell us a little bit about your event (max. 3,000 characters)</p>
                             <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event" required></textarea>
                         </div>
-                    </form>
                 </div>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-6', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
@@ -423,7 +347,6 @@
                     </p>
                 </header>
                 <div class="event-details-form">
-                    <form action="#" method="POST">
                         <div class="form-group">
                             <label for="eventTags">Event Tags</label>
                             <p class="description">Add some relevant keywords to help players find your event more easily</p>
@@ -431,7 +354,6 @@
                                 <input type="text" id="eventTags" name="eventTags" placeholder="Add tags" required>
                             </div>
                         </div>
-                    </form>
                 </div>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-7', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
@@ -451,7 +373,6 @@
                     </p>
                 </header>
                 <div class="event-details-form">
-                    <form action="#" method="POST">
                         <div class="form-group">
                             <label for="eventBanner">Event Banner</label>
                             <p class="description">A distinctive banner will help your event stand out (resolution TBD).</p>
@@ -469,7 +390,6 @@
                                 <br>
                             </div>
                         </div>
-                    </form>
                 </div>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-8', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
