@@ -1,8 +1,3 @@
-@push('style')
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
-@endpush
-
 <nav class="navbar">
     <div class="logo">
         <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
