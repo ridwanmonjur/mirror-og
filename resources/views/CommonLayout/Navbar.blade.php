@@ -18,8 +18,8 @@
         @guest
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
         <div class="dropdown">
-            <li><a href="#" id='nav-but' class="dropbtn sign" data-toggle="dropdown" aria-expanded="false">Sign In</a></li>
-            <div id="myDropdown" class="dropdown-content">
+            <a href="#" class="btn" data-toggle="dropdown dropdown-toggle" aria-expanded="false">Sign In</a>
+            <div id="myDropdown" class="dropdown-menu">
                 <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">Organizer</a>
                 <a class="dropdown-item" href="{{ route('participant.signin.view') }}">Participant</a>
             </div>
@@ -29,8 +29,7 @@
         <button class="oceans-gaming-default-button oceans-gaming-gray-button"> Where is moop? </button>
         <img style="position: relative; top: 0px;" width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
         <img style="position: relative; top: 0px;" width="70px" height="40px" src="{{ asset('/assets/images/navbar-crown.png') }}" alt="">
-        <a class="" href="{{ route('logout.action') }}">Logout</a>
-
+        <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Logout</a>
         @endauth
     </div>
 </nav>
@@ -53,13 +52,7 @@
         <img width="70px" height="40px" src="{{ asset('/assets/images/navbar-crown.png') }}" alt="">
 
         <div class="dropdown">
-            <button type="button" style="border: 0px solid black; background: transparent; margin-top: 12px; font-size: 16px;" class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" onclick="toggleDropdown()">
-                Sign Out
-            </button>
-            <div id="myDropdown" class="dropdown-menu d-none">
-                <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">Organizer</a>
-                <a class="dropdown-item" href="{{ route('participant.signin.view') }}">Participant</a>
-            </div>
+        <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Logout</a>
         </div>
 
         @endauth
