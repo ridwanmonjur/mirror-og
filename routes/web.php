@@ -27,7 +27,7 @@ Route::group([
 });
 
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
-
+Route::get('logout', [AuthController::class, 'logoutAction'])->name("logout.action");
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name("google.login");
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
