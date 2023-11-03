@@ -94,7 +94,7 @@
                                 <div class="flexbox-centered-space">
                                     <img src="{{ asset('/assets/images/menu.png') }}" alt="menu" width="50" height="40">
                                     <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
-                                        <u>{{$event->status}}</u>
+                                        {{$event->status}}
                                     </button>
                                 </div>
                                 <br>

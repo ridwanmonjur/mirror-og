@@ -18,8 +18,8 @@
         @guest
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
         <div class="dropdown">
-            <a href="#" class="btn" data-toggle="dropdown dropdown-toggle" aria-expanded="false">Sign In</a>
-            <div id="myDropdown" class="dropdown-menu">
+            <a href="#" role="button" class="btn dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Sign In</a>
+            <div id="zzz" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">Organizer</a>
                 <a class="dropdown-item" href="{{ route('participant.signin.view') }}">Participant</a>
             </div>
@@ -50,11 +50,7 @@
         @auth
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
         <img width="70px" height="40px" src="{{ asset('/assets/images/navbar-crown.png') }}" alt="">
-
-        <div class="dropdown">
         <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Logout</a>
-        </div>
-
         @endauth
     </div>
 </nav>
