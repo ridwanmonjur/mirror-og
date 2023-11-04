@@ -18,9 +18,7 @@ return new class extends Migration {
             $table->string('eventDefinitions');
             $table->string('eventTier');
             $table->string('tierIcon');
-            $table->foreignId('event_id')->constrained(
-                table: 'events', indexName: 'event_categories_event_id_foreign'
-            )->nullable();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

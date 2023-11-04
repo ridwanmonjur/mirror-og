@@ -20,7 +20,7 @@ $stylesEventRatio .= "background-color: #8CCD39; color: white;";
 elseif ($ratio > 0.5){
 $stylesEventRatio .= "background-color: #FA831F; color: white;";
 }
-elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } $eventTierLower=strtolower($event->eventCategory->eventTier);
+elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } $eventTierLower=strtolower($event->eventDetail->eventTier);
 
     $date = \Carbon\Carbon::parse($event->eventDetail->startDateTime)->setTimezone('Asia/Singapore');
     $dayStr = $date->englishDayOfWeek;

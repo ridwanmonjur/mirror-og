@@ -14,9 +14,21 @@ class EventDetail extends Model
     protected $casts = [
         'eventTags' => 'array',
     ];
+    protected $fillable = ['name', 'status', 'venue', 'caption'];
 
-    // public function event()
-    // {
-    //     return $this->belongsTo(Event::class, 'event_id');
-    // }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function eventDetail()
+    {
+         return $this->hasOne(EventDetail::class, 'id');
+   }
+
+    // public function eventCategory()
+    //  {
+    //      return $this->hasOne(EventCategory::class, 'id');
+    //  }
+
 }

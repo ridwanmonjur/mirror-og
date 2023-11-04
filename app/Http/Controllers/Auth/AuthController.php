@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\EventCategory;
 use App\Models\Organizer;
 use App\Models\Participant;
 use App\Models\User;
@@ -95,7 +96,7 @@ class AuthController extends Controller
 
     public function showLandingPage(Request $request)
     {
-        $events = Event::all();
+        $events = EventCategory::all();
 
         return view('LandingPage', ['events' => $events]);
     }

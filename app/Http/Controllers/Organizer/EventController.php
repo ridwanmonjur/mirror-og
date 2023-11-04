@@ -23,7 +23,7 @@ class EventController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $eventList = Event::with('eventDetail', 'eventCategory')
+        $eventList = EventDetail::with('eventDetail')
             ->where('user_id', $user->id)
             ->get();
         $organizer = Organizer::where('user_id', $user->id)->first();
@@ -83,7 +83,7 @@ class EventController extends Controller
 
     public function show($id): View
     {
-        $event = Event::findOrFail($id);
+        $event = EventDetail::findOrFail($id);
         $isUser = Auth::user()->id == $event->user_id;
         return view(
             'Organizer.ViewEvent',

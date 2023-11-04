@@ -46,7 +46,7 @@
                     </h3>
                 </u>
                 <input type="submit" value="Create Event" onclick="goToCreateScreen();">
-               
+
 
             </header>
             <div class="flexbox-filter">
@@ -112,7 +112,7 @@
             elseif ($ratio > 0.5){
             $stylesEventRatio .= "background-color: #FA831F; color: white;";
             }
-            elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } */ $stylesEventRatio="background-color: #FFE325; color: black;" ; $eventTierLower=strtolower($event->eventCategory->eventTier);
+            elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } */ $stylesEventRatio="background-color: #FFE325; color: black;" ; $eventTierLower=strtolower($event->eventDetail->eventTier);
                 @endphp
                 <a href="{{ route('event.show', $event->id) }}" style="text-decoration: none;">
                     <div class="{{'rounded-box rounded-box-' . $eventTierLower }}">
@@ -131,7 +131,7 @@
                                     </button>
                                 </div>
                                 <br>
-                                <p style="height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->name}}</u></p>
+                                <p style="height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->eventName}}</u></p>
                                 <p class="small-text"><i>
                                         {{ $organizer->companyName  }}
                                     </i></p>
@@ -190,7 +190,7 @@
         <script>
             function goToCreateScreen(){
                 let url = "{{ route('event.create') }}";
-                window.alert(url);  
+                window.alert(url);
                 window.location.href = url;
             }
         </script>
