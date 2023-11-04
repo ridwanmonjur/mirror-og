@@ -63,17 +63,14 @@ class EventController extends Controller
         $eventDetail->eventDescription  = $request->eventDescription;
         $eventDetail->eventTags  = $request->eventTags;
         $eventDetail->eventBanner  = $request->eventBanner;
+        $eventDetail->status = $request->status;
+        $eventDetail->venue = $request->venue;
+        $eventDetail->sub_action_public_date  = $request->sub_action_public_date;
+        $eventDetail->sub_action_public_time  = $request->sub_action_public_time;
+        $eventDetail->sub_action_private  = $request->sub_action_private;
+        $eventDetail->action  = $request->action;
         $eventDetail->save();
 
-        $event = new Event;
-        $event->eventName = $request->eventName;
-        $event->status = $request->status;
-        $event->venue = $request->venue;
-        $event->sub_action_public_date  = $request->sub_action_public_date;
-        $event->sub_action_public_time  = $request->sub_action_public_time;
-        $event->sub_action_private  = $request->sub_action_private;
-        $event->action  = $request->action;
-        $event->save();
 
         return redirect('event.index');
 
