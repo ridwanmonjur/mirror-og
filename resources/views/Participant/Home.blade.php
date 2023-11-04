@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.Navbar')
+    <!-- @include('CommonLayout.Navbar') -->
 
     <section class="hero">
         <img src="{{ asset('/assets/images/ss.png') }}" alt="">

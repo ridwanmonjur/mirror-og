@@ -160,15 +160,7 @@ button#submit,
     
 }
 
-
-/* .dropdown-content a:hover {
-    background-color: #f1f1f1;
+a, a:hover {
+    color: black !important;
+    text-decoration: none !important;
 }
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown:hover .dropbtn {
-    background-color: #3e8e41;
-} */
