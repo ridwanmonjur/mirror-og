@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+    
+.d-none{
+    display: none;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    /* Adjust the maximum width as needed */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+.d-none {
+    display: none;
+}
+
+.d-none-at-mobile {
+    display: none;
+    margin: auto;
+}
+
+.d-centered-at-mobile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.navbar {
+    min-height: 5vh;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.navbar img,
+.navbar svg,
+nav img,
+nav svg {
+    cursor: pointer;
+}
+
+.navbar img:hover,
+nav img:hover,
+.navbar svg:hover,
+nav svg:hover {
+    transform: scale(1.1);
+}
+
+.navbar img:active,
+nav img:active,
+.navbar svg:active,
+nav svg:active {
+    transform: scale(1.1);
+}
+
+.navbar .nav-buttons {
+    display: none;
+}
+
+.menu-toggle {
+    display: block;
+}
+
+.search-bar {
+    position: relative;
+}
+
+.search-bar input {
+    border-radius: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 90px;
+    width: 450px;
+    max-width: 80vw;
+    /* caret-color: #43A4D7;
+    color: #43A4D7; */
+}
+
+.search-bar svg {
+    position: absolute;
+    top: 12px;
+}
+
+input[type="submit"],
+input#submit,
+button#submit,
+.oceans-gaming-default-button {
+    width: 200px;
+    padding-top: 12px;
+    padding-bottom: 13px;
+    font-size: normal;
+    margin-top: 0px;
+    color: #fff;
+    text-align: center;
+    cursor: submit;
+    padding: 10px;
+    border-radius: 30px;
+    background: #43A4D7;
+    border: none;
+    /* border-bottom: 2px solid rgba(0, 0, 0, 0.1); */
+}
+
+.oceans-gaming-default-button {
+    width: fit-content;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.oceans-gaming-default-button:click {
+    border: 0px solid black;
+}
+
+@media screen and (min-width: 600px) {
+   
+}
+
+@media screen and (min-width: 992px) {
+    .payment-summary {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+    .flexbox {
+        display: flex;
+        justify-content: space-between;
+    }
+    .search-bar {
+        display: block;
+    }
+    .search-bar input {
+        padding-left: 60px;
+    }
+    .navbar .nav-buttons {
+        display: block;
+    }
+    .d-none-at-mobile {
+        display: block;
+    }
+    .menu-toggle {
+        display: none;
+    }
+    .d-centered-at-mobile {
+        display: none;
+    }
+    .search-bar svg {
+        left: 20px;
+    }
+    
+}
+
+a, a:hover {
+    color: black !important;
+    text-decoration: none !important;
+}

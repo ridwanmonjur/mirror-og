@@ -222,7 +222,7 @@ nav ul li a:hover {
     margin-bottom: 3rem;
     overflow: auto;
     width: 350px;
-    height: 430px;
+    height: 470px;
     background: transparent;
     border: 2px solid rgb(82, 159, 23);
     border-radius: 40px;
@@ -257,7 +257,7 @@ nav ul li a:hover {
     border-radius: 25px;
     padding-left: 30px;
     padding-right: 30px;
-    width: 20%;
+    width: min-content;
 }
 
 .event_status_2 {
@@ -266,7 +266,7 @@ nav ul li a:hover {
     border-radius: 25px;
     padding-left: 30px;
     padding-right: 30px;
-    width: 20%;
+    width: min-content;
 }
 
 .event_status_3 {

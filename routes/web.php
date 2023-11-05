@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\EventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Organizer\PermissionController;
+use App\Http\Controllers\StripeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +27,7 @@ Route::group([
 });
 
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
-
+Route::get('logout', [AuthController::class, 'logoutAction'])->name("logout.action");
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name("google.login");
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
@@ -98,6 +99,8 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 Route::get('/dashboard', [AuthController::class, 'dashboard']); // Route for Dashboard Page
+
+
 
 // Route::redirect('/login', '/admin/login')->name('login');
 

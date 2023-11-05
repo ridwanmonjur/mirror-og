@@ -1,41 +1,7 @@
 @include('Organizer.Layout.CreateEventHeadTag')
 
 <body>
-    <nav class="navbar">
-        <div class="logo">
-            <img width="160px" height="60px" src="{{ asset('/assets/images/createEvent/logo-default.png') }}" alt="">
-        </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu menu-toggle" onclick="toggleNavbar()">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-        <div class="search-bar d-none-at-mobile">
-            <input type="text" name="search" id="search" placeholder="Search for events">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-        </div>
-        <div class="nav-buttons">
-            <button class="oceans-gaming-default-button oceans-gaming-gray-button"> Where is moop? </button>
-            <img width="50px" height="40px" src="{{ asset('/assets/images/createEvent/navbar-account.png') }}" alt="">
-            <img width="70px" height="40px" src="{{ asset('/assets/images/createEvent/navbar-crown.png') }}" alt="">
-        </div>
-    </nav>
-    <nav class="mobile-navbar d-centered-at-mobile d-none" style="border-bottom: 0.4px solid black; border-top: 0.4px solid black; background: white; padding-top: 10px;">
-        <div class="search-bar search-bar-mobile ">
-            <input type="text" name="search" id="search" placeholder="Search for events">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" style="left: 40px;">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-        </div>
-        <div class="nav-buttons search-bar-mobile d-centered-at-mobile">
-            <img width="50px" height="40px" src="{{ asset('/assets/images/createEvent/navbar-account.png') }}" alt="">
-            <img width="70px" height="40px" src="{{ asset('/assets/images/createEvent/navbar-crown.png') }}" alt="">
-        </div>
-    </nav>
+    @include('CommonLayout.Navbar')
     <main>
         <form action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
             @csrf
@@ -259,11 +225,11 @@
                             <div class="container">
                                 <div class="box">
                                     <p class="description"><b>Start</b></p>
-                                    <input type="date" id="startDate" name="startDate" placeholder=" Select a start date" required>
+                                    <input type="date" id="startDate" onchange="checkValidDate('startDate', 'endDate');" name="startDate" placeholder=" Select a start date" required>
                                 </div>
                                 <div class="box">
                                     <p class="description"><b>End</b></p>
-                                    <input type="date" id="endDate" name="endDate" placeholder=" Select an end date" required>
+                                    <input type="date" id="endDate" onchange="checkValidDate('startDate', 'endDate');" name="endDate" placeholder=" Select an end date" required>
                                 </div>
                             </div>
                         </div>
@@ -274,11 +240,11 @@
                             <div class="container">
                                 <div class="box">
                                     <p class="description"><b>Start</b></p>
-                                    <input type="time" id="startTime" name="startTime" placeholder=" Select a start time" required>
+                                    <input type="time" id="startTime" onchange="checkValidTime('startTime', 'endTime', 'startDate', 'endDate');" name="startTime" placeholder=" Select a start time" required>
                                 </div>
                                 <div class="box">
                                     <p class="description"><b>End</b></p>
-                                    <input type="time" id="endTime" name="endTime" placeholder=" Select an end time" required>
+                                    <input type="time" id="endTime" name="endTime" onchange="checkValidTime('startTime', 'endTime', 'startDate', 'endDate');" placeholder=" Select an end time" required>
                                 </div>
                             </div>
                         </div>
@@ -379,7 +345,7 @@
                             <label for="eventBanner">Event Banner</label>
                             <p class="description">A distinctive banner will help your event stand out (resolution TBD).</p>
                             <div class="banner-upload">
-                                <input type="file" id="eventBanner" name="eventBanner" accept="image/*" required>
+                                <input onchange="handleFile('eventBanner', 'previewImage');" type="file" id="eventBanner" name="eventBanner" accept="image/*" required>
                                 <div class="banner-preview">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
                                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -391,6 +357,8 @@
                                 <label class="upload-button" for="eventBanner">Upload Image</label>
                                 <br>
                             </div>
+                            <img class="d-none banner-preview" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px;">
+
                         </div>
                 </div>
                 <div class="flexbox box-width">
@@ -566,6 +534,50 @@
 
         </section>
         </form>
+        <div class="modal fade" id="payment-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="payment-modal-label">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <h4>Make A Payment</h4>
+                                @if (session()->has('success'))
+                                <div class="alert alert-success">
+                                    {{ session()->get('success') }}
+                                </div>
+                                @endif
+                                <form id="card-form">
+                                    @csrf
+                                    <div class="form-group form-group2">
+                                        <label for="card-name" class="">Your name</label>
+                                        <input type="text" name="name" id="card-name" class="">
+                                    </div>
+                                    <div class="form-group form-group2">
+                                        <label for="email" class="">Email</label>
+                                        <input type="email" name="email" id="email" class="">
+                                    </div>
+                                    <div class="form-group form-group2">
+                                        <label for="card" class="">Card details</label>
+
+                                        <div class="form-group form-group2">
+                                            <div id="card"></div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="oceans-gaming-default-button">Pay 👉</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button" data-bs-dismiss="modal"> Back </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
     <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
     <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
