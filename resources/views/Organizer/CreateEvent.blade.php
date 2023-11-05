@@ -270,7 +270,10 @@
                         <div class="form-group">
                             <label for="eventName">Name of Event</label>
                             <p class="description">Pick a good name for your event (max. 60 characters)</p>
-                            <input type="text" id="eventName" name="eventName" placeholder=" Name of Event" required>
+                            <input type="text" id="eventName" name="eventName" placeholder=" Name of Event" required class="@error('title') is-invalid @enderror">
+                            @error('eventName')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                         </div>
                 </div>
                 <div class="flexbox box-width">
