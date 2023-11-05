@@ -460,7 +460,7 @@
                 </header>
                 <div class="payment-summary" style="margin-top: -30px;">
 
-                    <input onchange="toggleRadio(this, 'public')" required type="radio" id="public" name="action" value="public">
+                    <input onchange="toggleRadio(this, 'public')" required type="radio" id="public" name="action" value="UPCOMING">
                     <label for="public"><u>Public</u></label><br>
                     <div class="radio-indent public">
                         <p>Everyone can see and join your event</p>
@@ -480,7 +480,7 @@
                         </div>
                     </div>
 
-                    <input onchange="toggleRadio(this, 'private')" required type="radio" id="private" name="action" value="private">
+                    <input onchange="toggleRadio(this, 'private')" required type="radio" id="private" name="action" value="ONGOING">
                     <label for="private"><u>Private</u></label><br>
                     <div class="radio-indent private">
                         <p>Only players you invite can see and join your event</p>
@@ -492,15 +492,15 @@
                         <label for="sub_action_private"><u>Schedule launch</u></label><br>
                         <div class="container">
                             <div class="box">
-                                <input type="date" id="sub_action_public_date" name="sub_action_public_date">
+                                <input type="date" id="sub_action_private" name="sub_action_private">
                             </div>
                             <div class="box">
-                                <input type="time" id="sub_action_public_time" name="sub_action_public_time">
+                                <input type="time" id="sub_action_private" name="sub_action_private">
                             </div>
                         </div>
                     </div>
 
-                    <input onchange="toggleRadio(this, 'draft')" type="radio" id="draft" name="action" required value="draft">
+                    <input onchange="toggleRadio(this, 'draft')" type="radio" id="draft" name="action" required value="DRAFT">
                     <label for="draft"><u>Save as draft</u></label>
                     <div class="radio-indent draft">
                         <p>Save your event and edit it later</p>

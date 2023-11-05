@@ -445,7 +445,7 @@ main {
     padding: 0px 10px;
     align-items: center;
     justify-content: center;
-    background-image: url("images/event-creation-bg.png");
+    background-image: url("/assets/images/event-management-bg.png");
     margin: 0;
 }
 

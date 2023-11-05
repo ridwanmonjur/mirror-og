@@ -51,6 +51,20 @@ class EventController extends Controller
     public function store(Request $request)
     {
 
+
+        // // Validate the Form
+        // $request->validate([
+        //     'startDate' => 'required',
+        //     'endDate' => 'required',
+        //     'startTime' => 'required',
+        //     'endTime' => 'required',
+        //     'eventName' => 'required',
+        //     'eventDescription' => 'required',
+        //     'eventTags' => 'required',
+        //     'eventBanner' => 'required',
+        //     'status' => 'required',
+        //     'venue' => 'required',
+        // ]);
         // dd($request->all());
         // return view('Organizer.CreateEvent');
 
@@ -70,7 +84,7 @@ class EventController extends Controller
         $eventDetail->sub_action_private  = $request->sub_action_private;
         $eventDetail->action  = $request->action;
         $eventDetail->save();
-        return redirect('Organizer.Home');
+        return redirect('organizer/home');
 
 
 
