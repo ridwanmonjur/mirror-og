@@ -4,14 +4,30 @@ namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\EventDetail;
 use Illuminate\Http\Request;
 
 class ParticipantEventController extends Controller
 {
     public function home()
     {
-        $events = Event::all();
+        $events = EventDetail::all();
 
-        return view('Participant.Home', ['events' => $events]);
+        return view('Participant.Home', ['events' => $events, 'mappingEventState' => $this->mappingEventState]);
     }
+
+    private $mappingEventState = [
+        'UPCOMING' => [
+            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
+        'ONGOING' => [
+            'buttonBackgroundColor' => '#FFFBFB', 'buttonTextColor' => 'black', 'borderColor' => 'black'
+        ],
+        'DRAFT' => [
+            'buttonBackgroundColor' => '#8CCD39', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
+        'ENDED' => [
+            'buttonBackgroundColor' => '#A6A6A6', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
+    ];
 }
