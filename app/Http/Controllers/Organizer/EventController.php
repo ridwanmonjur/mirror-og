@@ -70,9 +70,7 @@ class EventController extends Controller
         $eventDetail->sub_action_private  = $request->sub_action_private;
         $eventDetail->action  = $request->action;
         $eventDetail->save();
-
-
-        return redirect('event.index');
+        return redirect('Organizer.Home');
 
 
 
