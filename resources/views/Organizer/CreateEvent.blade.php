@@ -55,7 +55,7 @@
                     <div class="image-scroll-container">
                         @foreach ($eventCategory as $eventc)
                         <div class="scroll-images">
-                            <a href=""><img class="selectable-image focused" src="{{ asset('storage/'. $eventc->gameIcon) }}" alt="" style="border-radius: 20px; height: 330px; width: 220px;"></a>
+                            <a href="#"><img class="selectable-image focused" src="{{ asset('storage/'. $eventc->gameIcon) }}" alt="" style="border-radius: 20px; height: 330px; width: 220px;"></a>
                             <h5 style="padding-top: 10px;">{{ $eventc->gameTitle}}</h5>
                         </div>
                         @endforeach
@@ -80,9 +80,9 @@
                 </header>
                 @foreach ($eventCategory as $eventc)
                 <div class="cont">
-                    <a href="" class="box_2nd selectable-box">
+                    <a href="#" class="box_2nd selectable-box">
                         <h2 class="box-title">{{ $eventc->eventType}}</h2>
-                        <p class="box-text" style="text-align: left;">Insert definition here</p>
+                        <p class="box-text" style="text-align: left;">{{ $eventc->eventDefinitions}}</p>
                     </a>
                 </div>
                 @endforeach
@@ -105,7 +105,7 @@
                 </header>
                 @foreach ($eventCategory as $eventc)
                 <section class="featured-events">
-                    <a href="" class="event selectable-box">
+                    <a href="#" class="event selectable-box">
                         <div class="event_head_container">
                             <img id='starfish' src="{{ asset('storage/'. $eventc->tierIcon) }}" class="event_head">
                         </div>

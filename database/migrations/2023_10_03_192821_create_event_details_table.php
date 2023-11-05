@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('event_details', function (Blueprint $table) {
             $table->id();
-            $table->string('gameTitle');
-            $table->string('gameIcon');
-            $table->string('eventType');
-            $table->string('eventDefinitions');
-            $table->string('eventTier');
-            $table->string('tierIcon');
+            $table->string('gameTitle')->nullable();
+            $table->string('gameIcon')->nullable();
+            $table->string('eventType')->nullable();
+            $table->string('eventDefinitions')->nullable();
+            $table->string('eventTier')->nullable();
+            $table->string('tierIcon')->nullable();
             $table->string('eventName')->nullable();
             $table->date('startDate')->nullable();
             $table->date('endDate')->nullable();
