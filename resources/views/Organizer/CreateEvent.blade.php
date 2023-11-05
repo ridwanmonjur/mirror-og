@@ -23,7 +23,7 @@
             <img width="70px" height="40px" src="{{ asset('/assets/images/createEvent/navbar-crown.png') }}" alt="">
         </div>
     </nav>
-    <nav class="mobile-navbar d-centered-at-mobile d-none">
+    <nav class="mobile-navbar d-centered-at-mobile d-none" style="border-bottom: 0.4px solid black; border-top: 0.4px solid black; background: white; padding-top: 10px;">
         <div class="search-bar search-bar-mobile ">
             <input type="text" name="search" id="search" placeholder="Search for events">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" style="left: 40px;">
@@ -569,9 +569,9 @@
     </main>
     <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
     <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
-
     <!-- Including the Tagify library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         // Initializing Tagify on the input field

@@ -29,7 +29,7 @@ class AuthController extends Controller
     {
         // dd($request->all());
         // dd('redirected');
-        return Socialite::driver('google')->stateless()->redirect();
+        return Socialite::driver('google')->redirect();
     }
 
     public function handleGoogleCallback(Request $request)
@@ -37,7 +37,7 @@ class AuthController extends Controller
         // try {
             // dd($request->all());
 
-            $user = Socialite::driver('google')->stateless()->user();
+            $user = Socialite::driver('google')->user();
 
             $finduser = User::where('google_id', $user->id)->first();
 
