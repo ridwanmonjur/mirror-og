@@ -13,18 +13,13 @@ function goToNextScreen(nextId, nextTimeline) {
         'timeline-1', 'timeline-2', 'timeline-3', 'timeline-4'
     ];
     allIDs.forEach(id => {
-            const element = document.querySelector(`#${id}`);
-            console.log({ id, element })
-            if (id === nextId) element.classList.remove("d-none");
-            else if (!element.classList.contains("d-none")) {
-                element.classList.add("d-none");
-            }
-        })
-        // if (timeline === 'none') {
-        //     const border = document.querySelector(`#${timeline} div:nth-child(1)`);
-        //     border.style.borderTop = "2px solid green";
-        //     return;
-        // }
+        const element = document.querySelector(`#${id}`);
+        console.log({ id, element })
+        if (id === nextId) element.classList.remove("d-none");
+        else if (!element.classList.contains("d-none")) {
+            element.classList.add("d-none");
+        }
+    })
     allTimelines.forEach((timeline, index) => {
 
         const paragraph = document.querySelector(`#${timeline} .timestamp span`);

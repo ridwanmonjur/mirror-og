@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
@@ -26,6 +25,11 @@ use Exception;
 
 class AuthController extends Controller
 {
+    public function logoutAction()
+    {
+        Auth::logout();
+        return redirect('/');
+    }
     public function redirectToGoogle(Request $request)
     {
         // dd($request->all());
@@ -36,64 +40,53 @@ class AuthController extends Controller
     public function handleGoogleCallback(Request $request)
     {
         // try {
-            // dd($request->all());
+        // dd($request->all());
 
-            $user = Socialite::driver('google')->user();
+        $user = Socialite::driver('google')->user();
 
-            $finduser = User::where('google_id', $user->id)->first();
+        $finduser = User::where('google_id', $user->id)->first();
 
-            if($finduser){
+        if ($finduser) {
 
-                Auth::login($finduser);
+            Auth::login($finduser);
 
-                return redirect()->route('participant.home.view');
+            return redirect()->route('participant.home.view');
+        } else {
+            $newUser = User::create([
+                'name' => $user->name,
+                'email' => $user->email,
+                'password' => bcrypt('123456dummy'),
 
-            }else{
-                $newUser = User::create([
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'password' => bcrypt('123456dummy'),
+            ]);
+            $newUser->email_verified_at = now();
+            $newUser->google_id = $user->id;
+            $newUser->save();
+            Auth::login($newUser);
 
-                ]);
-                $newUser->email_verified_at = now();
-                $newUser->google_id = $user->id;
-                $newUser->save();
-                Auth::login($newUser);
-
-                return redirect()->route('participant.home.view');
-            }
+            return redirect()->route('participant.home.view');
+        }
         // } catch (Exception $e) {
         //     dd($e->getMessage());
         // }
     }
 
-     // Steam login
-     public function redirectToSteam()
-     {
-         return Socialite::driver('steam')->redirect();
-     }
-
-     // Steam callback
-     public function handleSteamCallback()
-     {
-         $user = Socialite::driver('steam')->user();
-
-         $this->_registerOrLoginUser($user);
-
-         // Return home after login
-         return redirect()->route('participant.home.view');
-     }
-
-    //SignIn Auth
-    private function showAlert($session)
+    // Steam login
+    public function redirectToSteam()
     {
-        if ($message = $session->get('success')) {
-            Alert::success('Success', $message);
-        }
-        if ($message = $session->get('error')) {
-            Alert::error('Error', 'Organizer Account Signed In Successfully!');
-        }
+        return Socialite::driver('steam')->redirect();
     }
+
+    // Steam callback
+    public function handleSteamCallback()
+    {
+        $user = Socialite::driver('steam')->user();
+
+        $this->_registerOrLoginUser($user);
+
+        // Return home after login
+        return redirect()->route('participant.home.view');
+    }
+
 
     public function showLandingPage(Request $request)
     {
@@ -104,13 +97,11 @@ class AuthController extends Controller
 
     public function signIn(Request $request)
     {
-        $this->showAlert($request->session());
         return view('Auth.SignIn');
     }
 
     public function organizerSignIn(Request $request)
     {
-        $this->showAlert($request->session());
         return view('Auth.OrganizerSignIn');
     }
 
@@ -159,7 +150,6 @@ class AuthController extends Controller
 
         return back()
             ->with(['error' => 'User not found.']);
-
     }
 
     public function createReset(Request $request)
@@ -268,7 +258,6 @@ class AuthController extends Controller
 
     public function signUp(Request $request)
     {
-        $this->showAlert($request->session());
 
         return view('Auth.SignUp');
     }
@@ -365,7 +354,6 @@ class AuthController extends Controller
         } catch (\Throwable $th) {
             return redirect()->route($redirectErrorRoute)->with('error', $th->getMessage());
         }
-
     }
 
     public function accessUser(Request $request)
@@ -401,7 +389,7 @@ class AuthController extends Controller
                     ]);
                 }
 
-                if ($user->role != $userRoleCapital && $user->role != "ADMIN"):
+                if ($user->role != $userRoleCapital && $user->role != "ADMIN") :
                     throw new \ErrorException("Invalid Role for $userRoleSentence");
                 endif;
 

@@ -14,7 +14,6 @@ class EventDetail extends Model
     protected $casts = [
         'eventTags' => 'array',
     ];
-    protected $fillable = ['name', 'status', 'venue', 'caption'];
 
     public function user()
     {

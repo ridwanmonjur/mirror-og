@@ -21,15 +21,7 @@
         <div class="hamburger-menu">
             <i class="fa fa-bars"></i>
         </div>
-        @guest
-        <div class="nav__items">
-            <ul>
-                <li><a href="#" id='nav-but' class="moop">Where's Moop?</a></li>
-                <li><a href="#" id='nav-but' class="sign">Sign In</a></li>
-            </ul>
-        </div>
-        @endguest
-        @auth
+
         <div class="nav__items">
             <ul>
                 <li><a href="#" id='nav-but' class="moop">Where's Moop?</a></li>
@@ -39,9 +31,11 @@
                 <li>
                     <img style="position: relative; top: 0px; left: -20px; cursor: pointer;" width="70px" height="40px" src="{{ asset('/assets/images/navbar-crown.png') }}" alt="">
                 </li>
+                <li>
+                    <a style="position: relative; top: 0px; left: -30px; cursor: pointer;" href="{{ route('logout.action') }}" class="moop">Sign Out</a>
+                </li>
             </ul>
         </div>
-        @endauth
     </nav>
 
     <section class="hero">
@@ -65,7 +59,7 @@
                 <div class="event_head_container">
                     <img id='turtle' src="{{ asset('/assets/images/logo/3.png') }}" class="event_head">
                 </div>
-                <img src="{{ asset('/assets/images/event_bg.jpg') }}" class="cover">
+                <img src="{{ asset('storage/'. $event->eventBanner) }}" class="cover">
                 <div class="frame1">
                     <img src="{{ asset('/assets/images/dota.png') }}" class="logo2">
                     <a class="event_status_1" style="@php echo $stylesEventStatus; @endphp">{{ $event->action }}</a>

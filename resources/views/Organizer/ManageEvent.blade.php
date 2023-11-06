@@ -1,41 +1,8 @@
 @include('Organizer.Layout.ManageEventHeadTag')
 
 <body>
-    <nav class="navbar">
-        <div class="logo">
-            <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
-        </div>
-        <svg style="margin-top: 10px; margin-right: 10px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu menu-toggle" onclick="toggleNavbar()">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-        <div class="search-bar d-none-at-mobile">
-            <input type="text" name="search" id="search" placeholder="Search for events">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-        </div>
-        <div class="nav-buttons">
-            <button class="oceans-gaming-default-button oceans-gaming-gray-button"> Where is moop? </button>
-            <img style="position: relative; top: 15px;" width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
-            <img style="position: relative; top: 15px;" width="70px" height="40px" src="{{ asset('/assets/images/navbar-crown.png') }}" alt="">
-        </div>
-    </nav>
-    <nav class="mobile-navbar d-centered-at-mobile d-none">
-        <div class="search-bar search-bar-mobile ">
-            <input type="text" name="search" id="search" placeholder="Search for events">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" style="left: 40px;">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-        </div>
-        <div class="nav-buttons search-bar-mobile d-centered-at-mobile">
-            <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
-            <img width="70px" height="40px" src="{{ asset('/assets/images/navbar-crown.png') }}" alt="">
-        </div>
-    </nav>
+    @include('CommonLayout.Navbar')
+
     <main>
         <br class="d-none-at-desktop">
         <div class="">
@@ -117,7 +84,7 @@
                 <a href="{{ route('event.show', $event->id) }}" style="text-decoration: none;">
                     <div class="{{'rounded-box rounded-box-' . $eventTierLower }}">
                         <div class="centered-absolute-game-tier">
-                            <img src="{{ asset( '/assets/images/'. $eventTierLower . '.png' ) }}" width="120" height="80">
+                            <img src="{{ asset('/assets/images/dolphin.png') }}" width="120" height="80">
                         </div>
                         <div class="{{'card-image card-image-' . $eventTierLower }}">
                             <img src="{{ asset('/assets/images/1.png') }}" alt="">
@@ -127,7 +94,7 @@
                                 <div class="flexbox-centered-space">
                                     <img src="{{ asset('/assets/images/menu.png') }}" alt="menu" width="50" height="40">
                                     <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
-                                        <u>{{$event->status}}</u>
+                                        {{$event->status}}
                                     </button>
                                 </div>
                                 <br>
@@ -177,7 +144,7 @@
                                             <circle cx="12" cy="10" r="3"></circle>
                                         </svg>
                                         &nbsp;
-                                        <span>{{ $event->venue }}</span>
+                                        <span>South East Asia</span>
                                     </div>
                                 </div>
                             </div>
@@ -187,15 +154,14 @@
                 </a>
                 @endforeach
         </div>
+        @stack('script')
         <script>
             function goToCreateScreen(){
                 let url = "{{ route('event.create') }}";
-                window.alert(url);
                 window.location.href = url;
             }
         </script>
     </main>
 
-    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
 
     <!-- <script src="script.js"></script> -->

@@ -12,9 +12,9 @@
         "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.9",
         "laravel/tinker": "^2.8",
-        "realrashid/sweet-alert": "^7.1",
         "sendgrid/sendgrid": "~7",
-        "socialiteproviders/google": "^4.1"
+        "socialiteproviders/google": "^4.1",
+        "stripe/stripe-php": "^13.0"
     },
     "require-dev": {
         "doctrine/dbal": "^3.6",

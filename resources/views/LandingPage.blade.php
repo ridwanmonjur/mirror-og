@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}"">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel=" stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Splash</title>
     <script src="{{ asset('script.js') }}"></script>
 </head>
@@ -29,8 +29,7 @@
             <ul>
                 <li><a href="#" id='nav-but' class="moop">Where's Moop?</a></li>
                 <div class="dropdown">
-                    <li><a onclick="myFunction()" href="#" id='nav-but' class="dropbtn sign" data-bs-toggle="dropdown"
-                            aria-expanded="false">Sign In</a></li>
+                    <li><a onclick="myFunction()" style="color: white !important;" href="#" id='nav-but' class="dropbtn sign" data-bs-toggle="dropdown" aria-expanded="false">Sign In</a></li>
                 </div>
                 <div id="myDropdown" class="dropdown-content">
                     <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">Organizer</a>
@@ -45,12 +44,13 @@
             <ul>
                 <li><a href="#" id='nav-but' class="moop">Where's Moop?</a></li>
                 <li>
-                    <img style="position: relative; top: 0px; cursor: pointer;" width="50px" height="40px"
-                        src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
+                    <img style="position: relative; top: 0px; cursor: pointer;" width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
                 </li>
                 <li>
-                    <img style="position: relative; top: 0px; left: -20px; cursor: pointer;" width="70px" height="40px"
-                        src="{{ asset('/assets/images/navbar-crown.png') }}" alt="">
+                    <img style="position: relative; top: 0px; left: -20px; cursor: pointer;" width="70px" height="40px" src="{{ asset('/assets/images/navbar-crown.png') }}" alt="">
+                </li>
+                <li>
+                    <a style="position: relative; top: 0px; left: -30px; cursor: pointer;" href="{{ route('logout.action') }}" class="moop">Sign Out</a>
                 </li>
             </ul>
         </div>
@@ -90,7 +90,7 @@
             <div class="trophy_caption">
                 <img src="{{ asset('/assets/images/trophy.png') }}" class="trophy"><br>
                 <a class="league_caption">
-                    <b>{{ $event->caption }}</b>
+                    <b>Soon</b>
                 </a>
             </div>
         </div>
@@ -102,7 +102,7 @@
         }
 
         // Close the dropdown if the user clicks outside of it
-        window.onclick = function (event) {
+        window.onclick = function(event) {
             if (!event.target.matches('.dropbtn')) {
                 var dropdowns = document.getElementsByClassName("dropdown-content");
                 var i;
