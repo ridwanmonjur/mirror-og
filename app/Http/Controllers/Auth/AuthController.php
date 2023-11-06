@@ -88,9 +88,20 @@ class AuthController extends Controller
 
     public function showLandingPage(Request $request)
     {
-        $events = Event::all();
+        $count = 4;
+        $events = Event::paginate($count);
+        if ($request->ajax()) {
+            $view = view(
+                'LandingPageScroll',
+                compact('events')
+            )->render();
 
-        return view('LandingPage', ['events' => $events]);
+            return response()->json(['html' => $view]);
+        }
+        return view(
+            'LandingPage',
+            compact('events')
+        );
     }
 
     public function signIn(Request $request)

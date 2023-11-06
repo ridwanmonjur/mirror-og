@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <title>Splash</title>
     <script src="{{ asset('script.js') }}"></script>
 </head>
+
 <body>
     <nav>
         <div class="nav__sect1">
@@ -21,11 +23,11 @@
         <div class="hamburger-menu">
             <i class="fa fa-bars"></i>
         </div>
-       
+
         <div class="nav__items">
             <ul>
                 <li><a href="#" id='nav-but' class="moop">Where's Moop?</a></li>
-                <li> 
+                <li>
                     <img style="position: relative; top: 0px; cursor: pointer;" width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
                 </li>
                 <li>
@@ -46,33 +48,31 @@
         <p class="head">What's happening?</p>
     </div>
 
-    <section class="featured-events">
-        @foreach($events as $event)
-            <div class="event">
-                <div class="event_head_container">
-                    <img id='turtle' src="{{ asset('/assets/images/logo/3.png') }}" class="event_head">
-                </div>
-                <img src="{{ asset('/assets/images/event_bg.jpg') }}" class="cover">
-                <div class="frame1">
-                    <img src="{{ asset('/assets/images/dota.png') }}" class="logo2">
-                    <a class="event_status_1">{{ $event->status }}</a>
-                </div><br>
-                <div class="league_name">
-                    <b>{{ $event->name }}</b><br>
-                    <a><small>{{ $event->venue }}</small></a>
-                </div><br>
-                <div class="trophy_caption">
-                    <img src="{{ asset('/assets/images/trophy.png') }}" class="trophy"><br>
-                    <a class="league_caption">
-                        <b>{{ $event->caption }}</b>
-                    </a>
-                </div>
-            </div>
-        @endforeach
+    <section class="featured-events scrolling-pagination">
+        @include("Participant.HomeScroll")
     </section>
+    <div class="no-more-data d-none"></div>
+    <br><br><br>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
 
-    <footer>
-        <p>Show More</p>
-    </footer>
+    <script>
+        var ENDPOINT = "{{ route('participant.home.view') }}";
+        var page = 1;
+
+        window.addEventListener(
+            "scroll",
+            throttle((e) => {
+                var windowHeight = window.innerHeight;
+                var documentHeight = document.documentElement.scrollHeight;
+                var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (scrollTop + windowHeight >= documentHeight - 250) {
+                    page++;
+                    infinteLoadMore(page);
+                }
+            }, 300)
+        );
+    </script>
 </body>
+
 </html>

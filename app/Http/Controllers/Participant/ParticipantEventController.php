@@ -8,10 +8,21 @@ use Illuminate\Http\Request;
 
 class ParticipantEventController extends Controller
 {
-    public function home()
+    public function home(Request $request)
     {
-        $events = Event::all();
+        $count = 4;
+        $events = Event::paginate($count);
+        if ($request->ajax()) {
+            $view = view(
+                'Participant.HomeScroll',
+                compact('events')
+            )->render();
 
-        return view('Participant.Home', ['events' => $events]);
+            return response()->json(['html' => $view]);
+        }
+        return view(
+            'Participant.Home',
+            compact('events')
+        );
     }
 }

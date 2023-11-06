@@ -14,32 +14,36 @@ use Illuminate\Support\Facades\Auth;
 class EventController extends Controller
 {
 
-   
+
     public function home(): View
     {
         return view('Organizer.Home');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $eventList = Event::with('eventDetail', 'eventCategory')
             ->where('user_id', $user->id)
-            ->get();
+            ->orderBy('id', 'asc')
+            ->paginate(4);
         $organizer = Organizer::where('user_id', $user->id)->first();
-        $count = $eventList->count();
+        $mappingEventState = $this->mappingEventState;
+        $count = 4;
+        if ($request->ajax()) {
+            $view = view(
+                'Organizer.ManageEventScroll',
+                compact('eventList', 'count', 'user', 'organizer', 'mappingEventState')
+            )->render();
+
+            return response()->json(['html' => $view]);
+        }
         return view(
             'Organizer.ManageEvent',
-            [
-                'eventList' => $eventList,
-                'count' => $count,
-                'user' => $user,
-                'organizer' => $organizer,
-                'mappingEventState' => $this->mappingEventState
-            ]
+            compact('eventList', 'count', 'user', 'organizer', 'mappingEventState')
         );
     }
-    
+
     public function create(): View
     {
         // return view('Organizer.CreateEvent.event');
@@ -63,13 +67,13 @@ class EventController extends Controller
         );
     }
 
-    
+
     public function edit($id)
     {
         //
     }
 
-   
+
     public function update($id)
     {
         //

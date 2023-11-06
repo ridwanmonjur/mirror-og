@@ -65,30 +65,29 @@
         <p class="head">What's happening?</p>
     </div>
 
-    <section class="featured-events">
-        @foreach($events as $event)
-        <div class="event">
-            <div class="event_head_container">
-                <img id='turtle' src="{{ asset('/assets/images/logo/3.png') }}" class="event_head">
-            </div>
-            <img src="{{ asset('/assets/images/event_bg.jpg') }}" class="cover">
-            <div class="frame1">
-                <img src="{{ asset('/assets/images/dota.png') }}" class="logo2">
-                <a class="event_status_1">{{ $event->status }}</a>
-            </div><br>
-            <div class="league_name">
-                <b>{{ $event->name }}</b><br>
-                <a><small>{{ $event->venue }}</small></a>
-            </div><br>
-            <div class="trophy_caption">
-                <img src="{{ asset('/assets/images/trophy.png') }}" class="trophy"><br>
-                <a class="league_caption">
-                    <b>{{ $event->caption }}</b>
-                </a>
-            </div>
-        </div>
-        @endforeach
+    <section class="featured-events scrolling-pagination">
+        @include("LandingPageScroll")
     </section>
+    <div class="no-more-data d-none"></div>
+    <br><br>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
+    <script>
+        var ENDPOINT = "{{ route('landing.view') }}";
+        var page = 1;
+        window.addEventListener(
+            "scroll",
+            throttle((e) => {
+                var windowHeight = window.innerHeight;
+                var documentHeight = document.documentElement.scrollHeight;
+                var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (scrollTop + windowHeight >= documentHeight - 250) {
+                    page++;
+                    infinteLoadMore(page);
+                }
+            }, 300)
+        );
+    </script>
     <script>
         function myFunction() {
             document.getElementById("myDropdown").classList.toggle("show");
@@ -108,9 +107,6 @@
             }
         }
     </script>
-    <footer>
-        <p>Show More</p>
-    </footer>
 </body>
 
 </html>

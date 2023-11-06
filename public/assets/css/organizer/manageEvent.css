@@ -32,7 +32,6 @@
 main {
     width: 100%;
     min-height: 115vh;
-    height: fit-content;
     display: block !important;
     padding: 0px 10px;
     align-items: center;
