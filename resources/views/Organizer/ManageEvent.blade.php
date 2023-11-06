@@ -84,7 +84,7 @@
                 <a href="{{ route('event.show', $event->id) }}" style="text-decoration: none;">
                     <div class="{{'rounded-box rounded-box-' . $eventTierLower }}">
                         <div class="centered-absolute-game-tier">
-                            <img src="{{ asset( '/assets/images/'. $eventTierLower . '.png' ) }}" width="120" height="80">
+                            <img src="{{ asset('/assets/images/dolphin.png') }}" width="120" height="80">
                         </div>
                         <div class="{{'card-image card-image-' . $eventTierLower }}">
                             <img src="{{ asset('/assets/images/1.png') }}" alt="">
@@ -144,7 +144,7 @@
                                             <circle cx="12" cy="10" r="3"></circle>
                                         </svg>
                                         &nbsp;
-                                        <span>{{ $event->venue }}</span>
+                                        <span>South East Asia</span>
                                     </div>
                                 </div>
                             </div>

@@ -90,7 +90,7 @@
             <div class="trophy_caption">
                 <img src="{{ asset('/assets/images/trophy.png') }}" class="trophy"><br>
                 <a class="league_caption">
-                    <b>{{ $event->caption }}</b>
+                    <b>Soon</b>
                 </a>
             </div>
         </div>
