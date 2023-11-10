@@ -48,7 +48,7 @@ input[type="time"] {
     transition: border-color 0.3s;
 }
 
-.form-group2 input{
+.form-group2 input {
     margin-bottom: 0px !important;
     padding: 6px 30px !important;
 }
