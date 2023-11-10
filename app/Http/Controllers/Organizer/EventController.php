@@ -30,17 +30,18 @@ class EventController extends Controller
         $organizer = Organizer::where('user_id', $user->id)->first();
         $mappingEventState = $this->mappingEventState;
         $count = 4;
+        $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
         if ($request->ajax()) {
             $view = view(
                 'Organizer.ManageEventScroll',
-                compact('eventList', 'count', 'user', 'organizer', 'mappingEventState')
+                $outputArray
             )->render();
 
             return response()->json(['html' => $view]);
         }
         return view(
             'Organizer.ManageEvent',
-            compact('eventList', 'count', 'user', 'organizer', 'mappingEventState')
+            $outputArray
         );
     }
 

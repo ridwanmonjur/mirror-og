@@ -33,7 +33,7 @@ function infinteLoadMore(page) {
                     noMoreDataElement.classList.remove('d-none');
                     noMoreDataElement.style.display = 'flex';
                     noMoreDataElement.style.justifyContent = 'center';
-                    noMoreDataElement.textContent = "We don't have more data to display :(";
+                    noMoreDataElement.textContent = "We don't have more data to display";
                 }
 
                 // <!-- $('.auto-load').hide(); -->

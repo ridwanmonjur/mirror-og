@@ -90,17 +90,18 @@ class AuthController extends Controller
     {
         $count = 4;
         $events = Event::paginate($count);
+        $output = compact("events");
         if ($request->ajax()) {
             $view = view(
                 'LandingPageScroll',
-                compact('events')
+                $output
             )->render();
 
             return response()->json(['html' => $view]);
         }
         return view(
             'LandingPage',
-            compact('events')
+            $output
         );
     }
 

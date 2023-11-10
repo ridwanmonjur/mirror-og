@@ -12,17 +12,18 @@ class ParticipantEventController extends Controller
     {
         $count = 4;
         $events = Event::paginate($count);
+        $output = compact("events");
         if ($request->ajax()) {
             $view = view(
                 'Participant.HomeScroll',
-                compact('events')
+                $output
             )->render();
 
             return response()->json(['html' => $view]);
         }
         return view(
             'Participant.Home',
-            compact('events')
+            $output
         );
     }
 }
