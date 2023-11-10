@@ -2,9 +2,9 @@
 @php
 $stylesEventStatus = '';
 $stylesEventStatus .= 'padding-top: -150px; ';
-$stylesEventStatus .= 'background-color: ' . $mappingEventState[$event->status]['buttonBackgroundColor'] .' ;' ;
-$stylesEventStatus .= 'color: ' . $mappingEventState[$event->status]['buttonTextColor'] .' ; ' ;
-$stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$event->status]['borderColor'] .' ; ';
+$stylesEventStatus .= 'background-color: ' . $mappingEventState[$event->action]['buttonBackgroundColor'] .' ;' ;
+$stylesEventStatus .= 'color: ' . $mappingEventState[$event->action]['buttonTextColor'] .' ; ' ;
+$stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$event->action]['borderColor'] .' ; ';
 
 /*
 $stylesEventRatio = '';
@@ -18,12 +18,12 @@ $stylesEventRatio .= "background-color: #8CCD39; color: white;";
 elseif ($ratio > 0.5){
 $stylesEventRatio .= "background-color: #FA831F; color: white;";
 }
-elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } */ $stylesEventRatio="background-color: #FFE325; color: black;" ; $eventTierLower=strtolower($event->eventCategory->eventTier);
+elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } */ $stylesEventRatio="background-color: #FFE325; color: black;" ; $eventTierLower=strtolower($event->eventDetail->eventTier);
     @endphp
     <a href="{{ route('event.show', $event->id) }}" style="text-decoration: none;">
         <div class="{{'rounded-box rounded-box-' . $eventTierLower }}">
             <div class="centered-absolute-game-tier">
-                <img src="{{ asset( '/assets/images/'. $eventTierLower . '.png' ) }}" width="120" height="80">
+                <img src="{{ asset('/assets/images/dolphin.png') }}" width="120" height="80">
             </div>
             <div class="{{'card-image card-image-' . $eventTierLower }}">
                 <img src="{{ asset('/assets/images/1.png') }}" alt="">
@@ -37,7 +37,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                         </button>
                     </div>
                     <br>
-                    <p style="height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->name}}</u></p>
+                    <p style="height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->eventName}}</u></p>
                     <p class="small-text"><i>
                             {{ $organizer->companyName  }}
                         </i></p>
@@ -83,7 +83,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                 <circle cx="12" cy="10" r="3"></circle>
                             </svg>
                             &nbsp;
-                            <span>{{ $event->venue }}</span>
+                            <span>South East Asia</span>
                         </div>
                     </div>
                 </div>
