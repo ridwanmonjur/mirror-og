@@ -55,18 +55,13 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-
         $validatedData = $request->validate([
             'eventName' => 'required',
             // 'endDate' => 'required',
             // 'startTime' => 'required',
             // 'endTime' => 'required',
         ]);
-
-
         // // Validate the Form
-
-
         $eventDetail = new EventDetail;
         $eventDetail->startDate = $request->startDate;
         $eventDetail->endDate = $request->endDate;
@@ -85,9 +80,6 @@ class EventController extends Controller
         $eventDetail->user_id  = auth()->user()->id;
         $eventDetail->save();
         return redirect('organizer/home');
-
-
-
     }
 
     public function show($id): View

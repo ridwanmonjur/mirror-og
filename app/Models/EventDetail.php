@@ -22,12 +22,7 @@ class EventDetail extends Model
 
     public function eventDetail()
     {
-         return $this->hasOne(EventDetail::class, 'id');
-   }
-
-    // public function eventCategory()
-    //  {
-    //      return $this->hasOne(EventCategory::class, 'id');
-    //  }
+        return $this->hasOne(EventDetail::class, 'id');
+    }
 
 }

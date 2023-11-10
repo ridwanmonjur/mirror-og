@@ -93,7 +93,8 @@ class AuthController extends Controller
 
         $count = 4;
         $events = EventDetail::paginate($count);
-        $output = compact("events");
+        $mappingEventState = $this->mappingEventState;
+        $output = compact("events", "mappingEventState");
         if ($request->ajax()) {
             $view = view(
                 'LandingPageScroll',
