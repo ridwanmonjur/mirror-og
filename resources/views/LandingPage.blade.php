@@ -82,7 +82,7 @@
                 var windowHeight = window.innerHeight;
                 var documentHeight = document.documentElement.scrollHeight;
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                if (scrollTop + windowHeight >= documentHeight - 250) {
+                if (scrollTop + windowHeight >= documentHeight - 20) {
                     page++;
                     infinteLoadMore(page);
                 }

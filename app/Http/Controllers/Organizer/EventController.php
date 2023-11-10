@@ -10,6 +10,8 @@ use Illuminate\View\View;
 use App\Models\Event;
 use App\Models\Organizer;
 use Illuminate\Support\Facades\Auth;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class EventController extends Controller
 {
@@ -23,7 +25,8 @@ class EventController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $eventList = EventDetail::with('eventDetail')
+        $eventList =  QueryBuilder::for(EventDetail::class)
+            ->allowedFilters([AllowedFilter::exact('name')])
             ->where('user_id', $user->id)
             ->orderBy('id', 'asc')
             ->paginate(4);
@@ -49,7 +52,7 @@ class EventController extends Controller
     {
         $eventCategory = EventCategory::all();
         // return view('Organizer.CreateEvent.event');
-        return view('Organizer.CreateEvent', ['eventCategory' => $eventCategory ]);
+        return view('Organizer.CreateEvent', ['eventCategory' => $eventCategory]);
     }
 
 

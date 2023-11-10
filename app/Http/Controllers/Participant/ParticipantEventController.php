@@ -11,8 +11,8 @@ class ParticipantEventController extends Controller
 {
     public function home(Request $request)
     {
-
-        $count = 4;
+        
+        $count = 3;
         $events = EventDetail::paginate($count);
         $output = ['events' => $events, 'mappingEventState' => $this->mappingEventState];
         if ($request->ajax()) {
