@@ -13,14 +13,30 @@ return new class extends Migration
     {
         Schema::create('event_details', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('startDateTime');
-            $table->dateTime('endDateTime');
-            $table->string('eventDescription');
-            $table->string('eventBanner');
-            $table->string('eventTags');  
-            $table->foreignId('event_id')->constrained(
-                table: 'events', indexName: 'event_details_event_id_foreign'
-            );    
+            $table->string('gameTitle')->nullable();
+            $table->string('gameIcon')->nullable();
+            $table->string('eventType')->nullable();
+            $table->string('eventDefinitions')->nullable();
+            $table->string('eventTier')->nullable();
+            $table->string('tierIcon')->nullable();
+            $table->string('eventName')->nullable();
+            $table->date('startDate')->nullable();
+            $table->date('endDate')->nullable();
+            $table->time('startTime')->nullable();
+            $table->time('endTime')->nullable();
+            $table->string('eventDescription')->nullable();
+            $table->string('eventBanner')->nullable();
+            $table->string('eventTags')->nullable();
+            $table->string('status')->nullable();
+            $table->string('venue')->nullable();
+            $table->string('sub_action_public_date')->nullable();
+            $table->string('sub_action_public_time')->nullable();
+            $table->string('sub_action_private')->nullable();
+            $table->string('action')->nullable();
+            $table->string('caption')->nullable();
+            $table->foreignId('user_id')->constrained(
+            table: 'users', indexName: 'event_details_user_id_foreign')->nullable();
+            $table->timestamps();
         });
     }
 

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\EventCategory;
+use App\Models\EventDetail;
 use App\Models\Organizer;
 use App\Models\Participant;
 use App\Models\User;
@@ -88,8 +90,9 @@ class AuthController extends Controller
 
     public function showLandingPage(Request $request)
     {
+
         $count = 4;
-        $events = Event::paginate($count);
+        $events = EventDetail::paginate($count);
         $output = compact("events");
         if ($request->ajax()) {
             $view = view(
@@ -103,6 +106,7 @@ class AuthController extends Controller
             'LandingPage',
             $output
         );
+
     }
 
     public function signIn(Request $request)
@@ -418,4 +422,23 @@ class AuthController extends Controller
             return redirect()->route($redirectRoute)->with('error', $th->getMessage());
         }
     }
+
+
+    private $mappingEventState = [
+        'UPCOMING' => [
+            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
+        'ONGOING' => [
+            'buttonBackgroundColor' => '#FFFBFB', 'buttonTextColor' => 'black', 'borderColor' => 'black'
+        ],
+        'DRAFT' => [
+            'buttonBackgroundColor' => '#8CCD39', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
+        'ENDED' => [
+            'buttonBackgroundColor' => '#A6A6A6', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
+    ];
+
+
+
 }

@@ -4,15 +4,17 @@ namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\EventDetail;
 use Illuminate\Http\Request;
 
 class ParticipantEventController extends Controller
 {
     public function home(Request $request)
     {
+
         $count = 4;
-        $events = Event::paginate($count);
-        $output = compact("events");
+        $events = EventDetail::paginate($count);
+        $output = ['events' => $events, 'mappingEventState' => $this->mappingEventState];
         if ($request->ajax()) {
             $view = view(
                 'Participant.HomeScroll',
@@ -26,4 +28,19 @@ class ParticipantEventController extends Controller
             $output
         );
     }
+
+    private $mappingEventState = [
+        'UPCOMING' => [
+            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
+        'ONGOING' => [
+            'buttonBackgroundColor' => '#FFFBFB', 'buttonTextColor' => 'black', 'borderColor' => 'black'
+        ],
+        'DRAFT' => [
+            'buttonBackgroundColor' => '#8CCD39', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
+        'ENDED' => [
+            'buttonBackgroundColor' => '#A6A6A6', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
+    ];
 }

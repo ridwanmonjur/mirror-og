@@ -68,6 +68,7 @@
     <section class="featured-events scrolling-pagination">
         @include("LandingPageScroll")
     </section>
+    
     <div class="no-more-data d-none"></div>
     <br><br>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

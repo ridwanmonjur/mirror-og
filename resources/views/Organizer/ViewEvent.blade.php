@@ -4,9 +4,9 @@
 
 $stylesEventStatus = '';
 $stylesEventStatus .= 'padding-top: -150px; ';
-$stylesEventStatus .= 'background-color: ' . $mappingEventState[$event->status]['buttonBackgroundColor'] .' ;' ;
-$stylesEventStatus .= 'color: ' . $mappingEventState[$event->status]['buttonTextColor'] .' ; ' ;
-$stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$event->status]['borderColor'] .' ; ';
+$stylesEventStatus .= 'background-color: ' . $mappingEventState[$event->action]['buttonBackgroundColor'] .' ;' ;
+$stylesEventStatus .= 'color: ' . $mappingEventState[$event->action]['buttonTextColor'] .' ; ' ;
+$stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$event->action]['borderColor'] .' ; ';
 
 $stylesEventRatio = '';
 $ratio = 0.8;
@@ -20,7 +20,7 @@ $stylesEventRatio .= "background-color: #8CCD39; color: white;";
 elseif ($ratio > 0.5){
 $stylesEventRatio .= "background-color: #FA831F; color: white;";
 }
-elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } $eventTierLower=strtolower($event->eventCategory->eventTier);
+elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } $eventTierLower=strtolower($event->eventDetail->eventTier);
 
     $date = \Carbon\Carbon::parse($event->eventDetail->startDateTime)->setTimezone('Asia/Singapore');
     $dayStr = $date->englishDayOfWeek;

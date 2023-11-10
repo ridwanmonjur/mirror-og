@@ -43,8 +43,8 @@ return [
 
     'steam' => [
         'client_id' => null,
-        'client_secret' => env('STEAM_CLIENT_SECRET'),
-        'redirect' => env('STEAM_REDIRECT_URI'),
+        'client_secret' => env('8AE02B51B52FA9BD6BB683EB4585A651'),
+        'redirect' => env('http://localhost:8000/laravel-socialite/public/login/steam/callback'),
         'allowed_hosts' => [
           'driftwood.gg',
         ]

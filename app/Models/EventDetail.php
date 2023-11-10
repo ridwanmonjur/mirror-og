@@ -15,8 +15,19 @@ class EventDetail extends Model
         'eventTags' => 'array',
     ];
 
-    public function event()
+    public function user()
     {
-        return $this->belongsTo(Event::class, 'event_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function eventDetail()
+    {
+         return $this->hasOne(EventDetail::class, 'id');
+   }
+
+    // public function eventCategory()
+    //  {
+    //      return $this->hasOne(EventCategory::class, 'id');
+    //  }
+
 }

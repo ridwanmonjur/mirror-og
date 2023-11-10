@@ -23,7 +23,7 @@ class EventController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $eventList = Event::with('eventDetail', 'eventCategory')
+        $eventList = EventDetail::with('eventDetail')
             ->where('user_id', $user->id)
             ->orderBy('id', 'asc')
             ->paginate(4);
@@ -47,20 +47,52 @@ class EventController extends Controller
 
     public function create(): View
     {
+        $eventCategory = EventCategory::all();
         // return view('Organizer.CreateEvent.event');
-        return view('Organizer.CreateEvent');
+        return view('Organizer.CreateEvent', ['eventCategory' => $eventCategory ]);
     }
+
 
     public function store(Request $request)
     {
 
-        dd($request->all());
-        return view('Organizer.CreateEvent');
+        $validatedData = $request->validate([
+            'eventName' => 'required',
+            // 'endDate' => 'required',
+            // 'startTime' => 'required',
+            // 'endTime' => 'required',
+        ]);
+
+
+        // // Validate the Form
+
+
+        $eventDetail = new EventDetail;
+        $eventDetail->startDate = $request->startDate;
+        $eventDetail->endDate = $request->endDate;
+        $eventDetail->startTime = $request->startTime;
+        $eventDetail->endTime  = $request->endTime;
+        $eventDetail->eventName  = $request->eventName;
+        $eventDetail->eventDescription  = $request->eventDescription;
+        $eventDetail->eventTags  = $request->eventTags;
+        $eventDetail->eventBanner  = $request->eventBanner;
+        $eventDetail->status = $request->status;
+        $eventDetail->venue = $request->venue;
+        $eventDetail->sub_action_public_date  = $request->sub_action_public_date;
+        $eventDetail->sub_action_public_time  = $request->sub_action_public_time;
+        $eventDetail->sub_action_private  = $request->sub_action_private;
+        $eventDetail->action  = $request->action;
+        $eventDetail->user_id  = auth()->user()->id;
+        $eventDetail->save();
+        return redirect('organizer/home');
+
+
+
     }
 
     public function show($id): View
     {
-        $event = Event::findOrFail($id);
+        $event = EventDetail::findOrFail($id);
         $isUser = Auth::user()->id == $event->user_id;
         return view(
             'Organizer.ViewEvent',
