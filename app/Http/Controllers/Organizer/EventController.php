@@ -25,12 +25,32 @@ class EventController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $eventList =  QueryBuilder::for(EventDetail::class)
-            ->allowedFilters([AllowedFilter::exact('name')])
-            ->where('user_id', $user->id)
+        $eventListQuery =  EventDetail::query();
+        $organizer = Organizer::where('user_id', $user->id)->first();
+        $eventListQuery->when($request->has('status'), function ($query) use ($request) {
+            $status = $request->input('status');
+            // GET CURRENT DATE TIME OF THIS INSTANT
+            $currentDateTime = date('Y-m-d H:i:s');
+            if ($status == 'ALL') {
+                return $query;
+            }
+            if ($status == 'LIVE') {
+                return $query->where('status', 'ONGOING');
+            }
+            if ($status == 'SCHEDULED') {
+                return $query->where('status', 'UPCOMING');
+            }
+            if ($status == 'DRAFT') {
+                return $query->where('status', 'DRAFT');
+            }
+            if ($status == 'ENDED') {
+                return $query->where('status', 'DRAFT');
+            }
+            return $query;
+        });
+        $eventList= $eventListQuery->where('user_id', $user->id)
             ->orderBy('id', 'asc')
             ->paginate(4);
-        $organizer = Organizer::where('user_id', $user->id)->first();
         $mappingEventState = $this->mappingEventState;
         $count = 4;
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');

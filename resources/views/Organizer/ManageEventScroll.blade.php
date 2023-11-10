@@ -43,8 +43,8 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                         </i></p>
                     <div class="flexbox-welcome">
                         @php
-                        $date = \Carbon\Carbon::parse($event->eventDetail->startDateTime);
-                        $dateStr = $date->toFormattedDateString() . " " . $date->toTimeString();
+                        $date = \Carbon\Carbon::parse($event->eventDetail->startDateTime)->setTimezone('Asia/Singapore');
+                        $dateStr = $date->toFormattedDateString() . " " . $date->isoFormat('h:mm a');
                         @endphp
                         <div>@php echo $dateStr; @endphp</div>
                         <button style="@php echo $stylesEventRatio; @endphp" class="oceans-gaming-default-button oceans-gaming-default-button-small flexbox-centered-space">

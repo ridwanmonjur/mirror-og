@@ -8,7 +8,12 @@ import {
 window.formHelper = {
     addFormValues, getFormValues, setFormValues, validateFormValuesPresent, previewSelectedImage
 }
-
+import {
+    openElementById, closeElementById
+} from './utils/dom/functions'
+window.domHelper = {
+    openElementById, closeElementById
+}
 import axios from 'axios';
 window.axios = axios;
 

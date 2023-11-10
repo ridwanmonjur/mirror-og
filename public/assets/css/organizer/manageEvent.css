@@ -52,7 +52,10 @@ main {
 .search-bar svg,
 nav button,
 nav img,
-nav svg {
+nav svg,
+.icon2 svg,
+.icon2 span
+{
     cursor: pointer;
 }
 
@@ -61,7 +64,9 @@ nav img:hover,
 .search-bar svg:hover,
 .navbar svg:hover,
 nav button:hover,
-nav svg:hover
+nav svg:hover,
+.icon2 svg:hover,
+.icon2 span:hover
  {
     transform: scale(1.1);
 }
@@ -169,7 +174,7 @@ input[type="submit"],
 .grid-container {
     display: grid;
     grid-template-columns: 1fr;
-    grid-gap: 1%;
+    grid-gap: 40px 1%;
     padding: 5% 15% 15% 15%;
 }
 
@@ -356,4 +361,8 @@ input[type="submit"]:active {
         padding: 0px;
         grid-template-columns: repeat(4, 1fr);
     }
+}
+
+.checked {
+    color: orange;
 }
