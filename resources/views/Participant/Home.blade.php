@@ -68,7 +68,7 @@
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 if (scrollTop + windowHeight >= documentHeight - 250) {
                     page++;
-                    infinteLoadMore(page);
+                    infinteLoadMore(page, ENDPOINT);
                 }
             }, 300)
         );

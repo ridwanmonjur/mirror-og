@@ -17,7 +17,7 @@ function throttle(func, wait) {
        call infinteLoadMore()
        --------------------------------------------
        --------------------------------------------*/
-function infinteLoadMore(page) {
+function infinteLoadMore(page, ENDPOINT) {
     if ($('.no-more-data').hasClass('d-none')) {
         $.ajax({
             url: ENDPOINT + "?page=" + page,

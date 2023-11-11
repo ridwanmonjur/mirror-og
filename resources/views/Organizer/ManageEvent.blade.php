@@ -40,7 +40,7 @@
                 <p>
                     <a href="{{ route('event.index',
                         array_merge(request()->query(), ['status' => 'ENDED', 'page' => 1])
-                        ) }}">Drafts</a>
+                        ) }}">Ended</a>
                 </p>
             </div>
             <br>
@@ -94,16 +94,16 @@
                     <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button" style="background: #8CCD39 !important">
                         Reset
                     </button>
-                    <button type="submit" class="oceans-gaming-default-button">Sort</button>
+                    <button type="submit" class="oceans-gaming-default-button">Save & Sort</button>
                     <br> &emsp;&emsp;&emsp;&emsp;&emsp;
-                    <input type="hidden" name="sortType" value="1">
+                    <input type="hidden" name="sortType">
                     &nbsp; &nbsp;
                     <!-- <input type="hidden" name="sortType" value="0">
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -->
                 </form>
             </div>
 
-            <div id="filter-option" class="">
+            <div id="filter-option" class="d-none">
                 <form name="filter" action="{{ route('event.index') }}" method="get">
                     <!-- Include existing request parameters -->
                     @foreach(request()->except('gameTitle', 'eventTier', 'eventType') as $key => $value)
@@ -119,7 +119,10 @@
                         <input type="checkbox" name="gameTitle" value="Dota">
                         <label for="gameTitle">Dota</label>
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                        <button type="submit" class="oceans-gaming-default-button">Filter</button>
+                        <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button" style="background: #8CCD39 !important">
+                            Reset
+                        </button>
+                        <button type="submit" class="oceans-gaming-default-button">Save & Filter</button>
                     </div>
                     <div>
                         <label> Event Type:</label>
@@ -150,7 +153,10 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input type="text" name="search" id="search" placeholder="Search using title, description, or keywords">
+                <input type="text" onchange="handleInputBlur();" name="search" id="searchInput" placeholder="Search using title, description, or keywords">
+                <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button d-none" style="background: #8CCD39 !important">
+                    Reset
+                </button>
             </div>
         </div>
         <br><br>
@@ -165,7 +171,57 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
-            // hyperlink
+            var ENDPOINT;
+
+            function getQueryStringValue(key) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(key);
+            }
+
+            function convertUrlStringToQueryString() {
+                var queryString = window.location.search;
+                var queryString = queryString.substring(1);
+                var paramsArray = queryString.split("&");
+                var params = {};
+                paramsArray.forEach(function(param) {
+                    var pair = param.split("=");
+                    var key = decodeURIComponent(pair[0]);
+                    var value = decodeURIComponent(pair[1] || '');
+                    if (key.trim()!="") params[key] = value;
+                });
+                console.log({
+                    params
+                })
+                
+                return new URLSearchParams(params);
+            }
+            ENDPOINT = "/organizer/event/?" + convertUrlStringToQueryString();
+
+            var debounceTimer;
+
+            function debouncedFunction() {
+                const inputElement = document.getElementById('searchInput');
+                const inputValue = inputElement.value;
+                const nextSearch = inputElement.nextElementSibling;
+                if (nextSearch) {
+                    if (String(inputValue).trim() === '') {
+                        nextSearch.classList.add('d-none');
+                    } else {
+                        nextSearch.classList.remove('d-none')
+                    }
+                }
+                ENDPOINT = `/organizer/event/?search=${inputValue}`;
+                document.querySelector('.scrolling-pagination').innerHTML = '';
+                window.history.replaceState({}, document.title, ENDPOINT);
+                page = 1;
+                infinteLoadMore(page, ENDPOINT);
+            }
+
+            function handleInputBlur() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(debouncedFunction, 250);
+            }
+
             function resetUrl() {
                 let url = "{{ route('event.index') }}";
                 window.location.href = url;
@@ -190,42 +246,53 @@
 
             function sortAscending(index) {
                 const list = document.querySelectorAll('.ascending');
-                setHiddenElementValue(index, 'asc')
                 element = list[index];
                 element.classList.toggle('d-none');
                 element.nextElementSibling.classList.toggle('d-none');
+                setHiddenElementValue(index, 'desc')
             }
 
             function sortDescending(index) {
                 const list = document.querySelectorAll('.descending');
-                setHiddenElementValue(index, 'desc')
                 element = list[index]
                 element.classList.toggle('d-none');
                 element.nextElementSibling.classList.toggle('d-none');
+                setHiddenElementValue(index, 'none')
             }
 
             function sortNone(index) {
                 const list = document.querySelectorAll('.no-sort');
-                setHiddenElementValue(index, 'desc')
                 element = list[index]
                 element.classList.toggle('d-none');
                 element.previousElementSibling.previousElementSibling.classList.toggle('d-none');
+                setHiddenElementValue(index, 'asc')
             }
 
             function setHiddenElementValue(key, value) {
                 let input = document.querySelector(`input[name=sortType]`);
-                const sortType = JSON.parse(input.value) ?? {};
+                const sortType = (isValidJson(input.value)) ? JSON.parse(input.value) : {};
                 sortType[key] = value;
                 input.value = JSON.stringify(sortType);
             }
+
             const urlParams = new URLSearchParams(window.location.search);
             console.log({
                 urlParams
             })
-            
+
+            // Function to check if a string is valid JSON
+            function isValidJson(str) {
+                try {
+                    JSON.parse(str);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+
             window.onload = function() {
                 const urlParams = new URLSearchParams(window.location.search);
-                const inputNameList = ['gameTitle', 'eventTier', 'eventType'];
+                const inputNameList = ['gameTitle', 'eventTier', 'eventType', 'sort'];
                 for (let j = 0; j < inputNameList.length; j++) {
                     const inputName = inputNameList[j];
                     const inputParamValueListFromName = urlParams.getAll(inputName);
@@ -234,11 +301,35 @@
                         const checkbox = document.querySelector(`input[type="checkbox"][name="${inputName}"][value="${inputParamValueFromName}"]`);
                         if (checkbox) {
                             checkbox.checked = true
-                            console.log({
-                                inputParamValueFromName,
-                                inputName,
-                                checkbox,
-                            });
+                        }
+                    }
+                }
+                const sortType = urlParams.get('sortType');
+                if (sortType) {
+                    const sortTypeJson = isValidJson(sortType) ? JSON.parse(sortType) : {};
+                    const sortTypeJsonKeys = Object.keys(sortTypeJson);
+                    var sortBoxes = document.querySelectorAll('.sort-box');
+
+                    for (let i = 0; i < sortTypeJsonKeys.length; i++) {
+                        const sortTypeJsonKey = sortTypeJsonKeys[i];
+                        const sortTypeJsonValue = sortTypeJson[sortTypeJsonKey];
+                        console.log({
+                            sortTypeJsonKey,
+                            sortTypeJsonValue
+                        });
+                        var childElements = sortBoxes[sortTypeJsonKey].children;
+                        var lastThreeChildren = Array.from(childElements).slice(-3);
+                        lastThreeChildren.forEach(function(child) {
+                            if (!child.classList.contains('d-none')) {
+                                child.classList.add('d-none');
+                            }
+                        });
+                        if (sortTypeJsonValue === 'asc') {
+                            lastThreeChildren[0].classList.remove('d-none');
+                        } else if (sortTypeJsonValue === 'desc') {
+                            lastThreeChildren[1].classList.remove('d-none');
+                        } else {
+                            lastThreeChildren[2].classList.remove('d-none');
                         }
                     }
                 }
@@ -266,19 +357,18 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
                     `;
             }
-        </script>
-        <script>
-            var ENDPOINT = "{{ route('event.index') }}";
+
             var page = 1;
             window.addEventListener(
                 "scroll",
                 throttle((e) => {
+                    ENDPOINT = `/organizer/event/` + convertUrlStringToQueryString();
                     var windowHeight = window.innerHeight;
                     var documentHeight = document.documentElement.scrollHeight;
                     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                     if (scrollTop + windowHeight >= documentHeight - 250) {
                         page++;
-                        infinteLoadMore(page);
+                        infinteLoadMore(page, ENDPOINT);
                     }
                 }, 300)
             );
