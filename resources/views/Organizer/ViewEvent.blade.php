@@ -20,9 +20,11 @@ $stylesEventRatio .= "background-color: #8CCD39; color: white;";
 elseif ($ratio > 0.5){
 $stylesEventRatio .= "background-color: #FA831F; color: white;";
 }
-elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } $eventTierLower=strtolower($event->eventDetail->eventTier);
+elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } $eventTierLower=strtolower($event->eventTier);
 
-    $date = \Carbon\Carbon::parse($event->eventDetail->startDateTime)->setTimezone('Asia/Singapore');
+    $datePart = \Carbon\Carbon::parse($event->startDate)->setTimezone('Asia/Singapore');
+    $timePart = \Carbon\Carbon::parse($event->startTime)->setTimezone('Asia/Singapore');
+    $date = $datePart->setTimeFromTimeString($timePart);
     $dayStr = $date->englishDayOfWeek;
     $dateStr = $date->toFormattedDateString();
     $timeStr = $date->isoFormat('h:mm a');
@@ -97,7 +99,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                         <br>
                                         <div id="Overview" class="tabcontent" style="display: block;">
                                             <h3><u>About this event</u></h3>
-                                            <p>{{ $event->eventDetail->eventDescription }}</p>
+                                            <p>{{ $event->eventDescription }}</p>
                                         </div>
 
                                         <div id="Bracket" class="tabcontent">
@@ -163,7 +165,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                         </svg>
                                         &nbsp;
-                                        <span>Round Robin</span>
+                                        <span>{{$event->eventType}}</span>
                                     </div>
                                 </div>
                             </div>

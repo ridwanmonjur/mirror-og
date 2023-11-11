@@ -18,12 +18,12 @@ $stylesEventRatio .= "background-color: #8CCD39; color: white;";
 elseif ($ratio > 0.5){
 $stylesEventRatio .= "background-color: #FA831F; color: white;";
 }
-elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } */ $stylesEventRatio="background-color: #FFE325; color: black;" ; $eventTierLower=strtolower($event->eventDetail->eventTier);
+elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } */ $stylesEventRatio="background-color: #FFE325; color: black;" ; $eventTierLower=strtolower($event->eventTier);
     @endphp
     <a href="{{ route('event.show', $event->id) }}" style="text-decoration: none;">
         <div class="{{'rounded-box rounded-box-' . $eventTierLower }}">
             <div class="centered-absolute-game-tier">
-                <img src="{{ asset('/assets/images/dolphin.png') }}" width="120" height="80">
+                <img src="{{ asset('/assets/images/'. $eventTierLower . '.png') }}" width="120" height="80">
             </div>
             <div class="{{'card-image card-image-' . $eventTierLower }}">
                 <img src="{{ asset('/assets/images/1.png') }}" alt="">
@@ -32,6 +32,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                 <div>
                     <div class="flexbox-centered-space">
                         <img src="{{ asset('/assets/images/menu.png') }}" alt="menu" width="50" height="40">
+                        <span> {{ $event->gameTitle }} </span>
                         <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
                             {{$event->status}}
                         </button>
@@ -43,7 +44,9 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                         </i></p>
                     <div class="flexbox-welcome">
                         @php
-                        $date = \Carbon\Carbon::parse($event->eventDetail->startDateTime)->setTimezone('Asia/Singapore');
+                        $datePart = \Carbon\Carbon::parse($event->startDate)->setTimezone('Asia/Singapore');
+                        $timePart = \Carbon\Carbon::parse($event->startTime)->setTimezone('Asia/Singapore');
+                        $date = $datePart->setTimeFromTimeString($timePart);
                         $dateStr = $date->toFormattedDateString() . " " . $date->isoFormat('h:mm a');
                         @endphp
                         <div>@php echo $dateStr; @endphp</div>
@@ -84,6 +87,15 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                             </svg>
                             &nbsp;
                             <span>South East Asia</span>
+                        </div>
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            &nbsp;
+                            <span>{{$event->eventType}}</span>
                         </div>
                     </div>
                 </div>

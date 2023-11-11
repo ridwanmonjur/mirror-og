@@ -74,8 +74,8 @@
                 <form action="{{ route('event.index') }}" method="get">
 
                     <!-- Include existing request parameters -->
-                    @foreach(request()->except('sort', 'sortType') as $key => $value)
-                    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                    @foreach(request()->except('sort', 'sortType', 'page') as $key => $value)
+                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                     @endforeach
                     <input type="hidden" name="page" value="1">
                     <label> Sort by:</label>
@@ -96,17 +96,14 @@
                     </button>
                     <button type="submit" class="oceans-gaming-default-button">Save & Sort</button>
                     <br> &emsp;&emsp;&emsp;&emsp;&emsp;
-                    <input type="hidden" name="sortType">
                     &nbsp; &nbsp;
-                    <!-- <input type="hidden" name="sortType" value="0">
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -->
                 </form>
             </div>
 
             <div id="filter-option" class="d-none">
                 <form name="filter" action="{{ route('event.index') }}" method="get">
                     <!-- Include existing request parameters -->
-                    @foreach(request()->except('gameTitle', 'eventTier', 'eventType') as $key => $value)
+                    @foreach(request()->except('gameTitle', 'eventTier', 'eventType', 'page') as $key => $value)
                     <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                     @endforeach
                     <input type="hidden" name="page" value="1">
@@ -187,12 +184,12 @@
                     var pair = param.split("=");
                     var key = decodeURIComponent(pair[0]);
                     var value = decodeURIComponent(pair[1] || '');
-                    if (key.trim()!="") params[key] = value;
+                    if (key.trim() != "") params[key] = value;
                 });
                 console.log({
                     params
                 })
-                
+
                 return new URLSearchParams(params);
             }
             ENDPOINT = "/organizer/event/?" + convertUrlStringToQueryString();
@@ -243,13 +240,14 @@
                 if (element && !(element.classList.contains("d-none"))) element?.classList.add("d-none");
             }
 
+            const sortByList = ["startDate", "endDate"];
 
             function sortAscending(index) {
                 const list = document.querySelectorAll('.ascending');
                 element = list[index];
                 element.classList.toggle('d-none');
                 element.nextElementSibling.classList.toggle('d-none');
-                setHiddenElementValue(index, 'desc')
+                setHiddenElementValue(sortByList[index], 'desc')
             }
 
             function sortDescending(index) {
@@ -257,7 +255,7 @@
                 element = list[index]
                 element.classList.toggle('d-none');
                 element.nextElementSibling.classList.toggle('d-none');
-                setHiddenElementValue(index, 'none')
+                setHiddenElementValue(sortByList[index], 'none')
             }
 
             function sortNone(index) {
@@ -265,13 +263,17 @@
                 element = list[index]
                 element.classList.toggle('d-none');
                 element.previousElementSibling.previousElementSibling.classList.toggle('d-none');
-                setHiddenElementValue(index, 'asc')
+                setHiddenElementValue(sortByList[index], 'asc')
             }
 
             function setHiddenElementValue(key, value) {
                 let input = document.querySelector(`input[name=sortType]`);
                 const sortType = (isValidJson(input.value)) ? JSON.parse(input.value) : {};
-                sortType[key] = value;
+                if (value == "none" && key in sortType) {
+                    delete sortType[key];
+                } else {
+                    sortType[key] = value;
+                }
                 input.value = JSON.stringify(sortType);
             }
 
@@ -307,6 +309,7 @@
                 const sortType = urlParams.get('sortType');
                 if (sortType) {
                     const sortTypeJson = isValidJson(sortType) ? JSON.parse(sortType) : {};
+                    document.querySelector(`input[name="sortType"]`).value = sortType;
                     const sortTypeJsonKeys = Object.keys(sortTypeJson);
                     var sortBoxes = document.querySelectorAll('.sort-box');
 
@@ -317,7 +320,9 @@
                             sortTypeJsonKey,
                             sortTypeJsonValue
                         });
-                        var childElements = sortBoxes[sortTypeJsonKey].children;
+                        let index = sortByList.indexOf(sortTypeJsonKey);
+                        if (index<0) continue;
+                        var childElements = sortBoxes[ index ].children;
                         var lastThreeChildren = Array.from(childElements).slice(-3);
                         lastThreeChildren.forEach(function(child) {
                             if (!child.classList.contains('d-none')) {
@@ -362,7 +367,7 @@
             window.addEventListener(
                 "scroll",
                 throttle((e) => {
-                    ENDPOINT = `/organizer/event/` + convertUrlStringToQueryString();
+                    ENDPOINT = `/organizer/event/?` + convertUrlStringToQueryString();
                     var windowHeight = window.innerHeight;
                     var documentHeight = document.documentElement.scrollHeight;
                     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;

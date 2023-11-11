@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\Event;
 use App\Models\Organizer;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -28,28 +29,61 @@ class EventController extends Controller
         $eventListQuery =  EventDetail::query();
         $organizer = Organizer::where('user_id', $user->id)->first();
         $eventListQuery->when($request->has('status'), function ($query) use ($request) {
+
             $status = $request->input('status');
-            // GET CURRENT DATE TIME OF THIS INSTANT
-            $currentDateTime = date('Y-m-d H:i:s');
+
+            $currentDateTime = Carbon::now();
             if ($status == 'ALL') {
                 return $query;
             }
             if ($status == 'LIVE') {
-                return $query->where('status', 'ONGOING');
+                return $query->where(function ($query) use ($currentDateTime) {
+                    $query->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime])
+                        ->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime]);
+                });
             }
             if ($status == 'SCHEDULED') {
-                return $query->where('status', 'UPCOMING');
+                return $query->where(function ($query)  use ($currentDateTime) {
+                    $query->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime])
+                        ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
+                });
             }
             if ($status == 'DRAFT') {
                 return $query->where('status', 'DRAFT');
             }
             if ($status == 'ENDED') {
-                return $query->where('status', 'DRAFT');
+                return $query->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime]);
             }
             return $query;
         });
-        $eventList= $eventListQuery->where('user_id', $user->id)
-            ->orderBy('id', 'asc')
+        $eventListQuery->when($request->has('search'), function ($query) use ($request) {
+            $search = $request->input('search');
+            return $query->where('eventName', 'LIKE', "%{$search}%");
+        });
+
+        $eventListQuery->when($request->has("sort"), function ($query) use ($request) {
+            $sortTypeJSONString = $request->input("sortType");
+            $sortKeys = json_decode($sortTypeJSONString, true);
+            foreach ($sortKeys as $key => $value) {
+                $query->orderBy($key, $value);
+            }
+            return $query;
+        });
+        
+        $eventListQuery->when($request->has("eventTier"), function ($query) use ($request) {
+            $eventTier = $request->input("eventTier");
+            return $query->where('eventTier', $eventTier);
+        });
+        $eventListQuery->when($request->has("eventType"), function ($query) use ($request) {
+            $eventType = $request->input("eventType");
+            return $query->where('eventType', $eventType);
+        });
+        $eventListQuery->when($request->has("gameTitle"), function ($query) use ($request) {
+            $gameTitle = $request->input("gameTitle");
+            return $query->where('gameTitle', $gameTitle);
+        });
+
+        $eventList = $eventListQuery->where('user_id', $user->id)
             ->paginate(4);
         $mappingEventState = $this->mappingEventState;
         $count = 4;
