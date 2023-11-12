@@ -17,27 +17,41 @@
 
             </header>
             <div class="flexbox-filter">
-                <p>
+                <p
+                class="status-ALL"
+                >
                     <a href="{{ route('event.index', 
                         array_merge(request()->query(), ['status' => 'ALL', 'page' => 1])
-                        ) }}">All</a>
+                        ) }}"
+                        >All</a>
                 </p>
-                <p>
+                <p
+                class="status-LIVE"
+                >
                     <a href="{{ route('event.index',    
                         array_merge(request()->query(), ['status' => 'LIVE', 'page' => 1])
-                        ) }}">Live</a>
+                        ) }}"
+                        >Live</a>
                 </p>
-                <p>
+                <p
+                class="status-SCHEDULED"
+                >
                     <a href="{{ route('event.index',
                         array_merge(request()->query(), ['status' => 'SCHEDULED', 'page' => 1])
-                        ) }}">Scheduled</a>
+                        ) }}"
+                        >Scheduled</a>
                 </p>
-                <p>
+                <p
+                class="status-DRAFT"
+                >
                     <a href="{{ route('event.index',
                         array_merge(request()->query(), ['status' => 'DRAFT', 'page' => 1])
-                        ) }}">Drafts</a>
+                        ) }}"
+                        >Drafts</a>
                 </p>
-                <p>
+                <p
+                class="status-ENDED"
+                >
                     <a href="{{ route('event.index',
                         array_merge(request()->query(), ['status' => 'ENDED', 'page' => 1])
                         ) }}">Ended</a>
@@ -320,6 +334,14 @@
 
             window.onload = function() {
                 const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('status')) {
+                    let value = urlParams.get('status');
+                    let element =  document.querySelector(`p.status-${value}`)
+                    element.style.color = 'green'; 
+                    element.style.border = '3px solid #43A4D7'; 
+                    element.style.padding = "5px";
+                    element.style.borderRadius = '12px';
+                }
                 const inputNameList = ['gameTitle', 'eventTier', 'eventType', 'sort'];
                 for (let j = 0; j < inputNameList.length; j++) {
                     const inputName = inputNameList[j];
