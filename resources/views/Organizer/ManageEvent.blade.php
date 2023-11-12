@@ -82,12 +82,12 @@
                     &emsp;&emsp;&emsp;
                     <input type="hidden" name="sortType">
                     <span class="sort-box">
-                        <input type="checkbox" name="sort" value="startDate">
+                        <input type="radio" name="sort" value="startDate">
                         <label for="startDate">Start Date</label>
                     </span>
                     &ensp; &ensp;
                     <span class="sort-box">
-                        <input type="checkbox" name="sort" value="endDate">
+                        <input type="radio" name="sort" value="endDate">
                         <label for="endDate">End Date</label>
                     </span>
                     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
@@ -110,10 +110,10 @@
                     <div>
                         <label> Game Title:</label>
                         &emsp;
-                        <input type="checkbox" name="gameTitle" value="Dota2">
+                        <input type="radio" name="gameTitle" value="Dota 2">
                         <label for="gameTitle">Dota 2</label>
                         &ensp;
-                        <input type="checkbox" name="gameTitle" value="Dota">
+                        <input type="radio" name="gameTitle" value="Dota">
                         <label for="gameTitle">Dota</label>
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                         <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button" style="background: #8CCD39 !important">
@@ -124,22 +124,22 @@
                     <div>
                         <label> Event Type:</label>
                         &emsp;
-                        <input type="checkbox" name="eventTier" value="Tier">
+                        <input type="radio" name="eventType" value="Tier">
                         <label for="eventTier">Tier</label>
                         &ensp;
-                        <input type="checkbox" name="eventTier" value="League">
+                        <input type="radio" name="eventType" value="League">
                         <label for="eventTier">League</label>
                     </div>
                     <div>
                         <label> Event Tier: </label>
                         &emsp;&nbsp;&nbsp;
-                        <input type="checkbox" name="eventType" value="Dolphin">
+                        <input type="radio" name="eventTier" value="Dolphin">
                         <label for="eventType">Dolphin</label>
                         &ensp;
-                        <input type="checkbox" name="eventType" value="Turtle">
+                        <input type="radio" name="eventTier" value="Turtle">
                         <label for="eventType">Turtle</label>
                         &ensp;
-                        <input type="checkbox" name="eventType" value="Starfish">
+                        <input type="radio" name="eventTier" value="Starfish">
                         <label for="eventType">Starfish</label>
                     </div>
                 </form>
@@ -162,7 +162,7 @@
             @include("Organizer.ManageEventScroll")
         </div>
 
-        <div class="no-more-data d-none" style="margin-top: 150px;"></div>
+        <div class="no-more-data d-none" style="margin-top: 50px;"></div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -175,7 +175,26 @@
                 return urlParams.get(key);
             }
 
-            function convertUrlStringToQueryString() {
+            function convertObjectToURLString(object){
+                var queryString = "";
+                for (const [key, value] of Object.entries(object)) {
+                    if (Array.isArray(value)){
+                        value.forEach(function(value){
+                            queryString += `${key}=${value}&`;
+                        });
+                    }
+                    else{
+                        queryString += `${key}=${value}&`;
+                    }
+                }
+                return queryString;
+            }
+
+            function convertUrlStringToQueryStringOrObject({
+                isObject
+            } = {
+                isObject: false
+            }) {
                 var queryString = window.location.search;
                 var queryString = queryString.substring(1);
                 var paramsArray = queryString.split("&");
@@ -184,15 +203,22 @@
                     var pair = param.split("=");
                     var key = decodeURIComponent(pair[0]);
                     var value = decodeURIComponent(pair[1] || '');
-                    if (key.trim() != "") params[key] = value;
+                    if (key.trim() != "") {
+                        if (key in params){
+                            params[key] = [...params[key], value ];
+                        }
+                        else{
+                            params[key] = [value];
+                        
+                        }
+                    }
                 });
-                console.log({
-                    params
-                })
-
-                return new URLSearchParams(params);
+                if (isObject) return params;
+                else return convertObjectToURLString(params);
             }
-            ENDPOINT = "/organizer/event/?" + convertUrlStringToQueryString();
+            ENDPOINT = "/organizer/event/?" + convertUrlStringToQueryStringOrObject({
+                isObject: false
+            });
 
             var debounceTimer;
 
@@ -254,7 +280,7 @@
                 const list = document.querySelectorAll('.descending');
                 element = list[index]
                 element.classList.toggle('d-none');
-                element.nextElementSibling.classList.toggle('d-none');
+                element.previousElementSibling.previousElementSibling.classList.toggle('d-none');
                 setHiddenElementValue(sortByList[index], 'none')
             }
 
@@ -262,7 +288,7 @@
                 const list = document.querySelectorAll('.no-sort');
                 element = list[index]
                 element.classList.toggle('d-none');
-                element.previousElementSibling.previousElementSibling.classList.toggle('d-none');
+                element.nextElementSibling.classList.toggle('d-none');
                 setHiddenElementValue(sortByList[index], 'asc')
             }
 
@@ -277,7 +303,7 @@
                 input.value = JSON.stringify(sortType);
             }
 
-            const urlParams = new URLSearchParams(window.location.search);
+            const urlParams = convertObjectToURLString(window.location.search);
             console.log({
                 urlParams
             })
@@ -300,7 +326,7 @@
                     const inputParamValueListFromName = urlParams.getAll(inputName);
                     for (let i = 0; i < inputParamValueListFromName.length; i++) {
                         const inputParamValueFromName = inputParamValueListFromName[i];
-                        const checkbox = document.querySelector(`input[type="checkbox"][name="${inputName}"][value="${inputParamValueFromName}"]`);
+                        const checkbox = document.querySelector(`input[type="radio"][name="${inputName}"][value="${inputParamValueFromName}"]`);
                         if (checkbox) {
                             checkbox.checked = true
                         }
@@ -321,8 +347,8 @@
                             sortTypeJsonValue
                         });
                         let index = sortByList.indexOf(sortTypeJsonKey);
-                        if (index<0) continue;
-                        var childElements = sortBoxes[ index ].children;
+                        if (index < 0) continue;
+                        var childElements = sortBoxes[index].children;
                         var lastThreeChildren = Array.from(childElements).slice(-3);
                         lastThreeChildren.forEach(function(child) {
                             if (!child.classList.contains('d-none')) {
@@ -330,11 +356,11 @@
                             }
                         });
                         if (sortTypeJsonValue === 'asc') {
-                            lastThreeChildren[0].classList.remove('d-none');
-                        } else if (sortTypeJsonValue === 'desc') {
                             lastThreeChildren[1].classList.remove('d-none');
-                        } else {
+                        } else if (sortTypeJsonValue === 'desc') {
                             lastThreeChildren[2].classList.remove('d-none');
+                        } else {
+                            lastThreeChildren[0].classList.remove('d-none');
                         }
                     }
                 }
@@ -345,7 +371,14 @@
             for (let i = 0; i < elementList.length; i++) {
                 elementList[i].innerHTML +=
                     `
-                    <span class="ascending" 
+                    <span class="no-sort"
+                        onclick="sortNone(${i});"
+                    >
+                        &nbsp; 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                    </span>
+                    <span class="ascending d-none" 
                         onclick="sortAscending(${i});"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline></svg>
@@ -355,25 +388,24 @@
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-down"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg>                    
                     </span>
-                    <span class="no-sort d-none"
-                        onclick="sortNone(${i});"
-                    >
-                        &nbsp; 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                    `;
+                                       `;
             }
 
             var page = 1;
             window.addEventListener(
                 "scroll",
-                throttle((e) => {
-                    ENDPOINT = `/organizer/event/?` + convertUrlStringToQueryString();
+                throttle((e) => {                    
                     var windowHeight = window.innerHeight;
                     var documentHeight = document.documentElement.scrollHeight;
                     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    if (scrollTop + windowHeight >= documentHeight - 250) {
+                    if (scrollTop + windowHeight >= documentHeight - 200) {
+                        let params = convertUrlStringToQueryStringOrObject({
+                            isObject: true
+                        });
                         page++;
-                        infinteLoadMore(page, ENDPOINT);
+                        params.page = page;
+                        ENDPOINT = `/organizer/event/?` + convertObjectToURLString(params);
+                        infinteLoadMore(null, ENDPOINT);
                     }
                 }, 300)
             );

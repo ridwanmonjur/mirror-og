@@ -23,6 +23,19 @@ class EventController extends Controller
         return view('Organizer.Home');
     }
 
+    function combineParams($queryParams)
+    {
+        $combinedParams = [];
+        foreach ($queryParams as $key => $value) {
+            if (is_array($value) && count($value) > 1) {
+                $combinedParams[$key] = $value;
+            } else {
+                $combinedParams[$key] = is_array($value) ? $value[0] : [$value];
+            }
+        }
+        return $combinedParams;
+    }
+
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -69,7 +82,7 @@ class EventController extends Controller
             }
             return $query;
         });
-        
+
         $eventListQuery->when($request->has("eventTier"), function ($query) use ($request) {
             $eventTier = $request->input("eventTier");
             return $query->where('eventTier', $eventTier);
