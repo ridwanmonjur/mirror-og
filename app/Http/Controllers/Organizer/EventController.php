@@ -51,38 +51,38 @@ class EventController extends Controller
     public function store(Request $request)
     {
 
-        // $validatedData = $request->validate([
-        //     'eventName' => 'required',
-        //     // 'endDate' => 'required',
-        //     // 'startTime' => 'required',
-        //     // 'endTime' => 'required',
-        // ]);
+        $validatedData = $request->validate([
+            'eventName' => 'required',
+            // 'endDate' => 'required',
+            // 'startTime' => 'required',
+            // 'endTime' => 'required',
+        ]);
 
 
-        // // // Validate the Form
+        // // Validate the Form
 
 
-        // $eventDetail = new EventDetail;
-        // $eventDetail->startDate = $request->startDate;
-        // $eventDetail->endDate = $request->endDate;
-        // $eventDetail->startTime = $request->startTime;
-        // $eventDetail->endTime  = $request->endTime;
-        // $eventDetail->eventName  = $request->eventName;
-        // $eventDetail->eventDescription  = $request->eventDescription;
-        // $eventDetail->eventTags  = $request->eventTags;
-        // $eventDetail->eventBanner  = $request->eventBanner;
-        // $eventDetail->status = $request->status;
-        // $eventDetail->venue = $request->venue;
-        // $eventDetail->sub_action_public_date  = $request->sub_action_public_date;
-        // $eventDetail->sub_action_public_time  = $request->sub_action_public_time;
-        // $eventDetail->sub_action_private  = $request->sub_action_private;
-        // $eventDetail->action  = $request->action;
-        // $eventDetail->user_id  = auth()->user()->id;
-        // $eventDetail->save();
-        // return redirect('organizer/home');
+        $eventDetail = new EventDetail;
+        $eventDetail->startDate = $request->startDate;
+        $eventDetail->endDate = $request->endDate;
+        $eventDetail->startTime = $request->startTime;
+        $eventDetail->endTime  = $request->endTime;
+        $eventDetail->eventName  = $request->eventName;
+        $eventDetail->eventDescription  = $request->eventDescription;
+        $eventDetail->eventTags  = $request->eventTags;
+        $eventDetail->eventBanner  = $request->eventBanner;
+        $eventDetail->status = $request->status;
+        $eventDetail->venue = $request->venue;
+        $eventDetail->sub_action_public_date  = $request->sub_action_public_date;
+        $eventDetail->sub_action_public_time  = $request->sub_action_public_time;
+        $eventDetail->sub_action_private  = $request->sub_action_private;
+        $eventDetail->action  = $request->action;
+        $eventDetail->user_id  = auth()->user()->id;
+        $eventDetail->save();
+        return redirect('organizer/home');
 
-        dd($request->all());
-        return view('Organizer.CreateEvent');
+        // dd($request->all());
+        // return view('Organizer.CreateEvent');
 
     }
 

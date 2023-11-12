@@ -629,6 +629,8 @@
 <body>
     @include('CommonLayout.Navbar')
     <main>
+    <form action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
+            @csrf
         <section class="time-line-box">
             <div class="swiper-container text-center">
                 <div class="swiper-wrapper">
@@ -699,7 +701,7 @@
                 </header>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-0', 'none')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-2', 'timeline-1')" type="submit" class="oceans-gaming-default-button"> Next > </button>
+                    <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
 
@@ -726,7 +728,7 @@
                 </div>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-1', 'none')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-3', 'timeline-1')" type="submit" class="oceans-gaming-default-button"> Next > </button>
+                    <button onclick="goToNextScreen('step-3', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
 
@@ -963,7 +965,6 @@
                 </header>
                 <div class="event-details-form">
                     <form action="#" method="POST">
-
                         <div class="form-group">
                             <label for="startDate">Date of Event</label>
                             <p class="description">Tell your players when to mark their calendars</p>
@@ -993,8 +994,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </form>
                 </div>
                 <div class="flexbox box-width">
@@ -1051,7 +1050,7 @@
                 </div>
                 <div class="flexbox box-width">
                     <button onclick="goToNextScreen('step-7', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-9', 'timeline-2')" type="button" class="oceans-gaming-default-button"> Next > </button>
+                    <button onclick="goToNextScreen('step-9', 'timeline-2')" type="submit" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
 
@@ -1283,8 +1282,8 @@
                 <br><br>
                 <input type="button" onclick="goToNextScreen('', '')" value="Continue">
             </div>
-
         </section>
+    </form>
     </main>
 
     <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
