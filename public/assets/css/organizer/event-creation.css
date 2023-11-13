@@ -414,6 +414,7 @@ input[type="time"] {
     padding: 20px;
     text-align: center;
     height: 300px;
+    width: 250px;
     border-radius: 20px;
     transition: transform 0.2s;
     /* Add a transform animation */
@@ -425,7 +426,6 @@ input[type="time"] {
 
 .selectable-box {
     cursor: pointer;
-    /* Add pointer cursor for selectable behavior */
 }
 
 .selectable-box:hover {
@@ -446,7 +446,7 @@ input[type="time"] {
 
 main {
     width: 100%;
-    height: 120vh;
+    height: 140vh;
     display: block !important;
     padding: 0px 10px;
     align-items: center;
