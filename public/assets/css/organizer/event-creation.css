@@ -422,6 +422,7 @@ input[type="time"] {
     /* Remove underlines from links */
     color: black;
     /* Set text color to black */
+    cursor: pointer;
 }
 
 .selectable-box {
@@ -442,6 +443,7 @@ input[type="time"] {
     height: 350px;
     width: 230px;
     border-radius: 20px;
+    cursor: pointer;
 }
 
 main {

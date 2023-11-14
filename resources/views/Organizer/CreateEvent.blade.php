@@ -89,8 +89,6 @@
                 </div>
             </div>
 
-
-
             <div id="step-2" class="d-none">
                 <header class="welcome text-center">
                     <u>
@@ -104,12 +102,12 @@
 
                 <div class="container">
                     <div class="grid-wrapper grid-col-auto">
-                        <label for="radio-card-1" class="radio-card">
-                            <input type="radio" name="radio-card" id="radio-card-1" checked />
+                        <label for="radio-card-3" class="radio-card">
+                            <input type="radio" name="radio-card" id="radio-card-3" checked />
                             <div class="card-content-wrapper">
                                 <span class="check-icon"></span>
                                 <div class="card-content">
-                                    <div class="box_2nd selectable-box" onclick="activateRadio('radio-card-1')">
+                                    <div class="box_2nd selectable-box">
                                         <h2 class="box-title">Tournament</h2>
                                         <p class="box-text" style="text-align: left;">Insert definition here</p>
                                     </div>
@@ -118,12 +116,12 @@
                         </label>
                         <!-- /.radio-card -->
 
-                        <label for="radio-card-2" class="radio-card">
-                            <input type="radio" name="radio-card" id="radio-card-2" />
+                        <label for="radio-card-4" class="radio-card">
+                            <input type="radio" name="radio-card" id="radio-card-4" />
                             <div class="card-content-wrapper">
                                 <span class="check-icon"></span>
                                 <div class="card-content">
-                                    <div class="box_2nd selectable-box" onclick="activateRadio('radio-card-2')">
+                                    <div class="box_2nd selectable-box">
                                         <h2 class="box-title">League</h2>
                                         <p class="box-text" style="text-align: left;">Insert definition here</p>
                                     </div>
@@ -152,8 +150,8 @@
                 <section class="featured-events">
                     <div class="container">
                         <div class="grid-wrapper grid-col-auto">
-                            <label for="radio-card-1" class="radio-card">
-                                <input type="radio" name="radio-card" id="radio-card-1" checked />
+                            <label for="radio-card-5" class="radio-card">
+                                <input type="radio" name="radio-card" id="radio-card-5" checked />
                                 <div class="card-content-wrapper">
                                     <span class="check-icon"></span>
                                     <div class="card-content">
@@ -196,8 +194,8 @@
                             </label>
                             <!-- /.radio-card -->
 
-                            <label for="radio-card-2" class="radio-card">
-                                <input type="radio" name="radio-card" id="radio-card-2" />
+                            <label for="radio-card-6" class="radio-card">
+                                <input type="radio" name="radio-card" id="radio-card-6" />
                                 <div class="card-content-wrapper">
                                     <span class="check-icon"></span>
                                     <div class="card-content">
@@ -239,8 +237,8 @@
                                 </div>
                             </label>
 
-                            <label for="radio-card-3" class="radio-card">
-                                <input type="radio" name="radio-card" id="radio-card-2" />
+                            <label for="radio-card-7" class="radio-card">
+                                <input type="radio" name="radio-card" id="radio-card-7" />
                                 <div class="card-content-wrapper">
                                     <span class="check-icon"></span>
                                     <div class="card-content">
@@ -305,8 +303,8 @@
                 <section class="featured-events" style="align-items: center;">
                     <div class="container">
                         <div class="grid-wrapper grid-col-auto">
-                            <label for="radio-card-1" class="radio-card">
-                                <input type="radio" name="radio-card" id="radio-card-1" checked />
+                            <label for="radio-card-8" class="radio-card">
+                                <input type="radio" name="radio-card" id="radio-card-8" checked />
                                 <div class="card-content-wrapper">
                                     <span class="check-icon"></span>
                                     <div class="card-content">
@@ -803,19 +801,15 @@
             element.classList.add('selected');
         }
 
-        function selectImage(radioId) {
-    const images = document.querySelectorAll(".selectable-image");
+        function activateRadio(radioId) {
+    const radios = document.querySelectorAll("input[name='radio-card']");
 
-    images.forEach((image) => {
-        image.classList.remove("selected");
+    radios.forEach((radio) => {
+        radio.checked = false;
     });
 
-    const selectedImage = document.querySelector(`#${radioId} .selectable-image`);
-    selectedImage.classList.add("selected");
-
-    // Additionally, you can check the radio button as follows
-    const radioButton = document.querySelector(`#${radioId} input[type="radio"]`);
-    radioButton.checked = true;
+    const selectedRadio = document.querySelector(`#${radioId} input[type='radio']`);
+    selectedRadio.checked = true;
 }
 
 
