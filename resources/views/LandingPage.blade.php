@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}"">
     <link rel=" stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Splash</title>
-    <script src="{{ asset('script.js') }}"></script>
+    <script src="{{ asset('assets/js/navbar/script.js') }}"></script>
 </head>
 
 <body>
@@ -21,13 +21,14 @@
             </div>
         </div>
 
-        <div class="hamburger-menu">
+        <div class="hamburger-menu" onclick="toggleMenu()">
             <i class="fa fa-bars"></i>
         </div>
-        @guest
-        <div class="nav__items">
+
+        <div class="nav__items" id="navItems">
             <ul>
                 <li><a href="#" id='nav-but' class="moop">Where's Moop?</a></li>
+                @guest
                 <div class="dropdown">
                     <li><a onclick="myFunction()" style="color: white !important;" href="#" id='nav-but' class="dropbtn sign" data-bs-toggle="dropdown" aria-expanded="false">Sign In</a></li>
                 </div>
@@ -35,10 +36,10 @@
                     <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">Organizer</a>
                     <a class="dropdown-item" href="{{ route('participant.signin.view') }}">Participant</a>
                 </div>
-
+                @endguest
             </ul>
         </div>
-        @endguest
+
         @auth
         <div class="nav__items">
             <ul>
