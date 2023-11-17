@@ -17,41 +17,27 @@
 
             </header>
             <div class="flexbox-filter">
-                <p
-                class="status-ALL"
-                >
+                <p class="status-ALL">
                     <a href="{{ route('event.index', 
                         array_merge(request()->query(), ['status' => 'ALL', 'page' => 1])
-                        ) }}"
-                        >All</a>
+                        ) }}">All</a>
                 </p>
-                <p
-                class="status-LIVE"
-                >
+                <p class="status-LIVE">
                     <a href="{{ route('event.index',    
                         array_merge(request()->query(), ['status' => 'LIVE', 'page' => 1])
-                        ) }}"
-                        >Live</a>
+                        ) }}">Live</a>
                 </p>
-                <p
-                class="status-SCHEDULED"
-                >
+                <p class="status-SCHEDULED">
                     <a href="{{ route('event.index',
                         array_merge(request()->query(), ['status' => 'SCHEDULED', 'page' => 1])
-                        ) }}"
-                        >Scheduled</a>
+                        ) }}">Scheduled</a>
                 </p>
-                <p
-                class="status-DRAFT"
-                >
+                <p class="status-DRAFT">
                     <a href="{{ route('event.index',
                         array_merge(request()->query(), ['status' => 'DRAFT', 'page' => 1])
-                        ) }}"
-                        >Drafts</a>
+                        ) }}">Drafts</a>
                 </p>
-                <p
-                class="status-ENDED"
-                >
+                <p class="status-ENDED">
                     <a href="{{ route('event.index',
                         array_merge(request()->query(), ['status' => 'ENDED', 'page' => 1])
                         ) }}">Ended</a>
@@ -89,7 +75,7 @@
 
                     <!-- Include existing request parameters -->
                     @foreach(request()->except('sort', 'sortType', 'page') as $key => $value)
-                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                     @endforeach
                     <input type="hidden" name="page" value="1">
                     <label> Sort by:</label>
@@ -164,7 +150,7 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input type="text" onchange="handleInputBlur();" name="search" id="searchInput" placeholder="Search using title, description, or keywords">
+                <input type="text" onblur="handleInputBlur();" name="search" id="searchInput" placeholder="Search using title, description, or keywords">
                 <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button d-none" style="background: #8CCD39 !important">
                     Reset
                 </button>
@@ -189,15 +175,14 @@
                 return urlParams.get(key);
             }
 
-            function convertObjectToURLString(object){
+            function convertObjectToURLString(object) {
                 var queryString = "";
                 for (const [key, value] of Object.entries(object)) {
-                    if (Array.isArray(value)){
-                        value.forEach(function(value){
+                    if (Array.isArray(value)) {
+                        value.forEach(function(value) {
                             queryString += `${key}=${value}&`;
                         });
-                    }
-                    else{
+                    } else {
                         queryString += `${key}=${value}&`;
                     }
                 }
@@ -218,12 +203,11 @@
                     var key = decodeURIComponent(pair[0]);
                     var value = decodeURIComponent(pair[1] || '');
                     if (key.trim() != "") {
-                        if (key in params){
-                            params[key] = [...params[key], value ];
-                        }
-                        else{
+                        if (key in params) {
+                            params[key] = [...params[key], value];
+                        } else {
                             params[key] = [value];
-                        
+
                         }
                     }
                 });
@@ -247,16 +231,21 @@
                         nextSearch.classList.remove('d-none')
                     }
                 }
-                ENDPOINT = `/organizer/event/?search=${inputValue}`;
+                let params = convertUrlStringToQueryStringOrObject({
+                    isObject: true
+                });
+                params.search = inputValue;
+                params.page=1;
+                ENDPOINT = `/organizer/event/?` + convertObjectToURLString(params);
                 document.querySelector('.scrolling-pagination').innerHTML = '';
                 window.history.replaceState({}, document.title, ENDPOINT);
-                page = 1;
-                infinteLoadMore(page, ENDPOINT);
+                infinteLoadMore(null, ENDPOINT);
             }
 
             function handleInputBlur() {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(debouncedFunction, 250);
+                debouncedFunction();
+                // clearTimeout(debounceTimer);
+                // debounceTimer = setTimeout(debouncedFunction, 250);
             }
 
             function resetUrl() {
@@ -336,9 +325,9 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.get('status')) {
                     let value = urlParams.get('status');
-                    let element =  document.querySelector(`p.status-${value}`)
-                    element.style.color = 'green'; 
-                    element.style.border = '3px solid #43A4D7'; 
+                    let element = document.querySelector(`p.status-${value}`)
+                    element.style.color = 'green';
+                    element.style.border = '3px solid #43A4D7';
                     element.style.padding = "5px";
                     element.style.borderRadius = '12px';
                 }
@@ -416,7 +405,7 @@
             var page = 1;
             window.addEventListener(
                 "scroll",
-                throttle((e) => {                    
+                throttle((e) => {
                     var windowHeight = window.innerHeight;
                     var documentHeight = document.documentElement.scrollHeight;
                     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;

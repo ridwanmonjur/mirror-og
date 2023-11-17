@@ -70,8 +70,13 @@ class EventController extends Controller
             return $query;
         });
         $eventListQuery->when($request->has('search'), function ($query) use ($request) {
-            $search = $request->input('search');
-            return $query->where('eventName', 'LIKE', "%{$search}%");
+            $search = trim($request->input('search'));
+            if (empty($search)){
+                return $query;
+            }
+            return $query->where('gameTitle', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
+            ->orWhere('eventDescription', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
+            ->orWhere('eventDefinitions', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci");
         });
 
         $eventListQuery->when($request->has("sort"), function ($query) use ($request) {
@@ -84,11 +89,11 @@ class EventController extends Controller
         });
 
         $eventListQuery->when($request->has("eventTier"), function ($query) use ($request) {
-            $eventTier = $request->input("eventTier");
+            $eventTier = trim($request->input("eventTier"));
             return $query->where('eventTier', $eventTier);
         });
         $eventListQuery->when($request->has("eventType"), function ($query) use ($request) {
-            $eventType = $request->input("eventType");
+            $eventType = trim($request->input("eventType"));
             return $query->where('eventType', $eventType);
         });
         $eventListQuery->when($request->has("gameTitle"), function ($query) use ($request) {
