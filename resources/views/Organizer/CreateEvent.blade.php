@@ -63,7 +63,7 @@
                     </div>
                 </header>
                 <div class="flexbox box-width">
-                    <button onclick="goToNextScreen('step-0', 'none')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                    <button onclick="goToNextScreen('step-0', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
                     <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
@@ -87,7 +87,7 @@
                 </div>
                 @endforeach
                 <div class="flexbox box-width">
-                    <button onclick="goToNextScreen('step-1', 'none')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                    <button onclick="goToNextScreen('step-1', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
                     <button onclick="goToNextScreen('step-3', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
 
@@ -144,7 +144,7 @@
                 </section>
 
                 <div class="flexbox box-width">
-                    <button onclick="goToNextScreen('step-2', 'none')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                    <button onclick="goToNextScreen('step-2', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
                     <button onclick="goToNextScreen('step-4', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
@@ -202,7 +202,7 @@
                 </section>
 
                 <div class="flexbox box-width">
-                    <button onclick="goToNextScreen('step-3', 'none')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                    <button onclick="goToNextScreen('step-3', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
                     <button onclick="goToNextScreen('step-5', 'timeline-2')" type="button" class="oceans-gaming-default-button"> Step 2 > </button>
                 </div>
             </div>
@@ -250,7 +250,7 @@
                         </div>
                 </div>
                 <div class="flexbox box-width">
-                    <button onclick="goToNextScreen('step-4', 'timeline-1')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                    <button onclick="goToNextScreen('step-4', 'timeline-1')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
                     <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
@@ -277,7 +277,7 @@
                         </div>
                 </div>
                 <div class="flexbox box-width">
-                    <button onclick="goToNextScreen('step-5', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                    <button onclick="goToNextScreen('step-5', 'timeline-2')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
                     <button onclick="goToNextScreen('step-7', 'timeline-2')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
@@ -301,7 +301,7 @@
                         </div>
                 </div>
                 <div class="flexbox box-width">
-                    <button onclick="goToNextScreen('step-6', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                    <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
                     <button onclick="goToNextScreen('step-8', 'timeline-2')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
@@ -327,7 +327,7 @@
                         </div>
                 </div>
                 <div class="flexbox box-width">
-                    <button onclick="goToNextScreen('step-7', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                    <button onclick="goToNextScreen('step-7', 'timeline-2')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
                     <button onclick="goToNextScreen('step-9', 'timeline-2')" type="button" class="oceans-gaming-default-button"> Next > </button>
                 </div>
             </div>
@@ -365,7 +365,7 @@
                         </div>
                 </div>
                 <div class="flexbox box-width">
-                    <button onclick="goToNextScreen('step-8', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                    <button onclick="goToNextScreen('step-8', 'timeline-2')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
                     <button onclick="goToNextScreen('step-10', 'timeline-3')" type="button" class="oceans-gaming-default-button"> Step 3 > </button>
                 </div>
             </div>
@@ -416,7 +416,7 @@
                 </div>
                 <br>
                 <div class="flexbox box-width">
-                    <button onclick="goToNextScreen('step-9', 'timeline-2')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                    <button onclick="goToNextScreen('step-9', 'timeline-2')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
                     <button onclick="goToNextScreen('step-11', 'timeline-4')" type="button" class="oceans-gaming-default-button"> Step 4 > </button>
                 </div>
             </div>
@@ -494,8 +494,8 @@
                 </div>
                 <br>
                 <div class="flexbox box-width">
-                    <button onclick="goToNextScreen('step-10', 'timeline-3')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                    <button onclick="goToNextScreen('step-12', 'timeline-4')" type="submit" class="oceans-gaming-default-button"> Step 4 > </button>
+                    <button onclick="goToNextScreen('step-10', 'timeline-3')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                    <button onclick="goToNextScreen('step-12', 'timeline-4')" type="button" class="oceans-gaming-default-button"> Step 4 > </button>
                 </div>
             </div>
 
@@ -514,7 +514,7 @@
                     <p>Are your sure you want to launch your event now?</p>
                     <br>
                     <div class="flexbox">
-                        <button onclick="goToNextScreen('step-11', 'timeline-4')" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Cancel </button>
+                        <button onclick="goToNextScreen('step-11', 'timeline-4')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Cancel </button>
                         <button onclick="addEvent(this)" type="submit" class="oceans-gaming-default-button"> Yes, I'm sure </button>
                     </div>
                     <br>
