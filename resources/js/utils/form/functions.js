@@ -58,8 +58,7 @@ function setFormValues(values) {
 
     if (createEventForm) {
         for (var key in values) {
-            console.log(key);
-            console.log(values[key]);
+            
             var formField = createEventForm.elements[key];
             if (formField) {
                 console.log({ formField, formFieldValue: formField.value })

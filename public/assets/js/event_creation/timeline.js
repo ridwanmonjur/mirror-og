@@ -3,14 +3,13 @@ const Toast = Swal.mixin({
     position: 'top-right',
     width: 'fit-content',
     showConfirmButton: false,
-    timer: 4000,
+    timer: 400000,
     timerProgressBar: true
 })
 
 function addFormValues(keyList) {
     let allFormkeyList = {};
     var createEventForm = document.forms['create-event-form'];
-
     if (!createEventForm) {
         Toast.fire({
             icon: 'error',
@@ -30,7 +29,7 @@ function addFormValues(keyList) {
     return allFormkeyList;
 }
 
-function validateFormValuesPresent(values) {
+function validateFormValuesPresent(keyList) {
     let isFormValid = true, invalidKey = '';
 
     var createEventForm = document.forms['create-event-form'];
@@ -43,7 +42,7 @@ function validateFormValuesPresent(values) {
         return [false, "form"];
     }
 
-    for (var key of values) {
+    for (var key of keyList) {
         var formField = createEventForm.elements[key];
         if (formField) {
             var value = formField.value.trim();
@@ -85,7 +84,7 @@ function setFormValues(values) {
 
 }
 
-function getFormValues(keyList) {
+function getFormValues(keyList = ["ALL_FORM_KEYS"]) {
     let allFormkeyList = {};
     var createEventForm = document.forms['create-event-form'];
 
@@ -96,9 +95,12 @@ function getFormValues(keyList) {
         })
     }
 
+    if (keyList[0] === "ALL_FORM_KEYS") {
+        keyList = Object.keys(createEventForm.elements);
+    }
     for (var key of keyList) {
         var formField = createEventForm.elements[key];
-        
+
         if (formField) {
             var value = formField.value;
             allFormkeyList[key] = value;
@@ -168,10 +170,7 @@ function previewSelectedImage(imageId, previewImageId) {
 // }
 
 let inputKeyToInputNameMapping = {
-    eventTier: 'event tier',
-    eventType: 'event type',
-    gameTitle: 'game title',
-    'event name': 'name of the event',
+    eventName: 'name of the event',
     eventTier: 'tier of the event',
     eventType: 'type of the event',
     gameTitle: 'title of the game',
@@ -181,8 +180,25 @@ let inputKeyToInputNameMapping = {
     endDate: 'the end date of the event',
     endTime: 'the end time of the event',
     eventDescription: 'the event description',
-    eventTags: 'the event tags'
+    launch_visible: "launch type (public/ private/ draft)",
+    isPaymentDone: "payment"
 }
+
+let inputKeyToStepNameMapping = {
+    eventTier: ['step-3', 'timeline-1'],
+    eventType: ['step-2', 'timeline-1'],
+    gameTitle: ['step-1', 'timeline-1'],
+    eventName: ['step-6', 'timeline-2'],
+    eventBanner: ['step-7', 'timeline-2'],
+    startDate: ['step-5', 'timeline-2'],
+    startTime: ['step-5', 'timeline-2'],
+    endDate: ['step-5', 'timeline-2'],
+    endTime: ['step-5', 'timeline-2'],
+    eventDescription: ['step-7', 'timeline-2'],
+    launch_visible: ['step-11', 'timeline-4'],
+    isPaymentDone: ['step-10', 'timeline-3']
+}
+
 function closeDropDown(element, id, keyValues, key) {
     element.parentElement.previousElementSibling.classList.toggle("dropbtn-open");
     element.parentElement.classList.toggle("d-none");
@@ -209,11 +225,80 @@ function getElementByIdAndSetInnerHTML(id, innerHTML) {
 function numberToLocaleString(number) {
     return Number(number).toLocaleString()
 }
+
+function saveEvent(){
+    let isFormValid = true, invalidKey = '', formValidation = null;
+    var createEventForm = document.forms['create-event-form'];
+    if (!createEventForm) {
+        Toast.fire({
+            icon: 'error',
+            title: 'Form cannot be found!'
+        })
+    }
+    formValidation = validateFormValuesPresent([
+        'gameTitle', 'eventType', 'eventTier', 
+        'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription', 'eventBanner',
+        'isPaymentDone',
+        'launch_visible'
+    ]);
+    if (formValidation != null) {
+        isFormValid = formValidation[0];
+        invalidKey = formValidation[1];
+    }
+    if (!isFormValid) {
+
+        console.log({formValidation})
+        console.log({formValidation})
+        console.log({formValidation})
+        console.log({formValidation})
+
+        Toast.fire({
+            icon: 'error',
+            text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
+        })
+        let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
+        goToNextScreen(nextId, nextTimeline);
+        return;
+    }
+    if (createEventForm.elements['launch_visible'].value == 'draft') {
+        createEventForm.submit();
+        return;
+    }
+    else{
+        formValidation = validateFormValuesPresent([
+            'launch_schedule', 'launch_time', 'launch_date'
+        ]);
+        if (formValidation != null) {
+            isFormValid = formValidation[0];
+            invalidKey = formValidation[1];
+        }
+        if (!isFormValid) {
+            console.log({formValidation})
+            console.log({formValidation})
+            console.log({formValidation})
+            console.log({formValidation})
+            Toast.fire({
+                icon: 'error',
+                text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
+            })
+            let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
+            goToNextScreen(nextId, nextTimeline);
+            return;
+        }
+        else{
+            createEventForm.submit();
+        }
+    }
+    
+}
+
 function goToNextScreen(nextId, nextTimeline) {
     document.getElementsByClassName("navbar")[0].scrollIntoView({ behavior: 'smooth' });
+
     const allIDs = [
         'step-0',
         'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6', 'step-7', 'step-8', 'step-9', 'step-10', 'step-11', 'step-12'];
+
     const allTimelines = ['timeline-1', 'timeline-2', 'timeline-3', 'timeline-4'];
     let isFormValid = true, invalidKey = '', formValidation = null;
     let currentId = 'step-0';
@@ -223,43 +308,89 @@ function goToNextScreen(nextId, nextTimeline) {
             currentId = id;
         }
     })
+    console.log({ nextId, currentId, id: allIDs[10] })
+
     if (currentId == allIDs[1]) {
         formValidation = validateFormValuesPresent(['gameTitle']);
-        // formValidation = formHelper.validateFormValuesPresent(['eventTier', 'eventType', 'gameTitle']);
     }
     else if (currentId == allIDs[2]) {
         formValidation = validateFormValuesPresent(['eventType']);
-        // formValidation = formHelper.validateFormValuesPresent(
-        //     ['eventBanner', 'startDate', 'startTime', 'endDate', 'endTime', 'eventDescription', 'eventTags']
-        // );
     }
     else if (currentId == allIDs[3]) {
         formValidation = validateFormValuesPresent(['eventTier']);
     }
+
     else if (currentId == allIDs[5]) {
-        formValidation = validateFormValuesPresent(['eventType']);
-        // formValidation = formHelper.validateFormValuesPresent(
-        //     ['eventBanner', 'startDate', 'startTime', 'endDate', 'endTime', 'eventDescription', 'eventTags']
-        // );
+        formValidation = validateFormValuesPresent(['startDate', "startTime", "endDate", "endTime"]);
     }
+    else if (currentId == allIDs[6]) {
+        formValidation = validateFormValuesPresent(['eventName']);
+    }
+    else if (currentId == allIDs[7]) {
+        formValidation = validateFormValuesPresent(['eventDescription']);
+    }
+    else if (currentId == allIDs[9]) {
+        formValidation = validateFormValuesPresent(['eventBanner']);
+    }
+    if (nextId == allIDs[10]) {
+        console.log({found: true})
+        let eventRate = 20, eventSubTotal = 0, eventFee = 0, eventTotal = 0;
+        let eventRateToTierMap = { 'Starfish': 5000, 'Turtle': 10000, 'Dolphin': 15000 };
+        let formValues = getFormValues(['eventTier', 'eventType']);
+        if (
+            'eventTier' in formValues &&
+            'eventType' in formValues
+        ) {
+            console.log({ formValues })
+            console.log({ formValues })
+            console.log({ formValues })
+            console.log({ formValues })
+            console.log({ formValues })
+
+            let eventTier = formValues['eventTier'];
+            let eventType = formValues['eventType'];
+            let eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
+            if (eventRate == -1) {
+                Toast.fire({
+                    icon: 'error',
+                    text: `Invalid event tier or event type!`
+                })
+            }
+            let eventFee = eventSubTotal * (eventRate / 100);
+            let eventTotal = eventSubTotal + eventFee;
+            getElementByIdAndSetInnerHTML('paymentType', eventType);
+            getElementByIdAndSetInnerHTML('paymentTier', eventTier);
+            getElementByIdAndSetInnerHTML('paymentSubtotal', numberToLocaleString(eventSubTotal));
+            getElementByIdAndSetInnerHTML('paymentRate', `${eventRate}%`);
+            getElementByIdAndSetInnerHTML('paymentFee', numberToLocaleString(eventFee));
+            getElementByIdAndSetInnerHTML('paymentTotal', numberToLocaleString(eventTotal));
+        }
+        else {
+            throw new Error("Invalid form values for payment screen");
+        }
+    }
+    else if (nextId == allIDs[11]) {
+        formValidation = validateFormValuesPresent(['isPaymentDone']);
+    }
+    
     if (formValidation != null) {
         isFormValid = formValidation[0];
         invalidKey = formValidation[1];
     }
-    if (!isFormValid) {
-        Toast.fire({
-            icon: 'error',
-            text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
-        })
-    }
-    if (currentId == allIDs[4]) {
+    // if (!isFormValid) {
+    //     Toast.fire({
+    //         icon: 'error',
+    //         text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
+    //     })
+    // }
+    if (nextId == allIDs[4]) {
         let formValues = getFormValues(['eventTier', 'eventType', 'gameTitle']);
         if (
             // do later this way
             'eventTier' in formValues &&
             'gameTitle' in formValues &&
             'eventType' in formValues
-            ) {
+        ) {
             // let eventTier = formValues['eventTier'];
             // let eventType = formValues['eventType'];
             // let gameTitle = formValues['gameTitle'];
@@ -288,38 +419,10 @@ function goToNextScreen(nextId, nextTimeline) {
             })
         }
     }
-    if (currentId == allIDs[8]) {
-        let eventRate = 20, eventSubTotal = 0, eventFee = 0, eventTotal = 0;
-        let eventRateToTierMap = { 'Starfish': 5000, 'Turtle': 10000, 'Dolphin': 15000 };
-        let formValues = getFormValues(['eventTier', 'eventType']);
-        // if (
-            // Get from github
-        //     'eventTier' in formValues &&
-        //     'eventType' in formValues) {
-        //     let eventTier = formValues['eventTier'];
-        //     let eventType = formValues['eventType'];
-        //     let eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
-        //     if (eventRate == -1) {
-        //         throw new Error("Invalid event tier");
-        //     }
-        //     let eventFee = eventSubTotal * (eventRate / 100);
-        //     let eventTotal = eventSubTotal + eventFee;
-        //     getElementByIdAndSetInnerHTML('paymentType', eventType);
-        //     getElementByIdAndSetInnerHTML('paymentTier', eventTier);
-        //     getElementByIdAndSetInnerHTML('paymentSubtotal', numberToLocaleString(eventSubTotal));
-        //     getElementByIdAndSetInnerHTML('paymentRate', `${eventRate}%`);
-        //     getElementByIdAndSetInnerHTML('paymentFee', numberToLocaleString(eventFee));
-        //     getElementByIdAndSetInnerHTML('paymentTotal', numberToLocaleString(eventTotal));
-        // }
-        // else {
-        //     throw new Error("Invalid form values for payment screen");
-        // }
-    }
-    if (currentId == allIDs[4]) {
-    }
-    if (!isFormValid) {
-        return;
-    }
+
+    // if (!isFormValid) {
+    //     return;
+    // }
     allTimelines.forEach((timeline, _index) => {
         const paragraph = document.querySelector(`#${timeline} .timestamp span`);
         const cicle = document.querySelector(`#${timeline} small`);

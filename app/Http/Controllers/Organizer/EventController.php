@@ -71,12 +71,12 @@ class EventController extends Controller
         });
         $eventListQuery->when($request->has('search'), function ($query) use ($request) {
             $search = trim($request->input('search'));
-            if (empty($search)){
+            if (empty($search)) {
                 return $query;
             }
             return $query->where('gameTitle', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
-            ->orWhere('eventDescription', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
-            ->orWhere('eventDefinitions', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci");
+                ->orWhere('eventDescription', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
+                ->orWhere('eventDefinitions', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci");
         });
 
         $eventListQuery->when($request->has("sort"), function ($query) use ($request) {
@@ -130,14 +130,12 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'eventName' => 'required',
-            // 'endDate' => 'required',
-            // 'startTime' => 'required',
-            // 'endTime' => 'required',
-        ]);
-        // // Validate the Form
         $eventDetail = new EventDetail;
+        // step1
+        $eventDetail->gameTitle = $request->gameTitle;
+        $eventDetail->eventType = $request->eventType;
+        $eventDetail->eventTier = $request->eventTier;
+        // step2
         $eventDetail->startDate = $request->startDate;
         $eventDetail->endDate = $request->endDate;
         $eventDetail->startTime = $request->startTime;
@@ -146,12 +144,27 @@ class EventController extends Controller
         $eventDetail->eventDescription  = $request->eventDescription;
         $eventDetail->eventTags  = $request->eventTags;
         $eventDetail->eventBanner  = $request->eventBanner;
-        $eventDetail->status = $request->status;
-        $eventDetail->venue = $request->venue;
-        $eventDetail->sub_action_public_date  = $request->sub_action_public_date;
-        $eventDetail->sub_action_public_time  = $request->sub_action_public_time;
-        $eventDetail->sub_action_private  = $request->sub_action_private;
-        $eventDetail->action  = $request->action;
+        // launch_visible, launch_schedule, launch_time, launch_date
+        if ($request->launch_visible == "draft") {
+            $eventDetail->status = "DRAFT";
+            $eventDetail->sub_action_public_date  = null;
+            $eventDetail->sub_action_public_time  = null;
+            $eventDetail->sub_action_private  = null;
+            $eventDetail->action  = $request->launch_visible;
+        } else {
+            if ($request->launch_visible == "") {
+                $date = \Carbon\Carbon::now();
+                $currentDate = $date->toDateString(); // YYYY-MM-DD format
+                $currentTime = $date->toTimeString(); // HH:MM:SS format
+                $eventDetail->sub_action_public_date = $currentDate;
+                $eventDetail->sub_action_public_time = $currentTime;
+            } else {
+                $eventDetail->sub_action_public_date  = $request->launch_date;
+                $eventDetail->sub_action_public_time  = $request->launch_time;
+            }
+            $eventDetail->sub_action_private  = $request->launch_visible == "public" ? "public" : "private";
+            $eventDetail->action  = $request->launch_visible;
+        }
         $eventDetail->user_id  = auth()->user()->id;
         $eventDetail->save();
         return redirect('organizer/home');

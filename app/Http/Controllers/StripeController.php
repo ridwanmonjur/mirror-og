@@ -25,23 +25,21 @@ class StripeController extends Controller
                 'payment_method' => $request->payment_method,
                 'description' => 'Demo payment with stripe',
                 'confirm' => true,
-                'receipt_email' => $request->email,
-                'automatic_payment_methods' => [
-                    'enabled' => true,
-                    'allow_redirects' => 'never',
-                ],
+                'receipt_email' => $request->email
             ]);
-            $customer = $stripe->customers->create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'description' => 'My first customer',
-            ]);
-            $invoice= $stripe->invoices->create([
-                'customer' => $customer->id,
-                'collection_method' => 'send_invoice',
-                'days_until_due' => 0,
-            ]);
-            $stripe->invoices->finalizeInvoice($invoice->id, []);
+            // $customer = $stripe->customers->create([
+            //     'name' => $request->name,
+            //     'email' => $request->email,
+            //     'description' => 'My first customer',
+            //      add this????????????????
+            //      "card" : charge.stripe_card_token
+            // ]);
+            // $invoice= $stripe->invoices->create([
+            //     'customer' => $customer->id,
+            //     'collection_method' => 'send_invoice',
+            //     'days_until_due' => 0,
+            // ]);
+            // $stripe->invoices->finalizeInvoice($invoice->id, []);
             $responseData = [
                 'status' => 'success',
                 'message' => 'Payment successful',

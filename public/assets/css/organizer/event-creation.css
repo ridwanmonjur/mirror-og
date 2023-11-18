@@ -15,7 +15,6 @@
 }
 
 .box {
-    flex: 1;
     margin-right: 10px;
     /* Adjust the margin as needed for spacing between columns */
 }
@@ -450,14 +449,10 @@ input[type="time"] {
 }
 
 main {
-    width: 100%;
-    min-height: 200vh;
-    height: max-content;
-    padding: 0px 10px;
-    align-items: center;
-    justify-content: center;
     background-image: url("/assets/images/event-management-bg.png");
-    margin: 0;
+    min-height: 100vh;
+    max-height: 150vh;
+    background-repeat: repeat-y;
 }
 
 .navbar {
@@ -830,8 +825,9 @@ input[type="submit"]:active {
 }
 
 .flexbox {
-    width: 100%;
-    display: block;
+    display: flex;
+    justify-content: space-between;
+
 }
 
 .radio-indent,
@@ -865,7 +861,7 @@ input[type="submit"]:active {
         left: 13%;
     }
     main {
-        padding: 20px 100px;
+        padding: auto 100px;
     }
     .payment-summary {
         padding-left: 40px;
@@ -873,7 +869,6 @@ input[type="submit"]:active {
     }
     .flexbox {
         display: flex;
-        justify-content: space-between;
     }
     .search-bar {
         display: block;
