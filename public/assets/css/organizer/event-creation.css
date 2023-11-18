@@ -122,12 +122,10 @@ input[type="time"] {
 /* Style for the banner upload container */
 
 .featured-events {
-    max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 0;
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
 }
 
 .selectable-box {
@@ -174,6 +172,7 @@ input[type="time"] {
 .selectable-image {
     border-radius: 20px;
     transition: transform 0.3s;
+    object-fit: cover;
 }
 
 .event_extra {
@@ -401,10 +400,16 @@ input[type="time"] {
     margin-bottom: 5px;
 }
 
-.cont {
+.container-border {
     display: flex;
     gap: 20px;
     padding: 20px;
+}
+
+.grid-2-columns, .grid-3-columns{
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 1fr;
 }
 
 .box_2nd {
@@ -446,8 +451,8 @@ input[type="time"] {
 
 main {
     width: 100%;
-    height: 120vh;
-    display: block !important;
+    min-height: 200vh;
+    height: max-content;
     padding: 0px 10px;
     align-items: center;
     justify-content: center;
@@ -820,8 +825,7 @@ input[type="submit"]:active {
 }
 
 .box-width {
-    width: 600px !important;
-    max-width: 80vw !important;
+    max-width: 60vw !important;
     margin: auto !important;
 }
 
@@ -847,6 +851,12 @@ input[type="submit"]:active {
 @media screen and (min-width: 600px) {
     .swiper-container {
         display: block;
+    }
+    .grid-2-columns{
+        grid-template-columns: 1fr 1fr;
+    }
+    .grid-3-columns{
+        grid-template-columns: 1fr 1fr 1fr;
     }
 }
 

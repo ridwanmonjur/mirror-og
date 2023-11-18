@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-    
-.d-none{
+
+.d-none {
     display: none;
 }
 
@@ -123,44 +123,57 @@ button#submit,
     border: 0px solid black;
 }
 
-@media screen and (min-width: 600px) {
-   
-}
+@media screen and (min-width: 600px) {}
 
 @media screen and (min-width: 992px) {
     .payment-summary {
         padding-left: 40px;
         padding-right: 40px;
     }
+
     .flexbox {
         display: flex;
         justify-content: space-between;
     }
+
     .search-bar {
         display: block;
     }
+
     .search-bar input {
         padding-left: 60px;
     }
+
     .navbar .nav-buttons {
         display: block;
     }
+
     .d-none-at-mobile {
         display: block;
     }
+
     .menu-toggle {
         display: none;
     }
+
     .d-centered-at-mobile {
         display: none;
     }
+
     .search-bar svg {
         left: 20px;
     }
-    
+
 }
 
-a, a:hover {
+a,
+a:hover {
     color: black !important;
     text-decoration: none !important;
+}
+
+.swal2-popup, .swal2-toast{
+    display: flex !important;
+    justify-content: center !important;
+    flex-wrap: nowrap !important;
 }
