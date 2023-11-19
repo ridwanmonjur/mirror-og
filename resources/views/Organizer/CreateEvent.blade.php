@@ -1,11 +1,12 @@
 @include('Organizer.Layout.CreateEventHeadTag')
+<!-- https://stackoverflow.com/questions/895171/prevent-users-from-submitting-a-form-by-hitting-enter -->
 
 <body>
     <main>
         <div>
             @include('CommonLayout.Navbar')
             <div>
-                <form action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
+                <form onkeydown="return event.key != 'Enter';" action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
                     @csrf
                     <input type="hidden" name="gameTitle" id="gameTitle">
                     <input type="hidden" name="eventTier" id="eventTier">
@@ -138,22 +139,24 @@
                                 let eventTierPerson = this.querySelector('.inputEventTierPerson').innerHTML;
                             let eventTierPrize = this.querySelector('.inputEventTierPrize').innerHTML;
                             let eventTierEntry = this.querySelector('.inputEventTierEntry').innerHTML;
+                            let eventTierTitle = this.querySelector('.inputEventTierTitle').innerHTML;
                             localStorage.setItem('eventTierPerson', eventTierPerson);
                             localStorage.setItem('eventTierPrize', eventTierPrize);
                             localStorage.setItem('eventTierImg', eventTierImg);
                             localStorage.setItem('eventTierEntry', eventTierEntry);
+                            localStorage.setItem('eventTierTitle', eventTierTitle);
                             fillStepValues();
                                 
                                 ;" class="featured-events">
                                     <a href="#" class="event selectable-box">
                                         <!-- 0 -->
-                                        <div class="event_head_container">
+                                        <div class="event_head_container ">
                                             <img id='starfish' src="{{ asset('storage/images/'. $category->tierIcon) }}" class="inputEventTierImg event_head">
                                         </div>
                                         <!-- 1 -->
                                         <br>
                                         <!-- 2 -->
-                                        <h4 style="text-align: center;">{{ $category->eventTier }}</h4>
+                                        <h4 class="inputEventTierTitle" style="text-align: center;">{{ $category->eventTier }}</h4>
                                         <!-- 3 -->
                                         <br>
                                         <!-- 4 -->
@@ -208,20 +211,20 @@
                             <p>Here are the categories you've chosen for your event.</p>
                         </div>
                         <section class="container-border" style="display: flex; justify-content: center">
-                            <img id="outputGameTitleImg" src="css/images/dotaPoster.jpg" alt="" style="border-radius: 20px; width: 230px; height: 350px;">
+                            <img id="outputGameTitleImg" src="{{asset('assets/images/logo/6.png')}}" alt="" style="border-radius: 20px; width: 230px; height: 350px; object-fit: cover; ">
                             <div class="box_3rd" style="max-width: 300px;">
                                 <h2 id="outputEventTypeTitle">League</h2>
                                 <p id="outputEventTypeDefinition" style="text-align: left;">Insert definition here</p>
                             </div>
                             <div class="event_extra">
                                 <div class="event_head_container">
-                                    <img id="outputGameTitleImg" src="css/images/logo/6.png" class="event_head" style="margin-right: 20px;">
+                                    <img id="outputGameTitleImg" src="{{asset('assets/images/logo/6.png')}}" class="event_head">
                                 </div>
                                 <br><br>
                                 <h4 id="outputEventTierTitle" style="text-align: center;">Starfish</h4>
                                 <div class="event_row">
                                     <div class="icon_container">
-                                        <img id="outputEventTierImg" src="{{ asset('assets/images/user.png') }}" class="event_icon" style="margin-right: 20px;">
+                                        <img style="width: 30px; height: 30px; margin-right: 20px;"  id="outputEventTierImg" src="{{ asset('assets/images/user.png') }}" class="event_icon">
                                     </div>
                                     <div class="info_container">
                                         <p id="outputEventTierPerson">64</p>
@@ -230,7 +233,7 @@
                                 </div>
                                 <div class="event_row">
                                     <div class="icon_container">
-                                        <img src="{{ asset('/assets/images/createEvent/trophy.png') }}" class="event_icon" style="margin-right: 20px;">
+                                        <img style="width: 30px; height: 30px; margin-right: 20px;"  src="{{ asset('/assets/images/createEvent/trophy.png') }}" class="event_icon">
                                     </div>
                                     <div class="info_container">
                                         <p id="outputEventTierPrize">RM 15000</p>
@@ -239,7 +242,7 @@
                                 </div>
                                 <div class="event_row">
                                     <div class="icon_container">
-                                        <img src="{{ asset('assets/images/dollar.png') }}" class="event_icon">
+                                        <img style="width: 30px; height: 30px;" src="{{ asset('assets/images/dollar.png') }}" class="event_icon">
                                     </div>
                                     <div class="info_container">
                                         <p id="outputEventTierEntry">RM 100</p>
@@ -316,7 +319,7 @@
                                 Don't forget to name your event!
                             </p>
                         </div>
-                        <div class="event-details-form">
+                        <div class="event-details-form box-width">
                             <div class="form-group">
                                 <label for="eventName">Name of Event</label>
                                 <p class="description">Pick a good name for your event (max. 60 characters)</p>
@@ -340,7 +343,7 @@
                                 Next, what's your event about?
                             </p>
                         </div>
-                        <div class="event-details-form">
+                        <div class="event-details-form box-width">
                             <div class="form-group">
                                 <label for="eventDescription">Event Description</label>
                                 <p class="description">So, tell us a little bit about your event (max. 3,000 characters)</p>
@@ -364,7 +367,7 @@
                                 Keywords wil help players find your event!
                             </p>
                         </div>
-                        <div class="event-details-form">
+                        <div class="event-details-form box-width">
                             <div class="form-group">
                                 <label for="eventTags">Event Tags</label>
                                 <p class="description">Add some relevant keywords to help players find your event more easily</p>
@@ -390,7 +393,7 @@
                                 Finally, some visual aid!
                             </p>
                         </div>
-                        <div class="event-details-form">
+                        <div class="event-details-form box-width">
                             <div class="form-group">
                                 <label for="eventBanner">Event Banner</label>
                                 <p class="description">A distinctive banner will help your event stand out (resolution TBD).</p>
@@ -451,7 +454,7 @@
                             </div>
                             <br>
                             <div class="text-center">
-                                <button onclick="" type="button"  class="choose-payment-method" data-bs-toggle="modal" data-bs-target="#payment-modal">
+                                <button onclick="" type="button" class="choose-payment-method" data-bs-toggle="modal" data-bs-target="#payment-modal">
                                     Choose a payment method
                                 </button>
                             </div>
@@ -572,7 +575,7 @@
                             <p id="notification"></p>
                         </div>
                         <br><br>
-                        <input  onclick="goToNextScreen('', '')" value="Continue">
+                        <input onclick="goToNextScreen('', '')" value="Continue">
                     </div>
 
                 </form>
@@ -638,6 +641,12 @@
         new Tagify(document.querySelector('#eventTags'), {});
     </script>
     <script>
+        $(document).on("keydown", ":input:not(textarea)", function(event) {
+            if (event.key == "Enter") {
+                event.preventDefault();
+            }
+        });
+
         function fillStepValues() {
             let formValues = getFormValues(['eventTier', 'eventType', 'gameTitle']);
             if (
@@ -671,6 +680,7 @@
                 outputEventTypeDefinition.innerHTML = localStorage.getItem('eventTypeDefinition');
 
                 let outputEventTierImg = document.querySelector(`img#outputEventTierImg`);
+                let outputEventTierTitle = document.getElementById('outputEventTierTitle');
                 let outputEventTierPerson = document.getElementById('outputEventTierPerson');
                 let outputEventTierPrize = document.getElementById('outputEventTierPrize');
                 let outputEventTierEntry = document.getElementById('outputEventTierEntry');
@@ -678,7 +688,7 @@
                 outputEventTierPerson.innerHTML = localStorage.getItem('eventTierPerson');
                 outputEventTierPrize.innerHTML = localStorage.getItem('eventTierPrize');
                 outputEventTierEntry.innerHTML = localStorage.getItem('eventTierEntry');
-
+                outputEventTierTitle.innerHTML = localStorage.getItem('eventTierTitle');
             }
         }
 

@@ -3,7 +3,7 @@ const Toast = Swal.mixin({
     position: 'top-right',
     width: 'fit-content',
     showConfirmButton: false,
-    timer: 400000,
+    timer: 6000,
     timerProgressBar: true
 })
 
@@ -272,11 +272,22 @@ function saveEvent(){
     }
     else{
         formValidation = validateFormValuesPresent([
-            'launch_schedule', 'launch_time', 'launch_date'
+            'launch_schedule',
         ]);
         if (formValidation != null) {
             isFormValid = formValidation[0];
             invalidKey = formValidation[1];
+        }
+        else{
+            if (createEventForm.elements['launch_schedule'] != 'now'){
+                formValidation = validateFormValuesPresent([
+                    'launch_date', 'launch_time'
+                ]);
+                if (formValidation != null) {
+                    isFormValid = formValidation[0];
+                    invalidKey = formValidation[1];
+                }
+            }
         }
         if (!isFormValid) {
             console.log({formValidation})

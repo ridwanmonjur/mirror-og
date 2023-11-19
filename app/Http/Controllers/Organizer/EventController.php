@@ -165,9 +165,13 @@ class EventController extends Controller
             $eventDetail->sub_action_private  = $request->launch_visible == "public" ? "public" : "private";
             $eventDetail->action  = $request->launch_visible;
         }
+        // dummy
+        $eventDetail->action= "DRAFT";
+        $eventDetail->status= "DRAFT";
         $eventDetail->user_id  = auth()->user()->id;
         $eventDetail->save();
-        return redirect('organizer/home');
+        return redirect('organizer/event/'.$eventDetail->id);
+        // return redirect('organizer/home');
     }
 
     public function show($id): View
