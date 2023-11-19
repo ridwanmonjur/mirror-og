@@ -19,7 +19,7 @@ password: 12345678
 composer update
 
 # Create a copy of your .env file
-cp .env.example .env
+cp .example.env .env
 
 # Generate an app encryption key
 php artisan key:generate
