@@ -6,6 +6,7 @@ use App\Http\Controllers\Organizer\EventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Organizer\PermissionController;
 use App\Http\Controllers\StripeController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,9 @@ Route::group([
 	'middleware' => ['check-permission:admin'],
 	'excluded_middleware' => ['login'],
 ], function () {
-
+});
+Route::get('/foo', function () {
+	Artisan::call('storage:link');
 });
 
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
@@ -78,8 +81,6 @@ Route::group(['prefix' => 'organizer'], function () {
 				'show' => "event.show",
 
 			]);
-
-
 		});
 		Route::get('/authDone', [PermissionController::class, 'showAuthenticated']);
 		Route::get(
