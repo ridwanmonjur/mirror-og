@@ -148,7 +148,7 @@
                                     <a href="#" class="event selectable-box">
                                         <!-- 0 -->
                                         <div class="event_head_container">
-                                                <img id='starfish' src="{{ asset('storage/images//'. $category->tierIcon) }}" class="inputEventTierImg event_head">
+                                            <img id='starfish' src="{{ asset('storage/images/'. $category->tierIcon) }}" class="inputEventTierImg event_head">
                                         </div>
                                         <!-- 1 -->
                                         <br>
@@ -158,9 +158,9 @@
                                         <br>
                                         <!-- 4 -->
                                         <div style="display: flex; justify-content: start; align-items: center">
-                                        <!-- 4.0 -->    
-                                        <img style="width: 30px; height: 30px; margin-right: 20px;" src="{{ asset('/assets/images/createEvent/user.png') }}">
-                                            
+                                            <!-- 4.0 -->
+                                            <img style="width: 30px; height: 30px; margin-right: 20px;" src="{{ asset('/assets/images/createEvent/user.png') }}">
+
                                             <div>
                                                 <span class="inputEventTierPerson">{{ $mappingTierState[$category->eventTier]['person'] }}</span>
                                                 <span>team slots</span>
@@ -168,7 +168,7 @@
                                         </div>
                                         <!-- 5 -->
                                         <br>
-                                         <!-- 6 -->
+                                        <!-- 6 -->
                                         <div style="display: flex; justify-content: start; align-items: center">
                                             <img style="width: 30px; height: 30px; margin-right: 20px;" src="{{ asset('/assets/images/createEvent/trophy.png') }}">
                                             <div>
@@ -207,21 +207,21 @@
                             <br>
                             <p>Here are the categories you've chosen for your event.</p>
                         </div>
-                        <section class="container-border">
+                        <section class="container-border" style="display: flex; justify-content: center">
                             <img id="outputGameTitleImg" src="css/images/dotaPoster.jpg" alt="" style="border-radius: 20px; width: 230px; height: 350px;">
-                            <div class="box_3rd">
+                            <div class="box_3rd" style="max-width: 300px;">
                                 <h2 id="outputEventTypeTitle">League</h2>
                                 <p id="outputEventTypeDefinition" style="text-align: left;">Insert definition here</p>
                             </div>
                             <div class="event_extra">
                                 <div class="event_head_container">
-                                    <img id="outputGameTitleImg" src="css/images/logo/6.png" class="event_head">
+                                    <img id="outputGameTitleImg" src="css/images/logo/6.png" class="event_head" style="margin-right: 20px;">
                                 </div>
                                 <br><br>
                                 <h4 id="outputEventTierTitle" style="text-align: center;">Starfish</h4>
                                 <div class="event_row">
                                     <div class="icon_container">
-                                        <img id="outputEventTierImg" src="css/images/user.png" class="event_icon">
+                                        <img id="outputEventTierImg" src="{{ asset('assets/images/user.png') }}" class="event_icon" style="margin-right: 20px;">
                                     </div>
                                     <div class="info_container">
                                         <p id="outputEventTierPerson">64</p>
@@ -230,7 +230,7 @@
                                 </div>
                                 <div class="event_row">
                                     <div class="icon_container">
-                                        <img src="css/images/trophy.png" class="event_icon">
+                                        <img src="{{ asset('/assets/images/createEvent/trophy.png') }}" class="event_icon" style="margin-right: 20px;">
                                     </div>
                                     <div class="info_container">
                                         <p id="outputEventTierPrize">RM 15000</p>
@@ -239,7 +239,7 @@
                                 </div>
                                 <div class="event_row">
                                     <div class="icon_container">
-                                        <img src="css/images/dollar.png" class="event_icon">
+                                        <img src="{{ asset('assets/images/dollar.png') }}" class="event_icon">
                                     </div>
                                     <div class="info_container">
                                         <p id="outputEventTierEntry">RM 100</p>
@@ -266,32 +266,34 @@
                                 First, when is your event happening?
                             </p>
                             <div class="event-details-form" style="width: 100% !important; margin: 0px auto;">
-                                <div class="form-group">
-                                    <label for="startDate">Date of Event</label>
-                                    <p class="description">Tell your players when to mark their calendars</p>
-                                    <div class="container">
-                                        <div class="box">
-                                            <p class="description"><b>Start</b></p>
-                                            <input type="date" id="startDate" onchange="checkValidTime();" name="startDate" placeholder=" Select a start date" required>
-                                        </div>
-                                        <div class="box">
-                                            <p class="description"><b>End</b></p>
-                                            <input type="date" id="endDate" onchange="checkValidTime();" name="endDate" placeholder=" Select an end date" required>
+                                <div>
+                                    <div class="form-group">
+                                        <label for="startDate">Date of Event</label>
+                                        <p class="description">Tell your players when to mark their calendars</p>
+                                        <div class="container">
+                                            <div class="box">
+                                                <p class="description"><b>Start</b></p>
+                                                <input type="date" id="startDate" onchange="checkValidTime();" name="startDate" placeholder=" Select a start date" required>
+                                            </div>
+                                            <div class="box">
+                                                <p class="description"><b>End</b></p>
+                                                <input type="date" id="endDate" onchange="checkValidTime();" name="endDate" placeholder=" Select an end date" required>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="startTime">Time of Event</label>
-                                    <p class="description">So that your players can set their alarms</p>
-                                    <div class="container">
-                                        <div class="box">
-                                            <p class="description"><b>Start</b></p>
-                                            <input type="time" id="startTime" onchange="checkValidTime();" name="startTime" placeholder=" Select a start time" required>
-                                        </div>
-                                        <div class="box">
-                                            <p class="description"><b>End</b></p>
-                                            <input type="time" id="endTime" name="endTime" onchange="checkValidTime();" placeholder=" Select an end time" required>
+                                    <div class="form-group">
+                                        <label for="startTime">Time of Event</label>
+                                        <p class="description">So that your players can set their alarms</p>
+                                        <div class="container">
+                                            <div class="box">
+                                                <p class="description"><b>Start</b></p>
+                                                <input type="time" id="startTime" onchange="checkValidTime();" name="startTime" placeholder=" Select a start time" required>
+                                            </div>
+                                            <div class="box">
+                                                <p class="description"><b>End</b></p>
+                                                <input type="time" id="endTime" name="endTime" onchange="checkValidTime();" placeholder=" Select an end time" required>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -449,7 +451,7 @@
                             </div>
                             <br>
                             <div class="text-center">
-                                <button onclick="" type="button" id="submit" class="choose-payment-method" data-bs-toggle="modal" data-bs-target="#payment-modal">
+                                <button onclick="" type="button"  class="choose-payment-method" data-bs-toggle="modal" data-bs-target="#payment-modal">
                                     Choose a payment method
                                 </button>
                             </div>
@@ -570,7 +572,7 @@
                             <p id="notification"></p>
                         </div>
                         <br><br>
-                        <input type="submit" onclick="goToNextScreen('', '')" value="Continue">
+                        <input  onclick="goToNextScreen('', '')" value="Continue">
                     </div>
 
                 </form>

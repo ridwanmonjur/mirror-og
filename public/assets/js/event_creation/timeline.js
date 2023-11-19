@@ -180,6 +180,9 @@ let inputKeyToInputNameMapping = {
     endDate: 'the end date of the event',
     endTime: 'the end time of the event',
     eventDescription: 'the event description',
+    launch_date: "launch date",
+    launch_time: "launch time",
+    launch_schedule: "launch schedule",
     launch_visible: "launch type (public/ private/ draft)",
     isPaymentDone: "payment"
 }
@@ -196,6 +199,9 @@ let inputKeyToStepNameMapping = {
     endTime: ['step-5', 'timeline-2'],
     eventDescription: ['step-7', 'timeline-2'],
     launch_visible: ['step-11', 'timeline-4'],
+    launch_date: ['step-11', 'timeline-4'],
+    launch_time: ['step-11', 'timeline-4'],
+    launch_schedule: ['step-11', 'timeline-4'],
     isPaymentDone: ['step-10', 'timeline-3']
 }
 
@@ -239,8 +245,8 @@ function saveEvent(){
         'gameTitle', 'eventType', 'eventTier', 
         'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription', 'eventBanner',
         'isPaymentDone',
-        'launch_visible'
-    ]);
+        'launch_visible',
+           ]);
     if (formValidation != null) {
         isFormValid = formValidation[0];
         invalidKey = formValidation[1];
