@@ -124,7 +124,7 @@ class EventController extends Controller
     {
         $eventCategory = EventCategory::all();
         // return view('Organizer.CreateEvent.event');
-        return view('Organizer.CreateEvent', ['eventCategory' => $eventCategory]);
+        return view('Organizer.CreateEvent', ['eventCategory' => $eventCategory, 'mappingTierState' => $this->mappingTierState]);
     }
 
 
@@ -196,6 +196,18 @@ class EventController extends Controller
     {
         //
     }
+
+    private $mappingTierState = [
+        'Dolphin' => [
+            'person' => 16, 'prize' => '5000', 'entry' => 10
+        ],
+        'Turtle' => [   
+            'person' => 32, 'prize' => '10000', 'entry' => 20
+        ],
+        'Starfish' => [
+            'person' => 64 , 'prize' => '15000', 'entry' => 30
+        ],      
+    ];  
 
     private $mappingEventState = [
         'UPCOMING' => [

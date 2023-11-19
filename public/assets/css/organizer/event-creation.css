@@ -820,8 +820,8 @@ input[type="submit"]:active {
 }
 
 .box-width {
-    max-width: 60vw !important;
     margin: auto !important;
+    max-width: 80vw !important;
 }
 
 .flexbox {
@@ -848,12 +848,7 @@ input[type="submit"]:active {
     .swiper-container {
         display: block;
     }
-    .grid-2-columns{
-        grid-template-columns: 1fr 1fr;
-    }
-    .grid-3-columns{
-        grid-template-columns: 1fr 1fr 1fr;
-    }
+    
 }
 
 @media screen and (min-width: 992px) {
@@ -890,6 +885,15 @@ input[type="submit"]:active {
     }
     .search-bar svg {
         left: 20px;
+    }
+    .grid-2-columns{
+        grid-template-columns: 1fr 1fr;
+    }
+    .box-width{
+        max-width: 60vw !important;
+    }
+    .grid-3-columns{
+        grid-template-columns: 1fr 1fr 1fr;
     }
     .swiper-slide {
         text-indent: 0px;

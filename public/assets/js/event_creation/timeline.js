@@ -341,11 +341,6 @@ function goToNextScreen(nextId, nextTimeline) {
             'eventTier' in formValues &&
             'eventType' in formValues
         ) {
-            console.log({ formValues })
-            console.log({ formValues })
-            console.log({ formValues })
-            console.log({ formValues })
-            console.log({ formValues })
 
             let eventTier = formValues['eventTier'];
             let eventType = formValues['eventType'];
@@ -384,40 +379,39 @@ function goToNextScreen(nextId, nextTimeline) {
     //     })
     // }
     if (nextId == allIDs[4]) {
-        let formValues = getFormValues(['eventTier', 'eventType', 'gameTitle']);
-        if (
-            // do later this way
-            'eventTier' in formValues &&
-            'gameTitle' in formValues &&
-            'eventType' in formValues
-        ) {
-            // let eventTier = formValues['eventTier'];
-            // let eventType = formValues['eventType'];
-            // let gameTitle = formValues['gameTitle'];
-            // let inputGameTilte = document.getElementById('img#inputGameTilte');
-            // let resultGameTitle = document.querySelector('img#resultGameTitle');
-            // let inputEventType = document.getElementById('img#inputEventType');
-            // let resultEventType = document.querySelector('img#resultEventType');
-            // let inputEventTier = document.getElementById('img#inputEventTier');
-            // let resultEventTier = document.querySelector('img#resultEventTier');
-            // inputEventTier.innerHTML = resultEventTier.innerHTML;
-            // inputEventType.innerHTML = resultEventType.innerHTML;
-            // inputGameTilte.src = resultGameTitle.src;
-            // console.log({inputGameTilte, resultGameTitle})
-            // console.log({inputGameTilte, resultGameTitle})
-            // console.log({inputGameTilte, resultGameTitle})
-            // console.log({inputGameTilte, resultGameTitle})
-            // console.log({inputGameTilte, resultGameTitle})
-            // resultGameTitle.src = inputGameTilte.src;
-            // getElementByIdAndSetInnerHTML('paymentType', eventType);
-            // getElementByIdAndSetInnerHTML('paymentTier', eventTier);
-        }
-        else {
-            Toast.fire({
-                icon: 'error',
-                text: `Go back and fill all values....`
-            })
-        }
+        // let formValues = getFormValues(['eventTier', 'eventType', 'gameTitle']);
+        // if (
+        //     // do later this way
+        //     'eventTier' in formValues &&
+        //     'gameTitle' in formValues &&
+        //     'eventType' in formValues
+        // ) {
+        //     let eventTier = formValues['eventTier'];
+        //     let eventType = formValues['eventType'];
+        //     let gameTitle = formValues['gameTitle'];
+        //     let resultGameTitle = document.getElementById('img#outputGameTitle');
+        //     let inputEventType = document.getElementById('img#inputEventType');
+        //     let resultEventType = document.getElementById('outputEventTypeTitle');
+        //     let inputEventTier = document.getElementById('outputEventTier');
+        //     let resultEventTier = document.getElementById('outputEventTier');
+        //     inputEventTier.innerHTML = resultEventTier.innerHTML;
+        //     inputEventType.innerHTML = resultEventType.innerHTML;
+        //     inputGameTilte.src = resultGameTitle.src;
+        //     console.log({inputGameTilte, resultGameTitle})
+        //     console.log({inputGameTilte, resultGameTitle})
+        //     console.log({inputGameTilte, resultGameTitle})
+        //     console.log({inputGameTilte, resultGameTitle})
+        //     console.log({inputGameTilte, resultGameTitle})
+        //     resultGameTitle.src = inputGameTilte.src;
+        //     getElementByIdAndSetInnerHTML('paymentType', eventType);
+        //     getElementByIdAndSetInnerHTML('paymentTier', eventTier);
+        // }
+        // else {
+        //     Toast.fire({
+        //         icon: 'error',
+        //         text: `Go back and fill all values....`
+        //     })
+        // }
     }
 
     // if (!isFormValid) {

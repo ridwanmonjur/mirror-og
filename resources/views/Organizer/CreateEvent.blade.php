@@ -12,6 +12,7 @@
                     <input type="hidden" name="eventType"  id="eventType">
                     <input type="hidden" name="isPaymentDone"  id="isPaymentDone">
                     <input type="hidden" name="paymentMethod"  id="paymentMethod">
+
                     <div class="time-line-box">
                         <div class="swiper-container text-center">
                             <div class="swiper-wrapper">
@@ -34,134 +35,167 @@
                             </div>
                         </div>
                     </div>
-                    <section>
-                        <div class="text-center" id="step-0">
-                            <div class="welcome">
-                                <u>
-                                    <h2>
-                                        Welcome to Splash's Event Creator
-                                    </h2>
-                                </u>
-                                <br><br><br>
-                                <p class="create-online-esports">
-                                    Create online esports events all on your own, right here on Splash, in just 4 steps.
-                                </p>
-                            </div>
-                            <input type="button" onclick="goToNextScreen('step-1', 'timeline-1')" value="Continue">
-                        </div>
 
-                        <div id="step-1" class="d-none">
-                            <div class="welcome text-center">
-                                <u>
-                                    <h3>
-                                        STEP 1: Choose your Event Categories
-                                    </h3>
-                                </u>
-                                <br>
-                                <p>First, select an esport title</p>
-                                <br>
-                                <div class="image-scroll-container">
-                                    @foreach ($eventCategory as $category)
-                                    @if ($category->gameIcon)
-                                    <div class="scroll-images" onclick="setFormValues( {'gameTitle': {{Js::from($category->gameTitle)}} } ); goToNextScreen('step-2', 'timeline-1');">
-                                        <a href="#"><img id="inputGameTitle" class="selectable-image focused" src="<?php echo asset("storage/images/$category->gameIcon"); ?>" alt="" style="border-radius: 20px; height: 330px; width: 220px;"></a>
-                                        <h5 style="padding-top: 10px;">{{ $category->gameTitle}}</h5>
-                                    </div>
-                                    @endif
-                                    @endforeach
-                                    <!-- Add more images and titles here -->
-                                </div>
-                                <div class="flexbox box-width">
-                                    <button onclick="goToNextScreen('step-0', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                                    <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
-                                </div>
-                            </div>
+                    <div class="text-center" id="step-0">
+                        <div class="welcome">
+                            <u>
+                                <h2>
+                                    Welcome to Splash's Event Creator
+                                </h2>
+                            </u>
+                            <br><br><br>
+                            <p class="create-online-esports">
+                                Create online esports events all on your own, right here on Splash, in just 4 steps.
+                            </p>
                         </div>
+                        <input type="button" onclick="goToNextScreen('step-1', 'timeline-1')" value="Continue">
+                    </div>
 
-                        <div id="step-2" class="d-none">
-                            <div class="welcome text-center">
-                                <u>
-                                    <h3>
-                                        STEP 1: Choose your Event Categories
-                                    </h3>
-                                </u>
-                                <br>
-                                <p>Then, select what kind of event you want to run.</p>
-                            </div>
-                            <div class="grid-2-columns">
+                    <div id="step-1" class="d-none">
+                        <div class="welcome text-center">
+                            <u>
+                                <h3>
+                                    STEP 1: Choose your Event Categories
+                                </h3>
+                            </u>
+                            <br>
+                            <p>First, select an esport title</p>
+                            <br>
+                            <div class="image-scroll-container box-width">
                                 @foreach ($eventCategory as $category)
-                                @if ($category->eventDefinitions)
-                                <div onclick="setFormValues( {'eventType': {{Js::from($category->eventType) }} } ); goToNextScreen('step-3', 'timeline-1');" class="container-border">
-                                    <a href="#" class="box_2nd selectable-box">
-                                        <h2 class="box-title"><u>{{ $category->eventType}}</u></h2>
-                                        <p class="box-text" style="text-align: left;">{{ $category->eventDefinitions}}</p>
-                                    </a>
+                                @if ($category->gameIcon)
+                                <div class="scroll-images" onclick="
+                                setFormValues( {'gameTitle': {{Js::from($category->gameTitle)}} } ); 
+                                goToNextScreen('step-2', 'timeline-1');
+                                let gameTitleImg = this.children[0].children[0].src;
+                                localStorage.setItem('gameTitleImg', gameTitleImg);
+                                ">
+                                    <a href="#">
+                                        <img class="selectable-image focused" src="<?php echo asset("storage/images/$category->gameIcon"); ?>" alt="" style="border-radius: 20px; height: 330px; width: 220px;"></a>
+                                    <h5 style="padding-top: 10px;">{{ $category->gameTitle}}</h5>
                                 </div>
                                 @endif
                                 @endforeach
+                                <!-- Add more images and titles here -->
                             </div>
                             <div class="flexbox box-width">
-                                <button onclick="goToNextScreen('step-1', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                                <button onclick="goToNextScreen('step-3', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
+                                <button onclick="goToNextScreen('step-0', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                                <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
                             </div>
+                        </div>
+                    </div>
+
+                    <div id="step-2" class="d-none">
+                        <div class="welcome text-center">
+                            <u>
+                                <h3>
+                                    STEP 1: Choose your Event Categories
+                                </h3>
+                            </u>
+                            <p>Then, select what kind of event you want to run.</p>
+                        </div>
+                        <div class="grid-2-columns box-width" style="margin-top: -40px !important;">
+                            @foreach ($eventCategory as $category)
+                            @if ($category->eventDefinitions)
+                            <div onclick="setFormValues( {'eventType': {{Js::from($category->eventType) }} } ); 
+                            goToNextScreen('step-3', 'timeline-1');
+                            let eventTypeTitle = this.querySelector('.inputEventTypeTitle u').innerHTML;
+                            let eventTypeDefinition = this.querySelector('.inputEventTypeDefinition').innerHTML;
+                            localStorage.setItem('eventTypeTitle', eventTypeTitle);
+                            localStorage.setItem('eventTypeDefinition', eventTypeDefinition);
+                            " class="container-border">
+                                <a href="#" class="box_2nd selectable-box">
+                                    <h2 class="inputEventTypeTitle" class="box-title"><u>{{ $category->eventType}}</u></h2>
+                                    <p class="inputEventTypeDefinition" class="box-text" style="text-align: left;">{{ $category->eventDefinitions}}</p>
+                                </a>
+                            </div>
+                            @endif
+                            @endforeach
                         </div>
 
-                        <div id="step-3" class="d-none">
-                            <div class="welcome text-center">
-                                <u>
-                                    <h3>
-                                        STEP 1: Choose your Event Categories
-                                    </h3>
-                                </u>
-                                <br>
-                                <p>Finally, choose a tier for your event.</p>
-                                <div class="grid-3-columns">
-                                    @foreach ($eventCategory as $category)
-                                    <section onclick="setFormValues( {'eventTier': {{Js::from($category->eventTier)}} } ); goToNextScreen('step-4', 'timeline-1');" class="featured-events">
-                                        <a href="#" class="event selectable-box">
-                                            <div class="event_head_container">
-                                                <img id='starfish' src="{{ asset('storage/images//'. $category->tierIcon) }}" class="event_head">
+                        <div class="flexbox box-width">
+                            <button onclick="goToNextScreen('step-1', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                            <button onclick="goToNextScreen('step-3', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
+                        </div>
+                    </div>
+
+
+
+                    <div id="step-3" class="d-none">
+                        <div class="welcome text-center">
+                            <u>
+                                <h3>
+                                    STEP 1: Choose your Event Categories
+                                </h3>
+                            </u>
+                            <br>
+                            <p>Finally, choose a tier for your event.</p>
+                            <div class="flexbox box-width">
+                                @foreach ($eventCategory as $category)
+                                <section onclick="setFormValues( {'eventTier': {{Js::from($category->eventTier)}} } ); 
+                                goToNextScreen('step-4', 'timeline-1'); 
+                                let eventTierImg = this.querySelector('.inputEventTierImg').src;
+                                let eventTierPerson = this.querySelector('.inputEventTierPerson').innerHTML;
+                            let eventTierPrize = this.querySelector('.inputEventTierPrize').innerHTML;
+                            let eventTierEntry = this.querySelector('.inputEventTierEntry').innerHTML;
+                            localStorage.setItem('eventTierPerson', eventTierPerson);
+                            localStorage.setItem('eventTierPrize', eventTierPrize);
+                            localStorage.setItem('eventTierImg', eventTierImg);
+                            localStorage.setItem('eventTierEntry', eventTierEntry);
+                            fillStepValues();
+                                
+                                ;" class="featured-events">
+                                    <a href="#" class="event selectable-box">
+                                        <!-- 0 -->
+                                        <div class="event_head_container">
+                                                <img id='starfish' src="{{ asset('storage/images//'. $category->tierIcon) }}" class="inputEventTierImg event_head">
+                                        </div>
+                                        <!-- 1 -->
+                                        <br>
+                                        <!-- 2 -->
+                                        <h4 style="text-align: center;">{{ $category->eventTier }}</h4>
+                                        <!-- 3 -->
+                                        <br>
+                                        <!-- 4 -->
+                                        <div style="display: flex; justify-content: start; align-items: center">
+                                        <!-- 4.0 -->    
+                                        <img style="width: 30px; height: 30px; margin-right: 20px;" src="{{ asset('/assets/images/createEvent/user.png') }}">
+                                            
+                                            <div>
+                                                <span class="inputEventTierPerson">{{ $mappingTierState[$category->eventTier]['person'] }}</span>
+                                                <span>team slots</span>
                                             </div>
-                                            <br>
-                                            <h4 style="text-align: center;">{{ $category->eventTier }}</h4>
-                                            <br>
-                                            <div style="display: flex; justify-content: start; align-items: center">
-                                                <img style="width: 30px; height: 30px;" src="{{ asset('/assets/images/createEvent/user.png') }}">
-                                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                                <div>
-                                                    <span>16</span>
-                                                    <span>team slots</span>
-                                                </div>
+                                        </div>
+                                        <!-- 5 -->
+                                        <br>
+                                         <!-- 6 -->
+                                        <div style="display: flex; justify-content: start; align-items: center">
+                                            <img style="width: 30px; height: 30px; margin-right: 20px;" src="{{ asset('/assets/images/createEvent/trophy.png') }}">
+                                            <div>
+                                                <span class="inputEventTierPrize">RM {{ $mappingTierState[$category->eventTier]['prize'] }}</span>
+                                                <span>prize pool</span>
                                             </div>
-                                            <br>
-                                            <div style="display: flex; justify-content: start; align-items: center">
-                                                <img style="width: 30px; height: 30px;" src="{{ asset('/assets/images/createEvent/trophy.png') }}">
-                                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                                <div>
-                                                    <span>RM 5000</span>
-                                                    <span>prize pool</span>
-                                                </div>
+                                        </div>
+                                        <!-- 7 -->
+                                        <br>
+                                        <!-- 8 -->
+                                        <div style="display: flex; justify-content: start; align-items: center">
+                                            <img style="width: 30px; height: 30px; margin-right: 20px;" src="{{ asset('/assets/images/createEvent/dollar.png') }}">
+                                            <div>
+                                                <span class="inputEventTierEntry">RM {{ $mappingTierState[$category->eventTier]['entry'] }}</span>
+                                                <span>team entry fee</span>
                                             </div>
-                                            <br>
-                                            <div style="display: flex; justify-content: start; align-items: center">
-                                                <img style="width: 30px; height: 30px;" src="{{ asset('/assets/images/createEvent/dollar.png') }}">
-                                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                                <div>
-                                                    <span>RM 20</span>
-                                                    <span>team entry fee</span>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </section>
-                                    @endforeach
-                                </div>
-                                <div class="flexbox box-width">
-                                    <button onclick="goToNextScreen('step-2', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                                    <button onclick="goToNextScreen('step-4', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
-                                </div>
+                                        </div>
+                                    </a>
+                                </section>
+                                @endforeach
+                            </div>
+                            <div class="flexbox box-width">
+                                <button onclick="goToNextScreen('step-2', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                                <button onclick="goToNextScreen('step-4', 'timeline-1'); fillStepValues();" type="button" class="oceans-gaming-default-button"> Next > </button>
                             </div>
                         </div>
-                    </section>
+                    </div>
 
                     <div id="step-4" class="d-none">
                         <div class="welcome text-center">
@@ -174,23 +208,23 @@
                             <p>Here are the categories you've chosen for your event.</p>
                         </div>
                         <section class="container-border">
-                            <img id="resultGameTitle" src="css/images/dotaPoster.jpg" alt="" style="border-radius: 20px; width: 230px; height: 350px;">
+                            <img id="outputGameTitleImg" src="css/images/dotaPoster.jpg" alt="" style="border-radius: 20px; width: 230px; height: 350px;">
                             <div class="box_3rd">
-                                <h2>League</h2>
-                                <p style="text-align: left;">Insert definition here</p>
+                                <h2 id="outputEventTypeTitle">League</h2>
+                                <p id="outputEventTypeDefinition" style="text-align: left;">Insert definition here</p>
                             </div>
                             <div class="event_extra">
                                 <div class="event_head_container">
-                                    <img id="dolphin" src="css/images/logo/6.png" class="event_head">
+                                    <img id="outputGameTitleImg" src="css/images/logo/6.png" class="event_head">
                                 </div>
                                 <br><br>
-                                <h4 style="text-align: center;">Starfish</h4>
+                                <h4 id="outputEventTierTitle" style="text-align: center;">Starfish</h4>
                                 <div class="event_row">
                                     <div class="icon_container">
-                                        <img src="css/images/user.png" class="event_icon">
+                                        <img id="outputEventTierImg" src="css/images/user.png" class="event_icon">
                                     </div>
                                     <div class="info_container">
-                                        <p>64</p>
+                                        <p id="outputEventTierPerson">64</p>
                                         <small>team slots</small>
                                     </div>
                                 </div>
@@ -199,7 +233,7 @@
                                         <img src="css/images/trophy.png" class="event_icon">
                                     </div>
                                     <div class="info_container">
-                                        <p>RM 15000</p>
+                                        <p id="outputEventTierPrize">RM 15000</p>
                                         <small>prize pool</small>
                                     </div>
                                 </div>
@@ -208,7 +242,7 @@
                                         <img src="css/images/dollar.png" class="event_icon">
                                     </div>
                                     <div class="info_container">
-                                        <p>RM 100</p>
+                                        <p id="outputEventTierEntry">RM 100</p>
                                         <small>team entry fee</small>
                                     </div>
                                 </div>
@@ -216,8 +250,8 @@
                         </section>
 
                         <div class="flexbox box-width">
-                            <button onclick="goToNextScreen('step-3', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
-                            <button onclick="goToNextScreen('step-5', 'timeline-2')" type="button" class="oceans-gaming-default-button"> Step 2 > </button>
+                            <button onclick="goToNextScreen('step-3', 'timeline-1'); fillStepValues();" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Back </button>
+                            <button onclick="goToNextScreen('step-5', 'timeline-2');" type="button" class="oceans-gaming-default-button"> Step 2 > </button>
                         </div>
                     </div>
 
@@ -540,47 +574,48 @@
                     </div>
 
                 </form>
-                <div class="modal fade" id="payment-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-div" style="display: flex !important; justify-content: space-between !important;">
-                                <h5 class="modal-title" id="payment-modal-label"> &nbsp; &nbsp;Payment method</h5>
-                                <button type="button" class="btn-close" id="modal-close" data-bs-dismiss="modal" aria-label="Close">&nbsp;X&nbsp;</button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="panel panel-default">
-                                    <div class="panel-body">
-                                        <h4>Make A Payment</h4>
-                                        @if (session()->has('success'))
-                                        <div class="alert alert-success">
-                                            {{ session()->get('success') }}
-                                        </div>
-                                        @endif
-                                        <form id="card-form">
-                                            @csrf
-                                            <div class="form-group form-group2">
-                                                <label for="card-name" class="">Your name</label>
-                                                <input type="text" name="name" id="card-name" class="">
-                                            </div>
-                                            <div class="form-group form-group2">
-                                                <label for="email" class="">Email</label>
-                                                <input type="email" name="email" id="email" class="">
-                                            </div>
-                                            <div class="form-group form-group2">
-                                                <label for="card" class="">Card details</label>
+            </div>
 
-                                                <div class="form-group form-group2">
-                                                    <div id="card"></div>
-                                                </div>
-                                            </div>
-                                            <button type="submit" class="oceans-gaming-default-button">Pay 👉</button>
-                                        </form>
+            <div class="modal fade" id="payment-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-div" style="display: flex !important; justify-content: space-between !important;">
+                            <h5 class="modal-title" id="payment-modal-label"> &nbsp; &nbsp;Payment method</h5>
+                            <button type="button" class="btn-close" id="modal-close" data-bs-dismiss="modal" aria-label="Close">&nbsp;X&nbsp;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <h4>Make A Payment</h4>
+                                    @if (session()->has('success'))
+                                    <div class="alert alert-success">
+                                        {{ session()->get('success') }}
                                     </div>
+                                    @endif
+                                    <form id="card-form">
+                                        @csrf
+                                        <div class="form-group form-group2">
+                                            <label for="card-name" class="">Your name</label>
+                                            <input type="text" name="name" id="card-name" class="">
+                                        </div>
+                                        <div class="form-group form-group2">
+                                            <label for="email" class="">Email</label>
+                                            <input type="email" name="email" id="email" class="">
+                                        </div>
+                                        <div class="form-group form-group2">
+                                            <label for="card" class="">Card details</label>
+
+                                            <div class="form-group form-group2">
+                                                <div id="card"></div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="oceans-gaming-default-button">Pay 👉</button>
+                                    </form>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button" data-bs-dismiss="modal"> Back </button>
-                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button" data-bs-dismiss="modal"> Back </button>
                         </div>
                     </div>
                 </div>
@@ -601,6 +636,50 @@
         new Tagify(document.querySelector('#eventTags'), {});
     </script>
     <script>
+        function fillStepValues() {
+            let formValues = getFormValues(['eventTier', 'eventType', 'gameTitle']);
+            if (
+                // do later this way
+                'eventTier' in formValues &&
+                'gameTitle' in formValues &&
+                'eventType' in formValues
+            ) {
+                let eventTier = formValues['eventTier'];
+                let eventType = formValues['eventType'];
+                let gameTitle = formValues['gameTitle'];
+
+                console.log({
+                    eventTier
+                })
+                console.log({
+                    eventType
+                })
+                console.log({
+                    gameTitle
+                })
+
+                // let inputEGameTitleImg = document.querySelector(`img#inputGameTitle${gameTitle}Img`);
+                let outputGameTitleImg = document.querySelector('img#outputGameTitleImg');
+
+                outputGameTitleImg.src = localStorage.getItem('gameTitleImg');
+
+                let outputEventTypeTitle = document.getElementById('outputEventTypeTitle');
+                let outputEventTypeDefinition = document.getElementById('outputEventTypeDefinition');
+                outputEventTypeTitle.innerHTML = localStorage.getItem('eventTypeTitle');
+                outputEventTypeDefinition.innerHTML = localStorage.getItem('eventTypeDefinition');
+
+                let outputEventTierImg = document.querySelector(`img#outputEventTierImg`);
+                let outputEventTierPerson = document.getElementById('outputEventTierPerson');
+                let outputEventTierPrize = document.getElementById('outputEventTierPrize');
+                let outputEventTierEntry = document.getElementById('outputEventTierEntry');
+                outputEventTierImg.src = localStorage.getItem('eventTierImg');
+                outputEventTierPerson.innerHTML = localStorage.getItem('eventTierPerson');
+                outputEventTierPrize.innerHTML = localStorage.getItem('eventTierPrize');
+                outputEventTierEntry.innerHTML = localStorage.getItem('eventTierEntry');
+
+            }
+        }
+
         function checkValidTime() {
             var startDateInput = document.getElementById('startDate');
             var endDateInput = document.getElementById('endDate');
