@@ -377,6 +377,7 @@ footer {
         flex-direction: column;
         position: absolute;
         background-color: #fff;
+        
         top: 50px;
         right: 0;
         z-index: 1;
