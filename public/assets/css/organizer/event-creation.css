@@ -6,6 +6,17 @@
     --timeline-normal-width-mobile: 120px;
 }
 
+.next-button{
+    position: fixed;
+    left: 0;
+}
+
+.back-button{
+    position: fixed;
+    right: 0;
+    top: 60vh;
+}
+
 .container {
     display: flex;
     justify-content: space-between;
