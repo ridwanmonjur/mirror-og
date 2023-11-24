@@ -313,6 +313,7 @@ nav ul li a:hover {
 footer {
     text-align: center;
     color: #000000;
+    
 }
 
 .frame1 {
@@ -377,7 +378,7 @@ footer {
         flex-direction: column;
         position: absolute;
         background-color: #fff;
-        
+
         top: 50px;
         right: 0;
         z-index: 1;
