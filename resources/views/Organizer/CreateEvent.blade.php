@@ -37,7 +37,7 @@
                             </div>
                         </div>
 
-                        <div class="text-center" id="step-0">
+                        <div class="text-center d-none" id="step-0">
                             <div class="welcome">
                                 <u>
                                     <h2>
@@ -87,43 +87,44 @@
                         </div>
 
                         <div id="step-2" class="d-none">
-                            <div class="welcome text-center">
+                            <div class="welcome text-center" style="margin-bottom: 0px !important;">
                                 <u>
                                     <h3>
                                         STEP 1: Choose your Event Categories
                                     </h3>
                                 </u>
                                 <p>Then, select what kind of event you want to run.</p>
-                            </div>
-                            <div class="grid-2-columns box-width" style="margin-top: -40px !important;">
-                                @foreach ($eventCategory as $category)
-                                @if ($category->eventDefinitions)
-                                <div onclick="setFormValues( {'eventType': {{Js::from($category->eventType) }} } ); 
+                                <div class="box-width">
+                                    <div class="grid-2-columns box-width" style="margin-top: -20px !important;">
+                                        @foreach ($eventCategory as $category)
+                                        @if ($category->eventDefinitions)
+                                        <div onclick="setFormValues( {'eventType': {{Js::from($category->eventType) }} } ); 
                                 goToNextScreen('step-3', 'timeline-1');
                                 let eventTypeTitle = this.querySelector('.inputEventTypeTitle u').innerHTML;
                                 let eventTypeDefinition = this.querySelector('.inputEventTypeDefinition').innerHTML;
                                 localStorage.setItem('eventTypeTitle', eventTypeTitle);
                                 localStorage.setItem('eventTypeDefinition', eventTypeDefinition);
                                 " class="container-border">
-                                    <a href="#" class="box_2nd selectable-box">
-                                        <h2 class="inputEventTypeTitle" class="box-title"><u>{{ $category->eventType}}</u></h2>
-                                        <p class="inputEventTypeDefinition" class="box-text" style="text-align: left;">{{ $category->eventDefinitions}}</p>
-                                    </a>
+                                            <a href="#" class="box_2nd selectable-box">
+                                                <h2 class="inputEventTypeTitle" class="box-title"><u>{{ $category->eventType}}</u></h2>
+                                                <p class="inputEventTypeDefinition" class="box-text" style="text-align: left;">{{ $category->eventDefinitions}}</p>
+                                            </a>
+                                        </div>
+                                        @endif
+                                        @endforeach
+                                    </div>
                                 </div>
-                                @endif
-                                @endforeach
-                            </div>
-
-                            <div class="flexbox box-width">
-                                <button onclick="goToNextScreen('step-1', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-                                <button onclick="goToNextScreen('step-3', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
+                                <div class="flexbox box-width">
+                                    <button onclick="goToNextScreen('step-1', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
+                                    <button onclick="goToNextScreen('step-3', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
+                                </div>
                             </div>
                         </div>
 
 
 
-                        <div id="step-3" class="d-none">
-                            <div class="welcome text-center">
+                        <div id="step-3" class="">
+                            <div class="welcome text-center" style="margin-bottom: -10px !important;">
                                 <u>
                                     <h3>
                                         STEP 1: Choose your Event Categories
@@ -158,7 +159,6 @@
                                             <!-- 2 -->
                                             <h4 class="inputEventTierTitle" style="text-align: center;">{{ $category->eventTier }}</h4>
                                             <!-- 3 -->
-                                            <br>
                                             <!-- 4 -->
                                             <div style="display: flex; justify-content: start; align-items: center">
                                                 <!-- 4.0 -->
@@ -189,6 +189,7 @@
                                                     <span>team entry fee</span>
                                                 </div>
                                             </div>
+                                            <br>
                                         </a>
                                     </section>
                                     @endforeach
@@ -201,13 +202,12 @@
                         </div>
 
                         <div id="step-4" class="d-none">
-                            <div class="welcome text-center">
+                            <div class="welcome text-center" style="margin-bottom: 0px !important;">
                                 <u>
                                     <h3>
                                         STEP 1: Choose your Event Categories
                                     </h3>
                                 </u>
-                                <br>
                                 <p>Here are the categories you've chosen for your event.</p>
                             </div>
                             <section class="container-border" style="display: flex; justify-content: center">
@@ -218,13 +218,13 @@
                                 </div>
                                 <div class="event_extra">
                                     <div class="event_head_container">
-                                        <img id="outputGameTitleImg" src="{{asset('assets/images/createEvent/question.png')}}" class="event_head">
+                                        <img id="outputEventTierImg" src="{{asset('assets/images/createEvent/question.png')}}" class="event_head">
                                     </div>
                                     <br><br>
                                     <h4 id="outputEventTierTitle" style="text-align: center;">Choose a tier</h4>
                                     <div class="event_row">
                                         <div class="icon_container" style="margin-right: 10px;">
-                                            <img style="width: 30px; height: 30px;"  id="outputEventTierImg" src="{{ asset('assets/images/user.png') }}" class="event_icon">
+                                            <img style="width: 30px; height: 30px;" id="outputEventTierImg" src="{{ asset('assets/images/user.png') }}" class="event_icon">
                                         </div>
                                         <div class="info_container">
                                             <p id="outputEventTierPerson">X</p>
@@ -233,7 +233,7 @@
                                     </div>
                                     <div class="event_row">
                                         <div class="icon_container" style="margin-right: 10px;">
-                                            <img style="width: 30px; height: 30px; margin-right: 20px;"  src="{{ asset('/assets/images/createEvent/trophy.png') }}" class="event_icon">
+                                            <img style="width: 30px; height: 30px; margin-right: 20px;" src="{{ asset('/assets/images/createEvent/trophy.png') }}" class="event_icon">
                                         </div>
                                         <div class="info_container">
                                             <p id="outputEventTierPrize">RM Y</p>
@@ -241,7 +241,7 @@
                                         </div>
                                     </div>
                                     <div class="event_row">
-                                        <div class="icon_container" style="margin-right: 10px;" >
+                                        <div class="icon_container" style="margin-right: 10px;">
                                             <img style="width: 30px; height: 30px;" src="{{ asset('assets/images/dollar.png') }}" class="event_icon">
                                         </div>
                                         <div class="info_container">
@@ -259,7 +259,7 @@
                         </div>
 
                         <div class="text-center d-none create" id="step-5">
-                            <div class="welcome text-center">
+                            <div class="welcome text-center" style="margin-bottom: 0px !important;">
                                 <u>
                                     <h5>
                                         STEP 2: Fill in your Event Details
@@ -382,8 +382,8 @@
                             </div>
                         </div>
 
-                        <div class="text-center d-none create" id="step-9">
-                            <div class="welcome text-center">
+                        <div class="text-center create d-none" id="step-9">
+                            <div class="welcome text-center" style="margin-bottom: 0px !important; padding-top: 10px !important; padding-bottom: 0px !important;">
                                 <u>
                                     <h5>
                                         STEP 2: Fill in your Event Details
@@ -392,31 +392,32 @@
                                 <p>
                                     Finally, some visual aid!
                                 </p>
-                            </div>
-                            <div class="event-details-form box-width">
-                                <div class="form-group">
-                                    <label for="eventBanner">Event Banner</label>
-                                    <p class="description">A distinctive banner will help your event stand out (resolution TBD).</p>
-                                    <div class="banner-upload">
-                                        <input onchange="handleFile('eventBanner', 'previewImage');" type="file" id="eventBanner" name="eventBanner" accept="image/*" required>
-                                        <div class="banner-preview">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
-                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                                <polyline points="21 15 16 10 5 21"></polyline>
-                                            </svg>
-                                        </div>
-                                        Supported files: JPEG, JPG, PNG<br>
-                                        <label class="upload-button" for="eventBanner">Upload Image</label>
-                                        <br>
-                                    </div>
-                                    <img class="d-none banner-preview" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px;">
 
+                                <div class="event-details-form box-width">
+                                    <div class="form-group">
+                                        <label for="eventBanner">Event Banner</label>
+                                        <p class="description">A distinctive banner will help your event stand out (resolution TBD).</p>
+                                        <div class="banner-upload">
+                                            <input onchange="handleFile('eventBanner', 'previewImage');" type="file" id="eventBanner" name="eventBanner" accept="image/*" required>
+                                            <div class="banner-preview">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image">
+                                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                                </svg>
+                                            </div>
+                                            Supported files: JPEG, JPG, PNG<br>
+                                            <label class="upload-button" for="eventBanner">Upload Image</label>
+                                            <br>
+                                        </div>
+                                        <img class="d-none banner-preview" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px;">
+
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="flexbox box-width">
-                                <button onclick="goToNextScreen('step-8', 'timeline-2')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-                                <button onclick="goToNextScreen('step-10', 'timeline-3')" type="button" class="oceans-gaming-default-button"> Step 3 > </button>
+                                <div class="flexbox box-width">
+                                    <button onclick="goToNextScreen('step-8', 'timeline-2')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
+                                    <button onclick="goToNextScreen('step-10', 'timeline-3')" type="button" class="oceans-gaming-default-button"> Step 3 > </button>
+                                </div>
                             </div>
                         </div>
 
@@ -642,6 +643,13 @@
             new Tagify(document.querySelector('#eventTags'), {});
         </script>
         <script>
+            window.onload = function() {
+                ['eventTypeTitle', 'gameTitleImg', 'eventTierPrize', 'eventTierPerson',
+                'eventTierTitle', 'eventTierEntry', 'eventTypeDefinition', 'eventTierImg'
+                ].forEach((key) => {
+                    localStorage.removeItem(key);
+                });
+            }
             $(document).on("keydown", ":input:not(textarea)", function(event) {
                 if (event.key == "Enter") {
                     event.preventDefault();

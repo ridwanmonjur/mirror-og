@@ -4,18 +4,9 @@
     --timeline-start-width-mobile: 60px;
     --timeline-normal-width-desktop: 200px;
     --timeline-normal-width-mobile: 120px;
+    --navbar-height: 5vh;
 }
 
-.next-button{
-    position: fixed;
-    left: 0;
-}
-
-.back-button{
-    position: fixed;
-    right: 0;
-    top: 60vh;
-}
 
 .container {
     display: flex;
@@ -80,7 +71,7 @@ input[type="time"] {
     max-width: 80%;
     margin: 0 auto;
     text-align: left;
-    padding: 20px;
+    padding: 0 auto 0;
 }
 
 .form-group {
@@ -141,7 +132,7 @@ input[type="time"] {
 .selectable-box {
     background-color: #f0f0f0;
     border: 1px solid #ccc;
-    padding: 20px;
+    padding: 0px 20px;
     width: 30%;
     margin: 10px;
     cursor: pointer;
@@ -198,15 +189,14 @@ input[type="time"] {
 }
 
 .event {
-    margin-bottom: 3rem;
     overflow: visible;
     width: 300px;
-    height: 380px;
     background: transparent;
     border: 2px solid rgb(242, 93, 123);
     border-radius: 40px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     position: relative;
+    padding-bottom: 20px;
 }
 
 .event_1 {
@@ -263,9 +253,8 @@ input[type="time"] {
 
 .event_head {
     max-width: 5rem;
-    max-height: 5rem;
     position: absolute;
-    top: -3.5rem;
+    top: -2.5rem;
     left: 50%;
     /* Center horizontally */
     transform: translateX(-50%);
@@ -467,7 +456,7 @@ main {
 }
 
 .navbar {
-    min-height: 5vh;
+    min-height: var(--navbar-height);
     display: flex;
     justify-content: space-between;
     padding-top: 0px !important;
@@ -705,8 +694,7 @@ input[type="button"],
     color: white;
 }
 
-input[type="submit"]:hover {
-    background: #a3c3d3;
+input[type="submit"]:hover, {
 }
 
 input[type="submit"]:active {
@@ -714,11 +702,17 @@ input[type="submit"]:active {
 }
 
 .choose-payment-method {
-    width: max-content !important;
     padding-left: 20px;
     padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     margin: auto !important;
     text-align: center;
+    background: #43A4D7;
+    color: white;
+    border-radius: 30px;
+    outline: none;
+    border: none;
 }
 
 .dropdown:hover .dropdown-content {
