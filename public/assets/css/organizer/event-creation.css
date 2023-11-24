@@ -47,7 +47,7 @@ input[type="time"] {
     transition: border-color 0.3s;
 }
 
-.form-group2 input {
+.form-group2 input{
     margin-bottom: 0px !important;
     padding: 6px 30px !important;
 }
@@ -418,7 +418,6 @@ input[type="time"] {
     padding: 20px;
     text-align: center;
     height: 300px;
-    width: 250px;
     border-radius: 20px;
     transition: transform 0.2s;
     /* Add a transform animation */
@@ -426,11 +425,11 @@ input[type="time"] {
     /* Remove underlines from links */
     color: black;
     /* Set text color to black */
-    cursor: pointer;
 }
 
 .selectable-box {
     cursor: pointer;
+    /* Add pointer cursor for selectable behavior */
 }
 
 .selectable-box:hover {
@@ -447,7 +446,6 @@ input[type="time"] {
     height: 350px;
     width: 230px;
     border-radius: 20px;
-    cursor: pointer;
 }
 
 main {

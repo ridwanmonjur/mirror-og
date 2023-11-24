@@ -29,13 +29,6 @@ Route::get('/foo', function () {
 	Artisan::call('storage:link');
 });
 
-// web.php
-// Route::post('/save-step-1', 'EventController@saveStep1')->name('saveStep1');
-// Route::post('/save-step-2', 'EventController@saveStep2')->name('saveStep2');
-// Route::post('/save-step-3', 'EventController@saveStep3')->name('saveStep3');
-// Route::get('/show-data', 'EventController@showData')->name('showData');
-// nafis
-
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
 Route::get('logout', [AuthController::class, 'logoutAction'])->name("logout.action");
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name("google.login");
