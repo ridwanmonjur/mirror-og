@@ -645,7 +645,7 @@
         <script>
             window.onload = function() {
                 ['eventTypeTitle', 'gameTitleImg', 'eventTierPrize', 'eventTierPerson',
-                'eventTierTitle', 'eventTierEntry', 'eventTypeDefinition', 'eventTierImg'
+                    'eventTierTitle', 'eventTierEntry', 'eventTypeDefinition', 'eventTierImg'
                 ].forEach((key) => {
                     localStorage.removeItem(key);
                 });
@@ -655,6 +655,11 @@
                     event.preventDefault();
                 }
             });
+
+            function checkStringNullOrEmptyAndReturn(value) {
+                let _value = String(value).trim();
+                return (value === null || value === undefined || _value === "") ? null : _value;
+            }
 
             function fillStepValues() {
                 let formValues = getFormValues(['eventTier', 'eventType', 'gameTitle']);
@@ -680,24 +685,70 @@
 
                     // let inputEGameTitleImg = document.querySelector(`img#inputGameTitle${gameTitle}Img`);
                     let outputGameTitleImg = document.querySelector('img#outputGameTitleImg');
-
-                    outputGameTitleImg.src = localStorage.getItem('gameTitleImg');
-
+                    let outputGameTitleImgSrc = localStorage.getItem('gameTitleImg');
+                    console.log({
+                            outputGameTitleImgSrc
+                        })
+                        console.log({
+                            outputGameTitleImgSrc
+                        })
+                        console.log({
+                            outputGameTitleImgSrc
+                        })
+                        let second = checkStringNullOrEmptyAndReturn(outputGameTitleImgSrc);
+                    console.log({
+                        second
+                    })
+                    console.log({
+                        second
+                    })
+                    console.log({
+                        second
+                    })
+                    if (outputGameTitleImgSrc != null) {
+                        console.log({
+                            outputGameTitleImgSrc
+                        })
+                        console.log({
+                            outputGameTitleImgSrc
+                        })
+                        console.log({
+                            outputGameTitleImgSrc
+                        })
+                        outputGameTitleImg.src = outputGameTitleImgSrc;
+                    }
                     let outputEventTypeTitle = document.getElementById('outputEventTypeTitle');
                     let outputEventTypeDefinition = document.getElementById('outputEventTypeDefinition');
-                    outputEventTypeTitle.innerHTML = localStorage.getItem('eventTypeTitle');
-                    outputEventTypeDefinition.innerHTML = localStorage.getItem('eventTypeDefinition');
+
+                    outputEventTypeTitle.innerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTypeTitle'));
+                    outputEventTypeDefinition.innerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTypeDefinition'));
 
                     let outputEventTierImg = document.querySelector(`img#outputEventTierImg`);
                     let outputEventTierTitle = document.getElementById('outputEventTierTitle');
                     let outputEventTierPerson = document.getElementById('outputEventTierPerson');
                     let outputEventTierPrize = document.getElementById('outputEventTierPrize');
                     let outputEventTierEntry = document.getElementById('outputEventTierEntry');
-                    outputEventTierImg.src = localStorage.getItem('eventTierImg');
-                    outputEventTierPerson.innerHTML = localStorage.getItem('eventTierPerson');
-                    outputEventTierPrize.innerHTML = localStorage.getItem('eventTierPrize');
-                    outputEventTierEntry.innerHTML = localStorage.getItem('eventTierEntry');
-                    outputEventTierTitle.innerHTML = localStorage.getItem('eventTierTitle');
+
+                    let outputEventTierImgSrc = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTierImg'));
+                    if (outputEventTierImgSrc != null)
+                        outputEventTierImg.src = outputEventTierImgSrc;
+
+                    let outputEventTierPersonInnerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTierPerson'));
+                    if (outputEventTierPersonInnerHTML != null)
+                        outputEventTierPerson.innerHTML = outputEventTierPersonInnerHTML;
+
+                    let outputEventTierPrizeInnerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTierPrize'));
+                    if (outputEventTierPrizeInnerHTML != null)
+                        outputEventTierPrize.innerHTML = outputEventTierPrizeInnerHTML;
+
+                    let outputEventTierEntryInnerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTierEntry'));
+                    if (outputEventTierEntryInnerHTML != null)
+                        outputEventTierEntry.innerHTML = outputEventTierEntryInnerHTML;
+
+                    let outputEventTierTitleInnerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTierTitle'));
+                    if (outputEventTierEntryInnerHTML != null)
+                        outputEventTierTitle.innerHTML = outputEventTierTitleInnerHTML;
+
                 }
             }
 
