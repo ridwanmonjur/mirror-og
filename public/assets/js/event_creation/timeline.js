@@ -233,7 +233,7 @@ function numberToLocaleString(number) {
     return Number(number).toLocaleString()
 }
 
-function saveEvent(){
+function saveEvent() {
     let isFormValid = true, invalidKey = '', formValidation = null;
     var createEventForm = document.forms['create-event-form'];
     if (!createEventForm) {
@@ -243,21 +243,21 @@ function saveEvent(){
         })
     }
     formValidation = validateFormValuesPresent([
-        'gameTitle', 'eventType', 'eventTier', 
+        'gameTitle', 'eventType', 'eventTier',
         'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription', 'eventBanner',
         'isPaymentDone',
         'launch_visible',
-           ]);
+    ]);
     if (formValidation != null) {
         isFormValid = formValidation[0];
         invalidKey = formValidation[1];
     }
     if (!isFormValid) {
 
-        console.log({formValidation})
-        console.log({formValidation})
-        console.log({formValidation})
-        console.log({formValidation})
+        console.log({ formValidation })
+        console.log({ formValidation })
+        console.log({ formValidation })
+        console.log({ formValidation })
 
         Toast.fire({
             icon: 'error',
@@ -271,7 +271,7 @@ function saveEvent(){
         createEventForm.submit();
         return;
     }
-    else{
+    else {
         formValidation = validateFormValuesPresent([
             'launch_schedule',
         ]);
@@ -279,8 +279,8 @@ function saveEvent(){
             isFormValid = formValidation[0];
             invalidKey = formValidation[1];
         }
-        else{
-            if (createEventForm.elements['launch_schedule'] != 'now'){
+        else {
+            if (createEventForm.elements['launch_schedule'] != 'now') {
                 formValidation = validateFormValuesPresent([
                     'launch_date', 'launch_time'
                 ]);
@@ -291,10 +291,10 @@ function saveEvent(){
             }
         }
         if (!isFormValid) {
-            console.log({formValidation})
-            console.log({formValidation})
-            console.log({formValidation})
-            console.log({formValidation})
+            console.log({ formValidation })
+            console.log({ formValidation })
+            console.log({ formValidation })
+            console.log({ formValidation })
             Toast.fire({
                 icon: 'error',
                 text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
@@ -303,11 +303,11 @@ function saveEvent(){
             goToNextScreen(nextId, nextTimeline);
             return;
         }
-        else{
+        else {
             createEventForm.submit();
         }
     }
-    
+
 }
 
 function goToNextScreen(nextId, nextTimeline) {
@@ -351,7 +351,9 @@ function goToNextScreen(nextId, nextTimeline) {
         formValidation = validateFormValuesPresent(['eventBanner']);
     }
     if (nextId == allIDs[10]) {
-        console.log({found: true})
+        const paymentMethodConditionFulfilledButton = document.getElementsByClassName('choose-payment-method-condition-fulfilled')[0];
+        const paymentMethodCondition = document.getElementsByClassName('choose-payment-method')[0];
+        console.log({ found: true })
         let eventRate = 20, eventSubTotal = 0, eventFee = 0, eventTotal = 0;
         let eventRateToTierMap = { 'Starfish': 5000, 'Turtle': 10000, 'Dolphin': 15000 };
         let formValues = getFormValues(['eventTier', 'eventType']);
@@ -360,8 +362,8 @@ function goToNextScreen(nextId, nextTimeline) {
             'eventType' in formValues
         ) {
 
-            let eventTier = formValues['eventTier'];
-            let eventType = formValues['eventType'];
+            let eventTier = formValues['eventTier'] ?? null;
+            let eventType = formValues['eventType'] ?? null;
             let eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
             if (eventRate == -1) {
                 Toast.fire({
@@ -371,12 +373,35 @@ function goToNextScreen(nextId, nextTimeline) {
             }
             let eventFee = eventSubTotal * (eventRate / 100);
             let eventTotal = eventSubTotal + eventFee;
-            getElementByIdAndSetInnerHTML('paymentType', eventType);
-            getElementByIdAndSetInnerHTML('paymentTier', eventTier);
-            getElementByIdAndSetInnerHTML('paymentSubtotal', numberToLocaleString(eventSubTotal));
-            getElementByIdAndSetInnerHTML('paymentRate', `${eventRate}%`);
-            getElementByIdAndSetInnerHTML('paymentFee', numberToLocaleString(eventFee));
-            getElementByIdAndSetInnerHTML('paymentTotal', numberToLocaleString(eventTotal));
+            if (eventTier == null || eventType == null || eventSubTotal == -1) {
+                getElementByIdAndSetInnerHTML('paymentType', "N/A");
+                getElementByIdAndSetInnerHTML('paymentTier', "N/A");
+                // getElementByIdAndSetInnerHTML('paymentSubtotal', "N/A");
+                // getElementByIdAndSetInnerHTML('paymentRate', "N/A");
+                // getElementByIdAndSetInnerHTML('paymentFee', "N/A");
+                getElementByIdAndSetInnerHTML('paymentTotal', "N/A");
+
+                if (!paymentMethodCondition.classList.contains("d-none")) {
+                    paymentMethodCondition.classList.add("d-none");
+                }
+                if (paymentMethodConditionFulfilledButton.classList.contains("d-none")) {
+                    paymentMethodConditionFulfilledButton.classList.remove("d-none");
+                }
+            }
+            else {
+                getElementByIdAndSetInnerHTML('paymentType', eventType);
+                getElementByIdAndSetInnerHTML('paymentTier', eventTier);
+                getElementByIdAndSetInnerHTML('paymentSubtotal', "RM " + numberToLocaleString(eventSubTotal));
+                getElementByIdAndSetInnerHTML('paymentRate', `${eventRate}%`);
+                getElementByIdAndSetInnerHTML('paymentFee', "RM " + numberToLocaleString(eventFee));
+                getElementByIdAndSetInnerHTML('paymentTotal', "RM " + numberToLocaleString(eventTotal));
+                if (!paymentMethodConditionFulfilledButton.classList.contains("d-none")) {
+                    paymentMethodConditionFulfilledButton.classList.add("d-none");
+                }
+                if (paymentMethodCondition.classList.contains("d-none")) {
+                    paymentMethodCondition.classList.remove("d-none");
+                }
+            }
         }
         else {
             throw new Error("Invalid form values for payment screen");
@@ -385,7 +410,7 @@ function goToNextScreen(nextId, nextTimeline) {
     else if (nextId == allIDs[11]) {
         formValidation = validateFormValuesPresent(['isPaymentDone']);
     }
-    
+
     if (formValidation != null) {
         isFormValid = formValidation[0];
         invalidKey = formValidation[1];

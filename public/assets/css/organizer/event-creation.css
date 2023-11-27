@@ -177,10 +177,8 @@ input[type="time"] {
 }
 
 .event_extra {
-    margin-bottom: 3rem;
     overflow: visible;
     width: 230px;
-    height: 350px;
     background: transparent;
     border: 2px solid rgb(90, 150, 230);
     border-radius: 40px;
@@ -309,7 +307,7 @@ input[type="time"] {
 .event_row {
     display: flex;
     align-items: center;
-    margin: 10px 0;
+    margin: 0px 0;
     padding: 10px;
     /* Add padding here */
 }
@@ -403,6 +401,7 @@ input[type="time"] {
     display: flex;
     gap: 20px;
     padding: 20px;
+    margin: 0;
 }
 
 .grid-2-columns, .grid-3-columns{
@@ -443,7 +442,6 @@ input[type="time"] {
     background: transparent;
     padding: 20px;
     text-align: center;
-    height: 350px;
     width: 230px;
     border-radius: 20px;
 }
@@ -701,18 +699,27 @@ input[type="submit"]:active {
     background: #79b0cc;
 }
 
-.choose-payment-method {
+.choose-payment-method, .choose-payment-method-condition-fulfilled {
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
     margin: auto !important;
     text-align: center;
-    background: #43A4D7;
     color: white;
     border-radius: 30px;
     outline: none;
     border: none;
+}
+
+.choose-payment-method-condition-fulfilled{
+    background: #FBF9F3;
+
+}
+
+.choose-payment-method{
+    background: #43A4D7;
+
 }
 
 .dropdown:hover .dropdown-content {
