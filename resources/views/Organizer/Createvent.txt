@@ -1,5 +1,0 @@
-When an organiser launches an event, it will immediately go live to the players. 
-When an organiser schedules an event, it will not be live until the scheduled time, 
-which it will then go live to the players at the scheduled time.
-
-An upcoming event is an event that is already live to the players but has not started (such as during the registration period). An event that is live will be either "Upcoming" or "Ongoing", where ongoing is when the event has already begin and registration period has ended. Then, when the event ends, it will be marked as "Ended".

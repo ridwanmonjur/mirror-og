@@ -20,9 +20,14 @@ class EventDetail extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function eventDetail()
+    public function tier()
     {
-        return $this->hasOne(EventDetail::class, 'id');
+        return $this->belongsTo(EventTier::class, 'event_tier_id');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(EventType::class, 'event_type_id');
     }
 
 }

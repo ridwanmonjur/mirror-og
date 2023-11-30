@@ -10,7 +10,7 @@
             <div class="event_head_container">
                 <img id='turtle' src="{{ asset('/assets/images/logo/3.png') }}" class="event_head">
             </div>
-            <img src="{{ asset('storage/images/'. $event->eventBanner) }}" class="cover">
+            <img src="{{ asset('storage/'. $event->eventBanner) }}" class="cover">
             <div class="frame1" >
                 <img src="{{ asset('/assets/images/dota.png') }}" class="logo2">
                 <a class="event_status_1" style="@php echo $stylesEventStatus; @endphp">{{ $event->action }}</a>

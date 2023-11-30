@@ -124,20 +124,23 @@ class EventController extends Controller
     {
         $eventCategory = EventCategory::all();
         // return view('Organizer.CreateEvent.event');
-        return view('Organizer.CreateEvent', ['eventCategory' => $eventCategory, 'mappingTierState' => $this->mappingTierState]);
+        return view('Organizer.CreateEvent', [
+            'eventCategory' => $eventCategory, 
+            'mappingTierState' => $this->mappingTierState,
+            'event'=> null
+        ]);
     }
 
 
     public function store(Request $request)
     {
-        $path = null;
+        $fileNameFinal = null;
         if ($request->hasFile('eventBanner')) {
             $file = $request->file('eventBanner');
-            $fileName = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('public/images', $fileName);
-        } else {
-            $file = null;
-        }
+            $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
+            $fileNameFinal = "images/events/$fileNameInitial";
+            $file->storeAs('public/images/events/', $fileNameInitial);
+        } 
         $eventDetail = new EventDetail;
         // step1
         $eventDetail->gameTitle = $request->gameTitle;
@@ -155,7 +158,7 @@ class EventController extends Controller
         $eventDetail->eventName  = $request->eventName;
         $eventDetail->eventDescription  = $request->eventDescription;
         $eventDetail->eventTags  = $request->eventTags;
-        $eventDetail->eventBanner  = $path;
+        $eventDetail->eventBanner  = $fileNameFinal;
         // launch_visible, launch_schedule, launch_time, launch_date
         if ($request->launch_visible == "draft") {
             $eventDetail->status = "DRAFT";
@@ -198,7 +201,13 @@ class EventController extends Controller
 
     public function edit($id)
     {
-        //
+        $event = EventDetail::findOrFail($id);
+        $eventCategory = EventCategory::all();
+        return view('Organizer.CreateEvent', [
+            'eventCategory' => $eventCategory, 
+            'mappingTierState' => $this->mappingTierState,
+            'event'=> $event
+        ]);
     }
 
 

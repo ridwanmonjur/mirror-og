@@ -8,9 +8,9 @@
                 <div>
                     <form enctype="multipart/form-data" onkeydown="return event.key != 'Enter';" action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
                         @csrf
-                        <input type="hidden" name="gameTitle" id="gameTitle">
-                        <input type="hidden" name="eventTier" id="eventTier">
-                        <input type="hidden" name="eventType"  id="eventType">
+                        <input type="hidden" name="gameTitle" id="gameTitle" value="{{ $event ? $event->gameTitle: ''  }}">
+                        <input type="hidden" name="eventTier" id="eventTier" value="{{ $event ? $event->eventTier: ''  }}">
+                        <input type="hidden" name="eventType"  id="eventType" value="{{ $event ? $event->eventType: ''  }}">
                         <input type="hidden" name="isPaymentDone"  id="isPaymentDone">
                         <input type="hidden" name="paymentMethod"  id="paymentMethod">
 
@@ -443,7 +443,7 @@
                                         <span>Event Creation Fee total</span>
                                         <span id="paymentFee"></span>
                                     </div>
-                                    <br>    
+                                    <br>
                                     <div class="flexbox">
                                         <h5> TOTAL </h5>
                                         <h5 id="paymentTotal"></h5>
@@ -645,11 +645,44 @@
         </script>
         <script>
             window.onload = function() {
-                ['eventTypeTitle', 'gameTitleImg', 'eventTierPrize', 'eventTierPerson',
-                    'eventTierTitle', 'eventTierEntry', 'eventTypeDefinition', 'eventTierImg'
-                ].forEach((key) => {
-                    localStorage.removeItem(key);
-                });
+                let $event = {
+                    {
+                        Js::from($event)
+                    }
+                };
+                console.log({
+                    $event
+                })
+                console.log({
+                    $event
+                })
+                console.log({
+                    $event
+                })
+                console.log({
+                    $event
+                })
+                console.log({
+                    $event
+                })
+                console.log({
+                    $event
+                })
+                let isCreateEventView = $event == null;
+                if (isCreateEventView) {
+                    ['eventTypeTitle', 'gameTitleImg', 'eventTierPrize', 'eventTierPerson',
+                        'eventTierTitle', 'eventTierEntry', 'eventTypeDefinition', 'eventTierImg'
+                    ].forEach((key) => {
+                        localStorage.removeItem(key);
+                    });
+                }
+                else{
+                    localStorage.setItem('eventTypeTitle', $event.eventTypeTitle);
+                    localStorage.setItem('gameTitleImg', $event.gameTitleImg);
+                    localStorage.setItem('eventTierPrize', $event.eventTierPrize);
+                    localStorage.setItem('eventTierPerson', $event.eventTierPerson);
+                    localStorage.setItem('eventTierTitle', $event.eventTierTitle);
+                }
             }
             $(document).on("keydown", ":input:not(textarea)", function(event) {
                 if (event.key == "Enter") {
@@ -723,11 +756,11 @@
 
                     let outputEventTypeTitleInnerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTypeTitle'));
                     if (outputEventTypeTitleInnerHTML != null)
-                    outputEventTypeTitle.innerHTML = outputEventTypeTitleInnerHTML;
+                        outputEventTypeTitle.innerHTML = outputEventTypeTitleInnerHTML;
 
                     let outputEventTypeDefinitionInnerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTypeDefinition'));
                     if (outputEventTypeDefinitionInnerHTML != null)
-                    outputEventTypeDefinition.innerHTML = outputEventTypeDefinitionInnerHTML;
+                        outputEventTypeDefinition.innerHTML = outputEventTypeDefinitionInnerHTML;
 
                     let outputEventTierImg = document.querySelector(`img#outputEventTierImg`);
                     let outputEventTierTitle = document.getElementById('outputEventTierTitle');
@@ -796,11 +829,21 @@
 
             function handleFile(inputFileId, previewImageId) {
                 var selectedFile = document.getElementById(inputFileId).files[0];
-                console.log({selectedFile})
-                console.log({selectedFile})
-                console.log({selectedFile})
-                console.log({selectedFile})
-                console.log({selectedFile})
+                console.log({
+                    selectedFile
+                })
+                console.log({
+                    selectedFile
+                })
+                console.log({
+                    selectedFile
+                })
+                console.log({
+                    selectedFile
+                })
+                console.log({
+                    selectedFile
+                })
                 var allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
                 if (!allowedTypes.includes(selectedFile.type)) {

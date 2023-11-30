@@ -4,8 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\EventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
-use App\Http\Controllers\Organizer\PermissionController;
-use App\Http\Controllers\StripeController;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -59,7 +57,6 @@ Route::group(['prefix' => 'participant'], function () {
 		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
 			Route::get('/home', [ParticipantEventController::class, 'home'])->name("participant.home.view");
 		});
-		Route::get('/authDone', [PermissionController::class, 'showAuthenticated']);
 		Route::get(
 			'/permissions',
 			['middleware' => 'check-permission:admin|organizer', 'uses' => 'PermissionController@showOrganizerPage']
@@ -79,10 +76,9 @@ Route::group(['prefix' => 'organizer'], function () {
 				'create' => "event.create",
 				'store' => "event.store",
 				'show' => "event.show",
-
+				'edit' => "event.edit",
 			]);
 		});
-		Route::get('/authDone', [PermissionController::class, 'showAuthenticated']);
 		Route::get(
 			'/permissions',
 			['middleware' => 'check-permission:admin|organizer', 'uses' => 'PermissionController@showOrganizerPage']
