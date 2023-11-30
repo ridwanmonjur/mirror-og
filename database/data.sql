@@ -1,25 +1,11 @@
+USE splash;
+
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `email_verified_token`, `email_verified_expires_at`, `password`, `country_code`, `mobile_no`, `role`, `status`, `remember_token`, `created_at`, `updated_at`, `google_id`) VALUES
 (1, 'Admin', 'admin@example.com', NULL, '08XknKWJLm8nUlEK11oYtie7bnRV7tKA4nLhA9yt4ZyaWmrFeVh00H0eGnzFpR78', NULL, '$2y$10$3b8hd9PNVg/ikULcrGgg/enkqjdqBSbZmgzwpxBzM7Ps2fW3SEkCa', NULL, NULL, 'ADMIN', NULL, NULL, '2023-11-05 20:36:17', '2023-11-06 18:14:34', NULL),
 (2, 'ariful.splash', 'jahorularif@gmail.com', '2023-11-05 20:44:48', NULL, NULL, '$2y$10$sDcA25DcYz.IpB3/TKxRP.kbnDc0LzSe..pGFc3g1FNIICGSmSsLi', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-05 20:44:22', '2023-11-05 20:44:48', NULL),
 (3, 'Oceans Gaming', 'oceansgamingmy@gmail.com', '2023-11-06 07:42:46', NULL, NULL, '$2y$10$0li6SVWriI9KTW.4LazL0eCR6q4TfBvbmWoqCH3rcAwEz3lEUyWgq', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-06 07:42:08', '2023-11-06 07:42:46', NULL),
 (4, 'nafis20', 'nafis20@graduate.utm.my', '2023-11-06 17:46:09', NULL, NULL, '$2y$10$WUWJt5tJ4M6Domo78yjYXuQlJAEr3DHJVM0LMN8lcW1HgZkpnVbmW', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-06 17:45:20', '2023-11-06 17:46:09', NULL),
 (5, 'ridwanmonjur@gmail.com', 'ridwanmonjur@gmail.com', NULL, 'ExkEClSE2Gm2geLOK2zMXGYb54J1THPiaY3MplANxan7pXKgRENwLzkxg9o5Lt3v', NULL, '$2y$10$lH28CRN3B5YizMg/H4L1J.Xu1v6B2.6A3pN/9tVUG/xR9nh.ibht6', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-10 10:02:24', '2023-11-10 10:02:24', NULL);
-
-
-
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '2014_10_12_000000_create_users_table', 1),
-(2, '2014_10_12_100000_create_password_reset_tokens_table', 1),
-(3, '2019_08_19_000000_create_failed_jobs_table', 1),
-(4, '2019_12_14_000001_create_personal_access_tokens_table', 1),
-(5, '2023_09_25_063808_create_oganizer_table', 1),
-(6, '2023_09_25_063810_create_participant_table', 1),
-(7, '2023_09_25_073638_add_fkkeys_to_organizers', 1),
-(8, '2023_09_25_073648_add_fkkeys_to_participants', 1),
-(9, '2023_10_03_192821_create_event_details_table', 1),
-(10, '2023_10_03_193739_create_event_categories_table', 1),
-(11, '2023_10_14_145130_add_google_id_column_to_users_table', 1);
-
 
 INSERT INTO `organizers` (`id`, `companyName`, `companyDescription`, `created_at`, `updated_at`, `user_id`) VALUES
 (1, 'Splash Test', 'Good Company', '2023-11-05 20:44:22', '2023-11-05 20:44:22', 2),
@@ -29,10 +15,20 @@ INSERT INTO `organizers` (`id`, `companyName`, `companyDescription`, `created_at
 
 
 INSERT INTO `event_categories` (`id`, `gameTitle`, `gameIcon`, `eventType`, `eventDefinitions`, `eventTier`, `tierIcon`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 'Dota 2', 'dotaPoster.jpg', 'Tournament ', 'Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.', 'Dolphin', '6.png', NULL, '2023-11-05 20:39:09', '2023-11-05 20:39:09'),
-(4, 'Dota ', '6.png', 'League', 'dota doing good', 'php', 'dotaPoster.jpg', NULL, '2023-11-06 03:06:58', '2023-11-06 03:06:58');
+(1, 'Dota 2', 'Dota 2.jpg', 'Tournament ', 'Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.', 'Dolphin', '6.png', NULL, '2023-11-05 20:39:09', '2023-11-05 20:39:09'),
+(4, 'Dota ', 'dota.png', 'League', 'dota doing good', 'php', 'dotaPoster.jpg', NULL, '2023-11-06 03:06:58', '2023-11-06 03:06:58');
 
-INSERT INTO `event_details` (`id`, `gameTitle`, `gameIcon`, `eventType`, `eventDefinitions`, `eventTier`, `tierIcon`, `eventName`, `startDate`, `endDate`, `startTime`, `endTime`, `eventDescription`, `eventBanner`, `eventTags`, `status`, `venue`, `sub_action_public_date`, `sub_action_public_time`, `sub_action_private`, `action`, `caption`, `user_id`, `created_at`, `updated_at`) VALUES
+INSERT INTO `event_tier` (`id`, `eventTier`, `tierIcon`, `tierTeamSlot`, `tierPrizePool`, `tierEntryFee`, `user_id` ) VALUES
+(1, 'Dolphin', 'dolphin.png', 16, 5000, 10, NULL),
+(2, 'Turtle', 'turtle.png', 32, 10000, 20, NULL),
+(3, 'Starfish', 'starfish.png', 64, 15000, 30, NULL);
+
+INSERT INTO `event_type` (`id`, `eventType`, `eventDefinitions`) VALUES
+(1, 'Tournament ', 'Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.'),
+(2, 'League', 'dota doing good');
+
+
+INSERT INTO `event_details` (`id`, `gameTitle`, `gameIcon`, `eventType`, `eventDefinitions`, `eventTier`, `tierIcon`, `eventName`, `startDate`, `endDate`, `startTime`, `endTime`, `eventDescription`, `eventBanner`, `eventTags`, `status`, `venue`, `sub_action_public_date`, `sub_action_public_time`, `sub_action_private`, `action`, `caption`, `user_id`, `created_at`, `updated_at`, `event_type_id`, `event_tier_id`, `event_category_id`) VALUES
 (2, 'Dota 2', 'dotaPoster.jpg', 'Tier', 'Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.a', 'Dolphin', 'dolphin.png', 'New Event', '2023-11-07', '2023-11-14', '12:00:00', '04:00:00', 'Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.', 'logo.png', '[\"dota 2\"]', NULL, NULL, NULL, NULL, NULL, 'DRAFT', NULL, 5, '2023-11-05 20:41:59', '2023-11-05 20:41:59'),
 (3, 'Dota 2', 'dotaPoster.jpg', 'League', 'Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.a', 'Turtle', 'turtle.png', 'Awesome Event 12345679 !@#$%^&*()', '2023-11-16', '2023-11-30', '17:02:00', '21:02:00', 'COol Events523541', 'Dota 2.jpg', '\"[{\\\"value\\\":\\\"tag\\\"},{\\\"value\\\":\\\"new\\\"},{\\\"value\\\":\\\"coo\\\"},{\\\"value\\\":\\\"test\\\"},{\\\"value\\\":\\\"2345u420\\\"},{\\\"value\\\":\\\"$%$@!\\\"},{\\\"value\\\":\\\"wheee\\\"}]\"', NULL, NULL, NULL, NULL, NULL, 'UPCOMING', NULL, 5, '2023-11-06 08:03:53', '2023-11-06 08:03:53'),
 (4, 'Dota 2', 'dotaPoster.jpg', 'Tier', 'Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.a', 'Starfish', 'starfish.png', 'Awesome Event 12345679 !@#$%^&*()', '2023-11-08', '2023-11-29', '19:04:00', '22:04:00', 'Cool Event WHEEWEW!^@^@$^43t43g', 'Dota 2.jpg', '\"[{\\\"value\\\":\\\"tag\\\"},{\\\"value\\\":\\\"wiggie\\\"},{\\\"value\\\":\\\"46423623\\\"},{\\\"value\\\":\\\"^%@#^#@\\\"},{\\\"value\\\":\\\"fBFBF bf BF BF Wbfw\\\"}]\"', NULL, NULL, NULL, NULL, NULL, 'UPCOMING', NULL, 5, '2023-11-06 08:10:18', '2023-11-06 08:10:18'),

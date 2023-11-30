@@ -30,4 +30,9 @@ class EventDetail extends Model
         return $this->belongsTo(EventType::class, 'event_type_id');
     }
 
+    public function game()
+    {
+        return $this->belongsTo(EventCategory::class, 'event_category_id');
+    }
+    
 }

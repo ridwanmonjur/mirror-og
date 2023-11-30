@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -18,8 +19,8 @@ return new class extends Migration {
             $table->string('eventDefinitions')->nullable();
             $table->string('eventTier')->nullable();
             $table->string('tierIcon')->nullable();
-            $table->foreignId('user_id')->constrained(
-            table: 'users', indexName: 'event_categories_user_id_foreign')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

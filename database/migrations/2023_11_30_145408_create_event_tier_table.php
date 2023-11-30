@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('tierTeamSlot')->nullable();
             $table->string('tierPrizePool')->nullable();
             $table->string('tierEntryFee')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -26,6 +28,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('event_tier');
+        Schema::table('event_tier', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+        });
     }
 };
