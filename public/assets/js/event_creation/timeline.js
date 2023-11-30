@@ -242,71 +242,74 @@ function saveEvent() {
             title: 'Form cannot be found!'
         })
     }
-    formValidation = validateFormValuesPresent([
-        'gameTitle', 'eventType', 'eventTier',
-        'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription', 'eventBanner',
-        'isPaymentDone',
-        'launch_visible',
-    ]);
-    if (formValidation != null) {
-        isFormValid = formValidation[0];
-        invalidKey = formValidation[1];
-    }
-    if (!isFormValid) {
+    // formValidation = validateFormValuesPresent([
+    //     'gameTitle', 'eventType', 'eventTier',
+    //     'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription', 'eventBanner',
+    //     'isPaymentDone',
+    //     'launch_visible',
+    // ]);
+    // if (formValidation != null) {
+    //     isFormValid = formValidation[0];
+    //     invalidKey = formValidation[1];
+    // }
 
-        console.log({ formValidation })
-        console.log({ formValidation })
-        console.log({ formValidation })
-        console.log({ formValidation })
+    createEventForm.submit();
 
-        Toast.fire({
-            icon: 'error',
-            text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
-        })
-        let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
-        goToNextScreen(nextId, nextTimeline);
-        return;
-    }
-    if (createEventForm.elements['launch_visible'].value == 'draft') {
-        createEventForm.submit();
-        return;
-    }
-    else {
-        formValidation = validateFormValuesPresent([
-            'launch_schedule',
-        ]);
-        if (formValidation != null) {
-            isFormValid = formValidation[0];
-            invalidKey = formValidation[1];
-        }
-        else {
-            if (createEventForm.elements['launch_schedule'] != 'now') {
-                formValidation = validateFormValuesPresent([
-                    'launch_date', 'launch_time'
-                ]);
-                if (formValidation != null) {
-                    isFormValid = formValidation[0];
-                    invalidKey = formValidation[1];
-                }
-            }
-        }
-        if (!isFormValid) {
-            console.log({ formValidation })
-            console.log({ formValidation })
-            console.log({ formValidation })
-            console.log({ formValidation })
-            Toast.fire({
-                icon: 'error',
-                text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
-            })
-            let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
-            goToNextScreen(nextId, nextTimeline);
-            return;
-        }
-        else {
-            createEventForm.submit();
-        }
-    }
+    // if (!isFormValid) {
+
+    //     console.log({ formValidation })
+    //     console.log({ formValidation })
+    //     console.log({ formValidation })
+    //     console.log({ formValidation })
+
+    //     Toast.fire({
+    //         icon: 'error',
+    //         text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
+    //     })
+    //     let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
+    //     goToNextScreen(nextId, nextTimeline);
+    //     return;
+    // }
+    // if (createEventForm.elements['launch_visible'].value == 'draft') {
+    //     createEventForm.submit();
+    //     return;
+    // }
+    // else {
+    //     formValidation = validateFormValuesPresent([
+    //         'launch_schedule',
+    //     ]);
+    //     if (formValidation != null) {
+    //         isFormValid = formValidation[0];
+    //         invalidKey = formValidation[1];
+    //     }
+    //     else {
+    //         if (createEventForm.elements['launch_schedule'] != 'now') {
+    //             formValidation = validateFormValuesPresent([
+    //                 'launch_date', 'launch_time'
+    //             ]);
+    //             if (formValidation != null) {
+    //                 isFormValid = formValidation[0];
+    //                 invalidKey = formValidation[1];
+    //             }
+    //         }
+    //     }
+    //     if (!isFormValid) {
+    //         console.log({ formValidation })
+    //         console.log({ formValidation })
+    //         console.log({ formValidation })
+    //         console.log({ formValidation })
+    //         Toast.fire({
+    //             icon: 'error',
+    //             text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
+    //         })
+    //         let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
+    //         goToNextScreen(nextId, nextTimeline);
+    //         return;
+    //     }
+    //     else {
+    //         createEventForm.submit();
+    //     }
+    // }
 
 }
 

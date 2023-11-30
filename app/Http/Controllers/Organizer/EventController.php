@@ -130,20 +130,32 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
+        $path = null;
+        if ($request->hasFile('eventBanner')) {
+            $file = $request->file('eventBanner');
+            $fileName = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('public/images', $fileName);
+        } else {
+            $file = null;
+        }
         $eventDetail = new EventDetail;
         // step1
         $eventDetail->gameTitle = $request->gameTitle;
         $eventDetail->eventType = $request->eventType;
         $eventDetail->eventTier = $request->eventTier;
         // step2
-        $eventDetail->startDate = $request->startDate;
-        $eventDetail->endDate = $request->endDate;
-        $eventDetail->startTime = $request->startTime;
-        $eventDetail->endTime  = $request->endTime;
+        $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $request->startTime)
+            ->utc();
+        $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $request->endTime)
+            ->utc();
+        $eventDetail->startDate = $carbonStartDateTime->format('m/d-Y');
+        $eventDetail->endDate = $carbonStartDateTime->format('H:i');
+        $eventDetail->startTime =  $carbonEndDateTime->format('Y-m-d');
+        $eventDetail->endTime  = $carbonEndDateTime->format('H:i');
         $eventDetail->eventName  = $request->eventName;
         $eventDetail->eventDescription  = $request->eventDescription;
         $eventDetail->eventTags  = $request->eventTags;
-        $eventDetail->eventBanner  = $request->eventBanner;
+        $eventDetail->eventBanner  = $path;
         // launch_visible, launch_schedule, launch_time, launch_date
         if ($request->launch_visible == "draft") {
             $eventDetail->status = "DRAFT";
@@ -153,24 +165,23 @@ class EventController extends Controller
             $eventDetail->action  = $request->launch_visible;
         } else {
             if ($request->launch_visible == "") {
-                $date = \Carbon\Carbon::now();
-                $currentDate = $date->toDateString(); // YYYY-MM-DD format
-                $currentTime = $date->toTimeString(); // HH:MM:SS format
-                $eventDetail->sub_action_public_date = $currentDate;
-                $eventDetail->sub_action_public_time = $currentTime;
+                $eventDetail->status = "LIVE";
+                $eventDetail->sub_action_public_date = null;
+                $eventDetail->sub_action_public_time = null;
             } else {
-                $eventDetail->sub_action_public_date  = $request->launch_date;
-                $eventDetail->sub_action_public_time  = $request->launch_time;
+                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->launch_date . ' ' . $request->launch_time)
+                    ->utc();
+                $eventDetail->status = "FUTURE_LIVE";
+                $eventDetail->sub_action_public_date  = $carbonPublishedDateTime->format('Y-m-d');
+                $eventDetail->sub_action_public_time  = $carbonPublishedDateTime->format('H:i');
             }
             $eventDetail->sub_action_private  = $request->launch_visible == "public" ? "public" : "private";
             $eventDetail->action  = $request->launch_visible;
         }
-        // dummy
-        $eventDetail->action= "DRAFT";
-        $eventDetail->status= "DRAFT";
+
         $eventDetail->user_id  = auth()->user()->id;
         $eventDetail->save();
-        return redirect('organizer/event/'.$eventDetail->id);
+        return redirect('organizer/event/' . $eventDetail->id);
         // return redirect('organizer/home');
     }
 
@@ -205,13 +216,13 @@ class EventController extends Controller
         'Dolphin' => [
             'person' => 16, 'prize' => '5000', 'entry' => 10
         ],
-        'Turtle' => [   
+        'Turtle' => [
             'person' => 32, 'prize' => '10000', 'entry' => 20
         ],
         'Starfish' => [
-            'person' => 64 , 'prize' => '15000', 'entry' => 30
-        ],      
-    ];  
+            'person' => 64, 'prize' => '15000', 'entry' => 30
+        ],
+    ];
 
     private $mappingEventState = [
         'UPCOMING' => [

@@ -6,7 +6,7 @@
             <div>
                 @include('CommonLayout.Navbar')
                 <div>
-                    <form onkeydown="return event.key != 'Enter';" action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
+                    <form enctype="multipart/form-data" onkeydown="return event.key != 'Enter';" action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
                         @csrf
                         <input type="hidden" name="gameTitle" id="gameTitle">
                         <input type="hidden" name="eventTier" id="eventTier">
@@ -796,7 +796,13 @@
 
             function handleFile(inputFileId, previewImageId) {
                 var selectedFile = document.getElementById(inputFileId).files[0];
+                console.log({selectedFile})
+                console.log({selectedFile})
+                console.log({selectedFile})
+                console.log({selectedFile})
+                console.log({selectedFile})
                 var allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
                 if (!allowedTypes.includes(selectedFile.type)) {
                     selectedFile.value = '';
                     Toast.fire({

@@ -20,6 +20,15 @@ $stylesEventRatio .= "background-color: #FA831F; color: white;";
 }
 elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } */ $stylesEventRatio="background-color: #FFE325; color: black;" ; $eventTierLower=strtolower($event->eventTier);
     @endphp
+
+    @php
+    $carbonDateTimeUtc = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $event->startDate . ' ' . $event->startTime, 'UTC');
+    $carbonDateTimeUtc = $carbonDateTimeUtc->setTimezone('Asia/Singapore');
+    $datePart = $carbonDateTimeUtc->format('Y-m-d');
+    $timePart = $carbonDateTimeUtc->isoFormat('h:mm a');
+    $dayStr = $carbonDateTimeUtc->englishDayOfWeek;
+
+    @endphp
     <a href="{{ route('event.show', $event->id) }}" style="text-decoration: none;">
         <div class="{{'rounded-box rounded-box-' . $eventTierLower }}">
             <div class="centered-absolute-game-tier">
@@ -43,12 +52,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                             {{ $organizer->companyName  }}
                         </i></p>
                     <div class="flexbox-welcome">
-                        @php
-                        $datePart = \Carbon\Carbon::parse($event->startDate)->setTimezone('Asia/Singapore');
-                        $timePart = \Carbon\Carbon::parse($event->startTime)->setTimezone('Asia/Singapore');
-                        $date = $datePart->setTimeFromTimeString($timePart);
-                        $dateStr = $date->toFormattedDateString() . " " . $date->isoFormat('h:mm a');
-                        @endphp
+
                         <div>@php echo $dateStr; @endphp</div>
                         <button style="@php echo $stylesEventRatio; @endphp" class="oceans-gaming-default-button oceans-gaming-default-button-small flexbox-centered-space">
                             &nbsp;

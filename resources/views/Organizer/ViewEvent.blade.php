@@ -4,9 +4,10 @@
 
 $stylesEventStatus = '';
 $stylesEventStatus .= 'padding-top: -150px; ';
-$stylesEventStatus .= 'background-color: ' . $mappingEventState[$event->action]['buttonBackgroundColor'] .' ;' ;
-$stylesEventStatus .= 'color: ' . $mappingEventState[$event->action]['buttonTextColor'] .' ; ' ;
-$stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$event->action]['borderColor'] .' ; ';
+$status = $event->status ?? 'DRAFT';
+$stylesEventStatus .= 'background-color: ' . $mappingEventState[$status]['buttonBackgroundColor'] .' ;' ;
+$stylesEventStatus .= 'color: ' . $mappingEventState[$status]['buttonTextColor'] .' ; ' ;
+$stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$status]['borderColor'] .' ; ';
 
 $stylesEventRatio = '';
 $ratio = 0.8;
@@ -22,12 +23,11 @@ $stylesEventRatio .= "background-color: #FA831F; color: white;";
 }
 elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } $eventTierLower=strtolower($event->eventTier);
 
-    $datePart = \Carbon\Carbon::parse($event->startDate)->setTimezone('Asia/Singapore');
-    $timePart = \Carbon\Carbon::parse($event->startTime)->setTimezone('Asia/Singapore');
-    $date = $datePart->setTimeFromTimeString($timePart);
-    $dayStr = $date->englishDayOfWeek;
-    $dateStr = $date->toFormattedDateString();
-    $timeStr = $date->isoFormat('h:mm a');
+    $carbonDateTimeUtc = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $event->startDate . ' ' . $event->startTime, 'UTC');
+    $carbonDateTimeUtc = $carbonDateTimeUtc->setTimezone('Asia/Singapore');
+    $datePart = $carbonDateTimeUtc->format('Y-m-d');
+    $timePart = $carbonDateTimeUtc->isoFormat('h:mm a');
+    $dayStr = $carbonDateTimeUtc->englishDayOfWeek;
 
 
     @endphp
@@ -56,7 +56,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                 <div>
                     <div style="padding-left: 20px;padding-right:20px;">
                         <div>
-                            <img class="{{'card-image card-image-' . $eventTierLower }}" src="{{ asset('/assets/images/1.png') }}" alt="">
+                            <img class="{{'card-image card-image-' . $eventTierLower }}" src="{{ asset('storage/'.$event->eventBanner) }}" alt="">
                         </div>
                         <div class="grid-container-two-columns-at-desktop">
                             <div class="card-text">
@@ -64,8 +64,9 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                     <br>
                                     <div class="flexbox-centered-space">
                                         <p style="height:60px;text-overflow:ellipsis; overflow:hidden;font-size:20px;margin-right:60px;margin-bottom:20px">
-                                            <u>{{$event->name}}</u>
+                                            <u>{{$event->eventName}}</u>
                                         </p>
+
                                         <svg style="margin-top: -30px; margin-left: -60px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
                                             <circle cx="18" cy="5" r="3"></circle>
                                             <circle cx="6" cy="12" r="3"></circle>
@@ -85,8 +86,8 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                         </div>
                                     </div>
                                     <br>
-                                    <h4> <u> @php echo $dateStr . ' ( ' . $dayStr .' )'; @endphp </u> </h4>
-                                    <h4> <u> @php echo strtoupper($timeStr); @endphp </u> </h4>
+                                    <h4> <u> @php echo $datePart . ' ( ' . $dayStr .' )'; @endphp </u> </h4>
+                                    <h4> <u> @php echo strtoupper($timePart); @endphp </u> </h4>
                                     <br>
                                     <div>
                                         <div class="tab">
