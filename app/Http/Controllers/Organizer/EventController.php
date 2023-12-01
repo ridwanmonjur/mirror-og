@@ -198,6 +198,16 @@ class EventController extends Controller
         );
     }
 
+    public function showLive($id): View
+    {
+        $event = EventDetail::findOrFail($id);
+        $isUser = Auth::user()->id == $event->user_id;
+        return view(
+            'Organizer.ViewEvent',
+            ['event' => $event, 'mappingEventState' => $this->mappingEventState, 'isUser' => $isUser]
+        );
+    }
+
 
     public function edit($id)
     {
