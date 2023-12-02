@@ -78,7 +78,9 @@ Route::group(['prefix' => 'organizer'], function () {
 				'show' => "event.show",
 				'edit' => "event.edit",
 			]);
-			Route::get('live/{eventId}', [EventController::class, 'showLive'])->name("organizer.live.view");
+			Route::get('live/{id}', [EventController::class, 'showLive'])
+				->middleware('prevent-back-button')
+				->name("organizer.live.view");
 		});
 		Route::get(
 			'/permissions',

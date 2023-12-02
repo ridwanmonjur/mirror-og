@@ -22,13 +22,18 @@ elseif ($ratio > 0.5){
 $stylesEventRatio .= "background-color: #FA831F; color: white;";
 }
 elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } $eventTierLower=strtolower($event->eventTier);
-
-    $carbonDateTimeUtc = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $event->startDate . ' ' . $event->startTime, 'UTC');
+    if ($event->startDate!=null || $event->startTime!=null){
+    $carbonDateTimeUtc = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $event->startDate . ' ' . $event->startTime, 'UTC') ?? null;
     $carbonDateTimeUtc = $carbonDateTimeUtc->setTimezone('Asia/Singapore');
     $datePart = $carbonDateTimeUtc->format('Y-m-d');
     $timePart = $carbonDateTimeUtc->isoFormat('h:mm a');
     $dayStr = $carbonDateTimeUtc->englishDayOfWeek;
-
+    }
+    else{
+    $datePart = 'Not set';
+    $timePart = 'Not set';
+    $dayStr = 'Not set';
+    }
 
     @endphp
 
@@ -44,8 +49,14 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                             View your events
                         </h3>
                     </u>
-                    <input type="submit" value="Create Event" onclick="goToCreateScreen();">
-
+                    @if ($livePreview == 0)
+                    <div>
+                        <input type="submit" value="Create Event" onclick="goToCreateScreen();">
+                        <input type="submit" style="background-color: #8CCD39;" value="Edit..." onclick="goToEditScreen();">
+                    </div>
+                    @else
+                    <input type="submit" style="background-color: #8CCD39;" value="Resume creating..." onclick="goToEditScreen();">
+                    @endif
                 </header>
             </div>
             <br><br>
@@ -62,12 +73,11 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                             <div class="card-text">
                                 <div>
                                     <br>
-                                    <div class="flexbox-centered-space">
+                                    <div class="flexbox-centered-space" style="align-items: center;">
                                         <p style="height:60px;text-overflow:ellipsis; overflow:hidden;font-size:20px;margin-right:60px;margin-bottom:20px">
-                                            <u>{{$event->eventName}}</u>
+                                            <u>{{$event->eventName?? "No name yet"}}</u>
                                         </p>
-
-                                        <svg style="margin-top: -30px; margin-left: -60px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+                                        <svg style="position: relative; top: -20px; margin-left: -60px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
                                             <circle cx="18" cy="5" r="3"></circle>
                                             <circle cx="6" cy="12" r="3"></circle>
                                             <circle cx="18" cy="19" r="3"></circle>
@@ -84,6 +94,9 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                                 <p class="small-text"> <i> 104 followers </i> </p>
                                             </div>
                                         </div>
+                                        @if ($livePreview == 1)
+                                        <input type="submit" style="background-color: #8CCD39;" value="Resume creating...." onclick="goToEditScreen();">
+                                        @endif
                                     </div>
                                     <br>
                                     <h4> <u> @php echo $datePart . ' ( ' . $dayStr .' )'; @endphp </u> </h4>
@@ -95,12 +108,11 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <button class="{{ 'side-image-' . $eventTierLower . ' tablinks' }}" onclick="openTab(event, 'Bracket')">Bracket</button>
                                             <button class="{{ 'side-image-' . $eventTierLower . ' tablinks' }}" onclick="openTab(event, 'Teams')">Teams</button>
                                             <button class="{{ 'side-image-' . $eventTierLower . ' tablinks' }}" onclick="openTab(event, 'Result')">Result</button>
-
                                         </div>
                                         <br>
                                         <div id="Overview" class="tabcontent" style="display: block;">
                                             <h3><u>About this event</u></h3>
-                                            <p>{{ $event->eventDescription }}</p>
+                                            <p>{{ $event->eventDescription ?? 'Not added yet' }} </p>
                                         </div>
 
                                         <div id="Bracket" class="tabcontent">
@@ -132,7 +144,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <circle cx="12" cy="7" r="4"></circle>
                                         </svg>
                                         &nbsp;
-                                        <span>Amazing prizes</span>
+                                        <span style="position: relative; top: 5px;">Amazing prizes</span>
                                     </div>
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
@@ -140,7 +152,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                         </svg>
                                         &nbsp;
-                                        <span>{{$event->fee ? $event->fee : 'Free'}}</span>
+                                        <span style="position: relative; top: 5px;">{{$event->fee ? $event->fee : 'Free'}}</span>
                                     </div>
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin">
@@ -148,7 +160,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <circle cx="12" cy="10" r="3"></circle>
                                         </svg>
                                         &nbsp;
-                                        <span>{{ $event->venue }}</span>
+                                        <span style="position: relative; top: 5px;">{{ $event->venue ?? 'SEA' }}</span>
                                     </div>
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2">
@@ -157,7 +169,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <line x1="6" y1="20" x2="6" y2="14"></line>
                                         </svg>
                                         &nbsp;
-                                        <span>8 / 14</span>
+                                        <span style="position: relative; top: 5px;">8 / 14</span>
                                     </div>
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
@@ -166,7 +178,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                         </svg>
                                         &nbsp;
-                                        <span>{{$event->eventType}}</span>
+                                        <span style="position: relative; top: 5px;">{{$event->eventType}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -183,6 +195,12 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
         <script>
             function goToCreateScreen() {
                 let url = "{{ route('event.create') }}";
+                window.location.href = url;
+            }
+
+            function goToEditScreen() {
+                let url = "{{ route('event.edit',  $event->id  ) }}";
+
                 window.location.href = url;
             }
         </script>

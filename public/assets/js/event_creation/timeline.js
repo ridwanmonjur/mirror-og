@@ -133,42 +133,6 @@ function previewSelectedImage(imageId, previewImageId) {
     }
 }
 
-// function goToNextScreen(nextId, nextTimeline) {
-//     const allIDs = [
-//         'step-0',
-//         'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6', 'step-7', 'step-8', 'step-9', 'step-10', 'step-11', 'step-12'
-//     ];
-//     const allTimelines = [
-//         'timeline-1', 'timeline-2', 'timeline-3', 'timeline-4'
-//     ];
-//     allIDs.forEach(id => {
-//         const element = document.querySelector(`#${id}`);
-//         console.log({ id, element })
-//         if (id === nextId) element.classList.remove("d-none");
-//         else if (!element.classList.contains("d-none")) {
-//             element.classList.add("d-none");
-//         }
-//     })
-//     allTimelines.forEach((timeline, index) => {
-
-//         const paragraph = document.querySelector(`#${timeline} .timestamp span`);
-//         const cicle = document.querySelector(`#${timeline} small`);
-//         // const border = document.querySelector(`#${timeline} div:nth-child(1)`);
-//         if (timeline === nextTimeline) {
-//             if (!paragraph.classList.contains("font-color-active-timeline")) paragraph.classList.add("font-color-active-timeline");
-//             if (!cicle.classList.contains("background-active-timeline")) cicle.classList.add("background-active-timeline");
-//             if (index === 0) {
-//                 border.style.borderTop = "2px solid red";
-//             }
-//         } else {
-//             if (paragraph.classList.contains("font-color-active-timeline")) paragraph.classList.remove("font-color-active-timeline");
-//             if (cicle.classList.contains("background-active-timeline")) cicle.classList.remove("background-active-timeline");
-//         }
-
-//     })
-
-
-// }
 
 let inputKeyToInputNameMapping = {
     eventName: 'name of the event',
@@ -233,6 +197,11 @@ function numberToLocaleString(number) {
     return Number(number).toLocaleString()
 }
 
+function saveForLivePreview() {
+    var createEventForm = document.forms['create-event-form'];
+    setFormValues({'livePreview': 'true'});
+    createEventForm.submit();
+}
 function saveEvent() {
     let isFormValid = true, invalidKey = '', formValidation = null;
     var createEventForm = document.forms['create-event-form'];
@@ -241,76 +210,71 @@ function saveEvent() {
             icon: 'error',
             title: 'Form cannot be found!'
         })
+        return;
     }
-    // formValidation = validateFormValuesPresent([
-    //     'gameTitle', 'eventType', 'eventTier',
-    //     'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription', 'eventBanner',
-    //     'isPaymentDone',
-    //     'launch_visible',
-    // ]);
-    // if (formValidation != null) {
-    //     isFormValid = formValidation[0];
-    //     invalidKey = formValidation[1];
-    // }
-
-    createEventForm.submit();
-
-    // if (!isFormValid) {
-
-    //     console.log({ formValidation })
-    //     console.log({ formValidation })
-    //     console.log({ formValidation })
-    //     console.log({ formValidation })
-
-    //     Toast.fire({
-    //         icon: 'error',
-    //         text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
-    //     })
-    //     let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
-    //     goToNextScreen(nextId, nextTimeline);
-    //     return;
-    // }
-    // if (createEventForm.elements['launch_visible'].value == 'draft') {
-    //     createEventForm.submit();
-    //     return;
-    // }
-    // else {
-    //     formValidation = validateFormValuesPresent([
-    //         'launch_schedule',
-    //     ]);
-    //     if (formValidation != null) {
-    //         isFormValid = formValidation[0];
-    //         invalidKey = formValidation[1];
-    //     }
-    //     else {
-    //         if (createEventForm.elements['launch_schedule'] != 'now') {
-    //             formValidation = validateFormValuesPresent([
-    //                 'launch_date', 'launch_time'
-    //             ]);
-    //             if (formValidation != null) {
-    //                 isFormValid = formValidation[0];
-    //                 invalidKey = formValidation[1];
-    //             }
-    //         }
-    //     }
-    //     if (!isFormValid) {
-    //         console.log({ formValidation })
-    //         console.log({ formValidation })
-    //         console.log({ formValidation })
-    //         console.log({ formValidation })
-    //         Toast.fire({
-    //             icon: 'error',
-    //             text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
-    //         })
-    //         let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
-    //         goToNextScreen(nextId, nextTimeline);
-    //         return;
-    //     }
-    //     else {
-    //         createEventForm.submit();
-    //     }
-    // }
-
+    formValidation = validateFormValuesPresent([
+        'gameTitle', 'eventType', 'eventTier',
+        'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription', 'eventBanner',
+        'isPaymentDone',
+        'launch_visible',
+    ]);
+    if (formValidation != null) {
+        isFormValid = formValidation[0];
+        invalidKey = formValidation[1];
+    }
+    if (!isFormValid) {
+        console.log({ formValidation })
+        console.log({ formValidation })
+        console.log({ formValidation })
+        console.log({ formValidation })
+        Toast.fire({
+            icon: 'error',
+            text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
+        })
+        let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
+        goToNextScreen(nextId, nextTimeline);
+        return;
+    }
+    if (createEventForm.elements['launch_visible'].value == 'draft') {
+        createEventForm.submit();
+        return;
+    }
+    else {
+        formValidation = validateFormValuesPresent([
+            'launch_schedule',
+        ]);
+        if (formValidation != null) {
+            isFormValid = formValidation[0];
+            invalidKey = formValidation[1];
+        }
+        else {
+            if (createEventForm.elements['launch_schedule'] != 'now') {
+                formValidation = validateFormValuesPresent([
+                    'launch_date', 'launch_time'
+                ]);
+                if (formValidation != null) {
+                    isFormValid = formValidation[0];
+                    invalidKey = formValidation[1];
+                }
+            }
+        }
+        if (!isFormValid) {
+            console.log({ formValidation })
+            console.log({ formValidation })
+            console.log({ formValidation })
+            console.log({ formValidation })
+            Toast.fire({
+                icon: 'error',
+                text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
+            })
+            let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
+            goToNextScreen(nextId, nextTimeline);
+            return;
+        }
+        else {
+            createEventForm.submit();
+        }
+    }
 }
 
 function goToNextScreen(nextId, nextTimeline) {
@@ -325,7 +289,7 @@ function goToNextScreen(nextId, nextTimeline) {
     let currentId = 'step-0';
     allIDs.forEach(id => {
         const element = document.querySelector(`#${id}`);
-        if (!element.classList.contains("d-none")) {
+        if (element && !element.classList.contains("d-none")) {
             currentId = id;
         }
     })
@@ -379,9 +343,6 @@ function goToNextScreen(nextId, nextTimeline) {
             if (eventTier == null || eventType == null || eventSubTotal == -1) {
                 getElementByIdAndSetInnerHTML('paymentType', "N/A");
                 getElementByIdAndSetInnerHTML('paymentTier', "N/A");
-                // getElementByIdAndSetInnerHTML('paymentSubtotal', "N/A");
-                // getElementByIdAndSetInnerHTML('paymentRate', "N/A");
-                // getElementByIdAndSetInnerHTML('paymentFee', "N/A");
                 getElementByIdAndSetInnerHTML('paymentTotal', "N/A");
 
                 if (!paymentMethodCondition.classList.contains("d-none")) {
@@ -418,51 +379,7 @@ function goToNextScreen(nextId, nextTimeline) {
         isFormValid = formValidation[0];
         invalidKey = formValidation[1];
     }
-    // if (!isFormValid) {
-    //     Toast.fire({
-    //         icon: 'error',
-    //         text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
-    //     })
-    // }
-    if (nextId == allIDs[4]) {
-        // let formValues = getFormValues(['eventTier', 'eventType', 'gameTitle']);
-        // if (
-        //     // do later this way
-        //     'eventTier' in formValues &&
-        //     'gameTitle' in formValues &&
-        //     'eventType' in formValues
-        // ) {
-        //     let eventTier = formValues['eventTier'];
-        //     let eventType = formValues['eventType'];
-        //     let gameTitle = formValues['gameTitle'];
-        //     let resultGameTitle = document.getElementById('img#outputGameTitle');
-        //     let inputEventType = document.getElementById('img#inputEventType');
-        //     let resultEventType = document.getElementById('outputEventTypeTitle');
-        //     let inputEventTier = document.getElementById('outputEventTier');
-        //     let resultEventTier = document.getElementById('outputEventTier');
-        //     inputEventTier.innerHTML = resultEventTier.innerHTML;
-        //     inputEventType.innerHTML = resultEventType.innerHTML;
-        //     inputGameTilte.src = resultGameTitle.src;
-        //     console.log({inputGameTilte, resultGameTitle})
-        //     console.log({inputGameTilte, resultGameTitle})
-        //     console.log({inputGameTilte, resultGameTitle})
-        //     console.log({inputGameTilte, resultGameTitle})
-        //     console.log({inputGameTilte, resultGameTitle})
-        //     resultGameTitle.src = inputGameTilte.src;
-        //     getElementByIdAndSetInnerHTML('paymentType', eventType);
-        //     getElementByIdAndSetInnerHTML('paymentTier', eventTier);
-        // }
-        // else {
-        //     Toast.fire({
-        //         icon: 'error',
-        //         text: `Go back and fill all values....`
-        //     })
-        // }
-    }
 
-    // if (!isFormValid) {
-    //     return;
-    // }
     allTimelines.forEach((timeline, _index) => {
         const paragraph = document.querySelector(`#${timeline} .timestamp span`);
         const cicle = document.querySelector(`#${timeline} small`);
@@ -481,7 +398,7 @@ function goToNextScreen(nextId, nextTimeline) {
         if (id === nextId) {
             element.classList.remove("d-none");
         }
-        else if (!element.classList.contains("d-none")) {
+        else if (element && !element.classList.contains("d-none")) {
             element.classList.add("d-none");
         }
     })

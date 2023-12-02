@@ -1,36 +1,6 @@
-<div id="step-1" class="d-none">
-    <div class="welcome text-center" style="margin-bottom: -25px !important;">
-        <u>
-            <h3>
-                STEP 1: Choose your Event Categories
-            </h3>
-        </u>
-        <p>First, select an esport title</p>
-        <div class="image-scroll-container box-width">
-            @foreach ($eventCategory as $category)
-            @if ($category->gameIcon)
-            <div class="scroll-images" onclick="
-                                    setFormValues( {'gameTitle': {{Js::from($category->gameTitle)}} } ); 
-                                    goToNextScreen('step-2', 'timeline-1');
-                                    let gameTitleImg = this.children[0].children[0].src;
-                                    localStorage.setItem('gameTitleImg', gameTitleImg);
-                                    ">
-                <a href="#">
-                    <img class="selectable-image focused" src="<?php echo asset("storage/images/$category->gameIcon"); ?>" alt="" style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"></a>
-                <h5 style="padding-top: 10px;">{{ $category->gameTitle}}</h5>
-            </div>
-            @endif
-            @endforeach
-            <!-- Add more images and titles here -->
-        </div>
-        <div class="flexbox box-width">
-            <button onclick="goToNextScreen('step-0', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-            <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
-        </div>
-    </div>
-</div>
 
 <div id="step-2" class="d-none">
+    
     <div class="welcome text-center" style="margin-bottom: 0px !important;">
         <u>
             <h3>
@@ -77,7 +47,7 @@
         <br>
         <p>Finally, choose a tier for your event.</p>
         <div class="flexbox box-width">
-            @foreach ($eventCategory as $category)
+            @foreach ($eventTierList as $category)
             <section onclick="setFormValues( {'eventTier': {{Js::from($category->eventTier)}} } ); 
                                     goToNextScreen('step-4', 'timeline-1'); 
                                     let eventTierImg = this.querySelector('.inputEventTierImg').src;
@@ -464,7 +434,7 @@
             </div>
         </div>
 
-        <input checked onchange="toggleRadio(this, 'draft')" type="radio" id="draft" name="launch_visible" required value="draft">
+        <input checked onchange="toggleRadio(this, 'draft')" type="radio" id="draft" name="launch_visible" required value="DRAFT">
         <label for="draft"><u>Save as draft</u></label>
         <div class="radio-indent draft">
             <p>Save your event and edit it later</p>
@@ -473,7 +443,11 @@
     </div>
     <br>
     <div class="text-center">
-        <button class="oceans-gaming-default-button">
+        <button 
+            type="button" 
+            class="oceans-gaming-default-button"
+            onclick="saveForLivePreview();"
+            >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                 <circle cx="12" cy="12" r="3"></circle>

@@ -5,14 +5,13 @@ namespace App\Http\Controllers\Organizer;
 use App\Http\Controllers\Controller;
 use App\Models\EventDetail;
 use App\Models\EventCategory;
+use App\Models\EventTier;
+use App\Models\EventType;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use App\Models\Event;
 use App\Models\Organizer;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class EventController extends Controller
 {
@@ -123,88 +122,144 @@ class EventController extends Controller
     public function create(): View
     {
         $eventCategory = EventCategory::all();
+        $eventTierList = EventTier::all();
+        $eventTypeList = EventType::all();
         // return view('Organizer.CreateEvent.event');
         return view('Organizer.CreateEvent', [
-            'eventCategory' => $eventCategory, 
+            'eventCategory' => $eventCategory,
             'mappingTierState' => $this->mappingTierState,
-            'event'=> null
+            'event' => null,
+            'eventTierList' => $eventTierList,
+            'eventTypeList' => $eventTypeList
         ]);
+    }
+
+    public function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
+    {
+        try {
+            // step1
+            $eventDetail->gameTitle = $request->gameTitle;
+            $eventDetail->eventType = $request->eventType;
+            $eventDetail->eventTier = $request->eventTier;
+            // step2
+            $startDate = $request->startDate;
+            $startTime = $request->startTime;
+            $endDate = $request->endDate;
+            $endTime = $request->endTime;
+            if ($startDate && $startTime) {
+                $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $request->startTime)
+                    ->utc();
+                $eventDetail->startDate = $carbonStartDateTime->format('Y-m-d');
+                $eventDetail->startTime =  $carbonStartDateTime->format('H:i');
+            } else {
+                $eventDetail->startDate = null;
+                $eventDetail->startTime = null;
+            }
+            if ($endDate && $endTime) {
+                $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $request->endTime)
+                    ->utc();
+                $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
+                $eventDetail->endTime  = $carbonEndDateTime->format('H:i');
+            } else {
+                $eventDetail->endDate = null;
+                $eventDetail->endTime  = null;
+            }
+            $eventDetail->eventName  = $request->eventName;
+            $eventDetail->eventDescription  = $request->eventDescription;
+            $eventDetail->eventTags  = $request->eventTags;
+            // launch_visible, launch_schedule, launch_time, launch_date
+            if ($request->launch_visible == "DRAFT") {
+                $eventDetail->status = "DRAFT";
+                $eventDetail->sub_action_public_date  = null;
+                $eventDetail->sub_action_public_time  = null;
+                $eventDetail->sub_action_private  = null;
+                $eventDetail->action  = $request->launch_visible;
+            } else {
+                $launch_date = $request->launch_date;
+                $launch_time = $request->launch_time;
+                if ($request->launch_visible != "" && $launch_date && $launch_time) {
+                    $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->launch_date . ' ' . $request->launch_time)
+                        ->utc();
+                    $eventDetail->status = "FUTURE_LIVE";
+                    $eventDetail->sub_action_public_date  = $carbonPublishedDateTime->format('Y-m-d');
+                    $eventDetail->sub_action_public_time  = $carbonPublishedDateTime->format('H:i');
+                } else {
+                    $eventDetail->status = "LIVE";
+                    $eventDetail->sub_action_public_date = null;
+                    $eventDetail->sub_action_public_time = null;
+                }
+                $eventDetail->sub_action_private  = $request->launch_visible == "public" ? "public" : "private";
+                $eventDetail->action  = $request->launch_visible;
+            }
+            return $eventDetail;
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
 
     public function store(Request $request)
     {
-        $fileNameFinal = null;
-        if ($request->hasFile('eventBanner')) {
-            $file = $request->file('eventBanner');
-            $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
-            $fileNameFinal = "images/events/$fileNameInitial";
-            $file->storeAs('public/images/events/', $fileNameInitial);
-        } 
-        $eventDetail = new EventDetail;
-        // step1
-        $eventDetail->gameTitle = $request->gameTitle;
-        $eventDetail->eventType = $request->eventType;
-        $eventDetail->eventTier = $request->eventTier;
-        // step2
-        $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $request->startTime)
-            ->utc();
-        $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $request->endTime)
-            ->utc();
-        $eventDetail->startDate = $carbonStartDateTime->format('m/d-Y');
-        $eventDetail->endDate = $carbonStartDateTime->format('H:i');
-        $eventDetail->startTime =  $carbonEndDateTime->format('Y-m-d');
-        $eventDetail->endTime  = $carbonEndDateTime->format('H:i');
-        $eventDetail->eventName  = $request->eventName;
-        $eventDetail->eventDescription  = $request->eventDescription;
-        $eventDetail->eventTags  = $request->eventTags;
-        $eventDetail->eventBanner  = $fileNameFinal;
-        // launch_visible, launch_schedule, launch_time, launch_date
-        if ($request->launch_visible == "draft") {
-            $eventDetail->status = "DRAFT";
-            $eventDetail->sub_action_public_date  = null;
-            $eventDetail->sub_action_public_time  = null;
-            $eventDetail->sub_action_private  = null;
-            $eventDetail->action  = $request->launch_visible;
-        } else {
-            if ($request->launch_visible == "") {
-                $eventDetail->status = "LIVE";
-                $eventDetail->sub_action_public_date = null;
-                $eventDetail->sub_action_public_time = null;
-            } else {
-                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->launch_date . ' ' . $request->launch_time)
-                    ->utc();
-                $eventDetail->status = "FUTURE_LIVE";
-                $eventDetail->sub_action_public_date  = $carbonPublishedDateTime->format('Y-m-d');
-                $eventDetail->sub_action_public_time  = $carbonPublishedDateTime->format('H:i');
+        try {
+            $fileNameFinal = null;
+            if ($request->hasFile('eventBanner')) {
+                $file = $request->file('eventBanner');
+                $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
+                $fileNameFinal = "images/events/$fileNameInitial";
+                $file->storeAs('public/images/events/', $fileNameInitial);
             }
-            $eventDetail->sub_action_private  = $request->launch_visible == "public" ? "public" : "private";
-            $eventDetail->action  = $request->launch_visible;
+            $eventDetail = new EventDetail;
+            try {
+                $eventDetail = $this->storeLogic($eventDetail, $request);
+            } catch (\Exception $e) {
+                return back()->with('error', 'Something went wrong with updating data!');
+            }
+            $eventDetail->user_id  = auth()->user()->id;
+            $eventDetail->eventBanner  = $fileNameFinal;
+            $eventDetail->save();
+            if ($request->livePreview == "true") {
+                return redirect('organizer/live/' . $eventDetail->id);
+            }
+            return redirect('organizer/event/' . $eventDetail->id);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Something went wrong with saving data!');
         }
-
-        $eventDetail->user_id  = auth()->user()->id;
-        $eventDetail->save();
-        return redirect('organizer/event/' . $eventDetail->id);
         // return redirect('organizer/home');
     }
 
-    public function show($id): View
+
+    private function showCommonLogic($id)
     {
         $event = EventDetail::findOrFail($id);
         $isUser = Auth::user()->id == $event->user_id;
-        return view(
-            'Organizer.ViewEvent',
-            ['event' => $event, 'mappingEventState' => $this->mappingEventState, 'isUser' => $isUser]
-        );
+        return [$event, $isUser];
     }
 
     public function showLive($id): View
     {
-        $event = EventDetail::findOrFail($id);
-        $isUser = Auth::user()->id == $event->user_id;
+        [$event, $isUser] = $this->showCommonLogic($id);
         return view(
             'Organizer.ViewEvent',
-            ['event' => $event, 'mappingEventState' => $this->mappingEventState, 'isUser' => $isUser]
+            [
+                'event' => $event,
+                'mappingEventState' => $this->mappingEventState,
+                'isUser' => $isUser,
+                'livePreview' => 1
+            ]
+        );
+    }
+
+    public function show($id): View
+    {
+        [$event, $isUser] = $this->showCommonLogic($id);
+        return view(
+            'Organizer.ViewEvent',
+            [
+                'event' => $event,
+                'mappingEventState' => $this->mappingEventState,
+                'isUser' => $isUser,
+                'livePreview' => 0
+            ]
         );
     }
 
@@ -213,17 +268,51 @@ class EventController extends Controller
     {
         $event = EventDetail::findOrFail($id);
         $eventCategory = EventCategory::all();
-        return view('Organizer.CreateEvent', [
-            'eventCategory' => $eventCategory, 
+        $eventTierList = EventTier::all();
+        $eventTypeList = EventType::all();
+        return view('Organizer.EditEvent', [
+            'eventCategory' => $eventCategory,
             'mappingTierState' => $this->mappingTierState,
-            'event'=> $event
-        ]);
+            'event' => $event,
+            'eventTierList' => $eventTierList,
+            'eventTypeList' => $eventTypeList
+        ])->with('editMode', true);
     }
 
 
-    public function update($id)
+    public function update(Request $request)
     {
-        //
+        try {
+            $eventId = $request->input('id');
+            if ($eventId) {
+                $fileNameFinal = null;
+                if ($request->hasFile('eventBanner')) {
+                    $file = $request->file('eventBanner');
+                    $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
+                    $fileNameFinal = "images/events/$fileNameInitial";
+                    $file->storeAs('public/images/events/', $fileNameInitial);
+                };
+                // Fetch the existing event from the database
+                $eventDetail = EventDetail::find($eventId);
+                try {
+                    $eventDetail = $this->storeLogic($eventDetail, $request);
+                } catch (\Exception $e) {
+                    return back()->with('error', 'Something went wrong with updating data!');
+                }
+                $eventDetail->user_id  = auth()->user()->id;
+                $eventDetail->eventBanner  = $fileNameFinal;
+                $eventDetail->save();
+                if ($request->livePreview == "true") {
+                    return redirect('organizer/live/' . $eventDetail->id);
+                }
+                return redirect('organizer/event/' . $eventDetail->id);
+            }
+            else{
+                return back()->with('error', 'Event id missing!');
+            }
+        } catch (\Exception $e) {
+            return back()->with('error', 'Something went wrong with saving data!');
+        }
     }
 
     public function destroy($id)
