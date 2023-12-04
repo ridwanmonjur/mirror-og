@@ -77,13 +77,28 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
             </div>
             <br><br>
             <div class="grid-container">
+                @if ( $event->eventTier )
                 <div class="{{'side-image side-image-' . $eventTierLower }}">
                     <img class="side-image-absolute-bottom" src="{{  $eventTierLowerImg }}" width="180" height="125">
                 </div>
+                @else
+                <!-- <div>Choose event tier</div> -->
+                <div></div>
+                @endif
                 <div>
                     <div style="padding-left: 20px;padding-right:20px;">
                         <div>
+                            @if ($event->eventBanner ) 
                             <img class="{{'card-image card-image-' . $eventTierLower }}" src="{{ $eventBannerImg }}" alt="">
+                            @else
+                            <div>
+                            <br><br><br>
+                            <h1>
+                            Please enter a banner image.
+                            </h1>
+                            <br><br>
+                            </div>
+                            @endif
                         </div>
                         <div class="grid-container-two-columns-at-desktop">
                             <div class="card-text">
@@ -106,7 +121,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <img style="display: inline;" src="{{ asset('/assets/images/menu.png') }}" class="{{ 'rounded-image rounded-box-' . $eventTierLower }}" alt="menu">
                                             &nbsp;
                                             <div class="card-organizer">
-                                                <p style="display: inline;"><u> {{$event->user->organizer->companyName}} </u> </p>
+                                                <p style="display: inline;"><u> {{$event->user->organizer->companyName ?? 'Add'}} </u> </p>
                                                 <p class="small-text"> <i> 104 followers </i> </p>
                                             </div>
                                         </div>
@@ -128,7 +143,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                         <br>
                                         <div id="Overview" class="tabcontent" style="display: block;">
                                             <h3><u>About this event</u></h3>
-                                            <p>{{ $event->eventDescription ?? 'Not added yet' }} </p>
+                                            <p>{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                                         </div>
 
                                         <div id="Bracket" class="tabcontent">
@@ -150,7 +165,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                             <div>
                                 <br><br>
                                 <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
-                                    <u>{{$event->status}}</u>
+                                    <u>{{$event->status ?? 'Choose event status'}}</u>
                                 </button>
                                 <br><br>
                                 <div>
@@ -194,7 +209,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                         </svg>
                                         &nbsp;
-                                        <span style="position: relative; top: 5px;">{{$event->eventType}}</span>
+                                        <span style="position: relative; top: 5px;">{{$event->eventType?? 'Choose event type'}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -202,9 +217,14 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
 
                     </div>
                 </div>
+                @if ($event->eventTier )
                 <div class="{{'side-image side-image-' . $eventTierLower }} ">
                     <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="180" height="125">
                 </div>
+                @else
+                <!-- <div>Choose event tier</div> -->
+                <div></div>
+                @endif
             </div>
         </main>
         @stack('script')

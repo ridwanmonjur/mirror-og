@@ -339,7 +339,8 @@
                     @if ($event->eventBanner)
                         <img class="banner-preview" src="{{asset('storage/'.$event->eventBanner)}}" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
                     @else
-                    <img class="banner-preview" src="{{ asset('assets/images/createEvent/exclamation.png') }}" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
+                    <div>Please enter an image</div>
+                    <img class="d-none banner-preview" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
                     @endif
                 @else
                 <img class="d-none banner-preview" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
