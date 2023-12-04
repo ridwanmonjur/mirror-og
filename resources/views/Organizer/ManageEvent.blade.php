@@ -409,7 +409,7 @@
                     var windowHeight = window.innerHeight;
                     var documentHeight = document.documentElement.scrollHeight;
                     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    if (scrollTop + windowHeight >= documentHeight - 200) {
+                    if (scrollTop + windowHeight >= documentHeight ) {
                         let params = convertUrlStringToQueryStringOrObject({
                             isObject: true
                         });

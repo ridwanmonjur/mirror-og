@@ -22,20 +22,44 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
     @endphp
 
     @php
+
+
+    $startDate = $event->startDate;
+    $startTime = $event->startTime;
+
+    if ($startDate && $startTime) {
     $carbonDateTimeUtc = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $event->startDate . ' ' . $event->startTime, 'UTC');
     $carbonDateTimeUtc = $carbonDateTimeUtc->setTimezone('Asia/Singapore');
     $datePart = $carbonDateTimeUtc->format('Y-m-d');
     $timePart = $carbonDateTimeUtc->isoFormat('h:mm a');
     $dayStr = $carbonDateTimeUtc->englishDayOfWeek;
-    $dateStr = $dayStr . ', ' . $datePart . ' ' . $timePart;
+    $dateStr = $datePart . ' ' . $timePart;
+    } else {
+    $dateStr = 'Please enter date time';
+    }
+
+    if ($event->eventTier ) {
+    $eventTierLower= strtolower(asset('/assets/images/'. $eventTierLower . '.png'));
+    }
+    else{
+    $eventTierLower = asset('assets/images/createEvent/question.png');
+    }
+
+    if ($event->eventBanner ) {
+    $eventBanner=  asset('storage/'.$event->eventBanner);
+    }
+    else{
+    $eventBanner = asset('assets/images/createEvent/question.png');
+    }
+
     @endphp
     <a href="{{ route('event.show', $event->id) }}" style="text-decoration: none;">
         <div class="{{'rounded-box rounded-box-' . $eventTierLower }}">
             <div class="centered-absolute-game-tier">
-                <img src="{{ asset('/assets/images/'. $eventTierLower . '.png') }}" width="120" height="80">
+                <img src="{{  $eventTierLower }}" width="100" style="object-fit: cover;">
             </div>
             <div class="{{'card-image card-image-' . $eventTierLower }}">
-                <img src="{{ asset('storage/'.$event->eventBanner) }}" alt="">
+                <img width="200" height="200" style="object-fit: center; object-position: center;" src="{{ $eventBanner }}" alt="">
             </div>
             <div class="card-text">
                 <div>

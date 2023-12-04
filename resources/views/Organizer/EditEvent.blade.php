@@ -20,7 +20,7 @@
 
                         @include('Organizer.Layout.CreateEventTimelineBox')
                         @include('Organizer.Layout.CreateEventStepOneShow')
-                        @include('Organizer.Layout.CreateEventForm')
+                        @include('Organizer.Layout.CreateEventForm' , ['event' => $event])
                         @if (session()->has('success'))
                         @include('Organizer.Layout.CreateEventSuccess')
                         @endif

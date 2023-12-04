@@ -28,11 +28,27 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
     $datePart = $carbonDateTimeUtc->format('Y-m-d');
     $timePart = $carbonDateTimeUtc->isoFormat('h:mm a');
     $dayStr = $carbonDateTimeUtc->englishDayOfWeek;
+    $combinedStr = $datePart . ' (' . $dayStr . ')';
     }
     else{
     $datePart = 'Not set';
     $timePart = 'Not set';
-    $dayStr = 'Not set';
+    $dayStr = '';
+    $combinedStr = 'Not set';
+    }
+
+    if ($event->eventTier ) {
+    $eventTierLowerImg= strtolower(asset('/assets/images/'. $eventTierLower . '.png'));
+    }
+    else{
+    $eventTierLowerImg = asset('assets/images/createEvent/question.png');
+    }
+
+    if ($event->eventBanner ) {
+    $eventBannerImg=  asset('storage/'.$event->eventBanner);
+    }
+    else{
+    $eventBannerImg = asset('assets/images/createEvent/question.png');
     }
 
     @endphp
@@ -62,12 +78,12 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
             <br><br>
             <div class="grid-container">
                 <div class="{{'side-image side-image-' . $eventTierLower }}">
-                    <img class="side-image-absolute-bottom" src="{{  asset( '/assets/images/'. $eventTierLower . '.png' ) }}" width="180" height="125">
+                    <img class="side-image-absolute-bottom" src="{{  $eventTierLowerImg }}" width="180" height="125">
                 </div>
                 <div>
                     <div style="padding-left: 20px;padding-right:20px;">
                         <div>
-                            <img class="{{'card-image card-image-' . $eventTierLower }}" src="{{ asset('storage/'.$event->eventBanner) }}" alt="">
+                            <img class="{{'card-image card-image-' . $eventTierLower }}" src="{{ $eventBannerImg }}" alt="">
                         </div>
                         <div class="grid-container-two-columns-at-desktop">
                             <div class="card-text">
@@ -99,7 +115,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                                         @endif
                                     </div>
                                     <br>
-                                    <h4> <u> @php echo $datePart . ' ( ' . $dayStr .' )'; @endphp </u> </h4>
+                                    <h4> <u> @php echo $combinedStr; @endphp </u> </h4>
                                     <h4> <u> @php echo strtoupper($timePart); @endphp </u> </h4>
                                     <br>
                                     <div>
@@ -187,7 +203,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
                     </div>
                 </div>
                 <div class="{{'side-image side-image-' . $eventTierLower }} ">
-                    <img class="side-image-absolute-top" src="{{  asset( '/assets/images/'. $eventTierLower . '.png' ) }}" width="180" height="125">
+                    <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="180" height="125">
                 </div>
             </div>
         </main>
