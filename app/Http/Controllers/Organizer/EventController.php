@@ -127,8 +127,8 @@ class EventController extends Controller
         // return view('Organizer.CreateEvent.event');
         return view('Organizer.CreateEvent', [
             'eventCategory' => $eventCategory,
-            'mappingTierState' => $this->mappingTierState,
             'event' => null,
+            'editMode' => 0,
             'eventTierList' => $eventTierList,
             'eventTypeList' => $eventTypeList
         ]);
@@ -141,6 +141,9 @@ class EventController extends Controller
             $eventDetail->gameTitle = $request->gameTitle;
             $eventDetail->eventType = $request->eventType;
             $eventDetail->eventTier = $request->eventTier;
+            $eventDetail->event_type_id = $request->eventTypeId;
+            $eventDetail->event_tier_id = $request->eventTierId;
+            $eventDetail->event_category_id = $request->gameTitleId;
             // step2
             $startDate = $request->startDate;
             $startTime = $request->startTime;
@@ -172,25 +175,28 @@ class EventController extends Controller
                 $eventDetail->status = "DRAFT";
                 $eventDetail->sub_action_public_date  = null;
                 $eventDetail->sub_action_public_time  = null;
-                $eventDetail->sub_action_private  = null;
-                $eventDetail->action  = $request->launch_visible;
             } else {
                 $launch_date = $request->launch_date;
                 $launch_time = $request->launch_time;
-                if ($request->launch_visible != "" && $launch_date && $launch_time) {
+                if ($request->launch_schedule == "schedule" && $launch_date && $launch_time) {
                     $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->launch_date . ' ' . $request->launch_time)
                         ->utc();
-                    $eventDetail->status = "FUTURE_LIVE";
+                    $eventDetail->status = "SCHEDULED";
                     $eventDetail->sub_action_public_date  = $carbonPublishedDateTime->format('Y-m-d');
                     $eventDetail->sub_action_public_time  = $carbonPublishedDateTime->format('H:i');
+                } else if ($request->launch_schedule == "now") {
+                    $carbonPublishedDateTime = Carbon::now()->utc();
+                    $eventDetail->status = "LIVE";
+                    $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
+                    $eventDetail->sub_action_public_time = $carbonPublishedDateTime->format('H:i');
                 } else {
                     $eventDetail->status = "LIVE";
-                    $eventDetail->sub_action_public_date = null;
-                    $eventDetail->sub_action_public_time = null;
+                    $launch_date = null;
+                    $launch_time = null;
                 }
-                $eventDetail->sub_action_private  = $request->launch_visible == "public" ? "public" : "private";
-                $eventDetail->action  = $request->launch_visible;
             }
+            $eventDetail->sub_action_private  = $request->launch_visible == "private" ? "private" : "public";
+            $eventDetail->action  = $request->launch_visible;
             return $eventDetail;
         } catch (\Exception $e) {
             throw $e;
@@ -230,7 +236,8 @@ class EventController extends Controller
 
     private function showCommonLogic($id)
     {
-        $event = EventDetail::findOrFail($id);
+        $event = EventDetail
+            ::with('type', 'tier', 'game')->findOrFail($id);
         $isUser = Auth::user()->id == $event->user_id;
         return [$event, $isUser];
     }
@@ -266,17 +273,19 @@ class EventController extends Controller
 
     public function edit($id)
     {
-        $event = EventDetail::findOrFail($id);
+        $event = EventDetail
+            ::with('type', 'tier', 'game')
+            ->findOrFail($id);
         $eventCategory = EventCategory::all();
         $eventTierList = EventTier::all();
         $eventTypeList = EventType::all();
         return view('Organizer.EditEvent', [
             'eventCategory' => $eventCategory,
-            'mappingTierState' => $this->mappingTierState,
             'event' => $event,
             'eventTierList' => $eventTierList,
-            'eventTypeList' => $eventTypeList
-        ])->with('editMode', true);
+            'eventTypeList' => $eventTypeList,
+            'editMode' => 1
+        ]);
     }
 
 
@@ -306,8 +315,7 @@ class EventController extends Controller
                     return redirect('organizer/live/' . $eventDetail->id);
                 }
                 return redirect('organizer/event/' . $eventDetail->id);
-            }
-            else{
+            } else {
                 return back()->with('error', 'Event id missing!');
             }
         } catch (\Exception $e) {

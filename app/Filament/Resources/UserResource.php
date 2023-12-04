@@ -50,7 +50,7 @@ class UserResource extends Resource
                 ,
             Forms\Components\Select::make('status')
                 ->options([
-                    'draft' => 'Draft',
+                    'draft' => 'DRAFT',
                     'reviewing' => 'Reviewing',
                     'published' => 'Published',
                 ])

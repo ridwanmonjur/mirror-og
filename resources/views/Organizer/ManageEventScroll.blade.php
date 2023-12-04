@@ -27,7 +27,7 @@ elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: b
     $datePart = $carbonDateTimeUtc->format('Y-m-d');
     $timePart = $carbonDateTimeUtc->isoFormat('h:mm a');
     $dayStr = $carbonDateTimeUtc->englishDayOfWeek;
-
+    $dateStr = $dayStr . ', ' . $datePart . ' ' . $timePart;
     @endphp
     <a href="{{ route('event.show', $event->id) }}" style="text-decoration: none;">
         <div class="{{'rounded-box rounded-box-' . $eventTierLower }}">

@@ -16,7 +16,7 @@
                                     localStorage.setItem('gameTitleImg', gameTitleImg);
                                     ">
                 <a href="#">
-                    <img class="selectable-image focused" src="<?php echo asset("storage/images/$category->gameIcon"); ?>" alt="" style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"></a>
+                    <img class="selectable-image focused" src="<?php echo asset("storage/$category->gameIcon"); ?>" alt="" style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"></a>
                 <h5 style="padding-top: 10px;">{{ $category->gameTitle}}</h5>
             </div>
             @endif
@@ -24,7 +24,7 @@
             <!-- Add more images and titles here -->
         </div>
         <div class="flexbox box-width">
-            <button onclick="goToNextScreen('step-0', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
+            <div></div>
             <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
         </div>
     </div>

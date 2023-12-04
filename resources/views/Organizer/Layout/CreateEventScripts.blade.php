@@ -13,8 +13,34 @@
 </script>
 <script>
     function checkStringNullOrEmptyAndReturn(value) {
+        if (value === null || value === undefined) return null;
         let _value = String(value).trim();
-        return (value === null || value === undefined || _value === "") ? null : _value;
+        return (_value === "") ? null : _value;
+    }
+
+    function checkStringNullOrEmptyAndReturnFromLocalStorage(key) {
+        let item = localStorage.getItem(key);
+        return checkStringNullOrEmptyAndReturn(item);
+    }
+
+    function setInnerHTMLFromLocalStorage(key, element) {
+        let value = checkStringNullOrEmptyAndReturnFromLocalStorage(key);
+        if (value) element.innerHTML = value;
+    }
+
+    function setImageSrcFromLocalStorage(key, element) {
+        let value = checkStringNullOrEmptyAndReturnFromLocalStorage(key);
+        if (value) element.src = value;
+    }
+
+    function setLocalStorageFromEventObject(key, property) {
+        let value = checkStringNullOrEmptyAndReturn(property);
+        console.log({value})
+        console.log({value})
+        console.log({value})
+        console.log({value})
+        console.log({value})
+        if (value) localStorage.setItem(key, value);
     }
 
     function fillStepValues() {
@@ -28,51 +54,57 @@
             let eventType = formValues['eventType'];
             let gameTitle = formValues['gameTitle'];
 
+            // Game Title
             // let inputEGameTitleImg = document.querySelector(`img#inputGameTitle${gameTitle}Img`);
             let outputGameTitleImg = document.querySelector('img#outputGameTitleImg');
-            let outputGameTitleImgSrc = localStorage.getItem('gameTitleImg');
-            let second = checkStringNullOrEmptyAndReturn(outputGameTitleImgSrc);
-            if (second != null) {
-                outputGameTitleImg.src = outputGameTitleImgSrc;
-            }
-            let outputEventTypeTitle = document.getElementById('outputEventTypeTitle');
-            let outputEventTypeDefinition = document.getElementById('outputEventTypeDefinition');
-
-            let outputEventTypeTitleInnerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTypeTitle'));
-            if (outputEventTypeTitleInnerHTML != null)
-                outputEventTypeTitle.innerHTML = outputEventTypeTitleInnerHTML;
-
-            let outputEventTypeDefinitionInnerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTypeDefinition'));
-            if (outputEventTypeDefinitionInnerHTML != null)
-                outputEventTypeDefinition.innerHTML = outputEventTypeDefinitionInnerHTML;
-
-            let outputEventTierImg = document.querySelector(`img#outputEventTierImg`);
-            let outputEventTierTitle = document.getElementById('outputEventTierTitle');
-            let outputEventTierPerson = document.getElementById('outputEventTierPerson');
-            let outputEventTierPrize = document.getElementById('outputEventTierPrize');
-            let outputEventTierEntry = document.getElementById('outputEventTierEntry');
-
-            let outputEventTierImgSrc = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTierImg'));
-            if (outputEventTierImgSrc != null)
-                outputEventTierImg.src = outputEventTierImgSrc;
-
-            let outputEventTierPersonInnerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTierPerson'));
-            if (outputEventTierPersonInnerHTML != null)
-                outputEventTierPerson.innerHTML = outputEventTierPersonInnerHTML;
-
-            let outputEventTierPrizeInnerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTierPrize'));
-            if (outputEventTierPrizeInnerHTML != null)
-                outputEventTierPrize.innerHTML = outputEventTierPrizeInnerHTML;
-
-            let outputEventTierEntryInnerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTierEntry'));
-            if (outputEventTierEntryInnerHTML != null)
-                outputEventTierEntry.innerHTML = outputEventTierEntryInnerHTML;
-
-            let outputEventTierTitleInnerHTML = checkStringNullOrEmptyAndReturn(localStorage.getItem('eventTierTitle'));
-            if (outputEventTierEntryInnerHTML != null)
-                outputEventTierTitle.innerHTML = outputEventTierTitleInnerHTML;
-
+            // let outputGameTitleImgSrcImg = checkStringNullOrEmptyAndReturnFromLocalStorage('gameTitleImg');
+            // if (outputGameTitleImgSrcImg) {
+            //     outputGameTitleImg.src = outputGameTitleImgSrcImg;
+            // 
+            setImageSrcFromLocalStorage('gameTitleImg', outputGameTitleImg);
         }
+
+        // Event Type
+        let outputEventTypeTitle = document.getElementById('outputEventTypeTitle');
+        let outputEventTypeDefinition = document.getElementById('outputEventTypeDefinition');
+        setInnerHTMLFromLocalStorage('eventTypeTitle', outputEventTypeTitle);
+
+        // let outputEventTypeDefinitionInnerHTML = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTypeDefinition');
+        // if (outputEventTypeDefinitionInnerHTML)
+        //     outputEventTypeDefinition.innerHTML = outputEventTypeDefinitionInnerHTML;
+        setInnerHTMLFromLocalStorage('eventTypeDefinition', outputEventTypeDefinition);
+
+        // Event Tier
+        let outputEventTierImg = document.querySelector(`img#outputEventTierImg`);
+        let outputEventTierTitle = document.getElementById('outputEventTierTitle');
+        let outputEventTierPerson = document.getElementById('outputEventTierPerson');
+        let outputEventTierPrize = document.getElementById('outputEventTierPrize');
+        let outputEventTierEntry = document.getElementById('outputEventTierEntry');
+
+        // let outputEventTierImgSrc = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTierImg');
+        // if (outputEventTierImgSrc)
+        //     outputEventTierImg.src = outputEventTierImgSrc;
+        setImageSrcFromLocalStorage('eventTierImg', outputEventTierImg);
+        setInnerHTMLFromLocalStorage('eventTierPerson', outputEventTierPerson);
+        setInnerHTMLFromLocalStorage('eventTierPrize', outputEventTierPrize);
+        setInnerHTMLFromLocalStorage('eventTierEntry', outputEventTierEntry);
+        setInnerHTMLFromLocalStorage('eventTierTitle', outputEventTierTitle);
+
+        // let outputEventTierPersonInnerHTML = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTierPerson');
+        // if (outputEventTierPersonInnerHTML)
+        //     outputEventTierPerson.innerHTML = outputEventTierPersonInnerHTML;
+
+        // let outputEventTierPrizeInnerHTML = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTierPrize');
+        // if (outputEventTierPrizeInnerHTML)
+        //     outputEventTierPrize.innerHTML = outputEventTierPrizeInnerHTML;
+
+        // let outputEventTierEntryInnerHTML = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTierEntry');
+        // if (outputEventTierEntryInnerHTML)
+        //     outputEventTierEntry.innerHTML = outputEventTierEntryInnerHTML;
+
+        // let outputEventTierTitleInnerHTML = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTierTitle');
+        // if (outputEventTierEntryInnerHTML)
+        //     outputEventTierTitle.innerHTML = outputEventTierTitleInnerHTML;
     }
 
     function checkValidTime() {
@@ -191,9 +223,7 @@
 
     window.onload = function() {
         /* beautify preserve:start */
-        let $event = "{{ Js::from($event) }}";
-        /* beautify preserve:end */
-
+        let $event = {!! json_encode($event) !!};
         console.log({
             $event
         })
@@ -212,19 +242,42 @@
         console.log({
             $event
         })
-        let isCreateEventView = $event == null;
-        if (isCreateEventView) {
+        if ($event) {
+            let assetKeyWord = "{{asset('')}}"
+            // game
+            setLocalStorageFromEventObject('gameTitleImg', assetKeyWord+ 'storage/' + $event?.game?.gameIcon);
+            // event type
+            setLocalStorageFromEventObject('eventTypeTitle', $event?.type?.eventType);
+            setLocalStorageFromEventObject('eventTypeDefinition', $event?.type?.eventDefinitions);
+            // tier
+            setLocalStorageFromEventObject('eventTierImg', assetKeyWord+ 'storage/' + $event?.tier?.tierIcon);
+            setLocalStorageFromEventObject('eventTierPerson', $event?.tier?.tierTeamSlot);
+            setLocalStorageFromEventObject('eventTierPrize', $event?.tier?.tierPrizePool);
+            setLocalStorageFromEventObject('eventTierEntry', $event?.tier?.tierEntryFee);
+            setLocalStorageFromEventObject('eventBanner', $event?.eventBanner);
+            // banner
+            setLocalStorageFromEventObject('eventTierTitle', $event?.tier?.eventTier);
+            setFormValues({
+                'gameTitleId': $event?.game?.id,
+                'eventTypeId': $event?.type?.id,
+                'eventTierId': $event?.tier?.id,
+                'eventTags': $event?.eventTags,
+                'eventDescription': $event?.eventDescription,
+                'eventName': $event?.eventName ?? '',
+                'startDate': $event?.startDate ?? '',
+                'endDate': $event?.endDate ?? '',
+                'startTime': $event?.startTime,
+                'endTime': $event?.endTime,
+                'sub_action_public': $event?.sub_action_public,
+                'sub_action_private': $event?.sub_action_private,
+                'sub_action_team': $event?.sub_action_team,
+            });
+        } else {
             ['eventTypeTitle', 'gameTitleImg', 'eventTierPrize', 'eventTierPerson',
                 'eventTierTitle', 'eventTierEntry', 'eventTypeDefinition', 'eventTierImg'
             ].forEach((key) => {
                 localStorage.removeItem(key);
             });
-        } else {
-            localStorage.setItem('eventTypeTitle', $event.eventTypeTitle);
-            localStorage.setItem('gameTitleImg', $event.gameTitleImg);
-            localStorage.setItem('eventTierPrize', $event.eventTierPrize);
-            localStorage.setItem('eventTierPerson', $event.eventTierPerson);
-            localStorage.setItem('eventTierTitle', $event.eventTierTitle);
         }
     }
     $(document).on("keydown", ":input:not(textarea)", function(event) {

@@ -10,13 +10,15 @@
             @foreach ($eventCategory as $category)
             @if ($category->gameIcon)
             <div class="scroll-images" onclick="
+                                    let categoryId =  {{Js::from($category->id)}};
                                     setFormValues( {'gameTitle': {{Js::from($category->gameTitle)}} } ); 
                                     goToNextScreen('step-2', 'timeline-1');
                                     let gameTitleImg = this.children[0].children[0].src;
                                     localStorage.setItem('gameTitleImg', gameTitleImg);
+                                    setFormValues( {'gameTitleId': categoryId } );
                                     ">
                 <a href="#">
-                    <img class="selectable-image focused" src="<?php echo asset("storage/images/$category->gameIcon"); ?>" alt="" style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"></a>
+                    <img class="selectable-image focused" src="<?php echo asset("storage/$category->gameIcon"); ?>" alt="" style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"></a>
                 <h5 style="padding-top: 10px;">{{ $category->gameTitle}}</h5>
             </div>
             @endif

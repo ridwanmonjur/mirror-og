@@ -72,13 +72,10 @@ function setFormValues(values) {
         for (var key in values) {
             console.log({ [key]: values[key] });
             var formField = createEventForm.elements[key];
-            if (formField) {
+            if (formField && values[key]) {
                 formField.value = values[key];
             } else {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Form not found'
-                })
+                console.log(`Form field  with key ${key}  not found!`);
             }
         }
     }
@@ -133,6 +130,29 @@ function previewSelectedImage(imageId, previewImageId) {
     }
 }
 
+function previewSelectedImageByForm(imageId, previewImageId) {
+    const imageInput = document.getElementById(imageId);
+    if (!imageInput) {
+        throw new Error("Image input not found!")
+    }
+    const previewImage = document.getElementById(previewImageId);
+    if (!previewImage) {
+        throw new Error("Preview not found!")
+    }
+    if (previewImage.classList.contains("d-none")) {
+        previewImage.classList.remove("d-none");
+    }
+    previewImage.style.objectFit = "cover";
+    const file = imageInput.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function (e) {
+            previewImage.src = e.target.result;
+        }
+    }
+}
+
 
 let inputKeyToInputNameMapping = {
     eventName: 'name of the event',
@@ -157,7 +177,7 @@ let inputKeyToStepNameMapping = {
     eventType: ['step-2', 'timeline-1'],
     gameTitle: ['step-1', 'timeline-1'],
     eventName: ['step-6', 'timeline-2'],
-    eventBanner: ['step-7', 'timeline-2'],
+    eventBanner: ['step-9', 'timeline-2'],
     startDate: ['step-5', 'timeline-2'],
     startTime: ['step-5', 'timeline-2'],
     endDate: ['step-5', 'timeline-2'],
@@ -199,7 +219,7 @@ function numberToLocaleString(number) {
 
 function saveForLivePreview() {
     var createEventForm = document.forms['create-event-form'];
-    setFormValues({'livePreview': 'true'});
+    setFormValues({ 'livePreview': 'true' });
     createEventForm.submit();
 }
 function saveEvent() {
@@ -235,7 +255,7 @@ function saveEvent() {
         goToNextScreen(nextId, nextTimeline);
         return;
     }
-    if (createEventForm.elements['launch_visible'].value == 'draft') {
+    if (createEventForm.elements['launch_visible'].value == 'DRAFT') {
         createEventForm.submit();
         return;
     }
@@ -316,6 +336,7 @@ function goToNextScreen(nextId, nextTimeline) {
     }
     else if (currentId == allIDs[9]) {
         formValidation = validateFormValuesPresent(['eventBanner']);
+        previewSelectedImage('eventBanner', 'previewImage');
     }
     if (nextId == allIDs[10]) {
         const paymentMethodConditionFulfilledButton = document.getElementsByClassName('choose-payment-method-condition-fulfilled')[0];

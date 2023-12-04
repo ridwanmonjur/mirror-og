@@ -1,6 +1,5 @@
-
 <div id="step-2" class="d-none">
-    
+
     <div class="welcome text-center" style="margin-bottom: 0px !important;">
         <u>
             <h3>
@@ -13,11 +12,20 @@
                 @foreach ($eventCategory as $category)
                 @if ($category->eventDefinitions)
                 <div onclick="setFormValues( {'eventType': {{Js::from($category->eventType) }} } ); 
+                                let eventTypeId = {{Js::from($category->id) }} ;
+                                setFormValues( {'eventTypeId': eventTypeId} ); 
                                 goToNextScreen('step-3', 'timeline-1');
+                                console.log({id});
+                                console.log({id});
+                                console.log({id});
+                                console.log({id});
+                                console.log({id});
                                 let eventTypeTitle = this.querySelector('.inputEventTypeTitle u').innerHTML;
                                 let eventTypeDefinition = this.querySelector('.inputEventTypeDefinition').innerHTML;
                                 localStorage.setItem('eventTypeTitle', eventTypeTitle);
+                                localStorage.setItem('eventTypeTitle', eventTypeTitle);
                                 localStorage.setItem('eventTypeDefinition', eventTypeDefinition);
+                                localStorage.setItem('eventTypeId', eventTypeId);
                                 " class="container-border">
                     <a href="#" class="box_2nd selectable-box">
                         <h2 class="inputEventTypeTitle" class="box-title"><u>{{ $category->eventType}}</u></h2>
@@ -49,25 +57,29 @@
         <div class="flexbox box-width">
             @foreach ($eventTierList as $category)
             <section onclick="setFormValues( {'eventTier': {{Js::from($category->eventTier)}} } ); 
-                                    goToNextScreen('step-4', 'timeline-1'); 
-                                    let eventTierImg = this.querySelector('.inputEventTierImg').src;
-                                    let eventTierPerson = this.querySelector('.inputEventTierPerson').innerHTML;
+                                let eventTierId = {{Js::from($category->id) }} ;
+                                goToNextScreen('step-4', 'timeline-1'); 
+                                let eventTierImg = this.querySelector('.inputEventTierImg').src;
+                                let eventTierPerson = this.querySelector('.inputEventTierPerson').innerHTML;
                                 let eventTierPrize = this.querySelector('.inputEventTierPrize').innerHTML;
                                 let eventTierEntry = this.querySelector('.inputEventTierEntry').innerHTML;
                                 let eventTierTitle = this.querySelector('.inputEventTierTitle').innerHTML;
+                                setFormValues( {'eventTierId': eventTierId } ); 
                                 localStorage.setItem('eventTierPerson', eventTierPerson);
                                 localStorage.setItem('eventTierPrize', eventTierPrize);
                                 localStorage.setItem('eventTierImg', eventTierImg);
                                 localStorage.setItem('eventTierEntry', eventTierEntry);
                                 localStorage.setItem('eventTierTitle', eventTierTitle);
+                                localStorage.setItem('eventTierId', eventTierId);
                                 fillStepValues();
                                     
                                     ;" class="featured-events">
                 <a href="#" class="event selectable-box">
                     <!-- 0 -->
                     <div class="event_head_container ">
-                        <img id='starfish' src="{{ asset('storage/images/'. $category->tierIcon) }}" class="inputEventTierImg event_head">
+                        <img id='starfish' src="{{ asset('storage/'. $category->tierIcon) }}" class="inputEventTierImg event_head">
                     </div>
+                    <!-- <div>Tier id: {{$category->id}}</div> -->
                     <!-- 1 -->
                     <br>
                     <!-- 2 -->
@@ -79,7 +91,7 @@
                         <img style="width: 25px; height: 25px; margin-right: 20px;" src="{{ asset('/assets/images/createEvent/user.png') }}">
 
                         <div>
-                            <span class="inputEventTierPerson">{{ $mappingTierState[$category->eventTier]['person'] }}</span>
+                            <span class="inputEventTierPerson">{{ $category->tierTeamSlot }}</span>
                             <span>team slots</span>
                         </div>
                     </div>
@@ -89,7 +101,7 @@
                     <div style="display: flex; justify-content: start; align-items: center">
                         <img style="width: 25px; height: 25px; margin-right: 20px;" src="{{ asset('/assets/images/createEvent/trophy.png') }}">
                         <div>
-                            <span class="inputEventTierPrize">RM {{ $mappingTierState[$category->eventTier]['prize'] }}</span>
+                            <span class="inputEventTierPrize">RM {{ $category->tierPrizePool }}</span>
                             <span>prize pool</span>
                         </div>
                     </div>
@@ -99,7 +111,7 @@
                     <div style="display: flex; justify-content: start; align-items: center">
                         <img style="width: 25px; height: 25px; margin-right: 20px;" src="{{ asset('/assets/images/createEvent/dollar.png') }}">
                         <div>
-                            <span class="inputEventTierEntry">RM {{ $mappingTierState[$category->eventTier]['entry'] }}</span>
+                            <span class="inputEventTierEntry">RM {{ $category->tierEntyFee  }}</span>
                             <span>team entry fee</span>
                         </div>
                     </div>
@@ -414,7 +426,7 @@
             </div>
         </div>
 
-        <input onchange="toggleRadio(this, 'private')" required type="radio" id="private" name="launch_visible" value="public">
+        <input onchange="toggleRadio(this, 'private')" required type="radio" id="private" name="launch_visible" value="private">
         <label for="private"><u>Private</u></label><br>
         <div class="radio-indent private">
             <p>Only players you invite can see and join your event</p>
@@ -443,11 +455,7 @@
     </div>
     <br>
     <div class="text-center">
-        <button 
-            type="button" 
-            class="oceans-gaming-default-button"
-            onclick="saveForLivePreview();"
-            >
+        <button type="button" class="oceans-gaming-default-button" onclick="saveForLivePreview();">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                 <circle cx="12" cy="12" r="3"></circle>
