@@ -77,7 +77,12 @@ Route::group(['prefix' => 'organizer'], function () {
 				'store' => "event.store",
 				'show' => "event.show",
 				'edit' => "event.edit",
+				'update' => "event.update",
 			]);
+			Route::post('event/updateForm/{id}', [EventController::class, 'updateForm'])->name('event.updateForm');
+			Route::get('success/{id}', [EventController::class, 'showSuccess'])
+				->middleware('prevent-back-button')
+				->name("organizer.success.view");
 			Route::get('live/{id}', [EventController::class, 'showLive'])
 				->middleware('prevent-back-button')
 				->name("organizer.live.view");

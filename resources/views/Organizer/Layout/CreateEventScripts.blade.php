@@ -35,11 +35,21 @@
 
     function setLocalStorageFromEventObject(key, property) {
         let value = checkStringNullOrEmptyAndReturn(property);
-        console.log({value})
-        console.log({value})
-        console.log({value})
-        console.log({value})
-        console.log({value})
+        console.log({
+            value
+        })
+        console.log({
+            value
+        })
+        console.log({
+            value
+        })
+        console.log({
+            value
+        })
+        console.log({
+            value
+        })
         if (value) localStorage.setItem(key, value);
     }
 
@@ -221,9 +231,20 @@
         }
     })
 
+    function clearLocalStorage() {
+        ['eventTypeTitle', 'gameTitleImg', 'eventTierPrize', 'eventTierPerson',
+            'eventTierTitle', 'eventTierEntry', 'eventTypeDefinition', 'eventTierImg',
+            'eventBanner'
+        ].forEach((key) => {
+            localStorage.removeItem(key);
+        });
+    }
+
     window.onload = function() {
         /* beautify preserve:start */
         let $event = {!! json_encode($event) !!};
+        /* beautify preserve:start */
+        clearLocalStorage();
         console.log({
             $event
         })
@@ -243,6 +264,7 @@
             $event
         })
         if ($event) {
+
             let assetKeyWord = "{{asset('')}}"
             // game
             setLocalStorageFromEventObject('gameTitleImg', assetKeyWord+ 'storage/' + $event?.game?.gameIcon);
@@ -271,12 +293,6 @@
                 'sub_action_public': $event?.sub_action_public,
                 'sub_action_private': $event?.sub_action_private,
                 'sub_action_team': $event?.sub_action_team,
-            });
-        } else {
-            ['eventTypeTitle', 'gameTitleImg', 'eventTierPrize', 'eventTierPerson',
-                'eventTierTitle', 'eventTierEntry', 'eventTypeDefinition', 'eventTierImg'
-            ].forEach((key) => {
-                localStorage.removeItem(key);
             });
         }
     }

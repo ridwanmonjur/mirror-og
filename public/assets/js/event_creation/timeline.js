@@ -222,6 +222,7 @@ function saveForLivePreview() {
     setFormValues({ 'livePreview': 'true' });
     createEventForm.submit();
 }
+
 function saveEvent() {
     let isFormValid = true, invalidKey = '', formValidation = null;
     var createEventForm = document.forms['create-event-form'];
@@ -234,13 +235,21 @@ function saveEvent() {
     }
     formValidation = validateFormValuesPresent([
         'gameTitle', 'eventType', 'eventTier',
-        'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription', 'eventBanner',
+        'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription', 
         'isPaymentDone',
         'launch_visible',
     ]);
     if (formValidation != null) {
         isFormValid = formValidation[0];
         invalidKey = formValidation[1];
+    }
+    if (localStorage.getItem('eventBanner') != null) {
+        // createEventForm.elements['eventBanner'].value = localStorage.getItem('eventBanner');
+        console.log({ banner: localStorage.getItem('eventBanner') })
+    }
+    else{
+        isFormValid = false;
+        invalidKey = 'eventBanner';
     }
     if (!isFormValid) {
         console.log({ formValidation })
@@ -336,7 +345,6 @@ function goToNextScreen(nextId, nextTimeline) {
     }
     else if (currentId == allIDs[9]) {
         formValidation = validateFormValuesPresent(['eventBanner']);
-        previewSelectedImage('eventBanner', 'previewImage');
     }
     if (nextId == allIDs[10]) {
         const paymentMethodConditionFulfilledButton = document.getElementsByClassName('choose-payment-method-condition-fulfilled')[0];

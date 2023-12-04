@@ -136,100 +136,94 @@ class EventController extends Controller
 
     public function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
     {
-        try {
-            // step1
-            $eventDetail->gameTitle = $request->gameTitle;
-            $eventDetail->eventType = $request->eventType;
-            $eventDetail->eventTier = $request->eventTier;
-            $eventDetail->event_type_id = $request->eventTypeId;
-            $eventDetail->event_tier_id = $request->eventTierId;
-            $eventDetail->event_category_id = $request->gameTitleId;
-            // step2
-            $startDate = $request->startDate;
-            $startTime = $request->startTime;
-            $endDate = $request->endDate;
-            $endTime = $request->endTime;
-            if ($startDate && $startTime) {
-                $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $request->startTime)
-                    ->utc();
-                $eventDetail->startDate = $carbonStartDateTime->format('Y-m-d');
-                $eventDetail->startTime =  $carbonStartDateTime->format('H:i');
-            } else {
-                $eventDetail->startDate = null;
-                $eventDetail->startTime = null;
-            }
-            if ($endDate && $endTime) {
-                $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $request->endTime)
-                    ->utc();
-                $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
-                $eventDetail->endTime  = $carbonEndDateTime->format('H:i');
-            } else {
-                $eventDetail->endDate = null;
-                $eventDetail->endTime  = null;
-            }
-            $eventDetail->eventName  = $request->eventName;
-            $eventDetail->eventDescription  = $request->eventDescription;
-            $eventDetail->eventTags  = $request->eventTags;
-            // launch_visible, launch_schedule, launch_time, launch_date
-            if ($request->launch_visible == "DRAFT") {
-                $eventDetail->status = "DRAFT";
-                $eventDetail->sub_action_public_date  = null;
-                $eventDetail->sub_action_public_time  = null;
-            } else {
-                $launch_date = $request->launch_date;
-                $launch_time = $request->launch_time;
-                if ($request->launch_schedule == "schedule" && $launch_date && $launch_time) {
-                    $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->launch_date . ' ' . $request->launch_time)
-                        ->utc();
-                    $eventDetail->status = "SCHEDULED";
-                    $eventDetail->sub_action_public_date  = $carbonPublishedDateTime->format('Y-m-d');
-                    $eventDetail->sub_action_public_time  = $carbonPublishedDateTime->format('H:i');
-                } else if ($request->launch_schedule == "now") {
-                    $carbonPublishedDateTime = Carbon::now()->utc();
-                    $eventDetail->status = "LIVE";
-                    $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
-                    $eventDetail->sub_action_public_time = $carbonPublishedDateTime->format('H:i');
-                } else {
-                    $eventDetail->status = "LIVE";
-                    $launch_date = null;
-                    $launch_time = null;
-                }
-            }
-            $eventDetail->sub_action_private  = $request->launch_visible == "private" ? "private" : "public";
-            $eventDetail->action  = $request->launch_visible;
-            return $eventDetail;
-        } catch (\Exception $e) {
-            throw $e;
+        // dd($eventDetail , $request, "hi");
+        // step1
+        $eventDetail->gameTitle = $request->gameTitle;
+        $eventDetail->eventType = $request->eventType;
+        $eventDetail->eventTier = $request->eventTier;
+        $eventDetail->event_type_id = $request->eventTypeId;
+        $eventDetail->event_tier_id = $request->eventTierId;
+        $eventDetail->event_category_id = $request->gameTitleId;
+        // step2
+        $startDate = $request->startDate;
+        $startTime = $request->startTime;
+        $endDate = $request->endDate;
+        $endTime = $request->endTime;
+        if ($startDate && $startTime) {
+            $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $request->startDate . ' ' . $request->startTime)
+                ->utc();
+            $eventDetail->startDate = $carbonStartDateTime->format('Y-m-d');
+            $eventDetail->startTime =  $carbonStartDateTime->format('H:i');
+        } else {
+            $eventDetail->startDate = null;
+            $eventDetail->startTime = null;
         }
+        if ($endDate && $endTime) {
+            $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $request->endDate . ' ' . $request->endTime)
+                ->utc();
+            $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
+            $eventDetail->endTime  = $carbonEndDateTime->format('H:i');
+        } else {
+            $eventDetail->endDate = null;
+            $eventDetail->endTime  = null;
+        }
+        $eventDetail->eventName  = $request->eventName;
+        $eventDetail->eventDescription  = $request->eventDescription;
+        $eventDetail->eventTags  = $request->eventTags;
+        // launch_visible, launch_schedule, launch_time, launch_date
+        if ($request->launch_visible == "DRAFT") {
+            $eventDetail->status = "DRAFT";
+            $eventDetail->sub_action_public_date  = null;
+            $eventDetail->sub_action_public_time  = null;
+        } else {
+            $launch_date = $request->launch_date;
+            $launch_time = $request->launch_time;
+            if ($request->launch_schedule == "schedule" && $launch_date && $launch_time) {
+                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $request->launch_date . ' ' . $request->launch_time)
+                    ->utc();
+                $eventDetail->status = "SCHEDULED";
+                $eventDetail->sub_action_public_date  = $carbonPublishedDateTime->format('Y-m-d');
+                $eventDetail->sub_action_public_time  = $carbonPublishedDateTime->format('H:i');
+            } else if ($request->launch_schedule == "now") {
+                $carbonPublishedDateTime = Carbon::now()->utc();
+                $eventDetail->status = "LIVE";
+                $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
+                $eventDetail->sub_action_public_time = $carbonPublishedDateTime->format('H:i');
+            } else {
+                $eventDetail->status = "LIVE";
+                $launch_date = null;
+                $launch_time = null;
+            }
+        }
+        $eventDetail->sub_action_private  = $request->launch_visible == "private" ? "private" : "public";
+        $eventDetail->action  = $request->launch_visible;
+        return $eventDetail;
     }
 
 
     public function store(Request $request)
     {
-        try {
-            $fileNameFinal = null;
-            if ($request->hasFile('eventBanner')) {
-                $file = $request->file('eventBanner');
-                $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
-                $fileNameFinal = "images/events/$fileNameInitial";
-                $file->storeAs('public/images/events/', $fileNameInitial);
-            }
-            $eventDetail = new EventDetail;
-            try {
-                $eventDetail = $this->storeLogic($eventDetail, $request);
-            } catch (\Exception $e) {
-                return back()->with('error', 'Something went wrong with updating data!');
-            }
-            $eventDetail->user_id  = auth()->user()->id;
-            $eventDetail->eventBanner  = $fileNameFinal;
-            $eventDetail->save();
-            if ($request->livePreview == "true") {
-                return redirect('organizer/live/' . $eventDetail->id);
-            }
-            return redirect('organizer/event/' . $eventDetail->id);
-        } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong with saving data!');
+        // try {
+        $fileNameFinal = null;
+        if ($request->hasFile('eventBanner')) {
+            $file = $request->file('eventBanner');
+            $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
+            $fileNameFinal = "images/events/$fileNameInitial";
+            $file->storeAs('public/images/events/', $fileNameInitial);
         }
+        $eventDetail = new EventDetail;
+        $eventDetail = $this->storeLogic($eventDetail, $request);
+
+        $eventDetail->user_id  = auth()->user()->id;
+        $eventDetail->eventBanner  = $fileNameFinal;
+        $eventDetail->save();
+        if ($request->livePreview == "true") {
+            return redirect('organizer/live/' . $eventDetail->id);
+        }
+        return back()->with('success', 'Event created successfully!');
+        // } catch (\Exception $e) {
+        //     return back()->with('error', 'Something went wrong with saving data!');
+        // }
         // return redirect('organizer/home');
     }
 
@@ -247,6 +241,20 @@ class EventController extends Controller
         [$event, $isUser] = $this->showCommonLogic($id);
         return view(
             'Organizer.ViewEvent',
+            [
+                'event' => $event,
+                'mappingEventState' => $this->mappingEventState,
+                'isUser' => $isUser,
+                'livePreview' => 1
+            ]
+        );
+    }
+
+    public function showSuccess($id): View
+    {
+        [$event, $isUser] = $this->showCommonLogic($id);
+        return view(
+            'Organizer.CreateEventSuccess',
             [
                 'event' => $event,
                 'mappingEventState' => $this->mappingEventState,
@@ -289,38 +297,45 @@ class EventController extends Controller
     }
 
 
-    public function update(Request $request)
+    public function updateForm($id, Request $request)
     {
-        try {
-            $eventId = $request->input('id');
-            if ($eventId) {
-                $fileNameFinal = null;
-                if ($request->hasFile('eventBanner')) {
-                    $file = $request->file('eventBanner');
-                    $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
-                    $fileNameFinal = "images/events/$fileNameInitial";
-                    $file->storeAs('public/images/events/', $fileNameInitial);
-                };
-                // Fetch the existing event from the database
-                $eventDetail = EventDetail::find($eventId);
-                try {
-                    $eventDetail = $this->storeLogic($eventDetail, $request);
-                } catch (\Exception $e) {
-                    return back()->with('error', 'Something went wrong with updating data!');
+        // try {
+        $eventId = $id;
+        $eventDetail = EventDetail::find($eventId);
+        if ($eventId) {
+            $fileNameFinal = null;
+            if ($request->hasFile('eventBanner')) {
+                $file = $request->file('eventBanner');
+                $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
+                $fileNameFinal = "images/events/$fileNameInitial";
+                $file->storeAs('public/images/events/', $fileNameInitial);
+                if ($eventDetail->eventBanner) {
+                    // delete please
+                    // unlink(storage_path('app/public/' . $eventDetail->eventBanner));
                 }
-                $eventDetail->user_id  = auth()->user()->id;
-                $eventDetail->eventBanner  = $fileNameFinal;
-                $eventDetail->save();
-                if ($request->livePreview == "true") {
-                    return redirect('organizer/live/' . $eventDetail->id);
-                }
-                return redirect('organizer/event/' . $eventDetail->id);
-            } else {
-                return back()->with('error', 'Event id missing!');
             }
-        } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong with saving data!');
+            else{
+                $fileNameFinal = $eventDetail->eventBanner;
+            }
+            // Fetch the existing event from the database
+            $eventDetail = EventDetail::find($eventId);
+            $eventDetail = $this->storeLogic($eventDetail, $request);
+            $eventDetail->user_id  = auth()->user()->id;
+            $eventDetail->eventBanner  = $fileNameFinal;
+            $eventDetail->save();
+            // dd($eventId, $request, $eventDetail);
+            if ($request->livePreview == "true") {
+                return redirect('organizer/live/' . $eventDetail->id);
+            }
+            return back()->with('success', 'Event created successfully!');
+        } else {
+            // return back()->with('error', 'Event id missing!');
+            return redirect('organizer/home');
         }
+        // } 
+        // catch (\Exception $e) {
+        // return back()->with('error', 'Something went wrong with saving data!');
+        // }
     }
 
     public function destroy($id)
@@ -328,20 +343,14 @@ class EventController extends Controller
         //
     }
 
-    private $mappingTierState = [
-        'Dolphin' => [
-            'person' => 16, 'prize' => '5000', 'entry' => 10
-        ],
-        'Turtle' => [
-            'person' => 32, 'prize' => '10000', 'entry' => 20
-        ],
-        'Starfish' => [
-            'person' => 64, 'prize' => '15000', 'entry' => 30
-        ],
-    ];
-
     private $mappingEventState = [
         'UPCOMING' => [
+            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
+        'LIVE' => [
+            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
+        'SCHEDULED' => [
             'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
         ],
         'ONGOING' => [

@@ -336,12 +336,12 @@
                     <br>
                 </div>
                 @if ($event)
-                    @if ($event->eventBanner)
-                        <img class="banner-preview" src="{{asset('storage/'.$event->eventBanner)}}" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
-                    @else
-                    <div>Please enter an image</div>
-                    <img class="d-none banner-preview" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
-                    @endif
+                @if ($event->eventBanner)
+                <img class="banner-preview" src="{{asset('storage/'.$event->eventBanner)}}" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
+                @else
+                <div>Please enter an image</div>
+                <img class="d-none banner-preview" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
+                @endif
                 @else
                 <img class="d-none banner-preview" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
                 @endif
@@ -414,11 +414,55 @@
     <br>
     <div class="payment-summary">
 
+        <!-- public part -->
+        @if ($event && $event->launch_visible == 'public' && $event->status != 'DRAFT')
+        <input checked onchange="toggleRadio(this, 'public')" required type="radio" id="public" name="launch_visible" value="public">
+        @else
         <input onchange="toggleRadio(this, 'public')" required type="radio" id="public" name="launch_visible" value="public">
+        @endif
         <label for="public"><u>Public</u></label><br>
         <div class="radio-indent public">
             <p>Everyone can see and join your event</p>
         </div>
+        @if ($event && $event->launch_visible == 'public' && $event->status != 'DRAFT')
+        <div class="radio-indent-hidden public ">
+            <!-- IF RADIO 1 -->
+            @if ($event && $event->sub_action_public_date != null && $event->sub_action_public_time != null)
+            <input type="radio" id="sub_action_public" name="launch_schedule" value="now">
+            @else
+            <input checked type="radio" id="sub_action_public" name="launch_schedule" value="now">
+            @endif
+            <!-- IF RADIO 1 -->
+
+            <!-- IF RADIO 2 -->
+            <label for="sub_action_public"><u>Launch now</u></label><br>
+            @if ($event && $event->sub_action_public_date != null && $event->sub_action_public_time != null)
+            <input checked type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
+            <label for="sub_action_public"><u>Schedule launch</u></label><br>
+            <div class="container">
+                <div class="box">
+                    <input type="date" id="sub_action_public_date" name="launch_date" value="{{$event->sub_action_public_date}}">
+                </div>
+                <div class="box">
+                    <input type="time" id="sub_action_public_time" name="launch_time" value="{{$event->sub_action_public_time}}">
+                </div>
+            </div>
+            @else
+            <input type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
+            <label for="sub_action_public"><u>Schedule launch</u></label><br>
+            <div class="container">
+                <div class="box">
+                    <input type="date" id="sub_action_public_date" name="launch_date">
+                </div>
+                <div class="box">
+                    <input type="time" id="sub_action_public_time" name="launch_time">
+                </div>
+            </div>
+            @endif
+            <!-- IF RADIO 2 -->
+
+        </div>
+        @else
         <div class="radio-indent-hidden public d-none">
             <input type="radio" id="sub_action_public" name="launch_schedule" value="now">
             <label for="sub_action_public"><u>Launch now</u></label><br>
@@ -433,28 +477,75 @@
                 </div>
             </div>
         </div>
+        @endif
 
+
+        <!-- private part -->
+        @if ($event && $event->launch_visible == 'private' && $event->status != 'DRAFT')
+        <input checked onchange="toggleRadio(this, 'private')" required type="radio" id="private" name="launch_visible" value="private">
+        @else
         <input onchange="toggleRadio(this, 'private')" required type="radio" id="private" name="launch_visible" value="private">
+        @endif
         <label for="private"><u>Private</u></label><br>
         <div class="radio-indent private">
             <p>Only players you invite can see and join your event</p>
         </div>
-        <div class="radio-indent-hidden private d-none">
-            <input type="radio" id="sub_action_private" name="launch_schedule" value="now">
-            <label for="sub_action_private"><u>Launch now</u></label><br>
-            <input type="radio" id="sub_action_private" name="launch_schedule" value="schedule">
-            <label for="sub_action_private"><u>Schedule launch</u></label><br>
+
+        @if ($event && $event->launch_visible == 'private' && $event->status != 'DRAFT')
+        <div class="radio-indent-hidden private">
+            @if ($event && $event->sub_action_public_date != null && $event->sub_action_public_time != null)
+            <input type="radio" id="sub_action_public" name="launch_schedule" value="now">
+            @else
+            <input checked type="radio" id="sub_action_public" name="launch_schedule" value="now">
+            @endif
+            <label for="sub_action_public"><u>Launch now</u></label><br>
+            @if ($event && $event->sub_action_public_date != null && $event->sub_action_public_time != null)
+            <input checked type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
+            <label for="sub_action_public"><u>Schedule launch</u></label><br>
             <div class="container">
                 <div class="box">
-                    <input type="date" id="sub_action_private" name="launch_date">
+                    <input type="date" id="sub_action_public_date" name="launch_date" value="{{$event->sub_action_public_date}}">
                 </div>
                 <div class="box">
-                    <input type="time" id="sub_action_private" name="launch_time">
+                    <input type="time" id="sub_action_public_time" name="launch_time" value="{{$event->sub_action_public_time}}">
+                </div>
+            </div>
+            @else
+            <input type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
+            <label for="sub_action_public"><u>Schedule launch</u></label><br>
+            <div class="container">
+                <div class="box">
+                    <input type="date" id="sub_action_public_date" name="launch_date">
+                </div>
+                <div class="box">
+                    <input type="time" id="sub_action_public_time" name="launch_time">
+                </div>
+            </div>
+            @endif
+        </div>
+        @else
+        <div class="radio-indent-hidden private d-none">
+            <input type="radio" id="sub_action_public" name="launch_schedule" value="now">
+            <label for="sub_action_public"><u>Launch now</u></label><br>
+            <input type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
+            <label for="sub_action_public"><u>Schedule launch</u></label><br>
+            <div class="container">
+                <div class="box">
+                    <input type="date" id="sub_action_public_date" name="launch_date">
+                </div>
+                <div class="box">
+                    <input type="time" id="sub_action_public_time" name="launch_time">
                 </div>
             </div>
         </div>
+        @endif
 
+        <!-- DRAFT PART -->
+        @if ($event && $event->status == 'DRAFT')
         <input checked onchange="toggleRadio(this, 'draft')" type="radio" id="draft" name="launch_visible" required value="DRAFT">
+        @else
+        <input onchange="toggleRadio(this, 'draft')" type="radio" id="draft" name="launch_visible" required value="DRAFT">
+        @endif
         <label for="draft"><u>Save as draft</u></label>
         <div class="radio-indent draft">
             <p>Save your event and edit it later</p>

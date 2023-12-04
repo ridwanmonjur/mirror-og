@@ -1,12 +1,12 @@
-<div class="text-center d-none" id="step-13">
+<div class="text-center" id="step-13">
     <div class="welcome">
         <u>
-            <h3 id="heading"></h3>
+            <h3 id="heading">Your event has been successfully created</h3>
         </u>
     </div>
     <div class="box-width">
-        <p id="notification"></p>
+        <p id="notification">To be implemented.....</p>
     </div>
     <br><br>
-    <input onclick="goToNextScreen('', '')" value="Continue">
+    <input type="submit" onclick="goToNextScreen('', '')" value="Done">
 </div>
