@@ -10,6 +10,7 @@ use App\Models\EventType;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\Organizer;
+use App\Models\PaymentTransaction;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -134,11 +135,21 @@ class EventController extends Controller
         ]);
     }
 
+    public function fixTimeToRemoveSeconds($time)
+    {
+        // Check if the startTime contains seconds
+        if (substr_count($time, ':') === 2) {
+            // If it has seconds, omit the seconds part
+            $time = explode(':', $time);
+            $time = $time[0] . ':' . $time[1];
+        }
+        return $time;
+    }
+
     public function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
     {
-        // dd($eventDetail , $request, "hi");
+        // dd($request);
         // step1
-       
         $eventDetail->gameTitle = $request->gameTitle;
         $eventDetail->eventType = $request->eventType;
         $eventDetail->eventTier = $request->eventTier;
@@ -147,11 +158,11 @@ class EventController extends Controller
         $eventDetail->event_category_id = $request->gameTitleId;
         // step2
         $startDate = $request->startDate;
-        $startTime = $request->startTime;
+        $startTime = $this->fixTimeToRemoveSeconds($request->startTime);
         $endDate = $request->endDate;
-        $endTime = $request->endTime;
+        $endTime = $this->fixTimeToRemoveSeconds($request->endTime);
         if ($startDate && $startTime) {
-            $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $request->startTime)
+            $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $startTime)
                 ->utc();
             $eventDetail->startDate = $carbonStartDateTime->format('Y-m-d');
             $eventDetail->startTime =  $carbonStartDateTime->format('H:i');
@@ -160,7 +171,8 @@ class EventController extends Controller
             $eventDetail->startTime = null;
         }
         if ($endDate && $endTime) {
-            $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $request->endTime)
+            
+            $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $endTime)
                 ->utc();
             $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
             $eventDetail->endTime  = $carbonEndDateTime->format('H:i');
@@ -171,6 +183,20 @@ class EventController extends Controller
         $eventDetail->eventName  = $request->eventName;
         $eventDetail->eventDescription  = $request->eventDescription;
         $eventDetail->eventTags  = $request->eventTags;
+        // payment
+        $transaction = $eventDetail->payment_transaction;
+        if ($transaction && $transaction->payment_id && $transaction->status == "SUCCESS") {
+        } else {
+            if ($request->isPaymentDone == "true") {
+                $transaction = new PaymentTransaction();
+                $transaction->payment_id = $request->paymentMethod;
+                $transaction->payment_status = "SUCCESS";
+                $transaction->save();
+                $eventDetail->payment_transaction_id = $transaction->id;
+            } else {
+            }
+        }
+       
         // launch_visible, launch_schedule, launch_time, launch_date
         if ($request->launch_visible == "DRAFT") {
             $eventDetail->status = "DRAFT";
@@ -178,9 +204,9 @@ class EventController extends Controller
             $eventDetail->sub_action_public_time  = null;
         } else {
             $launch_date = $request->launch_date;
-            $launch_time = $request->launch_time;
+            $launch_time = $this->fixTimeToRemoveSeconds($request->launch_time);
             if ($request->launch_schedule == "schedule" && $launch_date && $launch_time) {
-                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->launch_date . ' ' . $request->launch_time)
+                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->launch_date . ' ' . $launch_time)
                     ->utc();
                 $eventDetail->status = "SCHEDULED";
                 $eventDetail->sub_action_public_date  = $carbonPublishedDateTime->format('Y-m-d');
@@ -314,8 +340,7 @@ class EventController extends Controller
                     // delete please
                     // unlink(storage_path('app/public/' . $eventDetail->eventBanner));
                 }
-            }
-            else{
+            } else {
                 $fileNameFinal = $eventDetail->eventBanner;
             }
             // Fetch the existing event from the database

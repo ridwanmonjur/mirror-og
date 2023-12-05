@@ -386,9 +386,15 @@
             </div>
             <br>
             <div class="text-center">
+                @if ($event && $event->payment_transaction_id != null)
+                <button onclick="" class="choose-payment-method" style="background-color: green !important;" type="button">
+                    Paid successfully!
+                </button>
+                @else
                 <button onclick="" type="button" class="choose-payment-method" data-bs-toggle="modal" data-bs-target="#payment-modal">
                     Choose a payment method
                 </button>
+                @endif
                 <button onclick="goToNextScreen('step-1', 'timeline-1');" type="button" class="choose-payment-method-condition-fulfilled" style="background-color: red;">
                     Choose event tier and title first
                 </button>
@@ -415,7 +421,7 @@
     <div class="payment-summary">
 
         <!-- public part -->
-        @if ($event && $event->launch_visible == 'public' && $event->status != 'DRAFT')
+        @if ($event && $event->sub_action_private == 'public' && $event->status != 'DRAFT')
         <input checked onchange="toggleRadio(this, 'public')" required type="radio" id="public" name="launch_visible" value="public">
         @else
         <input onchange="toggleRadio(this, 'public')" required type="radio" id="public" name="launch_visible" value="public">
@@ -424,7 +430,7 @@
         <div class="radio-indent public">
             <p>Everyone can see and join your event</p>
         </div>
-        @if ($event && $event->launch_visible == 'public' && $event->status != 'DRAFT')
+        @if ($event && $event->sub_action_private == 'public' && $event->status != 'DRAFT')
         <div class="radio-indent-hidden public ">
             <!-- IF RADIO 1 -->
             @if ($event && $event->sub_action_public_date != null && $event->sub_action_public_time != null)
@@ -481,7 +487,7 @@
 
 
         <!-- private part -->
-        @if ($event && $event->launch_visible == 'private' && $event->status != 'DRAFT')
+        @if ($event && $event->sub_action_private == 'private' && $event->status != 'DRAFT')
         <input checked onchange="toggleRadio(this, 'private')" required type="radio" id="private" name="launch_visible" value="private">
         @else
         <input onchange="toggleRadio(this, 'private')" required type="radio" id="private" name="launch_visible" value="private">
@@ -491,7 +497,7 @@
             <p>Only players you invite can see and join your event</p>
         </div>
 
-        @if ($event && $event->launch_visible == 'private' && $event->status != 'DRAFT')
+        @if ($event && $event->sub_action_private == 'private' && $event->status != 'DRAFT')
         <div class="radio-indent-hidden private">
             @if ($event && $event->sub_action_public_date != null && $event->sub_action_public_time != null)
             <input type="radio" id="sub_action_public" name="launch_schedule" value="now">

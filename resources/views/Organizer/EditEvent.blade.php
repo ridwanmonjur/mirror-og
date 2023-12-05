@@ -12,8 +12,13 @@
                         <input type="hidden" name="gameTitle" id="gameTitle">
                         <input type="hidden" name="eventTier" id="eventTier">
                         <input type="hidden" name="eventType"  id="eventType">
+                        @if ($event && $event->payment_transaction_id != null)
                         <input type="hidden" name="isPaymentDone"  id="isPaymentDone" value="done">
                         <input type="hidden" name="paymentMethod"  id="paymentMethod" value="done">
+                        @else
+                        <input type="hidden" name="isPaymentDone"  id="isPaymentDone">
+                        <input type="hidden" name="paymentMethod"  id="paymentMethod">
+                        @endif
                         <input type="hidden" name="gameTitleId" id="gameTitleId">
                         <input type="hidden" name="eventTierId" id="eventTierId">
                         <input type="hidden" name="eventTypeId"  id="eventTypeId">

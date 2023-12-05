@@ -283,6 +283,9 @@
                 'gameTitleId': $event?.game?.id,
                 'eventTypeId': $event?.type?.id,
                 'eventTierId': $event?.tier?.id,
+                'eventTier': $event?.tier?.eventTier,
+                'eventType': $event?.type?.eventType,
+                'gameTitle': $event?.game?.gameTitle,
                 'eventTags': $event?.eventTags,
                 'eventDescription': $event?.eventDescription,
                 'eventName': $event?.eventName ?? '',
@@ -294,6 +297,15 @@
                 'sub_action_private': $event?.sub_action_private,
                 'sub_action_team': $event?.sub_action_team,
             });
+            // <input type="hidden" name="livePreview" id="livePreview" value="false">
+            //             <input type="hidden" name="gameTitle" id="gameTitle">
+            //             <input type="hidden" name="eventTier" id="eventTier">
+            //             <input type="hidden" name="eventType"  id="eventType">
+            //             <input type="hidden" name="gameTitleId" id="gameTitleId">
+            //             <input type="hidden" name="eventTierId" id="eventTierId">
+            //             <input type="hidden" name="eventTypeId"  id="eventTypeId">
+            //             <input type="hidden" name="isPaymentDone"  id="isPaymentDone">
+            //             <input type="hidden" name="paymentMethod"  id="paymentMethod">
         }
     }
     $(document).on("keydown", ":input:not(textarea)", function(event) {
