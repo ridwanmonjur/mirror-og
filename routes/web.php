@@ -23,10 +23,10 @@ Route::group([
 	'excluded_middleware' => ['login'],
 ], function () {
 });
-Route::get('/foo', function () {
-	Artisan::call('storage:link');
+Route::get('/link/storage', function () {
+	$exitCode = Artisan::call('storage:link', [] );
+	echo $exitCode; // 0 exit code for no errors.});
 });
-
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
 Route::get('logout', [AuthController::class, 'logoutAction'])->name("logout.action");
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name("google.login");

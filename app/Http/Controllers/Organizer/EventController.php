@@ -138,6 +138,7 @@ class EventController extends Controller
     {
         // dd($eventDetail , $request, "hi");
         // step1
+       
         $eventDetail->gameTitle = $request->gameTitle;
         $eventDetail->eventType = $request->eventType;
         $eventDetail->eventTier = $request->eventTier;
@@ -150,7 +151,7 @@ class EventController extends Controller
         $endDate = $request->endDate;
         $endTime = $request->endTime;
         if ($startDate && $startTime) {
-            $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $request->startDate . ' ' . $request->startTime)
+            $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $request->startTime)
                 ->utc();
             $eventDetail->startDate = $carbonStartDateTime->format('Y-m-d');
             $eventDetail->startTime =  $carbonStartDateTime->format('H:i');
@@ -159,7 +160,7 @@ class EventController extends Controller
             $eventDetail->startTime = null;
         }
         if ($endDate && $endTime) {
-            $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $request->endDate . ' ' . $request->endTime)
+            $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $request->endTime)
                 ->utc();
             $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
             $eventDetail->endTime  = $carbonEndDateTime->format('H:i');
@@ -179,7 +180,7 @@ class EventController extends Controller
             $launch_date = $request->launch_date;
             $launch_time = $request->launch_time;
             if ($request->launch_schedule == "schedule" && $launch_date && $launch_time) {
-                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $request->launch_date . ' ' . $request->launch_time)
+                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->launch_date . ' ' . $request->launch_time)
                     ->utc();
                 $eventDetail->status = "SCHEDULED";
                 $eventDetail->sub_action_public_date  = $carbonPublishedDateTime->format('Y-m-d');
@@ -220,7 +221,7 @@ class EventController extends Controller
         if ($request->livePreview == "true") {
             return redirect('organizer/live/' . $eventDetail->id);
         }
-        return back()->with('success', 'Event created successfully!');
+        return redirect('organizer/success/' . $eventDetail->id);
         // } catch (\Exception $e) {
         //     return back()->with('error', 'Something went wrong with saving data!');
         // }
@@ -327,7 +328,7 @@ class EventController extends Controller
             if ($request->livePreview == "true") {
                 return redirect('organizer/live/' . $eventDetail->id);
             }
-            return back()->with('success', 'Event created successfully!');
+            return redirect('organizer/success/' . $eventDetail->id);
         } else {
             // return back()->with('error', 'Event id missing!');
             return redirect('organizer/home');

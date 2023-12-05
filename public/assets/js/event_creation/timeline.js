@@ -243,7 +243,7 @@ function saveEvent() {
         isFormValid = formValidation[0];
         invalidKey = formValidation[1];
     }
-    if (localStorage.getItem('eventBanner') != null) {
+    if (localStorage.getItem('eventBanner') != null || getFormValues(['eventBanner']) != null) {
         // createEventForm.elements['eventBanner'].value = localStorage.getItem('eventBanner');
         console.log({ banner: localStorage.getItem('eventBanner') })
     }

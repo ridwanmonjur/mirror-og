@@ -8,9 +8,8 @@
                 <div>
                         @csrf
                         @include('Organizer.Layout.CreateEventTimelineBox')
-                        @include('Organizer.Layout.CreateEventSuccess')
+                        @include('Organizer.Layout.CreateEventSuccess', ['event' => $event])
                 </div>
-                @include('Organizer.Layout.CreateEventPaymentModal')
             </div>
             <br><br>
         </main>

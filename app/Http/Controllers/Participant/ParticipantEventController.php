@@ -33,6 +33,12 @@ class ParticipantEventController extends Controller
         'UPCOMING' => [
             'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
         ],
+        'LIVE' => [
+            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
+        'SCHEDULED' => [
+            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
         'ONGOING' => [
             'buttonBackgroundColor' => '#FFFBFB', 'buttonTextColor' => 'black', 'borderColor' => 'black'
         ],
