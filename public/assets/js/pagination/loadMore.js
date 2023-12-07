@@ -20,7 +20,7 @@ function throttle(func, wait) {
 function infinteLoadMore(page, ENDPOINT) {
     if ($('.no-more-data').hasClass('d-none')) {
         let endpointFinal = page==null? ENDPOINT: ENDPOINT + "?page=" + page
-        window.history.replaceState({}, document.title, endpointFinal);
+        // window.history.replaceState({}, document.title, endpointFinal);
 
         $.ajax({
             url: endpointFinal,

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}"">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Splash</title>
     <script src="{{ asset('script.js') }}"></script>
@@ -49,8 +50,9 @@
     </div>
 
     <section class="featured-events scrolling-pagination">
-        @include("Participant.HomeScroll")
+        @include("LandingPageScroll")
     </section>
+
     <div class="no-more-data d-none"></div>
     <br><br><br>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

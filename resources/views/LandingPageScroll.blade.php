@@ -2,15 +2,17 @@
 @php
 $stylesEventStatus = bladeEventStatusStyleMapping($event->status);
 $stylesEventStatus .= 'padding-top: -150px; ';
+$eventTierLowerImg = bladeEventTierImage($event->eventTier);
+$eventBannerImg = bladeEventBannerImage($event->eventBanner);
 @endphp
 <div class="event">
     <div class="event_head_container">
-        <img id='turtle' src="{{ asset('/assets/images/logo/3.png') }}" class="event_head">
+        <img id='turtle' src="{{ $eventTierLowerImg }}" class="event_head">
     </div>
-    <img src="{{ asset('storage/'. $event->eventBanner) }}" class="cover">
+    <img src="{{ $eventBannerImg }}" class="cover">
     <div class="frame1">
         <img src="{{ asset('/assets/images/dota.png') }}" class="logo2">
-        <a class="event_status_1" style="@php echo $stylesEventStatus; @endphp">{{ $event->action }}</a>
+        <a class="event_status_1" style="@php echo $stylesEventStatus; @endphp">{{ $event->status ?? 'DRAFT' }}</a>
     </div><br>
     <div class="league_name">
         <b>{{ $event->eventName }}</b><br>
