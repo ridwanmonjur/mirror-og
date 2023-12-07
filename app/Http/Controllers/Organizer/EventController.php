@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
-
+    private $mappingEventState = config('constants.mappingEventState'); 
 
     public function home(): View
     {
@@ -103,7 +103,7 @@ class EventController extends Controller
 
         $eventList = $eventListQuery->where('user_id', $user->id)
             ->paginate(4);
-        $mappingEventState = $this->mappingEventState;
+        $mappingEventState = config('constants.mappingEventState');
         $count = 4;
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
         if ($request->ajax()) {
@@ -286,7 +286,7 @@ class EventController extends Controller
             'Organizer.CreateEventSuccess',
             [
                 'event' => $event,
-                'mappingEventState' => $mappingEventState,
+                'mappingEventState' => $this->mappingEventState,
                 'isUser' => $isUser,
                 'livePreview' => 1
             ]

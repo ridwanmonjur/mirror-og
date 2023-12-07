@@ -1,25 +1,10 @@
 @foreach ($eventList as $event)
 @php
-$stylesEventStatus = '';
+$stylesEventStatus = bladeEventStatusStyleMapping($event->status);
 $stylesEventStatus .= 'padding-top: -150px; ';
-$status = $event->status ?? 'DRAFT';
-$stylesEventStatus .= 'background-color: ' . $mappingEventState[$status]['buttonBackgroundColor'] .' ;' ;
-$stylesEventStatus .= 'color: ' . $mappingEventState[$status]['buttonTextColor'] .' ; ' ;
-$stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$status]['borderColor'] .' ; ';
 
-/*
-$stylesEventRatio = '';
-$ratio = (double) $event->registeredParticipants / $event->totalParticipants;
-if ($ratio > 0.9){
-$stylesEventRatio .= "background-color: red; color: white;";
-}
-elseif ($ratio == 0){
-$stylesEventRatio .= "background-color: #8CCD39; color: white;";
-}
-elseif ($ratio > 0.5){
-$stylesEventRatio .= "background-color: #FA831F; color: white;";
-}
-elseif ($ratio <= 0.5){ $stylesEventRatio .="background-color: #FFE325; color: black;" ; } */ $stylesEventRatio="background-color: #FFE325; color: black;" ; $eventTierLower=strtolower($event->eventTier);
+/* */ $stylesEventRatio= bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
+ ; $eventTierLower=strtolower($event->eventTier);
     @endphp
 
     @php

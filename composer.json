@@ -35,7 +35,7 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Utils/constants.php"
+            "app/Helpers/bladeHelpers.php"
         ]
     },
     "autoload-dev": {

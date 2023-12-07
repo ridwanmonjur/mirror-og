@@ -93,6 +93,7 @@ class AuthController extends Controller
 
         $count = 4;
         $events = EventDetail::paginate($count);
+        $mappingEventState = config('constants.mappingEventState');
         $output = compact("events", "mappingEventState");
         if ($request->ajax()) {
             $view = view(
