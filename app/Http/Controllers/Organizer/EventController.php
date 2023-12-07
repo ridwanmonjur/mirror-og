@@ -171,7 +171,7 @@ class EventController extends Controller
             $eventDetail->startTime = null;
         }
         if ($endDate && $endTime) {
-            
+
             $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $endTime)
                 ->utc();
             $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
@@ -196,7 +196,7 @@ class EventController extends Controller
             } else {
             }
         }
-       
+
         // launch_visible, launch_schedule, launch_time, launch_date
         if ($request->launch_visible == "DRAFT") {
             $eventDetail->status = "DRAFT";
@@ -227,16 +227,22 @@ class EventController extends Controller
         return $eventDetail;
     }
 
+    public function storeEventBanner($file)
+    {
+        $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
+        $fileNameFinal = "images/events/$fileNameInitial";
+        $file->storeAs('public/images/events/', $fileNameInitial);
+        return $fileNameFinal;
+    }
+
+
 
     public function store(Request $request)
     {
         // try {
         $fileNameFinal = null;
         if ($request->hasFile('eventBanner')) {
-            $file = $request->file('eventBanner');
-            $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
-            $fileNameFinal = "images/events/$fileNameInitial";
-            $file->storeAs('public/images/events/', $fileNameInitial);
+            $fileNameFinal = $this->storeEventBanner($request->file('eventBanner'));
         }
         $eventDetail = new EventDetail;
         $eventDetail = $this->storeLogic($eventDetail, $request);
@@ -248,10 +254,6 @@ class EventController extends Controller
             return redirect('organizer/live/' . $eventDetail->id);
         }
         return redirect('organizer/success/' . $eventDetail->id);
-        // } catch (\Exception $e) {
-        //     return back()->with('error', 'Something went wrong with saving data!');
-        // }
-        // return redirect('organizer/home');
     }
 
 
@@ -284,7 +286,7 @@ class EventController extends Controller
             'Organizer.CreateEventSuccess',
             [
                 'event' => $event,
-                'mappingEventState' => $this->mappingEventState,
+                'mappingEventState' => $mappingEventState,
                 'isUser' => $isUser,
                 'livePreview' => 1
             ]
@@ -332,10 +334,7 @@ class EventController extends Controller
         if ($eventId) {
             $fileNameFinal = null;
             if ($request->hasFile('eventBanner')) {
-                $file = $request->file('eventBanner');
-                $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
-                $fileNameFinal = "images/events/$fileNameInitial";
-                $file->storeAs('public/images/events/', $fileNameInitial);
+                $fileNameFinal = $this->storeEventBanner($request->file('eventBanner'));
                 if ($eventDetail->eventBanner) {
                     // delete please
                     // unlink(storage_path('app/public/' . $eventDetail->eventBanner));
@@ -369,24 +368,5 @@ class EventController extends Controller
         //
     }
 
-    private $mappingEventState = [
-        'UPCOMING' => [
-            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
-        ],
-        'LIVE' => [
-            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
-        ],
-        'SCHEDULED' => [
-            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
-        ],
-        'ONGOING' => [
-            'buttonBackgroundColor' => '#FFFBFB', 'buttonTextColor' => 'black', 'borderColor' => 'black'
-        ],
-        'DRAFT' => [
-            'buttonBackgroundColor' => '#8CCD39', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
-        ],
-        'ENDED' => [
-            'buttonBackgroundColor' => '#A6A6A6', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
-        ],
-    ];
+   
 }

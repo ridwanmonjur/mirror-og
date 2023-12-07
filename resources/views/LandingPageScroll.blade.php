@@ -2,9 +2,10 @@
         @php
             $stylesEventStatus = '';
             $stylesEventStatus .= 'padding-top: -150px; ';
-            $stylesEventStatus .= 'background-color: ' . $mappingEventState[$event->action]['buttonBackgroundColor'] .' ;' ;
-            $stylesEventStatus .= 'color: ' . $mappingEventState[$event->action]['buttonTextColor'] .' ; ' ;
-            $stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$event->action]['borderColor'] .' ; ';
+            $status = $event->status ?? 'LIVE';
+            $stylesEventStatus .= 'background-color: ' . $mappingEventState[$status]['buttonBackgroundColor'] .' ;' ;
+            $stylesEventStatus .= 'color: ' . $mappingEventState[$status]['buttonTextColor'] .' ; ' ;
+            $stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$status]['borderColor'] .' ; ';
             @endphp
         <div class="event">
             <div class="event_head_container">

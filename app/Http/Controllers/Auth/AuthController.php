@@ -9,7 +9,6 @@ use App\Models\EventDetail;
 use App\Models\Organizer;
 use App\Models\Participant;
 use App\Models\User;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -22,6 +21,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Exception;
+use App\Utils\Constants;
 
 class AuthController extends Controller
 {
@@ -93,7 +93,6 @@ class AuthController extends Controller
 
         $count = 4;
         $events = EventDetail::paginate($count);
-        $mappingEventState = $this->mappingEventState;
         $output = compact("events", "mappingEventState");
         if ($request->ajax()) {
             $view = view(
@@ -425,20 +424,7 @@ class AuthController extends Controller
     }
 
 
-    private $mappingEventState = [
-        'UPCOMING' => [
-            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
-        ],
-        'ONGOING' => [
-            'buttonBackgroundColor' => '#FFFBFB', 'buttonTextColor' => 'black', 'borderColor' => 'black'
-        ],
-        'DRAFT' => [
-            'buttonBackgroundColor' => '#8CCD39', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
-        ],
-        'ENDED' => [
-            'buttonBackgroundColor' => '#A6A6A6', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
-        ],
-    ];
+   
 
 
 
