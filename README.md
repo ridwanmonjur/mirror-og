@@ -19,18 +19,23 @@ password: 12345678
 composer update
 
 # Create a copy of your .env file
-cp .env.example .env
+cp .env.prod .env
 
 # Generate an app encryption key
 php artisan key:generate
+npm i 
+npm i -g vite
+npm run build
+
 ```
+
 
 ### Admin Filament Installation
 ```bash
 # Create Admin Credentials
 php artisan make:filament-user
 #update Images
-php artisan storage:link
+
 ```
 
 ### Migrate
