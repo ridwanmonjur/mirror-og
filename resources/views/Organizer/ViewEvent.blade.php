@@ -59,14 +59,15 @@ $eventBannerImg = bladeEventBannerImage($event->eventBanner);
             <div>
                 <div style="padding-left: 20px;padding-right:20px;">
                     <div>
-                        @if ($event->eventBanner )
-                        <img class="{{'card-image card-image-' . $eventTierLower }}" src="{{ $eventBannerImg }}" alt="">
+                        @if ($event->eventBanner)
+                        <img width="500" height="300" " style="object-fit: cover;" {!! trustedBladeHandleImageFailure(); !!} src="{{ $eventBannerImg }}" alt="">
                         @else
                         <div>
-                            <br><br><br>
-                            <h1>
+                            <br>
+                            <img style="object-fit: cover;" {!! trustedBladeHandleImageFailure(); !!} alt="">
+                            <h5>
                                 Please enter a banner image.
-                            </h1>
+                            </h5>
                             <br><br>
                         </div>
                         @endif

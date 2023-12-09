@@ -81,3 +81,8 @@ function bladeEventBannerImage($eventBanner)
     }
     return $eventBannerImg;
 }
+
+function trustedBladeHandleImageFailure(){
+    $imgFailure = asset('assets/images/broken-image.jpeg');
+    return "onerror=\"this.onerror=null;this.height='200';this.width='200';this.src='$imgFailure'\";";    
+}
