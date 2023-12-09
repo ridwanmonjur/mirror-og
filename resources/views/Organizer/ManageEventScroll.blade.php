@@ -19,7 +19,6 @@ $eventTierLowerImg = bladeEventTierImage($event->eventTier);
 $eventBannerImg = bladeImageNull($event->eventBanner);
 
 $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
-
 @endphp
 <a href="{{ route('event.show', $event->id) }}" style="text-decoration: none;">
     <div class="{{'rounded-box rounded-box-' . $eventTierLower }}">
