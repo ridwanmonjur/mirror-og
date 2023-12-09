@@ -27,9 +27,7 @@ $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
             <img src="{{  $eventTierLowerImg }}" width="100" style="object-fit: cover;">
         </div>
         <div class="{{'card-image card-image-' . $eventTierLower }}">
-            <img width="200" height="200" style="object-fit: cover; " 
-            {!! trustedBladeHandleImageFailure(); !!}
-            src="{{ $eventBannerImg }}" alt="">
+            <img width="200" height="200" style="object-fit: cover; " {!! trustedBladeHandleImageFailure(); !!} src="{{ $eventBannerImg }}" alt="">
         </div>
         <div class="card-text">
             <div>
