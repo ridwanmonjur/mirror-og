@@ -23,9 +23,19 @@ cp .env.prod .env
 
 # Generate an app encryption key
 php artisan key:generate
+
+Install npm using wget 
+
 npm i 
 npm i -g vite
 npm run build
+
+delete symlink and/or public/storage
+
+
+hit endpoint to create symlink
+/artisan/storage
+
 
 ```
 

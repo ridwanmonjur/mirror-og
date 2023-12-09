@@ -233,8 +233,12 @@ class EventController extends Controller
     {
         $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
         $fileNameFinal = "images/events/$fileNameInitial";
-        $file->storeAs('public/images/events/', $fileNameInitial);
+        $file->storeAs('images/events/', $fileNameInitial);
         return $fileNameFinal;
+    }
+
+    public function destroyEventBanner($file)
+    {
     }
 
 
@@ -259,17 +263,20 @@ class EventController extends Controller
     }
 
 
-    private function showCommonLogic($id)
+    private function getEventAndUser($id)
     {
+        $authUser = Auth::user();
         $event = EventDetail
-            ::with('type', 'tier', 'game')->findOrFail($id);
-        $isUser = Auth::user()->id == $event->user_id;
+            ::with('type', 'tier', 'game')
+            ->where('user_id', $authUser->id)
+            ->findOrFail($id);
+        $isUser = true;
         return [$event, $isUser];
     }
 
     public function showLive($id): View
     {
-        [$event, $isUser] = $this->showCommonLogic($id);
+        [$event, $isUser] = $this->getEventAndUser($id);
         return view(
             'Organizer.ViewEvent',
             [
@@ -283,7 +290,7 @@ class EventController extends Controller
 
     public function showSuccess($id): View
     {
-        [$event, $isUser] = $this->showCommonLogic($id);
+        [$event, $isUser] = $this->getEventAndUser($id);
         return view(
             'Organizer.CreateEventSuccess',
             [
@@ -297,7 +304,7 @@ class EventController extends Controller
 
     public function show($id): View
     {
-        [$event, $isUser] = $this->showCommonLogic($id);
+        [$event, $isUser] = $this->getEventAndUser($id);
         return view(
             'Organizer.ViewEvent',
             [
@@ -367,8 +374,9 @@ class EventController extends Controller
 
     public function destroy($id)
     {
-        //
+        [$event] = $this->getEventAndUser($id);
+        $event->delete();
+        return redirect('organizer/event');
     }
-
    
 }
