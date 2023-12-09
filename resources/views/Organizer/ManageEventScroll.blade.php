@@ -4,9 +4,7 @@ $stylesEventStatus = bladeEventStatusStyleMapping($event->status);
 $stylesEventStatus .= 'padding-top: -150px; ';
 
 $stylesEventRatio= bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
-$eventTierLower=strtolower($event->eventTier);
-if ($event->eventTier) $eventTierLower=strtolower($event->eventTier);
-else $eventTierLower = null;
+$eventTierLower= $event->eventTier ? strtolower($event->eventTier) : 'Choose tier!';
 $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
 [
 $datePart,
@@ -18,7 +16,10 @@ $dateStr
 
 $eventTierLowerImg = bladeEventTierImage($event->eventTier);
 
-$eventBannerImg = bladeEventBannerImage($event->eventBanner);
+$eventBannerImg = bladeImageNull($event->eventBanner);
+
+$bladeEventGameImage = bladeImageNull($event->game->gameIcon);
+
 @endphp
 <a href="{{ route('event.show', $event->id) }}" style="text-decoration: none;">
     <div class="{{'rounded-box rounded-box-' . $eventTierLower }}">
@@ -33,8 +34,8 @@ $eventBannerImg = bladeEventBannerImage($event->eventBanner);
         <div class="card-text">
             <div>
                 <div class="flexbox-centered-space">
-                    <img src="{{ asset('/assets/images/menu.png') }}" alt="menu" width="50" height="40">
-                    <span> {{ $event->gameTitle }} </span>
+                    <img src="{{ $bladeEventGameImage }}" alt="menu" height="50">
+                    <span> {{ $event->game->gameTitle }} </span>
                     <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
                         {{$event->status}}
                     </button>
@@ -42,7 +43,7 @@ $eventBannerImg = bladeEventBannerImage($event->eventBanner);
                 <br>
                 <p style="height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->eventName}}</u></p>
                 <p class="small-text"><i>
-                        {{ $organizer->companyName  }}
+                        {{ $organizer->companyName ?? 'Not set' }}
                     </i></p>
                 <div class="flexbox-welcome">
 
@@ -83,7 +84,7 @@ $eventBannerImg = bladeEventBannerImage($event->eventBanner);
                             <circle cx="12" cy="10" r="3"></circle>
                         </svg>
                         &nbsp;
-                        <span>South East Asia</span>
+                        <span>{{$event->region ?? 'South East Asia'}}</span>
                     </div>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info">
@@ -92,7 +93,7 @@ $eventBannerImg = bladeEventBannerImage($event->eventBanner);
                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                         </svg>
                         &nbsp;
-                        <span>{{$event->eventType}}</span>
+                        <span>{{$event->type->eventType ?? 'Choose a type'}}</span>
                     </div>
                 </div>
             </div>

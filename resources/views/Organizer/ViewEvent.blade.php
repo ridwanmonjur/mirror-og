@@ -18,14 +18,13 @@ $dateStr
 
 $eventTierLowerImg = bladeEventTierImage($event->eventTier);
 
-$eventBannerImg = bladeEventBannerImage($event->eventBanner);
+$eventBannerImg = bladeImageNull($event->eventBanner);
 
 
 
 @endphp
 
 <body>
-    <!-- @include('CommonLayout.Navbar') -->
 
     <main>
         <br class="d-none-at-desktop">

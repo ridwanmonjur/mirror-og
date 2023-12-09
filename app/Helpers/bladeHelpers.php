@@ -59,6 +59,7 @@ function bladeGenerateEventStartEndDateStr($startDate, $startTime)
     ];
 }
 
+
 function bladeEventTierImage($eventTier)
 {
 
@@ -72,7 +73,7 @@ function bladeEventTierImage($eventTier)
     return $eventTierLowerImg;
 }
 
-function bladeEventBannerImage($eventBanner)
+function bladeImageNull($eventBanner)
 {
     if ($eventBanner) {
         $eventBannerImg = asset('storage/' . $eventBanner);
@@ -85,4 +86,14 @@ function bladeEventBannerImage($eventBanner)
 function trustedBladeHandleImageFailure(){
     $imgFailure = asset('assets/images/broken-image.jpeg');
     return "onerror=\"this.onerror=null;this.height='200';this.width='200';this.src='$imgFailure'\";";    
+}
+
+function bladeEventGameImage($eventBanner)
+{
+    if ($eventBanner) {
+        $eventBannerImg = asset('storage/' . $eventBanner);
+    } else {
+        $eventBannerImg = asset('assets/images/createEvent/question.png');
+    }
+    return $eventBannerImg;
 }

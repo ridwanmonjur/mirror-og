@@ -422,6 +422,7 @@
             );
         </script>
     </main>
+    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
 
 
     <!-- <script src="script.js"></script> -->

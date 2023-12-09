@@ -29,7 +29,7 @@
             <ul>
                 <li><a href="#" id='nav-but' class="moop">Where's Moop?</a></li>
                 <div class="dropdown">
-                    <li><a onclick="myFunction()" style="color: white !important;" href="#" id='nav-but' class="dropbtn sign" data-bs-toggle="dropdown" aria-expanded="false">Sign In</a></li>
+                    <li><a onclick="myFunction()" style="color: white !important;" id='nav-but' class="dropbtn sign" data-bs-toggle="dropdown" aria-expanded="false">Sign In</a></li>
                 </div>
                 <div id="myDropdown" class="dropdown-content">
                     <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">Organizer</a>
