@@ -5,7 +5,7 @@ use Carbon\Carbon;
 function bladeEventStatusStyleMapping($status)
 {
     $mappingEventState = config('constants.mappingEventState');
-    $status = $status ?? 'LIVE';
+    $status = $status ?? 'NO_STATUS';
     $stylesEventStatus = '';
     $stylesEventStatus .= 'background-color: ' . $mappingEventState[$status]['buttonBackgroundColor'] . ' ;';
     $stylesEventStatus .= 'color: ' . $mappingEventState[$status]['buttonTextColor'] . ' ; ';
@@ -52,7 +52,7 @@ function bladeGenerateEventStartEndDateStr($startDate, $startTime)
     }
     return [
         'datePart' => $datePart,
-        '$dateStr' => $dateStr,
+        'dateStr' => $dateStr,
         'timePart' => $timePart,
         'dayStr' => $dayStr,
         'combinedStr' => $combinedStr
@@ -96,4 +96,10 @@ function bladeEventGameImage($eventBanner)
         $eventBannerImg = asset('assets/images/createEvent/question.png');
     }
     return $eventBannerImg;
+}
+
+function bladeEventTowerLowerClass($eventTier)
+{
+    $eventTierLower= $eventTier ? strtolower($eventTier) : 'no-tier';
+    return $eventTierLower;
 }

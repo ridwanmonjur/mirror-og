@@ -4,7 +4,7 @@ $stylesEventStatus = bladeEventStatusStyleMapping($event->status);
 $stylesEventStatus .= 'padding-top: -150px; ';
 
 $stylesEventRatio= bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
-$eventTierLower= $event->eventTier ? strtolower($event->eventTier) : 'Choose tier!';
+$eventTierLower= bladeEventTowerLowerClass($event->eventTier);
 $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
 [
 $datePart,
@@ -12,7 +12,7 @@ $timePart,
 $dayStr,
 $combinedStr,
 $dateStr
-] = array_values($dateArray);
+] = extract($dateArray);
 
 $eventTierLowerImg = bladeEventTierImage($event->eventTier);
 

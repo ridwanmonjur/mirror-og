@@ -5,8 +5,8 @@
 $stylesEventStatus = bladeEventStatusStyleMapping($event->status);
 $stylesEventRatio= bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
 
-if ($event->eventTier) $eventTierLower=strtolower($event->eventTier);
-else $eventTierLower = null;
+$eventTierLower= bladeEventTowerLowerClass($event->eventTier);
+
 $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
 [
 $datePart,
@@ -14,12 +14,11 @@ $timePart,
 $dayStr,
 $combinedStr,
 $dateStr
-] = array_values($dateArray);
+] = extract($dateArray);
 
 $eventTierLowerImg = bladeEventTierImage($event->eventTier);
 
 $eventBannerImg = bladeImageNull($event->eventBanner);
-
 
 
 @endphp
