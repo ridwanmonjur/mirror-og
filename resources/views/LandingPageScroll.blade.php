@@ -7,12 +7,12 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
 $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
 @endphp
 <div class="event">
-    <div class="event_head_container">
-        <img id='turtle' src="{{ $eventTierLowerImg }}" class="event_head">
+    <div style="display: flex; justify-content: center;">
+        <img style="position: absolute !important; top: -35px !important; z-index: 999; border-radius: 60px !important; object-fit: cover;" width="100" height="100" src="{{ $eventTierLowerImg }}">
     </div>
     <img src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover">
-    <div class="frame1" >
-        <img  src="{{ $bladeEventGameImage }}" style="padding-left: 20px;" class="logo2">
+    <div class="frame1">
+        <img src="{{ $bladeEventGameImage }}" style="padding-left: 20px;" class="logo2">
         <a class="event_status_1" style="@php echo $stylesEventStatus; @endphp">{{ $event->statusResolved() }}</a>
     </div><br>
     <div class="league_name">

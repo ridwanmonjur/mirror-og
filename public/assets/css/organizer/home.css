@@ -194,7 +194,6 @@ nav ul li a:hover {
 
 .event {
     margin-bottom: 3rem;
-    overflow: auto;
     width: 350px;
     height: 430px;
     background: transparent;
