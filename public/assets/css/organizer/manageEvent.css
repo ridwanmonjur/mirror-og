@@ -70,9 +70,14 @@ nav svg:hover,
  {
     transform: scale(1.1);
 }
-
 .rounded-box:hover{
     transform: scale(1.03, 1.05);
+}
+
+ .group-hover-flexbox{
+    padding-top: 30px;
+    display: flex;
+    justify-content: space-around;
 }
 
 .search-bar2-adjust {
@@ -283,7 +288,7 @@ input[type="submit"]:active {
 }
 
 .card-text {
-    padding: 10px 20px;
+    padding: 10px 20px 0px;
 }
 
 .card-text .small-text {

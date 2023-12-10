@@ -13,12 +13,14 @@ use App\Models\Organizer;
 use App\Models\PaymentTransaction;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Exceptions\TimeGreaterException;
 
 class EventController extends Controller
 {
-    public function mappingEventStateResolve() {
-        return config('constants.mappingEventState'); 
-    } 
+    public function mappingEventStateResolve()
+    {
+        return config('constants.mappingEventState');
+    }
 
     public function home(): View
     {
@@ -137,19 +139,13 @@ class EventController extends Controller
         ]);
     }
 
-    public function fixTimeToRemoveSeconds($time)
-    {
-        // Check if the startTime contains seconds
-        if (substr_count($time, ':') === 2) {
-            // If it has seconds, omit the seconds part
-            $time = explode(':', $time);
-            $time = $time[0] . ':' . $time[1];
-        }
-        return $time;
-    }
+
 
     public function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
     {
+        $carbonStartDateTime = null;
+        $carbonEndDateTime = null;
+        $carbonPublishedDateTime = null;
         // dd($request);
         // step1
         $eventDetail->gameTitle = $request->gameTitle;
@@ -160,9 +156,9 @@ class EventController extends Controller
         $eventDetail->event_category_id = $request->gameTitleId;
         // step2
         $startDate = $request->startDate;
-        $startTime = $this->fixTimeToRemoveSeconds($request->startTime);
+        $startTime = $eventDetail->fixTimeToRemoveSeconds($request->startTime);
         $endDate = $request->endDate;
-        $endTime = $this->fixTimeToRemoveSeconds($request->endTime);
+        $endTime = $eventDetail->fixTimeToRemoveSeconds($request->endTime);
         if ($startDate && $startTime) {
             $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $startTime)
                 ->utc();
@@ -173,14 +169,14 @@ class EventController extends Controller
             $eventDetail->startTime = null;
         }
         if ($endDate && $endTime) {
-
             $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $endTime)
                 ->utc();
-            $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
-            $eventDetail->endTime  = $carbonEndDateTime->format('H:i');
-        } else {
-            $eventDetail->endDate = null;
-            $eventDetail->endTime  = null;
+            if ($startDate && $startTime && $carbonEndDateTime < $carbonStartDateTime) {
+                $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
+                $eventDetail->endTime  = $carbonEndDateTime->format('H:i');
+            } else {
+                throw new TimeGreaterException("End date and time must be greater than start date and time.");
+            }
         }
         $eventDetail->eventName  = $request->eventName;
         $eventDetail->eventDescription  = $request->eventDescription;
@@ -189,7 +185,7 @@ class EventController extends Controller
         $transaction = $eventDetail->payment_transaction;
         if ($transaction && $transaction->payment_id && $transaction->status == "SUCCESS") {
         } else {
-            if ($request->isPaymentDone == "true") {
+            if ($request->isPaymentDone == "true" && $request->livePreview == "true") {
                 $transaction = new PaymentTransaction();
                 $transaction->payment_id = $request->paymentMethod;
                 $transaction->payment_status = "SUCCESS";
@@ -198,28 +194,30 @@ class EventController extends Controller
             } else {
             }
         }
-
-        // launch_visible, launch_schedule, launch_time, launch_date
-        if ($request->launch_visible == "DRAFT") {
+        if ($request->livePreview == "true") {
+            $eventDetail->status = "PREVIEW";
+            $eventDetail->sub_action_public_date  = $request->launch_date;
+            $eventDetail->sub_action_public_time  = $request->launch_time;
+        } else if ($request->launch_visible == "DRAFT") {
             $eventDetail->status = "DRAFT";
             $eventDetail->sub_action_public_date  = null;
             $eventDetail->sub_action_public_time  = null;
         } else {
             $launch_date = $request->launch_date;
-            $launch_time = $this->fixTimeToRemoveSeconds($request->launch_time);
+            $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time);
             if ($request->launch_schedule == "schedule" && $launch_date && $launch_time) {
-                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->launch_date . ' ' . $launch_time)
+                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date . ' ' . $launch_time)
                     ->utc();
                 $eventDetail->status = "SCHEDULED";
                 $eventDetail->sub_action_public_date  = $carbonPublishedDateTime->format('Y-m-d');
                 $eventDetail->sub_action_public_time  = $carbonPublishedDateTime->format('H:i');
             } else if ($request->launch_schedule == "now") {
                 $carbonPublishedDateTime = Carbon::now()->utc();
-                $eventDetail->status = "LIVE";
+                $eventDetail->status = "UPCOMING";
                 $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
                 $eventDetail->sub_action_public_time = $carbonPublishedDateTime->format('H:i');
             } else {
-                $eventDetail->status = "LIVE";
+                $eventDetail->status = "UPCOMING";
                 $launch_date = null;
                 $launch_time = null;
             }
@@ -251,8 +249,11 @@ class EventController extends Controller
             $fileNameFinal = $this->storeEventBanner($request->file('eventBanner'));
         }
         $eventDetail = new EventDetail;
-        $eventDetail = $this->storeLogic($eventDetail, $request);
-
+        try {
+            $eventDetail = $this->storeLogic($eventDetail, $request);
+        } catch (TimeGreaterException $e) {
+            return back()->with('error', $e->getMessage());
+        }
         $eventDetail->user_id  = auth()->user()->id;
         $eventDetail->eventBanner  = $fileNameFinal;
         $eventDetail->save();
@@ -337,39 +338,40 @@ class EventController extends Controller
 
     public function updateForm($id, Request $request)
     {
-        // try {
-        $eventId = $id;
-        $eventDetail = EventDetail::find($eventId);
-        if ($eventId) {
-            $fileNameFinal = null;
-            if ($request->hasFile('eventBanner')) {
-                $fileNameFinal = $this->storeEventBanner($request->file('eventBanner'));
-                if ($eventDetail->eventBanner) {
-                    // delete please
-                    // unlink(storage_path('app/public/' . $eventDetail->eventBanner));
-                }
-            } else {
-                $fileNameFinal = $eventDetail->eventBanner;
-            }
-            // Fetch the existing event from the database
+        try {
+            $eventId = $id;
             $eventDetail = EventDetail::find($eventId);
-            $eventDetail = $this->storeLogic($eventDetail, $request);
-            $eventDetail->user_id  = auth()->user()->id;
-            $eventDetail->eventBanner  = $fileNameFinal;
-            $eventDetail->save();
-            // dd($eventId, $request, $eventDetail);
-            if ($request->livePreview == "true") {
-                return redirect('organizer/live/' . $eventDetail->id);
+            if ($eventId) {
+                $fileNameFinal = null;
+                if ($request->hasFile('eventBanner')) {
+                    $fileNameFinal = $this->storeEventBanner($request->file('eventBanner'));
+                    if ($eventDetail->eventBanner) {
+                        $this->destroyEventBanner($eventDetail->eventBanner);
+                    }
+                } else {
+                    $fileNameFinal = $eventDetail->eventBanner;
+                }
+                $eventDetail = EventDetail::find($eventId);
+                try {
+                    $eventDetail = $this->storeLogic($eventDetail, $request);
+                } catch (TimeGreaterException $e) {
+                    return back()->with('error', $e->getMessage());
+                }
+                $eventDetail->user_id  = auth()->user()->id;
+                $eventDetail->eventBanner  = $fileNameFinal;
+                $eventDetail->save();
+                // dd($eventId, $request, $eventDetail);
+                if ($request->livePreview == "true") {
+                    return redirect('organizer/live/' . $eventDetail->id);
+                }
+                return redirect('organizer/success/' . $eventDetail->id);
+            } else {
+                // return back()->with('error', 'Event id missing!');
+                return redirect('organizer/home');
             }
-            return redirect('organizer/success/' . $eventDetail->id);
-        } else {
-            // return back()->with('error', 'Event id missing!');
-            return redirect('organizer/home');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Something went wrong with saving data!');
         }
-        // } 
-        // catch (\Exception $e) {
-        // return back()->with('error', 'Something went wrong with saving data!');
-        // }
     }
 
     public function destroy($id)
@@ -378,5 +380,4 @@ class EventController extends Controller
         $event->delete();
         return redirect('organizer/event');
     }
-   
 }

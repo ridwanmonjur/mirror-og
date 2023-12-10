@@ -6,13 +6,7 @@ $stylesEventStatus .= 'padding-top: -150px; ';
 $stylesEventRatio= bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
 $eventTierLower= bladeEventTowerLowerClass($event->eventTier);
 $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
-[
-$datePart,
-$timePart,
-$dayStr,
-$combinedStr,
-$dateStr
-] = extract($dateArray);
+extract($dateArray);
 
 $eventTierLowerImg = bladeEventTierImage($event->eventTier);
 
@@ -31,32 +25,29 @@ $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
         <div class="card-text">
             <div>
                 <div class="flexbox-centered-space">
-                    <img src="{{ $bladeEventGameImage }}" alt="menu" height="50">
-                    <span> {{ $event->game->gameTitle }} </span>
+                    <img src="{{ $bladeEventGameImage }}" alt="menu" width="50" height="50" style="object-fit: cover; ">
                     <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
-                        {{$event->status}}
+                        <u> {{$event->statusResolved}} </u>
                     </button>
-                </div>
-                <br>
-                <p style="height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->eventName}}</u></p>
-                <p class="small-text"><i>
-                        {{ $organizer->companyName ?? 'Not set' }}
-                    </i></p>
-                <div class="flexbox-welcome">
-
-                    <div>@php echo $dateStr; @endphp</div>
                     <button style="@php echo $stylesEventRatio; @endphp" class="oceans-gaming-default-button oceans-gaming-default-button-small flexbox-centered-space">
                         &nbsp;
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
-
                         <span>
                             8 / 14
                         </span>
                         &nbsp;
                     </button>
+                </div>
+                <br>
+                <p style="max-height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->eventName}}</u></p>
+                <p class="small-text"><i>
+                        {{ $organizer->companyName ?? 'Not set' }}
+                    </i></p>
+                <div class="flexbox-welcome">
+                    <div>@php echo $dateStr; @endphp</div>
                 </div>
                 <div>
                     <div>
@@ -92,6 +83,12 @@ $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
                         &nbsp;
                         <span>{{$event->type->eventType ?? 'Choose a type'}}</span>
                     </div>
+                </div>
+                <div class="group-hover-flexbox">
+                    <img src="{{ asset('/assets/images/events/live-preview-icon.png') }}" alt="live preview" width="30" height="30" style="object-fit: cover; ">
+                    <img src="{{ asset('/assets/images/events/members-icon.png') }}" alt="members" width="30" height="30" style="object-fit: cover; ">
+                    <img src="{{ asset('/assets/images/events/clipboard-icon.png') }}" alt="clipboard" width="30" height="30" style="object-fit: cover; ">
+                    <img src="{{ asset('/assets/images/events/edit-icon.png') }}" alt="edit" width="30" height="30" style="object-fit: cover; ">
                 </div>
             </div>
         </div>

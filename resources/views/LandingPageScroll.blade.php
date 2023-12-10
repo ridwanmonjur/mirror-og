@@ -13,7 +13,7 @@ $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
     <img src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover">
     <div class="frame1" >
         <img  src="{{ $bladeEventGameImage }}" style="padding-left: 20px;" class="logo2">
-        <a class="event_status_1" style="@php echo $stylesEventStatus; @endphp">{{ $event->status ?? 'DRAFT' }}</a>
+        <a class="event_status_1" style="@php echo $stylesEventStatus; @endphp">{{ $event->statusResolved() }}</a>
     </div><br>
     <div class="league_name">
         <b>{{ $event->eventName }}</b><br>
