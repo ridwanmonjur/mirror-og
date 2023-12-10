@@ -146,6 +146,7 @@ class EventController extends Controller
 
     public function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
     {
+        $isEditMode = $eventDetail->id!=null;
         $carbonStartDateTime = null;
         $carbonEndDateTime = null;
         $carbonPublishedDateTime = null;
@@ -193,7 +194,7 @@ class EventController extends Controller
             $transaction->payment_status = "SUCCESS";
             $transaction->save();
             $eventDetail->payment_transaction_id = $transaction->id;
-        } else if ($request->livePreview != "true") {
+        } else if ($request->livePreview != "true" && !$isEditMode) {
             throw new TimeGreaterException("Payment is not done.");
         }
         if ($request->livePreview == "true") {
