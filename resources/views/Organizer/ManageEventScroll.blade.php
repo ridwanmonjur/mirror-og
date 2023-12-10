@@ -27,7 +27,7 @@ $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
                 <div class="flexbox-centered-space">
                     <img src="{{ $bladeEventGameImage }}" alt="menu" width="50" height="50" style="object-fit: cover; ">
                     <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
-                        <u> {{$event->statusResolved}} </u>
+                        <u> {{$event->statusResolved()}} </u>
                     </button>
                     <button style="@php echo $stylesEventRatio; @endphp" class="oceans-gaming-default-button oceans-gaming-default-button-small flexbox-centered-space">
                         &nbsp;
