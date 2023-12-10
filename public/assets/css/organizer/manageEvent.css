@@ -59,6 +59,11 @@ nav svg,
     cursor: pointer;
 }
 
+
+img.larger-hover:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}
 .navbar img:hover,
 nav img:hover,
 .search-bar svg:hover,

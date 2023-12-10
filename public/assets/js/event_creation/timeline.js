@@ -223,7 +223,20 @@ function saveForLivePreview() {
     createEventForm.submit();
 }
 
-function saveEvent() {
+function saveEvent(isCheckForNow = true) {
+    let launch_schedule = null;
+    let launch_schedule_form = getFormValues(['launch_schedule'])
+    if ('launch_schedule' in launch_schedule_form) {
+        launch_schedule = launch_schedule_form['launch_schedule'];
+    }
+    if (isCheckForNow && launch_schedule == 'now') {
+        console.log({ launch_schedule })
+        console.log({ launch_schedule })
+        console.log({ launch_schedule })
+        setFormValues({ 'launch_schedule': 'now' });
+        goToNextScreen('step-12', 'timeline-4');
+        return;
+    }
     let isFormValid = true, invalidKey = '', formValidation = null;
     var createEventForm = document.forms['create-event-form'];
     if (!createEventForm) {

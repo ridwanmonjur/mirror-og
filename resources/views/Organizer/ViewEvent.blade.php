@@ -2,7 +2,8 @@
 
 @php
 
-$stylesEventStatus = bladeEventStatusStyleMapping($event->status);
+$status = $event->statusResolved();
+$stylesEventStatus = bladeEventStatusStyleMapping($status);
 $stylesEventRatio= bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
 
 $eventTierLower= bladeEventTowerLowerClass($event->eventTier);
@@ -135,7 +136,7 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                         <div>
                             <br><br>
                             <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
-                                <u>{{$event->status ?? 'Choose event status'}}</u>
+                                <u>{{$status ?? 'Choose event status'}}</u>
                             </button>
                             <br><br>
                             <div>

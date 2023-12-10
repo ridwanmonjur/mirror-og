@@ -2,12 +2,20 @@
       <div class="welcome">
           <u>
               <h2>
-                  Welcome to Splash's Event Creator
+              @if (isset($error))
+              Sorry error has occurred in saving your event!
+              @else
+              Welcome to Splash's Event Creator
+              @endif
               </h2>
           </u>
           <br><br><br>
           <p class="create-online-esports">
+              @if (isset($error))
+              <span style="color: red;"> {{ $error }} </span>
+              @else
               Create online esports events all on your own, right here on Splash, in just 4 steps.
+              @endif
           </p>
       </div>
       <input type="button" onclick="goToNextScreen('step-1', 'timeline-1')" value="Continue">

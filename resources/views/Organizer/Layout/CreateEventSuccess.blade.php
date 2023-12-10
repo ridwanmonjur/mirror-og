@@ -28,14 +28,17 @@ extract($dateArray);
     </button>
     @endif
     <button
-        onclick="window.location.href='{{route('event.index') }}'"
+        onclick="goToManageScreen();"
         class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: black; border: 1px solid black;">
         Go to event page
     </button>
     <br><br>
-    <button class="oceans-gaming-default-button" style="padding:10px 60px;">Done</button>
+    <button class="oceans-gaming-default-button" style="padding:10px 100px;">Done</button>
 </div>
 <script>
+    const goToManageScreen= () => {
+        window.location.href="{{route('event.index') }}";
+    }
     let copyUrl = "{{ route('event.show', $event->id) }}";
     const copyUtil = () => {
         navigator.clipboard.writeText(copyUrl).then(function() {

@@ -14,6 +14,9 @@ use App\Models\PaymentTransaction;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Exceptions\TimeGreaterException;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\UnauthorizedException;
 
 class EventController extends Controller
 {
@@ -270,20 +273,38 @@ class EventController extends Controller
         $event = EventDetail
             ::with('type', 'tier', 'game')
             ->where('user_id', $authUser->id)
-            ->findOrFail($id);
-        $isUser = true;
-        return [$event, $isUser];
+            ->find($id);
+        $isUserSameAsAuth = true;
+        if (!$event) {
+           throw new ModelNotFoundException("Model not found for id: $id");
+        }
+        // if ($event->user_id != $authUser->id) {
+        //     throw new UnauthorizedException("Restricted access. This is not your resource.");
+        // }
+        return [$event, $isUserSameAsAuth, $authUser];
+    }
+
+    public function show404($error): View
+    {
+        return view(
+            'Organizer.EventNotFound',
+            compact('error')
+        );
     }
 
     public function showLive($id): View
     {
-        [$event, $isUser] = $this->getEventAndUser($id);
+        try {
+            [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+        } catch (Exception $e) {
+            return $this->show404("Model not found for id: $id");
+        }
         return view(
             'Organizer.ViewEvent',
             [
                 'event' => $event,
                 'mappingEventState' => $this->mappingEventStateResolve(),
-                'isUser' => $isUser,
+                'isUser' => $isUserSameAsAuth,
                 'livePreview' => 1
             ]
         );
@@ -291,13 +312,17 @@ class EventController extends Controller
 
     public function showSuccess($id): View
     {
-        [$event, $isUser] = $this->getEventAndUser($id);
+        try {
+            [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+        } catch (Exception $e) {
+            return $this->show404("Model not found for id: $id");
+        }
         return view(
             'Organizer.CreateEventSuccess',
             [
                 'event' => $event,
                 'mappingEventState' => $this->mappingEventStateResolve(),
-                'isUser' => $isUser,
+                'isUser' => $isUserSameAsAuth,
                 'livePreview' => 1
             ]
         );
@@ -305,13 +330,17 @@ class EventController extends Controller
 
     public function show($id): View
     {
-        [$event, $isUser] = $this->getEventAndUser($id);
+        try {
+            [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+        } catch (Exception $e) {
+            return $this->show404("Model not found for id: $id");
+        }
         return view(
             'Organizer.ViewEvent',
             [
                 'event' => $event,
                 'mappingEventState' => $this->mappingEventStateResolve(),
-                'isUser' => $isUser,
+                'isUser' => $isUserSameAsAuth,
                 'livePreview' => 0
             ]
         );
@@ -320,9 +349,11 @@ class EventController extends Controller
 
     public function edit($id)
     {
-        $event = EventDetail
-            ::with('type', 'tier', 'game')
-            ->findOrFail($id);
+        try {
+            [$event] = $this->getEventAndUser($id);
+        } catch (Exception $e) {
+            return $this->show404("Model not found for id: $id");
+        }
         $eventCategory = EventCategory::all();
         $eventTierList = EventTier::all();
         $eventTypeList = EventType::all();
@@ -360,14 +391,12 @@ class EventController extends Controller
                 $eventDetail->user_id  = auth()->user()->id;
                 $eventDetail->eventBanner  = $fileNameFinal;
                 $eventDetail->save();
-                // dd($eventId, $request, $eventDetail);
                 if ($request->livePreview == "true") {
                     return redirect('organizer/live/' . $eventDetail->id);
                 }
                 return redirect('organizer/success/' . $eventDetail->id);
             } else {
-                // return back()->with('error', 'Event id missing!');
-                return redirect('organizer/home');
+                return back()->with('error', 'Event id missing!');
             }
         } catch (\Exception $e) {
             return back()->with('error', 'Something went wrong with saving data!');
