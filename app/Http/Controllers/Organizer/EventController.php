@@ -174,7 +174,7 @@ class EventController extends Controller
         if ($endDate && $endTime) {
             $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $endTime)
                 ->utc();
-            if ($startDate && $startTime && $carbonEndDateTime < $carbonStartDateTime) {
+            if ($startDate && $startTime && $carbonEndDateTime > $carbonStartDateTime) {
                 $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
                 $eventDetail->endTime  = $carbonEndDateTime->format('H:i');
             } else {

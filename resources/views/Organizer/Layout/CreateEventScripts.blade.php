@@ -205,6 +205,10 @@
                 'isPaymentDone': true,
                 paymentMethod: paymentMethod.id
             });
+            Toast.fire({
+                icon: 'success',
+                text: "Payment succeeded. Please wait while we redirect you to the next step."
+            })
             goToNextScreen('step-11', 'timeline-4');
             document.getElementById('modal-close').click();
             const form = new FormData(cardForm);
@@ -214,7 +218,7 @@
             });
             fetch("{{ route('stripe.organizerTeamPay') }}", {
                     method: "POST",
-                    divs: {
+                    headers: {
                         "Content-Type": "application/json",
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     },
@@ -222,10 +226,17 @@
                 })
                 .then(response => response.json())
                 .then(responseData => {
+                    console.log(responseData);
+                    if (responseData.success) {
 
+                    } else {
+                        Toast.fire({
+                            icon: 'error',
+                            text: "Payment failed unfortunately due to unknown reasons."
+                        })
+                    }
                 })
                 .catch(error => {
-                    // Handle errors here
                     console.error(error);
                 })
         }

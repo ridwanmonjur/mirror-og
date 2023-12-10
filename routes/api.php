@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Organizer\InvitationController;
+use App\Http\Controllers\Organizer\EventController;
 use App\Http\Controllers\StripeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,5 +28,9 @@ Route::name('stripe.')
         Route::post('payment', 'organizerTeamPay')->name('organizerTeamPay');
     });
 
-// Route::any('/admin', 'AdminController@index')->middleware('check-permission:admin');
 
+Route::post('/event/{id}/invitation', [InvitationController::class, 'store'])
+    ->name("event.invitation.store");
+   
+   
+// Route::any('/admin', 'AdminController@index')->middleware('check-permission:admin');

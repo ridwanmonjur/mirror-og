@@ -21,6 +21,11 @@ class EventDetail extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+   
+    public function invitationList()
+    {
+        return $this->hasMany(Invitation::class, 'event_id');
+    }
 
     public function tier()
     {

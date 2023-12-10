@@ -14,6 +14,8 @@ $eventTierLowerImg = bladeEventTierImage($event->eventTier);
 $eventBannerImg = bladeImageNull($event->eventBanner);
 
 $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
+
+$eventId = $event->id;
 @endphp
 <div class="{{'rounded-box rounded-box-' . $eventTierLower }}">
     <div class="centered-absolute-game-tier">
@@ -85,21 +87,47 @@ $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
                 </div>
             </div>
             <div class="group-hover-flexbox icon2">
-                <img onclick="goToLivePreview()" class="larger-hover" src="{{ asset('/assets/images/events/live-preview-icon.png') }}" alt="live preview" width="30" height="30" style="object-fit: cover; ">
-                <img class="larger-hover" src="{{ asset('/assets/images/events/members-icon.png') }}" alt="members" width="30" height="30" style="object-fit: cover; ">
-                <img class="larger-hover" src="{{ asset('/assets/images/events/clipboard-icon.png') }}" alt="clipboard" width="30" height="30" style="object-fit: cover; ">
-                <img onclick="goToEditScreen()" class="larger-hover" src="{{ asset('/assets/images/events/edit-icon.png') }}" alt="edit" width="30" height="30" style="object-fit: cover; ">
+                <a style="padding: none; margin: none;" href="{{ route('organizer.live.view', $event->id) }}">
+                    <img onclick="goToLivePreview()" class="larger-hover" src="{{ asset('/assets/images/events/live-preview-icon.png') }}" alt="live preview" width="30" height="30" style="object-fit: cover; ">
+                </a>
+                <a style="padding: none; margin: none;">
+                    <button
+                    onclick=""
+                    style="padding: none; margin: none; background-color: transparent; outline: none; border: none;" type="button" data-toggle="modal" data-target="#shareModal">
+                        <img class="larger-hover" src="{{ asset('/assets/images/events/members-icon.png') }}" alt="members" width="30" height="30" style="object-fit: cover; ">
+                    </button>
+                </a>
+                <a style="padding: none; margin: none;">
+                    <img style="padding: none; margin: none;" onclick="copyUtil('event')" class="larger-hover" src="{{ asset('/assets/images/events/clipboard-icon.png') }}" alt="clipboard" width="40" height="30" style="object-fit: cover; ">
+                </a>
+                <a style="padding: none; margin: none;" href="{{ route('event.edit', $event->id) }}">
+                    <img onclick="goToEditScreen()" class="larger-hover" src="{{ asset('/assets/images/events/edit-icon.png') }}" alt="edit" width="30" height="30" style="object-fit: cover; ">
+                </a>
             </div>
+            <!-- Modal -->
+
         </div>
         <script>
-            const goToLivePreview = () => {
-                window.location.href = "{{ route('organizer.live.view', $event->id) }}";
-            }
             const goToManageScreen = () => {
                 window.location.href = "{{ route('event.index') }}";
             }
-            const goToEditScreen = () => {
-                window.location.href = "{{ route('event.show', $event->id) }}";
+            const copyUtil = (urlType) => {
+                let copyUrl = '';
+                switch (urlType) {
+                    case 'event':
+                        copyUrl = "{{ route('event.index', $eventId) }}";
+                        copyUrlFunction(copyUrl);
+                        break;
+                    case 'facebook':
+                        copyUrl = "{{ route('organizer.live.view', $eventId) }}";
+                        localStorage.setItem('copyUrl', copyUrl);
+                        break;
+                    default:
+                        copyUrl = "Set copy url first!";
+                        localStorage.setItem('copyUrl', copyUrl);
+                        break;
+                }
+
             }
         </script>
     </div>
