@@ -187,16 +187,14 @@ class EventController extends Controller
         // payment
         $transaction = $eventDetail->payment_transaction;
         if ($transaction && $transaction->payment_id && $transaction->status == "SUCCESS") {
-        } else {
-            if ($request->isPaymentDone == "true" && $request->paymentMethod) {
-                $transaction = new PaymentTransaction();
-                $transaction->payment_id = $request->paymentMethod;
-                $transaction->payment_status = "SUCCESS";
-                $transaction->save();
-                $eventDetail->payment_transaction_id = $transaction->id;
-            } else if ($request->livePreview != "true") {
-                throw new TimeGreaterException("Payment is not done.");
-            }
+        } elseif ($request->isPaymentDone == "true" && $request->paymentMethod) {
+            $transaction = new PaymentTransaction();
+            $transaction->payment_id = $request->paymentMethod;
+            $transaction->payment_status = "SUCCESS";
+            $transaction->save();
+            $eventDetail->payment_transaction_id = $transaction->id;
+        } else if ($request->livePreview != "true") {
+            throw new TimeGreaterException("Payment is not done.");
         }
         if ($request->livePreview == "true") {
             $eventDetail->status = "PREVIEW";
