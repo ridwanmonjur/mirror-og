@@ -188,13 +188,14 @@ class EventController extends Controller
         $transaction = $eventDetail->payment_transaction;
         if ($transaction && $transaction->payment_id && $transaction->status == "SUCCESS") {
         } else {
-            if ($request->isPaymentDone == "true" && $request->livePreview == "true") {
+            if ($request->isPaymentDone == "true" && $request->paymentMethod) {
                 $transaction = new PaymentTransaction();
                 $transaction->payment_id = $request->paymentMethod;
                 $transaction->payment_status = "SUCCESS";
                 $transaction->save();
                 $eventDetail->payment_transaction_id = $transaction->id;
-            } else {
+            } else if ($request->livePreview != "true") {
+                throw new TimeGreaterException("Payment is not done.");
             }
         }
         if ($request->livePreview == "true") {
@@ -276,7 +277,7 @@ class EventController extends Controller
             ->find($id);
         $isUserSameAsAuth = true;
         if (!$event) {
-           throw new ModelNotFoundException("Model not found for id: $id");
+            throw new ModelNotFoundException("Model not found for id: $id");
         }
         // if ($event->user_id != $authUser->id) {
         //     throw new UnauthorizedException("Restricted access. This is not your resource.");
