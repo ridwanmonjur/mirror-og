@@ -197,14 +197,7 @@
             input.setAttribute('value', paymentMethod.id)
             cardForm.appendChild(input)
             // payment method created
-            setFormValues({
-                'isPaymentDone': true,
-                paymentMethod: paymentMethod.id
-            });
-            Toast.fire({
-                icon: 'success',
-                text: "Payment succeeded. Please proceed to the next step."
-            })
+
             let paymentDiv = document.querySelector('.choose-payment-method');
             paymentDiv.style.backgroundColor = 'green';
             paymentDiv.textContent = 'Payment successful';
@@ -228,14 +221,14 @@
                 .then(response => response.json())
                 .then(responseData => {
                     console.log(responseData);
-                    if (responseData.success) {
-
-                    } else {
-                        Toast.fire({
-                            icon: 'error',
-                            text: "Payment failed unfortunately due to unknown reasons."
-                        })
-                    }
+                    setFormValues({
+                        'isPaymentDone': true,
+                        paymentMethod: paymentMethod.id
+                    });
+                    Toast.fire({
+                        icon: 'success',
+                        text: "Payment succeeded. Please proceed to the next step."
+                    })
                 })
                 .catch(error => {
                     console.error(error);

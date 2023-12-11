@@ -26,7 +26,8 @@ class StripeController extends Controller
                 'description' => 'Demo payment with stripe',
                 'confirm' => true,
                 'receipt_email' => $request->email,
-                'automatic_payment_methods' => ['enabled' => false],
+                'payment_method_types' => ['card'],
+                'automatic_payment_methods' => ['enabled' => false,],
             ]);
             // $customer = $stripe->customers->create([
             //     'name' => $request->name,
