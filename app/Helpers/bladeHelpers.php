@@ -13,6 +13,18 @@ function bladeEventStatusStyleMapping($status)
     return $stylesEventStatus;
 }
 
+function fixTimeToRemoveSeconds($time)
+{
+    if ($time == null) {
+        return null;
+    }
+    if (substr_count($time, ':') === 2) {
+        $time = explode(':', $time);
+        $time = $time[0] . ':' . $time[1];
+    }
+    return $time;
+}
+
 function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants)
 {
     $stylesEventRatio = '';
@@ -35,6 +47,7 @@ function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants
 
 function bladeGenerateEventStartEndDateStr($startDate, $startTime)
 {
+    $startTime= fixTimeToRemoveSeconds($startTime);
     if ($startDate != null && $startTime != null) {
         $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i:s', $startDate . ' ' . $startTime, 'UTC') ?? null;
         $carbonDateTimeUtc = $carbonDateTimeUtc->setTimezone('Asia/Singapore');

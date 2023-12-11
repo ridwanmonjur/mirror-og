@@ -107,11 +107,11 @@ class EventController extends Controller
             $gameTitle = $request->input("gameTitle");
             return $query->where('gameTitle', $gameTitle);
         });
-
+        $count = 10;
         $eventList = $eventListQuery->where('user_id', $user->id)
-            ->paginate(4);
+            ->paginate($count);
         $mappingEventState = $this->mappingEventStateResolve();
-        $count = 4;
+        
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
         if ($request->ajax()) {
             $view = view(

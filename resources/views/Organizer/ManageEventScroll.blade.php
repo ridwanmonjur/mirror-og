@@ -87,22 +87,24 @@ $eventId = $event->id;
                 </div>
             </div>
             <div class="group-hover-flexbox icon2">
+                @if ($status == 'ONGOING' || $status == 'DRAFT')
                 <a style="padding: none; margin: none;" href="{{ route('organizer.live.view', $event->id) }}">
                     <img onclick="goToLivePreview()" class="larger-hover" src="{{ asset('/assets/images/events/live-preview-icon.png') }}" alt="live preview" width="30" height="30" style="object-fit: cover; ">
                 </a>
                 <a style="padding: none; margin: none;">
-                    <button
-                    onclick=""
-                    style="padding: none; margin: none; background-color: transparent; outline: none; border: none;" type="button" data-toggle="modal" data-target="#shareModal">
+                    <button onclick="" style="padding: none; margin: none; background-color: transparent; outline: none; border: none;" type="button" data-toggle="modal" data-target="#shareModal">
                         <img class="larger-hover" src="{{ asset('/assets/images/events/members-icon.png') }}" alt="members" width="30" height="30" style="object-fit: cover; ">
                     </button>
                 </a>
                 <a style="padding: none; margin: none;">
                     <img style="padding: none; margin: none;" onclick="copyUtil('event')" class="larger-hover" src="{{ asset('/assets/images/events/clipboard-icon.png') }}" alt="clipboard" width="40" height="30" style="object-fit: cover; ">
                 </a>
+                @if ($status != 'ONGOING')
                 <a style="padding: none; margin: none;" href="{{ route('event.edit', $event->id) }}">
                     <img onclick="goToEditScreen()" class="larger-hover" src="{{ asset('/assets/images/events/edit-icon.png') }}" alt="edit" width="30" height="30" style="object-fit: cover; ">
                 </a>
+                @endif
+                @endif
             </div>
             <!-- Modal -->
 
