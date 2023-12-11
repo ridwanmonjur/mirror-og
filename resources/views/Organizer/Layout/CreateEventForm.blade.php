@@ -341,7 +341,7 @@ $status = $event? $event->statusResolved(): null;
                 </div>
                 @if ($event)
                 @if ($event->eventBanner)
-                <img class="banner-preview" src="{{asset('storage/'.$event->eventBanner)}}" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
+                <img class="banner-preview" src="{{bladeImageNull($event->eventBanner)}}" {!! trustedBladeHandleImageFailure(); !!} id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
                 @else
                 <div>Please enter an image</div>
                 <img class="d-none banner-preview" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">

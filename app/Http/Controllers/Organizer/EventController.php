@@ -214,16 +214,12 @@ class EventController extends Controller
                 $eventDetail->status = "SCHEDULED";
                 $eventDetail->sub_action_public_date  = $carbonPublishedDateTime->format('Y-m-d');
                 $eventDetail->sub_action_public_time  = $carbonPublishedDateTime->format('H:i');
-            } else if ($request->launch_schedule == "now") {
+            } else {
                 $carbonPublishedDateTime = Carbon::now()->utc();
                 $eventDetail->status = "UPCOMING";
-                $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
-                $eventDetail->sub_action_public_time = $carbonPublishedDateTime->format('H:i');
-            } else {
-                $eventDetail->status = "UPCOMING";
-                $launch_date = null;
-                $launch_time = null;
-            }
+                $eventDetail->sub_action_public_date = null;
+                $eventDetail->sub_action_public_time = null;
+            } 
         }
         $eventDetail->sub_action_private  = $request->launch_visible == "private" ? "private" : "public";
         $eventDetail->action  = $request->launch_visible;
@@ -241,8 +237,6 @@ class EventController extends Controller
     public function destroyEventBanner($file)
     {
     }
-
-
 
     public function store(Request $request)
     {
@@ -346,7 +340,6 @@ class EventController extends Controller
         );
     }
 
-
     public function edit($id)
     {
         try {
@@ -365,7 +358,6 @@ class EventController extends Controller
             'editMode' => 1
         ]);
     }
-
 
     public function updateForm($id, Request $request)
     {

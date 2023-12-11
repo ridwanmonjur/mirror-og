@@ -61,7 +61,7 @@ class EventDetail extends Model
             return "ERROR";
         }
         $carbonNow = Carbon::now()->utc();
-        if ($carbonEndDateTime > $carbonNow) {
+        if ($carbonEndDateTime < $carbonNow) {
             return "ENDED";
         } else {
             if ($carbonPublishedDateTime && $carbonPublishedDateTime < $carbonNow) {
