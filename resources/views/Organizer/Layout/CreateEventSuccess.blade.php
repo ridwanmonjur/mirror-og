@@ -13,7 +13,7 @@ extract($dateArray);
         </u>
     </div>
     <div class="box-width">
-        @if ($event->$event->sub_action_public_time  && $event->sub_action_public_date)
+        @if ($event->sub_action_public_time  && $event->sub_action_public_date)
         <p id="notification">Your <u>{{$event->sub_action_private}}</u> event has been scheduled to launch on {{$combinedStr}} at {{$timePart}}!</p>
         @elseif($status!="DRAFT" && $status!= "PREVIEW")
         <p id="notification">Your <u>{{$event->sub_action_private}}</u> event is already live!</p>
