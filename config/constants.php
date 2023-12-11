@@ -16,6 +16,9 @@ return [
         'DRAFT' => [
             'buttonBackgroundColor' => '#8CCD39', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
         ],
+        'PREVIEW' => [
+            'buttonBackgroundColor' => '#8CCD39', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
         'ENDED' => [
             'buttonBackgroundColor' => '#A6A6A6', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
         ],

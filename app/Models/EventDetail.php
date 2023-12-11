@@ -50,7 +50,7 @@ class EventDetail extends Model
     public function statusResolved()
     {
         if ($this->status == "DRAFT" || $this->status == "PREVIEW") {
-            return $this->status;
+            return "DRAFT";
         }
         $carbonPublishedDateTime = $this->createCarbonDateTimeFromDB($this->sub_action_public_date, $this->sub_action_public_time);
         $carbonEndDateTime = $this->createCarbonDateTimeFromDB($this->endDate, $this->endTime);
