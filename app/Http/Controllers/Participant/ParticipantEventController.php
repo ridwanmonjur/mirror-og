@@ -29,6 +29,13 @@ class ParticipantEventController extends Controller
         );
     }
 
+
+    public function eventDetails()
+    {
+        $eventDetail = EventDetail::all();
+        return view('Participant.Layout.HeadTag', compact('eventDetail'));
+    }
+
     private $mappingEventState = [
         'UPCOMING' => [
             'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
