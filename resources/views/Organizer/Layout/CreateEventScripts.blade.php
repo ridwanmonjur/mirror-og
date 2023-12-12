@@ -232,6 +232,10 @@
                 })
                 .catch(error => {
                     console.error(error);
+                    Toast.fire({
+                        icon: 'error',
+                        text: "Payment succeeded. Please proceed to the next step."
+                    })
                 })
         }
     })
