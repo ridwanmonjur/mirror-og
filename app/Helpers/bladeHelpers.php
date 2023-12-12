@@ -60,7 +60,7 @@ function bladeGenerateEventStartEndDateStr($startDate, $startTime)
         $datePart = 'Not set';
         $timePart = 'Not set';
         $dayStr = '';
-        $dateStr = 'Please enter dae and time';
+        $dateStr = 'Please enter date and time';
         $combinedStr = 'Not set';
     }
     return [

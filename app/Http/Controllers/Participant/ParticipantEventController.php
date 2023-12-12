@@ -14,7 +14,7 @@ class ParticipantEventController extends Controller
         
         $count = 3;
         $events = EventDetail::paginate($count);
-        $output = ['events' => $events, 'mappingEventState' => $this->mappingEventState];
+        $output = ['events' => $events, 'mappingEventState' => EventDetail::mappingEventStateResolve()];
         if ($request->ajax()) {
             $view = view(
                 'Participant.HomeScroll',
@@ -36,24 +36,4 @@ class ParticipantEventController extends Controller
         return view('Participant.Layout.HeadTag', compact('eventDetail'));
     }
 
-    private $mappingEventState = [
-        'UPCOMING' => [
-            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
-        ],
-        'LIVE' => [
-            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
-        ],
-        'SCHEDULED' => [
-            'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
-        ],
-        'ONGOING' => [
-            'buttonBackgroundColor' => '#FFFBFB', 'buttonTextColor' => 'black', 'borderColor' => 'black'
-        ],
-        'DRAFT' => [
-            'buttonBackgroundColor' => '#8CCD39', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
-        ],
-        'ENDED' => [
-            'buttonBackgroundColor' => '#A6A6A6', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
-        ],
-    ];
 }

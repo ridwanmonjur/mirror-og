@@ -93,4 +93,10 @@ class EventDetail extends Model
             ->utc();
         return $carbonDateTime;
     }
+
+    public static function mappingEventStateResolve()
+    {
+        return config('constants.mappingEventState');
+    }
+
 }

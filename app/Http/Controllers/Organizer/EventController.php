@@ -20,12 +20,7 @@ use Illuminate\Validation\UnauthorizedException;
 
 class EventController extends Controller
 {
-    public function mappingEventStateResolve()
-    {
-        return config('constants.mappingEventState');
-    }
-
-    public function home(): View
+      public function home(): View
     {
         return view('Organizer.Home');
     }
@@ -110,7 +105,7 @@ class EventController extends Controller
         $count = 10;
         $eventList = $eventListQuery->where('user_id', $user->id)
             ->paginate($count);
-        $mappingEventState = $this->mappingEventStateResolve();
+        $mappingEventState = EventDetail::mappingEventStateResolve();
         
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
         if ($request->ajax()) {
@@ -297,7 +292,7 @@ class EventController extends Controller
             'Organizer.ViewEvent',
             [
                 'event' => $event,
-                'mappingEventState' => $this->mappingEventStateResolve(),
+                'mappingEventState' => EventDetail::mappingEventStateResolve(),
                 'isUser' => $isUserSameAsAuth,
                 'livePreview' => 1
             ]
@@ -315,7 +310,7 @@ class EventController extends Controller
             'Organizer.CreateEventSuccess',
             [
                 'event' => $event,
-                'mappingEventState' => $this->mappingEventStateResolve(),
+                'mappingEventState' => EventDetail::mappingEventStateResolve(),
                 'isUser' => $isUserSameAsAuth,
                 'livePreview' => 1
             ]
@@ -333,7 +328,7 @@ class EventController extends Controller
             'Organizer.ViewEvent',
             [
                 'event' => $event,
-                'mappingEventState' => $this->mappingEventStateResolve(),
+                'mappingEventState' => EventDetail::mappingEventStateResolve(),
                 'isUser' => $isUserSameAsAuth,
                 'livePreview' => 0
             ]
