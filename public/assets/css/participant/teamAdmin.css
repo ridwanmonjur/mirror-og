@@ -38,7 +38,7 @@ main {
     padding: 0px 10px;
     align-items: center;
     justify-content: center;
-    background-image: url("images/event-creation-bg.png");
+    background-image: url("/assets/images/event-creation-bg.png");
     margin: 0;
 }
 
@@ -248,7 +248,7 @@ input[type="submit"],
     background-size: cover;
     background-position: center;
     /* Default image URL */
-    background-image: url('images/fnatic.jpg');
+    background-image: url('/assets/images/fnatic.jpg');
 }
 
 .upload-button {
