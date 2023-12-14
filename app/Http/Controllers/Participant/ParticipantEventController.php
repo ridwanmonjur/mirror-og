@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\Team;
 use App\Models\EventDetail;
 use Illuminate\Http\Request;
 
@@ -34,6 +35,22 @@ class ParticipantEventController extends Controller
     {
         $eventDetail = EventDetail::all();
         return view('Participant.Layout.HeadTag', compact('eventDetail'));
+    }
+
+
+    public function createTeamView()
+    {
+        return view('Participant.CreateTeam');
+    }
+
+
+    public function TeamStore(Request $request)
+    {
+        $team = new Team;
+        $team->teamName = $request->input('teamName');
+        $team->user_id  = auth()->user()->id;
+        $team->save();
+        return redirect()->back()->with('status','Team Added Successfully');
     }
 
 }

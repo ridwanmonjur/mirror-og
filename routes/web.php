@@ -63,6 +63,8 @@ Route::group(['prefix' => 'participant'], function () {
 		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
 			Route::get('/home', [ParticipantEventController::class, 'home'])->name("participant.home.view");
 			Route::get('/team-management', [ParticipantEventController::class, 'eventDetails']);
+			Route::get('/create-team', [ParticipantEventController::class, 'createTeamView']);
+			Route::post('/team-management', [ParticipantEventController::class, 'TeamStore']);
 		});
 		Route::get(
 			'/permissions',

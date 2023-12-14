@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event creation</title>
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamCreate.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
+    <link href='https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.css'>
+</head>
+
+<body>
+    <div class="text-center" id="step-0">
+
+        @if (session('status'))
+        <h6 class="alert alert-success">{{ session('status') }}</h6>
+    @endif
+        <div class="welcome">
+            <u>
+                <h2>Create Your Team</h2>
+            </u>
+            <br><br><br>
+            <p class="create-online-esports">
+                What will your team be called?
+            </p>
+            <br>
+            <form action="{{ url('/participant/team-management') }}" method="POST">
+                @csrf
+            <input type="text" name="teamName" id="teamName" placeholder="Team Name">
+        </div>
+        
+        <div><input type="submit" onclick="" value="Create Team"></div>
+    </form>
+    </div>
+    
+</body>
+</html>
