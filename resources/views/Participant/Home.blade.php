@@ -27,7 +27,16 @@
 
         <div class="nav__items">
             <ul>
-                <li><a href="#" id='nav-but' class="moop">Where's Moop?</a></li>
+                {{-- <li><a href="#" id='nav-but' class="moop">Where's Moop?</a></li> --}}
+                <div class="dropdown">
+                    <li><a onclick="myFunction()" style="color: white !important;" id='nav-but' class="dropbtn sign" data-bs-toggle="dropdown" aria-expanded="false">Where's Moop?</a></li>
+                </div>
+                <div id="myDropdown" class="dropdown-content">
+                    <a class="dropdown-item" href="/participant/create-team/{id}">Create Team</a>
+                    <a class="dropdown-item" href="{{ route('participant.signin.view') }}">Participant</a>
+                </div>
+
+            
                 <li>
                     <img style="position: relative; top: 0px; cursor: pointer;" width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
                 </li>
@@ -75,6 +84,26 @@
             }, 300)
         );
     </script>
+
+<script>
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
 </body>
 
 </html>

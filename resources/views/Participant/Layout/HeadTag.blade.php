@@ -61,8 +61,10 @@
                 </label>
                 <input type="file" id="image-upload" accept="image/*" style="display: none;">
             </div>
-            <h3 class="team-name" id="team-name">Team Fnatic</h3>
+            @foreach ($teamDetail as $team)
+            <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
             <p>We are an awesome team with awesome members! Come be awesome together! Play some games and win some prizes GGEZ!</p>
+            @endforeach
         </div>
 
         <div class="tabs">
@@ -76,7 +78,7 @@
             <div style="padding-left: 200px;"><b>Recent Events</b></div>
             <div class="recent-events">
                 <!-- Update the event-carousel section in the Overview tab content -->
-                <div class="event-carousel">
+                {{-- <div class="event-carousel">
                     <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
                     @foreach ($eventDetail as $event)
                     <div class="event-box" id="event1">
@@ -88,7 +90,7 @@
                     @endforeach
                     <button class="carousel-button" onclick="slideEvents(1)">></button>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="team-info">
                 <div class="showcase">

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Team;
 use App\Models\EventDetail;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ParticipantEventController extends Controller
@@ -31,16 +32,17 @@ class ParticipantEventController extends Controller
     }
 
 
-    public function eventDetails()
+    public function teamDetails($user_id)
     {
-        $eventDetail = EventDetail::all();
-        return view('Participant.Layout.HeadTag', compact('eventDetail'));
+        $teamDetail = Team::Where('user_id',$user_id)->get();
+        return view('Participant.Layout.HeadTag', compact('teamDetail'));
     }
 
 
-    public function createTeamView()
+    public function createTeamView(Request $request, $user_id)
     {
-        return view('Participant.CreateTeam');
+    $teamm = Team::find($user_id);
+    return view('Participant.CreateTeam', compact('teamm'));
     }
 
 
