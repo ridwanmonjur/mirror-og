@@ -55,4 +55,12 @@ class ParticipantEventController extends Controller
         return redirect()->back()->with('status','Team Added Successfully');
     }
 
+   /* Select Team to Register */
+
+    public function SelectTeamtoRegister(Request $request)
+    {
+        $selectTeam = Team::all();
+        return view('Participant.SelectTeamtoRegister', compact('selectTeam'));
+    }
+
 }

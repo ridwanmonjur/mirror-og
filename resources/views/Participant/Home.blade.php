@@ -33,7 +33,7 @@
                 </div>
                 <div id="myDropdown" class="dropdown-content">
                     <a class="dropdown-item" href="/participant/create-team/{id}">Create Team</a>
-                    <a class="dropdown-item" href="{{ route('participant.signin.view') }}">Participant</a>
+                    <a class="dropdown-item" href="/participant/selectTeam/{id}">Team Registration</a>
                 </div>
 
             
