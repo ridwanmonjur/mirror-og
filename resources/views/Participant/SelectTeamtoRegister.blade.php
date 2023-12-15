@@ -32,13 +32,14 @@
                 </span>
             </button>
             <div class="dropdown-content" id="teamList">
-                
+                <form action="{{ url('/participant/home') }}" method="POST">
+                    @csrf
                 <input type="text" id="teamSearch" oninput="filterTeams()" placeholder="Search for teams...">
                 <div>
                     @foreach ($selectTeam as $item)
                     <div class="team-info" onclick="selectOption(this, '{{ $item->teamName }}', 'css/images/logo.png')">
                         <img src="{{ asset('/assets/images/dota.png') }}" height="25px" width="50px">
-                        <a href="#">{{ $item->teamName }}</a>
+                        <a href="#" name="teamName">{{ $item->teamName }}</a>
                     </div>
                     @endforeach
                 </div>
@@ -72,6 +73,7 @@
             </div>
 
         </div>
+    </form>
     </div>
 
     <script>

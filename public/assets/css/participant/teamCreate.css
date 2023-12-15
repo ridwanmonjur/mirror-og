@@ -164,7 +164,7 @@ nav ul li a:hover {
     background-color: #ddd;
 }
 
-input[type="button"],
+input[type="submit"],
 .oceans-gaming-default-button {
     width: 200px;
     padding-top: 12px;
