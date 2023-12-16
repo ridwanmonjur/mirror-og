@@ -30,44 +30,44 @@ class AuthController extends Controller
         Auth::logout();
         return redirect('/');
     }
-    public function redirectToGoogle(Request $request)
+
+    protected function _registerOrLoginUser($user, $type)
     {
-        // dd($request->all());
-        // dd('redirected');
-        return Socialite::driver('google')->redirect();
-    }
-
-    public function handleGoogleCallback(Request $request)
-    {
-        // try {
-        // dd($request->all());
-
-        $user = Socialite::driver('google')->user();
-
-        $finduser = User::where('google_id', $user->id)->first();
-
+        if ($type == 'google') {
+            $finduser = User::where('google_id', $user->id)->first();
+        } else if ($type == 'steam') {
+            $finduser = User::where('steam_id', $user->id)->first();
+        }
         if ($finduser) {
-
             Auth::login($finduser);
-
-            return redirect()->route('participant.home.view');
+           return $user;
         } else {
             $newUser = User::create([
                 'name' => $user->name,
                 'email' => $user->email,
                 'password' => bcrypt('123456dummy'),
-
             ]);
             $newUser->email_verified_at = now();
-            $newUser->google_id = $user->id;
+            if ($type == 'google') {
+                $newUser->google_id = $user->id;
+            } else if ($type == 'steam') {
+                $newUser->steam_id = $user->id;
+            }
             $newUser->save();
             Auth::login($newUser);
-
-            return redirect()->route('participant.home.view');
+            return $newUser;
         }
-        // } catch (Exception $e) {
-        //     dd($e->getMessage());
-        // }
+    }
+
+    public function handleGoogleCallback()
+    {
+        $user = Socialite::driver('google')->user();
+        $finduser = $this->_registerOrLoginUser($user, 'google');
+        if ($finduser->role == 'PARTICIPANT') {
+            return redirect()->route('organizer.home.view');
+        } else if ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
+            return redirect()->route('organizer.home.view');
+        }
     }
 
     // Steam login
@@ -80,11 +80,12 @@ class AuthController extends Controller
     public function handleSteamCallback()
     {
         $user = Socialite::driver('steam')->user();
-
-        $this->_registerOrLoginUser($user);
-
-        // Return home after login
-        return redirect()->route('participant.home.view');
+        $finduser = $this->_registerOrLoginUser($user, 'google');
+        if ($finduser->role == 'PARTICIPANT') {
+            return redirect()->route('organizer.home.view');
+        } else if ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
+            return redirect()->route('organizer.home.view');
+        }
     }
 
 
@@ -107,7 +108,6 @@ class AuthController extends Controller
             'LandingPage',
             $output
         );
-
     }
 
     public function signIn(Request $request)
@@ -423,10 +423,4 @@ class AuthController extends Controller
             return redirect()->route($redirectRoute)->with('error', $th->getMessage());
         }
     }
-
-
-   
-
-
-
 }
