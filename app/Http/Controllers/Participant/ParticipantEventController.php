@@ -40,6 +40,13 @@ class ParticipantEventController extends Controller
     }
 
 
+    public function teamManagement($id)
+    {
+        $teamManage = Team::Where('id',$id)->get();
+        return view('Participant.Layout.TeamManagement', compact('teamManage'));
+    }
+
+
     public function createTeamView(Request $request, $user_id)
     {
     $teamm = Team::find($user_id);

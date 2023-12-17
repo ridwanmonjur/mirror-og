@@ -61,7 +61,7 @@
                     </label>
                     <input type="file" id="image-upload" accept="image/*" style="display: none;">
                 </div>
-                <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
+              <a href="/participant/team-manage/{{ $team['id'] }}"> <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3></a> 
                 <br>
                 <p>Total Members: 20</p>
             </div>

@@ -62,9 +62,10 @@ Route::group(['prefix' => 'participant'], function () {
 	Route::group(['middleware' => 'auth'], function () {
 		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
 			Route::get('/home', [ParticipantEventController::class, 'home'])->name("participant.home.view");
-			Route::get('/team-list/{id}', [ParticipantEventController::class, 'teamList'])->name("participant.team.view");;
+			Route::get('/team-list/{id}', [ParticipantEventController::class, 'teamList'])->name("participant.team.view");
 			Route::get('/create-team/{id}', [ParticipantEventController::class, 'createTeamView']);
 			Route::post('/team-management', [ParticipantEventController::class, 'TeamStore']);
+			Route::get('/team-manage/{id}', [ParticipantEventController::class, 'teamManagement'])->name("participant.teamManagement.view");;
 			Route::get('/selectTeam/{id}', [ParticipantEventController::class, 'SelectTeamtoRegister']);
 			Route::post('/home', [ParticipantEventController::class, 'TeamtoRegister']);
 			Route::get('/confirm', [ParticipantEventController::class, 'ConfirmUpdate']);
