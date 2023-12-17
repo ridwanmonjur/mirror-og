@@ -9,13 +9,7 @@ $stylesEventRatio= bladeEventRatioStyleMapping($event->registeredParticipants, $
 $eventTierLower= bladeEventTowerLowerClass($event->eventTier);
 
 $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
-[
-$datePart,
-$timePart,
-$dayStr,
-$combinedStr,
-$dateStr
-] = extract($dateArray);
+extract($dateArray);
 
 $eventTierLowerImg = bladeEventTierImage($event->eventTier);
 
@@ -35,10 +29,12 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                         View your events
                     </h3>
                 </u>
-                @if ($livePreview == 0)
+                @if ($livePreview == 0 )
                 <div>
                     <input type="submit" value="Create Event" onclick="goToCreateScreen();">
-                    <input type="submit" style="background-color: #8CCD39;" value="Edit..." onclick="goToEditScreen();">
+                    @if ($status == 'DRAFT' || $status == "PREVIEW")
+                        <input type="submit" style="background-color: #8CCD39;" value="Edit..." onclick="goToEditScreen();">
+                    @endif
                 </div>
                 @else
                 <input type="submit" style="background-color: #8CCD39;" value="Resume creating..." onclick="goToEditScreen();">
@@ -101,8 +97,8 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                                     @endif
                                 </div>
                                 <br>
-                                <h4> <u> @php echo $combinedStr; @endphp </u> </h4>
-                                <h4> <u> @php echo strtoupper($timePart); @endphp </u> </h4>
+                                <h4> <u> {{  $combinedStr }} </u> </h4>
+                                <h4> <u> {{ strtoupper($timePart) }} </u> </h4>
                                 <br>
                                 <div>
                                     <div class="tab">

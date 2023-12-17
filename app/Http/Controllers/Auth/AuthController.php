@@ -40,7 +40,7 @@ class AuthController extends Controller
         }
         if ($finduser) {
             Auth::login($finduser);
-           return $user;
+            return $user;
         } else {
             $newUser = User::create([
                 'name' => $user->name,
@@ -91,9 +91,16 @@ class AuthController extends Controller
 
     public function showLandingPage(Request $request)
     {
-
         $count = 4;
-        $events = EventDetail::paginate($count);
+        $currentDateTime = Carbon::now()->utc();
+        $events = EventDetail::where('status', '<>', 'DRAFT')
+            ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
+            ->where(function ($query) use ($currentDateTime) {
+                $query->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) > ?', [$currentDateTime])
+                    ->orWhereNull('sub_action_public_time')
+                    ->orWhereNull('sub_action_public_date');
+            })
+            ->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
         $output = compact("events", "mappingEventState");
         if ($request->ajax()) {
@@ -122,7 +129,6 @@ class AuthController extends Controller
 
     public function storeReset(Request $request)
     {
-
         // dd($request->all());
         $request->validate([
             'token' => 'required',

@@ -66,10 +66,9 @@ class EventDetail extends Model
         } else {
             if ($carbonPublishedDateTime && $carbonPublishedDateTime < $carbonNow) {
                 return "SCHEDULED";
-            } elseif ($carbonStartDateTime < $carbonNow) {
-                return "UPCOMING";
-            }
-            else return "ONGOING";
+            } elseif ($carbonStartDateTime  < $carbonNow) {
+                return "ONGOING";
+            } else return "UPCOMING";
         }
     }
     public function fixTimeToRemoveSeconds($time)

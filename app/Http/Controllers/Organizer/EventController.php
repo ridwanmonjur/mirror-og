@@ -20,7 +20,7 @@ use Illuminate\Validation\UnauthorizedException;
 
 class EventController extends Controller
 {
-      public function home(): View
+    public function home(): View
     {
         return view('Organizer.Home');
     }
@@ -44,30 +44,31 @@ class EventController extends Controller
         $eventListQuery =  EventDetail::query();
         $organizer = Organizer::where('user_id', $user->id)->first();
         $eventListQuery->when($request->has('status'), function ($query) use ($request) {
-
             $status = $request->input('status');
-
-            $currentDateTime = Carbon::now();
+            $currentDateTime = Carbon::now()->utc();
             if ($status == 'ALL') {
                 return $query;
-            }
-            if ($status == 'LIVE') {
-                return $query->where(function ($query) use ($currentDateTime) {
-                    $query->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime])
-                        ->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime]);
-                });
-            }
-            if ($status == 'SCHEDULED') {
-                return $query->where(function ($query)  use ($currentDateTime) {
-                    $query->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime])
-                        ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
-                });
-            }
-            if ($status == 'DRAFT') {
-                return $query->where('status', 'DRAFT');
-            }
-            if ($status == 'ENDED') {
+            } elseif ($status == 'ENDED') {
                 return $query->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime]);
+            } elseif ($status == 'DRAFT') {
+                return $query->where('status', 'DRAFT');
+            } elseif ($status == 'LIVE') {
+                return $query
+                    ->where(function ($query) use ($currentDateTime) {
+                        return $query
+                            ->whereNull('sub_action_public_date')
+                            ->orWhereNull('sub_action_public_time')
+                            ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime]);
+                    })
+                    ->where('status', '<>', 'DRAFT')
+                    ->where('status', '<>', 'PREVIEW')
+                    ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
+            } elseif ($status == 'SCHEDULED') {
+                return $query
+                    ->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime])
+                    ->where('status', '<>', 'DRAFT')
+                    ->where('status', '<>', 'PREVIEW')
+                    ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
             }
             return $query;
         });
@@ -106,7 +107,7 @@ class EventController extends Controller
         $eventList = $eventListQuery->where('user_id', $user->id)
             ->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
-        
+
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
         if ($request->ajax()) {
             $view = view(
@@ -141,7 +142,9 @@ class EventController extends Controller
 
     public function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
     {
-        $isEditMode = $eventDetail->id!=null;
+        $isEditMode = $eventDetail->id != null;
+        // disable preview mode checjs if edit mode
+        $isPreviewMode = $isEditMode ? false : $request->livePreview == "true";
         $carbonStartDateTime = null;
         $carbonEndDateTime = null;
         $carbonPublishedDateTime = null;
@@ -189,11 +192,11 @@ class EventController extends Controller
             $transaction->payment_status = "SUCCESS";
             $transaction->save();
             $eventDetail->payment_transaction_id = $transaction->id;
-        } else if ($request->livePreview != "true" && !$isEditMode) {
+        } else if ($isPreviewMode && !$isEditMode) {
             throw new TimeGreaterException("Payment is not done.");
         }
-        if ($request->livePreview == "true") {
-            $eventDetail->status = "PREVIEW";
+        if ($request->livePreview == "true" && !$isEditMode) {
+            $eventDetail->status = "DRAFT";
             $eventDetail->sub_action_public_date  = $request->launch_date;
             $eventDetail->sub_action_public_time  = $request->launch_time;
         } else if ($request->launch_visible == "DRAFT") {
@@ -214,7 +217,7 @@ class EventController extends Controller
                 $eventDetail->status = "UPCOMING";
                 $eventDetail->sub_action_public_date = null;
                 $eventDetail->sub_action_public_time = null;
-            } 
+            }
         }
         $eventDetail->sub_action_private  = $request->launch_visible == "private" ? "private" : "public";
         $eventDetail->action  = $request->launch_visible;
@@ -340,7 +343,11 @@ class EventController extends Controller
         try {
             [$event] = $this->getEventAndUser($id);
         } catch (Exception $e) {
-            return $this->show404("Model not found for id: $id");
+            return $this->show404("Event not found for id: $id");
+        }
+        $status = $event->statusResolved();
+        if ($status != 'UPCOMING' || $status != "DRAFT") {
+            return $this->show404("Event has already gone live for id: $id");
         }
         $eventCategory = EventCategory::all();
         $eventTierList = EventTier::all();
@@ -374,6 +381,10 @@ class EventController extends Controller
                     $eventDetail = $this->storeLogic($eventDetail, $request);
                 } catch (TimeGreaterException $e) {
                     return back()->with('error', $e->getMessage());
+                }
+                $status = $eventDetail->statusResolved();
+                if ($status != 'UPCOMING' || $status != "DRAFT") {
+                    return $this->show404("Event has already gone live for id: $id");
                 }
                 $eventDetail->user_id  = auth()->user()->id;
                 $eventDetail->eventBanner  = $fileNameFinal;
