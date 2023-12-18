@@ -33,10 +33,17 @@ class ParticipantEventController extends Controller
     }
 
 
-    public function teamDetails($user_id)
+    public function teamList($user_id)
     {
-        $teamDetail = Team::Where('user_id',$user_id)->get();
-        return view('Participant.Layout.HeadTag', compact('teamDetail'));
+        $teamList = Team::Where('user_id',$user_id)->get();
+        return view('Participant.TeamList', compact('teamList'));
+    }
+
+
+    public function teamManagement($id)
+    {
+        $teamManage = Team::Where('id',$id)->get();
+        return view('Participant.Layout.TeamManagement', compact('teamManage'));
     }
 
 
@@ -53,7 +60,7 @@ class ParticipantEventController extends Controller
         $team->teamName = $request->input('teamName');
         $team->user_id  = auth()->user()->id;
         $team->save();
-        return redirect()->back()->with('status','Team Added Successfully');
+        return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
     }
 
    /* Select Team to Register */
