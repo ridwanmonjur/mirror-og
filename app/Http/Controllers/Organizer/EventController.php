@@ -103,13 +103,14 @@ class EventController extends Controller
             $gameTitle = $request->input("gameTitle");
             return $query->where('gameTitle', $gameTitle);
         });
-        $count = 10;
+        $count = 4;
         $eventList = $eventListQuery->where('user_id', $user->id)
             ->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
 
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
         if ($request->ajax()) {
+        dd($request->all());
             $view = view(
                 'Organizer.ManageEventScroll',
                 $outputArray
@@ -234,6 +235,11 @@ class EventController extends Controller
 
     public function destroyEventBanner($file)
     {
+        $fileNameInitial = str_replace("images/events/", "", $file);
+        $fileNameFinal = "images/events/$fileNameInitial";
+        if (file_exists($fileNameFinal)) {
+            unlink($fileNameFinal);
+        }
     }
 
     public function store(Request $request)

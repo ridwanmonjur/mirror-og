@@ -21,6 +21,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['prefix' => 'organizer'], function () {
+    Route::post('event/{index}', [EventController::class, 'index'])
+        ->name("event.index");
+});
+
 Route::name('stripe.')
     ->controller(StripeController::class)
     ->prefix('stripe')

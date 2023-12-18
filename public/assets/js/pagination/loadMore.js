@@ -48,3 +48,36 @@ function infinteLoadMore(page, ENDPOINT) {
         return;
     }
 }
+
+
+function infinteLoadMoreByPost(page, ENDPOINT) {
+    let noMoreDataElement = document.querySelector('.no-more-data');
+    let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
+    let hasClass = noMoreDataElement.classList.contains('d-none');
+    if (hasClass) {
+        let endpointFinal = page == null ? ENDPOINT : ENDPOINT + "?page=" + page
+        // window.history.replaceState({}, document.title, endpointFinal);
+        fetch(endpointFinal, {
+            method: 'GET',
+            headers: {
+                'Accept': 'text/html',
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => {
+                if (response.html == '') {
+                    noMoreDataElement.classList.remove('d-none');
+                    noMoreDataElement.style.display = 'flex';
+                    noMoreDataElement.style.justifyContent = 'center';
+                    noMoreDataElement.textContent = "We don't have more data to display";
+                }
+                // <!-- $('.auto-load').hide(); -->
+                scrollingPaginationElement.innerHTML += response.html;
+            })
+            .catch(function (error) {
+                console.log('Server error occured');
+            });
+    } else {
+        return;
+    }
+}
