@@ -132,7 +132,8 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                         <div>
                             <br><br>
                             <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
-                                <u>{{$status ?? 'Choose event status'}}</u>
+                                {{-- <u>{{$status ?? 'Choose event status'}}</u> --}}
+                                <u id="btn" >Join</u>
                             </button>
                             <br><br>
                             <div>
@@ -206,6 +207,18 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
 
             window.location.href = url;
         }
+    </script>
+    <script>
+        const btn = document.getElementById('btn');
+
+btn.addEventListener('click', function onClick() {
+  btn.style.backgroundColor = '#43A4D7';
+  btn.style.color = 'white';
+  btn.textContent = 'Joined';
+
+
+  
+});
     </script>
     <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
     <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
