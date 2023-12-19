@@ -16,7 +16,7 @@ $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
         <a class="event_status_1" style="@php echo $stylesEventStatus; @endphp">{{ $event->statusResolved() }}</a>
     </div><br>
     <div class="league_name">
-        <b>{{ $event->eventName }}</b><br>
+        <a href="/participant/event/{{ $event['id'] }}"> <b>{{ $event->eventName }}</b><br> </a>
         <a><small>{{ $event->region ?? 'South East Asia' }}</small></a>
     </div><br>
     <div class="trophy_caption">

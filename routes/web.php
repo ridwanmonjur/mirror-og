@@ -69,6 +69,7 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::get('/selectTeam/{id}', [ParticipantEventController::class, 'SelectTeamtoRegister']);
 			Route::post('/home', [ParticipantEventController::class, 'TeamtoRegister']);
 			Route::get('/confirm', [ParticipantEventController::class, 'ConfirmUpdate']);
+			Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent']);
 		});
 		Route::get(
 			'/permissions',

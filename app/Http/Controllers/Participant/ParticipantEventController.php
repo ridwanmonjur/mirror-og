@@ -89,4 +89,10 @@ class ParticipantEventController extends Controller
         
     }
 
+    public function ViewEvent(Request $request, $id)
+    {
+    $event = EventDetail::find($id);
+    return view('Participant.viewEvent', compact('event'));
+    }
+
 }

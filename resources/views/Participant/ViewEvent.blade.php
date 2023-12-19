@@ -92,9 +92,9 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                                             <p class="small-text"> <i> 104 followers </i> </p>
                                         </div>
                                     </div>
-                                    @if ($livePreview == 1)
+                                    
                                     <input type="submit" style="background-color: #8CCD39;" value="Resume creating...." onclick="goToEditScreen();">
-                                    @endif
+                                    
                                 </div>
                                 <br>
                                 <h4> <u> {{  $combinedStr }} </u> </h4>
