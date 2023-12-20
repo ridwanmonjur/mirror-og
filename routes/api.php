@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Organizer\InvitationController;
 use App\Http\Controllers\Organizer\EventController;
+use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\StripeController;
+use App\Models\Participant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,8 +23,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['prefix' => 'participant'], function () {
+    Route::post('event', [ParticipantEventController::class, 'index'])
+        ->name("event.index");
+});
+
+
 Route::group(['prefix' => 'organizer'], function () {
-    Route::post('event/{index}', [EventController::class, 'index'])
+    Route::post('event', [EventController::class, 'index'])
         ->name("event.index");
 });
 
