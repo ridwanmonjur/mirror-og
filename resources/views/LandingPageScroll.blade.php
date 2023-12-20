@@ -21,9 +21,14 @@ $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
     </div><br>
     <div class="trophy_caption">
         <img src="{{ asset('/assets/images/trophy.png') }}" class="trophy"><br>
-        <a class="league_caption">
+        {{-- <a class="league_caption">
             <b>Soon</b>
-        </a>
+        </a> --}}
+    </div>
+    <div style="text-align: center;">
+        <img src="{{ asset('/assets/images/eye.png') }}" alt="" height="20px" width="20px" style="padding: 10px;">
+        <img src="{{ asset('/assets/images/chart.png') }}" alt="" height="20px" width="20px" style="padding: 10px;">
+        <img src="{{ asset('/assets/images/share.png') }}" alt="" height="20px" width="20px" style="padding: 10px;">
     </div>
 </div>
 @endforeach
