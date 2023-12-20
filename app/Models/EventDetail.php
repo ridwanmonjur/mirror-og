@@ -47,6 +47,11 @@ class EventDetail extends Model
         return $this->belongsTo(PaymentTransaction::class, 'payment_transaction_id');
     }
 
+    public function joinEvent()
+    {
+        return $this->hasMany(JoinEvent::class);
+    }
+
     public function statusResolved()
     {
         if ($this->status == "DRAFT" || $this->status == "PREVIEW") {

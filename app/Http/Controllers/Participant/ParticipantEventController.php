@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Team;
 use App\Models\EventDetail;
+use App\Models\JoinEvent;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -93,6 +94,23 @@ class ParticipantEventController extends Controller
     {
     $event = EventDetail::find($id);
     return view('Participant.ViewEvent', compact('event'));
+    }
+
+
+
+    public function JoinEvent(Request $request, $id)
+    {
+
+       
+        
+        
+        $joint = new JoinEvent();
+        $joint->user_id  = auth()->user()->id;
+        // $join->event_details_id = $request->input('event_details_id');
+        $joint->event_details_id = $id;
+        $joint->save();
+
+        return redirect()->back()->with('status','Team Added Successfully');
     }
 
 }

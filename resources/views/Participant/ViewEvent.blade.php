@@ -131,10 +131,14 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                         </div>
                         <div>
                             <br><br>
-                            <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
+                            <form method="POST" action="{{ route('join.store',['id' => $event]) }} }}">
+                                @csrf
+                            <button type="submit" class="oceans-gaming-default-button">
                                 {{-- <u>{{$status ?? 'Choose event status'}}</u> --}}
-                                <u id="btn" >Join</u>
+                                <u>Join</u>
                             </button>
+                        </form>
+                        
                             <br><br>
                             <div>
                                 <div>

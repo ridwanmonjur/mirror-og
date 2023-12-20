@@ -70,6 +70,7 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::post('/home', [ParticipantEventController::class, 'TeamtoRegister']);
 			Route::get('/confirm', [ParticipantEventController::class, 'ConfirmUpdate']);
 			Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent']);
+			Route::post('/events/{id}', [ParticipantEventController::class, 'JoinEvent'])->name('join.store');
 		});
 		Route::get(
 			'/permissions',
