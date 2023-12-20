@@ -18,7 +18,8 @@
                         <input type="hidden" name="isPaymentDone"  id="isPaymentDone">
                         <input type="hidden" name="paymentMethod"  id="paymentMethod">
                         @include('Organizer.Layout.CreateEventTimelineBox')
-                        @if (session()->has('success'))
+                        @if (session()->has('error'))
+                        @include('Organizer.Layout.CreateEventTimelineWelcome', ['error' => session()->get('error')])
                         @else
                         @include('Organizer.Layout.CreateEventTimelineWelcome')
                         @endif

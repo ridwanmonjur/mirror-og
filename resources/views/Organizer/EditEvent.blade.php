@@ -23,8 +23,8 @@
                         <input type="hidden" name="eventTierId" id="eventTierId">
                         <input type="hidden" name="eventTypeId"  id="eventTypeId">
                         @include('Organizer.Layout.CreateEventTimelineBox')
-                        @if (session()->has('success'))
-                        @include('Organizer.Layout.CreateEventStepOneHide')
+                        @if (session()->has('error'))
+                        @include('Organizer.Layout.CreateEventStepOneShow', ['error' => session()->get('error')])
                         @else
                         @include('Organizer.Layout.CreateEventStepOneShow')
                         @endif

@@ -13,13 +13,13 @@ use App\Models\Organizer;
 use App\Models\PaymentTransaction;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Exceptions\TimeGreaterException;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\UnauthorizedException;
 
 class EventController extends Controller
 {
-    public function mappingEventStateResolve() {
-        return config('constants.mappingEventState'); 
-    } 
-
     public function home(): View
     {
         return view('Organizer.Home');
@@ -44,30 +44,31 @@ class EventController extends Controller
         $eventListQuery =  EventDetail::query();
         $organizer = Organizer::where('user_id', $user->id)->first();
         $eventListQuery->when($request->has('status'), function ($query) use ($request) {
-
             $status = $request->input('status');
-
-            $currentDateTime = Carbon::now();
+            $currentDateTime = Carbon::now()->utc();
             if ($status == 'ALL') {
                 return $query;
-            }
-            if ($status == 'LIVE') {
-                return $query->where(function ($query) use ($currentDateTime) {
-                    $query->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime])
-                        ->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime]);
-                });
-            }
-            if ($status == 'SCHEDULED') {
-                return $query->where(function ($query)  use ($currentDateTime) {
-                    $query->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime])
-                        ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
-                });
-            }
-            if ($status == 'DRAFT') {
-                return $query->where('status', 'DRAFT');
-            }
-            if ($status == 'ENDED') {
+            } elseif ($status == 'ENDED') {
                 return $query->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime]);
+            } elseif ($status == 'DRAFT') {
+                return $query->where('status', 'DRAFT');
+            } elseif ($status == 'LIVE') {
+                return $query
+                    ->where(function ($query) use ($currentDateTime) {
+                        return $query
+                            ->whereNull('sub_action_public_date')
+                            ->orWhereNull('sub_action_public_time')
+                            ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime]);
+                    })
+                    ->where('status', '<>', 'DRAFT')
+                    ->where('status', '<>', 'PREVIEW')
+                    ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
+            } elseif ($status == 'SCHEDULED') {
+                return $query
+                    ->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime])
+                    ->where('status', '<>', 'DRAFT')
+                    ->where('status', '<>', 'PREVIEW')
+                    ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
             }
             return $query;
         });
@@ -102,11 +103,11 @@ class EventController extends Controller
             $gameTitle = $request->input("gameTitle");
             return $query->where('gameTitle', $gameTitle);
         });
-
+        $count = 10;
         $eventList = $eventListQuery->where('user_id', $user->id)
-            ->paginate(4);
-        $mappingEventState = $this->mappingEventStateResolve();
-        $count = 4;
+            ->paginate($count);
+        $mappingEventState = EventDetail::mappingEventStateResolve();
+
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
         if ($request->ajax()) {
             $view = view(
@@ -137,19 +138,16 @@ class EventController extends Controller
         ]);
     }
 
-    public function fixTimeToRemoveSeconds($time)
-    {
-        // Check if the startTime contains seconds
-        if (substr_count($time, ':') === 2) {
-            // If it has seconds, omit the seconds part
-            $time = explode(':', $time);
-            $time = $time[0] . ':' . $time[1];
-        }
-        return $time;
-    }
+
 
     public function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
     {
+        $isEditMode = $eventDetail->id != null;
+        // disable preview mode checjs if edit mode
+        $isPreviewMode = $isEditMode ? false : $request->livePreview == "true";
+        $carbonStartDateTime = null;
+        $carbonEndDateTime = null;
+        $carbonPublishedDateTime = null;
         // dd($request);
         // step1
         $eventDetail->gameTitle = $request->gameTitle;
@@ -160,9 +158,9 @@ class EventController extends Controller
         $eventDetail->event_category_id = $request->gameTitleId;
         // step2
         $startDate = $request->startDate;
-        $startTime = $this->fixTimeToRemoveSeconds($request->startTime);
+        $startTime = $eventDetail->fixTimeToRemoveSeconds($request->startTime);
         $endDate = $request->endDate;
-        $endTime = $this->fixTimeToRemoveSeconds($request->endTime);
+        $endTime = $eventDetail->fixTimeToRemoveSeconds($request->endTime);
         if ($startDate && $startTime) {
             $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $startTime)
                 ->utc();
@@ -173,14 +171,14 @@ class EventController extends Controller
             $eventDetail->startTime = null;
         }
         if ($endDate && $endTime) {
-
             $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $endTime)
                 ->utc();
-            $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
-            $eventDetail->endTime  = $carbonEndDateTime->format('H:i');
-        } else {
-            $eventDetail->endDate = null;
-            $eventDetail->endTime  = null;
+            if ($startDate && $startTime && $carbonEndDateTime > $carbonStartDateTime) {
+                $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
+                $eventDetail->endTime  = $carbonEndDateTime->format('H:i');
+            } else {
+                throw new TimeGreaterException("End date and time must be greater than start date and time.");
+            }
         }
         $eventDetail->eventName  = $request->eventName;
         $eventDetail->eventDescription  = $request->eventDescription;
@@ -188,40 +186,37 @@ class EventController extends Controller
         // payment
         $transaction = $eventDetail->payment_transaction;
         if ($transaction && $transaction->payment_id && $transaction->status == "SUCCESS") {
-        } else {
-            if ($request->isPaymentDone == "true") {
-                $transaction = new PaymentTransaction();
-                $transaction->payment_id = $request->paymentMethod;
-                $transaction->payment_status = "SUCCESS";
-                $transaction->save();
-                $eventDetail->payment_transaction_id = $transaction->id;
-            } else {
-            }
+        } elseif ($request->isPaymentDone == "true" && $request->paymentMethod) {
+            $transaction = new PaymentTransaction();
+            $transaction->payment_id = $request->paymentMethod;
+            $transaction->payment_status = "SUCCESS";
+            $transaction->save();
+            $eventDetail->payment_transaction_id = $transaction->id;
+        } else if ($isPreviewMode && !$isEditMode) {
+            throw new TimeGreaterException("Payment is not done.");
         }
-
-        // launch_visible, launch_schedule, launch_time, launch_date
-        if ($request->launch_visible == "DRAFT") {
+        if ($request->livePreview == "true" && !$isEditMode) {
+            $eventDetail->status = "DRAFT";
+            $eventDetail->sub_action_public_date  = $request->launch_date;
+            $eventDetail->sub_action_public_time  = $request->launch_time;
+        } else if ($request->launch_visible == "DRAFT") {
             $eventDetail->status = "DRAFT";
             $eventDetail->sub_action_public_date  = null;
             $eventDetail->sub_action_public_time  = null;
         } else {
             $launch_date = $request->launch_date;
-            $launch_time = $this->fixTimeToRemoveSeconds($request->launch_time);
+            $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time);
             if ($request->launch_schedule == "schedule" && $launch_date && $launch_time) {
-                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->launch_date . ' ' . $launch_time)
+                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date . ' ' . $launch_time)
                     ->utc();
                 $eventDetail->status = "SCHEDULED";
                 $eventDetail->sub_action_public_date  = $carbonPublishedDateTime->format('Y-m-d');
                 $eventDetail->sub_action_public_time  = $carbonPublishedDateTime->format('H:i');
-            } else if ($request->launch_schedule == "now") {
-                $carbonPublishedDateTime = Carbon::now()->utc();
-                $eventDetail->status = "LIVE";
-                $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
-                $eventDetail->sub_action_public_time = $carbonPublishedDateTime->format('H:i');
             } else {
-                $eventDetail->status = "LIVE";
-                $launch_date = null;
-                $launch_time = null;
+                $carbonPublishedDateTime = Carbon::now()->utc();
+                $eventDetail->status = "UPCOMING";
+                $eventDetail->sub_action_public_date = null;
+                $eventDetail->sub_action_public_time = null;
             }
         }
         $eventDetail->sub_action_private  = $request->launch_visible == "private" ? "private" : "public";
@@ -241,8 +236,6 @@ class EventController extends Controller
     {
     }
 
-
-
     public function store(Request $request)
     {
         // try {
@@ -251,8 +244,11 @@ class EventController extends Controller
             $fileNameFinal = $this->storeEventBanner($request->file('eventBanner'));
         }
         $eventDetail = new EventDetail;
-        $eventDetail = $this->storeLogic($eventDetail, $request);
-
+        try {
+            $eventDetail = $this->storeLogic($eventDetail, $request);
+        } catch (TimeGreaterException $e) {
+            return back()->with('error', $e->getMessage());
+        }
         $eventDetail->user_id  = auth()->user()->id;
         $eventDetail->eventBanner  = $fileNameFinal;
         $eventDetail->save();
@@ -269,20 +265,38 @@ class EventController extends Controller
         $event = EventDetail
             ::with('type', 'tier', 'game')
             ->where('user_id', $authUser->id)
-            ->findOrFail($id);
-        $isUser = true;
-        return [$event, $isUser];
+            ->find($id);
+        $isUserSameAsAuth = true;
+        if (!$event) {
+            throw new ModelNotFoundException("Model not found for id: $id");
+        }
+        // if ($event->user_id != $authUser->id) {
+        //     throw new UnauthorizedException("Restricted access. This is not your resource.");
+        // }
+        return [$event, $isUserSameAsAuth, $authUser];
+    }
+
+    public function show404($error): View
+    {
+        return view(
+            'Organizer.EventNotFound',
+            compact('error')
+        );
     }
 
     public function showLive($id): View
     {
-        [$event, $isUser] = $this->getEventAndUser($id);
+        try {
+            [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+        } catch (Exception $e) {
+            return $this->show404("Model not found for id: $id");
+        }
         return view(
             'Organizer.ViewEvent',
             [
                 'event' => $event,
-                'mappingEventState' => $this->mappingEventStateResolve(),
-                'isUser' => $isUser,
+                'mappingEventState' => EventDetail::mappingEventStateResolve(),
+                'isUser' => $isUserSameAsAuth,
                 'livePreview' => 1
             ]
         );
@@ -290,13 +304,17 @@ class EventController extends Controller
 
     public function showSuccess($id): View
     {
-        [$event, $isUser] = $this->getEventAndUser($id);
+        try {
+            [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+        } catch (Exception $e) {
+            return $this->show404("Model not found for id: $id");
+        }
         return view(
             'Organizer.CreateEventSuccess',
             [
                 'event' => $event,
-                'mappingEventState' => $this->mappingEventStateResolve(),
-                'isUser' => $isUser,
+                'mappingEventState' => EventDetail::mappingEventStateResolve(),
+                'isUser' => $isUserSameAsAuth,
                 'livePreview' => 1
             ]
         );
@@ -304,24 +322,33 @@ class EventController extends Controller
 
     public function show($id): View
     {
-        [$event, $isUser] = $this->getEventAndUser($id);
+        try {
+            [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+        } catch (Exception $e) {
+            return $this->show404("Model not found for id: $id");
+        }
         return view(
             'Organizer.ViewEvent',
             [
                 'event' => $event,
-                'mappingEventState' => $this->mappingEventStateResolve(),
-                'isUser' => $isUser,
+                'mappingEventState' => EventDetail::mappingEventStateResolve(),
+                'isUser' => $isUserSameAsAuth,
                 'livePreview' => 0
             ]
         );
     }
 
-
     public function edit($id)
     {
-        $event = EventDetail
-            ::with('type', 'tier', 'game')
-            ->findOrFail($id);
+        try {
+            [$event] = $this->getEventAndUser($id);
+        } catch (Exception $e) {
+            return $this->show404("Event not found for id: $id");
+        }
+        $status = $event->statusResolved();
+        if ($status != 'UPCOMING' || $status != "DRAFT") {
+            return $this->show404("Event has already gone live for id: $id");
+        }
         $eventCategory = EventCategory::all();
         $eventTierList = EventTier::all();
         $eventTypeList = EventType::all();
@@ -334,42 +361,44 @@ class EventController extends Controller
         ]);
     }
 
-
     public function updateForm($id, Request $request)
     {
-        // try {
-        $eventId = $id;
-        $eventDetail = EventDetail::find($eventId);
-        if ($eventId) {
-            $fileNameFinal = null;
-            if ($request->hasFile('eventBanner')) {
-                $fileNameFinal = $this->storeEventBanner($request->file('eventBanner'));
-                if ($eventDetail->eventBanner) {
-                    // delete please
-                    // unlink(storage_path('app/public/' . $eventDetail->eventBanner));
-                }
-            } else {
-                $fileNameFinal = $eventDetail->eventBanner;
-            }
-            // Fetch the existing event from the database
+        try {
+            $eventId = $id;
             $eventDetail = EventDetail::find($eventId);
-            $eventDetail = $this->storeLogic($eventDetail, $request);
-            $eventDetail->user_id  = auth()->user()->id;
-            $eventDetail->eventBanner  = $fileNameFinal;
-            $eventDetail->save();
-            // dd($eventId, $request, $eventDetail);
-            if ($request->livePreview == "true") {
-                return redirect('organizer/live/' . $eventDetail->id);
+            if ($eventId) {
+                $fileNameFinal = null;
+                if ($request->hasFile('eventBanner')) {
+                    $fileNameFinal = $this->storeEventBanner($request->file('eventBanner'));
+                    if ($eventDetail->eventBanner) {
+                        $this->destroyEventBanner($eventDetail->eventBanner);
+                    }
+                } else {
+                    $fileNameFinal = $eventDetail->eventBanner;
+                }
+                $eventDetail = EventDetail::find($eventId);
+                try {
+                    $eventDetail = $this->storeLogic($eventDetail, $request);
+                } catch (TimeGreaterException $e) {
+                    return back()->with('error', $e->getMessage());
+                }
+                $status = $eventDetail->statusResolved();
+                if ($status != 'UPCOMING' || $status != "DRAFT") {
+                    return $this->show404("Event has already gone live for id: $id");
+                }
+                $eventDetail->user_id  = auth()->user()->id;
+                $eventDetail->eventBanner  = $fileNameFinal;
+                $eventDetail->save();
+                if ($request->livePreview == "true") {
+                    return redirect('organizer/live/' . $eventDetail->id);
+                }
+                return redirect('organizer/success/' . $eventDetail->id);
+            } else {
+                return back()->with('error', 'Event id missing!');
             }
-            return redirect('organizer/success/' . $eventDetail->id);
-        } else {
-            // return back()->with('error', 'Event id missing!');
-            return redirect('organizer/home');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Something went wrong with saving data!');
         }
-        // } 
-        // catch (\Exception $e) {
-        // return back()->with('error', 'Something went wrong with saving data!');
-        // }
     }
 
     public function destroy($id)
@@ -378,5 +407,4 @@ class EventController extends Controller
         $event->delete();
         return redirect('organizer/event');
     }
-   
 }

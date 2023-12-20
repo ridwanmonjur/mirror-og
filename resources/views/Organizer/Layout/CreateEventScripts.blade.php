@@ -5,12 +5,8 @@
 <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
 <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
 <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
-<!-- Including the Tagify library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.min.js"></script>
-<script>
-    // Initializing Tagify on the input field
-    new Tagify(document.querySelector('#eventTags'), {});
-</script>
+
 <script>
     function checkStringNullOrEmptyAndReturn(value) {
         if (value === null || value === undefined) return null;
@@ -201,11 +197,13 @@
             input.setAttribute('value', paymentMethod.id)
             cardForm.appendChild(input)
             // payment method created
-            setFormValues({
-                'isPaymentDone': true,
-                paymentMethod: paymentMethod.id
-            });
-            goToNextScreen('step-11', 'timeline-4');
+
+            let paymentDiv = document.querySelector('.choose-payment-method');
+            paymentDiv.style.backgroundColor = 'green';
+            paymentDiv.textContent = 'Payment successful';
+            paymentDiv.removeAttribute('data-bs-toggle');
+            paymentDiv.removeAttribute('data-bs-target');
+            // goToNextScreen('step-11', 'timeline-4');
             document.getElementById('modal-close').click();
             const form = new FormData(cardForm);
             const data = {};
@@ -214,7 +212,7 @@
             });
             fetch("{{ route('stripe.organizerTeamPay') }}", {
                     method: "POST",
-                    divs: {
+                    headers: {
                         "Content-Type": "application/json",
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     },
@@ -222,11 +220,22 @@
                 })
                 .then(response => response.json())
                 .then(responseData => {
-
+                    console.log(responseData);
+                    setFormValues({
+                        'isPaymentDone': true,
+                        paymentMethod: paymentMethod.id
+                    });
+                    Toast.fire({
+                        icon: 'success',
+                        text: "Payment succeeded. Please proceed to the next step."
+                    })
                 })
                 .catch(error => {
-                    // Handle errors here
                     console.error(error);
+                    Toast.fire({
+                        icon: 'error',
+                        text: "Payment succeeded. Please proceed to the next step."
+                    })
                 })
         }
     })
@@ -297,6 +306,10 @@
                 'sub_action_private': $event?.sub_action_private,
                 'sub_action_team': $event?.sub_action_team,
             });
+            new Tagify(document.querySelector('#eventTags'), [...$event?.eventTags] ?? []);
+
+            // tagify.addTags(["banana", "orange", "apple"])
+
             // <input type="hidden" name="livePreview" id="livePreview" value="false">
             //             <input type="hidden" name="gameTitle" id="gameTitle">
             //             <input type="hidden" name="eventTier" id="eventTier">
@@ -307,6 +320,9 @@
             //             <input type="hidden" name="isPaymentDone"  id="isPaymentDone">
             //             <input type="hidden" name="paymentMethod"  id="paymentMethod">
         }
+        else{
+            new Tagify(document.querySelector('#eventTags'), {});
+        }
     }
     $(document).on("keydown", ":input:not(textarea)", function(event) {
         if (event.key == "Enter") {
@@ -316,12 +332,8 @@
 </script>
 
 
-<!-- Including the Tagify library -->
 
 <script>
-    // Initializing Tagify on the input field
-    new Tagify(document.querySelector('#eventTags'), {});
-
     function selectOption(element, label, imageUrl) {
         // Add the selected class to the parent button
         const dropdownButton = element.closest('.dropdown').querySelector('.dropbtn');

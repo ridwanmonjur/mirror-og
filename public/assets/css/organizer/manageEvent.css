@@ -59,6 +59,11 @@ nav svg,
     cursor: pointer;
 }
 
+
+img.larger-hover:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}
 .navbar img:hover,
 nav img:hover,
 .search-bar svg:hover,
@@ -70,9 +75,14 @@ nav svg:hover,
  {
     transform: scale(1.1);
 }
-
 .rounded-box:hover{
     transform: scale(1.03, 1.05);
+}
+
+ .group-hover-flexbox{
+    padding-top: 30px;
+    display: flex;
+    justify-content: space-around;
 }
 
 .search-bar2-adjust {
@@ -202,6 +212,10 @@ input[type="submit"]:active {
     /* box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); */
     z-index: 1;
 }
+.rounded-box-no-tier {
+    border-color: rgb(180, 180, 180) !important;
+}
+
 
 .rounded-box-turtle {
     border-color: #8CCD39;
@@ -279,7 +293,7 @@ input[type="submit"]:active {
 }
 
 .card-text {
-    padding: 10px 20px;
+    padding: 10px 20px 0px;
 }
 
 .card-text .small-text {

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Organizer\InvitationController;
 use App\Http\Controllers\Organizer\EventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use Illuminate\Support\Facades\Artisan;
@@ -24,12 +25,12 @@ Route::group([
 ], function () {
 });
 Route::get('/artisan/storage', function () {
-	$exitCode = Artisan::call('storage:link', [] );
+	$exitCode = Artisan::call('storage:link', []);
 	echo $exitCode; // 0 exit code for no errors.});
 });
-Route::get('/artisan/migrate', function(){
-    Artisan::call('migrate');
-    dd('migrated!');
+Route::get('/artisan/migrate', function () {
+	Artisan::call('migrate');
+	dd('migrated!');
 });
 
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
@@ -61,6 +62,14 @@ Route::group(['prefix' => 'participant'], function () {
 	Route::group(['middleware' => 'auth'], function () {
 		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
 			Route::get('/home', [ParticipantEventController::class, 'home'])->name("participant.home.view");
+			Route::get('/team-list/{id}', [ParticipantEventController::class, 'teamList'])->name("participant.team.view");
+			Route::get('/create-team/{id}', [ParticipantEventController::class, 'createTeamView']);
+			Route::post('/team-management', [ParticipantEventController::class, 'TeamStore']);
+			Route::get('/team-manage/{id}', [ParticipantEventController::class, 'teamManagement'])->name("participant.teamManagement.view");;
+			Route::get('/selectTeam/{id}', [ParticipantEventController::class, 'SelectTeamtoRegister']);
+			Route::post('/home', [ParticipantEventController::class, 'TeamtoRegister']);
+			Route::get('/confirm', [ParticipantEventController::class, 'ConfirmUpdate']);
+			Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent']);
 		});
 		Route::get(
 			'/permissions',
@@ -84,6 +93,8 @@ Route::group(['prefix' => 'organizer'], function () {
 				'edit' => "event.edit",
 				'update' => "event.update",
 			]);
+			Route::get('/event/{id}/invitation', [InvitationController::class, 'index'])
+				->name('event.invitation.index');
 			Route::post('event/updateForm/{id}', [EventController::class, 'updateForm'])->name('event.updateForm');
 			Route::get('success/{id}', [EventController::class, 'showSuccess'])
 				->middleware('prevent-back-button')

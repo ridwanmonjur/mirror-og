@@ -1,5 +1,8 @@
 <div id="step-1" class="">
     <div class="welcome text-center" style="margin-bottom: -25px !important;">
+        @if (isset($error))
+        <p style="color:red;">{{ $error }}</p>
+        @endif
         <u>
             <h3>
                 STEP 1: Choose your Event Categories
@@ -7,6 +10,8 @@
         </u>
         <p>First, select an esport title</p>
         <div class="image-scroll-container box-width">
+
+
             @foreach ($eventCategory as $category)
             @if ($category->gameIcon)
             <div class="scroll-images" onclick="

@@ -1,3 +1,7 @@
+@php
+$status = $event? $event->statusResolved(): null;
+@endphp
+
 <div id="step-2" class="d-none">
 
     <div class="welcome text-center" style="margin-bottom: 0px !important;">
@@ -337,9 +341,9 @@
                 </div>
                 @if ($event)
                 @if ($event->eventBanner)
-                <img class="banner-preview" src="{{asset('storage/'.$event->eventBanner)}}" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
+                <img class="banner-preview" src="{{bladeImageNull($event->eventBanner)}}" {!! trustedBladeHandleImageFailure(); !!} id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
                 @else
-                <div>Please enter an image</div>
+                <div style="color: red;">Please enter an image</div>
                 <img class="d-none banner-preview" id="previewImage" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: cover;">
                 @endif
                 @else
@@ -421,7 +425,7 @@
     <div class="payment-summary">
 
         <!-- public part -->
-        @if ($event && $event->sub_action_private == 'public' && $event->status != 'DRAFT')
+        @if ($event && $event->sub_action_private == 'public' && $status != 'DRAFT')
         <input checked onchange="toggleRadio(this, 'public')" required type="radio" id="public" name="launch_visible" value="public">
         @else
         <input onchange="toggleRadio(this, 'public')" required type="radio" id="public" name="launch_visible" value="public">
@@ -430,7 +434,7 @@
         <div class="radio-indent public">
             <p>Everyone can see and join your event</p>
         </div>
-        @if ($event && $event->sub_action_private == 'public' && $event->status != 'DRAFT')
+        @if ($event && $event->sub_action_private == 'public' && $status != 'DRAFT')
         <div class="radio-indent-hidden public ">
             <!-- IF RADIO 1 -->
             @if ($event && $event->sub_action_public_date != null && $event->sub_action_public_time != null)
@@ -487,7 +491,7 @@
 
 
         <!-- private part -->
-        @if ($event && $event->sub_action_private == 'private' && $event->status != 'DRAFT')
+        @if ($event && $event->sub_action_private == 'private' && $status != 'DRAFT')
         <input checked onchange="toggleRadio(this, 'private')" required type="radio" id="private" name="launch_visible" value="private">
         @else
         <input onchange="toggleRadio(this, 'private')" required type="radio" id="private" name="launch_visible" value="private">
@@ -497,7 +501,7 @@
             <p>Only players you invite can see and join your event</p>
         </div>
 
-        @if ($event && $event->sub_action_private == 'private' && $event->status != 'DRAFT')
+        @if ($event && $event->sub_action_private == 'private' && $status != 'DRAFT')
         <div class="radio-indent-hidden private">
             @if ($event && $event->sub_action_public_date != null && $event->sub_action_public_time != null)
             <input type="radio" id="sub_action_public" name="launch_schedule" value="now">
@@ -547,7 +551,7 @@
         @endif
 
         <!-- DRAFT PART -->
-        @if ($event && $event->status == 'DRAFT')
+        @if ($event && $status == 'DRAFT')
         <input checked onchange="toggleRadio(this, 'draft')" type="radio" id="draft" name="launch_visible" required value="DRAFT">
         @else
         <input onchange="toggleRadio(this, 'draft')" type="radio" id="draft" name="launch_visible" required value="DRAFT">
@@ -572,7 +576,7 @@
     <br>
     <div class="flexbox box-width">
         <button onclick="goToNextScreen('step-10', 'timeline-3')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-        <button onclick="saveEvent()" type="button" type="button" class="oceans-gaming-default-button"> Step 4 > </button>
+        <button onclick="saveEvent(true)" type="button" type="button" class="oceans-gaming-default-button"> Step 4 > </button>
     </div>
     <br>
 
@@ -593,8 +597,8 @@
         <p>Are your sure you want to launch your event now?</p>
         <br>
         <div class="flexbox box-width">
-            <button onclick="goToNextScreen('step-13', 'timeline-4')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Cancel </button>
-            <button onclick="saveEvent()" type="button" class="oceans-gaming-default-button"> Yes, I'm sure </button>
+            <button onclick="goToNextScreen('step-11', 'timeline-4')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Cancel </button>
+            <button onclick="saveEvent(false)" type="button" class="oceans-gaming-default-button"> Yes, I'm sure </button>
         </div>
         <br>
     </div>

@@ -5,12 +5,24 @@ use Carbon\Carbon;
 function bladeEventStatusStyleMapping($status)
 {
     $mappingEventState = config('constants.mappingEventState');
-    $status = $status ?? 'LIVE';
+    $status = $status ?? 'NO_STATUS';
     $stylesEventStatus = '';
     $stylesEventStatus .= 'background-color: ' . $mappingEventState[$status]['buttonBackgroundColor'] . ' ;';
     $stylesEventStatus .= 'color: ' . $mappingEventState[$status]['buttonTextColor'] . ' ; ';
     $stylesEventStatus .= 'border: 1px solid ' . $mappingEventState[$status]['borderColor'] . ' ; ';
     return $stylesEventStatus;
+}
+
+function fixTimeToRemoveSeconds($time)
+{
+    if ($time == null) {
+        return null;
+    }
+    if (substr_count($time, ':') === 2) {
+        $time = explode(':', $time);
+        $time = $time[0] . ':' . $time[1];
+    }
+    return $time;
 }
 
 function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants)
@@ -35,8 +47,9 @@ function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants
 
 function bladeGenerateEventStartEndDateStr($startDate, $startTime)
 {
+    $startTime= fixTimeToRemoveSeconds($startTime);
     if ($startDate != null && $startTime != null) {
-        $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i:s', $startDate . ' ' . $startTime, 'UTC') ?? null;
+        $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $startDate . ' ' . $startTime, 'UTC') ?? null;
         $carbonDateTimeUtc = $carbonDateTimeUtc->setTimezone('Asia/Singapore');
         $datePart = $carbonDateTimeUtc->format('Y-m-d');
         $timePart = $carbonDateTimeUtc->isoFormat('h:mm a');
@@ -47,12 +60,12 @@ function bladeGenerateEventStartEndDateStr($startDate, $startTime)
         $datePart = 'Not set';
         $timePart = 'Not set';
         $dayStr = '';
-        $dateStr = 'Please enter dae and time';
+        $dateStr = 'Please enter date and time';
         $combinedStr = 'Not set';
     }
     return [
         'datePart' => $datePart,
-        '$dateStr' => $dateStr,
+        'dateStr' => $dateStr,
         'timePart' => $timePart,
         'dayStr' => $dayStr,
         'combinedStr' => $combinedStr
@@ -96,4 +109,10 @@ function bladeEventGameImage($eventBanner)
         $eventBannerImg = asset('assets/images/createEvent/question.png');
     }
     return $eventBannerImg;
+}
+
+function bladeEventTowerLowerClass($eventTier)
+{
+    $eventTierLower= $eventTier ? strtolower($eventTier) : 'no-tier';
+    return $eventTierLower;
 }

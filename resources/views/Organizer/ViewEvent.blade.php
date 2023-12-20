@@ -2,24 +2,18 @@
 
 @php
 
-$stylesEventStatus = bladeEventStatusStyleMapping($event->status);
+$status = $event->statusResolved();
+$stylesEventStatus = bladeEventStatusStyleMapping($status);
 $stylesEventRatio= bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
 
-if ($event->eventTier) $eventTierLower=strtolower($event->eventTier);
-else $eventTierLower = null;
+$eventTierLower= bladeEventTowerLowerClass($event->eventTier);
+
 $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
-[
-$datePart,
-$timePart,
-$dayStr,
-$combinedStr,
-$dateStr
-] = array_values($dateArray);
+extract($dateArray);
 
 $eventTierLowerImg = bladeEventTierImage($event->eventTier);
 
 $eventBannerImg = bladeImageNull($event->eventBanner);
-
 
 
 @endphp
@@ -35,14 +29,16 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                         View your events
                     </h3>
                 </u>
-                @if ($livePreview == 0)
+                {{-- @if ($livePreview == 0 )
                 <div>
                     <input type="submit" value="Create Event" onclick="goToCreateScreen();">
-                    <input type="submit" style="background-color: #8CCD39;" value="Edit..." onclick="goToEditScreen();">
+                    @if ($status == 'DRAFT' || $status == "PREVIEW")
+                        <input type="submit" style="background-color: #8CCD39;" value="Edit..." onclick="goToEditScreen();">
+                    @endif
                 </div>
                 @else
                 <input type="submit" style="background-color: #8CCD39;" value="Resume creating..." onclick="goToEditScreen();">
-                @endif
+                @endif --}}
             </header>
         </div>
         <br><br>
@@ -59,11 +55,11 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                 <div style="padding-left: 20px;padding-right:20px;">
                     <div>
                         @if ($event->eventBanner)
-                        <img width="500" height="300" " style="object-fit: cover;" {!! trustedBladeHandleImageFailure(); !!} src="{{ $eventBannerImg }}" alt="">
+                        <img width="500" height="300" " style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!} src="{{ $eventBannerImg }}" alt="">
                         @else
                         <div>
                             <br>
-                            <img style="object-fit: cover;" {!! trustedBladeHandleImageFailure(); !!} alt="">
+                            <img style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!} alt="">
                             <h5>
                                 Please enter a banner image.
                             </h5>
@@ -101,8 +97,8 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                                     @endif
                                 </div>
                                 <br>
-                                <h4> <u> @php echo $combinedStr; @endphp </u> </h4>
-                                <h4> <u> @php echo strtoupper($timePart); @endphp </u> </h4>
+                                <h4> <u> {{  $combinedStr }} </u> </h4>
+                                <h4> <u> {{ strtoupper($timePart) }} </u> </h4>
                                 <br>
                                 <div>
                                     <div class="tab">
@@ -136,7 +132,7 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                         <div>
                             <br><br>
                             <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
-                                <u>{{$event->status ?? 'Choose event status'}}</u>
+                                <u>{{$status ?? 'Choose event status'}}</u>
                             </button>
                             <br><br>
                             <div>

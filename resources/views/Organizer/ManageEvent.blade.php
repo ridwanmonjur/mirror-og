@@ -157,6 +157,24 @@
             </div>
         </div>
         <br><br>
+        <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Share on social media</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        NEED TO GET UI FROM LEIGH   
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="scrolling-pagination grid-container">
             @include("Organizer.ManageEventScroll")
@@ -168,6 +186,14 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
+            const copyUrlFunction = (copyUrl) => {
+                navigator.clipboard.writeText(copyUrl).then(function() {
+                    console.log('Copying to clipboard was successful! Copied: ' + copyUrl);
+                }, function(err) {
+                    console.error('Could not copy text to clipboard: ', err);
+                });
+            }
+
             var ENDPOINT;
 
             function getQueryStringValue(key) {
@@ -235,7 +261,7 @@
                     isObject: true
                 });
                 params.search = inputValue;
-                params.page=1;
+                params.page = 1;
                 ENDPOINT = `/organizer/event/?` + convertObjectToURLString(params);
                 document.querySelector('.scrolling-pagination').innerHTML = '';
                 window.history.replaceState({}, document.title, ENDPOINT);
@@ -409,7 +435,7 @@
                     var windowHeight = window.innerHeight;
                     var documentHeight = document.documentElement.scrollHeight;
                     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    if (scrollTop + windowHeight >= documentHeight ) {
+                    if (scrollTop + windowHeight >= documentHeight) {
                         let params = convertUrlStringToQueryStringOrObject({
                             isObject: true
                         });
@@ -423,6 +449,7 @@
         </script>
     </main>
     <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
-
-
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"> </script>
     <!-- <script src="script.js"></script> -->
