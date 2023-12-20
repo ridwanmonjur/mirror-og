@@ -110,7 +110,7 @@ class ParticipantEventController extends Controller
         $joint->event_details_id = $id;
         $joint->save();
 
-        return redirect()->back()->with('status','Team Added Successfully');
+        return redirect('/participant/selectTeam');
     }
 
 }
