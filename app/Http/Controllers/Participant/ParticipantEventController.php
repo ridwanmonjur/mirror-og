@@ -76,7 +76,7 @@ class ParticipantEventController extends Controller
     public function TeamtoRegister(Request $request)
     {
         $member = new Member;
-        $member->teamName = $request->input('teamName');
+        $member->teamName = $request->input('selectedTeamName');
         $member->user_id  = auth()->user()->id;
         $member->save();
         return redirect()->back()->with('status','Team Added Successfully');
