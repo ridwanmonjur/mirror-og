@@ -22,8 +22,30 @@ function searchNavbar(event) {
         },
         body: JSON.stringify({ searchText: searchText })
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log(data);
+
+        // Assuming you want to update the document with the fetched data
+        // Replace this with your actual logic to update the DOM
+        document.innerHTML = ''; // Clear existing content
+
+        data.forEach(event => {
+            const eventElement = createEventElement(event);
+            document.appendChild(eventElement);
+        });
+    })
     .then(data => {
         console.log(data);
     })
+}
+
+function createEventElement(event) {
+    // Replace this with your actual logic to create the event element
+    // Example: Create a div with event information
+    const eventDiv = document.createElement('div');
+    eventDiv.innerHTML = `
+        <b>${event.eventName}</b><br>
+        <small>${event.region || 'South East Asia'}</small>
+    `;
+    return eventDiv;
 }

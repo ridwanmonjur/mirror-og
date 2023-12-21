@@ -24,13 +24,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'participant'], function () {
-    Route::post('event', [ParticipantEventController::class, 'index'])
+    Route::post('events', [ParticipantEventController::class, 'index'])
         ->name("event.index");
 });
 
 
 Route::group(['prefix' => 'organizer'], function () {
-    Route::post('event', [EventController::class, 'index'])
+    Route::post('events', [EventController::class, 'index'])
         ->name("event.index");
 });
 
