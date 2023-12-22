@@ -8,6 +8,7 @@ use App\Models\Team;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\Member;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -75,6 +76,15 @@ class ParticipantEventController extends Controller
 
     public function TeamtoRegister(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'selectedTeamName' => 'required', // Validation rule for 'selectedTeamName'
+            // Add other validation rules for additional fields if needed
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         $member = new Member;
         $member->teamName = $request->input('selectedTeamName');
         $member->user_id  = auth()->user()->id;
