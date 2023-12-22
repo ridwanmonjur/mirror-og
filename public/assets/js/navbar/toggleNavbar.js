@@ -14,8 +14,9 @@ function searchNavbar(event) {
     } else {
         endpoint = "/participant/events";
     }
-
-    fetch(endpoint, {
+    let endpointFinal = page==null? ENDPOINT: ENDPOINT + "?page=" + page
+        // window.history.replaceState({}, document.title, endpointFinal);
+    fetch(endpointFinal, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -24,15 +25,20 @@ function searchNavbar(event) {
     })
     .then(response => {
         console.log(data);
-
-        // Assuming you want to update the document with the fetched data
-        // Replace this with your actual logic to update the DOM
-        document.innerHTML = ''; // Clear existing content
-
         data.forEach(event => {
-            const eventElement = createEventElement(event);
-            document.appendChild(eventElement);
+            createEventElement(event);
         });
+
+        const currentUrl = new URL(window.location.href);
+
+        const queryParams = currentUrl.searchParams;
+        if (!queryParams.has('page')) {
+            const eventDiv = document.querySelector('.event');
+            eventDiv.innerHTML = ""
+        } 
+        createEventElement(event);
+
+    
     })
     .then(data => {
         console.log(data);
@@ -42,8 +48,20 @@ function searchNavbar(event) {
 function createEventElement(event) {
     // Replace this with your actual logic to create the event element
     // Example: Create a div with event information
-    const eventDiv = document.createElement('div');
+    const eventDiv = document.querySelector('.event');
     eventDiv.innerHTML = `
+        <b>${event.eventName}</b><br>
+        <small>${event.region || 'South East Asia'}</small>
+    `;
+    return eventDiv;
+}
+
+
+function appendEventElement(event) {
+    // Replace this with your actual logic to create the event element
+    // Example: Create a div with event information
+    const eventDiv = document.querySelector('.event');
+    eventDiv.innerHTML += `
         <b>${event.eventName}</b><br>
         <small>${event.region || 'South East Asia'}</small>
     `;
