@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Team;
 use App\Models\EventDetail;
+use App\Models\JoinEvent;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -75,7 +76,7 @@ class ParticipantEventController extends Controller
     public function TeamtoRegister(Request $request)
     {
         $member = new Member;
-        $member->teamName = $request->input('teamName');
+        $member->teamName = $request->input('selectedTeamName');
         $member->user_id  = auth()->user()->id;
         $member->save();
         return redirect()->back()->with('status','Team Added Successfully');
@@ -92,7 +93,24 @@ class ParticipantEventController extends Controller
     public function ViewEvent(Request $request, $id)
     {
     $event = EventDetail::find($id);
-    return view('Participant.viewEvent', compact('event'));
+    return view('Participant.ViewEvent', compact('event'));
+    }
+
+
+
+    public function JoinEvent(Request $request, $id)
+    {
+
+       
+        
+        
+        $joint = new JoinEvent();
+        $joint->user_id  = auth()->user()->id;
+        // $join->event_details_id = $request->input('event_details_id');
+        $joint->event_details_id = $id;
+        $joint->save();
+
+        return redirect('/participant/selectTeam');
     }
 
 }
