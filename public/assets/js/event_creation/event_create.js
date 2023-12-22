@@ -10,6 +10,8 @@ function toggleRadio(_input, message) {
             element.classList.remove("d-none");
         } else element.classList.add("d-none");
     })
+
+    updateLaunchButtonText(message);
 }
 
 function addEvent(button) {
@@ -32,4 +34,22 @@ function chooseEventType(button) {
         } else eventType.classList.add("d-none");
     })
     button.parentElement.classList.add("d-none");
+}
+
+function updateLaunchButtonText(type) {
+    var launchButton = document.getElementById('launch-button');
+
+    switch (type) {
+        case 'launch':
+            launchButton.innerText = 'Launch';
+            break;
+
+        case 'schedule':
+            launchButton.innerText = 'Schedule';
+            break;
+
+        case 'draft':
+            launchButton.innerText = 'Save';
+            break;
+    }
 }
