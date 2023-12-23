@@ -58,6 +58,12 @@ class ParticipantEventController extends Controller
 
     public function TeamStore(Request $request)
     {
+
+        $validatedData = $request->validate([
+            'teamName' => 'required|string|max:25', // Validation rule for teamName field
+            // You can add more validation rules if needed for other fields
+        ]);
+
         $team = new Team;
         $team->teamName = $request->input('teamName');
         $team->user_id  = auth()->user()->id;

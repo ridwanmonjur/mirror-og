@@ -28,6 +28,17 @@
             <br>
             <form action="{{ url('/participant/team-management') }}" method="POST">
                 @csrf
+
+                <!-- Display validation errors -->
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                <ul>
+                @foreach ($errors->all() as $error)
+                 <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
             <input type="text" name="teamName" id="teamName" placeholder="Team Name">
         </div>
         
