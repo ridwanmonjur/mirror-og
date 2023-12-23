@@ -41,9 +41,9 @@ $isEvent = $event && $status? true: false;
                                 " class="container-border">
                     <a href="#" class="box_2nd selectable-box">
                         @if ($event && $category->id == $event->event_type_id)
-                            <h2 class="{{ 'inputEventTypeTitle' . $event->event_type_id . ' box-title color-text-success'}}"><u>{{ $category->eventType}}</u></h2>
+                            <h2 class="{{ 'inputEventTypeTitle' . $category->id . ' box-title color-text-success'}}"><u>{{ $category->eventType}}</u></h2>
                         @else
-                            <h2 class="{{ 'inputEventTypeTitle' . $event->event_type_id . ' box-title'}}"><u>{{ $category->eventType}}</u></h2>
+                            <h2 class="{{ 'inputEventTypeTitle' . $category->id  . ' box-title'}}"><u>{{ $category->eventType}}</u></h2>
                         @endif
 
                         <span class="inputEventTypeDefinition" class="box-text" style="text-align: left;">{{ $category->eventDefinitions}}</span>
