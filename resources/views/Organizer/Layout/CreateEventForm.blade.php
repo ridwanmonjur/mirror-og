@@ -22,6 +22,7 @@ $status = $event? $event->statusResolved(): null;
                                 console.log({id});
                                 console.log({id});
                                 console.log({id});
+                                
                                 console.log({id});
                                 console.log({id});
                                 let eventTypeTitle = this.querySelector('.inputEventTypeTitle u').innerHTML;
