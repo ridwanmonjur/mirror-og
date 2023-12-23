@@ -175,7 +175,7 @@ input[type="time"] {
     object-fit: cover;
 }
 
-.event_extra {
+.v {
     overflow: visible;
     width: 230px;
     background: transparent;

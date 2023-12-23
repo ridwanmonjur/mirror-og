@@ -10,19 +10,24 @@
         </u>
         <p>First, select an esport title</p>
         <div class="image-scroll-container box-width">
-
-
             @foreach ($eventCategory as $category)
             @if ($category->gameIcon)
             <div class="scroll-images" onclick="
+                                    this.style='border: 2px solid #00A3FF; border-radius: 20px; padding: 5px;';
                                     setFormValues( {'gameTitle': {{Js::from($category->gameTitle)}} } ); 
                                     goToNextScreen('step-2', 'timeline-1');
                                     let gameTitleImg = this.children[0].children[0].src;
                                     localStorage.setItem('gameTitleImg', gameTitleImg);
                                     ">
                 <a href="#">
-                    <img class="selectable-image focused" src="<?php echo asset("storage/$category->gameIcon"); ?>" alt="" style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"></a>
-                <h5 style="padding-top: 10px;">{{ $category->gameTitle}}</h5>
+                    <img class="selectable-image " src="<?php echo asset("storage/$category->gameIcon"); ?>" alt="" style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"></a>
+                <h5 style="padding-top: 10px;">
+                    @if ($event && $category->id == $event->event_category_id)
+                    <u style="color: green;"> {{ $category->gameTitle}} </u>
+                    @else
+                    {{ $category->gameTitle}}
+                    @endif
+                </h5>
             </div>
             @endif
             @endforeach

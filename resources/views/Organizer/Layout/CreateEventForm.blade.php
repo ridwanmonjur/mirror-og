@@ -1,5 +1,6 @@
 @php
 $status = $event? $event->statusResolved(): null;
+$isEvent = $event && $status? true: false;
 @endphp
 
 <div id="step-2" class="d-none">
@@ -19,6 +20,13 @@ $status = $event? $event->statusResolved(): null;
                                 let eventTypeId = {{Js::from($category->id) }} ;
                                 setFormValues( {'eventTypeId': eventTypeId} );
                                 goToNextScreen('step-3', 'timeline-1');
+                                document.querySelectorAll('.color-text-success').forEach((el) => {
+                                    el.classList.remove('color-text-success');
+                                });
+                                document.querySelectorAll('.inputEventTypeTitle'+ eventTypeId).forEach((el) => {
+                                    el.classList.add('color-text-success');
+                                    el.classList.add(`inputEventTypeTitle${eventTypeId}`);
+                                });
                                 console.log({id});
                                 console.log({id});
                                 console.log({id});
@@ -32,7 +40,12 @@ $status = $event? $event->statusResolved(): null;
                                 localStorage.setItem('eventTypeId', eventTypeId);
                                 " class="container-border">
                     <a href="#" class="box_2nd selectable-box">
-                        <h2 class="inputEventTypeTitle" class="box-title"><u>{{ $category->eventType}}</u></h2>
+                        @if ($event && $category->id == $event->event_type_id)
+                            <h2 class="{{ 'inputEventTypeTitle' . $event->event_type_id . ' box-title color-text-success'}}"><u>{{ $category->eventType}}</u></h2>
+                        @else
+                            <h2 class="{{ 'inputEventTypeTitle' . $event->event_type_id . ' box-title'}}"><u>{{ $category->eventType}}</u></h2>
+                        @endif
+
                         <span class="inputEventTypeDefinition" class="box-text" style="text-align: left;">{{ $category->eventDefinitions}}</span>
                     </a>
                 </div>

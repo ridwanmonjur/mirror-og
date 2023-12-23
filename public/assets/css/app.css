@@ -4,6 +4,10 @@
     display: none;
 }
 
+.color-text-success {
+    color: #5DBB63;
+}
+
 .container {
     display: flex;
     justify-content: space-between;

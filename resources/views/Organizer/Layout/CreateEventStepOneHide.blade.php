@@ -18,7 +18,7 @@
                                     setFormValues( {'gameTitleId': categoryId } );
                                     ">
                 <a href="#">
-                    <img class="selectable-image focused" src="<?php echo asset("storage/$category->gameIcon"); ?>" alt="" style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"></a>
+                    <img class="selectable-image" src="<?php echo asset("storage/$category->gameIcon"); ?>" alt="" style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"></a>
                 <h5 style="padding-top: 10px;">{{ $category->gameTitle}}</h5>
             </div>
             @endif
