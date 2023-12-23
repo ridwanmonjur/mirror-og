@@ -31,19 +31,19 @@
                     </svg>
                 </span>
             </button>
-            <form action="{{ url('/participant/home') }}" method="POST">
-                @csrf
-                <!-- Display validation errors -->
-                @if ($errors->any())
-                <div class="alert alert-danger">
-                <ul>
-                @foreach ($errors->all() as $error)
-                 <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
             <div class="dropdown-content" id="teamList">
+                <form action="{{ url('/participant/home') }}" method="POST">
+                    @csrf
+                    <!-- Display validation errors -->
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                    <ul>
+                    @foreach ($errors->all() as $error)
+                     <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
                 <input type="text" id="teamSearch" oninput="filterTeams()" placeholder="Search for teams...">
                 <div>
                     @foreach ($selectTeam as $item)

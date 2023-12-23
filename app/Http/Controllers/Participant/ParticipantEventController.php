@@ -66,6 +66,12 @@ class ParticipantEventController extends Controller
 
         $team = new Team;
         $team->teamName = $request->input('teamName');
+        $existingTeam = Team::where('teamName', $team->teamName)->first();
+
+        if ($existingTeam) {
+            return redirect()->back()->with('error', 'Team name already exists. Please choose a different name.');
+            // Redirect back to the form with an error message
+        }
         $team->user_id  = auth()->user()->id;
         $team->save();
         return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
