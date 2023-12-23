@@ -346,7 +346,7 @@ class EventController extends Controller
             return $this->show404("Event not found for id: $id");
         }
         $status = $event->statusResolved();
-        if ($status != 'UPCOMING' || $status != "DRAFT") {
+        if ($status != 'UPCOMING' && $status != "DRAFT") {
             return $this->show404("Event has already gone live for id: $id");
         }
         $eventCategory = EventCategory::all();
