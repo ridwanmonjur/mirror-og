@@ -60,11 +60,10 @@ extract($dateArray);
                 text: 'Event url copied to clipboard',
                 showConfirmButton: false,
                 timer: 1500,
-                iconColor: 'white',
                 customClass: {
                     popup: 'colored-toast'
                 },
-                timerProgressBar: trueF
+                timerProgressBar: true
             })
 
         }, function(err) {
