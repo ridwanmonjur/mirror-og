@@ -30,6 +30,7 @@ $isEvent = $event && $status? true: false;
                                 console.log({id});
                                 console.log({id});
                                 console.log({id});
+                                
                                 console.log({id});
                                 console.log({id});
                                 let eventTypeTitle = this.querySelector('.inputEventTypeTitle u').innerHTML;
