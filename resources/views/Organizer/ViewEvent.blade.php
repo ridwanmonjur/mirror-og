@@ -19,6 +19,7 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
 @endphp
 
 <body>
+    @include('CommonLayout.Navbar')
 
     <main>
         <br class="d-none-at-desktop">
@@ -55,7 +56,7 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                 <div style="padding-left: 20px;padding-right:20px;">
                     <div>
                         @if ($event->eventBanner)
-                        <img width="500" height="300" " style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!} src="{{ $eventBannerImg }}" alt="">
+                        <img width="400" height="250" style="margin: auto; padding-left: 30px;" {!! trustedBladeHandleImageFailure() !!} src="{{ $eventBannerImg }}" alt="">
                         @else
                         <div>
                             <br>

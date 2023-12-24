@@ -10,8 +10,14 @@ function toggleRadio(_input, message) {
             element.classList.remove("d-none");
         } else element.classList.add("d-none");
     })
+}
 
-    updateLaunchButtonText(message);
+function launchScheduleDefaultSelected(className) {
+    let element1 = document.querySelector(`input[type='radio'].${className}`);
+    if (element1){
+        element1.checked = true;
+    }
+    console.log(element1)
 }
 
 function addEvent(button) {

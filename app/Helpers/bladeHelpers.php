@@ -98,7 +98,7 @@ function bladeImageNull($eventBanner)
 
 function trustedBladeHandleImageFailure(){
     $imgFailure = asset('assets/images/broken-image.jpeg');
-    return "onerror=\"this.onerror=null;this.height='200';this.width='200';this.src='$imgFailure'\";";    
+    return "onerror=\"this.onerror=null;this.src='$imgFailure'\";";    
 }
 
 function bladeEventGameImage($eventBanner)
