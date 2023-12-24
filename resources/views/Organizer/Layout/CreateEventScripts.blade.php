@@ -220,7 +220,6 @@
                 })
                 .then(response => response.json())
                 .then(responseData => {
-                    console.log(responseData);
                     setFormValues({
                         'isPaymentDone': true,
                         paymentMethod: paymentMethod.id
@@ -234,7 +233,7 @@
                     console.error(error);
                     Toast.fire({
                         icon: 'error',
-                        text: "Payment succeeded. Please proceed to the next step."
+                        text: "Payment failed. Please try again..."
                     })
                 })
         }

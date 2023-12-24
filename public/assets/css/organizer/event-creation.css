@@ -7,7 +7,6 @@
     --navbar-height: 5vh;
 }
 
-
 .container {
     display: flex;
     justify-content: space-between;
@@ -49,7 +48,7 @@ input[type="time"] {
     transition: border-color 0.3s;
 }
 
-.form-group2 input{
+.form-group2 input {
     margin-bottom: 0px !important;
     padding: 6px 30px !important;
 }
@@ -404,7 +403,8 @@ input[type="time"] {
     margin: 0;
 }
 
-.grid-2-columns, .grid-3-columns{
+.grid-2-columns,
+.grid-3-columns {
     display: grid;
     justify-content: center;
     grid-template-columns: 1fr;
@@ -542,7 +542,6 @@ nav svg:active {
     height: 100px;
     padding: 30px 0;
     width: 100%;
-    /* background-color: #dadefe; */
 }
 
 .time-line-box .timeline {
@@ -604,9 +603,9 @@ nav svg:active {
     border-radius: 12px;
     /* border: 2px solid #95ADBD; */
     position: absolute;
-    left: 20%;
+    left: 40%;
     top: 0%;
-    transform: translateY(-50%) translateX(-100%);
+    transform: translateY(-50%) translateX(-110%);
     transition: all 200ms ease-in;
 }
 
@@ -640,6 +639,31 @@ nav svg:active {
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     transition: all 200ms ease-in;
+}
+
+.swiper-slide .cat {
+    white-space: nowrap;
+}
+
+.cat {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    left: -40%;
+}
+
+.timestamp {
+    width: 100%;
+    /* Ensure the timestamp takes up the full width */
+}
+
+
+/* Adjust the swiper-slide to accommodate the padding */
+
+.swiper-slide {
+    box-sizing: border-box;
 }
 
 .background-active-timeline {
@@ -692,14 +716,12 @@ input[type="button"],
     color: white;
 }
 
-input[type="submit"]:hover, {
-}
-
 input[type="submit"]:active {
     background: #79b0cc;
 }
 
-.choose-payment-method, .choose-payment-method-condition-fulfilled {
+.choose-payment-method,
+.choose-payment-method-condition-fulfilled {
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 10px;
@@ -712,14 +734,12 @@ input[type="submit"]:active {
     border: none;
 }
 
-.choose-payment-method-condition-fulfilled{
+.choose-payment-method-condition-fulfilled {
     background: #FBF9F3;
-
 }
 
-.choose-payment-method{
+.choose-payment-method {
     background: #43A4D7;
-
 }
 
 .dropdown:hover .dropdown-content {
@@ -839,7 +859,6 @@ input[type="submit"]:active {
 .flexbox {
     display: flex;
     justify-content: space-between;
-
 }
 
 .radio-indent,
@@ -860,7 +879,6 @@ input[type="submit"]:active {
     .swiper-container {
         display: block;
     }
-    
 }
 
 @media screen and (min-width: 992px) {
@@ -898,13 +916,13 @@ input[type="submit"]:active {
     .search-bar svg {
         left: 20px;
     }
-    .grid-2-columns{
+    .grid-2-columns {
         grid-template-columns: 1fr 1fr;
     }
-    .box-width{
+    .box-width {
         max-width: 60vw !important;
     }
-    .grid-3-columns{
+    .grid-3-columns {
         grid-template-columns: 1fr 1fr 1fr;
     }
     .swiper-slide {

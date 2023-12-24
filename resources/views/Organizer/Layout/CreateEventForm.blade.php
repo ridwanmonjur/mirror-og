@@ -15,13 +15,14 @@ $status = $event? $event->statusResolved(): null;
             <div class="grid-2-columns box-width" style="margin-top: -20px !important;">
                 @foreach ($eventCategory as $category)
                 @if ($category->eventDefinitions)
-                <div onclick="setFormValues( {'eventType': {{Js::from($category->eventType) }} } ); 
+                <div onclick="setFormValues( {'eventType': {{Js::from($category->eventType) }} } );
                                 let eventTypeId = {{Js::from($category->id) }} ;
-                                setFormValues( {'eventTypeId': eventTypeId} ); 
+                                setFormValues( {'eventTypeId': eventTypeId} );
                                 goToNextScreen('step-3', 'timeline-1');
                                 console.log({id});
                                 console.log({id});
                                 console.log({id});
+                                
                                 console.log({id});
                                 console.log({id});
                                 let eventTypeTitle = this.querySelector('.inputEventTypeTitle u').innerHTML;
@@ -60,15 +61,15 @@ $status = $event? $event->statusResolved(): null;
         <p>Finally, choose a tier for your event.</p>
         <div class="flexbox box-width">
             @foreach ($eventTierList as $category)
-            <section onclick="setFormValues( {'eventTier': {{Js::from($category->eventTier)}} } ); 
+            <section onclick="setFormValues( {'eventTier': {{Js::from($category->eventTier)}} } );
                                 let eventTierId = {{Js::from($category->id) }} ;
-                                goToNextScreen('step-4', 'timeline-1'); 
+                                goToNextScreen('step-4', 'timeline-1');
                                 let eventTierImg = this.querySelector('.inputEventTierImg').src;
                                 let eventTierPerson = this.querySelector('.inputEventTierPerson').innerHTML;
                                 let eventTierPrize = this.querySelector('.inputEventTierPrize').innerHTML;
                                 let eventTierEntry = this.querySelector('.inputEventTierEntry').innerHTML;
                                 let eventTierTitle = this.querySelector('.inputEventTierTitle').innerHTML;
-                                setFormValues( {'eventTierId': eventTierId } ); 
+                                setFormValues( {'eventTierId': eventTierId } );
                                 localStorage.setItem('eventTierPerson', eventTierPerson);
                                 localStorage.setItem('eventTierPrize', eventTierPrize);
                                 localStorage.setItem('eventTierImg', eventTierImg);
@@ -76,7 +77,7 @@ $status = $event? $event->statusResolved(): null;
                                 localStorage.setItem('eventTierTitle', eventTierTitle);
                                 localStorage.setItem('eventTierId', eventTierId);
                                 fillStepValues();
-                                    
+
                                     ;" class="featured-events">
                 <a href="#" class="event selectable-box">
                     <!-- 0 -->
@@ -438,16 +439,16 @@ $status = $event? $event->statusResolved(): null;
         <div class="radio-indent-hidden public ">
             <!-- IF RADIO 1 -->
             @if ($event && $event->sub_action_public_date != null && $event->sub_action_public_time != null)
-            <input type="radio" id="sub_action_public" name="launch_schedule" value="now">
+            <input onchange="toggleRadio(this, 'launch')" type="radio" id="sub_action_public" name="launch_schedule" value="now">
             @else
-            <input checked type="radio" id="sub_action_public" name="launch_schedule" value="now">
+            <input checked onchange="toggleRadio(this, 'launch')" type="radio" id="sub_action_public" name="launch_schedule" value="now">
             @endif
             <!-- IF RADIO 1 -->
 
             <!-- IF RADIO 2 -->
             <label for="sub_action_public"><u>Launch now</u></label><br>
             @if ($event && $event->sub_action_public_date != null && $event->sub_action_public_time != null)
-            <input checked type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
+            <input checked onchange="toggleRadio(this, 'schedule')" type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
             <label for="sub_action_public"><u>Schedule launch</u></label><br>
             <div class="container">
                 <div class="box">
@@ -458,7 +459,7 @@ $status = $event? $event->statusResolved(): null;
                 </div>
             </div>
             @else
-            <input type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
+            <input onchange="toggleRadio(this, 'schedule')" type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
             <label for="sub_action_public"><u>Schedule launch</u></label><br>
             <div class="container">
                 <div class="box">
@@ -474,9 +475,9 @@ $status = $event? $event->statusResolved(): null;
         </div>
         @else
         <div class="radio-indent-hidden public d-none">
-            <input type="radio" id="sub_action_public" name="launch_schedule" value="now">
+            <input onchange="toggleRadio(this, 'launch')" type="radio" id="sub_action_public" name="launch_schedule" value="now">
             <label for="sub_action_public"><u>Launch now</u></label><br>
-            <input type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
+            <input onchange="toggleRadio(this, 'schedule')" type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
             <label for="sub_action_public"><u>Schedule launch</u></label><br>
             <div class="container">
                 <div class="box">
@@ -488,7 +489,6 @@ $status = $event? $event->statusResolved(): null;
             </div>
         </div>
         @endif
-
 
         <!-- private part -->
         @if ($event && $event->sub_action_private == 'private' && $status != 'DRAFT')
@@ -504,13 +504,13 @@ $status = $event? $event->statusResolved(): null;
         @if ($event && $event->sub_action_private == 'private' && $status != 'DRAFT')
         <div class="radio-indent-hidden private">
             @if ($event && $event->sub_action_public_date != null && $event->sub_action_public_time != null)
-            <input type="radio" id="sub_action_public" name="launch_schedule" value="now">
+            <input onchange="toggleRadio(this, 'launch')" type="radio" id="sub_action_public" name="launch_schedule" value="now">
             @else
-            <input checked type="radio" id="sub_action_public" name="launch_schedule" value="now">
+            <input onchange="toggleRadio(this, 'launch')" checked type="radio" id="sub_action_public" name="launch_schedule" value="now">
             @endif
             <label for="sub_action_public"><u>Launch now</u></label><br>
             @if ($event && $event->sub_action_public_date != null && $event->sub_action_public_time != null)
-            <input checked type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
+            <input checked onchange="toggleRadio(this, 'schedule')" type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
             <label for="sub_action_public"><u>Schedule launch</u></label><br>
             <div class="container">
                 <div class="box">
@@ -521,7 +521,7 @@ $status = $event? $event->statusResolved(): null;
                 </div>
             </div>
             @else
-            <input type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
+            <input onchange="toggleRadio(this, 'schedule')" type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
             <label for="sub_action_public"><u>Schedule launch</u></label><br>
             <div class="container">
                 <div class="box">
@@ -535,9 +535,9 @@ $status = $event? $event->statusResolved(): null;
         </div>
         @else
         <div class="radio-indent-hidden private d-none">
-            <input type="radio" id="sub_action_public" name="launch_schedule" value="now">
+            <input onchange="toggleRadio(this, 'launch')" type="radio" id="sub_action_public" name="launch_schedule" value="now">
             <label for="sub_action_public"><u>Launch now</u></label><br>
-            <input type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
+            <input onchange="toggleRadio(this, 'schedule')" type="radio" id="sub_action_public" name="launch_schedule" value="schedule">
             <label for="sub_action_public"><u>Schedule launch</u></label><br>
             <div class="container">
                 <div class="box">
@@ -570,13 +570,13 @@ $status = $event? $event->statusResolved(): null;
                 <circle cx="12" cy="12" r="3"></circle>
             </svg>
             &nbsp;&nbsp;
-            <u>Preview your event page</u>
+            <u id="preview-button-text">Preview your event page</u>
         </button>
     </div>
     <br>
     <div class="flexbox box-width">
         <button onclick="goToNextScreen('step-10', 'timeline-3')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-        <button onclick="saveEvent(true)" type="button" type="button" class="oceans-gaming-default-button"> Step 4 > </button>
+        <button onclick="saveEvent()" type="button" class="oceans-gaming-default-button" id="launch-button"> Launch </button>
     </div>
     <br>
 

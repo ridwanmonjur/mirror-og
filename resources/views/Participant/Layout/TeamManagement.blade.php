@@ -61,8 +61,8 @@
                 </label>
                 <input type="file" id="image-upload" accept="image/*" style="display: none;">
             </div>
-            @foreach ($teamDetail as $team)
-            <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
+            @foreach ($teamManage as $manage)
+            <h3 class="team-name" id="team-name">{{ $manage->teamName }}</h3>
             <p>We are an awesome team with awesome members! Come be awesome together! Play some games and win some prizes GGEZ!</p>
             @endforeach
         </div>
@@ -78,19 +78,16 @@
             <div style="padding-left: 200px;"><b>Recent Events</b></div>
             <div class="recent-events">
                 <!-- Update the event-carousel section in the Overview tab content -->
-                {{-- <div class="event-carousel">
-                    <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
+                <div class="event-carousel">
+                    <p style="text-align: center;">Team {{ $manage->teamName }} has no event history</p>
+                    {{-- <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
                     @foreach ($eventDetail as $event)
                     <div class="event-box" id="event1">
-                        <!-- Event 1 content -->
-                        <h3>{{ $event->eventName }}</h3>
-                        <p>{{ $event->startDate }}</p>
-                        <p>Location: Virtual</p>
                     </div>
                     @endforeach
-                    <button class="carousel-button" onclick="slideEvents(1)">></button>
+                    <button class="carousel-button" onclick="slideEvents(1)">></button> --}}
                 </div>
-            </div> --}}
+            </div>
 
             <div class="team-info">
                 <div class="showcase">
@@ -122,7 +119,7 @@
         </div>
 
         <div class="tab-content" id="Members" style="display: none;">
-            <p style="text-align: center;">Team Fnatic has 4 members</p>
+            <p style="text-align: center;">Team {{ $manage->teamName }} has 4 members</p>
             <table class="member-table">
                 <tbody>
                     <tr class="st">
@@ -176,8 +173,8 @@
 
         <div class="tab-content" id="Active Rosters" style="display: center;">
 
-            {{-- <p style="text-align: center;">Team Fnatic has no active rosters</p> --}}
-            <div id="activeRostersForm" style="display: center; text-align: center;">
+            <p style="text-align: center;">Team {{ $manage->teamName }} has no active rosters</p>
+            {{-- <div id="activeRostersForm" style="display: center; text-align: center;">
 
                 <div class="event">
                     <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
@@ -214,12 +211,12 @@
                     </div>
                 </div>
 
-            </div>
+            </div> --}}
         </div>
 
         <div class="tab-content" id="Roster History" style="display: none;">
-            {{-- <p style="text-align: center;">Team Fnatic has no roster history</p> --}}
-            <div id="activeRostersForm" style="display: center; text-align: center;">
+            <p style="text-align: center;">Team {{ $manage->teamName }} has no roster history</p>
+            {{-- <div id="activeRostersForm" style="display: center; text-align: center;">
 
                 <div class="event">
                     <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
@@ -256,7 +253,7 @@
                     </div>
                 </div>
 
-            </div>
+            </div> --}}
         </div>
 
     </main>

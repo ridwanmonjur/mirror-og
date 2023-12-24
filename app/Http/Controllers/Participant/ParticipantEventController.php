@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
-use App\Models\Event;
 use App\Models\Team;
 use App\Models\EventDetail;
+use App\Models\JoinEvent;
 use App\Models\Member;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -44,10 +45,18 @@ class ParticipantEventController extends Controller
     }
 
 
-    public function teamDetails($user_id)
+    public function teamList($user_id)
     {
-        $teamDetail = Team::Where('user_id', $user_id)->get();
-        return view('Participant.Layout.HeadTag', compact('teamDetail'));
+
+        $teamList = Team::Where('user_id',$user_id)->get();
+        return view('Participant.TeamList', compact('teamList'));
+    }
+
+
+    public function teamManagement($id)
+    {
+        $teamManage = Team::Where('id',$id)->get();
+        return view('Participant.Layout.TeamManagement', compact('teamManage'));
     }
 
 
@@ -60,11 +69,24 @@ class ParticipantEventController extends Controller
 
     public function TeamStore(Request $request)
     {
+
+        $validatedData = $request->validate([
+            'teamName' => 'required|string|max:25', // Validation rule for teamName field
+            // You can add more validation rules if needed for other fields
+        ]);
+
         $team = new Team;
         $team->teamName = $request->input('teamName');
+        $existingTeam = Team::where('teamName', $team->teamName)->first();
+
+        if ($existingTeam) {
+            return redirect()->back()->with('error', 'Team name already exists. Please choose a different name.');
+            // Redirect back to the form with an error message
+        }
         $team->user_id  = auth()->user()->id;
         $team->save();
-        return redirect()->back()->with('status', 'Team Added Successfully');
+        return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
+
     }
 
     /* Select Team to Register */
@@ -78,8 +100,17 @@ class ParticipantEventController extends Controller
 
     public function TeamtoRegister(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'selectedTeamName' => 'required', // Validation rule for 'selectedTeamName'
+            // Add other validation rules for additional fields if needed
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         $member = new Member;
-        $member->teamName = $request->input('teamName');
+        $member->teamName = $request->input('selectedTeamName');
         $member->user_id  = auth()->user()->id;
         $member->save();
         return redirect()->back()->with('status', 'Team Added Successfully');
@@ -116,8 +147,22 @@ class ParticipantEventController extends Controller
         $count = 4;
         $eventList = $eventListQuery->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
+    }
 
-        $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
-        return response()->json($outputArray);
+    public function ViewEvent(Request $request, $id)
+    {
+    $event = EventDetail::find($id);
+    return view('Participant.ViewEvent', compact('event'));
+    }
+
+    public function JoinEvent(Request $request, $id)
+    {
+        $joint = new JoinEvent();
+        $joint->user_id  = auth()->user()->id;
+        // $join->event_details_id = $request->input('event_details_id');
+        $joint->event_details_id = $id;
+        $joint->save();
+
+        return redirect('/participant/selectTeam');
     }
 }

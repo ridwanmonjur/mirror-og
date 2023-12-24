@@ -12,7 +12,7 @@ extract($dateArray);
         </u>
     </div>
     <div class="box-width">
-        @if ($event->sub_action_public_time  && $event->sub_action_public_date)
+        @if ($event->sub_action_public_time && $event->sub_action_public_date)
         <p id="notification">Your <u>{{$event->sub_action_private}}</u> event has been scheduled to launch on {{$combinedStr}} at {{$timePart}}!</p>
         @elseif($status!="DRAFT" && $status!= "PREVIEW")
         <p id="notification">Your <u>{{$event->sub_action_private}}</u> event is already live!</p>
@@ -40,7 +40,9 @@ extract($dateArray);
         Go to event page
     </button>
     <br><br>
-    <button class="oceans-gaming-default-button" style="padding:10px 100px;">Done</button>
+    <a href="{{route('event.show', $event->id) }}">
+        <button class="oceans-gaming-default-button" style="padding:10px 100px;">Done</button>
+    </a>
 </div>
 <script>
     const goToManageScreen = () => {
@@ -50,6 +52,20 @@ extract($dateArray);
     const copyUtil = () => {
         navigator.clipboard.writeText(copyUrl).then(function() {
             console.log('Copying to clipboard was successful!');
+            Swal.fire({
+                toast: true,
+                position: 'top-right',
+                icon: 'success',
+                title: 'Copied!',
+                text: 'Event url copied to clipboard',
+                showConfirmButton: false,
+                timer: 1500,
+                customClass: {
+                    popup: 'colored-toast'
+                },
+                timerProgressBar: true
+            })
+
         }, function(err) {
             console.error('Could not copy text to clipboard: ', err);
         });

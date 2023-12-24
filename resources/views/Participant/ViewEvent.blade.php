@@ -92,9 +92,9 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                                             <p class="small-text"> <i> 104 followers </i> </p>
                                         </div>
                                     </div>
-                                    @if ($livePreview == 1)
+                                    
                                     <input type="submit" style="background-color: #8CCD39;" value="Resume creating...." onclick="goToEditScreen();">
-                                    @endif
+                                    
                                 </div>
                                 <br>
                                 <h4> <u> {{  $combinedStr }} </u> </h4>
@@ -131,9 +131,14 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                         </div>
                         <div>
                             <br><br>
-                            <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
-                                <u>{{$status ?? 'Choose event status'}}</u>
+                            <form method="POST" action="{{ route('join.store',['id' => $event]) }} }}">
+                                @csrf
+                            <button type="submit" class="oceans-gaming-default-button">
+                                {{-- <u>{{$status ?? 'Choose event status'}}</u> --}}
+                                <u>Join</u>
                             </button>
+                        </form>
+                        
                             <br><br>
                             <div>
                                 <div>
@@ -206,6 +211,18 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
 
             window.location.href = url;
         }
+    </script>
+    <script>
+        const btn = document.getElementById('btn');
+
+btn.addEventListener('click', function onClick() {
+  btn.style.backgroundColor = '#43A4D7';
+  btn.style.color = 'white';
+  btn.textContent = 'Joined';
+
+
+  
+});
     </script>
     <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
     <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>

@@ -16,14 +16,19 @@ $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
         <a class="event_status_1" style="@php echo $stylesEventStatus; @endphp">{{ $event->statusResolved() }}</a>
     </div><br>
     <div class="league_name">
-        <b>{{ $event->eventName }}</b><br>
+        <a href="/participant/event/{{ $event['id'] }}"> <b>{{ $event->eventName }}</b><br> </a>
         <a><small>{{ $event->region ?? 'South East Asia' }}</small></a>
     </div><br>
     <div class="trophy_caption">
         <img src="{{ asset('/assets/images/trophy.png') }}" class="trophy"><br>
-        <a class="league_caption">
+        {{-- <a class="league_caption">
             <b>Soon</b>
-        </a>
+        </a> --}}
+    </div>
+    <div style="text-align: center;">
+        <img src="{{ asset('/assets/images/eye.png') }}" alt="" height="20px" width="20px" style="padding: 10px;">
+        <img src="{{ asset('/assets/images/chart.png') }}" alt="" height="20px" width="20px" style="padding: 10px;">
+        <img src="{{ asset('/assets/images/share.png') }}" alt="" height="20px" width="20px" style="padding: 10px;">
     </div>
 </div>
 @endforeach

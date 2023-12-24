@@ -13,10 +13,6 @@
 
 <body>
     <div class="text-center" id="step-0">
-
-        @if (session('status'))
-        <h6 class="alert alert-success">{{ session('status') }}</h6>
-    @endif
         <div class="welcome">
             <u>
                 <h2>Create Your Team</h2>
@@ -28,6 +24,28 @@
             <br>
             <form action="{{ url('/participant/team-management') }}" method="POST">
                 @csrf
+
+                <!-- Display validation errors -->
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                <ul>
+                @foreach ($errors->all() as $error)
+                 <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+                    @endif
+                    @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <input type="text" name="teamName" id="teamName" placeholder="Team Name">
         </div>
         

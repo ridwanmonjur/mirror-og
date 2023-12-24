@@ -34,12 +34,24 @@
             <div class="dropdown-content" id="teamList">
                 <form action="{{ url('/participant/home') }}" method="POST">
                     @csrf
+                    <!-- Display validation errors -->
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                    <ul>
+                    @foreach ($errors->all() as $error)
+                     <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
                 <input type="text" id="teamSearch" oninput="filterTeams()" placeholder="Search for teams...">
                 <div>
                     @foreach ($selectTeam as $item)
                     <div class="team-info" onclick="selectOption(this, '{{ $item->teamName }}', 'css/images/logo.png')">
                         <img src="{{ asset('/assets/images/dota.png') }}" height="25px" width="50px">
-                        <a href="#" name="teamName">{{ $item->teamName }}</a>
+                        <a href="#" id="teamNameAnchor" data-team-name="{{ $item->teamName }}">{{ $item->teamName }}</a>
+                        <!-- Hidden input to store the selected team's name -->
+                        <input type="hidden" id="selectedTeamInput" name="selectedTeamName">
                     </div>
                     @endforeach
                 </div>
@@ -54,7 +66,7 @@
             <p>Registration will NOT be confirmed until enough team members have accepted to join and payment is complete. Once enough team members have accepted and the entry fee has been paid, registration can be confirmed.</p>
 
             <div class="remember-checkbox">
-                <input type="checkbox" name="" class="largerCheckbox">
+                <input type="checkbox" id="confirmationCheckbox" class="largerCheckbox">
                 <p>Automatically confirm registration and lock in team when enough team members have accepted</p>
             </div>
 
@@ -65,7 +77,7 @@
             </div>
 
             <div class="text-center">
-                <input type="submit" class="choose-payment-method" value="Confirm Team and Notify">
+                <input type="submit" class="choose-payment-method" id="submitButton" disabled value="Confirm Team and Notify">
             </div>
 
             <div class="text-center">
@@ -76,7 +88,7 @@
     </form>
     </div>
 
-    <script>
+        <script>
         function toggleDropdown() {
             var dropdown = document.querySelector(".dropdown-content");
             dropdown.classList.toggle("show");
@@ -111,6 +123,8 @@
             selectedTeamLabel.textContent = label;
 
             // Handle other selection logic if needed
+            var teamName = element.querySelector('a').getAttribute('data-team-name');
+            document.getElementById('selectedTeamInput').value = teamName;
 
             // Close the dropdown
             closeDropDown(dropdownButton);
@@ -120,7 +134,17 @@
             const dropdownContent = button.nextElementSibling;
             dropdownContent.classList.remove('show');
         }
-    </script>
+
+        // For Checkbox
+        document.getElementById('confirmationCheckbox').addEventListener('change', function() {
+        var submitButton = document.getElementById('submitButton');
+        if (this.checked) {
+        submitButton.removeAttribute('disabled');
+        } else {
+        submitButton.setAttribute('disabled', 'disabled');
+        }
+        });
+        </script>
 
 </body>
 
