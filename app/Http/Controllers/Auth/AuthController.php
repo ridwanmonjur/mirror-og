@@ -93,7 +93,24 @@ class AuthController extends Controller
     {
         $count = 4;
         $currentDateTime = Carbon::now()->utc();
-        $events = EventDetail::where('status', '<>', 'DRAFT')
+        $events = EventDetail::with('game')
+            ->when($request->has('search'), function ($query) use ($request) {
+                $search = trim($request->input('search'));
+                if (empty($search)) {
+                    return $query;
+                }
+                return $query->where('eventName', 'LIKE', "%{$search}%")
+                    ->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
+            })
+            // ->whereHas('game', function ($query) use ($request) {
+            //     if ($request->has('search')){
+            //         $search = trim($request->input('search'));
+            //         if (!empty($search)) {
+            //             return $query->where('gameTitle', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci");
+            //         } else return $query;
+            //     } else return $query;
+            // })
+            ->where('status', '<>', 'DRAFT')
             ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
             ->where(function ($query) use ($currentDateTime) {
                 $query->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) > ?', [$currentDateTime])
@@ -104,6 +121,8 @@ class AuthController extends Controller
         $mappingEventState = EventDetail::mappingEventStateResolve();
         $output = compact("events", "mappingEventState");
         if ($request->ajax()) {
+        
+        // dd($events);
             $view = view(
                 'LandingPageScroll',
                 $output

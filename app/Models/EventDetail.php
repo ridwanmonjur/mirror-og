@@ -54,19 +54,17 @@ class EventDetail extends Model
 
     public function statusResolved()
     {
-        if ($this->status == "DRAFT" || $this->status == "PREVIEW") {
-            return "DRAFT";
-        }
         $carbonPublishedDateTime = $this->createCarbonDateTimeFromDB($this->sub_action_public_date, $this->sub_action_public_time);
         $carbonEndDateTime = $this->createCarbonDateTimeFromDB($this->endDate, $this->endTime);
         $carbonStartDateTime = $this->createCarbonDateTimeFromDB($this->startDate, $this->startTime);
-        if (!$carbonEndDateTime || !$carbonStartDateTime) {
+        $carbonNow = Carbon::now()->utc();
+        if ($this->status == "DRAFT" || $this->status == "PREVIEW") {
+            return "DRAFT";
+        } elseif (!$carbonEndDateTime || !$carbonStartDateTime) {
             Log::error("EventDetail.php: statusResolved: EventDetail with id= " . $this->id
                 . " and name= " . $this->eventName . " has null end or start date time");
             return "ERROR";
-        }
-        $carbonNow = Carbon::now()->utc();
-        if ($carbonEndDateTime < $carbonNow) {
+        } elseif ($carbonEndDateTime < $carbonNow) {
             return "ENDED";
         } else {
             if ($carbonPublishedDateTime && $carbonPublishedDateTime < $carbonNow) {

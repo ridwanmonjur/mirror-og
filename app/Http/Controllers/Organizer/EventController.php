@@ -110,7 +110,6 @@ class EventController extends Controller
 
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
         if ($request->ajax()) {
-        dd($request->all());
             $view = view(
                 'Organizer.ManageEventScroll',
                 $outputArray

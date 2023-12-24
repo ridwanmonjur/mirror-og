@@ -5,7 +5,7 @@ use Carbon\Carbon;
 function bladeEventStatusStyleMapping($status)
 {
     $mappingEventState = config('constants.mappingEventState');
-    $status = $status ?? 'NO_STATUS';
+    $status = $status ?? 'DRAFT';
     $stylesEventStatus = '';
     $stylesEventStatus .= 'background-color: ' . $mappingEventState[$status]['buttonBackgroundColor'] . ' ;';
     $stylesEventStatus .= 'color: ' . $mappingEventState[$status]['buttonTextColor'] . ' ; ';

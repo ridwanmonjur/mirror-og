@@ -36,7 +36,7 @@
                                 'box_2nd selectable-box',
                                 'color-border-success' => $event && $category->id == $event->event_type_id,
                             ])>
-                                <h2 class="{{ ' box-title' }}">
+                                <h2 class="{{ 'inputEventTypeTitle box-title' }}">
                                     <u>{{ $category->eventType }}</u>
                                 </h2>
                                 <span class="inputEventTypeDefinition" class="box-text"
@@ -147,7 +147,7 @@
             @endforeach
         </div>
         <div class="flexbox box-width">
-            <button onclick="goToNextScreen('step-2', 'none')" type="button"
+            <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-4', 'timeline-1'); fillStepValues();" type="button"
                 class="oceans-gaming-default-button"> Next > </button>
