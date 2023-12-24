@@ -108,7 +108,6 @@ class AuthController extends Controller
                 'LandingPageScroll',
                 $output
             )->render();
-
             return response()->json(['html' => $view]);
         }
         return view(
