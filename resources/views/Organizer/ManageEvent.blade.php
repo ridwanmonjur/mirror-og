@@ -435,14 +435,14 @@
                     var windowHeight = window.innerHeight;
                     var documentHeight = document.documentElement.scrollHeight;
                     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    if (scrollTop + windowHeight >= documentHeight) {
+                    if (scrollTop + windowHeight >= documentHeight - 200 ) {
                         let params = convertUrlStringToQueryStringOrObject({
                             isObject: true
                         });
                         page++;
                         params.page = page;
                         ENDPOINT = `/organizer/event/?` + convertObjectToURLString(params);
-                        infinteLoadMore(null, ENDPOINT);
+                        infinteLoadMoreByPost(null, ENDPOINT);
                     }
                 }, 300)
             );
