@@ -80,7 +80,6 @@ nav svg:hover,
 }
 
  .group-hover-flexbox{
-    padding-top: 30px;
     display: flex;
     justify-content: space-around;
 }

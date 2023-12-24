@@ -4,6 +4,16 @@
     display: none;
 }
 
+.color-text-success {
+    color: #5DBB63;
+}
+
+.color-border-success {
+    border: 2px solid #00A3FF; 
+    border-radius: 20px; 
+}
+
+
 .container {
     display: flex;
     justify-content: space-between;

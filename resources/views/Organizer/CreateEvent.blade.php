@@ -23,7 +23,7 @@
                         @else
                         @include('Organizer.Layout.CreateEventTimelineWelcome')
                         @endif
-                        @include('Organizer.Layout.CreateEventStepOneHide')
+                        @include('Organizer.Layout.CreateEventStepOneCreate')
                         @include('Organizer.Layout.CreateEventForm')
                         @if (session()->has('success'))
                         @include('Organizer.Layout.CreateEventSuccess')

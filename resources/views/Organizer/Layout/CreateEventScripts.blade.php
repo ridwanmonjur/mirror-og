@@ -31,21 +31,6 @@
 
     function setLocalStorageFromEventObject(key, property) {
         let value = checkStringNullOrEmptyAndReturn(property);
-        console.log({
-            value
-        })
-        console.log({
-            value
-        })
-        console.log({
-            value
-        })
-        console.log({
-            value
-        })
-        console.log({
-            value
-        })
         if (value) localStorage.setItem(key, value);
     }
 
@@ -61,12 +46,8 @@
             let gameTitle = formValues['gameTitle'];
 
             // Game Title
-            // let inputEGameTitleImg = document.querySelector(`img#inputGameTitle${gameTitle}Img`);
             let outputGameTitleImg = document.querySelector('img#outputGameTitleImg');
-            // let outputGameTitleImgSrcImg = checkStringNullOrEmptyAndReturnFromLocalStorage('gameTitleImg');
-            // if (outputGameTitleImgSrcImg) {
-            //     outputGameTitleImg.src = outputGameTitleImgSrcImg;
-            // 
+         
             setImageSrcFromLocalStorage('gameTitleImg', outputGameTitleImg);
         }
 
@@ -75,9 +56,7 @@
         let outputEventTypeDefinition = document.getElementById('outputEventTypeDefinition');
         setInnerHTMLFromLocalStorage('eventTypeTitle', outputEventTypeTitle);
 
-        // let outputEventTypeDefinitionInnerHTML = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTypeDefinition');
-        // if (outputEventTypeDefinitionInnerHTML)
-        //     outputEventTypeDefinition.innerHTML = outputEventTypeDefinitionInnerHTML;
+      
         setInnerHTMLFromLocalStorage('eventTypeDefinition', outputEventTypeDefinition);
 
         // Event Tier
@@ -87,30 +66,12 @@
         let outputEventTierPrize = document.getElementById('outputEventTierPrize');
         let outputEventTierEntry = document.getElementById('outputEventTierEntry');
 
-        // let outputEventTierImgSrc = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTierImg');
-        // if (outputEventTierImgSrc)
-        //     outputEventTierImg.src = outputEventTierImgSrc;
         setImageSrcFromLocalStorage('eventTierImg', outputEventTierImg);
         setInnerHTMLFromLocalStorage('eventTierPerson', outputEventTierPerson);
         setInnerHTMLFromLocalStorage('eventTierPrize', outputEventTierPrize);
         setInnerHTMLFromLocalStorage('eventTierEntry', outputEventTierEntry);
         setInnerHTMLFromLocalStorage('eventTierTitle', outputEventTierTitle);
 
-        // let outputEventTierPersonInnerHTML = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTierPerson');
-        // if (outputEventTierPersonInnerHTML)
-        //     outputEventTierPerson.innerHTML = outputEventTierPersonInnerHTML;
-
-        // let outputEventTierPrizeInnerHTML = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTierPrize');
-        // if (outputEventTierPrizeInnerHTML)
-        //     outputEventTierPrize.innerHTML = outputEventTierPrizeInnerHTML;
-
-        // let outputEventTierEntryInnerHTML = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTierEntry');
-        // if (outputEventTierEntryInnerHTML)
-        //     outputEventTierEntry.innerHTML = outputEventTierEntryInnerHTML;
-
-        // let outputEventTierTitleInnerHTML = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTierTitle');
-        // if (outputEventTierEntryInnerHTML)
-        //     outputEventTierTitle.innerHTML = outputEventTierTitleInnerHTML;
     }
 
     function checkValidTime() {
@@ -175,7 +136,7 @@
     })
     const cardForm = document.getElementById('card-form')
     const cardName = document.getElementById('card-name')
-    cardElement.mount('#card')
+    if (document.getElementById('card')) cardElement.mount('#card')
     cardForm.addEventListener('submit', async (e) => {
         e.preventDefault()
         const {
@@ -253,24 +214,6 @@
         let $event = {!! json_encode($event) !!};
         /* beautify preserve:start */
         clearLocalStorage();
-        console.log({
-            $event
-        })
-        console.log({
-            $event
-        })
-        console.log({
-            $event
-        })
-        console.log({
-            $event
-        })
-        console.log({
-            $event
-        })
-        console.log({
-            $event
-        })
         if ($event) {
 
             let assetKeyWord = "{{asset('')}}"
@@ -306,18 +249,7 @@
                 'sub_action_team': $event?.sub_action_team,
             });
             new Tagify(document.querySelector('#eventTags'), [...$event?.eventTags] ?? []);
-
-            // tagify.addTags(["banana", "orange", "apple"])
-
-            // <input type="hidden" name="livePreview" id="livePreview" value="false">
-            //             <input type="hidden" name="gameTitle" id="gameTitle">
-            //             <input type="hidden" name="eventTier" id="eventTier">
-            //             <input type="hidden" name="eventType"  id="eventType">
-            //             <input type="hidden" name="gameTitleId" id="gameTitleId">
-            //             <input type="hidden" name="eventTierId" id="eventTierId">
-            //             <input type="hidden" name="eventTypeId"  id="eventTypeId">
-            //             <input type="hidden" name="isPaymentDone"  id="isPaymentDone">
-            //             <input type="hidden" name="paymentMethod"  id="paymentMethod">
+           
         }
         else{
             new Tagify(document.querySelector('#eventTags'), {});
@@ -334,29 +266,15 @@
 
 <script>
     function selectOption(element, label, imageUrl) {
-        // Add the selected class to the parent button
         const dropdownButton = element.closest('.dropdown').querySelector('.dropbtn');
         dropdownButton.classList.add('selected');
 
-        // Handle selection logic here
         const selectedLabel = dropdownButton.querySelector('.selected-label');
         const selectedImage = dropdownButton.querySelector('.selected-image img');
         selectedLabel.textContent = label;
         selectedImage.src = imageUrl;
 
-        // Close the dropdown
         closeDropDown(dropdownButton);
     }
 
-    // // Function to close the dropdown
-    // function closeDropDown(button) {
-    //     const dropdownContent = button.nextElementSibling;
-    //     dropdownContent.classList.remove('d-block');
-    // }
-
-    // // Function to open the dropdown
-    // function openDropDown(button) {
-    //     const dropdownContent = button.nextElementSibling;
-    //     dropdownContent.classList.add('d-block');
-    // }
 </script>

@@ -17,12 +17,14 @@ $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
 
 $eventId = $event->id;
 @endphp
-<div class="{{'rounded-box rounded-box-' . $eventTierLower }}">
+<div class="{{'rounded-box rounded-box-' . $eventTierLower }} " 
+    style="padding-bottom: 2px;"
+>
     <div class="centered-absolute-game-tier">
         <img src="{{  $eventTierLowerImg }}" width="100" style="object-fit: cover;">
     </div>
     <div class="{{'card-image card-image-' . $eventTierLower }}">
-        <img width="200" height="200" style="object-fit: cover; " {!! trustedBladeHandleImageFailure() !!} src="{{ $eventBannerImg }}" alt="">
+        <img width="300" height="160"  {!! trustedBladeHandleImageFailure(); !!} src="{{ $eventBannerImg }}" alt="">
     </div>
     <div class="card-text">
         <div>
@@ -88,7 +90,7 @@ $eventId = $event->id;
             </div>
             <div class="group-hover-flexbox icon2">
                 @if ($status == 'UPCOMING' || $status == 'DRAFT')
-                <a style="padding: none; margin: none;" href="{{ route('organizer.live.view', $event->id) }}">
+                <a style="padding: none; margin: none;" href="{{ route('event.show', $event->id) }}">
                     <img onclick="goToLivePreview()" class="larger-hover" src="{{ asset('/assets/images/events/live-preview-icon.png') }}" alt="live preview" width="30" height="30" style="object-fit: cover; ">
                 </a>
                 <a style="padding: none; margin: none;">
