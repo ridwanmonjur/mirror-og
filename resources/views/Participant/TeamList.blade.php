@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
 </head>
 <body>
-    @include('CommonLayout.Navbar')
+    {{-- @include('CommonLayout.Navbar') --}}
 
     {{-- <nav class="navbar">
         <div class="logo">

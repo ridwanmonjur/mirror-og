@@ -18,7 +18,7 @@
 @endphp
 
 <body>
-    @include('CommonLayout.Navbar')
+    {{-- @include('CommonLayout.Navbar') --}}
     <main>
         <br class="d-none-at-desktop">
         <div class="">

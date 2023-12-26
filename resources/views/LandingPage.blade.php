@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.Navbar2')
+    {{-- @include('CommonLayout.Navbar2') --}}
     <nav>
         <div class="nav__sect1">
                 <img class="logo" src="{{ asset('/assets/images/logo2.png') }}" alt="">

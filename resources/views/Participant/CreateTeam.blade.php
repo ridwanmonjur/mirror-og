@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.Navbar')
+    {{-- @include('CommonLayout.Navbar') --}}
 
     <div class="text-center" id="step-0">
         <div class="welcome">
