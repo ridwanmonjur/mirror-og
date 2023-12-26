@@ -12,6 +12,8 @@
 </head>
 
 <body>
+    {{-- @include('CommonLayout.Navbar') --}}
+
     <div class="text-center" id="step-0">
         <div class="welcome">
             <u>
@@ -52,6 +54,7 @@
         <div><input type="submit" onclick="" value="Create Team"></div>
     </form>
     </div>
-    
+    @include('CommonLayout.BootstrapJs')
+
 </body>
 </html>

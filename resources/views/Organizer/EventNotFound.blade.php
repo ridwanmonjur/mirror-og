@@ -1,6 +1,7 @@
 @include('Organizer.Layout.CreateEventHeadTag')
-@include('CommonLayout.Navbar')
 <body style="margin-top: 0 !important;">
+@include('CommonLayout.Navbar')
+
     <main>
         <br><br>
         <div class="text-center" >
@@ -33,8 +34,7 @@
                 window.location.href = "{{route('event.index') }}";
             }
         </script>
-        <!-- include navbar script -->
-        <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"> </script>
+        @include('CommonLayout.BootstrapJs')
 
     </main>
 </body>

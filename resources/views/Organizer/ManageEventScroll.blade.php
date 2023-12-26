@@ -108,6 +108,7 @@ $eventId = $event->id;
                 @endif
                 @endif
             </div>
+            <br>
             <!-- Modal -->
         </div>
         <script>

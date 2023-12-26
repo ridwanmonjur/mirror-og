@@ -196,6 +196,8 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
         </div>
     </main>
     @stack('script')
+        @include('CommonLayout.BootstrapJs')
+
     <script>
         function goToCreateScreen() {
             let url = "{{ route('event.create') }}";

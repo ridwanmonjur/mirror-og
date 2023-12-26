@@ -10,6 +10,7 @@
 </head>
 
 <body>
+    {{-- @include('CommonLayout.Navbar') --}}
 
     <div class="wrapper">
 
@@ -135,6 +136,7 @@
         }
         });
         </script>
+    @include('CommonLayout.BootstrapJs')
 
 </body>
 

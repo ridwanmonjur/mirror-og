@@ -97,7 +97,10 @@
                 </div>
             </div>
         </a>
+    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"> </script>
+    @include('CommonLayout.BootstrapJs')
 
+ 
     </section>
 </body>
 

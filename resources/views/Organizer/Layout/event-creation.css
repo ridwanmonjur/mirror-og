@@ -522,7 +522,7 @@ nav svg:active {
 .swiper-wrapper {
     display: inline-flex;
     flex-direction: row;
-    overflow-y: hidden;
+    overflow-y: auto;
     justify-content: center;
 }
 
@@ -570,7 +570,7 @@ nav svg:active {
     transition: all 200ms ease-in;
 }
 
-.time-line-box .status__left {
+.time-line-box .#8CCD39 {
     padding: 0px 10px;
     display: flex;
     justify-content: flex-end;
@@ -594,7 +594,7 @@ nav svg:active {
     padding-top: 8px;
 }
 
-.time-line-box .status__left small {
+.time-line-box .#8CCD39 small {
     content: '';
     width: 12px;
     height: 12px;
@@ -609,31 +609,10 @@ nav svg:active {
     transition: all 200ms ease-in;
 }
 
-.status__left__success small,
-.time-line-box-success .status__right small 
-{
-    background-color: rgb(42, 139, 235) !important;
-    color: white !important;
-    width: 18px !important;
-    height: 18px !important;
-}
+.#8CCD39__success small{
+    background-color: #78da1d;
+    content: 'x';
 
-.status__left__success small,
-.time-line-box-success .status__right small
-{
-    padding-bottom: 15px !important;
-    padding-left: 5px !important;
-    padding-right: 15px !important;
-}
-
-.time-line-box-success .status__right,
-.time-line-box-success .status,
-.time-line-box-success .status__left
-{
-    border-top: 2px solid rgb(42, 139, 235);
-    content: 'x' !important;
-    color: white !important;
-    position: relative;
 }
 
 .time-line-box .status__right small {
@@ -909,7 +888,7 @@ input[type="submit"]:active {
 }
 
 @media screen and (min-width: 992px) {
-    .time-line-box .status__left small {
+    .time-line-box .#8CCD39 small {
         left: 13%;
     }
     main {
@@ -963,10 +942,10 @@ input[type="submit"]:active {
     .time-line-box .status {
         width: var(--timeline-normal-width-desktop) ! important;
     }
-    .time-line-box .status__left {
+    .time-line-box .#8CCD39 {
         width: var(--timeline-start-width-desktop) ! important;
     }
-    .time-line-box .status__left span:before {
+    .time-line-box .#8CCD39 span:before {
         left: 12%;
     }
     .time-line-box .status__right {

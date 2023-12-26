@@ -1,13 +1,13 @@
 @if ($message = Session::get('success'))
 <div>
-    <strong style="color:green;">{{ $message }}</strong>
+    <strong style="color:#8CCD39;">{{ $message }}</strong>
 </div>
 @endif
 
 
 @if ($message = Session::get('error'))
 <div>
-    <strong style="color:red;">{{ $message }}</strong>
+    <strong style="color:#EF4444;">{{ $message }}</strong>
 </div>
 @endif
 

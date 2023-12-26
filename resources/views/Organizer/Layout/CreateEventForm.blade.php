@@ -446,7 +446,7 @@
             <br>
             <div class="text-center">
                 @if ($event && $event->payment_transaction_id != null)
-                    <button onclick="" class="choose-payment-method" style="background-color: green !important;"
+                    <button onclick="" class="choose-payment-method" style="background-color: #8CCD39 !important;"
                         type="button">
                         Paid successfully!
                     </button>

@@ -181,7 +181,7 @@
         </div>
 
         <div class="no-more-data d-none" style="margin-top: 50px;"></div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        @include('CommonLayout.BootstrapJs')
         <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -352,7 +352,7 @@
                 if (urlParams.get('status')) {
                     let value = urlParams.get('status');
                     let element = document.querySelector(`p.status-${value}`)
-                    element.style.color = 'green';
+                    element.style.color = '#8CCD39';
                     element.style.border = '3px solid #43A4D7';
                     element.style.padding = "5px";
                     element.style.borderRadius = '12px';
@@ -449,7 +449,4 @@
         </script>
     </main>
     <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"> </script>
-    <!-- <script src="script.js"></script> -->
+  <!-- <script src="script.js"></script> -->

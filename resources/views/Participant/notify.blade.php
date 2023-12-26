@@ -10,14 +10,15 @@
 </head>
 
 <body>
+    {{-- @include('CommonLayout.Navbar') --}}
 
     <div class="wrapper_notify">
 
         <div class="first_notify">
             <header><u>All members of Farming Enjoyers have been notified</u></header>
         </div>
-        </br>
-        </br>
+        <br>
+        <br>
 
         <div class="midbar">
             <p>Registration has NOT been confirmed. Registration can only be confirmed after enough team members have accepted and the entry fee has been paid.
@@ -35,6 +36,7 @@
 
         </div>
     </div>
+    @include('CommonLayout.BootstrapJs')
 
 </body>
 

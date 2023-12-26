@@ -1,7 +1,7 @@
 <div id="step-1" class="">
     <div class="welcome text-center" style="margin-bottom: -25px !important;">
         @if (isset($error))
-        <p style="color:red;">{{ $error }}</p>
+        <p style="color:#EF4444;">{{ $error }}</p>
         @endif
         <u>
             <h3>
