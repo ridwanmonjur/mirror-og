@@ -24,7 +24,7 @@ $eventId = $event->id;
         <img src="{{  $eventTierLowerImg }}" width="100" style="object-fit: cover;">
     </div>
     <div class="{{'card-image card-image-' . $eventTierLower }}">
-        <img width="300" height="160"  {!! trustedBladeHandleImageFailure(); !!} src="{{ $eventBannerImg }}" alt="">
+        <img width="300" height="160"  {!! trustedBladeHandleImageFailure() !!} src="{{ $eventBannerImg }}" alt="">
     </div>
     <div class="card-text">
         <div>
