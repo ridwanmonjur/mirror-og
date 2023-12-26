@@ -39,9 +39,9 @@
                     @foreach ($selectTeam as $item)
                     <div class="team-info" onclick="selectOption(this, '{{ $item->teamName }}', 'css/images/logo.png')">
                         <img src="{{ asset('/assets/images/dota.png') }}" height="25px" width="50px">
-                        <a href="#" id="teamNameAnchor" data-team-name="{{ $item->teamName }}">{{ $item->teamName }}</a>
+                        <a href="#" id="teamNameAnchor" data-team-name="{{ $item->id }}">{{ $item->teamName }}</a>
                         <!-- Hidden input to store the selected team's name -->
-                        <input type="hidden" id="selectedTeamInput" name="selectedTeamName">
+                        <input type="hidden" id="selectedTeamInput" name="selectedTeamID">
                     </div>
                     @endforeach
                 </div>

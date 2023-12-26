@@ -110,7 +110,7 @@ class ParticipantEventController extends Controller
         }
 
         $member = new Member;
-        $member->teamName = $request->input('selectedTeamName');
+        $member->team_id = $request->input('selectedTeamID');
         $member->user_id  = auth()->user()->id;
         $member->save();
         return redirect()->back()->with('status', 'Team Added Successfully');
