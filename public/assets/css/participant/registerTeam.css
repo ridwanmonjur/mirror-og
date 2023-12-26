@@ -24,7 +24,7 @@ body {
     margin-top: 15vh;
     margin-right: 30px;
     width: 700px;
-    height: 530px;
+    /* height: 530px; */
     background-color: #FFFBFB;
 }
 
@@ -235,4 +235,30 @@ input.largerCheckbox {
     font-size: 15px;
     color: white;
     /* Plus icon color */
+}
+
+
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .wrapper,
+    .wrapper_notify {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .first,
+    .first_notify {
+        width: 100%;
+    }
+
+    .sidebar {
+        width: 100%;
+        float: none;
+        margin-top: 10px;
+        bottom: 0;
+    }
 }
