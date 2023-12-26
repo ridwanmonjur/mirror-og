@@ -2,9 +2,9 @@
     <!-- https://stackoverflow.com/questions/895171/prevent-users-from-submitting-a-form-by-hitting-enter -->
 
     <body>
+        @include('CommonLayout.Navbar')
         <main>
             <div>
-                @include('CommonLayout.Navbar')
                 <div>
                     <form enctype="multipart/form-data" onkeydown="return event.key != 'Enter';" action="{{ route('event.updateForm', $event->id) }}" method="post" name="create-event-form" novalidate>
                         @csrf

@@ -1,7 +1,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
-<script src="https://js.stripe.com/v3/"></script>
+<script src="https://js.stripe.com/v3/" unsafe-inline></script>
 <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
 <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
 <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
@@ -160,7 +160,7 @@
             // payment method created
 
             let paymentDiv = document.querySelector('.choose-payment-method');
-            paymentDiv.style.backgroundColor = 'green';
+            paymentDiv.style.backgroundColor = '#8CCD39';
             paymentDiv.textContent = 'Payment successful';
             paymentDiv.removeAttribute('data-bs-toggle');
             paymentDiv.removeAttribute('data-bs-target');
@@ -203,7 +203,7 @@
     function clearLocalStorage() {
         ['eventTypeTitle', 'gameTitleImg', 'eventTierPrize', 'eventTierPerson',
             'eventTierTitle', 'eventTierEntry', 'eventTypeDefinition', 'eventTierImg',
-            'eventBanner'
+            'eventBanner', 'eventTierId', 'eventTypeId'
         ].forEach((key) => {
             localStorage.removeItem(key);
         });

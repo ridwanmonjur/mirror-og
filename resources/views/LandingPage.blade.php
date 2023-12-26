@@ -12,8 +12,9 @@
 </head>
 
 <body>
-    <nav>
-           <div class="nav__sect1">
+    @include('CommonLayout.Navbar2')
+    {{-- <nav>
+        <div class="nav__sect1">
                 <img class="logo" src="{{ asset('/assets/images/logo2.png') }}" alt="">
                 <div class="search_box">
                     <i id="search-icon" class="fa fa-search"></i>
@@ -59,7 +60,7 @@
                 </ul>
             </div>
         @endauth
-    </nav>
+    </nav> --}}
 
     <section class="hero">
         <img src="{{ asset('/assets/images/ss.png') }}" alt="">

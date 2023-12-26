@@ -223,16 +223,23 @@ function saveForLivePreview() {
     createEventForm.submit();
 }
 
-function saveEvent(isCheckForNow = true) {
+function saveEvent(willGoToNextPage = true) {
     let launch_schedule = null;
-    let launch_schedule_form = getFormValues(['launch_schedule'])
+    let launch_visible = null;
+    let launch_schedule_form = getFormValues(['launch_schedule', 'launch_visible'])
     if ('launch_schedule' in launch_schedule_form) {
         launch_schedule = launch_schedule_form['launch_schedule'];
     }
-    if (isCheckForNow && launch_schedule == 'now') {
-        console.log({ launch_schedule })
-        console.log({ launch_schedule })
-        console.log({ launch_schedule })
+    if ('launch_visible' in launch_schedule_form) {
+        launch_visible = launch_schedule_form['launch_visible'];
+    } else {
+        Toast.fire({
+            icon: 'error',
+            title: 'Form cannot be found!'
+        })
+        return;
+    }
+    if (launch_visible != "DRAFT" && willGoToNextPage && launch_schedule == 'now') {
         setFormValues({ 'launch_schedule': 'now' });
         goToNextScreen('step-12', 'timeline-4');
         return;
@@ -445,3 +452,7 @@ function goToNextScreen(nextId, nextTimeline) {
         }
     })
 }
+
+
+
+

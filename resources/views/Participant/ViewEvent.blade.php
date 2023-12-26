@@ -19,7 +19,7 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
 @endphp
 
 <body>
-
+    @include('CommonLayout.Navbar')
     <main>
         <br class="d-none-at-desktop">
         <div class="">

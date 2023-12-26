@@ -10,6 +10,7 @@
 </head>
 
 <body>
+    @include('CommonLayout.Navbar')
 
     <div class="wrapper">
 
@@ -17,8 +18,8 @@
 
             <header><u>Select Team to Register</u></header>
         </div>
-        </br>
-        </br>
+        <br>
+        <br>
 
         <div class="dropdown">
             <button class="dropbtn" onclick="toggleDropdown()">

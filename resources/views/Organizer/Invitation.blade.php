@@ -6,8 +6,8 @@ extract($dateArray);
 @endphp
 
 <body>
+        @include('CommonLayout.Navbar')
     <main>
-
         <div>
             @include('Organizer.Layout.CreateEventTimelineBox')
             <br>

@@ -10,6 +10,7 @@
 </head>
 
 <body>
+    @include('CommonLayout.Navbar')
 
     <div class="wrapper">
 

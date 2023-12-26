@@ -352,7 +352,7 @@
                 if (urlParams.get('status')) {
                     let value = urlParams.get('status');
                     let element = document.querySelector(`p.status-${value}`)
-                    element.style.color = 'green';
+                    element.style.color = '#8CCD39';
                     element.style.border = '3px solid #43A4D7';
                     element.style.padding = "5px";
                     element.style.borderRadius = '12px';

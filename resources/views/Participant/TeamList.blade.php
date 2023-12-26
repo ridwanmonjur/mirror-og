@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
 </head>
 <body>
-    <nav class="navbar">
+    @include('CommonLayout.Navbar')
+
+    {{-- <nav class="navbar">
         <div class="logo">
             <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
         </div>
@@ -45,7 +47,7 @@
             <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
             <img width="70px" height="40px" src="{{ asset('/assets/images/navbar-crown.png') }}" alt="">
         </div>
-    </nav>
+    </nav> --}}
 
     <main>
         @foreach ($teamList as $team)
