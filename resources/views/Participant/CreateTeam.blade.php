@@ -54,6 +54,7 @@
         <div><input type="submit" onclick="" value="Create Team"></div>
     </form>
     </div>
-    
+    @include('CommonLayout.BootstrapJs')
+
 </body>
 </html>

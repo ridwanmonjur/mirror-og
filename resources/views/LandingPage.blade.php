@@ -13,7 +13,7 @@
 
 <body>
     @include('CommonLayout.Navbar2')
-    {{-- <nav>
+    <nav>
         <div class="nav__sect1">
                 <img class="logo" src="{{ asset('/assets/images/logo2.png') }}" alt="">
                 <div class="search_box">
@@ -60,7 +60,7 @@
                 </ul>
             </div>
         @endauth
-    </nav> --}}
+    </nav> 
 
     <section class="hero">
         <img src="{{ asset('/assets/images/ss.png') }}" alt="">
@@ -76,7 +76,7 @@
 
     <div class="no-more-data d-none"></div>
     <br><br>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    @include('CommonLayout.BootstrapJs')
     <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
     <script>
         var ENDPOINT = "{{ route('landing.view') }}";

@@ -103,6 +103,8 @@ extract($dateArray);
         <br><br>
     </main>
     @include('Organizer.Layout.CreateEventScripts')
+        @include('CommonLayout.BootstrapJs')
+
     <script>
         function getCookie(name) {
             const value = `; ${document.cookie}`;

@@ -34,7 +34,7 @@
                 window.location.href = "{{route('event.index') }}";
             }
         </script>
-        <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"> </script>
+        @include('CommonLayout.BootstrapJs')
 
     </main>
 </body>

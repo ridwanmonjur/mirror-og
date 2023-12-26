@@ -152,6 +152,7 @@
             dropdownContent.classList.add('d-block');
         }
     </script>
+    @include('CommonLayout.BootstrapJs')
 
 </body>
 

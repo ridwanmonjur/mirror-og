@@ -38,6 +38,6 @@
             <br><br>
         </main>
         @include('Organizer.Layout.CreateEventScripts')
-        <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
+        @include('CommonLayout.BootstrapJs')
 
     </body>

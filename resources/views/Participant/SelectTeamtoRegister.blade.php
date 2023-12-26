@@ -146,6 +146,7 @@
         }
         });
         </script>
+    @include('CommonLayout.BootstrapJs')
 
 </body>
 
