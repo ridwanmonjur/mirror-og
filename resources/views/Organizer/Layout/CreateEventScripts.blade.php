@@ -158,10 +158,7 @@
             // payment method created
 
             let paymentDiv = document.querySelector('.choose-payment-method');
-            paymentDiv.style.backgroundColor = '#8CCD39';
-            paymentDiv.textContent = 'Payment successful';
-            paymentDiv.removeAttribute('data-toggle');
-            paymentDiv.removeAttribute('data-target');
+          
             // goToNextScreen('step-11', 'timeline-4');
             document.getElementById('modal-close').click();
             const form = new FormData(cardForm);
@@ -179,6 +176,10 @@
                 })
                 .then(response => response.json())
                 .then(responseData => {
+                    paymentDiv.style.backgroundColor = '#8CCD39';
+                    paymentDiv.textContent = 'Payment successful';
+                    paymentDiv.removeAttribute('data-toggle');
+                    paymentDiv.removeAttribute('data-target');
                     setFormValues({
                         'isPaymentDone': true,
                         paymentMethod: paymentMethod.id

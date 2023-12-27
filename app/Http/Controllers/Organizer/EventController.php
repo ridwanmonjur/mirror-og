@@ -258,9 +258,9 @@ class EventController extends Controller
         $eventDetail->eventBanner  = $fileNameFinal;
         $eventDetail->save();
         if ($request->livePreview == "true") {
-            return redirect('organizer/live/' . $eventDetail->id);
+            return redirect('organizer/event/' . $eventDetail->id . '/live');
         }
-        return redirect('organizer/success/' . $eventDetail->id);
+        return redirect('organizer/event/' . $eventDetail->id. '/success');
     }
 
 
@@ -395,9 +395,9 @@ class EventController extends Controller
                 $eventDetail->eventBanner  = $fileNameFinal;
                 $eventDetail->save();
                 if ($request->livePreview == "true") {
-                    return redirect('organizer/live/' . $eventDetail->id);
+                    return redirect('organizer/event/' . $eventDetail->id . '/live');
                 }
-                return redirect('organizer/success/' . $eventDetail->id);
+                return redirect('organizer/event/' . $eventDetail->id. '/success');
             } else {
                 return back()->with('error', 'Event id missing!');
             }
