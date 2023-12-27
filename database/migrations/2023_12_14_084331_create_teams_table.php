@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
-            $table->string('teamName')->nullable();
-            $table->foreignId('user_id')->constrained(
-                table: 'users', indexName: 'teams_user_id_foreign')->nullable();
+            $table->string('teamName');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
+
+            // Foreign key constraint
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -100,20 +100,27 @@ class ParticipantEventController extends Controller
 
     public function TeamtoRegister(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'selectedTeamName' => 'required', // Validation rule for 'selectedTeamName'
-            // Add other validation rules for additional fields if needed
-        ]);
+        $selectedTeamNames = $request->input('selectedTeamName');
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $member = new Member;
-        $member->team_id = $request->input('selectedTeamName');
+        // Loop through the selected teams if it's an array
+        if (is_array($selectedTeamNames)) {
+        foreach ($selectedTeamNames as $teamId) {
+        $member = new Member(); // Assuming you're creating a new Member instance
+        $member->team_id = $teamId;
         $member->user_id  = auth()->user()->id;
         $member->save();
         return redirect()->back()->with('status', 'Team Added Successfully');
+        }
+        } else {
+        // Handle the case when only one team is selected
+        $member = new Member();
+        $member->team_id = $selectedTeamNames;
+        $member->user_id  = auth()->user()->id;
+        $member->save();
+        return redirect()->back()->with('status', 'Team Added Successfully');
+}
+        
+        
     }
 
 
