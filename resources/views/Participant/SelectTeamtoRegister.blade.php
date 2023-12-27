@@ -35,22 +35,12 @@
             <div class="dropdown-content" id="teamList">
                 <form action="{{ url('/participant/home') }}" method="POST">
                     @csrf
-                    <!-- Display validation errors -->
-                    @if ($errors->any())
-                    <div class="alert alert-danger">
-                    <ul>
-                    @foreach ($errors->all() as $error)
-                     <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
                 <input type="text" id="teamSearch" oninput="filterTeams()" placeholder="Search for teams...">
                 <div>
                     @foreach ($selectTeam as $item)
                     <div class="team-info" onclick="selectOption(this, '{{ $item->teamName }}', 'css/images/logo.png')">
                         <img src="{{ asset('/assets/images/dota.png') }}" height="25px" width="50px">
-                        <a href="#" id="teamNameAnchor" data-team-name="{{ $item->teamName }}">{{ $item->teamName }}</a>
+                        <a href="#" id="teamNameAnchor" data-team-name="{{ $item->id }}">{{ $item->teamName }}</a>
                         <!-- Hidden input to store the selected team's name -->
                         <input type="hidden" id="selectedTeamInput" name="selectedTeamName">
                     </div>
