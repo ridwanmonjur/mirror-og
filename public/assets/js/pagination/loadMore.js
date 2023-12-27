@@ -20,13 +20,6 @@ function throttle(func, wait) {
 function infinteLoadMore(page, ENDPOINT) {
     if ($('.no-more-data').hasClass('d-none')) {
         let endpointFinal = page == null ? ENDPOINT: ENDPOINT + "?page=" + page
-        // window.history.replaceState({}, document.title, endpointFinal);
-        console.log({endpointFinal});
-        console.log({endpointFinal});
-        console.log({endpointFinal});
-        console.log({endpointFinal});
-        console.log({endpointFinal});
-        console.log({endpointFinal});
         $.ajax({
             url: endpointFinal,
             datatype: "html",
@@ -55,19 +48,19 @@ function infinteLoadMore(page, ENDPOINT) {
 }
 
 
-function infinteLoadMoreByPost(page, ENDPOINT) {
+function infinteLoadMoreByPost(ENDPOINT, body) {
     let noMoreDataElement = document.querySelector('.no-more-data');
     let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
     let hasClass = noMoreDataElement.classList.contains('d-none');
     if (hasClass) {
-        let endpointFinal = page == null ? ENDPOINT : ENDPOINT + "?page=" + page
         // window.history.replaceState({}, document.title, endpointFinal);
-        fetch(endpointFinal, {
-            method: 'GET',
+        fetch(ENDPOINT, {
+            method: 'post',
             headers: {
                 'Accept': 'text/html',
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify(body)
         })
             .then((response) => {
                 if (response.html == '') {
@@ -76,7 +69,6 @@ function infinteLoadMoreByPost(page, ENDPOINT) {
                     noMoreDataElement.style.justifyContent = 'center';
                     noMoreDataElement.textContent = "We don't have more data to display";
                 }
-                // <!-- $('.auto-load').hide(); -->
                 scrollingPaginationElement.innerHTML += response.html;
             })
             .catch(function (error) {

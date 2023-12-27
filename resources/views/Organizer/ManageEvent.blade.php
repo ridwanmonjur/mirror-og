@@ -18,42 +18,42 @@
             </header>
             <div class="flexbox-filter">
                 <p class="status-ALL">
-                    <a href="{{ route('event.index', 
-                        array_merge(request()->query(), ['status' => 'ALL', 'page' => 1])
-                        ) }}">All</a>
+                    <a
+                        href="{{ route('event.index', array_merge(request()->query(), ['status' => 'ALL', 'page' => 1])) }}">All</a>
                 </p>
                 <p class="status-LIVE">
-                    <a href="{{ route('event.index',    
-                        array_merge(request()->query(), ['status' => 'LIVE', 'page' => 1])
-                        ) }}">Live</a>
+                    <a
+                        href="{{ route('event.index', array_merge(request()->query(), ['status' => 'LIVE', 'page' => 1])) }}">Live</a>
                 </p>
                 <p class="status-SCHEDULED">
-                    <a href="{{ route('event.index',
-                        array_merge(request()->query(), ['status' => 'SCHEDULED', 'page' => 1])
-                        ) }}">Scheduled</a>
+                    <a
+                        href="{{ route('event.index', array_merge(request()->query(), ['status' => 'SCHEDULED', 'page' => 1])) }}">Scheduled</a>
                 </p>
                 <p class="status-DRAFT">
-                    <a href="{{ route('event.index',
-                        array_merge(request()->query(), ['status' => 'DRAFT', 'page' => 1])
-                        ) }}">Drafts</a>
+                    <a
+                        href="{{ route('event.index', array_merge(request()->query(), ['status' => 'DRAFT', 'page' => 1])) }}">Drafts</a>
                 </p>
                 <p class="status-ENDED">
-                    <a href="{{ route('event.index',
-                        array_merge(request()->query(), ['status' => 'ENDED', 'page' => 1])
-                        ) }}">Ended</a>
+                    <a
+                        href="{{ route('event.index', array_merge(request()->query(), ['status' => 'ENDED', 'page' => 1])) }}">Ended</a>
                 </p>
             </div>
             <br>
             <div>
-                <span class="icon2" onclick="openElementById('close-option'); openElementById('filter-option');  closeElementById('sort-option');">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter">
+                <span class="icon2"
+                    onclick="openElementById('close-option'); openElementById('filter-option');  closeElementById('sort-option');">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="feather feather-filter">
                         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                     </svg>
                     <span> Filter </span>
                 </span>
                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                <span class="icon2" onclick="openElementById('close-option'); openElementById('sort-option'); closeElementById('filter-option');">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <span class="icon2"
+                    onclick="openElementById('close-option'); openElementById('sort-option'); closeElementById('filter-option');">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
                         <path d="M15 7h6v6" />
                     </svg>
@@ -62,7 +62,8 @@
                     </span>
                 </span>
                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                <span class="icon2 d-none" id="close-option" onclick="closeElementById('close-option'); closeElementById('filter-option'); closeElementById('sort-option');">
+                <span class="icon2 d-none" id="close-option"
+                    onclick="closeElementById('close-option'); closeElementById('filter-option'); closeElementById('sort-option');">
                     <span style="font-weight: 900;">X</span>
                     <span>
                         Close
@@ -71,27 +72,24 @@
             </div>
             <br>
             <div id="sort-option" class="d-none">
-                <form action="{{ route('event.index') }}" method="get">
-
-                    <!-- Include existing request parameters -->
-                    @foreach(request()->except('sort', 'sortType', 'page') as $key => $value)
-                    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                    @endforeach
-                    <input type="hidden" name="page" value="1">
+                <form action="{{ route('event.index') }}" method="post">
                     <label> Sort by:</label>
                     &emsp;&emsp;&emsp;
-                    <input type="hidden" name="sortType">
                     <span class="sort-box">
-                        <input type="radio" name="sort" value="startDate">
+                        <input onchange="setLocalStorageSort(event);" type="radio" name="sort" value="startDate">
                         <label for="startDate">Start Date</label>
+                        <span class="startDateSortIcon sortIcon"> </span>
                     </span>
                     &ensp; &ensp;
                     <span class="sort-box">
-                        <input type="radio" name="sort" value="endDate">
-                        <label for="endDate">End Date</label>
+                        <input onchange="setLocalStorageSort(event);" onchange="setLocalStorageSort(event);"
+                            type="radio" name="sort" value="endDate">
+                        <label for="endDateSortIcon endIcon">End Date</label>
+                        <span> </span>
                     </span>
                     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                    <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button" style="background: #8CCD39 !important">
+                    <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button"
+                        style="background: #8CCD39 !important">
                         Reset
                     </button>
                     <button type="submit" class="oceans-gaming-default-button">Save & Sort</button>
@@ -101,11 +99,9 @@
             </div>
 
             <div id="filter-option" class="d-none">
-                <form name="filter" action="{{ route('event.index') }}" method="get">
+                <form name="filter" action="{{ route('event.index') }}" method="post">
                     <!-- Include existing request parameters -->
-                    @foreach(request()->except('gameTitle', 'eventTier', 'eventType', 'page') as $key => $value)
-                    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                    @endforeach
+
                     <input type="hidden" name="page" value="1">
                     <div>
                         <label> Game Title:</label>
@@ -116,7 +112,8 @@
                         <input type="radio" name="gameTitle" value="Dota">
                         <label for="gameTitle">Dota</label>
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                        <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button" style="background: #8CCD39 !important">
+                        <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button"
+                            style="background: #8CCD39 !important">
                             Reset
                         </button>
                         <button type="submit" class="oceans-gaming-default-button">Save & Filter</button>
@@ -146,18 +143,23 @@
             </div>
             <br>
             <div class="search-bar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search search-bar2-adjust">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" class="feather feather-search search-bar2-adjust">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input type="text" onblur="handleInputBlur();" name="search" id="searchInput" placeholder="Search using title, description, or keywords">
-                <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button d-none" style="background: #8CCD39 !important">
+                <input type="text" onblur="handleInputBlur();" name="search" id="searchInput"
+                    placeholder="Search using title, description, or keywords">
+                <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button d-none"
+                    style="background: #8CCD39 !important">
                     Reset
                 </button>
             </div>
         </div>
         <br><br>
-        <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -167,7 +169,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        NEED TO GET UI FROM LEIGH   
+                        NEED TO GET UI FROM LEIGH
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -177,14 +179,47 @@
         </div>
 
         <div class="scrolling-pagination grid-container">
-            @include("Organizer.ManageEventScroll")
+            @include('Organizer.ManageEventScroll')
         </div>
 
         <div class="no-more-data d-none" style="margin-top: 50px;"></div>
         @include('CommonLayout.BootstrapJs')
         <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            function setLocalStorageSort(event) {
+                let sort = JSON.parse(localStorage.getItem('sort')) || {};
+                let value = null;
+                if (event.target.value in sort) {
+                    if (value == 'asc') {
+                        value = 'desc';
+                    } else if (value == 'desc') {
+                        value = 'asc';
+                    } else {
+                        value = 'none';
+                    }
+                } else {
+                    value = 'asc';
+                }
+                if (event.target.checked) {
+                    sort[event.target.value] = value;
+                } else {
+                    delete sort[event.target.value];
+                }
+                localStorage.setItem('sortType', JSON.stringify(sortType));
+            }
 
+            function setLocalStorageFilter(event) {
+                let filter = JSON.parse(localStorage.getItem('filter')) || {};
+                let value = null;
+                if (event.target.checked) {
+                    sort[event.target.value] = value;
+                } else {
+                    delete sort[event.target.value];
+                }
+                localStorage.setItem('sortType', JSON.stringify(sortType));
+            }
+        </script>
         <script>
             const copyUrlFunction = (copyUrl) => {
                 navigator.clipboard.writeText(copyUrl).then(function() {
@@ -363,7 +398,8 @@
                     const inputParamValueListFromName = urlParams.getAll(inputName);
                     for (let i = 0; i < inputParamValueListFromName.length; i++) {
                         const inputParamValueFromName = inputParamValueListFromName[i];
-                        const checkbox = document.querySelector(`input[type="radio"][name="${inputName}"][value="${inputParamValueFromName}"]`);
+                        const checkbox = document.querySelector(
+                            `input[type="radio"][name="${inputName}"][value="${inputParamValueFromName}"]`);
                         if (checkbox) {
                             checkbox.checked = true
                         }
@@ -435,13 +471,13 @@
                     var windowHeight = window.innerHeight;
                     var documentHeight = document.documentElement.scrollHeight;
                     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    if (scrollTop + windowHeight >= documentHeight - 200 ) {
+                    if (scrollTop + windowHeight >= documentHeight - 200) {
                         let params = convertUrlStringToQueryStringOrObject({
                             isObject: true
                         });
                         page++;
                         params.page = page;
-                        ENDPOINT = `/organizer/event/?` + convertObjectToURLString(params);
+                        ENDPOINT = `/organizer/event/`;
                         infinteLoadMoreByPost(null, ENDPOINT);
                     }
                 }, 300)
@@ -449,4 +485,4 @@
         </script>
     </main>
     <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
-  <!-- <script src="script.js"></script> -->
+    <!-- <script src="script.js"></script> -->

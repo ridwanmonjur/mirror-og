@@ -24,14 +24,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'participant'], function () {
-    Route::post('events', [ParticipantEventController::class, 'index'])
-        ->name("event.index");
+    Route::post('events', [ParticipantEventController::class, 'index'])->name('event.index');
 });
 
-
 Route::group(['prefix' => 'organizer'], function () {
-    Route::post('events', [EventController::class, 'index'])
-        ->name("event.index");
+    Route::post('events/search', [EventController::class, 'index'])->name('event.search.view');
 });
 
 Route::name('stripe.')
@@ -41,9 +38,6 @@ Route::name('stripe.')
         Route::post('payment', 'organizerTeamPay')->name('organizerTeamPay');
     });
 
+Route::post('/event/{id}/invitation', [InvitationController::class, 'store'])->name('event.invitation.store');
 
-Route::post('/event/{id}/invitation', [InvitationController::class, 'store'])
-    ->name("event.invitation.store");
-   
-   
 // Route::any('/admin', 'AdminController@index')->middleware('check-permission:admin');

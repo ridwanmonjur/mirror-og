@@ -7,7 +7,7 @@
     <title></title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/registerTeam.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
 </head>
 
 <body>

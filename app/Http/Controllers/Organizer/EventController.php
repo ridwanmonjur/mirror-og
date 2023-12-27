@@ -77,9 +77,9 @@ class EventController extends Controller
             if (empty($search)) {
                 return $query;
             }
-            return $query->where('gameTitle', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
-                ->orWhere('eventDescription', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
-                ->orWhere('eventDefinitions', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci");
+            return $query->where('gameTitle', 'LIKE', "%{$search}%")
+                ->orWhere('eventDescription', 'LIKE', "%{$search}%")
+                ->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
         });
 
         $eventListQuery->when($request->has("sort"), function ($query) use ($request) {
@@ -90,7 +90,6 @@ class EventController extends Controller
             }
             return $query;
         });
-
         $eventListQuery->when($request->has("eventTier"), function ($query) use ($request) {
             $eventTier = trim($request->input("eventTier"));
             return $query->where('eventTier', $eventTier);

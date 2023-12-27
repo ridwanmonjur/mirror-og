@@ -107,9 +107,7 @@ $eventId = $event->id;
             <!-- Modal -->
         </div>
         <script>
-            const goToManageScreen = () => {
-                window.location.href = "{{ route('event.index') }}";
-            }
+          
             const copyUtil = (urlType) => {
                 let copyUrl = '';
                 switch (urlType) {

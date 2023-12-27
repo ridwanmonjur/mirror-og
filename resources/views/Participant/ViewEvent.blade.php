@@ -48,17 +48,18 @@
                 <div style="padding-left: 20px;padding-right:20px;">
                     <div>
                         @if ($event->eventBanner)
-                            <img width="500" height="300" " style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!} src="{{ $eventBannerImg }}" alt="">
-@else
-<div>
-                            <br>
-                            <img style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!} alt="">
-                            <h5>
-                                Please enter a banner image.
-                            </h5>
-                            <br><br>
-                        </div>
- @endif
+                            <img width="500" height="300" style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!}
+                                src="{{ $eventBannerImg }}" alt="">
+                        @else
+                            <div>
+                                <br>
+                                <img style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!} alt="">
+                                <h5>
+                                    Please enter a banner image.
+                                </h5>
+                                <br><br>
+                            </div>
+                        @endif
                     </div>
                     <div class="grid-container-two-columns-at-desktop">
                         <div class="card-text">
