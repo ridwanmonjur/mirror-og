@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class EventDetail extends Model
 {
     use HasFactory;
+    protected $table = 'event_details';
 
     protected $guarded = [];
 
@@ -19,8 +20,10 @@ class EventDetail extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id','id');
     }
+
+    
    
     public function invitationList()
     {

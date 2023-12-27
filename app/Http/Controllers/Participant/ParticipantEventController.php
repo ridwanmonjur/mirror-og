@@ -55,8 +55,23 @@ class ParticipantEventController extends Controller
 
     public function teamManagement($id)
     {
-        $teamManage = Team::Where('id',$id)->get();
-        return view('Participant.Layout.TeamManagement', compact('teamManage'));
+        // $teamManage = Team::Where('id',$id)->get();
+
+        $teamManage = Team::where('id', $id)->get();
+
+        // Check if the team exists
+         if ($teamManage) {
+        // Retrieve JoinEvents related to the team_id
+        $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
+            $query->where('team_id', $id);
+        })->with('eventDetails', 'user')->get();
+
+        return view('Participant.Layout.TeamManagement', compact('teamManage', 'joinEvents'));
+         } else {
+        // Handle if the team doesn't exist
+        return redirect()->back()->with('error', 'Team not found.');
+         }
+        // return view('Participant.Layout.TeamManagement', compact('teamManage'));
     }
 
 
