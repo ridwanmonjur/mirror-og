@@ -7,10 +7,11 @@
     <title></title>
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_event_reg.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
 </head>
 
 <body>
-    {{-- @include('CommonLayout.Navbar') --}}
+    @include('CommonLayout.Navbar')
 
     <div class="wrapper_notify">
 

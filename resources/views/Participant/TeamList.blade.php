@@ -9,9 +9,10 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamList.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
+    <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
 </head>
 <body>
-    {{-- @include('CommonLayout.Navbar') --}}
+    @include('CommonLayout.Navbar')
 
     {{-- <nav class="navbar">
         <div class="logo">
@@ -52,7 +53,7 @@
     <main>
         @foreach ($teamList as $team)
         <div class="wrapper">
-            
+
             <div class="team-section">
                 <div class="upload-container">
                     <label for="image-upload" class="upload-label">
@@ -63,17 +64,17 @@
                     </label>
                     <input type="file" id="image-upload" accept="image/*" style="display: none;">
                 </div>
-              <a href="/participant/team-manage/{{ $team['id'] }}"> <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3></a> 
+              <a href="/participant/team-manage/{{ $team['id'] }}"> <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3></a>
                 <br>
                 <p>Total Members: 20</p>
             </div>
-           
-                
+
+
         </div>
         @endforeach
 
 
-        
+
 
     </main>
 
