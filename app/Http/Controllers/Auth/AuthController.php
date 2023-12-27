@@ -94,6 +94,13 @@ class AuthController extends Controller
         $count = 4;
         $currentDateTime = Carbon::now()->utc();
         $events = EventDetail::with('game')
+            ->where('status', '<>', 'DRAFT')
+                ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
+                ->where(function ($query) use ($currentDateTime) {
+                    $query->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) > ?', [$currentDateTime])
+                        ->orWhereNull('sub_action_public_time')
+                        ->orWhereNull('sub_action_public_date');
+                })
             ->when($request->has('search'), function ($query) use ($request) {
                 $search = trim($request->input('search'));
                 if (empty($search)) {
@@ -110,13 +117,7 @@ class AuthController extends Controller
             //         } else return $query;
             //     } else return $query;
             // })
-            ->where('status', '<>', 'DRAFT')
-            ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
-            ->where(function ($query) use ($currentDateTime) {
-                $query->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) > ?', [$currentDateTime])
-                    ->orWhereNull('sub_action_public_time')
-                    ->orWhereNull('sub_action_public_date');
-            })
+            
             ->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
         $output = compact("events", "mappingEventState");

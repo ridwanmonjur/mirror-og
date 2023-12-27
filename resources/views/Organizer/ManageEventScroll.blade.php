@@ -3,18 +3,13 @@
 $status = $event->statusResolved();
 $stylesEventStatus = bladeEventStatusStyleMapping($status);
 $stylesEventStatus .= 'padding-top: -150px; ';
-
 $stylesEventRatio= bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
 $eventTierLower= bladeEventTowerLowerClass($event->eventTier);
 $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
 extract($dateArray);
-
 $eventTierLowerImg = bladeEventTierImage($event->eventTier);
-
 $eventBannerImg = bladeImageNull($event->eventBanner);
-
 $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
-
 $eventId = $event->id;
 @endphp
 <div class="{{'rounded-box rounded-box-' . $eventTierLower }} " 

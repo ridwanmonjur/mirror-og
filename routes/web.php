@@ -54,6 +54,8 @@ Route::get('/account/verify-success/', [AuthController::class, 'verifySuccess'])
 
 Route::post('/logout', [AuthController::class, 'logout'])->name("participant.logout.action");
 
+Route::get('/event/search', [AuthController::class, 'showLandingPage'])->name('user.search.view');
+
 Route::group(['prefix' => 'participant'], function () {
 	Route::get('/signin', [AuthController::class, 'signIn'])->name("participant.signin.view");
 	Route::get('/signup', [AuthController::class, 'signUp'])->name("participant.signup.view");
@@ -96,11 +98,14 @@ Route::group(['prefix' => 'organizer'], function () {
 			]);
 			Route::get('/event/{id}/invitation', [InvitationController::class, 'index'])
 				->name('event.invitation.index');
-			Route::post('event/updateForm/{id}', [EventController::class, 'updateForm'])->name('event.updateForm');
-			Route::get('success/{id}', [EventController::class, 'showSuccess'])
+			Route::post('event/{id}/updateForm', [EventController::class, 'updateForm'])->name('event.updateForm');
+			Route::get('event/{id}/success', [EventController::class, 'showSuccess'])
 				->middleware('prevent-back-button')
 				->name("organizer.success.view");
-			Route::get('live/{id}', [EventController::class, 'showLive'])
+			Route::get('event/{id}/live', [EventController::class, 'showLive'])
+				->middleware('prevent-back-button')
+				->name("organizer.live.view");
+			Route::get('event/{id}/live', [EventController::class, 'showLive'])
 				->middleware('prevent-back-button')
 				->name("organizer.live.view");
 		});
@@ -112,9 +117,6 @@ Route::group(['prefix' => 'organizer'], function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
-	/**
-	 * Verification Routes
-	 */
 	Route::get('/email/verify', 'VerificationController@show')->name('verification.notice');
 	Route::get('/email/verify/{id}/{hash}', 'VerificationController@verify')->name('verification.verify')->middleware(['signed']);
 	Route::post('/email/resend', 'VerificationController@resend')->name('verification.resend');
@@ -122,8 +124,3 @@ Route::group(['middleware' => ['auth']], function () {
 
 Route::get('/dashboard', [AuthController::class, 'dashboard']); // Route for Dashboard Page
 
-
-
-// Route::redirect('/login', '/admin/login')->name('login');
-
-// Route::redirect('/laravel/login', '/admin')->name('admin');

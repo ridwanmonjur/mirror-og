@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}"">
+    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <link rel=" stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Splash</title>
     <script src="{{ asset('script.js') }}"></script>
@@ -29,7 +29,7 @@
             <ul>
                 {{-- <li><a href="#" id='nav-but' class="moop">Where's Moop?</a></li> --}}
                 <div class="dropdown">
-                    <li><a onclick="myFunction()" style="color: white !important;" id='nav-but' class="dropbtn sign" data-bs-toggle="dropdown" aria-expanded="false">Where's Moop?</a></li>
+                    <li><a onclick="myFunction()" style="color: white !important;" id='nav-but' class="dropbtn sign" data-toggle="dropdown" aria-expanded="false">Where's Moop?</a></li>
                 </div>
                 <div id="myDropdown" class="dropdown-content">
                     <a class="dropdown-item" href="/participant/create-team/{id}">Create Team</a>

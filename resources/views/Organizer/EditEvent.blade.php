@@ -38,8 +38,7 @@
             </div>
             <br><br>
         </main>
-        @include('Organizer.Layout.CreateEventScripts')
         @include('CommonLayout.BootstrapJs')
-
+        @include('Organizer.Layout.CreateEventScripts')
 
     </body>

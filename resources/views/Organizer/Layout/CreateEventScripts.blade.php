@@ -1,5 +1,5 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
-<script src="https://js.stripe.com/v3/" unsafe-inline></script>
+<script src="https://js.stripe.com/v3/" ></script>
 <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
 <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
 <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
@@ -134,7 +134,7 @@
     })
     const cardForm = document.getElementById('card-form')
     const cardName = document.getElementById('card-name')
-    if (document.getElementById('card')) cardElement.mount('#card')
+    cardElement.mount('#card')
     cardForm.addEventListener('submit', async (e) => {
         e.preventDefault()
         const {
@@ -160,8 +160,8 @@
             let paymentDiv = document.querySelector('.choose-payment-method');
             paymentDiv.style.backgroundColor = '#8CCD39';
             paymentDiv.textContent = 'Payment successful';
-            paymentDiv.removeAttribute('data-bs-toggle');
-            paymentDiv.removeAttribute('data-bs-target');
+            paymentDiv.removeAttribute('data-toggle');
+            paymentDiv.removeAttribute('data-target');
             // goToNextScreen('step-11', 'timeline-4');
             document.getElementById('modal-close').click();
             const form = new FormData(cardForm);

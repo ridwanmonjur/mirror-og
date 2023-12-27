@@ -27,6 +27,7 @@
                             @include('Organizer.Layout.CreateEventTimelineWelcome')
                         @endif
                         @include('Organizer.Layout.CreateEventStepOneCreate')
+                        @include('CommonLayout.BootstrapJs')
                         @include('Organizer.Layout.CreateEventForm')
                         @if (session()->has('success'))
                             @include('Organizer.Layout.CreateEventSuccess')
@@ -38,6 +39,5 @@
             <br><br>
         </main>
         @include('Organizer.Layout.CreateEventScripts')
-        @include('CommonLayout.BootstrapJs')
 
     </body>

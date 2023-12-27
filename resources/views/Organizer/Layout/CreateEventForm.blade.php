@@ -451,8 +451,8 @@
                         Paid successfully!
                     </button>
                 @else
-                    <button onclick="" type="button" class="choose-payment-method" data-bs-toggle="modal"
-                        data-bs-target="#payment-modal">
+                    <button onclick="" type="button" class="choose-payment-method" data-toggle="modal"
+                        data-target="#payment-modal">
                         Choose a payment method
                     </button>
                 @endif
