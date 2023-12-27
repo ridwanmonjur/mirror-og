@@ -32,8 +32,11 @@
                     <li><a onclick="myFunction()" style="color: white !important;" id='nav-but' class="dropbtn sign" data-bs-toggle="dropdown" aria-expanded="false">Where's Moop?</a></li>
                 </div>
                 <div id="myDropdown" class="dropdown-content">
-                    <a class="dropdown-item" href="/participant/create-team/{id}">Create Team</a>
-                    <a class="dropdown-item" href="/participant/selectTeam">Team Registration</a>
+                    
+                @auth
+                <a class="dropdown-item" href="{{ url('/participant/create-team/' . Auth::id()) }}">Create Team</a>
+                    <a class="dropdown-item" href="{{ url('/participant/team-list/' . Auth::id()) }}">Team List</a>
+                    @endauth
                 </div>
 
 

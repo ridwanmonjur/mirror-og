@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Team;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
@@ -16,8 +17,13 @@ class ParticipantEventController extends Controller
 {
     public function home(Request $request)
     {
+        // Get the currently authenticated user's ID
+        $userId = Auth::id();
+
+        // Retrieve current date and time
         $currentDateTime = Carbon::now()->utc();
         $count = 3;
+
         $events = EventDetail::query()
             ->where(function ($query) use ($currentDateTime) {
                 return $query
@@ -29,21 +35,20 @@ class ParticipantEventController extends Controller
             ->where('status', '<>', 'PREVIEW')
             ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
             ->paginate($count);
-        $output = ['events' => $events, 'mappingEventState' => EventDetail::mappingEventStateResolve()];
-        if ($request->ajax()) {
-            $view = view(
-                'Participant.HomeScroll',
-                $output
-            )->render();
 
+        $output = [
+            'events' => $events,
+            'mappingEventState' => EventDetail::mappingEventStateResolve(),
+            'id' => $userId, // Pass the authenticated user's ID to the view
+        ];
+
+        if ($request->ajax()) {
+            $view = view('Participant.HomeScroll', $output)->render();
             return response()->json(['html' => $view]);
         }
-        return view(
-            'Participant.Home',
-            $output
-        );
-    }
 
+        return view('Participant.Home', $output);
+    }
 
     public function teamList($user_id)
     {
