@@ -10,9 +10,9 @@
         <line x1="3" y1="18" x2="21" y2="18"></line>
     </svg>
     <div class="search-bar d-none-at-mobile">
-        <input onchange="goToSearchPage()" type="text" name="search" id="search-bar"
+        <input type="text" name="search" id="search-bar"
             placeholder="Search for events">
-        <svg onclick="goToSearchPage()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" class="feather feather-search">
             <circle cx="11" cy="11" r="8"></circle>
@@ -22,10 +22,10 @@
     <div class="nav-buttons">
         @guest
             <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
-            <div class="dropdown">
+            <div class="dropdown" data-reference="parent" data-offset="-20,-20">
                 <a href="#" role="button" class="btn dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true">Sign In</a>
-                <div id="zzz" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <div id="" class="dropdown-menu" style="position: absolute; left: -60px;" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">Organizer</a>
                     <a class="dropdown-item" href="{{ route('participant.signin.view') }}">Participant</a>
                 </div>
@@ -40,12 +40,13 @@
             <a class="" style="text-decoration: none;position: relative; top: 10px;" href="{{ route('logout.action') }}">Logout</a>
         @endauth
     </div>
+
 </nav>
 <nav class="mobile-navbar d-centered-at-mobile d-none">
     <div class="search-bar search-bar-mobile ">
-        <input onchange="goToSearchPage()" type="text" name="search" id="search-bar-mobile"
+        <input type="text" name="search" id="search-bar-mobile"
             placeholder="Search for events">
-        <svg onclick="goToSearchPage()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" class="feather feather-search" style="left: 40px;">
             <circle cx="11" cy="11" r="8"></circle>
@@ -70,27 +71,53 @@
         document.querySelector("#myDropdown").classList.toggle("d-none")
     }
 
-    function goToSearchPage() {
-        let ENDPOINT = "{{ route('user.search.view') }}";
-        let page = 1;
-        let search = null;
-        let searchBar = document.querySelector('input#search-bar');
-        if (searchBar.style.display != 'none') {
-            search = searchBar.value;
-        } else {
-            searchBar = document.querySelector('input#search-bar-mobile');
-            search = searchBar.value;
-        }
+    var ENDPOINT = "{{ route('landing.view') }}";
+    var page = 1;
+    var search = null;
+    window.addEventListener(
+        "scroll",
+        throttle((e) => {
+            var windowHeight = window.innerHeight;
+            var documentHeight = document.documentElement.scrollHeight;
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop + windowHeight >= documentHeight - 20) {
+                page++;
+                ENDPOINT = "{{ route('landing.view') }}";
+                console.log({
+                    search
+                })
+                if (!search || String(search).trim() == "") {
+                    search = null;
+                    ENDPOINT += "?page=" + page;
+                } else {
+                    ENDPOINT += "?search=" + search + "&page=" + page;
+                }
+                infinteLoadMore(null, ENDPOINT);
+            }
+        }, 300)
+    );
+    document.getElementById('search-bar').addEventListener(
+        "change",
+        throttle((e) => {
+            searchPart(e);
+        }, 300)
+    );
+
+    function searchPart(e) {
+        page = 1;
+        let noMoreDataElement = document.querySelector('.no-more-data');
+        noMoreDataElement.classList.add('d-none');
+        document.querySelector('.scrolling-pagination').innerHTML = '';
+        search = e.target.value;
+        ENDPOINT = "{{ route('landing.view') }}";
         if (!search || String(search).trim() == "") {
             search = null;
             ENDPOINT += "?page=" + page;
         } else {
-            ENDPOINT += "?search=" + search + "&page=" + page;
+            ENDPOINT += "?search=" + e.target.value + "&page=" + page;
         }
-        window.href = ENDPOINT;
+        infinteLoadMore(null, ENDPOINT);
     }
-
-    goToSearchPage();
 </script>
 <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
 <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>

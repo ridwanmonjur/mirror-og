@@ -1,15 +1,12 @@
 /* Reset some default styles */
 
-body {
+main {
     background-image: url("/assets/images/events/home_bg.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     /* background-attachment: fixed; */
     margin: 0;
-}
-
-body {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     color: #2E4B59;
 }
@@ -28,107 +25,6 @@ a {
     transform: scale(1.05);
     /* Increase the size by 5% on hover */
 }
-
-nav {
-    background-color: #fff;
-    display: flex;
-    justify-content: space-between;
-    height: 65px;
-    align-items: center;
-    margin: 0;
-    gap: 10px;
-}
-
-.nav__sect1 {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.logo {
-    height: 20%;
-    width: 20%;
-}
-
-.nav__input {
-    border-radius: 23px;
-    height: 40px;
-    width: 40rem;
-    padding-left: 40px;
-}
-
-.fa-search {
-    position: absolute;
-    z-index: 100;
-    left: 165px;
-    top: 32px;
-}
-
-nav ul {
-    list-style: none;
-    display: flex;
-    align-items: center;
-}
-
-nav ul li {
-    margin-right: 1.5rem;
-}
-
-nav ul li:last-child {
-    margin-right: 0;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: #333;
-    transition: color 0.3s;
-}
-
-nav ul li a.moop {
-    background-color: #c5c3c2;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-}
-
-nav ul li a.sign {
-    background-color: #43A4D7;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-}
-
-nav ul li a:hover {
-    color: #083157;
-}
-
-.search_box {
-    width: 60%;
-    position: relative;
-}
-
-.search_box input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    padding-left: 40px;
-    padding-right: 60px;
-    box-sizing: border-box;
-    background: transparent;
-    border: 1px solid #000000;
-    border-radius: 20px;
-    font-size: 18px;
-    color: #000000;
-    outline: black;
-}
-
-.fa-search {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 15px;
-    color: #000000;
-}
-
 
 /* Hero Section */
 
@@ -182,12 +78,11 @@ nav ul li a:hover {
 /* Featured Events */
 
 .featured-events {
-    max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 0 1rem;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    
     padding-left: 11rem;
     padding-right: 11rem;
 }
@@ -231,7 +126,6 @@ nav ul li a:hover {
 
 .event_head_container {
     color: #173646;
-    font-size: 1.5em;
 }
 
 .frame1 {
@@ -250,7 +144,6 @@ nav ul li a:hover {
 
 .caption {
     color: #121148;
-    font-size: 1.2em;
     text-align: center;
     padding-left: 20px;
     padding-right: 20px;
@@ -286,9 +179,6 @@ nav ul li a:hover {
     text-align: center;
 }
 
-.league_caption {
-    font-size: 20px;
-}
 
 .league_name {
     text-align: left;
@@ -403,18 +293,14 @@ footer {
     }
     /* Featured Events */
     .featured-events {
-        max-width: 1200px;
         margin: 0 auto;
         padding: 2rem 0;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        padding-left: 5rem;
+        grid-template-columns: repeat(2, 1fr);
+            padding-left: 5rem;
         padding-right: 5rem;
     }
     .event_head_container {
         color: #173646;
-        font-size: 1.5em;
     }
     .frame1 {
         width: "140px";
@@ -463,7 +349,6 @@ footer {
     }
     .event_head_container {
         color: #173646;
-        font-size: 1.7em;
     }
     .frame1 {
         width: "160px";

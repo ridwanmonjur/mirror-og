@@ -247,4 +247,3 @@
     </script>
     @include('CommonLayout.BootstrapJs')
     <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
-    <!-- <script src="script.js"></script> -->

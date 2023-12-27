@@ -133,7 +133,6 @@ button#submit,
     border: 0px solid black;
 }
 
-@media screen and (min-width: 600px) {}
 
 @media screen and (min-width: 992px) {
     .payment-summary {
@@ -155,7 +154,8 @@ button#submit,
     }
 
     .navbar .nav-buttons {
-        display: block;
+        display: flex;
+        flex-wrap: nowrap !important;
     }
 
     .d-none-at-mobile {

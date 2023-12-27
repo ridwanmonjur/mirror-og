@@ -207,4 +207,3 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
     </script>
     <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
     <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
-    <!-- <script src="script.js"></script> -->
