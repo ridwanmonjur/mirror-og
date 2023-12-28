@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarShowSearchResults')
+    @include('CommonLayout.NavbarforParticipant')
     <main>
         <section class="hero">
             <img src="{{ asset('/assets/images/ss.png') }}" alt="">
