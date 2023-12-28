@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class JoinEvent extends Model
 {
     use HasFactory;
+    protected $table = 'join_events';
 
     public function eventDetail()
     {
@@ -16,7 +17,7 @@ class JoinEvent extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
 
@@ -24,5 +25,11 @@ class JoinEvent extends Model
     {
         return $this->belongsToMany(User::class, 'users');
     }
+
+    public function eventDetails()
+    {
+        return $this->belongsTo(EventDetail::class, 'event_details_id', 'id');
+    }
+
 
 }

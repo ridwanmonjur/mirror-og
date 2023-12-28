@@ -77,17 +77,37 @@
 
         <div class="tab-content" id="Overview">
             <div style="padding-left: 200px;"><b>Recent Events</b></div>
-            <div class="recent-events">
+            {{-- <div class="recent-events">
                 <!-- Update the event-carousel section in the Overview tab content -->
                 <div class="event-carousel">
                     <p style="text-align: center;">Team {{ $manage->teamName }} has no event history</p>
-                    {{-- <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
+                    <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
                     @foreach ($eventDetail as $event)
                     <div class="event-box" id="event1">
                     </div>
                     @endforeach
-                    <button class="carousel-button" onclick="slideEvents(1)">></button> --}}
+                    <button class="carousel-button" onclick="slideEvents(1)">></button>
                 </div>
+            </div> --}}
+
+            <div class="recent-events">
+                <!-- Update the event-carousel section in the Overview tab content -->
+                @if($joinEvents->isEmpty())
+                     <p>No events available</p>
+                    @else
+                    @foreach($joinEvents as $joinEvent)
+                <div class="event-carousel">
+                    <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
+                    <div class="event-box" id="event1">
+                        <!-- Event 1 content -->
+                        <h3>{{ $joinEvent->eventDetails->eventName }}</h3>
+                        <p>Start Date: {{ $joinEvent->eventDetails->startDate }}</p>
+                        <p>Location: Virtual</p>
+                    </div>
+                    <button class="carousel-button" onclick="slideEvents(1)">></button>
+                </div>
+                
+
             </div>
 
             <div class="team-info">
@@ -123,51 +143,23 @@
             <p style="text-align: center;">Team {{ $manage->teamName }} has 4 members</p>
             <table class="member-table">
                 <tbody>
+                    @foreach($joinEvent->user->teams as $team)
+                    @foreach($team->members as $member)
                     <tr class="st">
                         <td>
                             <div class="player-info">
                                 <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                                <span>John Doe</span>
+                                <span>{{ $member->user->name }}</span>
                             </div>
                         </td>
                         <td class="flag-cell">
                             <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="USA flag">
                         </td>
                     </tr>
-                    <tr class="nd">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                                <span>Jane Smith</span>
-                            </div>
-                        </td>
-                        <td class="flag-cell">
-                            <img class="nationality-flag" src="{{ asset('/assets/images/thailand.jpg') }}" alt="Canada flag">
-                        </td>
-                    </tr>
-                    <!-- Add more rows as needed -->
-                    <tr class="st">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/fnatic.jpg')"></div>
-                                <span>John Doe</span>
-                            </div>
-                        </td>
-                        <td class="flag-cell">
-                            <img class="nationality-flag" src="{{ asset('/assets/images/taiwan.jpg') }}" alt="USA flag">
-                        </td>
-                    </tr>
-                    <tr class="nd">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/fnatic.jpg')"></div>
-                                <span>Jane Smith</span>
-                            </div>
-                        </td>
-                        <td class="flag-cell">
-                            <img class="nationality-flag" src="{{ asset('/assets/images/malaysia.png') }}" alt="Canada flag">
-                        </td>
-                    </tr>
+                    @endforeach
+                    @endforeach
+                    @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>

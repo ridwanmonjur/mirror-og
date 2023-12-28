@@ -40,12 +40,13 @@
                 <div>
                     @foreach ($selectTeam as $item)
                     <div class="team-info" onclick="selectOption(this, '{{ $item->teamName }}', 'css/images/logo.png')">
-                        <img src="{{ asset('/assets/images/dota.png') }}" height="25px" width="50px">
-                        <a href="#" id="teamNameAnchor" data-team-name="{{ $item->id }}">{{ $item->teamName }}</a>
-                        <!-- Hidden input to store the selected team's name -->
-                        <input type="hidden" id="selectedTeamInput" name="selectedTeamName">
-                    </div>
-                    @endforeach
+                    <img src="{{ asset('/assets/images/dota.png') }}" height="25px" width="50px">
+                    <a href="#" class="teamNameAnchor" data-team-id="{{ $item->id }}">{{ $item->teamName }}</a>
+                    <!-- Hidden input to store the selected team's name as an array -->
+                    {{-- <input type="hidden" name="selectedTeamName[]" value="{{ $item->id }}"> --}}
+                    <input type="hidden" name="selectedTeamName" value="{{ $item->id }}">
+                 </div>
+                @endforeach
                 </div>
 
 
@@ -111,12 +112,20 @@
             dropdownButton.classList.add('selected');
 
             // Set the selected team label
-            const selectedTeamLabel = document.getElementById("selectedTeamLabel");
+             const selectedTeamLabel = document.getElementById("selectedTeamLabel");
             selectedTeamLabel.textContent = label;
 
             // Handle other selection logic if needed
-            var teamName = element.querySelector('a').getAttribute('data-team-name');
-            document.getElementById('selectedTeamInput').value = teamName;
+            var teamId = element.querySelector('a').getAttribute('data-team-id');
+            const selectedTeamInput = document.querySelector('input[name="selectedTeamName[]"][value="' + teamId + '"]');
+            if (!selectedTeamInput) {
+            // Create a new hidden input for the selected team
+            const newInput = document.createElement('input');
+            newInput.type = 'hidden';
+            newInput.name = 'selectedTeamName[]';
+            newInput.value = teamId;
+            document.querySelector('form').appendChild(newInput);
+    }
 
             // Close the dropdown
             closeDropDown(dropdownButton);
