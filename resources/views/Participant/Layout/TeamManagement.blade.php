@@ -14,41 +14,7 @@
 
 <body>
     @include('CommonLayout.Navbar')
-    <nav class="navbar">
-        <div class="logo">
-            <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
-        </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu menu-toggle" onclick="toggleNavbar()">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-        <div class="search-bar d-none-at-mobile">
-            <input type="text" name="search" id="search" placeholder="Search for events">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-        </div>
-        <div class="nav-buttons">
-            <button class="oceans-gaming-default-button oceans-gaming-gray-button"> Where is moop? </button>
-            <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
-            <img width="70px" height="40px" src="{{ asset('/assets/images/navbar-crown.png') }}" alt="">
-        </div>
-    </nav>
-    <nav class="mobile-navbar d-centered-at-mobile d-none">
-        <div class="search-bar search-bar-mobile ">
-            <input type="text" name="search" id="search" placeholder="Search for events">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" style="left: 40px;">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-        </div>
-        <div class="nav-buttons search-bar-mobile d-centered-at-mobile">
-            <img width="50px" height="40px" src="css/images/navbar-account.png" alt="">
-            <img width="70px" height="40px" src="css/images/navbar-crown.png" alt="">
-        </div>
-    </nav>
+    
 
     <main>
 
@@ -77,17 +43,38 @@
 
         <div class="tab-content" id="Overview">
             <div style="padding-left: 200px;"><b>Recent Events</b></div>
-            <div class="recent-events">
+            {{-- <div class="recent-events">
                 <!-- Update the event-carousel section in the Overview tab content -->
                 <div class="event-carousel">
                     <p style="text-align: center;">Team {{ $manage->teamName }} has no event history</p>
-                    {{-- <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
+                    <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
                     @foreach ($eventDetail as $event)
                     <div class="event-box" id="event1">
                     </div>
                     @endforeach
-                    <button class="carousel-button" onclick="slideEvents(1)">></button> --}}
+                    <button class="carousel-button" onclick="slideEvents(1)">></button>
                 </div>
+            </div> --}}
+
+            <div class="recent-events">
+                <!-- Update the event-carousel section in the Overview tab content -->
+                <div class="event-carousel">
+                    <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
+                    @if($joinEvents->isEmpty())
+                     <p>No events available</p>
+                    @else
+                    @foreach($joinEvents as $joinEvent)
+                    <div class="event-box" id="event1">
+                        <!-- Event 1 content -->
+                        <h3>{{ $joinEvent->eventDetails->eventName }}</h3>
+                        <p>Start Date: {{ $joinEvent->eventDetails->startDate }}</p>
+                        <p>Location: Virtual</p>
+                    </div>
+                    @endforeach
+                    <button class="carousel-button" onclick="slideEvents(1)">></button>
+                </div>
+                
+
             </div>
 
             <div class="team-info">
@@ -123,51 +110,22 @@
             <p style="text-align: center;">Team {{ $manage->teamName }} has 4 members</p>
             <table class="member-table">
                 <tbody>
+                    @foreach($joinEvent->user->teams as $team)
+                    @foreach($team->members as $member)
                     <tr class="st">
                         <td>
                             <div class="player-info">
                                 <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                                <span>John Doe</span>
+                                <span>{{ $member->user->name }}</span>
                             </div>
                         </td>
                         <td class="flag-cell">
                             <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="USA flag">
                         </td>
                     </tr>
-                    <tr class="nd">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                                <span>Jane Smith</span>
-                            </div>
-                        </td>
-                        <td class="flag-cell">
-                            <img class="nationality-flag" src="{{ asset('/assets/images/thailand.jpg') }}" alt="Canada flag">
-                        </td>
-                    </tr>
-                    <!-- Add more rows as needed -->
-                    <tr class="st">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/fnatic.jpg')"></div>
-                                <span>John Doe</span>
-                            </div>
-                        </td>
-                        <td class="flag-cell">
-                            <img class="nationality-flag" src="{{ asset('/assets/images/taiwan.jpg') }}" alt="USA flag">
-                        </td>
-                    </tr>
-                    <tr class="nd">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/fnatic.jpg')"></div>
-                                <span>Jane Smith</span>
-                            </div>
-                        </td>
-                        <td class="flag-cell">
-                            <img class="nationality-flag" src="{{ asset('/assets/images/malaysia.png') }}" alt="Canada flag">
-                        </td>
-                    </tr>
+                    @endforeach
+                    @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>

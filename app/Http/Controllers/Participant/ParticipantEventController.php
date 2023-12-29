@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Team;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
@@ -16,8 +17,13 @@ class ParticipantEventController extends Controller
 {
     public function home(Request $request)
     {
+        // Get the currently authenticated user's ID
+        $userId = Auth::id();
+
+        // Retrieve current date and time
         $currentDateTime = Carbon::now()->utc();
         $count = 3;
+
         $events = EventDetail::query()
             ->where(function ($query) use ($currentDateTime) {
                 return $query
@@ -29,21 +35,20 @@ class ParticipantEventController extends Controller
             ->where('status', '<>', 'PREVIEW')
             ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
             ->paginate($count);
-        $output = ['events' => $events, 'mappingEventState' => EventDetail::mappingEventStateResolve()];
-        if ($request->ajax()) {
-            $view = view(
-                'Participant.HomeScroll',
-                $output
-            )->render();
 
+        $output = [
+            'events' => $events,
+            'mappingEventState' => EventDetail::mappingEventStateResolve(),
+            'id' => $userId, // Pass the authenticated user's ID to the view
+        ];
+
+        if ($request->ajax()) {
+            $view = view('Participant.HomeScroll', $output)->render();
             return response()->json(['html' => $view]);
         }
-        return view(
-            'Participant.Home',
-            $output
-        );
-    }
 
+        return view('Participant.Home', $output);
+    }
 
     public function teamList($user_id)
     {
@@ -55,8 +60,23 @@ class ParticipantEventController extends Controller
 
     public function teamManagement($id)
     {
-        $teamManage = Team::Where('id',$id)->get();
-        return view('Participant.Layout.TeamManagement', compact('teamManage'));
+        // $teamManage = Team::Where('id',$id)->get();
+
+        $teamManage = Team::where('id', $id)->get();
+
+        // Check if the team exists
+         if ($teamManage) {
+        // Retrieve JoinEvents related to the team_id
+        $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
+            $query->where('team_id', $id);
+        })->with('eventDetails', 'user')->get();
+
+        return view('Participant.Layout.TeamManagement', compact('teamManage', 'joinEvents'));
+         } else {
+        // Handle if the team doesn't exist
+        return redirect()->back()->with('error', 'Team not found.');
+         }
+        // return view('Participant.Layout.TeamManagement', compact('teamManage'));
     }
 
 
@@ -100,20 +120,27 @@ class ParticipantEventController extends Controller
 
     public function TeamtoRegister(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'selectedTeamName' => 'required', // Validation rule for 'selectedTeamName'
-            // Add other validation rules for additional fields if needed
-        ]);
+        $selectedTeamNames = $request->input('selectedTeamName');
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $member = new Member;
-        $member->team_id = $request->input('selectedTeamName');
+        // Loop through the selected teams if it's an array
+        if (is_array($selectedTeamNames)) {
+        foreach ($selectedTeamNames as $teamId) {
+        $member = new Member(); // Assuming you're creating a new Member instance
+        $member->team_id = $teamId;
         $member->user_id  = auth()->user()->id;
         $member->save();
         return redirect()->back()->with('status', 'Team Added Successfully');
+        }
+        } else {
+        // Handle the case when only one team is selected
+        $member = new Member();
+        $member->team_id = $selectedTeamNames;
+        $member->user_id  = auth()->user()->id;
+        $member->save();
+        return redirect()->back()->with('status', 'Team Added Successfully');
+}
+        
+        
     }
 
 
