@@ -5,12 +5,18 @@ $stylesEventStatus = bladeEventStatusStyleMapping($status);
 $stylesEventStatus .= 'padding-top: -150px; ';
 $stylesEventRatio= bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
 $eventTierLower= bladeEventTowerLowerClass($event->eventTier);
-$dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
-extract($dateArray);
+$dateStartArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
+$dateEndArray = bladeGenerateEventStartEndDateStr($event->endDate, $event->endTime);
+$datePublishedArray = bladeGenerateEventStartEndDateStr($event->sub_action_public_date, $event->sub_action_public_time);
+extract($dateStartArray);
 $eventTierLowerImg = bladeEventTierImage($event->eventTier);
 $eventBannerImg = bladeImageNull($event->eventBanner);
 $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
 $eventId = $event->id;
+$toolTip= "<div><b>Event ID: </b>" . $eventId . "<br>";
+$toolTip.= "Start: " . $dateStartArray['timePart'] . " on " . $dateStartArray['combinedStr']. "<br>"; 
+$toolTip.= "End: ". $dateEndArray['timePart'] . " on " . $dateEndArray['combinedStr'] . "<br>";
+$toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $datePublishedArray['combinedStr'] ."</div>";
 @endphp
 <div class="{{'rounded-box rounded-box-' . $eventTierLower }} " 
     style="padding-bottom: 2px;"
@@ -25,7 +31,11 @@ $eventId = $event->id;
         <div>
             <div class="flexbox-centered-space">
                 <img src="{{ $bladeEventGameImage }}" alt="menu" width="50" height="50" style="object-fit: cover; ">
-                <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
+                <button
+                        data-toggle="tooltip" 
+                    data-html="true" 
+                    title="{{ $toolTip }}"
+                    class="activate-tooltip oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
                     <u> {{$status}} </u>
                 </button>
                 <button style="@php echo $stylesEventRatio; @endphp" class="oceans-gaming-default-button oceans-gaming-default-button-small flexbox-centered-space">
@@ -106,8 +116,9 @@ $eventId = $event->id;
             <br>
             <!-- Modal -->
         </div>
+        
         <script>
-          
+
             const copyUtil = (urlType) => {
                 let copyUrl = '';
                 switch (urlType) {

@@ -522,11 +522,11 @@
             <div class="container">
                 <div class="box">
                     <input onchange="updateLaunchButtonText('schedule');" type="date" id="sub_action_public_date"
-                        name="launch_date" value="{{ $isEventNotNull ? $event->sub_action_public_date : '' }}">
+                        name="launch_date_public" value="{{ $isEventNotNull ? $event->sub_action_public_date : '' }}">
                 </div>
                 <div class="box">
                     <input onchange="updateLaunchButtonText('schedule');" type="time" id="sub_action_public_time"
-                        name="launch_time" value="{{ $isEventNotNull ? $event->sub_action_public_time : '' }}">
+                        name="launch_time_public" value="{{ $isEventNotNull ? $event->sub_action_public_time : '' }}">
                 </div>
             </div>
         </div>
@@ -562,11 +562,11 @@
             <div class="container">
                 <div class="box">
                     <input onclick="updateLaunchButtonText('schedule');" type="date" id="sub_action_public_date"
-                        name="launch_date" value="{{ $isEventNotNull ? $event->sub_action_public_date : '' }}">
+                        name="launch_date_private" value="{{ $isEventNotNull ? $event->sub_action_public_date : '' }}">
                 </div>
                 <div class="box">
                     <input onclick="updateLaunchButtonText('schedule');" type="time" id="sub_action_public_time"
-                        name="launch_time" value="{{ $isEventNotNull ? $event->sub_action_public_time : '' }}">
+                        name="launch_time_private" value="{{ $isEventNotNull ? $event->sub_action_public_time : '' }}">
                 </div>
             </div>
 

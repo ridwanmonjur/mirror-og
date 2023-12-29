@@ -185,7 +185,13 @@
         <div class="no-more-data d-none" style="margin-top: 50px;"></div>
         @include('CommonLayout.BootstrapJs')
         <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                $('.activate-tooltip').tooltip();
+            });
+        </script>
+
         <script>
             function setLocalStorageSort(event) {
                 let sort = JSON.parse(localStorage.getItem('sort')) || {};
@@ -477,9 +483,10 @@
                         });
                         page++;
                         params.page = page;
-                        ENDPOINT = `/organizer/event/`;
-                        infinteLoadMoreByPost(null, ENDPOINT);
-                    }
+                        ENDPOINT = "{{ route('event.search.view') }}";
+                        let body = { page }
+                        infinteLoadMoreByPost(ENDPOINT, body);
+                    }   
                 }, 300)
             );
         </script>

@@ -67,7 +67,7 @@ class EventDetail extends Model
         } elseif ($carbonEndDateTime < $carbonNow) {
             return "ENDED";
         } else {
-            if ($carbonPublishedDateTime && $carbonPublishedDateTime < $carbonNow) {
+            if ($carbonPublishedDateTime && $carbonPublishedDateTime > $carbonStartDateTime && $carbonPublishedDateTime < $carbonEndDateTime) {
                 return "SCHEDULED";
             } elseif ($carbonStartDateTime  < $carbonNow) {
                 return "ONGOING";
