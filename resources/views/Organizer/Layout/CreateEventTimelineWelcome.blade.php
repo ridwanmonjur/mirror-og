@@ -1,5 +1,5 @@
   <div class="text-center" id="step-0">
-      <div class="welcome">
+      <div class="welcome mt-5">
           <u>
               <h2>
               @if (isset($error))
@@ -12,7 +12,7 @@
           <br><br><br>
           <p class="create-online-esports">
               @if (isset($error))
-              <span style="color: red;"> {{ $error }} </span>
+              <span style="color: #EF4444;"> {{ $error }} </span>
               @else
               Create online esports events all on your own, right here on Splash, in just 4 steps.
               @endif

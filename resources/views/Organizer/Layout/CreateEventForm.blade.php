@@ -5,7 +5,7 @@
 
 <div id="step-2" class="d-none">
 
-    <div class="welcome text-center" style="margin-bottom: 0px !important;">
+    <div class="welcome text-center" style="margin-bottom: -40px !important;">
         <u>
             <h3>
                 STEP 1: Choose your Event Categories
@@ -59,7 +59,7 @@
 
 
 <div id="step-3" class="d-none">
-    <div class="welcome text-center" style="margin-bottom: -10px !important;">
+    <div class="welcome text-center" style="margin-bottom: -60px !important;">
         <u>
             <h3>
                 STEP 1: Choose your Event Categories
@@ -67,7 +67,7 @@
         </u>
         <br>
         <p>Finally, choose a tier for your event.</p>
-        <div class="flexbox box-width">
+        <div class="grid box-width">
             @foreach ($eventTierList as $category)
                 <section
                     onclick="setFormValues( {'eventTier': {{ Js::from($category->eventTier) }} } );
@@ -164,14 +164,14 @@
         </u>
         <p>Here are the categories you've chosen for your event.</p>
     </div>
-    <section class="container-border" style="display: flex; justify-content: center;">
+    <section class="container-border-2 grid-2" style="gap: 20px;">
         <img id="outputGameTitleImg" src="{{ asset('assets/images/createEvent/exclamation.png') }}" alt=""
-            style="border-radius: 20px; width: 225px;  object-fit: cover; ">
-        <div class="box_3rd" style="max-width: 300px;">
+            style="margin: auto; border-radius: 20px; width: 225px;  object-fit: cover; ">
+        <div class="box_3rd box_3rd_max_width mx-auto">
             <h4 id="outputEventTypeTitle">League/ Tier</h4>
             <p id="outputEventTypeDefinition" style="text-align: left;">Choose your event type...</p>
         </div>
-        <div class="event_extra">
+        <div class="event_extra mx-auto" style="margin: auto;">
             <div class="event_head_container">
                 <img id="outputEventTierImg" src="{{ asset('assets/images/createEvent/question.png') }}"
                     class="event_head">
@@ -229,11 +229,11 @@
             First, when is your event happening?
         </p>
         <div class="event-details-form" style="width: 100% !important; margin: 0px auto;">
-            <div>
+            <div class="mx-auto">
                 <div class="form-group">
                     <label for="startDate">Date of Event</label>
                     <p class="description">Tell your players when to mark their calendars</p>
-                    <div class="container">
+                    <div class="grid-2-columns">
                         <div class="box">
                             <p class="description"><b>Start</b></p>
                             <input type="date" id="startDate" onchange="checkValidTime();" name="startDate"
@@ -250,7 +250,7 @@
                 <div class="form-group">
                     <label for="startTime">Time of Event</label>
                     <p class="description">So that your players can set their alarms</p>
-                    <div class="container">
+                    <div class="grid-2-columns">
                         <div class="box">
                             <p class="description"><b>Start</b></p>
                             <input type="time" id="startTime" onchange="checkValidTime();" name="startTime"
@@ -394,7 +394,7 @@
                             {!! trustedBladeHandleImageFailure() !!} id="previewImage" alt="Preview"
                             style="max-width: 200px; max-height: 200px; object-fit: cover;">
                     @else
-                        <div style="color: red;">Please enter an image</div>
+                        <div style="color: #EF4444;">Please enter an image</div>
                         <img class="d-none banner-preview" id="previewImage" alt="Preview"
                             style="max-width: 200px; max-height: 200px; object-fit: cover;">
                     @endif
@@ -457,7 +457,7 @@
                     </button>
                 @endif
                 <button onclick="goToNextScreen('step-1', 'timeline-1');" type="button"
-                    class="choose-payment-method-condition-fulfilled" style="background-color: red;">
+                    class="choose-payment-method-condition-fulfilled" style="background-color: #EF4444;">
                     Choose event tier and title first
                 </button>
             </div>

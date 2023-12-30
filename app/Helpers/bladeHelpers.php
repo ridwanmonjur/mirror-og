@@ -34,7 +34,7 @@ function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants
         $ratio = (float) $registeredParticipants / $totalParticipants;
     }
     if ($ratio > 0.9) {
-        $stylesEventRatio .= "background-color: red; color: white;";
+        $stylesEventRatio .= "background-color: #EF4444; color: white;";
     } elseif ($ratio == 0) {
         $stylesEventRatio .= "background-color: #8CCD39; color: white;";
     } elseif ($ratio > 0.5) {

@@ -7,18 +7,7 @@
     --navbar-height: 5vh;
 }
 
-.container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    /* Adjust the maximum width as needed */
-}
 
-.box {
-    margin-right: 10px;
-    /* Adjust the margin as needed for spacing between columns */
-}
 
 .description {
     margin-bottom: 5px;
@@ -125,6 +114,12 @@ input[type="time"] {
     margin: 0 auto;
     padding: 2rem 0;
     display: flex;
+}
+
+.grid, .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 20px;
     justify-content: space-between;
 }
 
@@ -147,20 +142,16 @@ input[type="time"] {
 
 .image-scroll-container {
     width: 100%;
-    overflow-x: auto;
-    white-space: nowrap;
     display: flex;
     justify-content: center;
-    /* Center align the images */
+    flex-wrap: wrap;
 }
 
 .scroll-images {
     margin-right: 20px;
-    /* Adjust the spacing between images */
     transition: opacity 0.3s, transform 0.3s;
     text-align: center;
     transform: scale(0.8);
-    /* Make other images smaller */
     cursor: pointer;
 }
 
@@ -403,6 +394,11 @@ input[type="time"] {
     margin: 0;
 }
 
+.container-border-2 {
+    padding: 20px;
+    margin: 0;
+}
+
 .grid-2-columns,
 .grid-3-columns {
     display: grid;
@@ -419,11 +415,8 @@ input[type="time"] {
     height: 300px;
     border-radius: 20px;
     transition: transform 0.2s;
-    /* Add a transform animation */
     text-decoration: none;
-    /* Remove underlines from links */
     color: black;
-    /* Set text color to black */
 }
 
 .selectable-box {
@@ -442,14 +435,18 @@ input[type="time"] {
     background: transparent;
     padding: 20px;
     text-align: center;
-    width: 230px;
+    width: 430px;
     border-radius: 20px;
+}
+
+.box_3rd_max_width {
+    width: 430px;
 }
 
 main {
     background-image: url("/assets/images/event-management-bg.png");
-    min-height: 100vh;
-    max-height: 150vh;
+    min-height: 91vh;
+    max-height: 300vh;
     background-repeat: repeat-y;
 }
 
@@ -747,6 +744,10 @@ input[type="submit"]:active {
     background: #79b0cc;
 }
 
+input[type='time'], input[type='date'] {
+    min-width: 300px;
+}
+
 .choose-payment-method,
 .choose-payment-method-condition-fulfilled {
     padding-left: 20px;
@@ -848,15 +849,15 @@ input[type="submit"]:active {
 }
 
 .welcome {
-    margin-top: 40px;
     margin-bottom: 80px;
     font-weight: lighter;
     color: #2E4B59 !important;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .welcome p {
-    width: 600px;
-    margin: auto;
+    margin: auto 20px;
     font-weight: lighter;
     text-overflow: clip;
     font-size: larger;
@@ -902,19 +903,39 @@ input[type="submit"]:active {
     font-size: 13px;
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 700px) {
     .swiper-container {
         display: block;
     }
+    .box_2nd {
+        height: 220px;
+    }
 }
 
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 1000px) {
+    .box_3rd_max_width {
+        width: 400px !important;
+    }
+    .box_2nd {
+        height: 300px;
+    }
+    .grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .grid-2 {
+        grid-template-columns: 0.5fr 1fr 1fr;
+        margin: 0 3vw;
+    }
+    .box-width{
+        max-width: 90vw;
+    }
+    main {
+       min-height: 91vh;
+    }
     .time-line-box .status__left small {
         left: 13%;
     }
-    main {
-        padding: auto 100px;
-    }
+    
     .payment-summary {
         padding-left: 40px;
         padding-right: 40px;
@@ -971,5 +992,19 @@ input[type="submit"]:active {
     }
     .time-line-box .status__right {
         width: var(--timeline-start-width-desktop) ! important;
+    }
+}
+
+@media screen and (min-width: 1400px) { 
+    .grid {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+  
+    .box-width{
+        max-width: 80vw;
+    }
+    .grid-2 {
+        grid-template-columns: 0.5fr 1fr 0.5fr;
+        margin: 0 10vw;
     }
 }
