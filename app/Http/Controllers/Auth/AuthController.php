@@ -91,7 +91,7 @@ class AuthController extends Controller
 
     public function showLandingPage(Request $request)
     {
-        $count = 4;
+        $count = 6;
         $currentDateTime = Carbon::now()->utc();
         $events = EventDetail::with('game')
             ->where('status', '<>', 'DRAFT')

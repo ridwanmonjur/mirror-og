@@ -72,6 +72,12 @@
 
     function goToSearchPage() {
         let ENDPOINT = "{{ route('user.search.view') }}";
+        console.log(ENDPOINT);
+        console.log(ENDPOINT);
+        console.log(ENDPOINT);
+        console.log(ENDPOINT);
+        console.log(ENDPOINT);
+        console.log(ENDPOINT);
         let page = 1;
         let search = null;
         let searchBar = document.querySelector('input#search-bar');
@@ -87,10 +93,9 @@
         } else {
             ENDPOINT += "?search=" + search + "&page=" + page;
         }
-        window.href = ENDPOINT;
+        window.location = ENDPOINT;
     }
 
-    goToSearchPage();
 </script>
 <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
 <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>

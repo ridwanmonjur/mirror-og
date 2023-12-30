@@ -12,7 +12,9 @@
                         Manage your events
                     </h3>
                 </u>
-                <input type="button" value="Create Event" onclick="goToCreateScreen();">
+                <button class="oceans-gaming-default-button" value="Create Event" onclick="goToCreateScreen();">
+                    Create Event
+                </button>
 
 
             </header>
@@ -220,6 +222,7 @@
 
         <div class="no-more-data d-none" style="margin-top: 50px;"></div>
         @include('CommonLayout.BootstrapJs')
+        <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
         <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
 
         <script>
@@ -573,4 +576,3 @@
             );
         </script>
     </main>
-    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>

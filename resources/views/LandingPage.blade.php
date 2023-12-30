@@ -30,6 +30,7 @@
         <div class="no-more-data d-none"></div>
         <br><br>
         @include('CommonLayout.BootstrapJs')
+        <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
         <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
         <script>
             var ENDPOINT = "{{ route('landing.view') }}";
@@ -80,7 +81,6 @@
                 infinteLoadMore(null, ENDPOINT);
             }
         </script>
-        <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
         <script>
             function myFunction() {
                 document.getElementById("myDropdown").classList.toggle("show");

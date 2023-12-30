@@ -66,6 +66,8 @@
         @endauth
     </div>
 </nav>
+<script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
+<script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
 <script>
     function toggleDropdown() {
         document.querySelector("#myDropdown").classList.toggle("d-none")
