@@ -1,5 +1,5 @@
 <div id="step-1" class="d-none">
-    <div class="welcome text-center" style="margin-bottom: -25px !important;">
+    <div class="welcome text-center" style="margin-bottom: -60px !important; ">
         <u>
             <h3>
                 STEP 1: Choose your Event Categories

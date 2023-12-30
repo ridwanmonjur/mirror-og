@@ -59,7 +59,7 @@
 
 
 <div id="step-3" class="d-none">
-    <div class="welcome text-center" style="margin-bottom: -60px !important;">
+    <div class="welcome text-center" style="margin-bottom: -90px !important; margin-top: -10px !important;">
         <u>
             <h3>
                 STEP 1: Choose your Event Categories
@@ -67,7 +67,7 @@
         </u>
         <br>
         <p>Finally, choose a tier for your event.</p>
-        <div class="grid box-width">
+        <div class="grid-3-columns box-width">
             @foreach ($eventTierList as $category)
                 <section
                     onclick="setFormValues( {'eventTier': {{ Js::from($category->eventTier) }} } );

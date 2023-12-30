@@ -1,5 +1,5 @@
 <div id="step-1" class="">
-    <div class="welcome text-center" style="margin-bottom: -25px !important;">
+    <div class="welcome text-center" style="margin-bottom: -60px !important;">
         @if (isset($error))
         <p style="color:#EF4444;">{{ $error }}</p>
         @endif
