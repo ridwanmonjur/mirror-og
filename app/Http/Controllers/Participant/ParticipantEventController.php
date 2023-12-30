@@ -129,7 +129,7 @@ class ParticipantEventController extends Controller
         $member->team_id = $teamId;
         $member->user_id  = auth()->user()->id;
         $member->save();
-        return redirect()->back()->with('status', 'Team Added Successfully');
+        return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
         }
         } else {
         // Handle the case when only one team is selected
@@ -137,7 +137,7 @@ class ParticipantEventController extends Controller
         $member->team_id = $selectedTeamNames;
         $member->user_id  = auth()->user()->id;
         $member->save();
-        return redirect()->back()->with('status', 'Team Added Successfully');
+        return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
 }
         
         
