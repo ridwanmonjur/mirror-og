@@ -28,7 +28,7 @@ Route::group(['prefix' => 'participant'], function () {
 });
 
 Route::group(['prefix' => 'organizer'], function () {
-    Route::post('events/search', [EventController::class, 'index'])->name('event.search.view');
+    Route::post('events/search', [EventController::class, 'search'])->name('event.search.view');
 });
 
 Route::name('stripe.')

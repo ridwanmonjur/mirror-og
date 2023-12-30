@@ -14,6 +14,7 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
 $bladeEventGameImage = bladeImageNull($event->game->gameIcon);
 $eventId = $event->id;
 $toolTip= "<div><b>Event ID: </b>" . $eventId . "<br>";
+$toolTip.= "<b>Description: </b>" . $event->eventDescription . "<br>";
 $toolTip.= "Start: " . $dateStartArray['timePart'] . " on " . $dateStartArray['combinedStr']. "<br>"; 
 $toolTip.= "End: ". $dateEndArray['timePart'] . " on " . $dateEndArray['combinedStr'] . "<br>";
 $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $datePublishedArray['combinedStr'] ."</div>";

@@ -14,6 +14,7 @@ use App\Models\PaymentTransaction;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Exceptions\TimeGreaterException;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\UnauthorizedException;
@@ -48,11 +49,19 @@ class EventController extends Controller
             $currentDateTime = Carbon::now()->utc();
             if ($status == 'ALL') {
                 return $query;
-            } elseif ($status == 'ENDED') {
-                return $query->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime]);
             } elseif ($status == 'DRAFT') {
+                // return $query->where(function($q)  {
+                //     return $q
+                //         ->where('status', 'DRAFT')
+                //         ->orWhereNull('status', 'PREVIEW')
+                // });
                 return $query->where('status', 'DRAFT');
-            } elseif ($status == 'LIVE') {
+            } elseif ($status == 'ENDED') {
+                return $query
+                    ->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime])
+                    ->where('status', '<>', 'DRAFT')
+                    ->where('status', '<>', 'PREVIEW');
+            }  elseif ($status == 'LIVE') {
                 return $query
                     ->where(function ($query) use ($currentDateTime) {
                         return $query
@@ -77,12 +86,13 @@ class EventController extends Controller
             if (empty($search)) {
                 return $query;
             }
-            return $query
+            return $query->where(function($q) use ($search) {
+                return $q
                 ->where('gameTitle', 'LIKE', "%{$search}%")
                 ->orWhere('eventDescription', 'LIKE', "%{$search}%")
                 ->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
+            });
         });
-
         $eventListQuery->when($request->has('sort'), function ($query) use ($request) {
             $sortTypeJSONString = $request->input('sortType');
             $sortKeys = json_decode($sortTypeJSONString, true);
@@ -114,6 +124,95 @@ class EventController extends Controller
             return response()->json(['html' => $view]);
         }
         return view('Organizer.ManageEvent', $outputArray);
+    }
+
+    public function search(Request $request)
+    {
+        $userId = $request->userId;
+        $user = User::find($userId);
+        $organizer = Organizer::where('user_id', $user->id)->first();
+        $eventListQuery = EventDetail::query();
+        $eventListQuery->when($request->has('status'), function ($query) use ($request) {
+            $status = $request->input('status');
+            if (!$status) return $query;
+            $status = $status[0];
+            $currentDateTime = Carbon::now()->utc();
+            if ($status == 'ALL') {
+                return $query;
+            } elseif ($status == 'DRAFT') {
+                return $query->where('status', 'DRAFT');
+            } 
+            elseif ($status == 'ENDED') {
+                return $query
+                    ->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime])
+                    ->where('status', '<>', 'DRAFT');
+            } elseif ($status == 'LIVE') {
+                return $query
+                    ->where(function ($query) use ($currentDateTime) {
+                        return $query
+                            ->whereNull('sub_action_public_date')
+                            ->orWhereNull('sub_action_public_time')
+                            ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime]);
+                    })
+                    ->where('status', '<>', 'DRAFT')
+                    ->where('status', '<>', 'PREVIEW')
+                    ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
+            } elseif ($status == 'SCHEDULED') {
+                return $query
+                    ->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime])
+                    ->where('status', '<>', 'DRAFT')
+                    ->where('status', '<>', 'PREVIEW')
+                    ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
+            }
+            else return $query;
+        });
+        $eventListQuery->when($request->has('search'), function ($query) use ($request) {
+            $search = trim($request->input('search'));
+            if (empty($search)) {
+                return $query;
+            }
+            return $query->where(function($q) use ($search) {
+                return $q
+                ->where('eventDescription', 'LIKE', "%{$search}%")
+                ->orWhere('eventName', 'LIKE', "%{$search}%");
+            });
+        });
+        $eventListQuery->when($request->has('sort'), function ($query) use ($request) {
+            $sort = $request->input('sort');
+            if (!$sort) return $query;
+            $sortTypeJSONString = $request->input('sortType');
+            $sortKeys = json_decode($sortTypeJSONString, true);
+            foreach ($sortKeys as $key => $value) {
+                $query->orderBy($key, $value);
+            }
+            return $query;
+        });
+        $eventListQuery->when($request->has('filter'), function ($query) use ($request) {
+            $filter = $request->input('filter');
+            if (!$filter) return $query;
+            if (array_key_exists('eventTier', $filter)) {
+                $query->where('eventTier', $filter['eventTier']);
+            } 
+            if (array_key_exists('eventType', $filter)) {
+                $query->where('eventType', $filter['eventType']);
+            }
+            if (array_key_exists('gameTitle', $filter)) {
+                $query->where('gameTitle', $filter['gameTitle']);
+            }
+            return $query;
+        });
+        // $eventListQuery->when($request->has('eventType'), function ($query) use ($request) {
+        //     $eventType = trim($request->input('eventType'));
+        //     return $query->where('eventType', $eventType);
+        // });
+        $count = 4;
+        $eventList = $eventListQuery->where('user_id', $userId)->paginate($count);
+        $mappingEventState = EventDetail::mappingEventStateResolve();
+
+        $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
+        $view = view('Organizer.ManageEventScroll', $outputArray)->render();
+        // dd($eventListQuery);
+        return response()->json(['html' => $view]);
     }
 
     public function create(): View
@@ -201,12 +300,11 @@ class EventController extends Controller
                 $launch_date = $request->launch_date_private;
                 $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_private);
             }
-            
+
             //  dd($request->all(), "hi", $isPreviewMode, $eventDetail->attributesToArray());
 
             if ($request->launch_schedule == 'schedule' && $launch_date && $launch_time) {
                 // dd($request->all(), "hi", $isPreviewMode, $eventDetail->attributesToArray());
-
 
                 $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date . ' ' . $launch_time)->utc();
                 if ($launch_date && $launch_time && $carbonPublishedDateTime > $carbonStartDateTime && $carbonPublishedDateTime < $carbonEndDateTime) {
