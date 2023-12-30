@@ -134,10 +134,17 @@
         }, 300)
     );
     document.getElementById('search-bar').addEventListener(
-        "change",
-        throttle((e) => {
+        "keydown",
+        debounce((e) => {
             searchPart(e);
-        }, 300)
+        }, 1000)
+    );
+
+    document.getElementById('search-bar-mobile').addEventListener(
+        "keydown",
+        debounce((e) => {
+            searchPart(e);
+        }, 1000)
     );
 
     function searchPart(e) {

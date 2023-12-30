@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    {{-- @include('CommonLayout.Navbar') --}}
+    {{-- @include('CommonLayout.NavbarGoToSearchPage') --}}
 
     <div class="text-center" id="step-0">
         <div class="welcome">

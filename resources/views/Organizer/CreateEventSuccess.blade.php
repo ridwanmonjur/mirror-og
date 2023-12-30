@@ -2,7 +2,7 @@
     <!-- https://stackoverflow.com/questions/895171/prevent-users-from-submitting-a-form-by-hitting-enter -->
     
     <body>
-                    @include('CommonLayout.Navbar')
+                    @include('CommonLayout.NavbarGoToSearchPage')
 
         <main>
             <div>

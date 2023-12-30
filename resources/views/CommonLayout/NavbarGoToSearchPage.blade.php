@@ -10,7 +10,7 @@
         <line x1="3" y1="18" x2="21" y2="18"></line>
     </svg>
     <div class="search-bar d-none-at-mobile">
-        <input onchange="goToSearchPage()" type="text" name="search" id="search-bar"
+        <input type="text" name="search" id="search-bar"
             placeholder="Search for events">
         <svg onclick="goToSearchPage()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -43,7 +43,7 @@
 </nav>
 <nav class="mobile-navbar d-centered-at-mobile d-none">
     <div class="search-bar search-bar-mobile ">
-        <input onchange="goToSearchPage()" type="text" name="search" id="search-bar-mobile"
+        <input type="text" name="search" id="search-bar-mobile"
             placeholder="Search for events">
         <svg onclick="goToSearchPage()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -65,6 +65,8 @@
         @endauth
     </div>
 </nav>
+<script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
+<script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
 <script>
     function toggleDropdown() {
         document.querySelector("#myDropdown").classList.toggle("d-none")
@@ -72,12 +74,6 @@
 
     function goToSearchPage() {
         let ENDPOINT = "{{ route('user.search.view') }}";
-        console.log(ENDPOINT);
-        console.log(ENDPOINT);
-        console.log(ENDPOINT);
-        console.log(ENDPOINT);
-        console.log(ENDPOINT);
-        console.log(ENDPOINT);
         let page = 1;
         let search = null;
         let searchBar = document.querySelector('input#search-bar');
@@ -96,6 +92,19 @@
         window.location = ENDPOINT;
     }
 
+     document.getElementById('search-bar').addEventListener(
+        "keydown",
+        debounce((e) => {
+            goToSearchPage();
+        }, 1000)
+    );
+
+    document.getElementById('search-bar-mobile').addEventListener(
+        "keydown",
+        debounce((e) => {
+            goToSearchPage();
+        }, 1000)
+    );
+
 </script>
-<script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
-<script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
+

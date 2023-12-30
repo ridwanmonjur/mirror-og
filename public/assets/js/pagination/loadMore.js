@@ -1,17 +1,25 @@
-function throttle(func, wait) {
-    let waiting = false;
-    return function () {
-        if (waiting) {
-            return;
-        }
+let throttle = (func, wait) => {
+    let lastTime = 0;
 
-        waiting = true;
-        setTimeout(() => {
-            func.apply(this, arguments);
-            waiting = false;
-        }, wait);
+    return (...args) => {
+      const now = Date.now();
+
+      if (now - lastTime >= wait) {
+        func(...args);
+
+        lastTime = now;
+      }
     };
-}
+  };
+let debounce = (func, wait) => {
+    let timeout;
+
+    return (...args) => {
+      if (timeout) clearTimeout(timeout);
+
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  };
 /*------------------------------------------
        --------------------------------------------
        call infinteLoadMore()

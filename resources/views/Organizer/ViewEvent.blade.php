@@ -14,7 +14,7 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
 @endphp
 
 <body>
-    @include('CommonLayout.Navbar')
+    @include('CommonLayout.NavbarGoToSearchPage')
 
     <main>
         <br class="d-none-at-desktop">

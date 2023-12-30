@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.Navbar')
+    @include('CommonLayout.NavbarGoToSearchPage')
 
     <div class="wrapper">
 

@@ -1,7 +1,7 @@
 @include('Organizer.Layout.ManageEventHeadTag')
 
 <body>
-    @include('CommonLayout.Navbar')
+    @include('CommonLayout.NavbarGoToSearchPage')
 
     <main>
         <br class="d-none-at-desktop">
@@ -168,7 +168,7 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input type="text" onkeydown="handleInputBlur();" name="search" id="searchInput"
+                <input type="text" name="search" id="searchInput"
                     placeholder="Search using title, description, or keywords">
                 <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button d-none"
                     style="background: #8CCD39 !important">
@@ -232,7 +232,13 @@
         </script>
 
         <script>
-            ["sort", "filter", "sortType"].forEach((name) => {
+            document.getElementById('searchInput').addEventListener('keydown',
+                debounce((e) => {
+                    handleInputBlur();
+                }, 1000)
+            );
+
+            ["sort", "filter", "search", "sortType",].forEach((name) => {
                 localStorage.removeItem(name);
             })
 
@@ -250,7 +256,8 @@
                     ...params,
                     filter: JSON.parse(localStorage.getItem('filter')),
                     sort: JSON.parse(localStorage.getItem('sort')),
-                    userId: Number("{{ auth()->user()->id }}")
+                    userId: Number("{{ auth()->user()->id }}"),
+                    search: localStorage.getItem("search")
                 }
                 loadByPost(ENDPOINT, body);
             }
@@ -411,6 +418,7 @@
                 if (!params) params = {}
                 params.page = 1;
                 ENDPOINT = "{{ route('event.search.view') }}";
+                localStorage.setItem("search", inputValue)
                 let body = {
                     ...params,
                     filter: JSON.parse(localStorage.getItem('filter')),
@@ -568,6 +576,7 @@
                             filter: JSON.parse(localStorage.getItem('filter')),
                             sort: JSON.parse(localStorage.getItem('sort')),
                             userId: Number("{{ auth()->user()->id }}"),
+                            search: localStorage.getItem("search"),
                             ...params
                         }
                         infinteLoadMoreByPost(ENDPOINT, body);
