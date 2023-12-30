@@ -252,69 +252,6 @@
                 loadByPost(ENDPOINT, body);
             }
 
-            function setLocalStorageSort(event) {
-                console.log(event.target.value);
-                console.log(event.target.value);
-                console.log(event.target.value);
-                console.log(event.target.value);
-                let localItem = localStorage.getItem('sort') ?? null;
-                let sort = null;
-                if (localItem) sort = JSON.parse(localItem);
-                else sort = {};
-
-                let value = null;
-                if (event.target.value in sort) {
-                    if (value == 'asc') {
-                        value = 'desc';
-                    } else if (value == 'desc') {
-                        value = 'asc';
-                    } else {
-                        value = 'none';
-                    }
-                } else {
-                    value = 'asc';
-                }
-                if (event.target.checked) {
-                    sort[event.target.value] = value;
-                } else {
-                    delete sort[event.target.value];
-                }
-                localStorage.setItem('sort', JSON.stringify(sort));
-            }
-
-            function setLocalStorageSortIcon(key) {
-                console.log(event.target.value);
-                console.log(event.target.value);
-                console.log(event.target.value);
-                console.log(event.target.value);
-                let localItem = localStorage.getItem('sort') ?? null;
-                let sort = null;
-                if (localItem) sort = JSON.parse(localItem);
-                else sort = {};
-
-                let value = null;
-                if (event.target.value in sort) {
-                    if (value == 'asc') {
-                        value = 'desc';
-                    } else if (value == 'desc') {
-                        value = 'asc';
-                    } else {
-                        value = 'none';
-                    }
-                } else {
-                    value = 'asc';
-                }
-                if (event.target.checked) {
-                    sort[event.target.value] = value;
-                } else {
-                    delete sort[event.target.value];
-                }
-                let iconSpan = document.querySelector(`.${key}SortIcon`);
-                iconSpan.innerHTML = "";
-                let icon = document.querySelector(`.${key}SortIcon`).cloneNode(true);
-                localStorage.setItem('sort', JSON.stringify(sort));
-            }
-
             function setLocalStorageFilter(event) {
                 console.log(event.target.value);
                 console.log(event.target.value);
@@ -331,6 +268,67 @@
                     delete filter[event.target.name];
                 }
                 localStorage.setItem('filter', JSON.stringify(filter));
+            }
+
+            function setLocalStorageSort(event) {
+                let key = event.target.value;
+                let localItem = localStorage.getItem('sort') ?? null;
+                let sort = null;
+                if (localItem) sort = JSON.parse(localItem);
+                else sort = {};
+                if (event.target.checked) {
+                    sort[key] = 'asc';
+                    let iconSpan = document.querySelector(`.${key}SortIcon`);
+                    iconSpan.innerHTML = "";
+                    let cloneNode = document.querySelector(`.asc-sort-icon`).cloneNode(true);
+                    cloneNode.classList.remove('d-none');
+                    cloneNode.onclick = () => {
+                        setLocalStorageSortIcon(key);
+                    }
+                    iconSpan.appendChild(cloneNode);
+                } else {
+                    delete sort[key];
+                }
+                localStorage.setItem('sort', JSON.stringify(sort));
+            }
+
+            function setLocalStorageSortIcon(key) {
+                let input = document.querySelector(`input[value=${key}][type='radio']`);
+                let isChecked = input.checked;
+                let localItem = localStorage.getItem('sort') ?? null;
+                let sort = null;
+                if (localItem) sort = JSON.parse(localItem);
+                else sort = {};
+                let value = 'none';
+                if (isChecked) {
+                    if (key in sort) {
+                        value = sort[key];
+                    }
+                    if (value == 'asc') {
+                        value = 'desc';
+                    } else if (value == 'desc') {
+                        value = 'none';
+                    } else {
+                        value = 'asc';
+                    }
+                }
+                if (value == 'none') {
+                    input.checked = false;
+                }
+                if (input.checked) {
+                    sort[key] = value;
+                } else {
+                    delete sort[key];
+                }
+                let iconSpan = document.querySelector(`.${key}SortIcon`);
+                iconSpan.innerHTML = "";
+                let cloneNode = document.querySelector(`.${value}-sort-icon`).cloneNode(true);
+                cloneNode.classList.remove('d-none');
+                cloneNode.onclick = () => {
+                    setLocalStorageSortIcon(key);
+                }
+                iconSpan.appendChild(cloneNode);
+                localStorage.setItem('sort', JSON.stringify(sort));
             }
         </script>
         <script>
@@ -547,7 +545,7 @@
                     }
                 }
             }
-          
+
             window.addEventListener(
                 "scroll",
                 throttle((e) => {
