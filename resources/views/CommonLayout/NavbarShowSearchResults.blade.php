@@ -1,3 +1,4 @@
+{{-- <div class="navbar-placeholder"> </div> --}}
 <nav class="navbar">
     <div class="logo">
         <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">

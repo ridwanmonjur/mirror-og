@@ -15,8 +15,10 @@
               <span style="color: #EF4444;"> {{ $error }} </span>
               @else
               Create online esports events all on your own, right here on Splash, in just 4 steps.
+              
               @endif
           </p>
+          <br><br><br>
       </div>
       <input type="button" onclick="goToNextScreen('step-1', 'timeline-1')" value="Continue">
   </div>

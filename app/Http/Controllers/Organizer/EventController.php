@@ -46,40 +46,41 @@ class EventController extends Controller
         $organizer = Organizer::where('user_id', $user->id)->first();
         $eventListQuery->when($request->has('status'), function ($query) use ($request) {
             $status = $request->input('status');
+            if (!$status) return $query;
             $currentDateTime = Carbon::now()->utc();
             if ($status == 'ALL') {
                 return $query;
             } elseif ($status == 'DRAFT') {
-                // return $query->where(function($q)  {
-                //     return $q
-                //         ->where('status', 'DRAFT')
-                //         ->orWhereNull('status', 'PREVIEW')
-                // });
                 return $query->where('status', 'DRAFT');
-            } elseif ($status == 'ENDED') {
+            } 
+            elseif ($status == 'ENDED') {
                 return $query
                     ->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime])
-                    ->where('status', '<>', 'DRAFT')
-                    ->where('status', '<>', 'PREVIEW');
-            }  elseif ($status == 'LIVE') {
+                    ->where('status', '<>', 'PREVIEW')
+                    ->where('status', '<>', 'DRAFT');
+            } elseif ($status == 'LIVE') {
                 return $query
                     ->where(function ($query) use ($currentDateTime) {
                         return $query
                             ->whereNull('sub_action_public_date')
                             ->orWhereNull('sub_action_public_time')
-                            ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime]);
+                            ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime]);
                     })
                     ->where('status', '<>', 'DRAFT')
                     ->where('status', '<>', 'PREVIEW')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
             } elseif ($status == 'SCHEDULED') {
-                return $query
-                    ->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime])
+                $query
+                    ->whereNotNull('sub_action_public_date')
+                    ->whereNotNull('sub_action_public_time')
+                    ->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime])
                     ->where('status', '<>', 'DRAFT')
                     ->where('status', '<>', 'PREVIEW')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
+                // dd($query);
+                return $query;
             }
-            return $query;
+            else return $query;
         });
         $eventListQuery->when($request->has('search'), function ($query) use ($request) {
             $search = trim($request->input('search'));
@@ -92,26 +93,6 @@ class EventController extends Controller
                 ->orWhere('eventDescription', 'LIKE', "%{$search}%")
                 ->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
             });
-        });
-        $eventListQuery->when($request->has('sort'), function ($query) use ($request) {
-            $sortTypeJSONString = $request->input('sortType');
-            $sortKeys = json_decode($sortTypeJSONString, true);
-            foreach ($sortKeys as $key => $value) {
-                $query->orderBy($key, $value);
-            }
-            return $query;
-        });
-        $eventListQuery->when($request->has('eventTier'), function ($query) use ($request) {
-            $eventTier = trim($request->input('eventTier'));
-            return $query->where('eventTier', $eventTier);
-        });
-        $eventListQuery->when($request->has('eventType'), function ($query) use ($request) {
-            $eventType = trim($request->input('eventType'));
-            return $query->where('eventType', $eventType);
-        });
-        $eventListQuery->when($request->has('gameTitle'), function ($query) use ($request) {
-            $gameTitle = $request->input('gameTitle');
-            return $query->where('gameTitle', $gameTitle);
         });
         $count = 4;
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
@@ -145,6 +126,7 @@ class EventController extends Controller
             elseif ($status == 'ENDED') {
                 return $query
                     ->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime])
+                    ->where('status', '<>', 'PREVIEW')
                     ->where('status', '<>', 'DRAFT');
             } elseif ($status == 'LIVE') {
                 return $query
@@ -152,14 +134,16 @@ class EventController extends Controller
                         return $query
                             ->whereNull('sub_action_public_date')
                             ->orWhereNull('sub_action_public_time')
-                            ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime]);
+                            ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime]);
                     })
                     ->where('status', '<>', 'DRAFT')
                     ->where('status', '<>', 'PREVIEW')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
             } elseif ($status == 'SCHEDULED') {
                 return $query
-                    ->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime])
+                    ->whereNotNull('sub_action_public_date')
+                    ->whereNotNull('sub_action_public_time')
+                    ->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime])
                     ->where('status', '<>', 'DRAFT')
                     ->where('status', '<>', 'PREVIEW')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
@@ -201,10 +185,6 @@ class EventController extends Controller
             }
             return $query;
         });
-        // $eventListQuery->when($request->has('eventType'), function ($query) use ($request) {
-        //     $eventType = trim($request->input('eventType'));
-        //     return $query->where('eventType', $eventType);
-        // });
         $count = 4;
         $eventList = $eventListQuery->where('user_id', $userId)->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();

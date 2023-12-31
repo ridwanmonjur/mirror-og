@@ -42,7 +42,7 @@
                     var windowHeight = window.innerHeight;
                     var documentHeight = document.documentElement.scrollHeight;
                     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    if (scrollTop + windowHeight >= documentHeight - 20) {
+                    if (scrollTop + windowHeight >= documentHeight - 100) {
                         page++;
                         ENDPOINT = "{{ route('landing.view') }}";
                         console.log({

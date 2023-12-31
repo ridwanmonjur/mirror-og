@@ -300,7 +300,7 @@ input[type="submit"]:active {
     font-size: smaller;
 }
 
-@media screen and (min-width: 700px) {
+@media screen and (min-width: 800px) {
     .grid-container {
         padding: 5% 10% 10% 10%;
         grid-template-columns: repeat(2, 1fr);
@@ -318,7 +318,7 @@ input[type="submit"]:active {
     }
 
     main {
-        padding: 20px 100px;
+        padding: 20px 60px;
     }
 
     .d-none-at-desktop {
@@ -365,9 +365,13 @@ input[type="submit"]:active {
 
 }
 
-@media screen and (min-width: 1500px) {
+@media screen and (min-width: 1400px) {
     .search-bar input {
         width: 600px;
+    }
+
+    main {
+        padding: 20px 100px;
     }
 
     .grid-container {

@@ -12,6 +12,7 @@ main {
 main {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     color: #2E4B59;
+    min-height: 100vh;
 }
 
 /* @import "node_modules/bootstrap/scss/bootstrap"; */

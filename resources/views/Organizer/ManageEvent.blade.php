@@ -580,8 +580,9 @@
                             ...params
                         }
                         infinteLoadMoreByPost(ENDPOINT, body);
+                        
                     }
-                }, 600)
+                }, 300)
             );
         </script>
     </main>
