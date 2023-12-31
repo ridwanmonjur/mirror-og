@@ -61,8 +61,27 @@ class ParticipantEventController extends Controller
     {
 
         $teamList = Team::Where('user_id', $user_id)->get();
-        return view('Participant.TeamList', compact('teamList'));
-    }
+        // Check if teams exist for the user
+         if ($teamList->isNotEmpty()) {
+        // Process the data to count unique usernames for each team
+        $usernamesCountByTeam = [];
+        foreach ($teamList as $team) {
+            // Retrieve JoinEvents for each team
+            $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($team) {
+                $query->where('team_id', $team->id);
+            })->with('user')->get();
+
+            $usernames = $joinEvents->unique('user_id')->pluck('user')->count();
+
+            $usernamesCountByTeam[$team->id] = $usernames;
+        }
+
+        return view('Participant.TeamList', compact('teamList', 'usernamesCountByTeam'));
+         } else {
+        // Handle if no teams are found for the user
+        return redirect()->back()->with('error', 'No teams found for the user.');
+         }
+         }
 
 
     public function teamManagement($id)
