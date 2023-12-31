@@ -13,20 +13,20 @@
 </head>
 
 <body>
-    {{-- @include('CommonLayout.NavbarforParticipant') --}}
-    <main>
-        <div class="text-center" id="step-0">
-            <div class="welcome">
-                <u>
-                    <h2>Create Your Team</h2>
-                </u>
-                <br><br><br>
-                <p class="create-online-esports">
-                    What will your team be called?
-                </p>
-                <br>
-                <form action="{{ url('/participant/team-management') }}" method="POST">
-                    @csrf
+    {{-- @include('CommonLayout.NavbarGoToSearchPage') --}}
+
+    <div class="text-center" id="step-0">
+        <div class="welcome">
+            <u>
+                <h2>Create Your Team</h2>
+            </u>
+            <br><br><br>
+            <p class="create-online-esports">
+                What will your team be called?
+            </p>
+            <br>
+            <form action="{{ url('/participant/team-management') }}" method="POST">
+                @csrf
 
                     <!-- Display validation errors -->
                     @if ($errors->any())

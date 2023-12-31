@@ -1,5 +1,5 @@
 <div id="step-1" class="">
-    <div class="welcome text-center" style="margin-bottom: -25px !important;">
+    <div class="welcome text-center" style="margin-bottom: -60px !important;">
         @if (isset($error))
         <p style="color:#EF4444;">{{ $error }}</p>
         @endif
@@ -37,7 +37,7 @@
             @endforeach
             <!-- Add more images and titles here -->
         </div>
-        <div class="flexbox box-width">
+        <div class="flexbox box-width back-next">
             <div></div>
             <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
         </div>

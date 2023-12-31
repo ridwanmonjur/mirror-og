@@ -6,7 +6,7 @@ extract($dateArray);
 @endphp
 
 <body>
-        @include('CommonLayout.Navbar')
+        @include('CommonLayout.NavbarGoToSearchPage')
     <main>
         <div>
             @include('Organizer.Layout.CreateEventTimelineBox')

@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.Navbar')
+    @include('CommonLayout.NavbarGoToSearchPage')
     <main>
         <section class="hero">
             <img src="{{ asset('/assets/images/events/ss.png') }}" alt="">
@@ -81,6 +81,7 @@
                 </div>
             </a>
             <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
+            <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
             @include('CommonLayout.BootstrapJs')
             <script>
                 var ENDPOINT = "{{ route('landing.view') }}";
@@ -108,28 +109,6 @@
                         }
                     }, 300)
                 );
-                document.getElementById('search-bar').addEventListener(
-                    "change",
-                    throttle((e) => {
-                        searchPart(e);
-                    }, 300)
-                );
-
-                function searchPart(e) {
-                    page = 1;
-                    let noMoreDataElement = document.querySelector('.no-more-data');
-                    noMoreDataElement.classList.add('d-none');
-                    document.querySelector('.scrolling-pagination').innerHTML = '';
-                    search = e.target.value;
-                    ENDPOINT = "{{ route('landing.view') }}";
-                    if (!search || String(search).trim() == "") {
-                        search = null;
-                        ENDPOINT += "?page=" + page;
-                    } else {
-                        ENDPOINT += "?search=" + e.target.value + "&page=" + page;
-                    }
-                    infinteLoadMore(null, ENDPOINT);
-                }
             </script>
 
         </section>

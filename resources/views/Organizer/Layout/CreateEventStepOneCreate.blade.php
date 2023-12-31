@@ -1,5 +1,5 @@
 <div id="step-1" class="d-none">
-    <div class="welcome text-center" style="margin-bottom: -25px !important;">
+    <div class="welcome text-center" style="margin-bottom: -60px !important; ">
         <u>
             <h3>
                 STEP 1: Choose your Event Categories
@@ -29,7 +29,7 @@
             @endforeach
             <!-- Add more images and titles here -->
         </div>
-        <div class="flexbox box-width">
+        <div class="flexbox box-width back-next">
             <button onclick="goToNextScreen('step-0', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next > </button>
         </div>

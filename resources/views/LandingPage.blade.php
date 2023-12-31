@@ -30,6 +30,7 @@
         <div class="no-more-data d-none"></div>
         <br><br>
         @include('CommonLayout.BootstrapJs')
+        <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
         <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
         <script>
             var ENDPOINT = "{{ route('landing.view') }}";
@@ -41,7 +42,7 @@
                     var windowHeight = window.innerHeight;
                     var documentHeight = document.documentElement.scrollHeight;
                     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    if (scrollTop + windowHeight >= documentHeight - 20) {
+                    if (scrollTop + windowHeight >= documentHeight - 100) {
                         page++;
                         ENDPOINT = "{{ route('landing.view') }}";
                         console.log({
@@ -57,30 +58,7 @@
                     }
                 }, 300)
             );
-            document.getElementById('search-bar').addEventListener(
-                "change",
-                throttle((e) => {
-                    searchPart(e);
-                }, 300)
-            );
-
-            function searchPart(e) {
-                page = 1;
-                let noMoreDataElement = document.querySelector('.no-more-data');
-                noMoreDataElement.classList.add('d-none');
-                document.querySelector('.scrolling-pagination').innerHTML = '';
-                search = e.target.value;
-                ENDPOINT = "{{ route('landing.view') }}";
-                if (!search || String(search).trim() == "") {
-                    search = null;
-                    ENDPOINT += "?page=" + page;
-                } else {
-                    ENDPOINT += "?search=" + e.target.value + "&page=" + page;
-                }
-                infinteLoadMore(null, ENDPOINT);
-            }
         </script>
-        <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
         <script>
             function myFunction() {
                 document.getElementById("myDropdown").classList.toggle("show");

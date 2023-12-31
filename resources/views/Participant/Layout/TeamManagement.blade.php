@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.Navbar')
+    @include('CommonLayout.NavbarGoToSearchPage')
     
 
     <main>

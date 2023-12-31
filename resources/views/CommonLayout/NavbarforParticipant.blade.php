@@ -24,6 +24,7 @@
       background-color: #f1f1f1;
     }
   </style>
+<div class="navbar-placeholder"> </div>
 <nav class="navbar">
     <div class="logo">
         <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
@@ -101,6 +102,8 @@
         @endauth
     </div>
 </nav>
+<script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
+<script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
 <script>
     function toggleDropdown() {
         document.querySelector("#myDropdown").classList.toggle("d-none")
@@ -132,10 +135,17 @@
         }, 300)
     );
     document.getElementById('search-bar').addEventListener(
-        "change",
-        throttle((e) => {
+        "keydown",
+        debounce((e) => {
             searchPart(e);
-        }, 300)
+        }, 1000)
+    );
+
+    document.getElementById('search-bar-mobile').addEventListener(
+        "keydown",
+        debounce((e) => {
+            searchPart(e);
+        }, 1000)
     );
 
     function searchPart(e) {
@@ -154,8 +164,7 @@
         infinteLoadMore(null, ENDPOINT);
     }
 </script>
-<script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
-<script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
+
 <script>
     function toggleTeamList() {
       var teamList = document.getElementById("teamList");

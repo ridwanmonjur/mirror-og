@@ -1,7 +1,7 @@
 @include('Organizer.Layout.ManageEventHeadTag')
 
 <body>
-    @include('CommonLayout.Navbar')
+    @include('CommonLayout.NavbarGoToSearchPage')
 
     <main>
         <br class="d-none-at-desktop">
@@ -12,30 +12,27 @@
                         Manage your events
                     </h3>
                 </u>
-                <input type="submit" value="Create Event" onclick="goToCreateScreen();">
+                <button class="oceans-gaming-default-button" value="Create Event" onclick="goToCreateScreen();">
+                    Create Event
+                </button>
 
 
             </header>
             <div class="flexbox-filter">
                 <p class="status-ALL">
-                    <a
-                        href="{{ route('event.index', array_merge(request()->query(), ['status' => 'ALL', 'page' => 1])) }}">All</a>
+                    <a href="{{ route('event.index', ['status' => 'ALL', 'page' => 1]) }}">All</a>
                 </p>
                 <p class="status-LIVE">
-                    <a
-                        href="{{ route('event.index', array_merge(request()->query(), ['status' => 'LIVE', 'page' => 1])) }}">Live</a>
+                    <a href="{{ route('event.index', ['status' => 'LIVE', 'page' => 1]) }}">Live</a>
                 </p>
                 <p class="status-SCHEDULED">
-                    <a
-                        href="{{ route('event.index', array_merge(request()->query(), ['status' => 'SCHEDULED', 'page' => 1])) }}">Scheduled</a>
+                    <a href="{{ route('event.index', ['status' => 'SCHEDULED', 'page' => 1]) }}">Scheduled</a>
                 </p>
                 <p class="status-DRAFT">
-                    <a
-                        href="{{ route('event.index', array_merge(request()->query(), ['status' => 'DRAFT', 'page' => 1])) }}">Drafts</a>
+                    <a href="{{ route('event.index', ['status' => 'DRAFT', 'page' => 1]) }}">Drafts</a>
                 </p>
                 <p class="status-ENDED">
-                    <a
-                        href="{{ route('event.index', array_merge(request()->query(), ['status' => 'ENDED', 'page' => 1])) }}">Ended</a>
+                    <a href="{{ route('event.index', ['status' => 'ENDED', 'page' => 1]) }}">Ended</a>
                 </p>
             </div>
             <br>
@@ -72,20 +69,37 @@
             </div>
             <br>
             <div id="sort-option" class="d-none">
-                <form action="{{ route('event.index') }}" method="post">
+                <form onSubmit="onSubmit(event);">
                     <label> Sort by:</label>
                     &emsp;&emsp;&emsp;
                     <span class="sort-box">
                         <input onchange="setLocalStorageSort(event);" type="radio" name="sort" value="startDate">
                         <label for="startDate">Start Date</label>
-                        <span class="startDateSortIcon sortIcon"> </span>
+                        <span class="startDateSortIcon sortIcon">
+                            <svg onclick="setLocalStorageSortIcon('startDate');" xmlns="http://www.w3.org/2000/svg"
+                                width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-refresh-cw">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                        </span>
                     </span>
                     &ensp; &ensp;
                     <span class="sort-box">
-                        <input onchange="setLocalStorageSort(event);" onchange="setLocalStorageSort(event);"
-                            type="radio" name="sort" value="endDate">
+                        <input onchange="setLocalStorageSort(event);" type="radio" name="sort" value="endDate">
                         <label for="endDateSortIcon endIcon">End Date</label>
-                        <span> </span>
+                        <span class="endDateSortIcon sortIcon">
+                            <svg onclick="setLocalStorageSortIcon('endDate');" xmlns="http://www.w3.org/2000/svg"
+                                width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-refresh-cw">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                        </span>
                     </span>
                     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                     <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button"
@@ -99,17 +113,17 @@
             </div>
 
             <div id="filter-option" class="d-none">
-                <form name="filter" action="{{ route('event.index') }}" method="post">
+                <form name="filter" onSubmit="onSubmit(event);">
                     <!-- Include existing request parameters -->
-
-                    <input type="hidden" name="page" value="1">
                     <div>
                         <label> Game Title:</label>
                         &emsp;
-                        <input type="radio" name="gameTitle" value="Dota 2">
+                        <input onchange="setLocalStorageFilter(event);" type="radio" name="gameTitle"
+                            value="Dota 2">
                         <label for="gameTitle">Dota 2</label>
                         &ensp;
-                        <input type="radio" name="gameTitle" value="Dota">
+                        <input onchange="setLocalStorageFilter(event);" type="radio" name="gameTitle"
+                            value="Dota">
                         <label for="gameTitle">Dota</label>
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                         <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button"
@@ -121,35 +135,40 @@
                     <div>
                         <label> Event Type:</label>
                         &emsp;
-                        <input type="radio" name="eventType" value="Tier">
-                        <label for="eventTier">Tier</label>
+                        <input onchange="setLocalStorageFilter(event);" type="radio" name="eventType"
+                            value="Tournament">
+                        <label for="eventTyoe">Tournament</label>
                         &ensp;
-                        <input type="radio" name="eventType" value="League">
-                        <label for="eventTier">League</label>
+                        <input onchange="setLocalStorageFilter(event);" type="radio" name="eventType"
+                            value="League">
+                        <label for="eventTyoe">League</label>
                     </div>
                     <div>
                         <label> Event Tier: </label>
                         &emsp;&nbsp;&nbsp;
-                        <input type="radio" name="eventTier" value="Dolphin">
-                        <label for="eventType">Dolphin</label>
+                        <input onchange="setLocalStorageFilter(event);" type="radio" name="eventTier"
+                            value="Dolphin">
+                        <label for="eventTier">Dolphin</label>
                         &ensp;
-                        <input type="radio" name="eventTier" value="Turtle">
-                        <label for="eventType">Turtle</label>
+                        <input onchange="setLocalStorageFilter(event);" type="radio" name="eventTier"
+                            value="Turtle">
+                        <label for="eventTier">Turtle</label>
                         &ensp;
-                        <input type="radio" name="eventTier" value="Starfish">
-                        <label for="eventType">Starfish</label>
+                        <input onchange="setLocalStorageFilter(event);" type="radio" name="eventTier"
+                            value="Starfish">
+                        <label for="eventTier">Starfish</label>
                     </div>
                 </form>
             </div>
             <br>
             <div class="search-bar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" class="feather feather-search search-bar2-adjust">
+                <svg onclick= "handleInputBlur();" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-search search-bar2-adjust">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input type="text" onblur="handleInputBlur();" name="search" id="searchInput"
+                <input type="text" name="search" id="searchInput"
                     placeholder="Search using title, description, or keywords">
                 <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button d-none"
                     style="background: #8CCD39 !important">
@@ -181,43 +200,145 @@
         <div class="scrolling-pagination grid-container">
             @include('Organizer.ManageEventScroll')
         </div>
+        <svg class="none-sort-icon d-none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" class="feather feather-refresh-cw">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+        <svg class="asc-sort-icon d-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" class="feather feather-chevrons-up">
+            <polyline points="17 11 12 6 7 11"></polyline>
+            <polyline points="17 18 12 13 7 18"></polyline>
+        </svg>
+        <svg class="desc-sort-icon d-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" class="feather feather-chevrons-down">
+            <polyline points="7 13 12 18 17 13"></polyline>
+            <polyline points="7 6 12 11 17 6"></polyline>
+        </svg>
 
         <div class="no-more-data d-none" style="margin-top: 50px;"></div>
         @include('CommonLayout.BootstrapJs')
+        <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
         <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
         <script>
-            function setLocalStorageSort(event) {
-                let sort = JSON.parse(localStorage.getItem('sort')) || {};
-                let value = null;
-                if (event.target.value in sort) {
-                    if (value == 'asc') {
-                        value = 'desc';
-                    } else if (value == 'desc') {
-                        value = 'asc';
-                    } else {
-                        value = 'none';
-                    }
-                } else {
-                    value = 'asc';
+            $(document).ready(function() {
+                $('.activate-tooltip').tooltip();
+            });
+        </script>
+
+        <script>
+            document.getElementById('searchInput').addEventListener('keydown',
+                debounce((e) => {
+                    handleInputBlur();
+                }, 1000)
+            );
+
+            ["sort", "filter", "search", "sortType",].forEach((name) => {
+                localStorage.removeItem(name);
+            })
+
+            var page = 1;
+
+            function onSubmit(event) {
+                event.preventDefault();
+                let params = convertUrlStringToQueryStringOrObject({
+                    isObject: true
+                });
+                if (!params) params = {}
+                params.page = 1;
+                ENDPOINT = "{{ route('event.search.view') }}";
+                let body = {
+                    ...params,
+                    filter: JSON.parse(localStorage.getItem('filter')),
+                    sort: JSON.parse(localStorage.getItem('sort')),
+                    userId: Number("{{ auth()->user()->id }}"),
+                    search: localStorage.getItem("search")
                 }
-                if (event.target.checked) {
-                    sort[event.target.value] = value;
-                } else {
-                    delete sort[event.target.value];
-                }
-                localStorage.setItem('sortType', JSON.stringify(sortType));
+                loadByPost(ENDPOINT, body);
             }
 
             function setLocalStorageFilter(event) {
-                let filter = JSON.parse(localStorage.getItem('filter')) || {};
-                let value = null;
+                console.log(event.target.value);
+                console.log(event.target.value);
+                console.log(event.target.value);
+                console.log(event.target.value);
+                let localItem = localStorage.getItem('filter') ?? null;
+                let filter = null;
+                if (localItem) filter = JSON.parse(localItem);
+                else filter = {};
+                let value = event.target.value;
                 if (event.target.checked) {
-                    sort[event.target.value] = value;
+                    filter[event.target.name] = value;
                 } else {
-                    delete sort[event.target.value];
+                    delete filter[event.target.name];
                 }
-                localStorage.setItem('sortType', JSON.stringify(sortType));
+                localStorage.setItem('filter', JSON.stringify(filter));
+            }
+
+            function setLocalStorageSort(event) {
+                let key = event.target.value;
+                let localItem = localStorage.getItem('sort') ?? null;
+                let sort = null;
+                if (localItem) sort = JSON.parse(localItem);
+                else sort = {};
+                if (event.target.checked) {
+                    sort[key] = 'asc';
+                    let iconSpan = document.querySelector(`.${key}SortIcon`);
+                    iconSpan.innerHTML = "";
+                    let cloneNode = document.querySelector(`.asc-sort-icon`).cloneNode(true);
+                    cloneNode.classList.remove('d-none');
+                    cloneNode.onclick = () => {
+                        setLocalStorageSortIcon(key);
+                    }
+                    iconSpan.appendChild(cloneNode);
+                } else {
+                    delete sort[key];
+                }
+                localStorage.setItem('sort', JSON.stringify(sort));
+            }
+
+            function setLocalStorageSortIcon(key) {
+                let input = document.querySelector(`input[value=${key}][type='radio']`);
+                let isChecked = input.checked;
+                let localItem = localStorage.getItem('sort') ?? null;
+                let sort = null;
+                if (localItem) sort = JSON.parse(localItem);
+                else sort = {};
+                let value = 'none';
+                if (isChecked) {
+                    if (key in sort) {
+                        value = sort[key];
+                    }
+                    if (value == 'asc') {
+                        value = 'desc';
+                    } else if (value == 'desc') {
+                        value = 'none';
+                    } else {
+                        value = 'asc';
+                    }
+                }
+                if (value == 'none') {
+                    input.checked = false;
+                }
+                if (input.checked) {
+                    sort[key] = value;
+                } else {
+                    delete sort[key];
+                }
+                let iconSpan = document.querySelector(`.${key}SortIcon`);
+                iconSpan.innerHTML = "";
+                let cloneNode = document.querySelector(`.${value}-sort-icon`).cloneNode(true);
+                cloneNode.classList.remove('d-none');
+                cloneNode.onclick = () => {
+                    setLocalStorageSortIcon(key);
+                }
+                iconSpan.appendChild(cloneNode);
+                localStorage.setItem('sort', JSON.stringify(sort));
             }
         </script>
         <script>
@@ -279,9 +400,8 @@
                 isObject: false
             });
 
-            var debounceTimer;
 
-            function debouncedFunction() {
+            function handleInputBlur() {
                 const inputElement = document.getElementById('searchInput');
                 const inputValue = inputElement.value;
                 const nextSearch = inputElement.nextElementSibling;
@@ -295,18 +415,18 @@
                 let params = convertUrlStringToQueryStringOrObject({
                     isObject: true
                 });
-                params.search = inputValue;
+                if (!params) params = {}
                 params.page = 1;
-                ENDPOINT = `/organizer/event/?` + convertObjectToURLString(params);
-                document.querySelector('.scrolling-pagination').innerHTML = '';
-                window.history.replaceState({}, document.title, ENDPOINT);
-                infinteLoadMore(null, ENDPOINT);
-            }
-
-            function handleInputBlur() {
-                debouncedFunction();
-                // clearTimeout(debounceTimer);
-                // debounceTimer = setTimeout(debouncedFunction, 250);
+                ENDPOINT = "{{ route('event.search.view') }}";
+                localStorage.setItem("search", inputValue)
+                let body = {
+                    ...params,
+                    filter: JSON.parse(localStorage.getItem('filter')),
+                    sort: JSON.parse(localStorage.getItem('sort')),
+                    userId: Number("{{ auth()->user()->id }}"),
+                    search: inputValue
+                }
+                loadByPost(ENDPOINT, body);
             }
 
             function resetUrl() {
@@ -337,7 +457,7 @@
                 element = list[index];
                 element.classList.toggle('d-none');
                 element.nextElementSibling.classList.toggle('d-none');
-                setHiddenElementValue(sortByList[index], 'desc')
+                // setHiddenElementValue(sortByList[index], 'desc') --}}
             }
 
             function sortDescending(index) {
@@ -368,9 +488,7 @@
             }
 
             const urlParams = convertObjectToURLString(window.location.search);
-            console.log({
-                urlParams
-            })
+
 
             // Function to check if a string is valid JSON
             function isValidJson(str) {
@@ -438,33 +556,7 @@
                     }
                 }
             }
-            // const eventTypes = urlParams.getAll('eventType');
 
-            const elementList = document.getElementsByClassName("sort-box");
-            for (let i = 0; i < elementList.length; i++) {
-                elementList[i].innerHTML +=
-                    `
-                    <span class="no-sort"
-                        onclick="sortNone(${i});"
-                    >
-                        &nbsp; 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                        </svg>
-                    </span>
-                    <span class="ascending d-none" 
-                        onclick="sortAscending(${i});"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up"><polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline></svg>
-                    </span>
-                    <span class="descending d-none"
-                        onclick="sortDescending(${i});"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-down"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg>                    
-                    </span>
-                                       `;
-            }
-
-            var page = 1;
             window.addEventListener(
                 "scroll",
                 throttle((e) => {
@@ -476,12 +568,21 @@
                             isObject: true
                         });
                         page++;
+                        let body = {};
+                        if (!params) params = {}
                         params.page = page;
-                        ENDPOINT = `/organizer/event/`;
-                        infinteLoadMoreByPost(null, ENDPOINT);
+                        ENDPOINT = "{{ route('event.search.view') }}";
+                        body = {
+                            filter: JSON.parse(localStorage.getItem('filter')),
+                            sort: JSON.parse(localStorage.getItem('sort')),
+                            userId: Number("{{ auth()->user()->id }}"),
+                            search: localStorage.getItem("search"),
+                            ...params
+                        }
+                        infinteLoadMoreByPost(ENDPOINT, body);
+                        
                     }
                 }, 300)
             );
         </script>
     </main>
-    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>

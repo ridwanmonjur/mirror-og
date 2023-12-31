@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
 </head>
 <body>
-    @include('CommonLayout.Navbar')
+    @include('CommonLayout.NavbarGoToSearchPage')
 
     {{-- <nav class="navbar">
         <div class="logo">

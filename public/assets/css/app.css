@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
+div.navbar-placeholder{
+    height: 5vh;
+    width: 100%;
+}
+
 .d-none {
     display: none;
 }
@@ -48,11 +53,25 @@
 }
 
 .navbar {
-    min-height: 5vh;
+    height: 9vh;
     display: flex;
     justify-content: space-between;
     padding-top: 0px !important;
     padding-bottom: 0px !important;
+    background-color: white;
+    position: fixed !important;
+    top: 0 !important;
+    width: 100%;
+    z-index: 999;
+}
+
+.mobile-navbar{
+    position: fixed;
+    top: 8vh;
+    width: 100vw;
+    z-index: 999;
+    background-color: white;
+    padding-top: 20px;
 }
 
 .navbar img,
