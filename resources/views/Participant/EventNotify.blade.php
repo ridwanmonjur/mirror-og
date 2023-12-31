@@ -7,38 +7,39 @@
     <title></title>
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_event_reg.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ asset('/assets/css/app.css')}}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
 </head>
 
 <body>
     @include('CommonLayout.NavbarGoToSearchPage')
+    <main>
+        <div class="wrapper_notify">
 
-    <div class="wrapper_notify">
-
-        <div class="first_notify">
-            <header><u>All members of Farming Enjoyers have been notified</u></header>
-        </div>
-        <br>
-        <br>
-
-        <div class="midbar">
-            <p>Registration has NOT been confirmed. Registration can only be confirmed after enough team members have accepted and the entry fee has been paid.
-            </p>
-
-            <p>You can check the registration status on your team's page.</p>
-
-            <div class="text-center">
-                <input type="submit" class="choose-payment-method" value="Done">
+            <div class="first_notify">
+                <header><u>All members of Farming Enjoyers have been notified</u></header>
             </div>
+            <br>
+            <br>
 
-            <div class="text-center">
-                <button class="oceans-gaming-another-button"> See Registration Status </button>
+            <div class="midbar">
+                <p>Registration has NOT been confirmed. Registration can only be confirmed after enough team members
+                    have accepted and the entry fee has been paid.
+                </p>
+
+                <p>You can check the registration status on your team's page.</p>
+
+                <div class="text-center">
+                    <input type="submit" class="choose-payment-method" value="Done">
+                </div>
+
+                <div class="text-center">
+                    <button class="oceans-gaming-another-button"> See Registration Status </button>
+                </div>
+
             </div>
-
         </div>
-    </div>
-    @include('CommonLayout.BootstrapJs')
-
+        @include('CommonLayout.BootstrapJs')
+    </main>
 </body>
 
 </html>
