@@ -78,7 +78,24 @@ class ParticipantEventController extends Controller
                 $query->where('team_id', $id);
             })->with('eventDetails', 'user')->get();
 
-            return view('Participant.Layout.TeamManagement', compact('teamManage', 'joinEvents'));
+            // Process the data to display the user's name once for each team
+            $eventsByTeam = [];
+            foreach ($joinEvents as $event) {
+            $userId = $event->user_id;
+            $teamId = $event->user->teams->first(function ($team) use ($id) {
+                return $team->id == $id;
+            })->id;
+
+            if (!isset($eventsByTeam[$teamId][$userId])) {
+                $eventsByTeam[$teamId][$userId]['user'] = $event->user;
+                $eventsByTeam[$teamId][$userId]['events'] = [];
+            }
+
+            $eventsByTeam[$teamId][$userId]['events'][] = $event;
+        }
+
+        return view('Participant.Layout.TeamManagement', compact('teamManage', 'joinEvents', 'eventsByTeam'));
+
         } else {
             // Handle if the team doesn't exist
             return redirect()->back()->with('error', 'Team not found.');

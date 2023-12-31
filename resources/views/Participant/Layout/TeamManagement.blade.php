@@ -105,18 +105,22 @@
                 </div>
             </div>
         </div>
-
+        @foreach($eventsByTeam as $teamId => $users)
+        @php
+        $uniqueUsernames = collect($users)->unique('user.id');
+        $usernamesCount = $uniqueUsernames->count();
+        @endphp
         <div class="tab-content" id="Members" style="display: none;">
-            <p style="text-align: center;">Team {{ $manage->teamName }} has 4 members</p>
+            <p style="text-align: center;">Team {{ $manage->teamName }} has {{ $usernamesCount }} members</p>
             <table class="member-table">
                 <tbody>
-                    @foreach($joinEvent->user->teams as $team)
-                    @foreach($team->members as $member)
+                    
+                    @foreach($users as $user)
                     <tr class="st">
                         <td>
                             <div class="player-info">
                                 <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                                <span>{{ $member->user->name }}</span>
+                                <span>{{ $user['user']->name }}</span>
                             </div>
                         </td>
                         <td class="flag-cell">
