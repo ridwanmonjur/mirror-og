@@ -6,7 +6,7 @@
     font-family: "Poppins", sans-serif;
 }
 
-main {
+body {
     width: 100%;
     height: auto;
     display: flex;
