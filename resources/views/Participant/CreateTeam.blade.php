@@ -28,35 +28,50 @@
                 <form action="{{ url('/participant/team-management') }}" method="POST">
                     @csrf
 
+    <div class="text-center" id="step-0">
+        <div class="welcome">
+            <u>
+                <h2>Create Your Team</h2>
+            </u>
+            <br><br><br>
+            <p class="create-online-esports">
+                What will your team be called?
+            </p>
+            <br>
+            <form action="{{ url('/participant/team-management') }}" method="POST">
+                @csrf
+
                     <!-- Display validation errors -->
                     @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                    @if (session('error'))
-                        <div class="alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
+                    <div class="alert alert-danger">
+                    <ul>
+                    @foreach ($errors->all() as $error)
+                     <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                        @endif
+                        @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
 
-                    @if (session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-                    <input type="text" name="teamName" id="teamName" placeholder="Team Name">
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                <input type="text" name="teamName" id="teamName" placeholder="Team Name">
             </div>
 
             <div><input type="submit" onclick="" value="Create Team"></div>
-            </form>
+        </form>
         </div>
-        @include('CommonLayout.BootstrapJs')
     </main>
+
+    @include('CommonLayout.BootstrapJs')
+
 </body>
 
 </html>
