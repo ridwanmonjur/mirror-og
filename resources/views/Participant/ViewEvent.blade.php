@@ -93,8 +93,8 @@
                                         </div>
                                     </div>
 
-                                    <input type="submit" style="background-color: #8CCD39;" value="Resume creating...."
-                                        onclick="goToEditScreen();">
+                                    <input type="submit" style="background-color: #8CCD39; padding: 10px 20px; font-size: 14px;" value="Follow"
+                                        onclick="#">
 
                                 </div>
                                 <br>
