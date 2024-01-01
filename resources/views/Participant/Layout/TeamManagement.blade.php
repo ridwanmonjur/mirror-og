@@ -59,12 +59,12 @@
             <div class="recent-events">
                 <!-- Update the event-carousel section in the Overview tab content -->
                 <div class="event-carousel">
-                    <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
                     @if($joinEvents->isEmpty())
                      <p>No events available</p>
                     @else
-                    @foreach($joinEvents as $joinEvent)
-                    <div class="event-box" id="event1">
+                    <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
+                    @foreach($joinEvents as $key => $joinEvent)
+                    <div class="event-box" id="event{{ $key + 1 }}" style="display: {{ $key === 0 ? 'block' : 'none' }};">
                         <!-- Event 1 content -->
                         <h3>{{ $joinEvent->eventDetails->eventName }}</h3>
                         <p>Start Date: {{ $joinEvent->eventDetails->startDate }}</p>
