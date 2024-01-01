@@ -83,9 +83,13 @@
                     <br>
                     <div class="showcase-box">
                         <div class="showcase-column">
-                            <p>Events Joined: 10</p>
-                            <p>Wins: 5</p>
-                            <p>Win Streak: 3</p>
+                            @php
+                            $eventCounts = $joinEvents->groupBy('eventDetails.id')->map->count();
+                            $totalEvents = $eventCounts->sum();
+                            @endphp
+                            <p>Events Joined: {{ $totalEvents }}</p>
+                            <p>Wins: 0</p>
+                            <p>Win Streak: 0</p>
                         </div>
                         <div class="showcase-column">
                             <!-- Trophy image in the second column -->
