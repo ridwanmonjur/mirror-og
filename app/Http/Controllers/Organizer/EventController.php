@@ -399,17 +399,17 @@ class EventController extends Controller
             foreach ($eventList as $eventItem) {
                 $tierEntryFee = $eventItem->tier->tierEntryFee ?? null;
             }
+    
+            // Get the count of associated join events for each EventDetail
+            foreach ($eventList as $eventDetail) {
+                $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
+            }
+    
+            $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
+            return view('Organizer.ViewEvent', $outputArray);
         } catch (Exception $e) {
             return $this->show404("Model not found for id: $id");
         }
-    
-        return view('Organizer.ViewEvent', [
-            'event' => $event,
-            'mappingEventState' => $mappingEventState,
-            'isUser' => $isUserSameAsAuth,
-            'livePreview' => 1,
-            'eventList' => $eventList, // Passing the eventList to the view
-        ]);
     }
 
     public function showSuccess($id): View
@@ -431,14 +431,34 @@ class EventController extends Controller
     {
         try {
             [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+            
+            // Your code to fetch $eventList (similar to what you've shown previously)
+            $user = Auth::user();
+            $count = 4;
+            $eventListQuery = EventDetail::query();
+            $eventListQuery->with('tier');
+            $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+
+            // Access tierEntryFee data from eventTier relationship in EventDetail
+            foreach ($eventList as $eventItem) {
+                $tierEntryFee = $eventItem->tier->tierEntryFee ?? null;
+            }
+    
+            // Get the count of associated join events for each EventDetail
+            foreach ($eventList as $eventDetail) {
+                $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
+            }
+            
         } catch (Exception $e) {
             return $this->show404("Model not found for id: $id");
         }
+        
         return view('Organizer.ViewEvent', [
             'event' => $event,
             'mappingEventState' => EventDetail::mappingEventStateResolve(),
             'isUser' => $isUserSameAsAuth,
             'livePreview' => 0,
+            'eventList' => $eventList, // Add the eventList variable to the view data
         ]);
     }
 
