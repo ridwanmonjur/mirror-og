@@ -385,14 +385,30 @@ class EventController extends Controller
     {
         try {
             [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+    
+            // Code For Getting Price from Event_Tier Table
+            $user = Auth::user();
+            $count = 4;
+            $eventListQuery = EventDetail::query();
+            $eventListQuery->with('tier'); // Eager load the eventTier relationship
+            $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+    
+            $mappingEventState = EventDetail::mappingEventStateResolve();
+    
+            // Access tierEntryFee data from eventTier relationship in EventDetail
+            foreach ($eventList as $eventItem) {
+                $tierEntryFee = $eventItem->tier->tierEntryFee ?? null;
+            }
         } catch (Exception $e) {
             return $this->show404("Model not found for id: $id");
         }
+    
         return view('Organizer.ViewEvent', [
             'event' => $event,
-            'mappingEventState' => EventDetail::mappingEventStateResolve(),
+            'mappingEventState' => $mappingEventState,
             'isUser' => $isUserSameAsAuth,
             'livePreview' => 1,
+            'eventList' => $eventList, // Passing the eventList to the view
         ]);
     }
 
