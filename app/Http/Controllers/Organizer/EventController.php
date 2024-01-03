@@ -97,13 +97,20 @@ class EventController extends Controller
         $count = 4;
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
-        
+
         // Code For Getting Price from Event_Tier Table
         $eventListQuery->with('tier'); // Eager load the eventTier relationship
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
         // Access tierEntryFee data from eventTier relationship in EventDetail
         foreach ($eventList as $event) {
             $tierEntryFee = $event->eventTier->tierEntryFee ?? null;
+        }
+        
+        $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+
+        // Get the count of associated join events for each EventDetail
+        foreach ($eventList as $eventDetail) {
+        $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
         }
 
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
