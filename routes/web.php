@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\InvitationController;
 use App\Http\Controllers\Organizer\EventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
+use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -39,8 +39,8 @@ Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name("go
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
 // Steam login
-Route::get('auth/steam', [App\Http\Controllers\Auth\AuthController::class, 'redirectToSteam'])->name('login.steam');
-Route::get('auth/steam/callback', [App\Http\Controllers\Auth\AuthController::class, 'handleSteamCallback']);
+Route::get('auth/steam', [AuthController::class, 'redirectToSteam'])->name('login.steam');
+Route::get('auth/steam/callback', [AuthController::class, 'handleSteamCallback']);
 
 Route::get('/forget-password', [AuthController::class, 'createForget'])->name("user.forget.view");
 Route::post('/forget-password', [AuthController::class, 'storeForget'])->name("user.forget.action");
@@ -74,10 +74,6 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent']);
 			Route::post('/events/{id}', [ParticipantEventController::class, 'JoinEvent'])->name('join.store');
 		});
-		Route::get(
-			'/permissions',
-			['middleware' => 'check-permission:admin|organizer', 'uses' => 'PermissionController@showOrganizerPage']
-		);
 	});
 });
 Route::group(['prefix' => 'organizer'], function () {
@@ -106,17 +102,13 @@ Route::group(['prefix' => 'organizer'], function () {
 				->middleware('prevent-back-button')
 				->name("organizer.live.view");
 		});
-		Route::get(
-			'/permissions',
-			['middleware' => 'check-permission:admin|organizer', 'uses' => 'PermissionController@showOrganizerPage']
-		);
 	});
 });
 
 Route::group(['middleware' => ['auth']], function () {
-	Route::get('/email/verify', 'VerificationController@show')->name('verification.notice');
-	Route::get('/email/verify/{id}/{hash}', 'VerificationController@verify')->name('verification.verify')->middleware(['signed']);
-	Route::post('/email/resend', 'VerificationController@resend')->name('verification.resend');
+	Route::get('/email/verify', 'AuthController@show')->name('verification.notice');
+	Route::get('/email/verify/{id}/{hash}', 'AuthController@verify')->name('verification.verify')->middleware(['signed']);
+	Route::post('/email/resend', 'AuthController@resend')->name('verification.resend');
 });
 
 Route::get('/dashboard', [AuthController::class, 'dashboard']); // Route for Dashboard Page
