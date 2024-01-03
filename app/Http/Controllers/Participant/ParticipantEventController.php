@@ -224,12 +224,28 @@ class ParticipantEventController extends Controller
 
     public function JoinEvent(Request $request, $id)
     {
+
+        $userId = auth()->user()->id;
+        $existingJoint = JoinEvent::where('user_id', $userId)
+                              ->where('event_details_id', $id)
+                              ->first();
+
+        if ($existingJoint) {
+        // If a record already exists, set an error message in the session.
+        $errorMessage = 'You have already joined this event.';
+        // Flash the error message to the session.
+        $request->session()->flash('errorMessage', $errorMessage);
+        } else {
+        // If no record exists, create a new entry.
         $joint = new JoinEvent();
-        $joint->user_id  = auth()->user()->id;
-        // $join->event_details_id = $request->input('event_details_id');
+        $joint->user_id = $userId;
         $joint->event_details_id = $id;
         $joint->save();
-
         return redirect('/participant/selectTeam');
+    }
+    // Return to the same page.
+    return redirect()->back()->withInput();
+        
+        
     }
 }
