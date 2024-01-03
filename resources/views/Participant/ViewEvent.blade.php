@@ -136,6 +136,11 @@
                         </div>
                         <div>
                             <br><br>
+                            @if(session('errorMessage'))
+                            <div class="error-message">
+                             {{ session('errorMessage') }}
+                            </div>
+                            @endif
                             <form method="POST" action="{{ route('join.store', ['id' => $event]) }} }}">
                                 @csrf
                                 <button type="submit" class="oceans-gaming-default-button">
