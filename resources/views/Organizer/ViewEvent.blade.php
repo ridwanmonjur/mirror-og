@@ -171,13 +171,18 @@ $eventBannerImg = bladeImageNull($event->eventBanner);
                                         <line x1="6" y1="20" x2="6" y2="14"></line>
                                     </svg>
                                     &nbsp;
-                                    @foreach($eventList as $eventDetail)
                                     @if($event->tier)
-                                    <span style="position: relative; top: 5px;"> {{ $eventDetail->joinEventCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available'}}</span>
+                                    @foreach($eventList as $index => $eventDetail)
+                                    @if($index == 0)
+                                    <span style="position: relative; top: 5px;">
+                                    {{ $eventDetail->joinEventCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available'}}
+                                    </span>
+                                    @endif
+                                    @endforeach
                                     @else
                                     <p>Tier Teams Slot: Not available</p>
                                     @endif
-                                    @endforeach
+                                    
 
                                    
                        

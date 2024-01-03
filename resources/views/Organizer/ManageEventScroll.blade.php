@@ -44,13 +44,17 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
-                    @foreach($eventList as $eventDetail)
-                        @if($event->tier)
-                        <span> {{ $eventDetail->joinEventCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available'}}</span>
-                        @else
-                        <p>Tier Teams Slot: Not available</p>
-                        @endif
-                        @endforeach
+                                    @if($event->tier)
+                                    @foreach($eventList as $index => $eventDetail)
+                                    @if($index == 0)
+                                    <span>
+                                    {{ $eventDetail->joinEventCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available'}}
+                                    </span>
+                                    @endif
+                                    @endforeach
+                                    @else
+                                    <p>Tier Teams Slot: Not available</p>
+                                    @endif
                 </button>
             </div>
             <br>
