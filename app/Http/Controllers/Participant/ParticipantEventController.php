@@ -183,39 +183,10 @@ class ParticipantEventController extends Controller
         }
     }
 
-
     public function ConfirmUpdate(Request $request)
     {
 
         return view('Participant.notify');
-    }
-    public function ViewSearchEvents(Request $request)
-    {
-        $currentDateTime = Carbon::now()->utc();
-        $eventListQuery =  EventDetail::query()
-            ->where(function ($query) use ($currentDateTime) {
-                return $query
-                    ->whereNull('sub_action_public_date')
-                    ->orWhereNull('sub_action_public_time')
-                    ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime]);
-            })
-            ->where('status', '<>', 'DRAFT')
-            ->where('status', '<>', 'PREVIEW')
-            ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
-        $eventListQuery->when($request->has('search'), function ($query) use ($request) {
-            $search = trim($request->input('search'));
-            if (empty($search)) {
-                return $query;
-            }
-            // collate
-            return $query->where('gameTitle', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
-                ->orWhere('eventDescription', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
-                ->orWhere('eventDefinitions', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci");
-        });
-        $count = 8;
-        $eventList = $eventListQuery->paginate($count);
-        $mappingEventState = EventDetail::mappingEventStateResolve();
-        // what to do with search results
     }
 
     public function ViewEvent(Request $request, $id)
