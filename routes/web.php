@@ -35,12 +35,7 @@ Route::get('/artisan/migrate', function () {
 
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
 Route::get('logout', [AuthController::class, 'logoutAction'])->name("logout.action");
-Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name("google.login");
-Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
-// Steam login
-Route::get('auth/steam', [AuthController::class, 'redirectToSteam'])->name('login.steam');
-Route::get('auth/steam/callback', [AuthController::class, 'handleSteamCallback']);
 
 Route::get('/forget-password', [AuthController::class, 'createForget'])->name("user.forget.view");
 Route::post('/forget-password', [AuthController::class, 'storeForget'])->name("user.forget.action");
@@ -61,6 +56,12 @@ Route::group(['prefix' => 'participant'], function () {
 	Route::get('/signup', [AuthController::class, 'signUp'])->name("participant.signup.view");
 	Route::post('/signin', [AuthController::class, 'accessUser'])->name("participant.signin.action");
 	Route::post('/signup', [AuthController::class, 'storeUser'])->name("participant.signup.action");
+	// Google login
+	Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name("google.login")->name("participant.google.login");
+	Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('participant.google.callback');
+	// Steam login
+	Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name('login.steam')->name("participant.steam.login");
+	Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'])->name("participant.steam.callback");
 	Route::group(['middleware' => 'auth'], function () {
 		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
 			Route::get('/home', [ParticipantEventController::class, 'home'])->name("participant.home.view");
@@ -81,6 +82,12 @@ Route::group(['prefix' => 'organizer'], function () {
 	Route::get('/signup', [AuthController::class, 'organizerSignup'])->name("organizer.signup.view");
 	Route::post('/signin', [AuthController::class, 'accessUser'])->name("organizer.signin.action");
 	Route::post('/signup', [AuthController::class, 'storeUser'])->name("organizer.signup.action");
+	// Google login
+	Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name("organizer.google.login");
+	Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name("organizer.google.callback");
+	// Steam login
+	Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name('login.steam')->name("organizer.steam.login");
+	Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'])->name("organizer.steam.login");
 	Route::group(['middleware' => 'auth'], function () {
 		Route::group(['middleware' => 'check-permission:organizer|admin'], function () {
 			Route::get('/home', [EventController::class, 'home'])->name("organizer.home.view");

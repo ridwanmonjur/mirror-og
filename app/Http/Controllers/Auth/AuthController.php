@@ -50,10 +50,11 @@ class AuthController extends Controller
                 $finduser->save();
                 return $finduser;
             } else {
+                // create new user
                 $newUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,
-                    'password' => bcrypt('123456dummy'),
+                    'password' => bcrypt(Str::random(13)),
                 ]);
                 $newUser->email_verified_at = now();
                 if ($type == 'google') {
@@ -73,8 +74,10 @@ class AuthController extends Controller
         $user = Socialite::driver('google')->stateless()->user();
         try {
             $finduser = $this->_registerOrLoginUser($user, 'google');
+            dd($finduser);
+
             if ($finduser->role == 'PARTICIPANT') {
-                return redirect()->route('organizer.home.view');
+                return redirect()->route('participant.home.view');
             } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
                 return redirect()->route('organizer.home.view');
             }
@@ -86,6 +89,7 @@ class AuthController extends Controller
     // Steam login
     public function redirectToSteam()
     {
+        if 
         return Socialite::driver('steam')->redirect();
     }
 
@@ -98,10 +102,10 @@ class AuthController extends Controller
     // Steam callback
     public function handleSteamCallback()
     {
-        $user = Socialite::driver('steam')->stateless()->redirectuser();
+        $user = Socialite::driver('steam')->stateless()->user();
         $finduser = $this->_registerOrLoginUser($user, 'steam');
         if ($finduser->role == 'PARTICIPANT') {
-            return redirect()->route('organizer.home.view');
+            return redirect()->route('participant.home.view');
         } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
             return redirect()->route('organizer.home.view');
         }
