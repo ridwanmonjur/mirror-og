@@ -13,9 +13,16 @@
 </head>
 
 <body>
-    {{-- @include('CommonLayout.NavbarGoToSearchPage') --}}
-
-    <div class="text-center" id="step-0">
+    @include('CommonLayout.NavbarGoToSearchPage')
+    <main>
+        <div class="text-center" id="step-0">
+            <div class="welcome">
+                <u>
+                </u>
+                <p class="create-online-esports">
+                </p>
+                <br>
+        <div class="text-center" id="step-0">
         <div class="welcome">
             <u>
                 <h2>Create Your Team</h2>
@@ -57,7 +64,8 @@
         </div>
     </main>
 
-    {{-- @include('CommonLayout.BootstrapJs') --}}
+    @include('CommonLayout.BootstrapJs')
 
 </body>
+
 </html>

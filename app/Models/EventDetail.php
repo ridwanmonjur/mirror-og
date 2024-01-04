@@ -54,6 +54,11 @@ class EventDetail extends Model
         return $this->hasMany(JoinEvent::class);
     }
 
+    public function joinEvents()
+    {
+        return $this->hasMany(JoinEvent::class, 'event_details_id', 'id');
+    }
+
     public function statusResolved()
     {
         $carbonPublishedDateTime = $this->createCarbonDateTimeFromDB($this->sub_action_public_date, $this->sub_action_public_time);

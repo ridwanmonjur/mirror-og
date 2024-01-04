@@ -30,7 +30,7 @@ npm i
 npm i -g vite
 npm run build
 
-delete symlink and/or public/storage
+ln -s storage/app/public public/storage
 
 
 hit endpoint to create symlink
@@ -44,6 +44,8 @@ hit endpoint to create symlink
 ```bash
 # Create Admin Credentials
 php artisan make:filament-user
+GO TO DAABASE
+AND GIVE USER ROLE=ADMIN
 #update Images
 
 ```

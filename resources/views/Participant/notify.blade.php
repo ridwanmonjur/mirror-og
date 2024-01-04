@@ -12,7 +12,7 @@
 
 <body>
     @include('CommonLayout.NavbarGoToSearchPage')
-
+    <main>
     <div class="wrapper_notify">
 
         <div class="first_notify">
@@ -38,7 +38,7 @@
         </div>
     </div>
     @include('CommonLayout.BootstrapJs')
-
+    </main>
 </body>
 
 </html>

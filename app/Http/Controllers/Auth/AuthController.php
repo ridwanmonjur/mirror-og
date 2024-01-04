@@ -38,31 +38,48 @@ class AuthController extends Controller
             Auth::login($finduser);
             return $user;
         } else {
-            $newUser = User::create([
-                'name' => $user->name,
-                'email' => $user->email,
-                'password' => bcrypt('123456dummy'),
-            ]);
-            $newUser->email_verified_at = now();
-            if ($type == 'google') {
-                $newUser->google_id = $user->id;
-            } elseif ($type == 'steam') {
-                $newUser->steam_id = $user->id;
+            $finduser = User::where('email', $user->email)->first();
+            if ($finduser) {
+                if ($type == 'google') {
+                    $finduser->google_id = $user->id;
+                } elseif ($type == 'steam') {
+                    $finduser->steam_id = $user->id;
+                }
+                $finduser->email_verified_at = now();
+                Auth::login($finduser);
+                $finduser->save();
+                return $finduser;
+            } else {
+                $newUser = User::create([
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'password' => bcrypt('123456dummy'),
+                ]);
+                $newUser->email_verified_at = now();
+                if ($type == 'google') {
+                    $newUser->google_id = $user->id;
+                } elseif ($type == 'steam') {
+                    $newUser->steam_id = $user->id;
+                }
+                $newUser->save();
+                Auth::login($newUser);
+                return $newUser;
             }
-            $newUser->save();
-            Auth::login($newUser);
-            return $newUser;
         }
     }
 
     public function handleGoogleCallback()
     {
-        $user = Socialite::driver('google')->user();
-        $finduser = $this->_registerOrLoginUser($user, 'google');
-        if ($finduser->role == 'PARTICIPANT') {
-            return redirect()->route('organizer.home.view');
-        } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
-            return redirect()->route('organizer.home.view');
+        $user = Socialite::driver('google')->stateless()->user();
+        try {
+            $finduser = $this->_registerOrLoginUser($user, 'google');
+            if ($finduser->role == 'PARTICIPANT') {
+                return redirect()->route('organizer.home.view');
+            } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
+                return redirect()->route('organizer.home.view');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -72,11 +89,17 @@ class AuthController extends Controller
         return Socialite::driver('steam')->redirect();
     }
 
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+
     // Steam callback
     public function handleSteamCallback()
     {
-        $user = Socialite::driver('steam')->user();
-        $finduser = $this->_registerOrLoginUser($user, 'google');
+        $user = Socialite::driver('steam')->stateless()->redirectuser();
+        $finduser = $this->_registerOrLoginUser($user, 'steam');
         if ($finduser->role == 'PARTICIPANT') {
             return redirect()->route('organizer.home.view');
         } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
@@ -256,7 +279,7 @@ class AuthController extends Controller
 
         Mail::send('Email.verify', ['token' => $token], function ($message) use ($email) {
             $message->to($email);
-            $message->subject('Reset Password');
+            $message->subject('Verify Password');
         });
 
         return redirect()
@@ -412,7 +435,7 @@ class AuthController extends Controller
                         ]);
                 }
 
-                if ($user->role != $userRoleCapital && $user->role != 'ADMIN'):
+                if ($user->role != $userRoleCapital && $user->role != 'ADMIN') :
                     throw new \ErrorException("Invalid Role for $userRoleSentence");
                 endif;
 

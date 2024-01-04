@@ -59,12 +59,12 @@
             <div class="recent-events">
                 <!-- Update the event-carousel section in the Overview tab content -->
                 <div class="event-carousel">
-                    <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
                     @if($joinEvents->isEmpty())
                      <p>No events available</p>
                     @else
-                    @foreach($joinEvents as $joinEvent)
-                    <div class="event-box" id="event1">
+                    <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
+                    @foreach($joinEvents as $key => $joinEvent)
+                    <div class="event-box" id="event{{ $key + 1 }}" style="display: {{ $key === 0 ? 'block' : 'none' }};">
                         <!-- Event 1 content -->
                         <h3>{{ $joinEvent->eventDetails->eventName }}</h3>
                         <p>Start Date: {{ $joinEvent->eventDetails->startDate }}</p>
@@ -83,9 +83,13 @@
                     <br>
                     <div class="showcase-box">
                         <div class="showcase-column">
-                            <p>Events Joined: 10</p>
-                            <p>Wins: 5</p>
-                            <p>Win Streak: 3</p>
+                            @php
+                            $eventCounts = $joinEvents->groupBy('eventDetails.id')->map->count();
+                            $totalEvents = $eventCounts->sum();
+                            @endphp
+                            <p>Events Joined: {{ $totalEvents }}</p>
+                            <p>Wins: 0</p>
+                            <p>Win Streak: 0</p>
                         </div>
                         <div class="showcase-column">
                             <!-- Trophy image in the second column -->
@@ -105,18 +109,22 @@
                 </div>
             </div>
         </div>
-
+        @foreach($eventsByTeam as $teamId => $users)
+        @php
+        $uniqueUsernames = collect($users)->unique('user.id');
+        $usernamesCount = $uniqueUsernames->count();
+        @endphp
         <div class="tab-content" id="Members" style="display: none;">
-            <p style="text-align: center;">Team {{ $manage->teamName }} has 4 members</p>
+            <p style="text-align: center;">Team {{ $manage->teamName }} has {{ $usernamesCount }} members</p>
             <table class="member-table">
                 <tbody>
-                    @foreach($joinEvent->user->teams as $team)
-                    @foreach($team->members as $member)
+                    
+                    @foreach($users as $user)
                     <tr class="st">
                         <td>
                             <div class="player-info">
                                 <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                                <span>{{ $member->user->name }}</span>
+                                <span>{{ $user['user']->name }}</span>
                             </div>
                         </td>
                         <td class="flag-cell">

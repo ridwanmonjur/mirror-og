@@ -93,8 +93,8 @@
                                         </div>
                                     </div>
 
-                                    <input type="submit" style="background-color: #8CCD39;" value="Resume creating...."
-                                        onclick="goToEditScreen();">
+                                    <input type="submit" style="background-color: #8CCD39; padding: 10px 20px; font-size: 14px;" value="Follow"
+                                        onclick="#">
 
                                 </div>
                                 <br>
@@ -136,6 +136,11 @@
                         </div>
                         <div>
                             <br><br>
+                            @if(session('errorMessage'))
+                            <div class="error-message">
+                             {{ session('errorMessage') }}
+                            </div>
+                            @endif
                             <form method="POST" action="{{ route('join.store', ['id' => $event]) }} }}">
                                 @csrf
                                 <button type="submit" class="oceans-gaming-default-button">

@@ -94,9 +94,24 @@ class EventController extends Controller
                 ->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
             });
         });
-        $count = 4;
+        $count = 8;
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
+
+        // Code For Getting Price from Event_Tier Table
+        $eventListQuery->with('tier'); // Eager load the eventTier relationship
+        $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+        // Access tierEntryFee data from eventTier relationship in EventDetail
+        foreach ($eventList as $event) {
+            $tierEntryFee = $event->eventTier->tierEntryFee ?? null;
+        }
+        
+        $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+
+        // Get the count of associated join events for each EventDetail
+        foreach ($eventList as $eventDetail) {
+        $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
+        }
 
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
         if ($request->ajax()) {
@@ -185,7 +200,7 @@ class EventController extends Controller
             }
             return $query;
         });
-        $count = 4;
+        $count = 8;
         $eventList = $eventListQuery->where('user_id', $userId)->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
 
@@ -369,16 +384,31 @@ class EventController extends Controller
     public function showLive($id): View
     {
         try {
-            [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+            [$event, $isUserSameAsAuth, $user] = $this->getEventAndUser($id);
+    
+            // Code For Getting Price from Event_Tier Table
+            $count = 8;
+            $eventListQuery = EventDetail::query();
+            $eventListQuery->with('tier'); // Eager load the eventTier relationship
+            $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+    
+            $mappingEventState = EventDetail::mappingEventStateResolve();
+    
+            // Access tierEntryFee data from eventTier relationship in EventDetail
+            foreach ($eventList as $eventItem) {
+                $tierEntryFee = $eventItem->tier->tierEntryFee ?? null;
+            }
+    
+            // Get the count of associated join events for each EventDetail
+            foreach ($eventList as $eventDetail) {
+                $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
+            }
+    
+            $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
+            return view('Organizer.ViewEvent', $outputArray);
         } catch (Exception $e) {
             return $this->show404("Model not found for id: $id");
         }
-        return view('Organizer.ViewEvent', [
-            'event' => $event,
-            'mappingEventState' => EventDetail::mappingEventStateResolve(),
-            'isUser' => $isUserSameAsAuth,
-            'livePreview' => 1,
-        ]);
     }
 
     public function showSuccess($id): View
@@ -399,15 +429,34 @@ class EventController extends Controller
     public function show($id): View
     {
         try {
-            [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+            [$event, $isUserSameAsAuth, $user] = $this->getEventAndUser($id);
+            
+            // Your code to fetch $eventList (similar to what you've shown previously)
+            $count = 8;
+            $eventListQuery = EventDetail::query();
+            $eventListQuery->with('tier');
+            $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+
+            // Access tierEntryFee data from eventTier relationship in EventDetail
+            foreach ($eventList as $eventItem) {
+                $tierEntryFee = $eventItem->tier->tierEntryFee ?? null;
+            }
+    
+            // Get the count of associated join events for each EventDetail
+            foreach ($eventList as $eventDetail) {
+                $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
+            }
+            
         } catch (Exception $e) {
             return $this->show404("Model not found for id: $id");
         }
+        
         return view('Organizer.ViewEvent', [
             'event' => $event,
             'mappingEventState' => EventDetail::mappingEventStateResolve(),
             'isUser' => $isUserSameAsAuth,
             'livePreview' => 0,
+            'eventList' => $eventList, // Add the eventList variable to the view data
         ]);
     }
 
