@@ -74,3 +74,12 @@
 @endsection
 
 @include('Auth.Layout.SignUpBodyTag')
+
+<script>
+    function movePlaceholderUp(input) {
+        const label = input.parentElement;
+        const placeholder = label.querySelector('.placeholder-moves-up');
+        placeholder.style.top = (input.value !== '') ? '0px' : '0px';
+        placeholder.style.fontSize = (input.value !== '') ? '0px' : 'inherit';
+    }
+</script>
