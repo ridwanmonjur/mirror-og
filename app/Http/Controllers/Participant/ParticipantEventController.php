@@ -207,6 +207,7 @@ class ParticipantEventController extends Controller
             if (empty($search)) {
                 return $query;
             }
+            // collate
             return $query->where('gameTitle', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
                 ->orWhere('eventDescription', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
                 ->orWhere('eventDefinitions', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci");
@@ -214,6 +215,7 @@ class ParticipantEventController extends Controller
         $count = 8;
         $eventList = $eventListQuery->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
+        // what to do with search results
     }
 
     public function ViewEvent(Request $request, $id)
