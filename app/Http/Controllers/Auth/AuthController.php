@@ -90,14 +90,14 @@ class AuthController extends Controller
     // Steam login
     public function redirectToSteam(Request $request)
     {
-        $routeName = $request->route()->getName();
-        if ($routeName == 'organizer.steam.login') {
+        // $routeName = $request->route()->getName();
+        // if ($routeName == 'organizer.steam.login') {
             
-        } else {
-            
-        }
-        dd($routeName);
-        // return Socialite::driver('steam')->redirect();
+        // } else {
+
+        // }
+        // dd($routeName);
+        return Socialite::driver('steam')->redirect();
     }
 
     public function redirectToGoogle(Request $request)

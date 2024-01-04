@@ -518,7 +518,7 @@ class EventController extends Controller
             } else {
                 return back()->with('error', 'Event id missing!');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return back()->with('error', 'Something went wrong with saving data!');
         }
     }
