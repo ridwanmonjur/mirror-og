@@ -22,7 +22,7 @@ class ParticipantEventController extends Controller
 
         // Retrieve current date and time
         $currentDateTime = Carbon::now()->utc();
-        $count = 3;
+        $count = 6;
 
         $events = EventDetail::query()
             ->where('status', '<>', 'DRAFT')
@@ -211,7 +211,7 @@ class ParticipantEventController extends Controller
                 ->orWhere('eventDescription', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
                 ->orWhere('eventDefinitions', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci");
         });
-        $count = 4;
+        $count = 8;
         $eventList = $eventListQuery->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
     }

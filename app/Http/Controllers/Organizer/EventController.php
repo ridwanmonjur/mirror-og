@@ -94,7 +94,7 @@ class EventController extends Controller
                 ->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
             });
         });
-        $count = 4;
+        $count = 8;
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
 
@@ -200,7 +200,7 @@ class EventController extends Controller
             }
             return $query;
         });
-        $count = 4;
+        $count = 8;
         $eventList = $eventListQuery->where('user_id', $userId)->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
 
@@ -384,11 +384,10 @@ class EventController extends Controller
     public function showLive($id): View
     {
         try {
-            [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+            [$event, $isUserSameAsAuth, $user] = $this->getEventAndUser($id);
     
             // Code For Getting Price from Event_Tier Table
-            $user = Auth::user();
-            $count = 4;
+            $count = 8;
             $eventListQuery = EventDetail::query();
             $eventListQuery->with('tier'); // Eager load the eventTier relationship
             $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
@@ -430,11 +429,10 @@ class EventController extends Controller
     public function show($id): View
     {
         try {
-            [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+            [$event, $isUserSameAsAuth, $user] = $this->getEventAndUser($id);
             
             // Your code to fetch $eventList (similar to what you've shown previously)
-            $user = Auth::user();
-            $count = 4;
+            $count = 8;
             $eventListQuery = EventDetail::query();
             $eventListQuery->with('tier');
             $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
