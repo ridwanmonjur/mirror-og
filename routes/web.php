@@ -57,10 +57,10 @@ Route::group(['prefix' => 'participant'], function () {
 	Route::post('/signin', [AuthController::class, 'accessUser'])->name("participant.signin.action");
 	Route::post('/signup', [AuthController::class, 'storeUser'])->name("participant.signup.action");
 	// Google login
-	Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name("google.login")->name("participant.google.login");
+	Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name("participant.google.login");
 	Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('participant.google.callback');
 	// Steam login
-	Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name('login.steam')->name("participant.steam.login");
+	Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name("participant.steam.login");
 	Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'])->name("participant.steam.callback");
 	Route::group(['middleware' => 'auth'], function () {
 		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
@@ -86,8 +86,8 @@ Route::group(['prefix' => 'organizer'], function () {
 	Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name("organizer.google.login");
 	Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name("organizer.google.callback");
 	// Steam login
-	Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name('login.steam')->name("organizer.steam.login");
-	Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'])->name("organizer.steam.login");
+	Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name("organizer.steam.login");
+	Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'])->name("organizer.steam.callback");
 	Route::group(['middleware' => 'auth'], function () {
 		Route::group(['middleware' => 'check-permission:organizer|admin'], function () {
 			Route::get('/home', [EventController::class, 'home'])->name("organizer.home.view");

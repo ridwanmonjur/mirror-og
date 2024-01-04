@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -87,15 +88,23 @@ class AuthController extends Controller
     }
 
     // Steam login
-    public function redirectToSteam()
+    public function redirectToSteam(Request $request)
     {
-        if 
-        return Socialite::driver('steam')->redirect();
+        $routeName = $request->route()->getName();
+        if ($routeName == 'organizer.steam.login') {
+            
+        } else {
+            
+        }
+        dd($routeName);
+        // return Socialite::driver('steam')->redirect();
     }
 
-    public function redirectToGoogle()
+    public function redirectToGoogle(Request $request)
     {
-        return Socialite::driver('google')->redirect();
+        $routeName = $request->route()->getName();
+        dd($routeName);
+        // return Socialite::driver('google')->redirect();
     }
 
 

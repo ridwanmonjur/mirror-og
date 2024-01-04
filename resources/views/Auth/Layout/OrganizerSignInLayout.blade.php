@@ -67,12 +67,11 @@
 </div>
 <script>
     function redirectToGoogle() {
-        window.location.href = "{{ route('google.login') }}";
+        window.location.href = "{{ route('organizer.google.login') }}";
     }
 
     function redirectToSteam() {
-        window.location.href = "{{ route('login.steam') }}";
-
+        window.location.href = "{{ route('organizer.steam.login') }}";
     }
 </script>
 

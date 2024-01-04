@@ -60,7 +60,7 @@
         <p>Continue with Google</p>
     </button>
     <button class="btn-login btn-steam">
-        <img class="image-login" src="{{ asset('/assets/images/auth/steam.svg') }}" alt="">
+        <img class="image-login" onclick="redirectToSteam();" src="{{ asset('/assets/images/auth/steam.svg') }}" alt="">
         <p>Continue with Steam</p>
     </button>
 </form>
@@ -70,7 +70,10 @@
 </div>
 <script>
     function redirectToGoogle() {
-        window.location.href = "{{ route('google.login') }}";
+        window.location.href = "{{ route('participant.google.login') }}";
+    }
+    function redirectToSteam() {
+        window.location.href = "{{ route('participant.steam.login') }}";
     }
 </script>
 
