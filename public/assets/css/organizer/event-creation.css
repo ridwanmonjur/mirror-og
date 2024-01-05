@@ -31,6 +31,9 @@ input[type="time"] {
 }
 
 
+.form-group-width {
+    width: 100% !important;
+}
 /* Add this CSS to your existing stylesheet */
 
 .form-group input[type="text"],
@@ -768,6 +771,10 @@ input[type="button"],
 input[type="submit"]:active {
     background: #79b0cc;
 }
+/* 
+.box-date{
+    margin-left: 30px;
+} */
 
 .box-date input[type='time'], .box-date input[type='date'] {
     min-width: 300px;
@@ -933,9 +940,16 @@ input[type="submit"]:active {
     .swiper-container {
         display: block;
     }
+    .form-group-width {
+        width: 75% !important;
+    }
     .box_2nd {
         height: 220px;
     }
+    .box-date{
+        margin-left: initial;
+    }
+
 }
 
 .time-line-box {
@@ -947,6 +961,7 @@ input[type="submit"]:active {
         margin: 0;
         width: 100%;
     }
+
   
     .box_2nd {
         height: 300px;

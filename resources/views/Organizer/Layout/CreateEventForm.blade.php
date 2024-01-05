@@ -142,7 +142,7 @@
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
                                 src="{{ asset('/assets/images/createEvent/dollar.png') }}">
                             <div>
-                                <span class="inputEventTierEntry">RM {{ $category->tierEntyFee }}</span>
+                                <span class="inputEventTierEntry">RM {{ $category->tierEntryFee }}</span>
                                 <span>team entry fee</span>
                             </div>
                         </div>
@@ -234,34 +234,34 @@
         <p>
             First, when is your event happening?
         </p>
-        <br>
+        <br><br>
         <div class="event-details-form">
-            <div class="form-group mx-auto w-75">
+            <div class="form-group form-group-width mx-auto">
                 <label for="startDate">Date of Event</label>
                 <div class="small-detail">Tell your players when to mark their calendars</div>
-                <div class="grid-2-columns">
-                    <div class="box box-date">
+                <div class="grid-2-columns box-date">
+                    <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
                         <input type="date" id="startDate" onchange="checkValidTime();" name="startDate"
                             placeholder=" Select a start date" required>
                     </div>
-                    <div class="box box-date">
+                    <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
                         <input type="date" id="endDate" onchange="checkValidTime();" name="endDate"
                             placeholder=" Select an end date" required>
                     </div>
                 </div>
             </div>
-            <div class="form-group mx-auto w-75">
+            <div class="form-group form-group-width mx-auto">
                 <label for="startTime">Time of Event</label>
                 <div class="small-detail">So that your players can set their alarms</div>
-                <div class="grid-2-columns">
-                    <div class="box box-date">
+                <div class="grid-2-columns box-date">
+                    <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
                         <input type="time" id="startTime" onchange="checkValidTime();" name="startTime"
                             placeholder=" Select a start time" required>
                     </div>
-                    <div class="box box-date">
+                    <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
                         <input type="time" id="endTime" name="endTime" onchange="checkValidTime();"
                             placeholder=" Select an end time" required>
@@ -292,7 +292,7 @@
     </div>
     <br><br>
     <div class="event-details-form box-width">
-        <div class="form-group">
+        <div class="form-group mx-auto">
             <label for="eventName">Name of Event</label>
             <p class="description">Pick a good name for your event (max. 60 characters)</p>
             <input type="text" id="eventName" name="eventName" placeholder=" Name of Event" required
