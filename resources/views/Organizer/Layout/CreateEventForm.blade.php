@@ -172,7 +172,7 @@
     <section class="container-border-2 grid-2" style="justify-content: center !important;">
         <img id="outputGameTitleImg" {!! trustedBladeHandleImageFailure() !!}
             src="{{ asset('assets/images/createEvent/exclamation.png') }}" alt=""
-            style="margin: auto; border-radius: 20px; width: 225px;  object-fit: cover; ">
+            style="margin: auto; border-radius: 20px; width: 225px; border: 1px dotted black; object-fit: cover; ">
         <div class="box_3rd box_3rd_max_width event_extra mx-auto">
             <h4 id="outputEventTypeTitle">League/ Tier</h4>
             <p id="outputEventTypeDefinition" style="text-align: left;">Choose your event type...</p>
@@ -185,8 +185,8 @@
             <br>
             <h4 id="outputEventTierTitle" style="text-align: center; margin-top: 25px;">Choose a tier</h4>
             <div class="event_row">
-                <div class="icon_container" style="margin-right: 10px;">
-                    <img style="width: 25px; height: 25px;" id="outputEventTierImg"
+                <div class="icon_container mr-4">
+                    <img width="25" height=25 id="outputEventTierImg"
                         src="{{ asset('assets/images/user.png') }}" class="event_icon">
                 </div>
                 <div class="info_container">
@@ -195,8 +195,8 @@
                 </div>
             </div>
             <div class="event_row">
-                <div class="icon_container" style="margin-right: 10px;">
-                    <img style="width: 25px; height: 25px; margin-right: 20px;"
+                <div class="icon_container mr-4">
+                    <img width="25" height=25
                         src="{{ asset('/assets/images/createEvent/trophy.png') }}" class="event_icon">
                 </div>
                 <div class="info_container">
@@ -205,8 +205,8 @@
                 </div>
             </div>
             <div class="event_row">
-                <div class="icon_container" style="margin-right: 10px;">
-                    <img style="width: 25px; height: 25px;" src="{{ asset('assets/images/dollar.png') }}"
+                <div class="icon_container mr-4" >
+                    <img width="25" height=25 src="{{ asset('assets/images/dollar.png') }}"
                         class="event_icon">
                 </div>
                 <div class="info_container">
