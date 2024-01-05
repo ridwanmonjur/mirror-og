@@ -185,7 +185,7 @@
             <br>
             <h4 id="outputEventTierTitle" style="text-align: center; margin-top: 25px;">Choose a tier</h4>
             <div class="event_row">
-                <div class="icon_container mr-4">
+                <div class="icon_container mr-4 ml-3">
                     <img width="25" height=25 id="outputEventTierImg"
                         src="{{ asset('assets/images/user.png') }}" class="event_icon">
                 </div>
@@ -195,7 +195,7 @@
                 </div>
             </div>
             <div class="event_row">
-                <div class="icon_container mr-4">
+                <div class="icon_container mr-4 ml-3">
                     <img width="25" height=25
                         src="{{ asset('/assets/images/createEvent/trophy.png') }}" class="event_icon">
                 </div>
@@ -205,7 +205,7 @@
                 </div>
             </div>
             <div class="event_row">
-                <div class="icon_container mr-4" >
+                <div class="icon_container mr-4 ml-3" >
                     <img width="25" height=25 src="{{ asset('assets/images/dollar.png') }}"
                         class="event_icon">
                 </div>
