@@ -200,12 +200,8 @@
     })
 
     function clearLocalStorage() {
-        ['eventTypeTitle', 'gameTitleImg', 'eventTierPrize', 'eventTierPerson',
-            'eventTierTitle', 'eventTierEntry', 'eventTypeDefinition', 'eventTierImg',
-            'eventBanner', 'eventTierId', 'eventTypeId'
-        ].forEach((key) => {
-            localStorage.removeItem(key);
-        });
+       localStorage.clear();
+
     }
 
     window.onload = function() {

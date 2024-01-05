@@ -67,6 +67,11 @@ input[type="time"] {
     color: #6B6B6B;
 }
 
+.form-group .small-detail {
+    font-size: 14px;
+    color: #6B6B6B;
+}
+
 .event-details-form {
     max-width: 80%;
     margin: 0 auto;
@@ -135,6 +140,10 @@ input[type="time"] {
     justify-content: space-between;
 }
 
+.grid-2{
+    gap: 20px;
+}
+
 .selectable-box {
     background-color: #f0f0f0;
     border: 1px solid #ccc;
@@ -197,6 +206,13 @@ input[type="time"] {
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     position: relative;
     padding-bottom: 20px;
+}
+
+.event_extra{
+    border-radius: 20px;
+    margin: auto;
+    width: 80%;
+    padding: 5px;
 }
 
 .event_1 {
@@ -447,13 +463,10 @@ input[type="time"] {
     background: transparent;
     padding: 20px;
     text-align: center;
-    width: 430px;
+    min-height: 300px;
     border-radius: 20px;
 }
 
-.box_3rd_max_width {
-    width: 430px;
-}
 
 main {
     background-image: url("/assets/images/event-management-bg.png");
@@ -930,9 +943,11 @@ input[type="submit"]:active {
 }
 
 @media screen and (min-width: 1000px) {
-    .box_3rd_max_width {
-        width: 400px !important;
+    .event_extra{
+        margin: 0;
+        width: 100%;
     }
+  
     .box_2nd {
         height: 300px;
     }
@@ -940,7 +955,7 @@ input[type="submit"]:active {
         grid-template-columns: 1fr 1fr;
     }
     .grid-2 {
-        grid-template-columns: 0.5fr 1fr 1fr;
+        grid-template-columns: 0.5fr 1fr 0.75fr;
         margin: 0 3vw;
     }
     .box-width{
@@ -1035,13 +1050,13 @@ input[type="submit"]:active {
     .grid {
         grid-template-columns: 1fr 1fr 1fr;
     }
-  
     .box-width{
         max-width: 80vw;
     }
     .grid-2 {
-        grid-template-columns: 0.5fr 1fr 0.5fr;
-        margin: 0 10vw;
+        grid-template-columns: 0.25fr 1fr 1fr;
+        justify-content: center !important;
+        margin: 0 18vw;
     }
     .back-next button{
         position: absolute;
