@@ -82,4 +82,13 @@
         placeholder.style.top = (input.value !== '') ? '0px' : '0px';
         placeholder.style.fontSize = (input.value !== '') ? '0px' : 'inherit';
     }
+
+    function togglePassword() {
+        var x = document.getElementById("password");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
 </script>

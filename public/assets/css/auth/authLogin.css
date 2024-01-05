@@ -419,13 +419,3 @@ span.placeholder-moves-up {
     box-shadow: 0 0 0 1px #43A4D7;
     /* Full freedom. (works also with border-radius) */
 }
-
-
-/* input:focus+label span.placeholder-moves-up,
-input:not(:focus):valid+label span.placeholder-moves-up {
-    opacity: 1 !important;
-    transform: translateY(-20px);
-    z-index: 99 !important;
-    background-color: white;
-    color: #43A4D7;
-} */
