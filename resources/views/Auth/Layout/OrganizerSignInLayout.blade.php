@@ -21,15 +21,16 @@
     <br>
     <div class="field">
         <label for="email" class="placeholder-moves-up-container">
-            <input type="email" name="email" id="email" required="true" class="input-area">
+            <input type="email" name="email" id="email" required="true" class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Email</span>
             <div class="field-error-message d-none"></div>
         </label>
     </div>
+
     <div class="field password">
         <label for="password" class="placeholder-moves-up-container">
             <input type="password" name="password" id="password" minlength="6" maxlength="24" required="true"
-                class="input-area">
+                class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Password</span>
             <i class="fa fa-eye" id="togglePassword" onclick="togglePassword()" style="cursor: pointer; margin-top: 10px"></i>
             <div class="field-error-message d-none"></div>
@@ -72,6 +73,13 @@
 
     function redirectToSteam() {
         window.location.href = "{{ route('organizer.steam.login') }}";
+    }
+
+    function movePlaceholderUp(input) {
+        const label = input.parentElement;
+        const placeholder = label.querySelector('.placeholder-moves-up');
+        placeholder.style.top = (input.value !== '') ? '0px' : '0px';
+        placeholder.style.fontSize = (input.value !== '') ? '0px' : 'inherit';
     }
 </script>
 
