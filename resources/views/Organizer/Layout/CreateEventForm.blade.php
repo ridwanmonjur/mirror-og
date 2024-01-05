@@ -142,7 +142,7 @@
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
                                 src="{{ asset('/assets/images/createEvent/dollar.png') }}">
                             <div>
-                                <span class="inputEventTierEntry">RM {{ $category->tierEntyFee }}</span>
+                                <span class="inputEventTierEntry">RM {{ $category->tierEntryFee }}</span>
                                 <span>team entry fee</span>
                             </div>
                         </div>
@@ -172,7 +172,7 @@
     <section class="container-border-2 grid-2" style="justify-content: center !important;">
         <img id="outputGameTitleImg" {!! trustedBladeHandleImageFailure() !!}
             src="{{ asset('assets/images/createEvent/exclamation.png') }}" alt=""
-            style="margin: auto; border-radius: 20px; width: 225px;  object-fit: cover; ">
+            style="margin: auto; border-radius: 20px; width: 225px; border: 1px dotted black; object-fit: cover; ">
         <div class="box_3rd box_3rd_max_width event_extra mx-auto">
             <h4 id="outputEventTypeTitle">League/ Tier</h4>
             <p id="outputEventTypeDefinition" style="text-align: left;">Choose your event type...</p>
@@ -185,8 +185,8 @@
             <br>
             <h4 id="outputEventTierTitle" style="text-align: center; margin-top: 25px;">Choose a tier</h4>
             <div class="event_row">
-                <div class="icon_container" style="margin-right: 10px;">
-                    <img style="width: 25px; height: 25px;" id="outputEventTierImg"
+                <div class="icon_container mr-4 ml-3">
+                    <img width="25" height=25 id="outputEventTierImg"
                         src="{{ asset('assets/images/user.png') }}" class="event_icon">
                 </div>
                 <div class="info_container">
@@ -195,8 +195,8 @@
                 </div>
             </div>
             <div class="event_row">
-                <div class="icon_container" style="margin-right: 10px;">
-                    <img style="width: 25px; height: 25px; margin-right: 20px;"
+                <div class="icon_container mr-4 ml-3">
+                    <img width="25" height=25
                         src="{{ asset('/assets/images/createEvent/trophy.png') }}" class="event_icon">
                 </div>
                 <div class="info_container">
@@ -205,8 +205,8 @@
                 </div>
             </div>
             <div class="event_row">
-                <div class="icon_container" style="margin-right: 10px;">
-                    <img style="width: 25px; height: 25px;" src="{{ asset('assets/images/dollar.png') }}"
+                <div class="icon_container mr-4 ml-3" >
+                    <img width="25" height=25 src="{{ asset('assets/images/dollar.png') }}"
                         class="event_icon">
                 </div>
                 <div class="info_container">
@@ -224,7 +224,7 @@
     </div>
 </div>
 
-<div class="text-center create" id="step-5">
+<div class="text-center create d-none" id="step-5">
     <div class="welcome text-center" style="margin-bottom: 0px !important;">
         <u>
             <h5>
@@ -234,34 +234,34 @@
         <p>
             First, when is your event happening?
         </p>
-        <br>
+        <br><br>
         <div class="event-details-form">
-            <div class="form-group mx-auto w-75">
+            <div class="form-group form-group-width mx-auto">
                 <label for="startDate">Date of Event</label>
                 <div class="small-detail">Tell your players when to mark their calendars</div>
-                <div class="grid-2-columns">
-                    <div class="box box-date">
+                <div class="grid-2-columns box-date">
+                    <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
                         <input type="date" id="startDate" onchange="checkValidTime();" name="startDate"
                             placeholder=" Select a start date" required>
                     </div>
-                    <div class="box box-date">
+                    <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
                         <input type="date" id="endDate" onchange="checkValidTime();" name="endDate"
                             placeholder=" Select an end date" required>
                     </div>
                 </div>
             </div>
-            <div class="form-group mx-auto w-75">
+            <div class="form-group form-group-width mx-auto">
                 <label for="startTime">Time of Event</label>
                 <div class="small-detail">So that your players can set their alarms</div>
-                <div class="grid-2-columns">
-                    <div class="box box-date">
+                <div class="grid-2-columns box-date">
+                    <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
                         <input type="time" id="startTime" onchange="checkValidTime();" name="startTime"
                             placeholder=" Select a start time" required>
                     </div>
-                    <div class="box box-date">
+                    <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
                         <input type="time" id="endTime" name="endTime" onchange="checkValidTime();"
                             placeholder=" Select an end time" required>
@@ -292,7 +292,7 @@
     </div>
     <br><br>
     <div class="event-details-form box-width">
-        <div class="form-group">
+        <div class="form-group mx-auto">
             <label for="eventName">Name of Event</label>
             <p class="description">Pick a good name for your event (max. 60 characters)</p>
             <input type="text" id="eventName" name="eventName" placeholder=" Name of Event" required

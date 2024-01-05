@@ -31,6 +31,10 @@ input[type="time"] {
 }
 
 
+.form-group-width {
+    margin: auto;
+    width: 100% !important;
+}
 /* Add this CSS to your existing stylesheet */
 
 .form-group input[type="text"],
@@ -324,14 +328,13 @@ input[type="time"] {
 
 .event_row {
     display: flex;
-    align-items: center;
+    justify-content: start;
     margin: 0px 0;
     padding: 10px;
     /* Add padding here */
 }
 
 .icon_container {
-    width: 20%;
     padding-left: 10px;
     /* Add right padding to create space */
 }
@@ -341,17 +344,6 @@ input[type="time"] {
     height: 30px;
     display: block;
 }
-
-.info_container {
-    flex-grow: 1;
-    /* Expand to fill available space */
-}
-
-.info_container p {
-    font-size: 16px;
-    margin: 0;
-}
-
 
 /* Style for the upload button */
 
@@ -463,7 +455,7 @@ input[type="time"] {
     background: transparent;
     padding: 20px;
     text-align: center;
-    min-height: 300px;
+    min-height: 250px;
     border-radius: 20px;
 }
 
@@ -770,7 +762,7 @@ input[type="submit"]:active {
 }
 
 .box-date input[type='time'], .box-date input[type='date'] {
-    min-width: 300px;
+    width: 100% !important;
 }
 
 .choose-payment-method,
@@ -936,6 +928,7 @@ input[type="submit"]:active {
     .box_2nd {
         height: 220px;
     }
+
 }
 
 .time-line-box {
@@ -947,7 +940,14 @@ input[type="submit"]:active {
         margin: 0;
         width: 100%;
     }
-  
+
+    .form-group-width {
+        width: 75% !important;
+    }
+    .box-date input[type='time'], .box-date input[type='date'] {
+        width: 300px !important;
+
+    }
     .box_2nd {
         height: 300px;
     }
