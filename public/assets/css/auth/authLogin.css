@@ -324,6 +324,16 @@ input:not(:focus):valid+span.placeholder-moves-up {
     transform: translateY(-20px);
 }
 
+.field input:focus+label span.placeholder-moves-up,
+.field input:not(:focus):valid+label span.placeholder-moves-up,
+.field input:placeholder-shown+label span.placeholder-moves-up {
+    opacity: 1;
+    transform: translateY(-20px);
+    z-index: 99 !important;
+    background-color: white;
+    color: #43A4D7;
+}
+
 label.placeholder-moves-up-container {
     margin: 0;
     position: relative;

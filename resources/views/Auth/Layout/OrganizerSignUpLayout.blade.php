@@ -13,7 +13,7 @@
     <br>
     <div class="field">
         <label for="username" class="placeholder-moves-up-container">
-            <input type="username" name="username" id="username" required="true" class="input-area">
+            <input type="username" name="username" id="username" required="true" class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Username</span>
             <div class="field-error-message d-none"></div>
         </label>
@@ -21,7 +21,7 @@
 
     <div class="field">
         <label for="email" class="placeholder-moves-up-container">
-            <input type="email" name="email" id="email" required="true" class="input-area">
+            <input type="email" name="email" id="email" required="true" class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Email address</span>
             <div class="field-error-message d-none"></div>
         </label>
@@ -29,7 +29,7 @@
 
     <div class="field">
         <label for="companyName" class="placeholder-moves-up-container">
-            <input type="text" name="companyName" id="companyName" required="true" class="input-area">
+            <input type="text" name="companyName" id="companyName" required="true" class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Company Name</span>
             <div class="field-error-message d-none"></div>
         </label>
@@ -37,7 +37,7 @@
 
     <div class="field">
         <label for="companyDescription" class="placeholder-moves-up-container">
-            <input type="text" name="companyDescription" id="companyDescription" required="true" class="input-area">
+            <input type="text" name="companyDescription" id="companyDescription" required="true" class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Company Description</span>
             <div class="field-error-message d-none"></div>
         </label>
@@ -45,7 +45,7 @@
 
     <div class="field password">
         <label for="password" class="placeholder-moves-up-container">
-            <input type="password" name="password" id="password" minlength="6" maxlength="24" required="true" class="input-area">
+            <input type="password" name="password" id="password" minlength="6" maxlength="24" required="true" class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Password</span>
             <i class="fa fa-eye" id="togglePassword" onclick="togglePassword()" style="cursor: pointer; margin-top: 10px"></i>
             <div class="field-error-message d-none"></div>
@@ -54,7 +54,7 @@
 
     <div class="field password">
         <label for="password" class="placeholder-moves-up-container">
-            <input type="password" name="password" id="password" minlength="6" maxlength="24" required="true" class="input-area">
+            <input type="password" name="password" id="password" minlength="6" maxlength="24" required="true" class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Confirm Password</span>
             <i class="fa fa-eye" id="togglePassword" onclick="togglePassword()" style="cursor: pointer; margin-top: 10px"></i>
             <div class="field-error-message d-none"></div>
