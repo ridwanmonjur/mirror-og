@@ -1,4 +1,4 @@
-  <div class="text-center d-none" id="step-0">
+  <div class="text-center" id="step-0">
       <div class="welcome mt-5">
           <u>
               <h2>

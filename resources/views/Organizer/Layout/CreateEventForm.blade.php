@@ -160,7 +160,7 @@
     </div>
 </div>
 
-<div id="step-4" class="">
+<div id="step-4" class="d-none">
     <div class="welcome text-center" style="margin-bottom: -10px !important;">
         <u>
             <h3>
@@ -170,15 +170,16 @@
         <p>Here are the categories you've chosen for your event.</p>
     </div>
     <section class="container-border-2 grid-2" style="justify-content: center !important;">
-        <img id="outputGameTitleImg" {!! trustedBladeHandleImageFailure() !!} src="{{ asset('assets/images/createEvent/exclamation.png') }}" alt=""
+        <img id="outputGameTitleImg" {!! trustedBladeHandleImageFailure() !!}
+            src="{{ asset('assets/images/createEvent/exclamation.png') }}" alt=""
             style="margin: auto; border-radius: 20px; width: 225px;  object-fit: cover; ">
-        <div class="box_3rd box_3rd_max_width mx-auto">
+        <div class="box_3rd box_3rd_max_width event_extra mx-auto">
             <h4 id="outputEventTypeTitle">League/ Tier</h4>
             <p id="outputEventTypeDefinition" style="text-align: left;">Choose your event type...</p>
         </div>
-        <div class="event_extra mx-auto" style="margin: auto;">
+        <div class="event_extra" style="border: 1px solid black;">
             <div class="event_head_container">
-                <img id="outputEventTierImg"  src="{{ asset('assets/images/createEvent/question.png') }}"
+                <img id="outputEventTierImg" src="{{ asset('assets/images/createEvent/question.png') }}"
                     class="event_head">
             </div>
             <br>
@@ -223,7 +224,7 @@
     </div>
 </div>
 
-<div class="text-center d-none create" id="step-5">
+<div class="text-center create" id="step-5">
     <div class="welcome text-center" style="margin-bottom: 0px !important;">
         <u>
             <h5>
@@ -233,39 +234,37 @@
         <p>
             First, when is your event happening?
         </p>
-        <div class="event-details-form" style="width: 100% !important; margin: 0px auto;">
-            <div class="mx-auto">
-                <div class="form-group">
-                    <label for="startDate">Date of Event</label>
-                    <p class="description">Tell your players when to mark their calendars</p>
-                    <div class="grid-2-columns">
-                        <div class="box box-date">
-                            <p class="description"><b>Start</b></p>
-                            <input type="date" id="startDate" onchange="checkValidTime();" name="startDate"
-                                placeholder=" Select a start date" required>
-                        </div>
-                        <div class="box box-date">
-                            <p class="description"><b>End</b></p>
-                            <input type="date" id="endDate" onchange="checkValidTime();" name="endDate"
-                                placeholder=" Select an end date" required>
-                        </div>
+        <br>
+        <div class="event-details-form">
+            <div class="form-group mx-auto w-75">
+                <label for="startDate">Date of Event</label>
+                <div class="small-detail">Tell your players when to mark their calendars</div>
+                <div class="grid-2-columns">
+                    <div class="box box-date">
+                        <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
+                        <input type="date" id="startDate" onchange="checkValidTime();" name="startDate"
+                            placeholder=" Select a start date" required>
+                    </div>
+                    <div class="box box-date">
+                        <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
+                        <input type="date" id="endDate" onchange="checkValidTime();" name="endDate"
+                            placeholder=" Select an end date" required>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="startTime">Time of Event</label>
-                    <p class="description">So that your players can set their alarms</p>
-                    <div class="grid-2-columns">
-                        <div class="box box-date">
-                            <p class="description"><b>Start</b></p>
-                            <input type="time" id="startTime" onchange="checkValidTime();" name="startTime"
-                                placeholder=" Select a start time" required>
-                        </div>
-                        <div class="box box-date">
-                            <p class="description"><b>End</b></p>
-                            <input type="time" id="endTime" name="endTime" onchange="checkValidTime();"
-                                placeholder=" Select an end time" required>
-                        </div>
+            </div>
+            <div class="form-group mx-auto w-75">
+                <label for="startTime">Time of Event</label>
+                <div class="small-detail">So that your players can set their alarms</div>
+                <div class="grid-2-columns">
+                    <div class="box box-date">
+                        <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
+                        <input type="time" id="startTime" onchange="checkValidTime();" name="startTime"
+                            placeholder=" Select a start time" required>
+                    </div>
+                    <div class="box box-date">
+                        <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
+                        <input type="time" id="endTime" name="endTime" onchange="checkValidTime();"
+                            placeholder=" Select an end time" required>
                     </div>
                 </div>
             </div>
@@ -274,7 +273,8 @@
             <button onclick="goToNextScreen('step-4', 'timeline-1')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button"
-                class="oceans-gaming-default-button"> Next > </button>
+                class="oceans-gaming-default-button">
+                Next > </button>
         </div>
     </div>
 </div>
@@ -290,6 +290,7 @@
             Don't forget to name your event!
         </p>
     </div>
+    <br><br>
     <div class="event-details-form box-width">
         <div class="form-group">
             <label for="eventName">Name of Event</label>
@@ -317,6 +318,7 @@
             Next, what's your event about?
         </p>
     </div>
+    <br><br>
     <div class="event-details-form box-width">
         <div class="form-group">
             <label for="eventDescription">Event Description</label>
@@ -344,6 +346,7 @@
             Keywords wil help players find your event!
         </p>
     </div>
+    <br><br>
     <div class="event-details-form box-width">
         <div class="form-group">
             <label for="eventTags">Event Tags</label>
@@ -372,7 +375,7 @@
         <p>
             Finally, some visual aid!
         </p>
-
+        <br>
         <div class="event-details-form box-width">
             <div class="form-group">
                 <label for="eventBanner">Event Banner</label>
