@@ -447,7 +447,7 @@ input[type="time"] {
     background: transparent;
     padding: 20px;
     text-align: center;
-    width: 430px;
+    min-width: 300px;
     border-radius: 20px;
 }
 
@@ -940,8 +940,8 @@ input[type="submit"]:active {
         grid-template-columns: 1fr 1fr;
     }
     .grid-2 {
-        grid-template-columns: 0.5fr 1fr 1fr;
-        margin: 0 3vw;
+        grid-template-columns: 0.5fr 1fr 0.5fr;
+        margin: 0 10vw;
     }
     .box-width{
         max-width: 90vw;
@@ -1035,13 +1035,13 @@ input[type="submit"]:active {
     .grid {
         grid-template-columns: 1fr 1fr 1fr;
     }
-  
     .box-width{
         max-width: 80vw;
     }
     .grid-2 {
-        grid-template-columns: 0.5fr 1fr 0.5fr;
-        margin: 0 10vw;
+        grid-template-columns: 0.25fr 1fr 0.5fr;
+        justify-content: center !important;
+        margin: 0 20vw;
     }
     .back-next button{
         position: absolute;

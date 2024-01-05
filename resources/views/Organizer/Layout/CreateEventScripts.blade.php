@@ -204,8 +204,9 @@
             'eventTierTitle', 'eventTierEntry', 'eventTypeDefinition', 'eventTierImg',
             'eventBanner', 'eventTierId', 'eventTypeId'
         ].forEach((key) => {
-            localStorage.removeItem(key);
+            if (localStorage.getItem(key)) localStorage.removeItem(key);
         });
+        window.alert("hi");
     }
 
     window.onload = function() {

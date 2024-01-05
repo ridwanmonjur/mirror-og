@@ -160,7 +160,7 @@
     </div>
 </div>
 
-<div id="step-4" class="d-none">
+<div id="step-4" class="">
     <div class="welcome text-center" style="margin-bottom: -10px !important;">
         <u>
             <h3>
@@ -169,8 +169,8 @@
         </u>
         <p>Here are the categories you've chosen for your event.</p>
     </div>
-    <section class="container-border-2 grid-2" style="gap: 20px;">
-        <img id="outputGameTitleImg" src="{{ asset('assets/images/createEvent/exclamation.png') }}" alt=""
+    <section class="container-border-2 grid-2" style="justify-content: center !important;">
+        <img id="outputGameTitleImg" {!! trustedBladeHandleImageFailure() !!} src="{{ asset('assets/images/createEvent/exclamation.png') }}" alt=""
             style="margin: auto; border-radius: 20px; width: 225px;  object-fit: cover; ">
         <div class="box_3rd box_3rd_max_width mx-auto">
             <h4 id="outputEventTypeTitle">League/ Tier</h4>
@@ -178,7 +178,7 @@
         </div>
         <div class="event_extra mx-auto" style="margin: auto;">
             <div class="event_head_container">
-                <img id="outputEventTierImg" src="{{ asset('assets/images/createEvent/question.png') }}"
+                <img id="outputEventTierImg"  src="{{ asset('assets/images/createEvent/question.png') }}"
                     class="event_head">
             </div>
             <br>
