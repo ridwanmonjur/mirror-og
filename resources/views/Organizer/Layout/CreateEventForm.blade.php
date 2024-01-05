@@ -224,7 +224,7 @@
     </div>
 </div>
 
-<div class="text-center create" id="step-5">
+<div class="text-center create d-nones" id="step-5">
     <div class="welcome text-center" style="margin-bottom: 0px !important;">
         <u>
             <h5>
