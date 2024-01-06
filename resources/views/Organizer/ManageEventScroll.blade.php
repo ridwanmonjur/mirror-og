@@ -60,7 +60,7 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
             <br>
             <p style="max-height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->eventName}}</u></p>
             <p class="small-text"><i>
-                    {{ $organizer->companyName ?? 'Not set' }}
+                    {{ $organizer->companyName ?? 'Choose organization name' }}
                 </i></p>
             <div class="flexbox-welcome">
                 <div>@php echo $dateStr; @endphp</div>
