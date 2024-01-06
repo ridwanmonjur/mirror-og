@@ -202,7 +202,7 @@ input[type="submit"]:active {
 }
 
 .rounded-box-starfish {
-    border-color: pink;
+    border-color: #F25D7B;
 }
 
 .rounded-box-mermaid {
@@ -282,7 +282,7 @@ input[type="submit"]:active {
 }
 
 .side-image-starfish {
-    border-bottom-color: pink;
+    border-bottom-color: #F25D7B;
 }
 
 .card-image-turtle {
@@ -298,7 +298,7 @@ input[type="submit"]:active {
 }
 
 .card-image-starfish {
-    border-color: pink;
+    border-color: #F25D7B;
 }
 
 .card-text {
