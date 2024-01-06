@@ -14,10 +14,25 @@ div.navbar-placeholder{
 }
 
 .color-border-success {
-    border: 2px solid #00A3FF; 
+    border: 2px dotted #00A3FF; 
     border-radius: 20px; 
 }
 
+.rounded-box-turtle {
+    border-color: #8CCD39;
+}
+
+.rounded-box-dolphin {
+    border-color: #43A4D7;
+}
+
+.rounded-box-starfish {
+    border-color: pink;
+}
+
+.rounded-box-mermaid {
+    border-color: #2E4B59;
+}
 
 .container {
     display: flex;

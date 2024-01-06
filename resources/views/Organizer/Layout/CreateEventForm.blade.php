@@ -99,6 +99,7 @@
                     class="featured-events">
                     <a href="#" @class([
                         'event selectable-box box-tier',
+                        'rounded-box-'.  strtolower($category->eventTier),
                         'color-border-success' =>
                             $event && $category->id == $event->event_category_id,
                     ])>
@@ -171,6 +172,8 @@
     </div>
     <section class="container-border-2 grid-2" style="justify-content: center !important;">
         <img id="outputGameTitleImg" {!! trustedBladeHandleImageFailure() !!}
+            width=225
+            height="100%"
             src="{{ asset('assets/images/createEvent/exclamation.png') }}" alt=""
             style="margin: auto; border-radius: 20px; width: 225px; border: 1px dotted black; object-fit: cover; ">
         <div class="box_3rd box_3rd_max_width event_extra mx-auto">

@@ -179,9 +179,7 @@ class EventController extends Controller
         $eventListQuery->when($request->has('sort'), function ($query) use ($request) {
             $sort = $request->input('sort');
             if (!$sort) return $query;
-            $sortTypeJSONString = $request->input('sortType');
-            $sortKeys = json_decode($sortTypeJSONString, true);
-            foreach ($sortKeys as $key => $value) {
+            foreach ($sort as $key => $value) {
                 $query->orderBy($key, $value);
             }
             return $query;
@@ -386,10 +384,9 @@ class EventController extends Controller
         try {
             [$event, $isUserSameAsAuth, $user] = $this->getEventAndUser($id);
     
-            // Code For Getting Price from Event_Tier Table
             $count = 8;
             $eventListQuery = EventDetail::query();
-            $eventListQuery->with('tier'); // Eager load the eventTier relationship
+            $eventListQuery->with('tier'); 
             $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
     
             $mappingEventState = EventDetail::mappingEventStateResolve();
