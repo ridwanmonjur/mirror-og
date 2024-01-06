@@ -1,3 +1,9 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Hide scroll bars */
+}
+
 .welcome {
     margin-top: 40px;
     margin-bottom: 80px;
@@ -6,21 +12,22 @@
 }
 
 .welcome p {
-    width: 600px;
+    max-width: 90%; 
+    text-align: center;
     margin: auto;
-    font-weight: lighter;
-    text-overflow: clip;
-    font-size: larger;
+    font-size: larger;;
 }
 
 main {
-    width: 100%;
-    height: auto;
+    height: 100vh;
     display: flex;
-    padding: 20px 100px;
     align-items: center;
     justify-content: center;
+    padding: 20px;
     background-image: url("/assets/images/Single_Screen.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; 
 }
 
 */ input[type="submit"],
@@ -107,4 +114,41 @@ input[type="button"]:hover {
 
 #step-0 {
     margin-bottom: 20px;
+}
+
+
+
+/* Responsive Code On Going */
+
+@media screen and (max-width: 768px) {
+    main {
+        padding: 20px 30px; /* Adjust padding for smaller screens */
+    }
+
+    .welcome p {
+        width: 80%; /* Adjust width for smaller screens */
+    }
+
+    #teamName {
+        width: 80%; /* Adjust width for smaller screens */
+        max-width: 300px; /* Set a maximum width */
+        margin: 20px auto; /* Center the input box */
+    }
+
+    input[type="button"] {
+        width: 80%; /* Adjust width for smaller screens */
+        max-width: 300px; /* Set a maximum width */
+        margin-top: 10px;
+    }
+}
+
+/* For screens between 768px and 1024px */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    main {
+        padding: 20px 50px; /* Adjust padding for medium-sized screens */
+    }
+
+    .welcome p {
+        width: 70%; /* Adjust width for medium-sized screens */
+    }
 }
