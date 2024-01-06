@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
 </head>
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonLayout.NavbarforParticipant')
     {{-- <nav class="navbar">
         <div class="logo">
             <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
