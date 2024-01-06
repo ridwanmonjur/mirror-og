@@ -505,7 +505,7 @@ class EventController extends Controller
                     return back()->with('error', $e->getMessage());
                 }
                 $status = $eventDetail->statusResolved();
-                if ($status != 'UPCOMING' || $status != 'DRAFT') {
+                if ($status != 'UPCOMING' && $status != 'DRAFT') {
                     return $this->show404("Event has already gone live for id: $id");
                 }
                 $eventDetail->user_id = auth()->user()->id;
