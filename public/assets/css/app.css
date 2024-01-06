@@ -15,7 +15,7 @@ div.navbar-placeholder{
 
 .color-border-success {
     /* transform: scale(1.01); */
-    border: 2px solid #00A3FF !important;
+    border: 3px dotted #00A3FF !important;
     /* box-shadow: 3px 3px 3px rgb(139, 138, 138); */
     border-radius: 20px; 
 }
