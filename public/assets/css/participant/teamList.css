@@ -13,6 +13,15 @@
     font-family: "Poppins", sans-serif;
 }
 
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
 .d-none {
     display: none;
 }
@@ -33,12 +42,15 @@
 
 main {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh; 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-image: url("/assets/images/event-creation-bg.png");
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-attachment: fixed; 
     margin: 0;
 }
 
