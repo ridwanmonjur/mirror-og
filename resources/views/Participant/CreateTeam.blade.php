@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonLayout.NavbarforParticipant')
     <main>
         <div class="text-center" id="step-0">
             <div class="welcome">
