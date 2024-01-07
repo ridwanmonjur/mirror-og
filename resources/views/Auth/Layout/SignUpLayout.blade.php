@@ -62,10 +62,6 @@
 
         @include('Auth.Layout.SignUpBodyTag')
         <script>
-            function redirectToGoogle() {
-                window.location.href = "{{ route('google.login') }}";
-            }
-
             function movePlaceholderUp(input) {
                 const label = input.parentElement;
                 const placeholder = label.querySelector('.placeholder-moves-up');
