@@ -19,15 +19,15 @@ class CheckPermission
         $currentRoleList = explode('|', $currentRoleListString);
         $user = auth()->user();
         $userAccess = strtolower($user->role);
+        view()->share('user', $user);
         if ($this->checkPermissionHelper($userAccess, $currentRoleList)) {
             return $next($request);
         }
 
-        view()->share('user', $user);
         return response()->view('Auth.SignIn')
             ->withException(new \Exception('You do not have permission to access this page'));
     }
-    private  function checkPermissionHelper($userAccess, $currentRoleList)
+    private function checkPermissionHelper($userAccess, $currentRoleList)
     {
         foreach ($currentRoleList as $key => $value) {
             if ($value == $userAccess) {
