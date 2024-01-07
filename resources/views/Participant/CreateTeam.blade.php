@@ -9,10 +9,20 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
     <link href='https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.css'>
+    <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
 </head>
 
 <body>
-    <div class="text-center" id="step-0">
+    @include('CommonLayout.NavbarforParticipant')
+    <main>
+        <div class="text-center" id="step-0">
+            <div class="welcome">
+                <u>
+                </u>
+                <p class="create-online-esports">
+                </p>
+                <br>
+        <div class="text-center" id="step-0">
         <div class="welcome">
             <u>
                 <h2>Create Your Team</h2>
@@ -25,33 +35,37 @@
             <form action="{{ url('/participant/team-management') }}" method="POST">
                 @csrf
 
-                <!-- Display validation errors -->
-                @if ($errors->any())
+                    <!-- Display validation errors -->
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                    <ul>
+                    @foreach ($errors->all() as $error)
+                     <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                        @endif
+                        @if(session('error'))
                 <div class="alert alert-danger">
-                <ul>
-                @foreach ($errors->all() as $error)
-                 <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-                    @endif
-                    @if(session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
+                    {{ session('error') }}
                 </div>
             @endif
-            <input type="text" name="teamName" id="teamName" placeholder="Team Name">
+
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                <input type="text" name="teamName" id="teamName" placeholder="Team Name">
+            </div>
+
+            <div><input type="submit" onclick="" value="Create Team"></div>
+        </form>
         </div>
-        
-        <div><input type="submit" onclick="" value="Create Team"></div>
-    </form>
-    </div>
-    
+    </main>
+
+    @include('CommonLayout.BootstrapJs')
+
 </body>
+
 </html>

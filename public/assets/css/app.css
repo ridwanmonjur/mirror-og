@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
+div.navbar-placeholder{
+    height: 5vh;
+    width: 100%;
+}
+
 .d-none {
     display: none;
 }
@@ -9,10 +14,27 @@
 }
 
 .color-border-success {
-    border: 2px solid #00A3FF; 
+    /* transform: scale(1.01); */
+    border: 3px dotted #00A3FF !important;
+    /* box-shadow: 3px 3px 3px rgb(139, 138, 138); */
     border-radius: 20px; 
 }
 
+.rounded-box-turtle {
+    border-color: #8CCD39;
+}
+
+.rounded-box-dolphin {
+    border-color: #43A4D7;
+}
+
+.rounded-box-starfish {
+    border-color: #F25D7B;
+}
+
+.rounded-box-mermaid {
+    border-color: #2E4B59;
+}
 
 .container {
     display: flex;
@@ -48,11 +70,25 @@
 }
 
 .navbar {
-    min-height: 5vh;
+    height: 9vh;
     display: flex;
     justify-content: space-between;
     padding-top: 0px !important;
     padding-bottom: 0px !important;
+    background-color: white;
+    position: fixed !important;
+    top: 0 !important;
+    width: 100%;
+    z-index: 999;
+}
+
+.mobile-navbar{
+    position: fixed;
+    top: 8vh;
+    width: 100vw;
+    z-index: 999;
+    background-color: white;
+    padding-top: 20px;
 }
 
 .navbar img,
@@ -133,7 +169,6 @@ button#submit,
     border: 0px solid black;
 }
 
-@media screen and (min-width: 600px) {}
 
 @media screen and (min-width: 992px) {
     .payment-summary {
@@ -155,7 +190,8 @@ button#submit,
     }
 
     .navbar .nav-buttons {
-        display: block;
+        display: flex;
+        flex-wrap: nowrap !important;
     }
 
     .d-none-at-mobile {

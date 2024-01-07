@@ -1,11 +1,16 @@
 @php
     $isEventNotNull = $event != null;
     $status = $isEventNotNull ? $event->statusResolved() : null;
+    $dateStartArray = null;
+    if ($isEventNotNull) {
+        $dateStartArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
+        extract($dateStartArray);
+    }
 @endphp
 
 <div id="step-2" class="d-none">
 
-    <div class="welcome text-center" style="margin-bottom: 0px !important;">
+    <div class="welcome text-center">
         <u>
             <h3>
                 STEP 1: Choose your Event Categories
@@ -36,7 +41,7 @@
                                 'box_2nd selectable-box',
                                 'color-border-success' => $event && $category->id == $event->event_type_id,
                             ])>
-                                <h2 class="{{ ' box-title' }}">
+                                <h2 class="{{ 'inputEventTypeTitle box-title' }}">
                                     <u>{{ $category->eventType }}</u>
                                 </h2>
                                 <span class="inputEventTypeDefinition" class="box-text"
@@ -47,7 +52,7 @@
                 @endforeach
             </div>
         </div>
-        <div class="flexbox box-width">
+        <div class="flexbox box-width back-next">
             <button onclick="goToNextScreen('step-1', 'none')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-3', 'timeline-1')" type="button"
@@ -59,7 +64,7 @@
 
 
 <div id="step-3" class="d-none">
-    <div class="welcome text-center" style="margin-bottom: -10px !important;">
+    <div class="welcome text-center">
         <u>
             <h3>
                 STEP 1: Choose your Event Categories
@@ -67,7 +72,7 @@
         </u>
         <br>
         <p>Finally, choose a tier for your event.</p>
-        <div class="flexbox box-width">
+        <div class="grid-3-columns box-width">
             @foreach ($eventTierList as $category)
                 <section
                     onclick="setFormValues( {'eventTier': {{ Js::from($category->eventTier) }} } );
@@ -94,6 +99,7 @@
                     class="featured-events">
                     <a href="#" @class([
                         'event selectable-box box-tier',
+                        'rounded-box-'.  strtolower($category->eventTier),
                         'color-border-success' =>
                             $event && $category->id == $event->event_category_id,
                     ])>
@@ -137,7 +143,7 @@
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
                                 src="{{ asset('/assets/images/createEvent/dollar.png') }}">
                             <div>
-                                <span class="inputEventTierEntry">RM {{ $category->tierEntyFee }}</span>
+                                <span class="inputEventTierEntry">RM {{ $category->tierEntryFee }}</span>
                                 <span>team entry fee</span>
                             </div>
                         </div>
@@ -146,8 +152,8 @@
                 </section>
             @endforeach
         </div>
-        <div class="flexbox box-width">
-            <button onclick="goToNextScreen('step-2', 'none')" type="button"
+        <div class="flexbox box-width back-next">
+            <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-4', 'timeline-1'); fillStepValues();" type="button"
                 class="oceans-gaming-default-button"> Next > </button>
@@ -164,14 +170,17 @@
         </u>
         <p>Here are the categories you've chosen for your event.</p>
     </div>
-    <section class="container-border" style="display: flex; justify-content: center;">
-        <img id="outputGameTitleImg" src="{{ asset('assets/images/createEvent/exclamation.png') }}" alt=""
-            style="border-radius: 20px; width: 225px;  object-fit: cover; ">
-        <div class="box_3rd" style="max-width: 300px;">
+    <section class="container-border-2 grid-2" style="justify-content: center !important;">
+        <img id="outputGameTitleImg" {!! trustedBladeHandleImageFailure() !!}
+            width=225
+            height="100%"
+            src="{{ asset('assets/images/createEvent/exclamation.png') }}" alt=""
+            style="margin: auto; border-radius: 20px; width: 225px; border: 1px dotted black; object-fit: cover; ">
+        <div class="box_3rd box_3rd_max_width event_extra mx-auto">
             <h4 id="outputEventTypeTitle">League/ Tier</h4>
             <p id="outputEventTypeDefinition" style="text-align: left;">Choose your event type...</p>
         </div>
-        <div class="event_extra">
+        <div class="event_extra" style="border: 1px solid black;">
             <div class="event_head_container">
                 <img id="outputEventTierImg" src="{{ asset('assets/images/createEvent/question.png') }}"
                     class="event_head">
@@ -179,8 +188,8 @@
             <br>
             <h4 id="outputEventTierTitle" style="text-align: center; margin-top: 25px;">Choose a tier</h4>
             <div class="event_row">
-                <div class="icon_container" style="margin-right: 10px;">
-                    <img style="width: 25px; height: 25px;" id="outputEventTierImg"
+                <div class="icon_container mr-4 ml-3">
+                    <img width="25" height=25 id="outputEventTierImg"
                         src="{{ asset('assets/images/user.png') }}" class="event_icon">
                 </div>
                 <div class="info_container">
@@ -189,8 +198,8 @@
                 </div>
             </div>
             <div class="event_row">
-                <div class="icon_container" style="margin-right: 10px;">
-                    <img style="width: 25px; height: 25px; margin-right: 20px;"
+                <div class="icon_container mr-4 ml-3">
+                    <img width="25" height=25
                         src="{{ asset('/assets/images/createEvent/trophy.png') }}" class="event_icon">
                 </div>
                 <div class="info_container">
@@ -199,8 +208,8 @@
                 </div>
             </div>
             <div class="event_row">
-                <div class="icon_container" style="margin-right: 10px;">
-                    <img style="width: 25px; height: 25px;" src="{{ asset('assets/images/dollar.png') }}"
+                <div class="icon_container mr-4 ml-3" >
+                    <img width="25" height=25 src="{{ asset('assets/images/dollar.png') }}"
                         class="event_icon">
                 </div>
                 <div class="info_container">
@@ -210,7 +219,7 @@
             </div>
         </div>
     </section>
-    <div class="flexbox box-width">
+    <div class="flexbox box-width back-next">
         <button onclick="goToNextScreen('step-3', 'timeline-1'); fillStepValues();" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-5', 'timeline-2');" type="button"
@@ -218,7 +227,7 @@
     </div>
 </div>
 
-<div class="text-center d-none create" id="step-5">
+<div class="text-center create d-none" id="step-5">
     <div class="welcome text-center" style="margin-bottom: 0px !important;">
         <u>
             <h5>
@@ -228,48 +237,47 @@
         <p>
             First, when is your event happening?
         </p>
-        <div class="event-details-form" style="width: 100% !important; margin: 0px auto;">
-            <div>
-                <div class="form-group">
-                    <label for="startDate">Date of Event</label>
-                    <p class="description">Tell your players when to mark their calendars</p>
-                    <div class="container">
-                        <div class="box">
-                            <p class="description"><b>Start</b></p>
-                            <input type="date" id="startDate" onchange="checkValidTime();" name="startDate"
-                                placeholder=" Select a start date" required>
-                        </div>
-                        <div class="box">
-                            <p class="description"><b>End</b></p>
-                            <input type="date" id="endDate" onchange="checkValidTime();" name="endDate"
-                                placeholder=" Select an end date" required>
-                        </div>
+        <br><br>
+        <div class="event-details-form">
+            <div class="form-group form-group-width mx-auto">
+                <label for="startDate">Date of Event</label>
+                <div class="small-detail">Tell your players when to mark their calendars</div>
+                <div class="grid-2-columns box-date">
+                    <div class="box">
+                        <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
+                        <input type="date" id="startDate" onchange="checkValidTime();" name="startDate"
+                            placeholder=" Select a start date" required>
+                    </div>
+                    <div class="box">
+                        <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
+                        <input type="date" id="endDate" onchange="checkValidTime();" name="endDate"
+                            placeholder=" Select an end date" required>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="startTime">Time of Event</label>
-                    <p class="description">So that your players can set their alarms</p>
-                    <div class="container">
-                        <div class="box">
-                            <p class="description"><b>Start</b></p>
-                            <input type="time" id="startTime" onchange="checkValidTime();" name="startTime"
-                                placeholder=" Select a start time" required>
-                        </div>
-                        <div class="box">
-                            <p class="description"><b>End</b></p>
-                            <input type="time" id="endTime" name="endTime" onchange="checkValidTime();"
-                                placeholder=" Select an end time" required>
-                        </div>
+            </div>
+            <div class="form-group form-group-width mx-auto">
+                <label for="startTime">Time of Event</label>
+                <div class="small-detail">So that your players can set their alarms</div>
+                <div class="grid-2-columns box-date">
+                    <div class="box">
+                        <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
+                        <input type="time" id="startTime" onchange="checkValidTime();" name="startTime"
+                            placeholder=" Select a start time" required>
+                    </div>
+                    <div class="box">
+                        <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
+                        <input type="time" id="endTime" name="endTime" onchange="checkValidTime();"
+                            placeholder=" Select an end time" required>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="flexbox box-width">
+        <div class="flexbox box-width back-next">
             <button onclick="goToNextScreen('step-4', 'timeline-1')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button"
-                class="oceans-gaming-default-button"> Next > </button>
+                class="oceans-gaming-default-button">
+                Next > </button>
         </div>
     </div>
 </div>
@@ -285,15 +293,16 @@
             Don't forget to name your event!
         </p>
     </div>
+    <br><br>
     <div class="event-details-form box-width">
-        <div class="form-group">
+        <div class="form-group mx-auto">
             <label for="eventName">Name of Event</label>
             <p class="description">Pick a good name for your event (max. 60 characters)</p>
             <input type="text" id="eventName" name="eventName" placeholder=" Name of Event" required
                 class="@error('title') is-invalid @enderror">
         </div>
     </div>
-    <div class="flexbox box-width">
+    <div class="flexbox box-width back-next">
         <button onclick="goToNextScreen('step-5', 'timeline-2')" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-7', 'timeline-2')" type="button" class="oceans-gaming-default-button">
@@ -312,6 +321,7 @@
             Next, what's your event about?
         </p>
     </div>
+    <br><br>
     <div class="event-details-form box-width">
         <div class="form-group">
             <label for="eventDescription">Event Description</label>
@@ -320,7 +330,7 @@
                 required></textarea>
         </div>
     </div>
-    <div class="flexbox box-width">
+    <div class="flexbox box-width back-next">
         <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-8', 'timeline-2')" type="button" class="oceans-gaming-default-button">
@@ -339,6 +349,7 @@
             Keywords wil help players find your event!
         </p>
     </div>
+    <br><br>
     <div class="event-details-form box-width">
         <div class="form-group">
             <label for="eventTags">Event Tags</label>
@@ -348,7 +359,7 @@
             </div>
         </div>
     </div>
-    <div class="flexbox box-width">
+    <div class="flexbox box-width back-next">
         <button onclick="goToNextScreen('step-7', 'timeline-2')" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-9', 'timeline-2')" type="button" class="oceans-gaming-default-button">
@@ -367,7 +378,7 @@
         <p>
             Finally, some visual aid!
         </p>
-
+        <br>
         <div class="event-details-form box-width">
             <div class="form-group">
                 <label for="eventBanner">Event Banner</label>
@@ -394,7 +405,7 @@
                             {!! trustedBladeHandleImageFailure() !!} id="previewImage" alt="Preview"
                             style="max-width: 200px; max-height: 200px; object-fit: cover;">
                     @else
-                        <div style="color: red;">Please enter an image</div>
+                        <div style="color: #EF4444;">Please enter an image</div>
                         <img class="d-none banner-preview" id="previewImage" alt="Preview"
                             style="max-width: 200px; max-height: 200px; object-fit: cover;">
                     @endif
@@ -404,7 +415,7 @@
                 @endif
             </div>
         </div>
-        <div class="flexbox box-width">
+        <div class="flexbox box-width back-next">
             <button onclick="goToNextScreen('step-8', 'timeline-2')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-10', 'timeline-3')" type="button"
@@ -446,24 +457,24 @@
             <br>
             <div class="text-center">
                 @if ($event && $event->payment_transaction_id != null)
-                    <button onclick="" class="choose-payment-method" style="background-color: green !important;"
-                        type="button">
+                    <button onclick="" class="choose-payment-method"
+                        style="background-color: #8CCD39 !important;" type="button">
                         Paid successfully!
                     </button>
                 @else
-                    <button onclick="" type="button" class="choose-payment-method" data-bs-toggle="modal"
-                        data-bs-target="#payment-modal">
+                    <button onclick="" type="button" class="choose-payment-method" data-toggle="modal"
+                        data-target="#payment-modal">
                         Choose a payment method
                     </button>
                 @endif
                 <button onclick="goToNextScreen('step-1', 'timeline-1');" type="button"
-                    class="choose-payment-method-condition-fulfilled" style="background-color: red;">
+                    class="choose-payment-method-condition-fulfilled" style="background-color: #EF4444;">
                     Choose event tier and title first
                 </button>
             </div>
         </div>
         <br>
-        <div class="flexbox box-width">
+        <div class="flexbox box-width back-next">
             <button onclick="goToNextScreen('step-9', 'timeline-2')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-11', 'timeline-4')" type="button"
@@ -485,16 +496,32 @@
     <div class="payment-summary">
 
         <!-- DRAFT PART -->
+        @if ($isEventNotNull)
 
-        <input @checked(!$isEventNotNull || ($isEventNotNull && $status == 'DRAFT')) onchange="toggleRadio(this, 'draft'); updateLaunchButtonText('draft');"
-            type="radio" id="draft" name="launch_visible" required value="DRAFT">
+            @if ($status == 'DRAFT')
+                <div>
+                    <h5>Event Status</h5>
+                    <p>Your event is currently saved as a draft.</p>
+                </div>
+            @endif
+
+            @if ($status != 'DRAFT' && $event->sub_action_public_time != null)
+                <div>
+                    <h5>Event Status</h5>
+                    <p>Your {{ $event->sub_action_private }} event is scheduled to launch on: {{ $combinedStr }} at
+                        {{ $timePart }}. </p>
+                </div>
+            @endif
+        @endif
+        <input checked onchange="toggleRadio(this, 'draft'); updateLaunchButtonText('draft');" type="radio"
+            id="draft" name="launch_visible" required value="DRAFT">
         <label for="draft"><u>Save as draft</u></label>
         <div class="radio-indent draft">
             <p>Save your event and edit it later</p>
         </div>
 
         <!-- public? -->
-        <input @checked($isEventNotNull && $event->sub_action_private == 'public' && $status != 'DRAFT')
+        <input
             onchange="toggleRadio(this, 'public' ); updateLaunchButtonText('launch'); launchScheduleDefaultSelected('launch_schedule_default_1');"
             required type="radio" id="public" name="launch_visible" value="public">
         <label for="public"><u>Public</u></label><br>
@@ -502,74 +529,61 @@
             <p>Everyone can see and join your event</p>
         </div>
 
-        <!-- public launch now? -->
-        @php
-            $classNamePublic = 'd-none';
-            if ($isEventNotNull && $event->sub_action_private == 'public' && $status != 'DRAFT') {
-                $classNamePublic = '';
-            }
-            $isCheckedPublicScheduled = !$isEventNotNull || ($isEventNotNull && $status != 'SCHEDULED');
-        @endphp
-        <div class="{{ 'radio-indent-hidden public ' . $classNamePublic }}">
-            <input onchange="updateLaunchButtonText('launch');" @checked($isCheckedPublicScheduled) type="radio"
-                class="launch_schedule_default_1" name="launch_schedule" value="now">
+        <div class="radio-indent-hidden public d-none">
+            <input onchange="updateLaunchButtonText('launch');" type="radio" class="launch_schedule_default_1"
+                name="launch_schedule" value="now">
             <!-- public launch schedule?? -->
             <label for="sub_action_public"><u>Launch now</u></label><br>
-            <input @checked(!$isCheckedPublicScheduled) onchange="updateLaunchButtonText('schedule');" type="radio"
-                id="launch_schedule" name="launch_schedule" value="schedule">
+            <input onchange="updateLaunchButtonText('schedule');" type="radio" id="launch_schedule"
+                name="launch_schedule" value="schedule">
             <label for="sub_action_public"><u>Schedule launch</u></label><br>
             <!-- public launch schedule time?? -->
             <div class="container">
                 <div class="box">
                     <input onchange="updateLaunchButtonText('schedule');" type="date" id="sub_action_public_date"
-                        name="launch_date" value="{{ $isEventNotNull ? $event->sub_action_public_date : '' }}">
+                        name="launch_date_public"
+                        value="{{ $isEventNotNull ? $event->sub_action_public_date : '' }}">
                 </div>
                 <div class="box">
                     <input onchange="updateLaunchButtonText('schedule');" type="time" id="sub_action_public_time"
-                        name="launch_time" value="{{ $isEventNotNull ? $event->sub_action_public_time : '' }}">
+                        name="launch_time_public"
+                        value="{{ $isEventNotNull ? $event->sub_action_public_time : '' }}">
                 </div>
             </div>
         </div>
 
         <!-- private part -->
-
-
-        <input @checked($isEventNotNull && $event->sub_action_private == 'private' && $status != 'DRAFT')
+        <input
             onchange="toggleRadio(this, 'private'); updateLaunchButtonText('launch'); launchScheduleDefaultSelected('launch_schedule_default_2');"
             required type="radio" id="private" name="launch_visible" value="private">
         <label for="private"><u>Private</u></label><br>
         <div class="radio-indent private">
             <p>Only players you invite can see and join your event</p>
         </div>
-        @php
-            $classNamePrivate = 'd-none';
-            if ($isEventNotNull && $event->sub_action_private == 'private' && $status != 'DRAFT') {
-                $classNamePrivate = '';
-            }
-            $isCheckedPrivateScheduled = !$isEventNotNull || ($isEventNotNull && $status != 'SCHEDULED');
-        @endphp
-        <div class="{{ 'radio-indent-hidden private ' . $classNamePrivate }}">
+
+        <div class="radio-indent-hidden private d-none">
             <!-- private launch now? -->
-            <input onchange="updateLaunchButtonText('launch');" @checked($isCheckedPrivateScheduled) type="radio"
-                class="launch_schedule_default_2" name="launch_schedule" value="now">
+            <input onchange="updateLaunchButtonText('launch');" type="radio" class="launch_schedule_default_2"
+                name="launch_schedule" value="now">
             <label for="sub_action_public"><u>Launch now</u></label><br>
 
             <!-- private launch schedule? -->
-            <input onclick="updateLaunchButtonText('schedule');" @checked(!$isCheckedPrivateScheduled) type="radio"
-                id="launch_schedule" name="launch_schedule" value="schedule">
+            <input onclick="updateLaunchButtonText('schedule');" type="radio" id="launch_schedule"
+                name="launch_schedule" value="schedule">
             <label for="sub_action_public"><u>Schedule launch</u></label><br>
             <!-- private launch date? -->
             <div class="container">
                 <div class="box">
                     <input onclick="updateLaunchButtonText('schedule');" type="date" id="sub_action_public_date"
-                        name="launch_date" value="{{ $isEventNotNull ? $event->sub_action_public_date : '' }}">
+                        name="launch_date_private"
+                        value="{{ $isEventNotNull ? $event->sub_action_public_date : '' }}">
                 </div>
                 <div class="box">
                     <input onclick="updateLaunchButtonText('schedule');" type="time" id="sub_action_public_time"
-                        name="launch_time" value="{{ $isEventNotNull ? $event->sub_action_public_time : '' }}">
+                        name="launch_time_private"
+                        value="{{ $isEventNotNull ? $event->sub_action_public_time : '' }}">
                 </div>
             </div>
-
         </div>
 
 
@@ -588,7 +602,7 @@
         </button>
     </div>
     <br>
-    <div class="flexbox box-width">
+    <div class="flexbox box-width back-next">
         <button onclick="goToNextScreen('step-10', 'timeline-3')" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="saveEvent(true)" type="button" type="button" id="launch-button"
@@ -613,7 +627,7 @@
             as it is.</p>
         <p>Are your sure you want to launch your event now?</p>
         <br>
-        <div class="flexbox box-width">
+        <div class="flexbox box-width back-next">
             <button onclick="goToNextScreen('step-11', 'timeline-4')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button"> Cancel </button>
             <button onclick="saveEvent(false)" type="button" class="oceans-gaming-default-button"> Yes, I'm sure

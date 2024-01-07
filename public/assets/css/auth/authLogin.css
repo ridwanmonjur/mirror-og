@@ -324,6 +324,16 @@ input:not(:focus):valid+span.placeholder-moves-up {
     transform: translateY(-20px);
 }
 
+.field input:focus+label span.placeholder-moves-up,
+.field input:not(:focus):valid+label span.placeholder-moves-up,
+.field input:placeholder-shown+label span.placeholder-moves-up {
+    opacity: 1;
+    transform: translateY(-20px);
+    z-index: 99 !important;
+    background-color: white;
+    color: #43A4D7;
+}
+
 label.placeholder-moves-up-container {
     margin: 0;
     position: relative;
@@ -385,4 +395,37 @@ input:not(:focus):valid+label span.placeholder-moves-up {
         text-align: center;
         box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     }
+}
+
+.field input:not(:placeholder-shown)+label span.placeholder-moves-up {
+    opacity: 1;
+    transform: translateY(-20px);
+}
+
+label.placeholder-moves-up-container {
+    margin: 0;
+    position: relative;
+    width: 100%;
+    display: inline-block;
+}
+
+span.placeholder-moves-up {
+    padding: 8px;
+    pointer-events: none;
+    position: absolute;
+    left: 15px;
+    top: 0;
+    transition: 0.2s;
+    transition-timing-function: ease;
+    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+    opacity: 0.5;
+    transform: translateY(0);
+}
+
+.field input:focus,
+.field input:not(:focus):valid {
+    border: none !important;
+    outline: none !important;
+    box-shadow: 0 0 0 1px #43A4D7;
+    /* Full freedom. (works also with border-radius) */
 }

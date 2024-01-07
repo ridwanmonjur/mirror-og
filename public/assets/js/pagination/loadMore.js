@@ -1,17 +1,25 @@
-function throttle(func, wait) {
-    let waiting = false;
-    return function () {
-        if (waiting) {
-            return;
-        }
+let throttle = (func, wait) => {
+    let lastTime = 0;
 
-        waiting = true;
-        setTimeout(() => {
-            func.apply(this, arguments);
-            waiting = false;
-        }, wait);
+    return (...args) => {
+      const now = Date.now();
+
+      if (now - lastTime >= wait) {
+        func(...args);
+
+        lastTime = now;
+      }
     };
-}
+  };
+let debounce = (func, wait) => {
+    let timeout;
+
+    return (...args) => {
+      if (timeout) clearTimeout(timeout);
+
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  };
 /*------------------------------------------
        --------------------------------------------
        call infinteLoadMore()
@@ -19,24 +27,22 @@ function throttle(func, wait) {
        --------------------------------------------*/
 function infinteLoadMore(page, ENDPOINT) {
     if ($('.no-more-data').hasClass('d-none')) {
-        let endpointFinal = page==null? ENDPOINT: ENDPOINT + "?page=" + page
-        // window.history.replaceState({}, document.title, endpointFinal);
-
+        let endpointFinal = page == null ? ENDPOINT : ENDPOINT + "?page=" + page
         $.ajax({
             url: endpointFinal,
             datatype: "html",
             type: "get",
             beforeSend: function () {
-        }
+            }
         })
             .done(function (response) {
                 if (response.html == '') {
-                        var noMoreDataElement = document.querySelector('.no-more-data');
-                        noMoreDataElement.classList.remove('d-none');
-                        noMoreDataElement.style.display = 'flex';
-                        noMoreDataElement.style.justifyContent = 'center';
-                        noMoreDataElement.textContent = "We don't have more data to display";
-                    }
+                    var noMoreDataElement = document.querySelector('.no-more-data');
+                    noMoreDataElement.classList.remove('d-none');
+                    noMoreDataElement.style.display = 'flex';
+                    noMoreDataElement.style.justifyContent = 'center';
+                    noMoreDataElement.textContent = "We don't have more data to display";
+                }
 
                 // <!-- $('.auto-load').hide(); -->
                 $(".scrolling-pagination").append(response.html);
@@ -50,29 +56,36 @@ function infinteLoadMore(page, ENDPOINT) {
 }
 
 
-function infinteLoadMoreByPost(page, ENDPOINT) {
+function infinteLoadMoreByPost(ENDPOINT, body) {
     let noMoreDataElement = document.querySelector('.no-more-data');
     let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
     let hasClass = noMoreDataElement.classList.contains('d-none');
     if (hasClass) {
-        let endpointFinal = page == null ? ENDPOINT : ENDPOINT + "?page=" + page
         // window.history.replaceState({}, document.title, endpointFinal);
-        fetch(endpointFinal, {
-            method: 'GET',
+        fetch(ENDPOINT, {
+            method: 'post',
             headers: {
                 'Accept': 'text/html',
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify(body)
         })
+            .then((response) => response.json())
             .then((response) => {
+                console.log({ response });
+                console.log({ response });
+                console.log({ response });
+                console.log({ response });
+
+                console.log({ response });
                 if (response.html == '') {
                     noMoreDataElement.classList.remove('d-none');
                     noMoreDataElement.style.display = 'flex';
                     noMoreDataElement.style.justifyContent = 'center';
                     noMoreDataElement.textContent = "We don't have more data to display";
+                } else {
+                    scrollingPaginationElement.innerHTML += response.html;
                 }
-                // <!-- $('.auto-load').hide(); -->
-                scrollingPaginationElement.innerHTML += response.html;
             })
             .catch(function (error) {
                 console.log('Server error occured');
@@ -80,4 +93,49 @@ function infinteLoadMoreByPost(page, ENDPOINT) {
     } else {
         return;
     }
+}
+
+
+function loadByPost(ENDPOINT, body) {
+    let noMoreDataElement = document.querySelector('.no-more-data');
+    let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
+    let hasClass = noMoreDataElement.classList.contains('d-none');
+    if (hasClass) {
+    }
+    // window.history.replaceState({}, document.title, endpointFinal);
+    fetch(ENDPOINT, {
+        method: 'post',
+        headers: {
+            'Accept': 'text/html',
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body)
+    })
+        .then((response) => response.json())
+        .then((response) => {
+            console.log({ response, hi: true });
+            console.log({ response, hi: true });
+            console.log({ response, hi: true });
+            console.log({ response, hi: true });
+
+            console.log({ response });
+            if (response.html == '') {
+                scrollingPaginationElement.innerHTML = "";
+                noMoreDataElement.classList.remove('d-none');
+                noMoreDataElement.style.display = 'flex';
+                noMoreDataElement.style.justifyContent = 'center';
+                noMoreDataElement.textContent = "Data not found by your query...";
+            } else {
+                console.log({ response, entered: true });
+                console.log({ response, entered: true });
+                console.log({ response, entered: true });
+                console.log({ response, entered: true });
+                console.log({ response, entered: true });
+                scrollingPaginationElement.innerHTML = "";
+                scrollingPaginationElement.innerHTML = response.html;
+            }
+        })
+        .catch(function (error) {
+            console.log('Server error occured');
+        });
 }

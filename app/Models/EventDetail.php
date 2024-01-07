@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class EventDetail extends Model
 {
     use HasFactory;
+    protected $table = 'event_details';
 
     protected $guarded = [];
 
@@ -19,8 +20,9 @@ class EventDetail extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id','id');
     }
+  
    
     public function invitationList()
     {
@@ -52,27 +54,31 @@ class EventDetail extends Model
         return $this->hasMany(JoinEvent::class);
     }
 
+    public function joinEvents()
+    {
+        return $this->hasMany(JoinEvent::class, 'event_details_id', 'id');
+    }
+
     public function statusResolved()
     {
-        if ($this->status == "DRAFT" || $this->status == "PREVIEW") {
-            return "DRAFT";
-        }
         $carbonPublishedDateTime = $this->createCarbonDateTimeFromDB($this->sub_action_public_date, $this->sub_action_public_time);
         $carbonEndDateTime = $this->createCarbonDateTimeFromDB($this->endDate, $this->endTime);
         $carbonStartDateTime = $this->createCarbonDateTimeFromDB($this->startDate, $this->startTime);
-        if (!$carbonEndDateTime || !$carbonStartDateTime) {
+        $carbonNow = Carbon::now()->utc();
+        // dd($carbonPublishedDateTime, $carbonEndDateTime, $carbonStartDateTime, $carbonNow);
+        if ($this->status == "DRAFT" || $this->status == "PREVIEW") {
+            return "DRAFT";
+        } elseif (!$carbonEndDateTime || !$carbonStartDateTime) {
             Log::error("EventDetail.php: statusResolved: EventDetail with id= " . $this->id
                 . " and name= " . $this->eventName . " has null end or start date time");
             return "ERROR";
-        }
-        $carbonNow = Carbon::now()->utc();
-        if ($carbonEndDateTime < $carbonNow) {
+        } elseif ($carbonEndDateTime < $carbonNow) {
             return "ENDED";
         } else {
-            if ($carbonPublishedDateTime && $carbonPublishedDateTime < $carbonNow) {
-                return "SCHEDULED";
-            } elseif ($carbonStartDateTime  < $carbonNow) {
+            if ($carbonStartDateTime < $carbonNow) {
                 return "ONGOING";
+            } elseif ($carbonPublishedDateTime && $carbonPublishedDateTime > $carbonNow) {
+                return "SCHEDULED";
             } else return "UPCOMING";
         }
     }

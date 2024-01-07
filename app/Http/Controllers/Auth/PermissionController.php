@@ -22,4 +22,5 @@ class PermissionController extends Controller
     {
         return view('DemoAuth.Participant');
     }
+    
 }

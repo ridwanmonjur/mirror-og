@@ -34,7 +34,7 @@ return [
     'google' => [
         'client_id' => '646564419111-qrjhqfommnl1oakv14kigb5eqcjmeh4o.apps.googleusercontent.com',
         'client_secret' => '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',
-        'redirect' => env('MAIL_REDIRECT_URL'),
+        'redirect' => env('GOOGLE_REDIRECT_URL'),
         'allowed_hosts' => [
             'driftwood.gg',
           ]
@@ -43,8 +43,8 @@ return [
 
     'steam' => [
         'client_id' => null,
-        'client_secret' => env('8AE02B51B52FA9BD6BB683EB4585A651'),
-        'redirect' => env('http://localhost:8000/laravel-socialite/public/login/steam/callback'),
+        'client_secret' => '8AE02B51B52FA9BD6BB683EB4585A651',
+        'redirect' => env('STEAM_REDIRECT_URL'),
         'allowed_hosts' => [
           'driftwood.gg',
         ]

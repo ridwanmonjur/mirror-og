@@ -14,6 +14,7 @@ use App\Models\PaymentTransaction;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Exceptions\TimeGreaterException;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\UnauthorizedException;
@@ -41,87 +42,170 @@ class EventController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $eventListQuery =  EventDetail::query();
+        $eventListQuery = EventDetail::query();
         $organizer = Organizer::where('user_id', $user->id)->first();
         $eventListQuery->when($request->has('status'), function ($query) use ($request) {
             $status = $request->input('status');
+            if (!$status) return $query;
             $currentDateTime = Carbon::now()->utc();
             if ($status == 'ALL') {
                 return $query;
-            } elseif ($status == 'ENDED') {
-                return $query->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime]);
             } elseif ($status == 'DRAFT') {
                 return $query->where('status', 'DRAFT');
+            } 
+            elseif ($status == 'ENDED') {
+                return $query
+                    ->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime])
+                    ->where('status', '<>', 'PREVIEW')
+                    ->where('status', '<>', 'DRAFT');
             } elseif ($status == 'LIVE') {
                 return $query
                     ->where(function ($query) use ($currentDateTime) {
                         return $query
                             ->whereNull('sub_action_public_date')
                             ->orWhereNull('sub_action_public_time')
-                            ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime]);
+                            ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime]);
                     })
                     ->where('status', '<>', 'DRAFT')
                     ->where('status', '<>', 'PREVIEW')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
             } elseif ($status == 'SCHEDULED') {
-                return $query
-                    ->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime])
+                $query
+                    ->whereNotNull('sub_action_public_date')
+                    ->whereNotNull('sub_action_public_time')
+                    ->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime])
                     ->where('status', '<>', 'DRAFT')
                     ->where('status', '<>', 'PREVIEW')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
+                // dd($query);
+                return $query;
             }
-            return $query;
+            else return $query;
         });
         $eventListQuery->when($request->has('search'), function ($query) use ($request) {
             $search = trim($request->input('search'));
             if (empty($search)) {
                 return $query;
             }
-            return $query->where('gameTitle', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
-                ->orWhere('eventDescription', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci")
-                ->orWhere('eventDefinitions', 'LIKE', "%{$search}% COLLATE utf8mb4_general_ci");
+            return $query->where(function($q) use ($search) {
+                return $q
+                ->where('gameTitle', 'LIKE', "%{$search}%")
+                ->orWhere('eventDescription', 'LIKE', "%{$search}%")
+                ->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
+            });
         });
+        $count = 8;
+        $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+        $mappingEventState = EventDetail::mappingEventStateResolve();
 
-        $eventListQuery->when($request->has("sort"), function ($query) use ($request) {
-            $sortTypeJSONString = $request->input("sortType");
-            $sortKeys = json_decode($sortTypeJSONString, true);
-            foreach ($sortKeys as $key => $value) {
+        // Code For Getting Price from Event_Tier Table
+        $eventListQuery->with('tier'); // Eager load the eventTier relationship
+        $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+        // Access tierEntryFee data from eventTier relationship in EventDetail
+        foreach ($eventList as $event) {
+            $tierEntryFee = $event->eventTier->tierEntryFee ?? null;
+        }
+        
+        $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+
+        // Get the count of associated join events for each EventDetail
+        foreach ($eventList as $eventDetail) {
+        $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
+        }
+
+        $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
+        if ($request->ajax()) {
+            $view = view('Organizer.ManageEventScroll', $outputArray)->render();
+
+            return response()->json(['html' => $view]);
+        }
+        return view('Organizer.ManageEvent', $outputArray);
+    }
+
+    public function search(Request $request)
+    {
+        $userId = $request->userId;
+        $user = User::find($userId);
+        $organizer = Organizer::where('user_id', $user->id)->first();
+        $eventListQuery = EventDetail::query();
+        $eventListQuery->when($request->has('status'), function ($query) use ($request) {
+            $status = $request->input('status');
+            if (!$status) return $query;
+            $status = $status[0];
+            $currentDateTime = Carbon::now()->utc();
+            if ($status == 'ALL') {
+                return $query;
+            } elseif ($status == 'DRAFT') {
+                return $query->where('status', 'DRAFT');
+            } 
+            elseif ($status == 'ENDED') {
+                return $query
+                    ->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime])
+                    ->where('status', '<>', 'PREVIEW')
+                    ->where('status', '<>', 'DRAFT');
+            } elseif ($status == 'LIVE') {
+                return $query
+                    ->where(function ($query) use ($currentDateTime) {
+                        return $query
+                            ->whereNull('sub_action_public_date')
+                            ->orWhereNull('sub_action_public_time')
+                            ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime]);
+                    })
+                    ->where('status', '<>', 'DRAFT')
+                    ->where('status', '<>', 'PREVIEW')
+                    ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
+            } elseif ($status == 'SCHEDULED') {
+                return $query
+                    ->whereNotNull('sub_action_public_date')
+                    ->whereNotNull('sub_action_public_time')
+                    ->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime])
+                    ->where('status', '<>', 'DRAFT')
+                    ->where('status', '<>', 'PREVIEW')
+                    ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
+            }
+            else return $query;
+        });
+        $eventListQuery->when($request->has('search'), function ($query) use ($request) {
+            $search = trim($request->input('search'));
+            if (empty($search)) {
+                return $query;
+            }
+            return $query->where(function($q) use ($search) {
+                return $q
+                ->where('eventDescription', 'LIKE', "%{$search}%")
+                ->orWhere('eventName', 'LIKE', "%{$search}%");
+            });
+        });
+        $eventListQuery->when($request->has('sort'), function ($query) use ($request) {
+            $sort = $request->input('sort');
+            if (!$sort) return $query;
+            foreach ($sort as $key => $value) {
                 $query->orderBy($key, $value);
             }
             return $query;
         });
-
-        $eventListQuery->when($request->has("eventTier"), function ($query) use ($request) {
-            $eventTier = trim($request->input("eventTier"));
-            return $query->where('eventTier', $eventTier);
+        $eventListQuery->when($request->has('filter'), function ($query) use ($request) {
+            $filter = $request->input('filter');
+            if (!$filter) return $query;
+            if (array_key_exists('eventTier', $filter)) {
+                $query->where('eventTier', $filter['eventTier']);
+            } 
+            if (array_key_exists('eventType', $filter)) {
+                $query->where('eventType', $filter['eventType']);
+            }
+            if (array_key_exists('gameTitle', $filter)) {
+                $query->where('gameTitle', $filter['gameTitle']);
+            }
+            return $query;
         });
-        $eventListQuery->when($request->has("eventType"), function ($query) use ($request) {
-            $eventType = trim($request->input("eventType"));
-            return $query->where('eventType', $eventType);
-        });
-        $eventListQuery->when($request->has("gameTitle"), function ($query) use ($request) {
-            $gameTitle = $request->input("gameTitle");
-            return $query->where('gameTitle', $gameTitle);
-        });
-        $count = 4;
-        $eventList = $eventListQuery->where('user_id', $user->id)
-            ->paginate($count);
+        $count = 8;
+        $eventList = $eventListQuery->where('user_id', $userId)->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
 
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
-        if ($request->ajax()) {
-        dd($request->all());
-            $view = view(
-                'Organizer.ManageEventScroll',
-                $outputArray
-            )->render();
-
-            return response()->json(['html' => $view]);
-        }
-        return view(
-            'Organizer.ManageEvent',
-            $outputArray
-        );
+        $view = view('Organizer.ManageEventScroll', $outputArray)->render();
+        // dd($eventListQuery);
+        return response()->json(['html' => $view]);
     }
 
     public function create(): View
@@ -135,17 +219,15 @@ class EventController extends Controller
             'event' => null,
             'editMode' => 0,
             'eventTierList' => $eventTierList,
-            'eventTypeList' => $eventTypeList
+            'eventTypeList' => $eventTypeList,
         ]);
     }
-
-
 
     public function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
     {
         $isEditMode = $eventDetail->id != null;
         // disable preview mode checjs if edit mode
-        $isPreviewMode = $isEditMode ? false : $request->livePreview == "true";
+        $isPreviewMode = $isEditMode ? false : $request->livePreview == 'true';
         $carbonStartDateTime = null;
         $carbonEndDateTime = null;
         $carbonPublishedDateTime = null;
@@ -163,65 +245,77 @@ class EventController extends Controller
         $endDate = $request->endDate;
         $endTime = $eventDetail->fixTimeToRemoveSeconds($request->endTime);
         if ($startDate && $startTime) {
-            $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $startTime)
-                ->utc();
+            $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $startTime)->utc();
             $eventDetail->startDate = $carbonStartDateTime->format('Y-m-d');
-            $eventDetail->startTime =  $carbonStartDateTime->format('H:i');
-        } else {
+            $eventDetail->startTime = $carbonStartDateTime->format('H:i');
+        } elseif ($isPreviewMode && !$isEditMode) {
             $eventDetail->startDate = null;
             $eventDetail->startTime = null;
+        } else {
+            throw new TimeGreaterException('Start date and time must be greater than current date and time.');
         }
         if ($endDate && $endTime) {
-            $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $endTime)
-                ->utc();
+            $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $endTime)->utc();
             if ($startDate && $startTime && $carbonEndDateTime > $carbonStartDateTime) {
                 $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
-                $eventDetail->endTime  = $carbonEndDateTime->format('H:i');
+                $eventDetail->endTime = $carbonEndDateTime->format('H:i');
+            } elseif ($isPreviewMode && !$isEditMode) {
+                $eventDetail->endDate = null;
+                $eventDetail->endTime = null;
             } else {
-                throw new TimeGreaterException("End date and time must be greater than start date and time.");
+                throw new TimeGreaterException('End date and time must be greater than start date and time.');
             }
         }
-        $eventDetail->eventName  = $request->eventName;
-        $eventDetail->eventDescription  = $request->eventDescription;
-        $eventDetail->eventTags  = $request->eventTags;
+        $eventDetail->eventName = $request->eventName;
+        $eventDetail->eventDescription = $request->eventDescription;
+        $eventDetail->eventTags = $request->eventTags;
         // payment
         $transaction = $eventDetail->payment_transaction;
-        if ($transaction && $transaction->payment_id && $transaction->status == "SUCCESS") {
-        } elseif ($request->isPaymentDone == "true" && $request->paymentMethod) {
+        if ($transaction && $transaction->payment_id && $transaction->status == 'SUCCESS') {
+        } elseif ($request->isPaymentDone == 'true' && $request->paymentMethod) {
             $transaction = new PaymentTransaction();
             $transaction->payment_id = $request->paymentMethod;
-            $transaction->payment_status = "SUCCESS";
+            $transaction->payment_status = 'SUCCESS';
             $transaction->save();
             $eventDetail->payment_transaction_id = $transaction->id;
-        } else if ($isPreviewMode && !$isEditMode) {
-            throw new TimeGreaterException("Payment is not done.");
+        } elseif ($isPreviewMode && !$isEditMode) {
+            throw new TimeGreaterException('Payment is not done.');
         }
-        if ($request->livePreview == "true" && !$isEditMode) {
-            $eventDetail->status = "DRAFT";
-            $eventDetail->sub_action_public_date  = $request->launch_date;
-            $eventDetail->sub_action_public_time  = $request->launch_time;
-        } else if ($request->launch_visible == "DRAFT") {
-            $eventDetail->status = "DRAFT";
-            $eventDetail->sub_action_public_date  = null;
-            $eventDetail->sub_action_public_time  = null;
+        if ($request->launch_visible == 'DRAFT' || $isPreviewMode) {
+            $eventDetail->status = 'DRAFT';
+            $eventDetail->sub_action_public_date = null;
+            $eventDetail->sub_action_public_time = null;
         } else {
-            $launch_date = $request->launch_date;
-            $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time);
-            if ($request->launch_schedule == "schedule" && $launch_date && $launch_time) {
-                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date . ' ' . $launch_time)
-                    ->utc();
-                $eventDetail->status = "SCHEDULED";
-                $eventDetail->sub_action_public_date  = $carbonPublishedDateTime->format('Y-m-d');
-                $eventDetail->sub_action_public_time  = $carbonPublishedDateTime->format('H:i');
+            if ($request->launch_visible == 'public') {
+                $launch_date = $request->launch_date_public;
+                $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_public);
+            } elseif ($request->launch_visible == 'private') {
+                $launch_date = $request->launch_date_private;
+                $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_private);
+            }
+
+            //  dd($request->all(), "hi", $isPreviewMode, $eventDetail->attributesToArray());
+
+            if ($request->launch_schedule == 'schedule' && $launch_date && $launch_time) {
+                // dd($request->all(), "hi", $isPreviewMode, $eventDetail->attributesToArray());
+
+                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date . ' ' . $launch_time)->utc();
+                if ($launch_date && $launch_time && $carbonPublishedDateTime > $carbonStartDateTime && $carbonPublishedDateTime < $carbonEndDateTime) {
+                    $eventDetail->status = 'SCHEDULED';
+                    $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
+                    $eventDetail->sub_action_public_time = $carbonPublishedDateTime->format('H:i');
+                } else {
+                    throw new TimeGreaterException('Published time must be greater than start time and lesser than end time.');
+                }
             } else {
                 $carbonPublishedDateTime = Carbon::now()->utc();
-                $eventDetail->status = "UPCOMING";
+                $eventDetail->status = 'UPCOMING';
                 $eventDetail->sub_action_public_date = null;
                 $eventDetail->sub_action_public_time = null;
             }
         }
-        $eventDetail->sub_action_private  = $request->launch_visible == "private" ? "private" : "public";
-        $eventDetail->action  = $request->launch_visible;
+        $eventDetail->sub_action_private = $request->launch_visible == 'private' ? 'private' : 'public';
+        $eventDetail->action = $request->launch_visible;
         return $eventDetail;
     }
 
@@ -235,7 +329,7 @@ class EventController extends Controller
 
     public function destroyEventBanner($file)
     {
-        $fileNameInitial = str_replace("images/events/", "", $file);
+        $fileNameInitial = str_replace('images/events/', '', $file);
         $fileNameFinal = "images/events/$fileNameInitial";
         if (file_exists($fileNameFinal)) {
             unlink($fileNameFinal);
@@ -249,27 +343,25 @@ class EventController extends Controller
         if ($request->hasFile('eventBanner')) {
             $fileNameFinal = $this->storeEventBanner($request->file('eventBanner'));
         }
-        $eventDetail = new EventDetail;
+        $eventDetail = new EventDetail();
         try {
             $eventDetail = $this->storeLogic($eventDetail, $request);
         } catch (TimeGreaterException $e) {
             return back()->with('error', $e->getMessage());
         }
-        $eventDetail->user_id  = auth()->user()->id;
-        $eventDetail->eventBanner  = $fileNameFinal;
+        $eventDetail->user_id = auth()->user()->id;
+        $eventDetail->eventBanner = $fileNameFinal;
         $eventDetail->save();
-        if ($request->livePreview == "true") {
-            return redirect('organizer/live/' . $eventDetail->id);
+        if ($request->livePreview == 'true') {
+            return redirect('organizer/event/' . $eventDetail->id . '/live');
         }
-        return redirect('organizer/success/' . $eventDetail->id);
+        return redirect('organizer/event/' . $eventDetail->id . '/success');
     }
-
 
     private function getEventAndUser($id)
     {
         $authUser = Auth::user();
-        $event = EventDetail
-            ::with('type', 'tier', 'game')
+        $event = EventDetail::with('type', 'tier', 'game')
             ->where('user_id', $authUser->id)
             ->find($id);
         $isUserSameAsAuth = true;
@@ -284,28 +376,36 @@ class EventController extends Controller
 
     public function show404($error): View
     {
-        return view(
-            'Organizer.EventNotFound',
-            compact('error')
-        );
+        return view('Organizer.EventNotFound', compact('error'));
     }
 
     public function showLive($id): View
     {
         try {
-            [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+            [$event, $isUserSameAsAuth, $user] = $this->getEventAndUser($id);
+    
+            $count = 8;
+            $eventListQuery = EventDetail::query();
+            $eventListQuery->with('tier'); 
+            $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+    
+            $mappingEventState = EventDetail::mappingEventStateResolve();
+    
+            // Access tierEntryFee data from eventTier relationship in EventDetail
+            foreach ($eventList as $eventItem) {
+                $tierEntryFee = $eventItem->tier->tierEntryFee ?? null;
+            }
+    
+            // Get the count of associated join events for each EventDetail
+            foreach ($eventList as $eventDetail) {
+                $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
+            }
+    
+            $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
+            return view('Organizer.ViewEvent', $outputArray);
         } catch (Exception $e) {
             return $this->show404("Model not found for id: $id");
         }
-        return view(
-            'Organizer.ViewEvent',
-            [
-                'event' => $event,
-                'mappingEventState' => EventDetail::mappingEventStateResolve(),
-                'isUser' => $isUserSameAsAuth,
-                'livePreview' => 1
-            ]
-        );
     }
 
     public function showSuccess($id): View
@@ -315,33 +415,46 @@ class EventController extends Controller
         } catch (Exception $e) {
             return $this->show404("Model not found for id: $id");
         }
-        return view(
-            'Organizer.CreateEventSuccess',
-            [
-                'event' => $event,
-                'mappingEventState' => EventDetail::mappingEventStateResolve(),
-                'isUser' => $isUserSameAsAuth,
-                'livePreview' => 1
-            ]
-        );
+        return view('Organizer.CreateEventSuccess', [
+            'event' => $event,
+            'mappingEventState' => EventDetail::mappingEventStateResolve(),
+            'isUser' => $isUserSameAsAuth,
+            'livePreview' => 1,
+        ]);
     }
 
     public function show($id): View
     {
         try {
-            [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+            [$event, $isUserSameAsAuth, $user] = $this->getEventAndUser($id);
+            
+            // Your code to fetch $eventList (similar to what you've shown previously)
+            $count = 8;
+            $eventListQuery = EventDetail::query();
+            $eventListQuery->with('tier');
+            $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+
+            // Access tierEntryFee data from eventTier relationship in EventDetail
+            foreach ($eventList as $eventItem) {
+                $tierEntryFee = $eventItem->tier->tierEntryFee ?? null;
+            }
+    
+            // Get the count of associated join events for each EventDetail
+            foreach ($eventList as $eventDetail) {
+                $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
+            }
+            
         } catch (Exception $e) {
             return $this->show404("Model not found for id: $id");
         }
-        return view(
-            'Organizer.ViewEvent',
-            [
-                'event' => $event,
-                'mappingEventState' => EventDetail::mappingEventStateResolve(),
-                'isUser' => $isUserSameAsAuth,
-                'livePreview' => 0
-            ]
-        );
+        
+        return view('Organizer.ViewEvent', [
+            'event' => $event,
+            'mappingEventState' => EventDetail::mappingEventStateResolve(),
+            'isUser' => $isUserSameAsAuth,
+            'livePreview' => 0,
+            'eventList' => $eventList, // Add the eventList variable to the view data
+        ]);
     }
 
     public function edit($id)
@@ -352,7 +465,7 @@ class EventController extends Controller
             return $this->show404("Event not found for id: $id");
         }
         $status = $event->statusResolved();
-        if ($status != 'UPCOMING' && $status != "DRAFT") {
+        if ($status != 'UPCOMING' && $status != 'DRAFT') {
             return $this->show404("Event has already gone live for id: $id");
         }
         $eventCategory = EventCategory::all();
@@ -363,7 +476,7 @@ class EventController extends Controller
             'event' => $event,
             'eventTierList' => $eventTierList,
             'eventTypeList' => $eventTypeList,
-            'editMode' => 1
+            'editMode' => 1,
         ]);
     }
 
@@ -389,20 +502,20 @@ class EventController extends Controller
                     return back()->with('error', $e->getMessage());
                 }
                 $status = $eventDetail->statusResolved();
-                if ($status != 'UPCOMING' || $status != "DRAFT") {
+                if ($status != 'UPCOMING' && $status != 'DRAFT') {
                     return $this->show404("Event has already gone live for id: $id");
                 }
-                $eventDetail->user_id  = auth()->user()->id;
-                $eventDetail->eventBanner  = $fileNameFinal;
+                $eventDetail->user_id = auth()->user()->id;
+                $eventDetail->eventBanner = $fileNameFinal;
                 $eventDetail->save();
-                if ($request->livePreview == "true") {
-                    return redirect('organizer/live/' . $eventDetail->id);
+                if ($request->livePreview == 'true') {
+                    return redirect('organizer/event/' . $eventDetail->id . '/live');
                 }
-                return redirect('organizer/success/' . $eventDetail->id);
+                return redirect('organizer/event/' . $eventDetail->id . '/success');
             } else {
                 return back()->with('error', 'Event id missing!');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return back()->with('error', 'Something went wrong with saving data!');
         }
     }

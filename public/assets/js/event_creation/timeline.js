@@ -223,16 +223,27 @@ function saveForLivePreview() {
     createEventForm.submit();
 }
 
-function saveEvent(isCheckForNow = true) {
+function saveEvent(willGoToNextPage = true) {
     let launch_schedule = null;
-    let launch_schedule_form = getFormValues(['launch_schedule'])
-    if ('launch_schedule' in launch_schedule_form) {
-        launch_schedule = launch_schedule_form['launch_schedule'];
+    let launch_visible = null;
+    let launch_schedule_form = getFormValues(['launch_visible'])
+    if ('launch_visible' in launch_schedule_form) {
+        launch_visible = launch_schedule_form['launch_visible'];
+    } else {
+        Toast.fire({
+            icon: 'error',
+            title: 'Form cannot be found!'
+        })
+        return;
     }
-    if (isCheckForNow && launch_schedule == 'now') {
-        console.log({ launch_schedule })
-        console.log({ launch_schedule })
-        console.log({ launch_schedule })
+    if (launch_visible=="public") {
+        launch_schedule_form = getFormValues(['launch_schedule_public'])
+        launch_schedule = launch_schedule_form['launch_schedule_public'];
+    } else if (launch_visible=="private") {
+        launch_schedule_form = getFormValues(['launch_schedule_private'])
+        launch_schedule = launch_schedule_form['launch_schedule_private'];
+    } 
+    if (launch_visible != "DRAFT" && willGoToNextPage && launch_schedule == 'now') {
         setFormValues({ 'launch_schedule': 'now' });
         goToNextScreen('step-12', 'timeline-4');
         return;
@@ -259,8 +270,7 @@ function saveEvent(isCheckForNow = true) {
     if (localStorage.getItem('eventBanner') != null || getFormValues(['eventBanner']) != null) {
         // createEventForm.elements['eventBanner'].value = localStorage.getItem('eventBanner');
         console.log({ banner: localStorage.getItem('eventBanner') })
-    }
-    else{
+    } else {
         isFormValid = false;
         invalidKey = 'eventBanner';
     }
@@ -445,3 +455,7 @@ function goToNextScreen(nextId, nextTimeline) {
         }
     })
 }
+
+
+
+

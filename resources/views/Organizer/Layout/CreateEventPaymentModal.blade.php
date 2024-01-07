@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-div" style="display: flex !important; justify-content: space-between !important;">
                 <h5 class="modal-title" id="payment-modal-label"> &nbsp; &nbsp;Payment method</h5>
-                <button type="button" class="btn-close" id="modal-close" data-bs-dismiss="modal" aria-label="Close">&nbsp;X&nbsp;</button>
+                <button type="button" class="btn-close" id="modal-close" data-dismiss="modal" aria-label="Close">&nbsp;X&nbsp;</button>
             </div>
             <div class="modal-body">
                 <div class="panel panel-default">
@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button" data-bs-dismiss="modal"> Back </button>
+                <button type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button" data-dismiss="modal"> Back </button>
             </div>
         </div>
     </div>

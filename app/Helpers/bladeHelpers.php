@@ -5,7 +5,7 @@ use Carbon\Carbon;
 function bladeEventStatusStyleMapping($status)
 {
     $mappingEventState = config('constants.mappingEventState');
-    $status = $status ?? 'NO_STATUS';
+    $status = $status ?? 'DRAFT';
     $stylesEventStatus = '';
     $stylesEventStatus .= 'background-color: ' . $mappingEventState[$status]['buttonBackgroundColor'] . ' ;';
     $stylesEventStatus .= 'color: ' . $mappingEventState[$status]['buttonTextColor'] . ' ; ';
@@ -34,7 +34,7 @@ function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants
         $ratio = (float) $registeredParticipants / $totalParticipants;
     }
     if ($ratio > 0.9) {
-        $stylesEventRatio .= "background-color: red; color: white;";
+        $stylesEventRatio .= "background-color: #EF4444; color: white;";
     } elseif ($ratio == 0) {
         $stylesEventRatio .= "background-color: #8CCD39; color: white;";
     } elseif ($ratio > 0.5) {
@@ -50,7 +50,7 @@ function bladeGenerateEventStartEndDateStr($startDate, $startTime)
     $startTime= fixTimeToRemoveSeconds($startTime);
     if ($startDate != null && $startTime != null) {
         $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $startDate . ' ' . $startTime, 'UTC') ?? null;
-        $carbonDateTimeUtc = $carbonDateTimeUtc->setTimezone('Asia/Singapore');
+        // $carbonDateTimeUtc = $carbonDateTimeUtc->setTimezone('Asia/Singapore');
         $datePart = $carbonDateTimeUtc->format('Y-m-d');
         $timePart = $carbonDateTimeUtc->isoFormat('h:mm a');
         $dayStr = $carbonDateTimeUtc->englishDayOfWeek;

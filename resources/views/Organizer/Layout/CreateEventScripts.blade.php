@@ -1,7 +1,5 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
-<script src="https://js.stripe.com/v3/"></script>
+<script src="https://js.stripe.com/v3/" ></script>
 <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
 <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
 <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
@@ -136,7 +134,7 @@
     })
     const cardForm = document.getElementById('card-form')
     const cardName = document.getElementById('card-name')
-    if (document.getElementById('card')) cardElement.mount('#card')
+    cardElement.mount('#card')
     cardForm.addEventListener('submit', async (e) => {
         e.preventDefault()
         const {
@@ -160,10 +158,7 @@
             // payment method created
 
             let paymentDiv = document.querySelector('.choose-payment-method');
-            paymentDiv.style.backgroundColor = 'green';
-            paymentDiv.textContent = 'Payment successful';
-            paymentDiv.removeAttribute('data-bs-toggle');
-            paymentDiv.removeAttribute('data-bs-target');
+          
             // goToNextScreen('step-11', 'timeline-4');
             document.getElementById('modal-close').click();
             const form = new FormData(cardForm);
@@ -181,6 +176,10 @@
                 })
                 .then(response => response.json())
                 .then(responseData => {
+                    paymentDiv.style.backgroundColor = '#8CCD39';
+                    paymentDiv.textContent = 'Payment successful';
+                    paymentDiv.removeAttribute('data-toggle');
+                    paymentDiv.removeAttribute('data-target');
                     setFormValues({
                         'isPaymentDone': true,
                         paymentMethod: paymentMethod.id
@@ -201,12 +200,8 @@
     })
 
     function clearLocalStorage() {
-        ['eventTypeTitle', 'gameTitleImg', 'eventTierPrize', 'eventTierPerson',
-            'eventTierTitle', 'eventTierEntry', 'eventTypeDefinition', 'eventTierImg',
-            'eventBanner'
-        ].forEach((key) => {
-            localStorage.removeItem(key);
-        });
+       localStorage.clear();
+
     }
 
     window.onload = function() {

@@ -1,7 +1,33 @@
+<style>
+    .team-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .team-dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+
+    .team-dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .team-dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+  </style>
 <div class="navbar-placeholder"> </div>
 <nav class="navbar">
     <div class="logo">
-    <a href="{{ route('organizer.home.view') }}">
+    <a href="{{ route('participant.home.view') }}">
     <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="Description">
     </a>
     </div>
@@ -12,14 +38,10 @@
         <line x1="3" y1="6" x2="21" y2="6"></line>
         <line x1="3" y1="18" x2="21" y2="18"></line>
     </svg>
-    <div>
-        {{ $user->role }} 
-         ssss
-    </div>
     <div class="search-bar d-none-at-mobile">
         <input type="text" name="search" id="search-bar"
             placeholder="Search for events">
-        <svg onclick="goToSearchPage()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" class="feather feather-search">
             <circle cx="11" cy="11" r="8"></circle>
@@ -29,17 +51,26 @@
     <div class="nav-buttons">
         @guest
             <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
-            <div class="dropdown">
+            <div class="dropdown" data-reference="parent" data-offset="-20,-20">
                 <a href="#" role="button" class="btn dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true">Sign In</a>
-                <div id="zzz" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <div id="" class="dropdown-menu" style="position: absolute; left: -60px;" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">Organizer</a>
                     <a class="dropdown-item" href="{{ route('participant.signin.view') }}">Participant</a>
                 </div>
             </div>
         @endguest
         @auth
-            <button class="oceans-gaming-default-button oceans-gaming-gray-button"> Where is moop? </button>
+            {{-- <button class="oceans-gaming-default-button oceans-gaming-gray-button"> Where is moop? </button> --}}
+            <div class="team-dropdown">
+                <button onclick="toggleTeamList()" class="oceans-gaming-default-button oceans-gaming-gray-button">Where is moop?</button>
+                <div id="teamList" class="team-dropdown-content">
+                  <a href="{{ url('/participant/create-team/' . Auth::id()) }}">Create a Team</a>
+                  <a href="{{ url('/participant/team-list/' . Auth::id()) }}">Team List</a>
+                  {{-- <a href="#">Team C</a> --}}
+                  <!-- Add more teams as needed -->
+                </div>
+              </div>
             <img style="position: relative; top: 0px;" width="50px" height="40px"
                 src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
             <img style="position: relative; top: 0px;" width="70px" height="40px"
@@ -47,12 +78,13 @@
             <a class="" style="text-decoration: none;position: relative; top: 10px;" href="{{ route('logout.action') }}">Logout</a>
         @endauth
     </div>
+
 </nav>
 <nav class="mobile-navbar d-centered-at-mobile d-none">
     <div class="search-bar search-bar-mobile ">
         <input type="text" name="search" id="search-bar-mobile"
             placeholder="Search for events">
-        <svg onclick="goToSearchPage()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" class="feather feather-search" style="left: 40px;">
             <circle cx="11" cy="11" r="8"></circle>
@@ -79,39 +111,82 @@
         document.querySelector("#myDropdown").classList.toggle("d-none")
     }
 
-    function goToSearchPage() {
-        let ENDPOINT = "{{ route('user.search.view') }}";
-        let page = 1;
-        let search = null;
-        let searchBar = document.querySelector('input#search-bar');
-        if (searchBar.style.display != 'none') {
-            search = searchBar.value;
-        } else {
-            searchBar = document.querySelector('input#search-bar-mobile');
-            search = searchBar.value;
-        }
-        if (!search || String(search).trim() == "") {
-            search = null;
-            ENDPOINT += "?page=" + page;
-        } else {
-            ENDPOINT += "?search=" + search + "&page=" + page;
-        }
-        window.location = ENDPOINT;
-    }
-
-     document.getElementById('search-bar').addEventListener(
+    var ENDPOINT = "{{ route('landing.view') }}";
+    var page = 1;
+    var search = null;
+    window.addEventListener(
+        "scroll",
+        throttle((e) => {
+            var windowHeight = window.innerHeight;
+            var documentHeight = document.documentElement.scrollHeight;
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop + windowHeight >= documentHeight - 20) {
+                page++;
+                ENDPOINT = "{{ route('landing.view') }}";
+                console.log({
+                    search
+                })
+                if (!search || String(search).trim() == "") {
+                    search = null;
+                    ENDPOINT += "?page=" + page;
+                } else {
+                    ENDPOINT += "?search=" + search + "&page=" + page;
+                }
+                infinteLoadMore(null, ENDPOINT);
+            }
+        }, 300)
+    );
+    document.getElementById('search-bar').addEventListener(
         "keydown",
         debounce((e) => {
-            goToSearchPage();
+            searchPart(e);
         }, 1000)
     );
 
     document.getElementById('search-bar-mobile').addEventListener(
         "keydown",
         debounce((e) => {
-            goToSearchPage();
+            searchPart(e);
         }, 1000)
     );
 
+    function searchPart(e) {
+        page = 1;
+        let noMoreDataElement = document.querySelector('.no-more-data');
+        noMoreDataElement.classList.add('d-none');
+        document.querySelector('.scrolling-pagination').innerHTML = '';
+        search = e.target.value;
+        ENDPOINT = "{{ route('landing.view') }}";
+        if (!search || String(search).trim() == "") {
+            search = null;
+            ENDPOINT += "?page=" + page;
+        } else {
+            ENDPOINT += "?search=" + e.target.value + "&page=" + page;
+        }
+        infinteLoadMore(null, ENDPOINT);
+    }
 </script>
 
+<script>
+    function toggleTeamList() {
+      var teamList = document.getElementById("teamList");
+      if (teamList.style.display === "block") {
+        teamList.style.display = "none";
+      } else {
+        teamList.style.display = "block";
+      }
+    }
+  
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.oceans-gaming-default-button')) {
+        var dropdowns = document.getElementsByClassName("team-dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.style.display === "block") {
+            openDropdown.style.display = "none";
+          }
+        }
+      }
+    }
+  </script>

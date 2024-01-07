@@ -2,11 +2,12 @@
     <!-- https://stackoverflow.com/questions/895171/prevent-users-from-submitting-a-form-by-hitting-enter -->
 
     <body>
+        @include('CommonLayout.NavbarGoToSearchPage')
         <main>
             <div>
-                @include('CommonLayout.Navbar')
                 <div>
-                    <form enctype="multipart/form-data" onkeydown="return event.key != 'Enter';" action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
+                    <form enctype="multipart/form-data" onkeydown="return event.key != 'Enter';"
+                        action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
                         @csrf
                         <input type="hidden" name="livePreview" id="livePreview" value="false">
                         <input type="hidden" name="gameTitle" id="gameTitle">
@@ -19,14 +20,17 @@
                         <input type="hidden" name="paymentMethod"  id="paymentMethod">
                         @include('Organizer.Layout.CreateEventTimelineBox')
                         @if (session()->has('error'))
-                        @include('Organizer.Layout.CreateEventTimelineWelcome', ['error' => session()->get('error')])
+                            @include('Organizer.Layout.CreateEventTimelineWelcome', [
+                                'error' => session()->get('error'),
+                            ])
                         @else
-                        @include('Organizer.Layout.CreateEventTimelineWelcome')
+                            @include('Organizer.Layout.CreateEventTimelineWelcome')
                         @endif
                         @include('Organizer.Layout.CreateEventStepOneCreate')
+                        @include('CommonLayout.BootstrapJs')
                         @include('Organizer.Layout.CreateEventForm')
                         @if (session()->has('success'))
-                        @include('Organizer.Layout.CreateEventSuccess')
+                            @include('Organizer.Layout.CreateEventSuccess')
                         @endif
                     </form>
                 </div>
@@ -35,6 +39,5 @@
             <br><br>
         </main>
         @include('Organizer.Layout.CreateEventScripts')
-
 
     </body>
