@@ -193,20 +193,26 @@ class ParticipantEventController extends Controller
 
     public function ViewEvent(Request $request, $id)
     {
-        $event = EventDetail::find($id);
-        $count = 8;
-        $user = Auth::user();
-        $eventListQuery = EventDetail::query();
-        $eventListQuery->with('tier'); // Eager load the eventTier relationship
-        $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
-
-        // Access tierEntryFee data from eventTier relationship in EventDetail
-        foreach ($eventList as $event) {
-            $tierEntryFee = $event->eventTier->tierEntryFee ?? null;
-        }
-        return view('Participant.ViewEvent', compact('event', 'eventList'));
+        {
+            $event = EventDetail::find($id);
+            $count = 8;
+            $user = Auth::user();
+            $eventListQuery = EventDetail::query();
+            $eventListQuery->with('tier'); // Eager load the eventTier relationship
+            $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+        
+            // Calculate followers count for the organizer
+            $organizerId = $event->user->organizer->id; 
+            $followersCount = Follow::where('organizer_id', $organizerId)->count();
+        
+            // Access tierEntryFee data from eventTier relationship in EventDetail
+            foreach ($eventList as $event) {
+                $tierEntryFee = $event->eventTier->tierEntryFee ?? null;
+            }
+        
+            return view('Participant.ViewEvent', compact('event', 'eventList', 'followersCount')); 
     }
-
+    }
     public function FollowOrganizer(Request $request)
     {
         try {
