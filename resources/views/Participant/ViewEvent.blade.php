@@ -92,9 +92,13 @@
                                             <p class="small-text"> <i> 104 followers </i> </p>
                                         </div>
                                     </div>
-
-                                    <input type="submit" style="background-color: #8CCD39; padding: 10px 20px; font-size: 14px;" value="Follow"
-                                        onclick="#">
+                                    <form method="POST" action="{{ route('follow.organizer') }}">
+                                        @csrf
+                                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                                        <input type="hidden" name="organizer_id" value="{{ $event->user->organizer->id }}"> <!-- Assuming organizer_id is stored in user_id field of EventDetail model -->
+                                    
+                                        <input type="submit" style="background-color: #8CCD39; padding: 10px 20px; font-size: 14px;" value="Follow">
+                                    </form>                                            
 
                                 </div>
                                 <br>

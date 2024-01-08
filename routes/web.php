@@ -74,6 +74,7 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::get('/confirm', [ParticipantEventController::class, 'ConfirmUpdate']);
 			Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent']);
 			Route::post('/events/{id}', [ParticipantEventController::class, 'JoinEvent'])->name('join.store');
+			Route::post('/follow-organizer', [ParticipantEventController::class, 'FollowOrganizer'])->name('follow.organizer');
 		});
 	});
 });

@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Participant;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
 use App\Models\Team;
 use App\Models\EventDetail;
+use App\Models\Follow;
 use App\Models\JoinEvent;
 use App\Models\Member;
 use Illuminate\Support\Facades\Validator;
@@ -203,6 +204,35 @@ class ParticipantEventController extends Controller
             $tierEntryFee = $event->eventTier->tierEntryFee ?? null;
         }
         return view('Participant.ViewEvent', compact('event', 'eventList'));
+    }
+
+    public function FollowOrganizer(Request $request)
+    {
+        try {
+            $userId = $request->input('user_id');
+            $organizerId = $request->input('organizer_id');
+    
+            // Check if the user is already following the organizer
+            $existingFollow = Follow::where('user_id', $userId)
+                                    ->where('organizer_id', $organizerId)
+                                    ->first();
+    
+            if (!$existingFollow) {
+                // If not following, create a new follow record
+                Follow::create([
+                    'user_id' => $userId,
+                    'organizer_id' => $organizerId
+                ]);
+    
+                return response()->json(['message' => 'Successfully followed the organizer']);
+            } else {
+                // If already following, return a message
+                return response()->json(['message' => 'You are already following this organizer']);
+            }
+        } catch (QueryException $e) {
+            // Handle the database exception
+            return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
+        }
     }
 
     public function JoinEvent(Request $request, $id)
