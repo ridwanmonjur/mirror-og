@@ -48,23 +48,25 @@
                 <div></div>
             @endif
             <div>
-                <div style="padding-left: 20px;padding-right:20px;">
-                    <div>
-                        @if ($event->eventBanner)
-                            <img width="400" height="250"
-                                style="margin: auto; padding-left: 30px;object-fit: cover;" {!! trustedBladeHandleImageFailure() !!}
-                                src="{{ $eventBannerImg }}" alt="">
-                        @else
-                            <div>
-                                <br>
-                                <img style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!} alt="">
-                                <h5>
-                                    Please enter a banner image.
-                                </h5>
-                                <br><br>
-                            </div>
-                        @endif
+                <div>
+                    <div class="grid-container-two-columns-at-desktop">
+                        <div class="mx-2">
+                            @if ($event->eventBanner)
+                                <img width="100%" height="250" style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!}
+                                    src="{{ $eventBannerImg }}" alt="">
+                            @else
+                                <div>
+                                    <br>
+                                    <img style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!} alt="">
+                                    <h5>
+                                        Please enter a banner image.
+                                    </h5>
+                                    <br><br>
+                                </div>
+                            @endif
+                        </div>
                     </div>
+                    <div></div>
                     <div class="grid-container-two-columns-at-desktop">
                         <div class="card-text">
                             <div>

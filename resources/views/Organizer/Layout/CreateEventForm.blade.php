@@ -186,7 +186,7 @@
                     class="event_head">
             </div>
             <br>
-            <h4 id="outputEventTierTitle" style="text-align: center; margin-top: 25px;">Choose a tier</h4>
+            <h4 id="outputEventTierTitle" class="text-center mt-1">Choose a tier</h4>
             <div class="event_row">
                 <div class="icon_container mr-4 ml-3">
                     <img width="25" height=25 id="outputEventTierImg"
