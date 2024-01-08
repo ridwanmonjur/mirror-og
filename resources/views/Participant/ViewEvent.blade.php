@@ -92,14 +92,19 @@
                                             <p class="small-text"> <i> 104 followers </i> </p>
                                         </div>
                                     </div>
-                                    <form method="POST" action="{{ route('follow.organizer') }}">
-                                        @csrf
-                                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                                        <input type="hidden" name="organizer_id" value="{{ $event->user->organizer->id }}"> <!-- Assuming organizer_id is stored in user_id field of EventDetail model -->
                                     
-                                        <input type="submit" style="background-color: #8CCD39; padding: 10px 20px; font-size: 14px;" value="Follow">
-                                    </form>                                            
-
+                                    <form id="followForm" method="POST" action="{{ Auth::user()->isFollowing($event->user->organizer) ? route('unfollow.organizer') : route('follow.organizer') }}">
+                                        @csrf
+                                        @if (Auth::user()->isFollowing($event->user->organizer))
+                                            @method('DELETE')
+                                        @endif
+                                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                                        <input type="hidden" name="organizer_id" value="{{ $event->user->organizer->id }}">
+                                        <button type="submit" style="background-color: {{ Auth::user()->isFollowing($event->user->organizer) ? '#FF0000' : '#8CCD39' }}; padding: 10px 20px; font-size: 14px;">
+                                            {{ Auth::user()->isFollowing($event->user->organizer) ? 'Unfollow' : 'Follow' }}
+                                        </button>
+                                    </form>
+                                    
                                 </div>
                                 <br>
                                 <h4> <u> {{ $combinedStr }} </u> </h4>

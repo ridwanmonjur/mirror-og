@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class ParticipantEventController extends Controller
 {
@@ -224,15 +225,28 @@ class ParticipantEventController extends Controller
                     'organizer_id' => $organizerId
                 ]);
     
-                return response()->json(['message' => 'Successfully followed the organizer']);
+                return Redirect::back()->with('success', 'Successfully followed the organizer');
             } else {
                 // If already following, return a message
-                return response()->json(['message' => 'You are already following this organizer']);
+                return Redirect::back()->with('success', 'Successfully followed the organizer');
             }
         } catch (QueryException $e) {
             // Handle the database exception
             return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
         }
+    }
+
+    public function unfollowOrganizer(Request $request)
+    {
+        $userId = $request->input('user_id');
+        $organizerId = $request->input('organizer_id');
+
+        // Find and delete the follow record for unfollowing
+        Follow::where('user_id', $userId)
+            ->where('organizer_id', $organizerId)
+            ->delete();
+
+            return Redirect::back()->with('success', 'Successfully unfollowed the organizer');
     }
 
     public function JoinEvent(Request $request, $id)
