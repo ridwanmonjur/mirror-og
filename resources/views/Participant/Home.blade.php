@@ -61,8 +61,8 @@
                 }, 300)
             );
         </script>
-
-    <script>
+       {{-- I think we dont need this below code  --}}
+    {{-- <script>
         function myFunction() {
             document.getElementById("myDropdown").classList.toggle("show");
         }
@@ -80,7 +80,7 @@
                 }
             }
         }
-    </script>
+    </script> --}}
 </body>
 
 </html>
