@@ -75,7 +75,7 @@ function setFormValues(values) {
             if (formField && values[key]) {
                 formField.value = values[key];
             } else {
-                console.log(`Form field  with key ${key}  not found!`);
+                console.log(`Form field with key ${key} not found!`);
             }
         }
     }
@@ -194,14 +194,15 @@ function closeDropDown(element, id, keyValues, key) {
     element.parentElement.previousElementSibling.classList.toggle("dropbtn-open");
     element.parentElement.classList.toggle("d-none");
     document.getElementById(id).innerHTML = `
-    Selected (${keyValues[key]})
-    <span class="dropbtn-arrow">
-    
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
-            <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-    </span>
-    `;
+Selected (${keyValues[key]})
+<span class="dropbtn-arrow">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class="feather feather-chevron-down">
+        <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+</span>
+`;
     setFormValues(keyValues)
 }
 function getElementByIdAndSetInnerHTML(id, innerHTML) {
@@ -224,61 +225,57 @@ function saveForLivePreview() {
 }
 
 function saveEvent(willGoToNextPage = true) {
+    let createEventForm = document.forms['create-event-form'];
     let launch_schedule = null;
     let launch_visible = null;
-    let launch_schedule_form = getFormValues(['launch_visible'])
+    let launch_date = null;
+    let launch_time = null;
+    let launch_schedule_form = getFormValues(['launch_visible',
+        'launch_schedule',
+        'launch_date_public',
+        'launch_date_private',
+        'launch_time_public',
+        'launch_time_public'
+    ])
     if ('launch_visible' in launch_schedule_form) {
         launch_visible = launch_schedule_form['launch_visible'];
-    } else {
-        Toast.fire({
-            icon: 'error',
-            title: 'Form cannot be found!'
-        })
-        return;
+        launch_schedule = launch_schedule_form['launch_schedule'];
     }
-    if (launch_visible=="public") {
-        launch_schedule_form = getFormValues(['launch_schedule_public'])
-        launch_schedule = launch_schedule_form['launch_schedule_public'];
-    } else if (launch_visible=="private") {
-        launch_schedule_form = getFormValues(['launch_schedule_private'])
-        launch_schedule = launch_schedule_form['launch_schedule_private'];
-    } 
-    if (launch_visible != "DRAFT" && willGoToNextPage && launch_schedule == 'now') {
-        setFormValues({ 'launch_schedule': 'now' });
-        goToNextScreen('step-12', 'timeline-4');
+    if (launch_visible == "public") {
+        launch_date = launch_schedule_form['launch_date_public'];
+        launch_time = launch_schedule_form['launch_time_public'];
+    } else if (launch_visible == "private") {
+        launch_date = launch_schedule_form['launch_date_private'];
+        launch_time = launch_schedule_form['launch_time_private'];
+    }
+   
+    if (launch_visible == 'DRAFT') {
+        createEventForm.submit();
         return;
     }
     let isFormValid = true, invalidKey = '', formValidation = null;
-    var createEventForm = document.forms['create-event-form'];
-    if (!createEventForm) {
-        Toast.fire({
-            icon: 'error',
-            title: 'Form cannot be found!'
-        })
-        return;
-    }
     formValidation = validateFormValuesPresent([
         'gameTitle', 'eventType', 'eventTier',
-        'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription', 
+        'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription',
         'isPaymentDone',
-        'launch_visible',
     ]);
+    if (launch_schedule != 'now' && (launch_date==null || launch_time==null)) {
+        isFormValid = false;
+        invalidKey = 'launch_date';
+    }
+    if (localStorage.getItem('eventBanner') == null && getFormValues(['eventBanner']) == null) {
+        isFormValid = false;
+        invalidKey = 'eventBanner';
+    }
+    if (!launch_schedule) {
+        isFormValid = false;
+        invalidKey = 'launch_schedule';
+    }
     if (formValidation != null) {
         isFormValid = formValidation[0];
         invalidKey = formValidation[1];
     }
-    if (localStorage.getItem('eventBanner') != null || getFormValues(['eventBanner']) != null) {
-        // createEventForm.elements['eventBanner'].value = localStorage.getItem('eventBanner');
-        console.log({ banner: localStorage.getItem('eventBanner') })
-    } else {
-        isFormValid = false;
-        invalidKey = 'eventBanner';
-    }
     if (!isFormValid) {
-        console.log({ formValidation })
-        console.log({ formValidation })
-        console.log({ formValidation })
-        console.log({ formValidation })
         Toast.fire({
             icon: 'error',
             text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
@@ -287,45 +284,13 @@ function saveEvent(willGoToNextPage = true) {
         goToNextScreen(nextId, nextTimeline);
         return;
     }
-    if (createEventForm.elements['launch_visible'].value == 'DRAFT') {
-        createEventForm.submit();
+    else if  (launch_visible != "DRAFT" && willGoToNextPage && launch_schedule == 'now') {
+        setFormValues({ 'launch_schedule': 'now' });
+        goToNextScreen('step-12', 'timeline-4');
         return;
     }
     else {
-        formValidation = validateFormValuesPresent([
-            'launch_schedule',
-        ]);
-        if (formValidation != null) {
-            isFormValid = formValidation[0];
-            invalidKey = formValidation[1];
-        }
-        else {
-            if (createEventForm.elements['launch_schedule'] != 'now') {
-                formValidation = validateFormValuesPresent([
-                    'launch_date', 'launch_time'
-                ]);
-                if (formValidation != null) {
-                    isFormValid = formValidation[0];
-                    invalidKey = formValidation[1];
-                }
-            }
-        }
-        if (!isFormValid) {
-            console.log({ formValidation })
-            console.log({ formValidation })
-            console.log({ formValidation })
-            console.log({ formValidation })
-            Toast.fire({
-                icon: 'error',
-                text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
-            })
-            let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
-            goToNextScreen(nextId, nextTimeline);
-            return;
-        }
-        else {
-            createEventForm.submit();
-        }
+        createEventForm.submit();
     }
 }
 
@@ -334,7 +299,8 @@ function goToNextScreen(nextId, nextTimeline) {
 
     const allIDs = [
         'step-0',
-        'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6', 'step-7', 'step-8', 'step-9', 'step-10', 'step-11', 'step-12'];
+        'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6', 'step-7', 'step-8', 'step-9', 'step-10', 'step-11',
+        'step-12'];
 
     const allTimelines = ['timeline-1', 'timeline-2', 'timeline-3', 'timeline-4'];
     let isFormValid = true, invalidKey = '', formValidation = null;
@@ -354,7 +320,6 @@ function goToNextScreen(nextId, nextTimeline) {
         formValidation = validateFormValuesPresent(['eventType']);
     }
     else if (currentId == allIDs[3]) {
-        formValidation = validateFormValuesPresent(['eventTier']);
     }
 
     else if (currentId == allIDs[5]) {
@@ -370,7 +335,8 @@ function goToNextScreen(nextId, nextTimeline) {
         formValidation = validateFormValuesPresent(['eventBanner']);
     }
     if (nextId == allIDs[10]) {
-        const paymentMethodConditionFulfilledButton = document.getElementsByClassName('choose-payment-method-condition-fulfilled')[0];
+        const paymentMethodConditionFulfilledButton =
+            document.getElementsByClassName('choose-payment-method-condition-fulfilled')[0];
         const paymentMethodCondition = document.getElementsByClassName('choose-payment-method')[0];
         console.log({ found: true })
         let eventRate = 20, eventSubTotal = 0, eventFee = 0, eventTotal = 0;
@@ -440,7 +406,8 @@ function goToNextScreen(nextId, nextTimeline) {
             if (!cicle.classList.contains("background-active-timeline")) cicle.classList.add("background-active-timeline");
         }
         else {
-            if (paragraph.classList.contains("font-color-active-timeline")) paragraph.classList.remove("font-color-active-timeline");
+            if (paragraph.classList.contains("font-color-active-timeline"))
+                paragraph.classList.remove("font-color-active-timeline");
             if (cicle.classList.contains("background-active-timeline")) cicle.classList.remove("background-active-timeline");
         }
     })
@@ -455,7 +422,3 @@ function goToNextScreen(nextId, nextTimeline) {
         }
     })
 }
-
-
-
-

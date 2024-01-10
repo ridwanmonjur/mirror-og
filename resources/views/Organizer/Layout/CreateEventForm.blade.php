@@ -22,20 +22,20 @@
                 @foreach ($eventCategory as $category)
                     @if ($category->eventDefinitions)
                         <div onclick="setFormValues( {'eventType': {{ Js::from($category->eventType) }} } );
-                                let eventTypeId = {{ Js::from($category->id) }} ;
-                                setFormValues( {'eventTypeId': eventTypeId} );
-                                goToNextScreen('step-3', 'timeline-1');
-                                document.querySelectorAll('.box_2nd').forEach((el) => {
-                                    el.classList.remove('color-border-success');
-                                });
-                                this.querySelector('.box_2nd').classList.add('color-border-success');
-                                let eventTypeTitle = this.querySelector('.inputEventTypeTitle u').innerHTML;
-                                let eventTypeDefinition = this.querySelector('.inputEventTypeDefinition').innerHTML;
-                                localStorage.setItem('eventTypeTitle', eventTypeTitle);
-                                localStorage.setItem('eventTypeTitle', eventTypeTitle);
-                                localStorage.setItem('eventTypeDefinition', eventTypeDefinition);
-                                localStorage.setItem('eventTypeId', eventTypeId);
-                                "
+                            let eventTypeId = {{ Js::from($category->id) }} ;
+                            setFormValues( {'eventTypeId': eventTypeId} );
+                            goToNextScreen('step-3', 'timeline-1');
+                            document.querySelectorAll('.box_2nd').forEach((el) => {
+                                el.classList.remove('color-border-success');
+                            });
+                            this.querySelector('.box_2nd').classList.add('color-border-success');
+                            let eventTypeTitle = this.querySelector('.inputEventTypeTitle u').innerHTML;
+                            let eventTypeDefinition = this.querySelector('.inputEventTypeDefinition').innerHTML;
+                            localStorage.setItem('eventTypeTitle', eventTypeTitle);
+                            localStorage.setItem('eventTypeTitle', eventTypeTitle);
+                            localStorage.setItem('eventTypeDefinition', eventTypeDefinition);
+                            localStorage.setItem('eventTypeId', eventTypeId);
+                            "
                             @class(['container-border'])>
                             <a href="#" @class([
                                 'box_2nd selectable-box',
@@ -76,26 +76,26 @@
             @foreach ($eventTierList as $category)
                 <section
                     onclick="setFormValues( {'eventTier': {{ Js::from($category->eventTier) }} } );
-                                let eventTierId = {{ Js::from($category->id) }} ;
-                                goToNextScreen('step-4', 'timeline-1');
-                                let eventTierImg = this.querySelector('.inputEventTierImg').src;
-                                let eventTierPerson = this.querySelector('.inputEventTierPerson').innerHTML;
-                                let eventTierPrize = this.querySelector('.inputEventTierPrize').innerHTML;
-                                let eventTierEntry = this.querySelector('.inputEventTierEntry').innerHTML;
-                                let eventTierTitle = this.querySelector('.inputEventTierTitle').innerHTML;
-                                setFormValues( {'eventTierId': eventTierId } );
-                                localStorage.setItem('eventTierPerson', eventTierPerson);
-                                localStorage.setItem('eventTierPrize', eventTierPrize);
-                                localStorage.setItem('eventTierImg', eventTierImg);
-                                localStorage.setItem('eventTierEntry', eventTierEntry);
-                                localStorage.setItem('eventTierTitle', eventTierTitle);
-                                localStorage.setItem('eventTierId', eventTierId);
-                                fillStepValues();
-                                 document.querySelectorAll('.box-tier').forEach(element => {
-                                        element.classList.remove('color-border-success');
-                                    });
-                                    this.querySelector('.box-tier').classList.add('color-border-success');
-                                    ;"
+                        let eventTierId = {{ Js::from($category->id) }} ;
+                        goToNextScreen('step-4', 'timeline-1');
+                        let eventTierImg = this.querySelector('.inputEventTierImg').src;
+                        let eventTierPerson = this.querySelector('.inputEventTierPerson').innerHTML;
+                        let eventTierPrize = this.querySelector('.inputEventTierPrize').innerHTML;
+                        let eventTierEntry = this.querySelector('.inputEventTierEntry').innerHTML;
+                        let eventTierTitle = this.querySelector('.inputEventTierTitle').innerHTML;
+                        setFormValues( {'eventTierId': eventTierId } );
+                        localStorage.setItem('eventTierPerson', eventTierPerson);
+                        localStorage.setItem('eventTierPrize', eventTierPrize);
+                        localStorage.setItem('eventTierImg', eventTierImg);
+                        localStorage.setItem('eventTierEntry', eventTierEntry);
+                        localStorage.setItem('eventTierTitle', eventTierTitle);
+                        localStorage.setItem('eventTierId', eventTierId);
+                        fillStepValues();
+                        document.querySelectorAll('.box-tier').forEach(element => {
+                            element.classList.remove('color-border-success');
+                        });
+                        this.querySelector('.box-tier').classList.add('color-border-success');
+                        ;"
                     class="featured-events">
                     <a href="#" @class([
                         'event selectable-box box-tier',
@@ -620,7 +620,9 @@
             </h5>
         </u>
     </div>
-    <div class="payment-summary" style="margin-top: -25px; text-align: center">
+    <br>
+    <div class="payment-summary" style="text-align: center">
+        <br>
         <h5>Launch Event Now?</h5>
         <p>You are about to launch your your event to the world.</p>
         <p>Once your event is live, you will no longer be able to make any changes to it, and it will appear to players
