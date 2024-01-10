@@ -74,10 +74,28 @@
                     <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
                     @foreach($joinEvents as $key => $joinEvent)
                     <div class="event-box" id="event{{ $key + 1 }}" style="display: {{ $key === 0 ? 'block' : 'none' }};">
-                        <!-- Event 1 content -->
-                        <h3>{{ $joinEvent->eventDetails->eventName }}</h3>
-                        <p>Start Date: {{ $joinEvent->eventDetails->startDate }}</p>
-                        <p>Location: Virtual</p>
+                    <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
+                    <!-- Your content goes here -->
+                    </div>
+
+                    <div class="frame1">    
+                    <div class="container">
+                    <div class="left-col">
+                    <p>
+                    <img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg" class="logo2">
+                    <p style="font-size: 10px; text-align: left; margin-top: 10px; margin-left: 10px;"> {{ $joinEvent->eventDetails->eventName }}</p>
+                    </p>
+                    </div>
+                    <div class="right-col">
+                    <p>
+                    <img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg" class="logo2">
+                    <p style="font-size: 10px; text-align: left; margin-top: 10px; margin-left: 10px;"> {{ $joinEvent->eventDetails->eventName }}</p>
+                                            
+                    </p>
+                    </div>
+                    </div>
+                    </div>
+
                     </div>
                     @endforeach
                     <button class="carousel-button" onclick="slideEvents(1)">></button>
