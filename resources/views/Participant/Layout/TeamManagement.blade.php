@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="... (the integrity hash) ..." crossorigin="anonymous">
+
 </head>
 
 <body>
@@ -29,7 +31,14 @@
                 <input type="file" id="image-upload" accept="image/*" style="display: none;">
             </div>
             @foreach ($teamManage as $manage)
-            <h3 class="team-name" id="team-name">{{ $manage->teamName }}</h3>
+            <div class="team-names">
+                <div class="team-info">
+                    <h3 class="team-name" id="team-name">{{ $manage->teamName }}</h3>
+                    <button class="gear-icon-btn"><i class="fas fa-cog"></i></button>
+                </div>
+               
+            </div>
+            
             <p>We are an awesome team with awesome members! Come be awesome together! Play some games and win some prizes GGEZ!</p>
             @endforeach
         </div>
