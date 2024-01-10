@@ -100,10 +100,47 @@
                                         @endif
                                         <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                                         <input type="hidden" name="organizer_id" value="{{ $event->user->organizer->id }}">
-                                        <button type="submit" style="background-color: {{ Auth::user()->isFollowing($event->user->organizer) ? '#32CD32' : '#8CCD39' }}; padding: 5px 10px; font-size: 14px; border-radius: 10px;">
+                                        <button type="submit" id="followButton" data-following="{{ Auth::user()->isFollowing($event->user->organizer) }}" style="background-color: {{ Auth::user()->isFollowing($event->user->organizer) ? '#32CD32' : '#8CCD39' }}; padding: 5px 10px; font-size: 14px; border-radius: 10px;">
                                             {{ Auth::user()->isFollowing($event->user->organizer) ? 'Unfollow' : 'Follow' }}
                                         </button>
                                     </form>
+                                    
+                                    <script>
+                                        document.getElementById('followForm').addEventListener('submit', function (event) {
+                                            event.preventDefault(); // Prevent default form submission
+                                    
+                                            let form = this;
+                                            let formData = new FormData(form);
+                                    
+                                            fetch(form.action, {
+                                                method: form.method,
+                                                body: formData
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                // Update button text and style
+                                                let followButton = document.getElementById('followButton');
+                                                let isFollowing = followButton.getAttribute('data-following') === 'true';
+                                    
+                                                if (isFollowing) {
+                                                    followButton.innerText = 'Follow';
+                                                    followButton.setAttribute('data-following', 'false');
+                                                    followButton.style.backgroundColor = '#8CCD39';
+                                                } else {
+                                                    followButton.innerText = 'Unfollow';
+                                                    followButton.setAttribute('data-following', 'true');
+                                                    followButton.style.backgroundColor = '#32CD32';
+                                                }
+                                    
+                                                // Display success message or handle any other action
+                                                console.log(data.message);
+                                            })
+                                            .catch(error => {
+                                                console.error('Error:', error);
+                                            });
+                                        });
+                                    </script>
+                                    
                                     
                                 </div>
                                 <br>

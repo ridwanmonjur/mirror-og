@@ -231,10 +231,10 @@ class ParticipantEventController extends Controller
                     'organizer_id' => $organizerId
                 ]);
     
-                return Redirect::back()->with('success', 'Successfully followed the organizer');
+                return response()->json(['message' => 'Successfully followed the organizer']);
             } else {
                 // If already following, return a message
-                return Redirect::back()->with('success', 'Successfully followed the organizer');
+                return response()->json(['message' => 'Successfully followed the organizer']);
             }
         } catch (QueryException $e) {
             // Handle the database exception
@@ -252,7 +252,7 @@ class ParticipantEventController extends Controller
             ->where('organizer_id', $organizerId)
             ->delete();
 
-            return Redirect::back()->with('success', 'Successfully unfollowed the organizer');
+            return response()->json(['message' => 'Successfully unfollowed the organizer']);
     }
 
     public function JoinEvent(Request $request, $id)
