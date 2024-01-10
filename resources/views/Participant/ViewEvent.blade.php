@@ -48,12 +48,12 @@
                 <div style="padding-left: 20px;padding-right:20px;">
                     <div>
                         @if ($event->eventBanner)
-                            <img width="500" height="300" style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!}
+                            <img width="500" height="300" style="object-fit: cover;" {!! trustedBladeHandleImageFailureResize() !!}
                                 src="{{ $eventBannerImg }}" alt="">
                         @else
                             <div>
                                 <br>
-                                <img style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!} alt="">
+                                <img style="object-fit: cover;" {!! trustedBladeHandleImageFailureResize() !!} alt="">
                                 <h5>
                                     Please enter a banner image.
                                 </h5>
