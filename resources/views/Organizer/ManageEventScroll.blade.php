@@ -53,7 +53,7 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
                         @endif
                         @endforeach
                         @else
-                        <p>N/A</p>
+                        <span>N/A</span>
                         @endif
                 </button>
             </div>
