@@ -100,7 +100,7 @@
                                         @endif
                                         <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                                         <input type="hidden" name="organizer_id" value="{{ $event->user->organizer->id }}">
-                                        <button type="submit" style="background-color: {{ Auth::user()->isFollowing($event->user->organizer) ? '#FF0000' : '#8CCD39' }}; padding: 10px 20px; font-size: 14px;">
+                                        <button type="submit" style="background-color: {{ Auth::user()->isFollowing($event->user->organizer) ? '#32CD32' : '#8CCD39' }}; padding: 5px 10px; font-size: 14px; border-radius: 10px;">
                                             {{ Auth::user()->isFollowing($event->user->organizer) ? 'Unfollow' : 'Follow' }}
                                         </button>
                                     </form>
