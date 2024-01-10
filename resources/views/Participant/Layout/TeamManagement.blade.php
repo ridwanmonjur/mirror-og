@@ -74,7 +74,7 @@
                     <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
                     @foreach($joinEvents as $key => $joinEvent)
                     <div class="event-box" id="event{{ $key + 1 }}" style="display: {{ $key === 0 ? 'block' : 'none' }};">
-                    <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
+                    <div style="background-image: url('https://loughtec.com/wp-content/uploads/elementor/thumbs/Update-Your-Systems-peh8a850evm1ycxqtvdlezweza0780o2haik3idj5c.jpg'); background-size: cover; background-position: center; text-align: left; height: 200px;">
                     <!-- Your content goes here -->
                     </div>
 
