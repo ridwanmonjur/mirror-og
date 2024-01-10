@@ -111,9 +111,20 @@
                     <div><b>Achievements</b></div>
                     <br>
                     <ul class="achievement-list">
-                        <li>First Place - Online Tournament (2023) <span class="achievement-complete">✔️</span></li>
-                        <li>Best Team Collaboration - LAN Event (2022) <span class="achievement-complete">✔️</span></li>
-                        <!-- Add more achievements as needed -->
+                        <li>
+                            <span class="additional-text">First Place - Online Tournament (2023)</span>
+                            <br>
+                            <span class="achievement-complete"></span>
+                            <br>
+                            <span class="additional-text">Get a girlfriend</span>
+                        </li>
+                        <li>
+                            <span class="additional-text">Best Team Collaboration - LAN Event (2022)</span>
+                            <br>
+                            <span class="achievement-complete"></span>
+                            <br>
+                            <span class="additional-text">Get a girlfriend</span>
+                        </li>
                     </ul>
                 </div>
             </div>
