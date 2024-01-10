@@ -58,7 +58,7 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
                 </button>
             </div>
             <br>
-            <p style="max-height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->eventName}}</u></p>
+            <p style="max-height : 60px; text-overflow:ellipsis; overflow:hidden; "><u>{{$event->eventName ?? 'Choose a name'}}</u></p>
             <p class="small-text"><i>
                     {{ $organizer->companyName ?? 'Choose organization name' }}
                 </i></p>
