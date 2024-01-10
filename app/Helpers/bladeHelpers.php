@@ -91,7 +91,7 @@ function bladeImageNull($eventBanner)
     if ($eventBanner) {
         $eventBannerImg = asset('storage/' . $eventBanner);
     } else {
-        $eventBannerImg = asset('assets/images/createEvent/question.png');
+        $eventBannerImg = asset('');
     }
     return $eventBannerImg;
 }

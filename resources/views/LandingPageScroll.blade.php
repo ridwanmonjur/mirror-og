@@ -4,7 +4,7 @@ $stylesEventStatus = bladeEventStatusStyleMapping($event->status);
 $stylesEventStatus .= 'padding-top: -150px; ';
 $eventTierLowerImg = bladeEventTierImage($event->eventTier);
 $eventBannerImg = bladeImageNull($event->eventBanner);
-$bladeEventGameImage = bladeImageNull($event->game->gameIcon);
+$bladeEventGameImage = bladeImageNull($event->game? $event->game->gameIcon : null);
 @endphp
 <div class="event">
     <div style="display: flex; justify-content: center;">

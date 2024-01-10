@@ -11,7 +11,7 @@ $datePublishedArray = bladeGenerateEventStartEndDateStr($event->sub_action_publi
 extract($dateStartArray);
 $eventTierLowerImg = bladeEventTierImage($event->eventTier);
 $eventBannerImg = bladeImageNull($event->eventBanner);
-$bladeEventGameImage = bladeImageNull($event->game->gameIcon);
+$bladeEventGameImage = bladeImageNull($event->game? $event->game->gameIcon : null);
 $eventId = $event->id;
 $toolTip= "<div><b>Event ID: </b>" . $eventId . "<br>";
 $toolTip.= "<b>Description: </b>" . $event->eventDescription . "<br>";
