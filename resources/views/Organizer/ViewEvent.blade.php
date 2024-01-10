@@ -159,7 +159,7 @@
                                         <span style="position: relative; top: 5px;"> RM
                                             {{ $event->tier->tierPrizePool ?? 'No Prize' }} Prize Pool</span>
                                     @else
-                                        <p>Tier PrizePool: Not available</p>
+                                        <span>Select event tier</span>
                                     @endif
                                 </div>
                                 <div>
@@ -175,7 +175,7 @@
                                         <span style="position: relative; top: 5px;">RM
                                             {{ $event->tier->tierEntryFee ?? 'Free' }} Entry Fees</span>
                                     @else
-                                        <p>Tier Entry Fee: Not available</p>
+                                        <span>Entry fee unavailable</span>
                                     @endif
                                 </div>
                                 <div>
@@ -208,13 +208,8 @@
                                             @endif
                                         @endforeach
                                     @else
-                                        <p>Tier Teams Slot: Not available</p>
+                                        <span>N/A</span>
                                     @endif
-
-
-
-
-
                                 </div>
                                 <div>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"

@@ -44,17 +44,17 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
-                                    @if($event->tier)
-                                    @foreach($eventList as $index => $eventDetail)
-                                    @if($index == 0)
-                                    <span>
-                                    {{ $eventDetail->joinEventCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available'}}
-                                    </span>
-                                    @endif
-                                    @endforeach
-                                    @else
-                                    <p>Tier Teams Slot: Not available</p>
-                                    @endif
+                        @if($event->tier)
+                        @foreach($eventList as $index => $eventDetail)
+                        @if($index == 0)
+                        <span>
+                        {{ $eventDetail->joinEventCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available'}}
+                        </span>
+                        @endif
+                        @endforeach
+                        @else
+                        <p>N/A</p>
+                        @endif
                 </button>
             </div>
             <br>
@@ -75,7 +75,7 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
                     @if($event->tier)
                     <span>RM {{ $event->tier->tierPrizePool ?? 'No Prize' }} Prize Pool</span>
                     @else
-                    <p>Tier PrizePool: Not available</p>
+                    <span>Select event tier</span>
                     @endif
                 </div>
                 <div>
@@ -87,7 +87,7 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
                     @if($event->tier)
                     <span>RM {{ $event->tier->tierEntryFee ?? 'Free' }} Entry Fees</span>
                     @else
-                    <p>Tier Entry Fee: Not available</p>
+                    <span>Entry fee not available</span>
                     @endif
                 </div>
                 <div>
