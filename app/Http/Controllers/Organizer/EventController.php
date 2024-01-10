@@ -226,6 +226,7 @@ class EventController extends Controller
     public function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
     {
         $isEditMode = $eventDetail->id != null;
+        $isDraftMode = $request->launch_visible == 'DRAFT';
         // disable preview mode checjs if edit mode
         $isPreviewMode = $isEditMode ? false : $request->livePreview == 'true';
         $carbonStartDateTime = null;
@@ -251,7 +252,7 @@ class EventController extends Controller
         } elseif ($isPreviewMode && !$isEditMode) {
             $eventDetail->startDate = null;
             $eventDetail->startTime = null;
-        } else {
+        } else if (!$isDraftMode){
             throw new TimeGreaterException('Start date and time must be greater than current date and time.');
         }
         if ($endDate && $endTime) {
@@ -262,7 +263,7 @@ class EventController extends Controller
             } elseif ($isPreviewMode && !$isEditMode) {
                 $eventDetail->endDate = null;
                 $eventDetail->endTime = null;
-            } else {
+            } else if (!$isDraftMode){
                 throw new TimeGreaterException('End date and time must be greater than start date and time.');
             }
         }
@@ -278,14 +279,14 @@ class EventController extends Controller
             $transaction->payment_status = 'SUCCESS';
             $transaction->save();
             $eventDetail->payment_transaction_id = $transaction->id;
-        } elseif ($isPreviewMode && !$isEditMode) {
+        } elseif ($isPreviewMode && !$isEditMode && !$isDraftMode) {
             throw new TimeGreaterException('Payment is not done.');
         }
-        if ($request->launch_visible == 'DRAFT' || $isPreviewMode) {
+        if ($request->launch_visible == 'DRAFT') {
             $eventDetail->status = 'DRAFT';
             $eventDetail->sub_action_public_date = null;
             $eventDetail->sub_action_public_time = null;
-        } else {
+        } {
             if ($request->launch_visible == 'public') {
                 $launch_date = $request->launch_date_public;
                 $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_public);
@@ -294,18 +295,15 @@ class EventController extends Controller
                 $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_private);
             }
 
-            //  dd($request->all(), "hi", $isPreviewMode, $eventDetail->attributesToArray());
 
             if ($request->launch_schedule == 'schedule' && $launch_date && $launch_time) {
-                // dd($request->all(), "hi", $isPreviewMode, $eventDetail->attributesToArray());
-
                 $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date . ' ' . $launch_time)->utc();
-                if ($launch_date && $launch_time && $carbonPublishedDateTime > $carbonStartDateTime && $carbonPublishedDateTime < $carbonEndDateTime) {
+                if ($launch_date && $launch_time && $carbonPublishedDateTime < $carbonStartDateTime && $carbonPublishedDateTime < $carbonEndDateTime) {
                     $eventDetail->status = 'SCHEDULED';
                     $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
                     $eventDetail->sub_action_public_time = $carbonPublishedDateTime->format('H:i');
                 } else {
-                    throw new TimeGreaterException('Published time must be greater than start time and lesser than end time.');
+                    throw new TimeGreaterException('Published time must be before start time and end time.');
                 }
             } else {
                 $carbonPublishedDateTime = Carbon::now()->utc();
