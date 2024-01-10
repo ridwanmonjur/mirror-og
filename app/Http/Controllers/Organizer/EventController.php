@@ -286,7 +286,7 @@ class EventController extends Controller
             $eventDetail->status = 'DRAFT';
             $eventDetail->sub_action_public_date = null;
             $eventDetail->sub_action_public_time = null;
-        } {
+        } else {
             if ($request->launch_visible == 'public') {
                 $launch_date = $request->launch_date_public;
                 $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_public);
@@ -294,8 +294,6 @@ class EventController extends Controller
                 $launch_date = $request->launch_date_private;
                 $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_private);
             }
-
-
             if ($request->launch_schedule == 'schedule' && $launch_date && $launch_time) {
                 $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date . ' ' . $launch_time)->utc();
                 if ($launch_date && $launch_time && $carbonPublishedDateTime < $carbonStartDateTime && $carbonPublishedDateTime < $carbonEndDateTime) {
@@ -305,14 +303,26 @@ class EventController extends Controller
                 } else {
                     throw new TimeGreaterException('Published time must be before start time and end time.');
                 }
-            } else {
-                $carbonPublishedDateTime = Carbon::now()->utc();
+            } else if ($request->launch_schedule == 'now') {
                 $eventDetail->status = 'UPCOMING';
                 $eventDetail->sub_action_public_date = null;
                 $eventDetail->sub_action_public_time = null;
+            } else {
+                $eventDetail->status = 'DRAFT';
+                if ($launch_date && $launch_time) {
+                    $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date . ' ' . $launch_time)->utc();
+                    $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
+                    $eventDetail->sub_action_public_time = $carbonPublishedDateTime->format('H:i');
+                } else {
+                    $eventDetail->sub_action_public_date = null;
+                    $eventDetail->sub_action_public_time = null;
+                }
             }
         }
-        $eventDetail->sub_action_private = $request->launch_visible == 'private' ? 'private' : 'public';
+        $eventDetail->sub_action_private = $request->launch_visible;
+        if ($request->launch_visible == 'DRAFT') { 
+            $eventDetail->sub_action_private = 'private';
+        }
         $eventDetail->action = $request->launch_visible;
         return $eventDetail;
     }

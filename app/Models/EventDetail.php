@@ -65,6 +65,7 @@ class EventDetail extends Model
         $carbonEndDateTime = $this->createCarbonDateTimeFromDB($this->endDate, $this->endTime);
         $carbonStartDateTime = $this->createCarbonDateTimeFromDB($this->startDate, $this->startTime);
         $carbonNow = Carbon::now()->utc();
+        // dd($this->status);
         // dd($carbonPublishedDateTime, $carbonEndDateTime, $carbonStartDateTime, $carbonNow);
         if ($this->status == "DRAFT" || $this->status == "PREVIEW") {
             return "DRAFT";

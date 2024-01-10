@@ -514,7 +514,7 @@
             @endif
         @endif
         <input checked onchange="toggleRadio(this, 'draft'); updateLaunchButtonText('draft');" type="radio"
-            id="draft" name="launch_visible" required value="DRAFT">
+            id="draft" name="launch_visible" value="DRAFT">
         <label for="draft"><u>Save as draft</u></label>
         <div class="radio-indent draft">
             <p>Save your event and edit it later</p>
