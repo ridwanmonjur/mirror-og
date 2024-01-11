@@ -78,11 +78,24 @@
     <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
         <!-- Banner image goes here -->
     </div>
-    <div style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+    <div style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
         <!-- Circle image goes here -->
-        <img src="https://blog.hubspot.com/hs-fs/hubfs/image8-2.jpg?width=600&name=image8-2.jpg" alt="Circle Image" style="width: 50px; border-radius: 50%; object-fit: cover;">
-    </div>
-</div>
+        @php
+        $imagePathWithoutExtension = 'https://driftwood.gg/storage/images/event_details/' . strtolower($joinEvent->eventDetails->eventTier);
+        $imageExtension = pathinfo($imagePathWithoutExtension, PATHINFO_EXTENSION);
+        
+        // Supported image extensions
+        $supportedExtensions = ['jpg', 'jpeg', 'png'];
+    
+        // If the extension is not in the supported list, default to '.png'
+        $imagePath = $imagePathWithoutExtension . (in_array(strtolower($imageExtension), $supportedExtensions) ? '' : '.png');
+        @endphp
+    
+        <img src="{{ $imagePath }}" alt="Circle Image" style="width: 100%; height: 100%; object-fit: cover;">
+    
+        </div>
+    
+        </div>
 
                     <div class="frame1">    
                     <div class="container">
