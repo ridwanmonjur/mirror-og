@@ -395,7 +395,7 @@
                             <polyline points="21 15 16 10 5 21"></polyline>
                         </svg>
                     </div>
-                    Supported files: JPEG, JPG, PNG<br>
+                    Supported files: JPG and PNG<br>
                     <label class="upload-button" for="eventBanner">Upload Image</label>
                     <br>
                 </div>
