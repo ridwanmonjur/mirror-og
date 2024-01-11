@@ -20,9 +20,9 @@
                         <input type="hidden" name="isPaymentDone"  id="isPaymentDone">
                         <input type="hidden" name="paymentMethod"  id="paymentMethod">
                         @endif
-                        <input type="hidden" name="gameTitleId" id="gameTitleId" value="{{$event->}}">
+                        {{-- <input type="hidden" name="gameTitleId" id="gameTitleId" value="{{$event->}}">
                         <input type="hidden" name="eventTierId" id="eventTierId" value="{{$event->}}">
-                        <input type="hidden" name="eventTypeId"  id="eventTypeId" value="{{}}">
+                        <input type="hidden" name="eventTypeId"  id="eventTypeId" value="{{}}"> --}}
                         @include('Organizer.Layout.CreateEventTimelineBox')
                         @if (session()->has('error'))
                         @include('Organizer.Layout.CreateEventStepOneEdit', ['error' => session()->get('error')])
