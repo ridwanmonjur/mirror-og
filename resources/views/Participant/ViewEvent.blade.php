@@ -101,7 +101,7 @@
                                             value="{{ $event->user->organizer->id }}">
                                         <button type="submit" id="followButton"
                                             data-following="{{ $user && $user->isFollowing($event->user->organizer) }}"
-                                            style="background-color: {{ $user && $user->isFollowing($event->user->organizer) ? '#32CD32' : '#8CCD39' }}; padding: 5px 10px; font-size: 14px; border-radius: 10px;">
+                                            style="background-color: {{ $user && $user->isFollowing($event->user->organizer) ? '#32CD32' : '#43A4D7' }}; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px;">
                                             {{ $user && $user->isFollowing($event->user->organizer) ? 'Unfollow' : 'Follow' }}
                                         </button>
                                         {{-- here is an input for signaling whether to fetch or not --}}
@@ -172,12 +172,12 @@
                                 @if ($existingJoint)
                                     <!-- Display the joined button -->
                                     <button type="button" class="oceans-gaming-default-button" disabled>
-                                        <u>Joined</u>
+                                        <span>Joined</span>
                                     </button>
                                 @else
                                     <!-- Display the join button -->
                                     <button type="submit" class="oceans-gaming-default-button">
-                                        <u>Join</u>
+                                        <span>Join</span>
                                     </button>
                                 @endif
                             </form>
