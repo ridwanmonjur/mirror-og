@@ -321,9 +321,17 @@ input[type="time"] {
     margin-top: 10px;
 }
 
-.banner-preview img {
-    max-width: 100%;
-    max-height: 100%;
+.banner-preview-img {
+    object-fit: cover;
+    max-width: 350px !important; 
+    aspect-ratio: 7/3; 
+    border: 2px dashed #ccc;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 10px;
 }
 
 .event_row {

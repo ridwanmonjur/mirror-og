@@ -22,16 +22,6 @@
                         View your events
                     </h3>
                 </u>
-                {{-- @if ($livePreview == 0)
-                <div>
-                    <input type="submit" value="Create Event" onclick="goToCreateScreen();">
-                    @if ($status == 'DRAFT' || $status == 'PREVIEW')
-                        <input type="submit" style="background-color: #8CCD39;" value="Edit..." onclick="goToEditScreen();">
-                    @endif
-                </div>
-                @else
-                <input type="submit" style="background-color: #8CCD39;" value="Resume creating..." onclick="goToEditScreen();">
-                @endif --}}
             </header>
         </div>
         <br><br>
@@ -48,12 +38,12 @@
                 <div style="padding-left: 20px;padding-right:20px;">
                     <div>
                         @if ($event->eventBanner)
-                            <img width="500" height="300" style="object-fit: cover;" {!! trustedBladeHandleImageFailureResize() !!}
+                            <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;" {!! trustedBladeHandleImageFailureResize() !!}
                                 src="{{ $eventBannerImg }}" alt="">
                         @else
                             <div>
                                 <br>
-                                <img style="object-fit: cover;" {!! trustedBladeHandleImageFailureResize() !!} alt="">
+                                <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;" {!! trustedBladeHandleImageFailureResize() !!} alt="">
                                 <h5>
                                     Please enter a banner image.
                                 </h5>
@@ -92,17 +82,22 @@
                                             <p class="small-text"> <i> {{ $followersCount }} followers </i> </p>
                                         </div>
                                     </div>
-                                    
-                                    <form id="followForm" method="POST" action="{{ Auth::user()->isFollowing($event->user->organizer) ? route('unfollow.organizer') : route('follow.organizer') }}">
+
+                                    <form id="followForm" method="POST"
+                                        action="{{ $user && $user->isFollowing($event->user->organizer) ? route('unfollow.organizer') : route('follow.organizer') }}">
                                         @csrf
-                                        @if (Auth::user()->isFollowing($event->user->organizer))
+                                        @if ($user && $user->isFollowing($event->user->organizer))
                                             @method('DELETE')
                                         @endif
-                                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                                        <input type="hidden" name="organizer_id" value="{{ $event->user->organizer->id }}">
-                                        <button type="submit" id="followButton" data-following="{{ Auth::user()->isFollowing($event->user->organizer) }}" style="background-color: {{ Auth::user()->isFollowing($event->user->organizer) ? '#32CD32' : '#8CCD39' }}; padding: 5px 10px; font-size: 14px; border-radius: 10px;">
-                                            {{ Auth::user()->isFollowing($event->user->organizer) ? 'Unfollow' : 'Follow' }}
+                                        <input type="hidden" name="user_id" value="{{ $user && $user->id ? $user->id : '' }}">
+                                        <input type="hidden" name="organizer_id"
+                                            value="{{ $event->user->organizer->id }}">
+                                        <button type="submit" id="followButton"
+                                            data-following="{{ $user && $user->isFollowing($event->user->organizer) }}"
+                                            style="background-color: {{ $user && $user->isFollowing($event->user->organizer) ? '#32CD32' : '#8CCD39' }}; padding: 5px 10px; font-size: 14px; border-radius: 10px;">
+                                            {{ $user && $user->isFollowing($event->user->organizer) ? 'Unfollow' : 'Follow' }}
                                         </button>
+                                        {{-- here is an input for signaling whether to fetch or not --}}
                                     </form>
                                 </div>
                                 <br>
@@ -144,10 +139,10 @@
                         </div>
                         <div>
                             <br><br>
-                            @if(session('errorMessage'))
-                            <div class="error-message">
-                             {{ session('errorMessage') }}
-                            </div>
+                            @if (session('errorMessage'))
+                                <div class="error-message">
+                                    {{ session('errorMessage') }}
+                                </div>
                             @endif
                             <form method="POST" action="{{ route('join.store', ['id' => $event]) }} }}">
                                 @csrf
@@ -251,7 +246,6 @@
 
         function goToEditScreen() {
             let url = "{{ route('event.edit', $event->id) }}";
-
             window.location.href = url;
         }
     </script>
@@ -262,44 +256,44 @@
             btn.style.backgroundColor = '#43A4D7';
             btn.style.color = 'white';
             btn.textContent = 'Joined';
-
-
-
         });
     </script>
     <script>
-        document.getElementById('followForm').addEventListener('submit', function (event) {
+        document.getElementById('followForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent default form submission
-    
+            if (document.querySelector("input[name='user_id']").value == ""){
+                window.location.href = "{{route('participant.signin.view')}}";
+                return;
+            }
             let form = this;
             let formData = new FormData(form);
-    
+
             fetch(form.action, {
-                method: form.method,
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Update button text and style
-                let followButton = document.getElementById('followButton');
-                let isFollowing = followButton.getAttribute('data-following') === 'true';
-    
-                if (isFollowing) {
-                    followButton.innerText = 'Follow';
-                    followButton.setAttribute('data-following', 'false');
-                    followButton.style.backgroundColor = '#8CCD39';
-                } else {
-                    followButton.innerText = 'Unfollow';
-                    followButton.setAttribute('data-following', 'true');
-                    followButton.style.backgroundColor = '#32CD32';
-                }
-    
-                // Display success message or handle any other action
-                console.log(data.message);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                    method: form.method,
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Update button text and style
+                    let followButton = document.getElementById('followButton');
+                    let isFollowing = followButton.getAttribute('data-following') === 'true';
+
+                    if (isFollowing) {
+                        followButton.innerText = 'Follow';
+                        followButton.setAttribute('data-following', 'false');
+                        followButton.style.backgroundColor = '#8CCD39';
+                    } else {
+                        followButton.innerText = 'Unfollow';
+                        followButton.setAttribute('data-following', 'true');
+                        followButton.style.backgroundColor = '#32CD32';
+                    }
+
+                    // Display success message or handle any other action
+                    console.log(data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         });
     </script>
     @include('CommonLayout.BootstrapJs')

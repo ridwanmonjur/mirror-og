@@ -382,7 +382,7 @@
         <div class="event-details-form box-width">
             <div class="form-group">
                 <label for="eventBanner">Event Banner</label>
-                <p class="description">A distinctive banner will help your event stand out (resolution TBD).</p>
+                <p class="description">A distinctive banner will help your event stand out (minimum resolution: 1400px x 600px).</p>
                 <div class="banner-upload">
                     <input onchange="handleFile('eventBanner', 'previewImage');" type="file" id="eventBanner"
                         name="eventBanner" accept="image/*" required>
@@ -395,23 +395,26 @@
                             <polyline points="21 15 16 10 5 21"></polyline>
                         </svg>
                     </div>
-                    Supported files: JPEG, JPG, PNG<br>
+                    Supported files: JPG and PNG<br>
                     <label class="upload-button" for="eventBanner">Upload Image</label>
                     <br>
                 </div>
                 @if ($event)
                     @if ($event->eventBanner)
-                        <img class="banner-preview" src="{{ bladeImageNull($event->eventBanner) }}"
+                        <img class="banner-preview-img" src="{{ bladeImageNull($event->eventBanner) }}"
                             {!! trustedBladeHandleImageFailure() !!} id="previewImage" alt="Preview"
-                            style="max-width: 200px; max-height: 200px; object-fit: cover;">
+                            width="350px" height="auto"
+                        >
                     @else
                         <div style="color: #EF4444;">Please enter an image</div>
-                        <img class="d-none banner-preview" id="previewImage" alt="Preview"
-                            style="max-width: 200px; max-height: 200px; object-fit: cover;">
+                        <img class="d-none banner-preview-img" id="previewImage" alt="Preview"
+                            width="350px" height="auto"
+                        >
                     @endif
                 @else
-                    <img class="d-none banner-preview" id="previewImage" alt="Preview"
-                        style="max-width: 200px; max-height: 200px; object-fit: cover;">
+                    <img class="d-none banner-preview-img" id="previewImage" alt="Preview"
+                        width="350px" height="auto"
+                    >
                 @endif
             </div>
         </div>

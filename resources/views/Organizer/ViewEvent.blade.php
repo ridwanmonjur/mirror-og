@@ -251,7 +251,6 @@
 
         function goToEditScreen() {
             let url = "{{ route('event.edit', $event->id) }}";
-
             window.location.href = url;
         }
     </script>

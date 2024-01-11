@@ -232,7 +232,6 @@ class EventController extends Controller
         $carbonStartDateTime = null;
         $carbonEndDateTime = null;
         $carbonPublishedDateTime = null;
-        // dd($request);
         // step1
         $eventDetail->gameTitle = $request->gameTitle;
         $eventDetail->eventType = $request->eventType;
@@ -324,6 +323,7 @@ class EventController extends Controller
             $eventDetail->sub_action_private = 'private';
         }
         $eventDetail->action = $request->launch_visible;
+        // dd($eventDetail, $request);
         return $eventDetail;
     }
 
@@ -374,7 +374,7 @@ class EventController extends Controller
             ->find($id);
         $isUserSameAsAuth = true;
         if (!$event) {
-            throw new ModelNotFoundException("Model not found for id: $id");
+            throw new ModelNotFoundException("Event not found with id: $id");
         }
         // if ($event->user_id != $authUser->id) {
         //     throw new UnauthorizedException("Restricted access. This is not your resource.");
@@ -412,7 +412,7 @@ class EventController extends Controller
             $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
             return view('Organizer.ViewEvent', $outputArray);
         } catch (Exception $e) {
-            return $this->show404("Model not found for id: $id");
+            return $this->show404("Event not found with id: $id");
         }
     }
 
@@ -421,7 +421,7 @@ class EventController extends Controller
         try {
             [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
         } catch (Exception $e) {
-            return $this->show404("Model not found for id: $id");
+            return $this->show404("Event not found with id: $id");
         }
         return view('Organizer.CreateEventSuccess', [
             'event' => $event,
@@ -453,7 +453,7 @@ class EventController extends Controller
             }
             
         } catch (Exception $e) {
-            return $this->show404("Model not found for id: $id");
+            return $this->show404("Event not found with id: $id");
         }
         
         return view('Organizer.ViewEvent', [
@@ -510,20 +510,22 @@ class EventController extends Controller
                     return back()->with('error', $e->getMessage());
                 }
                 $status = $eventDetail->statusResolved();
-                if ($status != 'UPCOMING' && $status != 'DRAFT') {
+                if ($status != 'ONGOING' && $status != 'DRAFT' && $status != 'SCHEDULED') {
                     return $this->show404("Event has already gone live for id: $id");
                 }
                 $eventDetail->user_id = auth()->user()->id;
                 $eventDetail->eventBanner = $fileNameFinal;
                 $eventDetail->save();
+
                 if ($request->livePreview == 'true') {
                     return redirect('organizer/event/' . $eventDetail->id . '/live');
                 }
                 return redirect('organizer/event/' . $eventDetail->id . '/success');
             } else {
-                return back()->with('error', 'Event id missing!');
+                return $this->show404("Event not found for id: $id");
             }
         } catch (Exception $e) {
+            dd($e);
             return back()->with('error', 'Something went wrong with saving data!');
         }
     }

@@ -23,10 +23,10 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
     style="padding-bottom: 2px;"
 >
     <div class="centered-absolute-game-tier">
-        <img src="{{  $eventTierLowerImg }}" width="100" style="object-fit: cover;">
+        <img src="{{  $eventTierLowerImg }}" width="70" height="70" style="object-fit: cover;">
     </div>
     <div class="{{'card-image card-image-' . $eventTierLower }}">
-        <img width="300" height="160"  {!! trustedBladeHandleImageFailure() !!} src="{{ $eventBannerImg }}" alt="">
+        <img width="100%" height="auto"  {!! trustedBladeHandleImageFailure() !!} src="{{ $eventBannerImg }}" alt="">
     </div>
     <div class="card-text">
         <div>
@@ -108,8 +108,8 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
                     <span>{{$event->type->eventType ?? 'Choose a type'}}</span>
                 </div>
             </div>
-            <div class="group-hover-flexbox icon2">
-                @if ($status == 'UPCOMING' || $status == 'DRAFT')
+            <div class="group-hover-flexbox icon2 mb-2">
+                @if ($status == 'ONGOING' || $status == 'DRAFT' || $status == 'SCHEDULED')
                 <a style="padding: none; margin: none;" href="{{ route('event.show', $event->id) }}">
                     <img onclick="goToLivePreview()" class="larger-hover" src="{{ asset('/assets/images/events/live-preview-icon.png') }}" alt="live preview" width="30" height="30" style="object-fit: cover; ">
                 </a>
@@ -119,7 +119,7 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
                     </button>
                 </a>
                 <a style="padding: none; margin: none;">
-                    <img style="padding: none; margin: none;" onclick="copyUtil('event')" class="larger-hover" src="{{ asset('/assets/images/events/clipboard-icon.png') }}" alt="clipboard" width="40" height="30" style="object-fit: cover; ">
+                    <img style="padding: none; margin: none;" onclick="copyUtil('event')" class="larger-hover" src="{{ asset('/assets/images/events/clipboard-icon.png') }}" alt="clipboard" width="45" height="30" style="object-fit: cover; ">
                 </a>
                 @if ($status != 'UPCOMING')
                 <a style="padding: none; margin: none;" href="{{ route('event.edit', $event->id) }}">
@@ -128,7 +128,6 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
                 @endif
                 @endif
             </div>
-            <br>
             <!-- Modal -->
         </div>
         

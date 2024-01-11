@@ -20,7 +20,13 @@
         </section>
 
         <div class="text__middle">
-            <p class="head">What's happening?</p>
+            <p class="head">
+            @if (empty(app('request')->input('search')))  
+            What's happening?
+            @else
+            Showing search results for '{{app('request')->input('search')}}'
+            @endif
+            </p>
         </div>
 
         <section class="featured-events scrolling-pagination">

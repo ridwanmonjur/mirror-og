@@ -15,6 +15,7 @@
     
     <div class="search-bar d-none-at-mobile">
         <input type="text" name="search" id="search-bar"
+            value="{{app('request')->input('search')}}"
             placeholder="Search for events">
         <svg onclick="goToSearchPage()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -48,6 +49,7 @@
 <nav class="mobile-navbar d-centered-at-mobile d-none">
     <div class="search-bar search-bar-mobile ">
         <input type="text" name="search" id="search-bar-mobile"
+            value="{{app('request')->input('search')}}"
             placeholder="Search for events">
         <svg onclick="goToSearchPage()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -77,7 +79,7 @@
     }
 
     function goToSearchPage() {
-        let ENDPOINT = "{{ route('user.search.view') }}";
+        let ENDPOINT = "{{ route('public.search.view') }}";
         let page = 1;
         let search = null;
         let searchBar = document.querySelector('input#search-bar');

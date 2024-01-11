@@ -49,7 +49,8 @@ Route::get('/account/verify-success/', [AuthController::class, 'verifySuccess'])
 
 Route::post('/logout', [AuthController::class, 'logout'])->name("participant.logout.action");
 
-Route::get('/event/search', [AuthController::class, 'showLandingPage'])->name('user.search.view');
+Route::get('/event/search', [AuthController::class, 'showLandingPage'])->name('public.search.view');
+Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view');
 
 Route::group(['prefix' => 'participant'], function () {
 	Route::get('/signin', [AuthController::class, 'signIn'])->name("participant.signin.view");

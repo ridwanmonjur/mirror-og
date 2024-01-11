@@ -110,15 +110,31 @@
 
     function handleFile(inputFileId, previewImageId) {
         var selectedFile = document.getElementById(inputFileId).files[0];
-        var allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        
+        const fileSize = selectedFile.size / 1024 / 1024; // in MiB
+        if (fileSize > 8) {
+            selectedFile.value = '';
+             Toast.fire({
+                icon: 'error',
+                text: "File size exceeds 2 MiB."
+            })
+
+            return;
+        }
+
+        var allowedTypes = ['image/png', 'image/jpg'];
 
         if (!allowedTypes.includes(selectedFile.type)) {
             selectedFile.value = '';
             Toast.fire({
                 icon: 'error',
-                text: "Invalid file type. Please upload a JPEG, PNG, or JPG file."
+                text: "Invalid file type. Please upload a PNG or JPG file."
             })
-        } else previewSelectedImage('eventBanner', 'previewImage');
+
+            return;
+        } 
+
+        previewSelectedImage('eventBanner', 'previewImage');
     }
 </script>
 <script>
