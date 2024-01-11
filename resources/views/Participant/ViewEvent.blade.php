@@ -312,7 +312,7 @@
                     if (isFollowing) {
                         followButton.innerText = 'Follow';
                         followButton.setAttribute('data-following', 'false');
-                        followButton.style.backgroundColor = '#8CCD39';
+                        followButton.style.backgroundColor = '#43A4D7';
                     } else {
                         followButton.innerText = 'Unfollow';
                         followButton.setAttribute('data-following', 'true');
