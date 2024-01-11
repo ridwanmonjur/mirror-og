@@ -1,30 +1,30 @@
-let throttle = (func, wait) => {
+throttle = (func, wait) => {
     let lastTime = 0;
 
     return (...args) => {
-      const now = Date.now();
+        const now = Date.now();
 
-      if (now - lastTime >= wait) {
-        func(...args);
+        if (now - lastTime >= wait) {
+            func(...args);
 
-        lastTime = now;
-      }
+            lastTime = now;
+        }
     };
-  };
+};
 let debounce = (func, wait) => {
     let timeout;
 
     return (...args) => {
-      if (timeout) clearTimeout(timeout);
+        if (timeout) clearTimeout(timeout);
 
-      timeout = setTimeout(() => func(...args), wait);
+        timeout = setTimeout(() => func(...args), wait);
     };
-  };
+};
 /*------------------------------------------
-       --------------------------------------------
-       call infinteLoadMore()
-       --------------------------------------------
-       --------------------------------------------*/
+--------------------------------------------
+call infinteLoadMore()
+--------------------------------------------
+--------------------------------------------*/
 function infinteLoadMore(page, ENDPOINT) {
     if ($('.no-more-data').hasClass('d-none')) {
         let endpointFinal = page == null ? ENDPOINT : ENDPOINT + "?page=" + page

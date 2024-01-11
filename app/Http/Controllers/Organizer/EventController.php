@@ -323,7 +323,7 @@ class EventController extends Controller
             $eventDetail->sub_action_private = 'private';
         }
         $eventDetail->action = $request->launch_visible;
-        dd($eventDetail, $request);
+        // dd($eventDetail, $request);
         return $eventDetail;
     }
 
