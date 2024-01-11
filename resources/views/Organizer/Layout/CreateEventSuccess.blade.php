@@ -17,7 +17,7 @@ extract($dateArray);
         @elseif ($status!="DRAFT" && $status!= "PREVIEW" && $status!="ERROR")
         <p id="notification">Your <u>{{$event->sub_action_private}}</u> event is already live!</p>
         @else
-        <p id="notification">Your {{strtolower($status)}} event has been created!</p>
+        <p id="notification">Your <u>{{strtolower($status)}}</u> event has been created!</p>
         @endif
     </div>
     <button class="js-shareUrl oceans-gaming-default-button" style="padding: 10px 50px; background-color: transparent; color: black; border: 1px solid black;">

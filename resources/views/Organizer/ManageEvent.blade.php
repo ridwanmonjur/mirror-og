@@ -263,10 +263,6 @@
             }
 
             function setLocalStorageFilter(event) {
-                console.log(event.target.value);
-                console.log(event.target.value);
-                console.log(event.target.value);
-                console.log(event.target.value);
                 let localItem = localStorage.getItem('filter') ?? null;
                 let filter = null;
                 if (localItem) filter = JSON.parse(localItem);
@@ -352,24 +348,6 @@
 
             var ENDPOINT;
 
-            function getQueryStringValue(key) {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(key);
-            }
-
-            function convertObjectToURLString(object) {
-                var queryString = "";
-                for (const [key, value] of Object.entries(object)) {
-                    if (Array.isArray(value)) {
-                        value.forEach(function(value) {
-                            queryString += `${key}=${value}&`;
-                        });
-                    } else {
-                        queryString += `${key}=${value}&`;
-                    }
-                }
-                return queryString;
-            }
 
             function convertUrlStringToQueryStringOrObject({
                 isObject
@@ -452,110 +430,7 @@
 
             const sortByList = ["startDate", "endDate"];
 
-            function sortAscending(index) {
-                const list = document.querySelectorAll('.ascending');
-                element = list[index];
-                element.classList.toggle('d-none');
-                element.nextElementSibling.classList.toggle('d-none');
-                // setHiddenElementValue(sortByList[index], 'desc') --}}
-            }
 
-            function sortDescending(index) {
-                const list = document.querySelectorAll('.descending');
-                element = list[index]
-                element.classList.toggle('d-none');
-                element.previousElementSibling.previousElementSibling.classList.toggle('d-none');
-                setHiddenElementValue(sortByList[index], 'none')
-            }
-
-            function sortNone(index) {
-                const list = document.querySelectorAll('.no-sort');
-                element = list[index]
-                element.classList.toggle('d-none');
-                element.nextElementSibling.classList.toggle('d-none');
-                setHiddenElementValue(sortByList[index], 'asc')
-            }
-
-            function setHiddenElementValue(key, value) {
-                let input = document.querySelector(`input[name=sortType]`);
-                const sortType = (isValidJson(input.value)) ? JSON.parse(input.value) : {};
-                if (value == "none" && key in sortType) {
-                    delete sortType[key];
-                } else {
-                    sortType[key] = value;
-                }
-                input.value = JSON.stringify(sortType);
-            }
-
-            const urlParams = convertObjectToURLString(window.location.search);
-
-
-            // Function to check if a string is valid JSON
-            function isValidJson(str) {
-                try {
-                    JSON.parse(str);
-                    return true;
-                } catch (e) {
-                    return false;
-                }
-            }
-
-            window.onload = function() {
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.get('status')) {
-                    let value = urlParams.get('status');
-                    let element = document.querySelector(`p.status-${value}`)
-                    element.style.color = '#8CCD39';
-                    element.style.border = '3px solid #43A4D7';
-                    element.style.padding = "5px";
-                    element.style.borderRadius = '12px';
-                }
-                const inputNameList = ['gameTitle', 'eventTier', 'eventType', 'sort'];
-                for (let j = 0; j < inputNameList.length; j++) {
-                    const inputName = inputNameList[j];
-                    const inputParamValueListFromName = urlParams.getAll(inputName);
-                    for (let i = 0; i < inputParamValueListFromName.length; i++) {
-                        const inputParamValueFromName = inputParamValueListFromName[i];
-                        const checkbox = document.querySelector(
-                            `input[type="radio"][name="${inputName}"][value="${inputParamValueFromName}"]`);
-                        if (checkbox) {
-                            checkbox.checked = true
-                        }
-                    }
-                }
-                const sortType = urlParams.get('sortType');
-                if (sortType) {
-                    const sortTypeJson = isValidJson(sortType) ? JSON.parse(sortType) : {};
-                    document.querySelector(`input[name="sortType"]`).value = sortType;
-                    const sortTypeJsonKeys = Object.keys(sortTypeJson);
-                    var sortBoxes = document.querySelectorAll('.sort-box');
-
-                    for (let i = 0; i < sortTypeJsonKeys.length; i++) {
-                        const sortTypeJsonKey = sortTypeJsonKeys[i];
-                        const sortTypeJsonValue = sortTypeJson[sortTypeJsonKey];
-                        console.log({
-                            sortTypeJsonKey,
-                            sortTypeJsonValue
-                        });
-                        let index = sortByList.indexOf(sortTypeJsonKey);
-                        if (index < 0) continue;
-                        var childElements = sortBoxes[index].children;
-                        var lastThreeChildren = Array.from(childElements).slice(-3);
-                        lastThreeChildren.forEach(function(child) {
-                            if (!child.classList.contains('d-none')) {
-                                child.classList.add('d-none');
-                            }
-                        });
-                        if (sortTypeJsonValue === 'asc') {
-                            lastThreeChildren[1].classList.remove('d-none');
-                        } else if (sortTypeJsonValue === 'desc') {
-                            lastThreeChildren[2].classList.remove('d-none');
-                        } else {
-                            lastThreeChildren[0].classList.remove('d-none');
-                        }
-                    }
-                }
-            }
 
             window.addEventListener(
                 "scroll",

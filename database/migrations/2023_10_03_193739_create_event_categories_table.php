@@ -15,10 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('gameTitle')->nullable();
             $table->string('gameIcon')->nullable();
-            $table->string('eventType')->nullable();
             $table->string('eventDefinitions')->nullable();
-            $table->string('eventTier')->nullable();
-            $table->string('tierIcon')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

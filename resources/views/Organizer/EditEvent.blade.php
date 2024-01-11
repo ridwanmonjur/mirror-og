@@ -15,13 +15,14 @@
                         @if ($event && $event->payment_transaction_id != null)
                         <input type="hidden" name="isPaymentDone"  id="isPaymentDone" value="done">
                         <input type="hidden" name="paymentMethod"  id="paymentMethod" value="done">
+                        <input type="hidden" name="paymentMethod"  id="paymentMethod" value="done">
                         @else
                         <input type="hidden" name="isPaymentDone"  id="isPaymentDone">
                         <input type="hidden" name="paymentMethod"  id="paymentMethod">
                         @endif
-                        <input type="hidden" name="gameTitleId" id="gameTitleId">
-                        <input type="hidden" name="eventTierId" id="eventTierId">
-                        <input type="hidden" name="eventTypeId"  id="eventTypeId">
+                        <input type="hidden" name="gameTitleId" id="gameTitleId" value="{{$event->}}">
+                        <input type="hidden" name="eventTierId" id="eventTierId" value="{{$event->}}">
+                        <input type="hidden" name="eventTypeId"  id="eventTypeId" value="{{}}">
                         @include('Organizer.Layout.CreateEventTimelineBox')
                         @if (session()->has('error'))
                         @include('Organizer.Layout.CreateEventStepOneEdit', ['error' => session()->get('error')])

@@ -26,7 +26,7 @@ class InvitationController extends Controller
             ->find($id);
         $isUserSameAsAuth = true;
         if (!$event) {
-            throw new ModelNotFoundException("Model not found for id: $id");
+            throw new ModelNotFoundException("Event not found with id: $id");
         }
         return view('Organizer.Invitation', compact('event', 'isUserSameAsAuth', 'participationList', 'user_id'));
     }

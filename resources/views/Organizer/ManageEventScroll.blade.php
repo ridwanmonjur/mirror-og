@@ -109,7 +109,7 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
                 </div>
             </div>
             <div class="group-hover-flexbox icon2">
-                @if ($status == 'UPCOMING' || $status == 'DRAFT')
+                @if ($status == 'ONGOING' || $status == 'DRAFT' || $status == 'SCHEDULED')
                 <a style="padding: none; margin: none;" href="{{ route('event.show', $event->id) }}">
                     <img onclick="goToLivePreview()" class="larger-hover" src="{{ asset('/assets/images/events/live-preview-icon.png') }}" alt="live preview" width="30" height="30" style="object-fit: cover; ">
                 </a>
