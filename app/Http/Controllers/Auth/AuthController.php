@@ -379,7 +379,7 @@ class AuthController extends Controller
 
             Mail::send('Email.verify', ['token' => $token], function ($message) use ($user) {
                 $message->to($user->email);
-                $message->subject('Reset Password');
+                $message->subject('Email verification');
             });
 
             return redirect()
