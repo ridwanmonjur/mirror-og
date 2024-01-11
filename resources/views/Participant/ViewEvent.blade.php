@@ -22,16 +22,6 @@
                         View your events
                     </h3>
                 </u>
-                {{-- @if ($livePreview == 0)
-                <div>
-                    <input type="submit" value="Create Event" onclick="goToCreateScreen();">
-                    @if ($status == 'DRAFT' || $status == 'PREVIEW')
-                        <input type="submit" style="background-color: #8CCD39;" value="Edit..." onclick="goToEditScreen();">
-                    @endif
-                </div>
-                @else
-                <input type="submit" style="background-color: #8CCD39;" value="Resume creating..." onclick="goToEditScreen();">
-                @endif --}}
             </header>
         </div>
         <br><br>
@@ -48,12 +38,12 @@
                 <div style="padding-left: 20px;padding-right:20px;">
                     <div>
                         @if ($event->eventBanner)
-                            <img width="500" height="300" style="object-fit: cover;" {!! trustedBladeHandleImageFailureResize() !!}
+                            <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;" {!! trustedBladeHandleImageFailureResize() !!}
                                 src="{{ $eventBannerImg }}" alt="">
                         @else
                             <div>
                                 <br>
-                                <img style="object-fit: cover;" {!! trustedBladeHandleImageFailureResize() !!} alt="">
+                                <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;" {!! trustedBladeHandleImageFailureResize() !!} alt="">
                                 <h5>
                                     Please enter a banner image.
                                 </h5>

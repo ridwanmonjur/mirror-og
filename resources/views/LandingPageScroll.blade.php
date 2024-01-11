@@ -17,12 +17,13 @@
                 <img src="{{ $bladeEventGameImage }}" style="padding-left: 20px;" class="logo2">
                 <span class="event_status_1" style="@php echo $stylesEventStatus; @endphp">{{ $event->statusResolved() }}
                 </span>
-            </div><br>
-            <div class="league_name">
-                <b>{{ $event->eventName }}</b><br>
+            </div>
+            
+            <div class="league_name mt-4">
+                <b>{{ $event->eventName }}</b> <br>
                 <small>{{ $event->region ?? 'South East Asia' }}</small>
-            </div><br>
-            <div class="trophy_caption">
+            </div>
+            <div class="trophy_caption mt-4">
                 <img src="{{ asset('/assets/images/trophy.png') }}" class="trophy"><br>
             </div>
             <div style="text-align: center;">

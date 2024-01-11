@@ -112,21 +112,53 @@ function previewSelectedImage(imageId, previewImageId) {
     if (!imageInput) {
         throw new Error("Image input not found!")
     }
+
     const previewImage = document.getElementById(previewImageId);
     if (!previewImage) {
         throw new Error("Preview not found!")
     }
-    if (previewImage.classList.contains("d-none")) {
-        previewImage.classList.remove("d-none");
-    }
-    previewImage.style.objectFit = "cover";
     const file = imageInput.files[0];
     if (file) {
         const reader = new FileReader();
+
+        reader.onload = function(e) {
+            var image = new Image();
+            image.src = reader.result;
+            var isError = false;
+        
+            image.onload = function() {
+                if (image.width <= 1400 ) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: `Image width ${image.width}px is lesser than 1400px`
+                    })
+                    
+                    isError = true;
+                    return;
+                }
+    
+                if (image.height <= 600) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: `Image height ${image.height} is lesser than 600px`
+                    })
+    
+                    isError = true;
+                    return;
+                }
+
+                if (!isError){
+                    if (previewImage.classList.contains("d-none")) {
+                        previewImage.classList.remove("d-none");
+                    }
+    
+                    previewImage.src = e.target.result;
+                }
+            };
+
+        };
         reader.readAsDataURL(file);
-        reader.onload = function (e) {
-            previewImage.src = e.target.result;
-        }
+        
     }
 }
 
@@ -135,13 +167,16 @@ function previewSelectedImageByForm(imageId, previewImageId) {
     if (!imageInput) {
         throw new Error("Image input not found!")
     }
+
     const previewImage = document.getElementById(previewImageId);
     if (!previewImage) {
         throw new Error("Preview not found!")
     }
+
     if (previewImage.classList.contains("d-none")) {
         previewImage.classList.remove("d-none");
     }
+
     previewImage.style.objectFit = "cover";
     const file = imageInput.files[0];
     if (file) {
