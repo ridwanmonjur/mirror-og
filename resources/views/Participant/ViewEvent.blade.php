@@ -151,13 +151,37 @@
                                     {{ session('errorMessage') }}
                                 </div>
                             @endif
-                            <form method="POST" action="{{ route('join.store', ['id' => $event]) }} }}">
+                            {{-- <form method="POST" action="{{ route('join.store', ['id' => $event]) }} }}">
                                 @csrf
                                 <button type="submit" class="oceans-gaming-default-button">
-                                    {{-- <u>{{$status ?? 'Choose event status'}}</u> --}}
+                                    <u>{{$status ?? 'Choose event status'}}</u>
                                     <u>Join</u>
                                 </button>
+                            </form> --}}
+
+                            <form method="POST" action="{{ route('join.store', ['id' => $event]) }}">
+                                @csrf
+                            
+                                @php
+                                    $userId = auth()->user()->id;
+                                    $existingJoint = \App\Models\JoinEvent::where('user_id', $userId)
+                                        ->where('event_details_id', $event->id)
+                                        ->first();
+                                @endphp
+                            
+                                @if ($existingJoint)
+                                    <!-- Display the joined button -->
+                                    <button type="button" class="oceans-gaming-default-button" disabled>
+                                        <u>Joined</u>
+                                    </button>
+                                @else
+                                    <!-- Display the join button -->
+                                    <button type="submit" class="oceans-gaming-default-button">
+                                        <u>Join</u>
+                                    </button>
+                                @endif
                             </form>
+                            
 
                             <br><br>
                             <div>
