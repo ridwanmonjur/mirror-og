@@ -25,16 +25,6 @@
                         View your events
                     </h3>
                 </u>
-                {{-- @if ($livePreview == 0)
-                <div>
-                    <input type="submit" value="Create Event" onclick="goToCreateScreen();">
-                    @if ($status == 'DRAFT' || $status == 'PREVIEW')
-                        <input type="submit" style="background-color: #8CCD39;" value="Edit..." onclick="goToEditScreen();">
-                    @endif
-                </div>
-                @else
-                <input type="submit" style="background-color: #8CCD39;" value="Resume creating..." onclick="goToEditScreen();">
-                @endif --}}
             </header>
         </div>
         <br><br>
@@ -52,12 +42,15 @@
                     <div class="grid-container-two-columns-at-desktop">
                         <div class="mx-2">
                             @if ($event->eventBanner)
-                                <img width="100%" height="250" style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!}
+                                <img width="100%" height="auto"
+                                    style="aspect-ratio: 7/3; object-fit: cover; margin: auto;" {!! trustedBladeHandleImageFailureResize() !!}
                                     src="{{ $eventBannerImg }}" alt="">
                             @else
                                 <div>
                                     <br>
-                                    <img style="object-fit: cover;" {!! trustedBladeHandleImageFailure() !!} alt="">
+                                    <img width="100%" height="auto"
+                                        style="aspect-ratio: 7/3; object-fit: cover; margin: auto;"
+                                        {!! trustedBladeHandleImageFailureResize() !!} src="{{ $eventBannerImg }}" alt="">
                                     <h5>
                                         Please enter a banner image.
                                     </h5>
@@ -65,8 +58,8 @@
                                 </div>
                             @endif
                         </div>
+                        <div></div>
                     </div>
-                    <div></div>
                     <div class="grid-container-two-columns-at-desktop">
                         <div class="card-text">
                             <div>

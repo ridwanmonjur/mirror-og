@@ -36,20 +36,26 @@
             @endif
             <div>
                 <div style="padding-left: 20px;padding-right:20px;">
-                    <div>
-                        @if ($event->eventBanner)
-                            <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;" {!! trustedBladeHandleImageFailureResize() !!}
-                                src="{{ $eventBannerImg }}" alt="">
-                        @else
-                            <div>
-                                <br>
-                                <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;" {!! trustedBladeHandleImageFailureResize() !!} alt="">
-                                <h5>
-                                    Please enter a banner image.
-                                </h5>
-                                <br><br>
-                            </div>
-                        @endif
+                    <div class="grid-container-two-columns-at-desktop">
+                        <div class="mx-2">
+                            @if ($event->eventBanner)
+                                <img width="100%" height="auto"
+                                    style="aspect-ratio: 7/3; object-fit: cover; margin: auto;" {!! trustedBladeHandleImageFailureResize() !!}
+                                    src="{{ $eventBannerImg }}" alt="">
+                            @else
+                                <div>
+                                    <br>
+                                    <img width="100%" height="auto"
+                                        style="aspect-ratio: 7/3; object-fit: cover; margin: auto;"
+                                        {!! trustedBladeHandleImageFailureResize() !!} src="{{ $eventBannerImg }}" alt="">
+                                    <h5>
+                                        Please enter a banner image.
+                                    </h5>
+                                    <br><br>
+                                </div>
+                            @endif
+                        </div>
+                        <div></div>
                     </div>
                     <div class="grid-container-two-columns-at-desktop">
                         <div class="card-text">
@@ -89,7 +95,8 @@
                                         @if ($user && $user->isFollowing($event->user->organizer))
                                             @method('DELETE')
                                         @endif
-                                        <input type="hidden" name="user_id" value="{{ $user && $user->id ? $user->id : '' }}">
+                                        <input type="hidden" name="user_id"
+                                            value="{{ $user && $user->id ? $user->id : '' }}">
                                         <input type="hidden" name="organizer_id"
                                             value="{{ $event->user->organizer->id }}">
                                         <button type="submit" id="followButton"
@@ -261,8 +268,8 @@
     <script>
         document.getElementById('followForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent default form submission
-            if (document.querySelector("input[name='user_id']").value == ""){
-                window.location.href = "{{route('participant.signin.view')}}";
+            if (document.querySelector("input[name='user_id']").value == "") {
+                window.location.href = "{{ route('participant.signin.view') }}";
                 return;
             }
             let form = this;
