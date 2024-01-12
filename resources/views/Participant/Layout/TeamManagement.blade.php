@@ -74,10 +74,28 @@
                     <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
                     @foreach($joinEvents as $key => $joinEvent)
                     <div class="event-box" id="event{{ $key + 1 }}" style="display: {{ $key === 0 ? 'block' : 'none' }};">
-                    <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;"></div>
-
-
-                    
+                    <div style="position: relative; height: 200px;">
+    <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
+        <!-- Banner image goes here -->
+    </div>
+    <div style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
+        <!-- Circle image goes here -->
+        @php
+        $imagePathWithoutExtension = 'https://driftwood.gg/storage/images/event_details/' . strtolower($joinEvent->eventDetails->eventTier);
+        $imageExtension = pathinfo($imagePathWithoutExtension, PATHINFO_EXTENSION);
+        
+        // Supported image extensions
+        $supportedExtensions = ['jpg', 'jpeg', 'png'];
+    
+        // If the extension is not in the supported list, default to '.png'
+        $imagePath = $imagePathWithoutExtension . (in_array(strtolower($imageExtension), $supportedExtensions) ? '' : '.png');
+        @endphp
+    
+        <img src="{{ $imagePath }}" alt="Circle Image" style="width: 100%; height: 100%; object-fit: cover;">
+    
+        </div>
+    
+        </div>
 
                     <div class="frame1">    
                     <div class="container">
@@ -90,7 +108,7 @@
                     <div class="right-col">
                     <p>
                     <img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg" class="logo2">
-                    <p style="font-size: 10px; text-align: left; margin-top: 10px; margin-left: 10px;"> {{ $joinEvent->eventDetails->eventName }}</p>
+                    <p style="font-size: 10px; text-align: left; margin-top: 10px; margin-left: 10px;"> {{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</p>
                                             
                     </p>
                     </div>

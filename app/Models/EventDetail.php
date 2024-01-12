@@ -110,4 +110,9 @@ class EventDetail extends Model
         return config('constants.mappingEventState');
     }
 
+    public function eventTier()
+{
+    return $this->belongsTo(EventTier::class, 'event_tier_id');
+}
+
 }
