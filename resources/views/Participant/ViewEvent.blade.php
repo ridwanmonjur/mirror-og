@@ -162,10 +162,7 @@
                                 @csrf
                             
                                 @php
-                                    $userId = auth()->user()->id;
-                                    $existingJoint = \App\Models\JoinEvent::where('user_id', $userId)
-                                        ->where('event_details_id', $event->id)
-                                        ->first();
+                                    
                                 @endphp
                             
                                 @if ($existingJoint)

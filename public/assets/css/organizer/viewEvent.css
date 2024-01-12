@@ -98,24 +98,6 @@ svg:active,
     position: relative;
 }
 
-.search-bar input {
-    border-radius: 30px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 90px;
-    width: 450px;
-    max-width: 80vw;
-    /* caret-color: #43A4D7;
-    color: #43A4D7; */
-
-}
-
-.search-bar svg {
-    position: absolute;
-    top: 12px;
-}
-
-
 input[type="submit"],
 .oceans-gaming-default-button {
     width: 200px;
@@ -164,13 +146,14 @@ input[type="submit"],
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .grid-container {
     display: grid;
     grid-template-columns: 1fr;
     grid-gap: 1%;
-    padding: 5% 15% 15% 15%;
+    padding: 5% 5%;
 }
 
 
@@ -312,8 +295,8 @@ input[type="submit"]:active {
 
 .card-subtitle {
     background-color: #D9D9D9;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -333,6 +316,9 @@ input[type="submit"]:active {
 /* Style the tab */
 .tab {
     overflow: hidden;
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
     /* border: 1px solid #ccc; */
     background-color: #f1f1f1;
 }
@@ -340,7 +326,7 @@ input[type="submit"]:active {
 /* Style the buttons inside the tab */
 .tab button {
     background-color: inherit;
-    float: left;
+    /* float: left; */
     border: none;
     outline: none;
     cursor: pointer;
@@ -367,14 +353,6 @@ input[type="submit"]:active {
     /* border: 1px solid #ccc; */
     border-top: none;
 }
-
-@media screen and (min-width: 600px) {
-    /* .grid-container{
-        padding: 5% 10% 10% 10%;
-        grid-template-columns: repeat(2, 1fr);
-    } */
-}
-
 
 @media screen and (min-width: 992px) {
     .flexbox-filter {

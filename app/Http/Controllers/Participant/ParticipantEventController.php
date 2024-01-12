@@ -216,7 +216,17 @@ class ParticipantEventController extends Controller
             $tierEntryFee = $_event->eventTier->tierEntryFee ?? null;
         }
 
-        return view('Participant.ViewEvent', compact('event', 'eventList', 'followersCount', 'user'));
+        if ($user) {
+            $userId = auth()->user()->id;
+            $existingJoint = JoinEvent::where('user_id', $userId)
+                ->where('event_details_id', $event->id)
+                ->first();
+        } else {
+            $userId = null;
+            $existingJoint = null;
+        }
+
+        return view('Participant.ViewEvent', compact('event', 'eventList', 'followersCount', 'user', 'existingJoint'));
     }
     public function FollowOrganizer(Request $request)
     {

@@ -34,7 +34,6 @@
                     <img class="side-image-absolute-bottom" src="{{ $eventTierLowerImg }}" width="180" height="125">
                 </div>
             @else
-                <!-- <div>Choose event tier</div> -->
                 <div></div>
             @endif
             <div>
