@@ -90,7 +90,7 @@
                         localStorage.setItem('eventTierEntry', eventTierEntry);
                         localStorage.setItem('eventTierTitle', eventTierTitle);
                         localStorage.setItem('eventTierId', eventTierId);
-                        fillStepValues();
+                        fillStepGameDetailsValues();
                         document.querySelectorAll('.box-tier').forEach(element => {
                             element.classList.remove('color-border-success');
                         });
@@ -103,18 +103,14 @@
                         'color-border-success' =>
                             $event && $category->id == $event->event_category_id,
                     ])>
-                        <!-- 0 -->
                         <div class="event_head_container ">
                             <img id='starfish' src="{{ asset('storage/' . $category->tierIcon) }}"
                                 class="inputEventTierImg event_head">
                         </div>
-                        <!-- <div>Tier id: {{ $category->id }}</div> -->
-                        <!-- 1 -->
+                        
                         <br>
-                        <!-- 2 -->
                         <h4 class="inputEventTierTitle" style="text-align: center;">{{ $category->eventTier }}</h4>
-                        <!-- 3 -->
-                        <!-- 4 -->
+                       
                         <div style="display: flex; justify-content: start; align-items: center">
                             <!-- 4.0 -->
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
@@ -125,9 +121,7 @@
                                 <span>team slots</span>
                             </div>
                         </div>
-                        <!-- 5 -->
                         <br>
-                        <!-- 6 -->
                         <div style="display: flex; justify-content: start; align-items: center">
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
                                 src="{{ asset('/assets/images/createEvent/trophy.png') }}">
@@ -136,9 +130,7 @@
                                 <span>prize pool</span>
                             </div>
                         </div>
-                        <!-- 7 -->
                         <br>
-                        <!-- 8 -->
                         <div style="display: flex; justify-content: start; align-items: center">
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
                                 src="{{ asset('/assets/images/createEvent/dollar.png') }}">
@@ -155,7 +147,7 @@
         <div class="flexbox box-width back-next">
             <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-            <button onclick="goToNextScreen('step-4', 'timeline-1'); fillStepValues();" type="button"
+            <button onclick="goToNextScreen('step-4', 'timeline-1'); fillStepGameDetailsValues();" type="button"
                 class="oceans-gaming-default-button"> Next > </button>
         </div>
     </div>
@@ -180,7 +172,7 @@
             <h4 id="outputEventTypeTitle">League/ Tier</h4>
             <p id="outputEventTypeDefinition" style="text-align: left;">Choose your event type...</p>
         </div>
-        <div class="event_extra" style="border: 1px solid black;">
+        <div class="event_extra rounded-box" id="event-tier-display">
             <div class="event_head_container">
                 <img id="outputEventTierImg" src="{{ asset('assets/images/createEvent/question.png') }}"
                     class="event_head">
@@ -220,7 +212,7 @@
         </div>
     </section>
     <div class="flexbox box-width back-next">
-        <button onclick="goToNextScreen('step-3', 'timeline-1'); fillStepValues();" type="button"
+        <button onclick="goToNextScreen('step-3', 'timeline-1'); fillStepGameDetailsValues();" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-5', 'timeline-2');" type="button"
             class="oceans-gaming-default-button"> Step 2 > </button>

@@ -32,7 +32,7 @@
         if (value) localStorage.setItem(key, value);
     }
 
-    function fillStepValues() {
+    function fillStepGameDetailsValues() {
         let formValues = getFormValues(['eventTier', 'eventType', 'gameTitle']);
         if (
             'eventTier' in formValues &&

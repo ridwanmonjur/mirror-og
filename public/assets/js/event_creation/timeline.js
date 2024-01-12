@@ -70,12 +70,11 @@ function setFormValues(values) {
 
     if (createEventForm) {
         for (var key in values) {
-            console.log({ [key]: values[key] });
             var formField = createEventForm.elements[key];
             if (formField && values[key]) {
                 formField.value = values[key];
             } else {
-                console.log(`Form field with key ${key} not found!`);
+                console.error(`Form field with key ${key} not found!`);
             }
         }
     }
@@ -338,7 +337,6 @@ function goToNextScreen(nextId, nextTimeline) {
         'step-12'];
 
     const allTimelines = ['timeline-1', 'timeline-2', 'timeline-3', 'timeline-4'];
-    let isFormValid = true, invalidKey = '', formValidation = null;
     let currentId = 'step-0';
     allIDs.forEach(id => {
         const element = document.querySelector(`#${id}`);
@@ -348,27 +346,6 @@ function goToNextScreen(nextId, nextTimeline) {
     })
     console.log({ nextId, currentId, id: allIDs[10] })
 
-    if (currentId == allIDs[1]) {
-        formValidation = validateFormValuesPresent(['gameTitle']);
-    }
-    else if (currentId == allIDs[2]) {
-        formValidation = validateFormValuesPresent(['eventType']);
-    }
-    else if (currentId == allIDs[3]) {
-    }
-
-    else if (currentId == allIDs[5]) {
-        formValidation = validateFormValuesPresent(['startDate', "startTime", "endDate", "endTime"]);
-    }
-    else if (currentId == allIDs[6]) {
-        formValidation = validateFormValuesPresent(['eventName']);
-    }
-    else if (currentId == allIDs[7]) {
-        formValidation = validateFormValuesPresent(['eventDescription']);
-    }
-    else if (currentId == allIDs[9]) {
-        formValidation = validateFormValuesPresent(['eventBanner']);
-    }
     if (nextId == allIDs[10]) {
         const paymentMethodConditionFulfilledButton =
             document.getElementsByClassName('choose-payment-method-condition-fulfilled')[0];
@@ -384,15 +361,15 @@ function goToNextScreen(nextId, nextTimeline) {
 
             let eventTier = formValues['eventTier'] ?? null;
             let eventType = formValues['eventType'] ?? null;
-            let eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
+            eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
             if (eventRate == -1) {
                 Toast.fire({
                     icon: 'error',
                     text: `Invalid event tier or event type!`
                 })
             }
-            let eventFee = eventSubTotal * (eventRate / 100);
-            let eventTotal = eventSubTotal + eventFee;
+            eventFee = eventSubTotal * (eventRate / 100);
+            eventTotal = eventSubTotal + eventFee;
             if (eventTier == null || eventType == null || eventSubTotal == -1) {
                 getElementByIdAndSetInnerHTML('paymentType', "N/A");
                 getElementByIdAndSetInnerHTML('paymentTier', "N/A");
@@ -423,15 +400,7 @@ function goToNextScreen(nextId, nextTimeline) {
         else {
             throw new Error("Invalid form values for payment screen");
         }
-    }
-    else if (nextId == allIDs[11]) {
-        formValidation = validateFormValuesPresent(['isPaymentDone']);
-    }
-
-    if (formValidation != null) {
-        isFormValid = formValidation[0];
-        invalidKey = formValidation[1];
-    }
+    } 
 
     allTimelines.forEach((timeline, _index) => {
         const paragraph = document.querySelector(`#${timeline} .timestamp span`);
@@ -448,7 +417,6 @@ function goToNextScreen(nextId, nextTimeline) {
     })
     allIDs.forEach(id => {
         const element = document.querySelector(`#${id}`);
-        // console.log({ id, element })
         if (id === nextId) {
             element.classList.remove("d-none");
         }
@@ -456,4 +424,11 @@ function goToNextScreen(nextId, nextTimeline) {
             element.classList.add("d-none");
         }
     })
+
+    if (nextId == allIDs[4]) {
+        let box = document.getElementById('event-tier-display');
+        box.classList.remove("rounded-box-thickness", "rounded-box-turtle", "rounded-box-dolphin", "rounded-box-starfish");
+        box.classList.add( 'rounded-box-' + localStorage.getItem('eventTierTitle').toLowerCase());
+        box.classList.add('rounded-box-thickness');
+    }
 }

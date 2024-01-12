@@ -20,6 +20,16 @@ div.navbar-placeholder{
     border-radius: 20px; 
 }
 
+.rounded-box {
+    border-radius: 30px 30px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.rounded-box-thickness {
+    border-width: 3px !important;
+}
+
 .rounded-box-turtle {
     border-color: #8CCD39;
 }
