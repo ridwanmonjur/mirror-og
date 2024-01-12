@@ -2,15 +2,20 @@
 
 function checkValidity(inpObj, inputID) {
     const fieldErrorMesage = document.querySelector(`#${inputID} ~ .field-error-message`);
+    const customErrorMessages = {
+        email: "Email address is invalid.",
+        // Add more custom error messages for different fields if needed
+    };
 
     if (!inpObj.checkValidity()) {
-        fieldErrorMesage.classList.remove("d-none");
-        fieldErrorMesage.innerHTML = `<i class="fas fa-exclamation-circle form_icon__error"></i><span>${inpObj.validationMessage}</span>`;
+        const customErrorMessage = customErrorMessages[inputID] || inpObj.validationMessage;
+        fieldErrorMesage.innerHTML = `<i class="fas fa-exclamation-circle form_icon__error"></i><span>${customErrorMessage}</span>`;
         inpObj.classList.add("input__error");
+        fieldErrorMesage.classList.remove("d-none");
     } else {
-        fieldErrorMesage.classList.add("d-none");
         inpObj.classList.remove("input__error");
         fieldErrorMesage.innerHTML = "";
+        fieldErrorMesage.classList.add("d-none");
     }
 }
 
