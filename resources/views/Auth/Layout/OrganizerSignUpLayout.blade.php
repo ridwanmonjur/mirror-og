@@ -79,8 +79,13 @@
     function movePlaceholderUp(input) {
         const label = input.parentElement;
         const placeholder = label.querySelector('.placeholder-moves-up');
-        placeholder.style.top = (input.value !== '') ? '0px' : '0px';
-        placeholder.style.fontSize = (input.value !== '') ? '0px' : 'inherit';
+        if (input.value !== '') {
+            placeholder.style.top = '0px';
+            placeholder.style.fontSize = '12px';
+        } else {
+            placeholder.style.top = '';
+            placeholder.style.fontSize = '';
+        }
     }
 
     function togglePassword() {
