@@ -79,7 +79,7 @@ div.navbar-placeholder{
     position: fixed !important;
     top: 0 !important;
     width: 100%;
-    z-index: 999;
+    z-index: 9999;
 }
 
 .mobile-navbar{

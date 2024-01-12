@@ -377,8 +377,7 @@ footer {
         font-size: 1.8rem;
     }
     .text__middle {
-        text-align: center;
-        padding: auto;
+        padding: 0 5vw;
     }
     .text__middle p {
         font-size: 24px;

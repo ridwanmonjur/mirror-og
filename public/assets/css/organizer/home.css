@@ -273,8 +273,7 @@ footer {
     }
 
     .text__middle {
-        text-align: center;
-        padding: 0;
+        padding: 0 5vw;
         font-size: larger;
     }
     /* Featured Events */
