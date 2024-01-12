@@ -376,10 +376,13 @@ footer {
     .hero h1 {
         font-size: 1.8rem;
     }
-
+    .text__middle {
+        text-align: center;
+        padding: auto;
+    }
     .text__middle p {
         font-size: 24px;
-        text-align: center;
+
     }
 
     .featured-events {
