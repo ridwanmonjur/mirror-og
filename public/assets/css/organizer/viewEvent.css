@@ -179,6 +179,8 @@ input[type="submit"]:active {
     border-width: 3px;
     border-style: solid;
     z-index: 1;
+    max-width: 100%;
+    
 }
 
 .rounded-box-turtle {
