@@ -61,8 +61,8 @@
     <div class="nav-buttons search-bar-mobile d-centered-at-mobile">
         @guest
             <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
-            <a class="" href="{{ route('organizer.signin.view') }}">Sign in as Organizer</a>
-            <a class="" href="{{ route('participant.signin.view') }}">Sign in as Participant</a>
+            <a class="" href="{{ route('organizer.signin.view') }}">Sign in as organizer</a>
+            <a class="" href="{{ route('participant.signin.view') }}">Sign in as participant</a>
         @endguest
         @auth
             <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
