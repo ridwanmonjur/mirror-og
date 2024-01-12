@@ -76,7 +76,6 @@ main {
 }
 
 .text__middle {
-    text-align: center;
     padding-left: 5%;
 }
 
@@ -380,6 +379,7 @@ footer {
 
     .text__middle p {
         font-size: 24px;
+        text-align: center;
     }
 
     .featured-events {
@@ -395,7 +395,7 @@ footer {
 
     .event{
         width: 90%;
-        margin: 0 auto 100px;
+        margin: 0 auto 60px;
     }
 }
 
