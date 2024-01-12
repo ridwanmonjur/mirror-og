@@ -76,8 +76,8 @@ main {
 }
 
 .text__middle {
-    width: max-content;
-    padding-left: 11rem;
+    text-align: center;
+    padding-left: 5%;
 }
 
 .text__middle p {
@@ -355,11 +355,7 @@ footer {
     .nav__items ul li {
         margin: 10px 0;
     }
-
-    .search-form {
-        margin-top: 20px;
-        text-align: center;
-    }
+    
 
     .search-form input[type="text"] {
         width: 80%;
@@ -398,7 +394,7 @@ footer {
     }
 
     .event{
-        width: 390px;
+        width: 90%;
         margin: 0 auto 100px;
     }
 }
