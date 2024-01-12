@@ -37,26 +37,22 @@
                 <div></div>
             @endif
             <div>
-                <div>
-                    <div>
-                        <div class="mx-2">
-                            @if ($event->eventBanner)
-                                <img width="100%" height="auto"
-                                    style="aspect-ratio: 7/3; object-fit: cover; margin: auto;" {!! trustedBladeHandleImageFailureResize() !!}
-                                    src="{{ $eventBannerImg }}" alt="">
-                            @else
-                                <div>
-                                    <br>
-                                    <img width="100%" height="auto"
-                                        style="aspect-ratio: 7/3; object-fit: cover; margin: auto;"
-                                        {!! trustedBladeHandleImageFailureResize() !!} src="{{ $eventBannerImg }}" alt="">
-                                    <h5>
-                                        Please enter a banner image.
-                                    </h5>
-                                    <br><br>
-                                </div>
-                            @endif
+                <div style="padding-left: 20px;padding-right:20px;">
+                    <div class="mx-2 position-relative">
+
+                        <div class="d-flex justify-content-center d-lg-none">
+                            <img class="image-at-top" src="{{ $eventTierLowerImg }}" width="120" height="90">
                         </div>
+                        <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;"
+                            @class(['rounded-banner', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
+                            alt="">
+                        @if ($event->eventBanner)
+                        @else
+                            <h5>
+                                Please enter a banner image.
+                            </h5>
+                            <br><br>
+                        @endif
                     </div>
                     <div class="grid-container-two-columns-at-desktop">
                         <div class="card-text">
@@ -131,7 +127,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <div class="pl-3">
                             <br><br>
                             <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
                                 <u>{{ $status ?? 'Choose event status' }}</u>
@@ -230,6 +226,7 @@
                 <div></div>
             @endif
         </div>
+        <br>
     </main>
     @stack('script')
     @include('CommonLayout.BootstrapJs')

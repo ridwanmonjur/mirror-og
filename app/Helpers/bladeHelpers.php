@@ -100,9 +100,9 @@ function trustedBladeHandleImageFailure(){
     $imgFailure = asset('assets/images/broken-image.jpeg');
     return "onerror=\"this.onerror=null;this.src='$imgFailure';\"";    
 }
-function trustedBladeHandleImageFailureResize(){
-    $imgFailure = asset('assets/images/broken-image.jpeg');
-    return "onerror=\"this.onerror=null;this.src='$imgFailure';this.width='300';this.height='200';\"";    
+function trustedBladeHandleImageFailureBanner(){
+    $imgFailure = asset('assets/images/404.png');
+    return "onerror=\"this.onerror=null;this.src='$imgFailure';\"";    
 }
 
 function bladeEventGameImage($eventBanner)

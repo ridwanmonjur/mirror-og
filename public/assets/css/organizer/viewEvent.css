@@ -35,7 +35,7 @@ main {
     min-height: 115vh;
     height: fit-content;
     display: block !important;
-    padding: 0px 10px;
+    padding: 0px 40px;
     align-items: center;
     justify-content: center;
     background-image: url("/assets/images/event-management-bg.png");
@@ -153,7 +153,7 @@ input[type="submit"],
     display: grid;
     grid-template-columns: 1fr;
     grid-gap: 1%;
-    padding: 5% 5%;
+    padding: 0% 5%;
 }
 
 
@@ -170,9 +170,14 @@ input[type="submit"]:active {
     border-radius: 30px 30px;
     border-width: 3px;
     border-style: solid;
-    /* #8CCD39 */
     min-width: 80%;
-    /* box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); */
+    z-index: 1;
+}
+
+.rounded-banner {
+    border-radius: 30px 30px;
+    border-width: 3px;
+    border-style: solid;
     z-index: 1;
 }
 
@@ -245,7 +250,7 @@ input[type="submit"]:active {
 .side-image-absolute-top {
     position: absolute;
     bottom: 40vh;
-}
+    }
 
 .side-image-absolute-bottom {
     position: absolute;
@@ -285,7 +290,7 @@ input[type="submit"]:active {
 }
 
 .card-text {
-    padding: 10px 20px;
+    padding: 10px 10px 0px 10px;
 }
 
 .card-text .small-text {
@@ -354,7 +359,23 @@ input[type="submit"]:active {
     border-top: none;
 }
 
+.image-at-top {
+    position: absolute;
+    top: -40px;
+}
+
 @media screen and (min-width: 992px) {
+    .d-lg-none {
+        display: none;
+    }
+    .rounded-banner {
+        max-width: 80%;
+    }
+
+    .image-at-top {
+        position: relative;
+        top: -50px;
+    }
     .flexbox-filter {
         width: 50%;
     }
