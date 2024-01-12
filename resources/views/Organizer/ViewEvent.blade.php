@@ -39,7 +39,7 @@
             @endif
             <div>
                 <div>
-                    <div class="grid-container-two-columns-at-desktop">
+                    <div>
                         <div class="mx-2">
                             @if ($event->eventBanner)
                                 <img width="100%" height="auto"
@@ -58,7 +58,6 @@
                                 </div>
                             @endif
                         </div>
-                        <div></div>
                     </div>
                     <div class="grid-container-two-columns-at-desktop">
                         <div class="card-text">
