@@ -24,7 +24,7 @@ cp .env.prod .env
 # Generate an app encryption key
 php artisan key:generate
 
-Install npm using wget 
+# Install npm using wget 
 
 npm i 
 npm i -g vite
@@ -36,10 +36,12 @@ ln -s storage/app/public public/storage
 hit endpoint to create symlink
 /artisan/storage
 
+# Clear All Caches (Combined)
+
+php artisan optimize:clear
+
 
 ```
-
-
 ### Admin Filament Installation
 ```bash
 # Create Admin Credentials
