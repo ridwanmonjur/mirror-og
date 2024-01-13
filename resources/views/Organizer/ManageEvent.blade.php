@@ -256,7 +256,7 @@
                     ...params,
                     filter: JSON.parse(localStorage.getItem('filter')),
                     sort: JSON.parse(localStorage.getItem('sort')),
-                    userId: Number("{{ auth()->user()->id }}"),
+                    userId: Number("{{ $user->id }}"),
                     search: localStorage.getItem("search")
                 }
                 loadByPost(ENDPOINT, body);
@@ -347,6 +347,25 @@
             }
 
             var ENDPOINT;
+
+              function getQueryStringValue(key) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(key);
+            }
+
+            function convertObjectToURLString(object) {
+                var queryString = "";
+                for (const [key, value] of Object.entries(object)) {
+                    if (Array.isArray(value)) {
+                        value.forEach(function(value) {
+                            queryString += `${key}=${value}&`;
+                        });
+                    } else {
+                        queryString += `${key}=${value}&`;
+                    }
+                }
+                return queryString;
+            }
 
 
             function convertUrlStringToQueryStringOrObject({

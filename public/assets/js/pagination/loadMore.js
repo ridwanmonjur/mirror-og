@@ -72,12 +72,6 @@ function infinteLoadMoreByPost(ENDPOINT, body) {
         })
             .then((response) => response.json())
             .then((response) => {
-                console.log({ response });
-                console.log({ response });
-                console.log({ response });
-                console.log({ response });
-
-                console.log({ response });
                 if (response.html == '') {
                     noMoreDataElement.classList.remove('d-none');
                     noMoreDataElement.style.display = 'flex';
@@ -113,24 +107,13 @@ function loadByPost(ENDPOINT, body) {
     })
         .then((response) => response.json())
         .then((response) => {
-            console.log({ response, hi: true });
-            console.log({ response, hi: true });
-            console.log({ response, hi: true });
-            console.log({ response, hi: true });
-
-            console.log({ response });
-            if (response.html == '') {
+           if (response.html == '') {
                 scrollingPaginationElement.innerHTML = "";
                 noMoreDataElement.classList.remove('d-none');
                 noMoreDataElement.style.display = 'flex';
                 noMoreDataElement.style.justifyContent = 'center';
                 noMoreDataElement.textContent = "Data not found by your query...";
             } else {
-                console.log({ response, entered: true });
-                console.log({ response, entered: true });
-                console.log({ response, entered: true });
-                console.log({ response, entered: true });
-                console.log({ response, entered: true });
                 scrollingPaginationElement.innerHTML = "";
                 scrollingPaginationElement.innerHTML = response.html;
             }

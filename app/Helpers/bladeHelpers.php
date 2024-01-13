@@ -57,11 +57,11 @@ function bladeGenerateEventStartEndDateStr($startDate, $startTime)
         $dateStr = $datePart . ' ' . $timePart;
         $combinedStr = $datePart . ' (' . $dayStr . ')';
     } else {
-        $datePart = 'Not set';
-        $timePart = 'Not set';
+        $datePart = 'Date is not set';
+        $timePart = 'Time is not set';
         $dayStr = '';
         $dateStr = 'Please enter date and time';
-        $combinedStr = 'Not set';
+        $combinedStr = 'Date/time is not set';
     }
     return [
         'datePart' => $datePart,
@@ -100,6 +100,12 @@ function trustedBladeHandleImageFailure(){
     $imgFailure = asset('assets/images/broken-image.jpeg');
     return "onerror=\"this.onerror=null;this.src='$imgFailure';\"";    
 }
+
+function trustedBladeHandleImageFailureResize(){
+    $imgFailure = asset('assets/images/broken-image.jpeg');
+    return "onerror=\"this.onerror=null;this.width='500px';this.height='50px';this.src='$imgFailure';\"";    
+}
+
 function trustedBladeHandleImageFailureBanner(){
     $imgFailure = asset('assets/images/404.png');
     return "onerror=\"this.onerror=null;this.src='$imgFailure';\"";    

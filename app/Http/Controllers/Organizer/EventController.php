@@ -94,7 +94,7 @@ class EventController extends Controller
                 ->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
             });
         });
-        $count = 6;
+        $count = 8;
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
 
@@ -188,6 +188,9 @@ class EventController extends Controller
             $filter = $request->input('filter');
             if (!$filter) return $query;
             if (array_key_exists('eventTier', $filter)) {
+                // User::whereHas('posts', function ($query) use ($postTitle) {
+                //     $query->where('title', 'like', '%' . $postTitle . '%');
+                // })->get();
                 $query->where('eventTier', $filter['eventTier']);
             } 
             if (array_key_exists('eventType', $filter)) {

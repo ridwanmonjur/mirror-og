@@ -18,15 +18,16 @@
                             $event && $category->id == $event->event_category_id,
                     ])
                         onclick="
-                                document.querySelectorAll('.scroll-images').forEach(element => {
-                                    element.classList.remove('color-border-success');
-                                });
-                                this.classList.add('color-border-success');
-                                setFormValues( {'gameTitle': {{ Js::from($category->gameTitle) }} } ); 
-                                goToNextScreen('step-2', 'timeline-1');
-                                let gameTitleImg = this.children[0].children[0].src;
-                                localStorage.setItem('gameTitleImg', gameTitleImg);
-                                ">
+                            document.querySelectorAll('.scroll-images').forEach(element => {
+                                element.classList.remove('color-border-success');
+                            });
+                            this.classList.add('color-border-success');
+                            setFormValues( {'gameTitle': {{ Js::from($category->gameTitle) }} } ); 
+                            goToNextScreen('step-2', 'timeline-1');
+                            let gameTitleImg = this.children[0].children[0].src;
+                            localStorage.setItem('gameTitleImg', gameTitleImg);
+                            "
+                        >
                         <a href="#">
                             <img class="selectable-image " src="<?php echo asset("storage/$category->gameIcon"); ?>" alt=""
                                 style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"></a>

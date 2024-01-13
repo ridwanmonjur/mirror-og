@@ -39,7 +39,7 @@
                     <div class="mx-2 position-relative">
 
                         <div class="d-flex justify-content-center d-lg-none">
-                            <img class="image-at-top" src="{{ $eventTierLowerImg }}" width="120" height="90">
+                            <img class="image-at-top" src="{{ $eventTierLowerImg }}"  {!! trustedBladeHandleImageFailureResize() !!}  width="120" height="90">
                         </div>
                         <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;"
                             @class(['rounded-banner', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
