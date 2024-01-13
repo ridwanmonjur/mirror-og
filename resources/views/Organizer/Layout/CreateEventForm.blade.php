@@ -77,7 +77,6 @@
                 <section
                     onclick="setFormValues( {'eventTier': {{ Js::from($category->eventTier) }} } );
                         let eventTierId = {{ Js::from($category->id) }} ;
-                        goToNextScreen('step-4', 'timeline-1');
                         let eventTierImg = this.querySelector('.inputEventTierImg').src;
                         let eventTierPerson = this.querySelector('.inputEventTierPerson').innerHTML;
                         let eventTierPrize = this.querySelector('.inputEventTierPrize').innerHTML;
@@ -95,6 +94,7 @@
                             element.classList.remove('color-border-success');
                         });
                         this.querySelector('.box-tier').classList.add('color-border-success');
+                        goToNextScreen('step-4', 'timeline-1');
                         ;"
                     class="featured-events">
                     <a href="#" @class([
@@ -109,7 +109,7 @@
                         </div>
                         
                         <br>
-                        <h4 class="inputEventTierTitle" style="text-align: center;">{{ $category->eventTier }}</h4>
+                        <h4 class="inputEventTierTitle text-center">{{ $category->eventTier }}</h4>
                        
                         <div style="display: flex; justify-content: start; align-items: center">
                             <!-- 4.0 -->
