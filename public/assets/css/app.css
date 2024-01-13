@@ -231,3 +231,7 @@ a:hover {
 .swal2-icon{
     margin-right: 10px !important;
 }
+
+.swal2-container {
+    z-index: 100000000000 !important;
+}

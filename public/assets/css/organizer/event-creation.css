@@ -17,19 +17,16 @@ input[type="time"] {
 }
 
 .back-next button{
-    position: absolute;
-    top: 15vh;
+    position: static;
 }
 
 .back-next button:nth-child(1){
-    position: absolute;
-    left: 10px;
-}
-.back-next button:nth-child(2){
-    position: absolute;
-    right: 10px;
+    position: static;
 }
 
+.back-next button:nth-child(2){
+    position: static;
+}
 
 .form-group-width {
     margin: auto;
@@ -625,7 +622,7 @@ nav svg:active {
     border-radius: 12px;
     /* border: 2px solid #95ADBD; */
     position: absolute;
-    left: 40%;
+    left: 0%;
     top: 0%;
     transform: translateY(-50%) translateX(-110%);
     transition: all 200ms ease-in;
@@ -700,7 +697,7 @@ nav svg:active {
     text-overflow: ellipsis;
     white-space: nowrap;
     position: relative;
-    left: -40%;
+    left: 0%;
 }
 
 .timestamp {

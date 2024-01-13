@@ -94,7 +94,7 @@ class EventController extends Controller
                 ->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
             });
         });
-        $count = 8;
+        $count = 6;
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
 
@@ -376,9 +376,6 @@ class EventController extends Controller
         if (!$event) {
             throw new ModelNotFoundException("Event not found with id: $id");
         }
-        // if ($event->user_id != $authUser->id) {
-        //     throw new UnauthorizedException("Restricted access. This is not your resource.");
-        // }
         return [$event, $isUserSameAsAuth, $authUser];
     }
 
@@ -391,7 +388,6 @@ class EventController extends Controller
     {
         try {
             [$event, $isUserSameAsAuth, $user] = $this->getEventAndUser($id);
-    
             $count = 8;
             $eventListQuery = EventDetail::query();
             $eventListQuery->with('tier'); 
@@ -399,19 +395,19 @@ class EventController extends Controller
     
             $mappingEventState = EventDetail::mappingEventStateResolve();
     
-            // Access tierEntryFee data from eventTier relationship in EventDetail
             foreach ($eventList as $eventItem) {
-                $tierEntryFee = $eventItem->tier->tierEntryFee ?? null;
+                $tierEntryFee = $eventItem->tier?->tierEntryFee ?? null;
             }
     
-            // Get the count of associated join events for each EventDetail
             foreach ($eventList as $eventDetail) {
-                $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
+                $eventDetail->joinEventCount = $eventDetail->joinEvents()?->count();
             }
-    
-            $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
+
+            $livePreview = true;
+            $outputArray = compact('eventList', 'event', 'count', 'user', 'livePreview', 'mappingEventState');
             return view('Organizer.ViewEvent', $outputArray);
         } catch (Exception $e) {
+            dd($e->getMessage());
             return $this->show404("Event not found with id: $id");
         }
     }

@@ -107,12 +107,9 @@
                             <img id='starfish' src="{{ asset('storage/' . $category->tierIcon) }}"
                                 class="inputEventTierImg event_head">
                         </div>
-                        
                         <br>
                         <h4 class="inputEventTierTitle text-center">{{ $category->eventTier }}</h4>
-                       
                         <div style="display: flex; justify-content: start; align-items: center">
-                            <!-- 4.0 -->
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
                                 src="{{ asset('/assets/images/createEvent/user.png') }}">
 
@@ -175,7 +172,8 @@
         <div class="event_extra rounded-box" id="event-tier-display">
             <div class="event_head_container">
                 <img id="outputEventTierImg" src="{{ asset('assets/images/createEvent/question.png') }}"
-                    class="event_head">
+                    class="event_head" width="60" height="60"
+                >
             </div>
             <br>
             <h4 id="outputEventTierTitle" class="text-center mt-1">Choose a tier</h4>
@@ -413,7 +411,7 @@
         <div class="flexbox box-width back-next">
             <button onclick="goToNextScreen('step-8', 'timeline-2')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-            <button onclick="goToNextScreen('step-10', 'timeline-3')" type="button"
+            <button onclick="goToNextScreen('step-10', 'timeline-3'); fillStepPaymentValues();" type="button"
                 class="oceans-gaming-default-button"> Step 3 > </button>
         </div>
     </div>
@@ -527,12 +525,10 @@
         <div class="radio-indent-hidden public d-none">
             <input onchange="updateLaunchButtonText('launch');" type="radio" class="launch_schedule_default_1"
                 name="launch_schedule" value="now">
-            <!-- public launch schedule?? -->
             <label for="sub_action_public"><u>Launch now</u></label><br>
             <input onchange="updateLaunchButtonText('schedule');" type="radio" id="launch_schedule"
                 name="launch_schedule" value="schedule">
             <label for="sub_action_public"><u>Schedule launch</u></label><br>
-            <!-- public launch schedule time?? -->
             <div class="container">
                 <div class="box">
                     <input onchange="updateLaunchButtonText('schedule');" type="date" id="sub_action_public_date"
@@ -546,8 +542,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- private part -->
         <input
             onchange="toggleRadio(this, 'private'); updateLaunchButtonText('launch'); launchScheduleDefaultSelected('launch_schedule_default_2');"
             required type="radio" id="private" name="launch_visible" value="private">
@@ -584,7 +578,7 @@
 
     </div>
     <br>
-    <div class="text-center d-none">
+    <div class="text-center">
         <button type="button" class="oceans-gaming-default-button" onclick="saveForLivePreview();">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -598,7 +592,7 @@
     </div>
     <br>
     <div class="flexbox box-width back-next">
-        <button onclick="goToNextScreen('step-10', 'timeline-3')" type="button"
+        <button onclick="goToNextScreen('step-10', 'timeline-3'); fillStepPaymentValues();" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="saveEvent(true)" type="button" type="button" id="launch-button"
             class="oceans-gaming-default-button"> Save </button>

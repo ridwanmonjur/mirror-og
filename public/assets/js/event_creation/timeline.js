@@ -228,15 +228,15 @@ function closeDropDown(element, id, keyValues, key) {
     element.parentElement.previousElementSibling.classList.toggle("dropbtn-open");
     element.parentElement.classList.toggle("d-none");
     document.getElementById(id).innerHTML = `
-Selected (${keyValues[key]})
-<span class="dropbtn-arrow">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-        class="feather feather-chevron-down">
-        <polyline points="6 9 12 15 18 9"></polyline>
-    </svg>
-</span>
-`;
+        Selected (${keyValues[key]})
+        <span class="dropbtn-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-chevron-down">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </span>
+    `;
     setFormValues(keyValues)
 }
 function getElementByIdAndSetInnerHTML(id, innerHTML) {
@@ -316,9 +316,12 @@ function saveEvent(willGoToNextPage = true) {
         })
         let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
         goToNextScreen(nextId, nextTimeline);
+        if (nextId == 'step-10') {  
+            fillStepPaymentValues();
+        }
         return;
     }
-    else if  (launch_visible != "DRAFT" && willGoToNextPage && launch_schedule == 'now') {
+    else if (launch_visible != "DRAFT" && willGoToNextPage && launch_schedule == 'now') {
         setFormValues({ 'launch_schedule': 'now' });
         goToNextScreen('step-12', 'timeline-4');
         return;
@@ -344,63 +347,6 @@ function goToNextScreen(nextId, nextTimeline) {
             currentId = id;
         }
     })
-    console.log({ nextId, currentId, id: allIDs[10] })
-
-    if (nextId == allIDs[10]) {
-        const paymentMethodConditionFulfilledButton =
-            document.getElementsByClassName('choose-payment-method-condition-fulfilled')[0];
-        const paymentMethodCondition = document.getElementsByClassName('choose-payment-method')[0];
-        console.log({ found: true })
-        let eventRate = 20, eventSubTotal = 0, eventFee = 0, eventTotal = 0;
-        let eventRateToTierMap = { 'Starfish': 5000, 'Turtle': 10000, 'Dolphin': 15000 };
-        let formValues = getFormValues(['eventTier', 'eventType']);
-        if (
-            'eventTier' in formValues &&
-            'eventType' in formValues
-        ) {
-
-            let eventTier = formValues['eventTier'] ?? null;
-            let eventType = formValues['eventType'] ?? null;
-            eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
-            if (eventRate == -1) {
-                Toast.fire({
-                    icon: 'error',
-                    text: `Invalid event tier or event type!`
-                })
-            }
-            eventFee = eventSubTotal * (eventRate / 100);
-            eventTotal = eventSubTotal + eventFee;
-            if (eventTier == null || eventType == null || eventSubTotal == -1) {
-                getElementByIdAndSetInnerHTML('paymentType', "N/A");
-                getElementByIdAndSetInnerHTML('paymentTier', "N/A");
-                getElementByIdAndSetInnerHTML('paymentTotal', "N/A");
-
-                if (!paymentMethodCondition.classList.contains("d-none")) {
-                    paymentMethodCondition.classList.add("d-none");
-                }
-                if (paymentMethodConditionFulfilledButton.classList.contains("d-none")) {
-                    paymentMethodConditionFulfilledButton.classList.remove("d-none");
-                }
-            }
-            else {
-                getElementByIdAndSetInnerHTML('paymentType', eventType);
-                getElementByIdAndSetInnerHTML('paymentTier', eventTier);
-                getElementByIdAndSetInnerHTML('paymentSubtotal', "RM " + numberToLocaleString(eventSubTotal));
-                getElementByIdAndSetInnerHTML('paymentRate', `${eventRate}%`);
-                getElementByIdAndSetInnerHTML('paymentFee', "RM " + numberToLocaleString(eventFee));
-                getElementByIdAndSetInnerHTML('paymentTotal', "RM " + numberToLocaleString(eventTotal));
-                if (!paymentMethodConditionFulfilledButton.classList.contains("d-none")) {
-                    paymentMethodConditionFulfilledButton.classList.add("d-none");
-                }
-                if (paymentMethodCondition.classList.contains("d-none")) {
-                    paymentMethodCondition.classList.remove("d-none");
-                }
-            }
-        }
-        else {
-            throw new Error("Invalid form values for payment screen");
-        }
-    } 
 
     allTimelines.forEach((timeline, _index) => {
         const paragraph = document.querySelector(`#${timeline} .timestamp span`);

@@ -1,5 +1,65 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
-<script src="https://js.stripe.com/v3/" ></script>
+<script>
+  
+    function fillStepPaymentValues() {
+        const paymentMethodConditionFulfilledButton =
+            document.getElementsByClassName('choose-payment-method-condition-fulfilled')[0];
+        const paymentMethodCondition = document.getElementsByClassName('choose-payment-method')[0];
+        let eventRate = 20,
+            eventSubTotal = 0,
+            eventFee = 0,
+            eventTotal = 0;
+        let eventRateToTierMap = {
+            'Starfish': 5000,
+            'Turtle': 10000,
+            'Dolphin': 15000
+        };
+        let formValues = getFormValues(['eventTier', 'eventType']);
+        if (
+            'eventTier' in formValues &&
+            'eventType' in formValues
+        ) {
+
+            let eventTier = formValues['eventTier'] ?? null;
+            let eventType = formValues['eventType'] ?? null;
+            eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
+            if (eventRate == -1) {
+                Toast2.fire({
+                    icon: 'error',
+                    text: `Invalid event tier or event type!`
+                })
+            }
+            eventFee = eventSubTotal * (eventRate / 100);
+            eventTotal = eventSubTotal + eventFee;
+            if (eventTier == null || eventType == null || eventSubTotal == -1) {
+                getElementByIdAndSetInnerHTML('paymentType', "N/A");
+                getElementByIdAndSetInnerHTML('paymentTier', "N/A");
+                getElementByIdAndSetInnerHTML('paymentTotal', "N/A");
+
+                if (!paymentMethodCondition.classList.contains("d-none")) {
+                    paymentMethodCondition.classList.add("d-none");
+                }
+                if (paymentMethodConditionFulfilledButton.classList.contains("d-none")) {
+                    paymentMethodConditionFulfilledButton.classList.remove("d-none");
+                }
+            } else {
+                getElementByIdAndSetInnerHTML('paymentType', eventType);
+                getElementByIdAndSetInnerHTML('paymentTier', eventTier);
+                getElementByIdAndSetInnerHTML('paymentSubtotal', "RM " + numberToLocaleString(eventSubTotal));
+                getElementByIdAndSetInnerHTML('paymentRate', `${eventRate}%`);
+                getElementByIdAndSetInnerHTML('paymentFee', "RM " + numberToLocaleString(eventFee));
+                getElementByIdAndSetInnerHTML('paymentTotal', "RM " + numberToLocaleString(eventTotal));
+                if (!paymentMethodConditionFulfilledButton.classList.contains("d-none")) {
+                    paymentMethodConditionFulfilledButton.classList.add("d-none");
+                }
+                if (paymentMethodCondition.classList.contains("d-none")) {
+                    paymentMethodCondition.classList.remove("d-none");
+                }
+            }
+        }
+    }
+</script>
+<script src="https://js.stripe.com/v3/"></script>
 <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
 <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
 <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
@@ -45,7 +105,7 @@
 
             // Game Title
             let outputGameTitleImg = document.querySelector('img#outputGameTitleImg');
-         
+
             setImageSrcFromLocalStorage('gameTitleImg', outputGameTitleImg);
         }
 
@@ -54,7 +114,7 @@
         let outputEventTypeDefinition = document.getElementById('outputEventTypeDefinition');
         setInnerHTMLFromLocalStorage('eventTypeTitle', outputEventTypeTitle);
 
-      
+
         setInnerHTMLFromLocalStorage('eventTypeDefinition', outputEventTypeDefinition);
 
         // Event Tier
@@ -110,11 +170,11 @@
 
     function handleFile(inputFileId, previewImageId) {
         var selectedFile = document.getElementById(inputFileId).files[0];
-        
+
         const fileSize = selectedFile.size / 1024 / 1024; // in MiB
         if (fileSize > 8) {
             selectedFile.value = '';
-             Toast.fire({
+            Toast.fire({
                 icon: 'error',
                 text: "File size exceeds 2 MiB."
             })
@@ -132,13 +192,13 @@
             })
 
             return;
-        } 
+        }
 
         previewSelectedImage('eventBanner', 'previewImage');
     }
 </script>
 <script>
-    let stripe = Stripe('{{ env("STRIPE_KEY") }}')
+    let stripe = Stripe('{{ env('STRIPE_KEY') }}')
     const elements = stripe.elements();
     const cardElement = elements.create('card', {
         style: {
@@ -174,7 +234,7 @@
             // payment method created
 
             let paymentDiv = document.querySelector('.choose-payment-method');
-          
+
             // goToNextScreen('step-11', 'timeline-4');
             document.getElementById('modal-close').click();
             const form = new FormData(cardForm);
@@ -207,7 +267,7 @@
                 })
                 .catch(error => {
                     console.error(error);
-                    Toast.fire({
+                    Toast2.fire({
                         icon: 'error',
                         text: "Payment failed. Please try again..."
                     })
@@ -216,8 +276,7 @@
     })
 
     function clearLocalStorage() {
-       localStorage.clear();
-
+        localStorage.clear();
     }
 
     window.onload = function() {
@@ -227,7 +286,7 @@
         clearLocalStorage();
         if ($event) {
 
-            let assetKeyWord = "{{asset('')}}"
+            let assetKeyWord = "{{ asset('') }}"
             // game
             setLocalStorageFromEventObject('gameTitleImg', assetKeyWord+ 'storage/' + $event?.game?.gameIcon);
             // event type
@@ -260,7 +319,7 @@
                 'sub_action_team': $event?.sub_action_team,
             });
             new Tagify(document.querySelector('#eventTags'), [...$event?.eventTags] ?? []);
-           
+
         }
         else{
             new Tagify(document.querySelector('#eventTags'), {});
@@ -287,5 +346,4 @@
 
         closeDropDown(dropdownButton);
     }
-
 </script>
