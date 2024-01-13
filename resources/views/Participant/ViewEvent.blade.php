@@ -273,15 +273,6 @@
         }
     </script>
     <script>
-        const btn = document.getElementById('btn');
-
-        btn.addEventListener('click', function onClick() {
-            btn.style.backgroundColor = '#43A4D7';
-            btn.style.color = 'white';
-            btn.textContent = 'Joined';
-        });
-    </script>
-    <script>
         document.getElementById('followForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent default form submission
             if (document.querySelector("input[name='user_id']").value == "") {
