@@ -539,9 +539,10 @@ nav svg:active {
 }
 
 .swiper-wrapper {
-    display: inline-flex;
+    display: flex;
     flex-direction: row;
     overflow-y: hidden;
+    overflow-x: visible;
     justify-content: center;
 }
 
@@ -687,17 +688,16 @@ nav svg:active {
     transition: all 200ms ease-in;
 }
 
-.swiper-slide .cat {
-    white-space: nowrap;
+
+.cat {
+    position: relative;
+    left: -40%;
 }
 
 .cat {
     display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     position: relative;
-    left: 0%;
+    left: -40%;
 }
 
 .timestamp {
