@@ -71,7 +71,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function isFollowing(Organizer $organizer)
     {
-        if (is_null($organizer) || is_null($organizer->id)) return null;
+        if (is_null($organizer)) return null;
         return $this->following()->where('organizer_id', $organizer->id)->exists();
     }
 
