@@ -162,26 +162,66 @@ class ParticipantEventController extends Controller
         return view('Participant.SelectTeamtoRegister', compact('selectTeam'));
     }
 
+    // public function TeamtoRegister(Request $request)
+    // {
+    //     $selectedTeamNames = $request->input('selectedTeamName');
+
+    //     if (is_array($selectedTeamNames)) {
+    //         foreach ($selectedTeamNames as $teamId) {
+    //             $member = new Member();
+    //             $member->team_id = $teamId;
+    //             $member->user_id = auth()->user()->id;
+    //             $member->save();
+    //             return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
+    //         }
+    //     } else {
+    //         $member = new Member();
+    //         $member->team_id = $selectedTeamNames;
+    //         $member->user_id = auth()->user()->id;
+    //         $member->save();
+    //         return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
+    //     }
+    // }
+
     public function TeamtoRegister(Request $request)
     {
-        $selectedTeamNames = $request->input('selectedTeamName');
+    $selectedTeamNames = $request->input('selectedTeamName');
 
-        if (is_array($selectedTeamNames)) {
-            foreach ($selectedTeamNames as $teamId) {
-                $member = new Member();
-                $member->team_id = $teamId;
-                $member->user_id = auth()->user()->id;
-                $member->save();
-                return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
+    if (is_array($selectedTeamNames)) {
+        foreach ($selectedTeamNames as $teamId) {
+            // Check if the user is already a member of the selected team
+            if (!$this->userAlreadyMember($teamId)) {
+                $this->registerUserToTeam($teamId);
             }
-        } else {
-            $member = new Member();
-            $member->team_id = $selectedTeamNames;
-            $member->user_id = auth()->user()->id;
-            $member->save();
-            return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
+        }
+    } else {
+        // Check if the user is already a member of the selected team
+        if (!$this->userAlreadyMember($selectedTeamNames)) {
+            $this->registerUserToTeam($selectedTeamNames);
         }
     }
+
+    return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
+    }
+
+    private function userAlreadyMember($teamId)
+    {
+    $userId = auth()->user()->id;
+    // Check if the user is already a member of the selected team
+    return Member::where('team_id', $teamId)
+        ->where('user_id', $userId)
+        ->exists();
+    }
+
+    private function registerUserToTeam($teamId)
+    {
+    // Create a new member entry for the user and selected team
+    $member = new Member();
+    $member->team_id = $teamId;
+    $member->user_id = auth()->user()->id;
+    $member->save();
+    }
+
 
     public function ConfirmUpdate(Request $request)
     {
