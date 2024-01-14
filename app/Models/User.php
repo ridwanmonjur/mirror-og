@@ -69,7 +69,7 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsToMany(Team::class, 'members');
     }
 
-    public function isFollowing(Organizer $organizer)
+    public function isFollowing($organizer)
     {
         if (is_null($organizer)) return false;
         return $this->following()->where('organizer_id', $organizer->id)->exists();
