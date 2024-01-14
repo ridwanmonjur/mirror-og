@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Participant;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use App\Models\Team;
@@ -12,6 +13,7 @@ use App\Models\Member;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -153,7 +155,7 @@ class ParticipantEventController extends Controller
                 ->with('error', 'Team name already exists. Please choose a different name.');
             // Redirect back to the form with an error message
         }
-        
+
         $team->user_id = auth()->user()->id;
         $team->save();
         return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
@@ -197,36 +199,49 @@ class ParticipantEventController extends Controller
 
     public function ViewEvent(Request $request, $id)
     {
-        $event = EventDetail::find($id);
-        $count = 8;
-        $user = Auth::user();
-        $eventListQuery = EventDetail::query();
-        $eventListQuery->with('tier');
-        if ($user){
-            $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
-            $userId = auth()->user()->id;
-            $existingJoint = JoinEvent::where('user_id', $userId)
-                ->where('event_details_id', $event->id)
-                ->first();
-            foreach ($eventList as $_event) {
-                $tierEntryFee = $_event->eventTier?->tierEntryFee ?? null;
+        try {
+            $event = EventDetail::find($id);
+            if (!$event) {
+                throw new ModelNotFoundException("Event not found by id: $id");
             }
-        } else {
-            $eventList = [];
-            $userId = null;
-            $existingJoint = null;
-        }
 
-        $organizerId = $event?->user?->organizer?->id ?? null;
-        if ($organizerId) {
-            $followersCount = Follow::where('organizer_id', $organizerId)->count();
-        } else {
-            $followersCount = null;
-        }
+            $count = 8;
+            $user = Auth::user();
+            $eventListQuery = EventDetail::query();
+            $eventListQuery->with('tier');
+            if ($user) {
+                $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+                $userId = auth()->user()->id;
+                $existingJoint = JoinEvent::where('user_id', $userId)
+                    ->where('event_details_id', $event->id)
+                    ->first();
+                foreach ($eventList as $_event) {
+                    $tierEntryFee = $_event->eventTier?->tierEntryFee ?? null;
+                }
+            } else {
+                $eventList = [];
+                $userId = null;
+                $existingJoint = null;
+            }
 
-        
-        return view('Participant.ViewEvent', compact('event', 'eventList', 'followersCount', 'user', 'existingJoint'));
+            $organizerId = $event?->user?->organizer?->id ?? null;
+            if ($organizerId) {
+                $followersCount = Follow::where('organizer_id', $organizerId)->count();
+            } else {
+                $followersCount = null;
+            }
+
+            return view('Participant.ViewEvent', compact('event', 'eventList', 'followersCount', 'user', 'existingJoint'));
+        } catch (Exception $e) {
+            return $this->show404($e);
+        }
     }
+
+    public function show404($error)
+    {
+        return view('Organizer.EventNotFound', compact('error'));
+    }
+
     public function FollowOrganizer(Request $request)
     {
         try {
