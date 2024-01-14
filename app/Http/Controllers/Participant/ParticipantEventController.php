@@ -61,35 +61,45 @@ class ParticipantEventController extends Controller
 
     public function teamList($user_id)
     {
-        $teamList = Team::Where('user_id', $user_id)->get();
-        // Check if teams exist for the user
-        if ($teamList->isNotEmpty()) {
-            // Process the data to count unique usernames for each team
-            $usernamesCountByTeam = [];
-            foreach ($teamList as $team) {
-                // Retrieve JoinEvents for each team
-                $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($team) {
-                    $query->where('team_id', $team->id);
-                })
-                    ->with('user')
-                    ->get();
+    
+    $teamList = Team::leftJoin('members', 'teams.id', '=', 'members.team_id')
+        ->where(function ($query) use ($user_id) {
+            $query->where('teams.user_id', $user_id) // Teams created by the user
+                ->orWhere('members.user_id', $user_id); // Teams where the user is a member
+        })
+        ->groupBy('teams.id') // Group by team ID to avoid duplicates
+        ->select('teams.*')
+        ->get();
 
-                $usernames = $joinEvents
-                    ->unique('user_id')
-                    ->pluck('user')
-                    ->count();
+    
+    if ($teamList->isNotEmpty()) {
+        
+        $usernamesCountByTeam = [];
+        foreach ($teamList as $team) {
+            
+            $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($team) {
+                $query->where('team_id', $team->id);
+            })
+                ->with('user')
+                ->get();
 
-                $usernamesCountByTeam[$team->id] = $usernames;
-            }
+            $usernames = $joinEvents
+                ->unique('user_id')
+                ->pluck('user')
+                ->count();
 
-            return view('Participant.TeamList', compact('teamList', 'usernamesCountByTeam'));
-        } else {
-            // Handle if no teams are found for the user
-            return redirect()
-                ->back()
-                ->with('error', 'No teams found for the user.');
+            $usernamesCountByTeam[$team->id] = $usernames;
         }
+
+        return view('Participant.TeamList', compact('teamList', 'usernamesCountByTeam'));
+    } else {
+        // Handle if no teams are found for the user
+        return redirect()
+            ->back()
+            ->with('error', 'No teams found for the user.');
     }
+    }
+
 
     public function teamManagement($id)
     {
