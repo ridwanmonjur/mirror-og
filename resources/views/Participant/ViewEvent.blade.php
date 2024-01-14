@@ -80,25 +80,25 @@
                                     &nbsp;
                                     <div class="card-organizer">
                                         <p style="display: inline;"><u>
-                                                {{ $event->user->organizer->companyName ?? 'Add' }} </u> </p>
+                                                {{ $event?->user?->organizer?->companyName ?? 'Add' }} </u> </p>
                                         <p class="small-text"> <i> {{ $followersCount }} followers </i> </p>
                                     </div>
                                 </div>
 
                                 <form id="followForm" method="POST"
-                                    action="{{ $user && $user->isFollowing($event->user->organizer) ? route('unfollow.organizer') : route('follow.organizer') }}">
+                                    action="{{ $user && $user->isFollowing($event?->user?->organizer) ? route('unfollow.organizer') : route('follow.organizer') }}">
                                     @csrf
-                                    @if ($user && $user->isFollowing($event->user->organizer))
+                                    @if ($user && $user->isFollowing($event?->user?->organizer))
                                         @method('DELETE')
                                     @endif
                                     <input type="hidden" name="user_id"
                                         value="{{ $user && $user->id ? $user->id : '' }}">
                                     <input type="hidden" name="organizer_id"
-                                        value="{{ $event->user->organizer->id }}">
+                                        value="{{ $event?->user?->organizer?->id }}">
                                     <button type="submit" id="followButton"
-                                        data-following="{{ $user && $user->isFollowing($event->user->organizer) }}"
-                                        style="background-color: {{ $user && $user->isFollowing($event->user->organizer) ? '#32CD32' : '#43A4D7' }}; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px;">
-                                        {{ $user && $user->isFollowing($event->user->organizer) ? 'Unfollow' : 'Follow' }}
+                                        data-following="{{ $user && $user->isFollowing($event?->user?->organizer) }}"
+                                        style="background-color: {{ $user && $user->isFollowing($event?->user?->organizer) ? '#32CD32' : '#43A4D7' }}; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px;">
+                                        {{ $user && $user->isFollowing($event?->user?->organizer) ? 'Unfollow' : 'Follow' }}
                                     </button>
                                     {{-- here is an input for signaling whether to fetch or not --}}
                                 </form>
