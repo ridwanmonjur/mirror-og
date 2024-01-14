@@ -19,10 +19,10 @@
         <p>Then, select what kind of event you want to run.</p>
         <div class="box-width">
             <div class="grid-2-columns box-width" style="margin-top: -20px !important;">
-                @foreach ($eventCategory as $category)
-                    @if ($category->eventDefinitions)
-                        <div onclick="setFormValues( {'eventType': {{ Js::from($category->eventType) }} } );
-                            let eventTypeId = {{ Js::from($category->id) }} ;
+                @foreach ($eventTypeList as $gameCategory)
+                    @if ($gameCategory->eventDefinitions)
+                        <div onclick="setFormValues( {'eventType': {{ Js::from($gameCategory->eventType) }} } );
+                            let eventTypeId = {{ Js::from($gameCategory->id) }} ;
                             setFormValues( {'eventTypeId': eventTypeId} );
                             goToNextScreen('step-3', 'timeline-1');
                             document.querySelectorAll('.box_2nd').forEach((el) => {
@@ -39,13 +39,13 @@
                             @class(['container-border'])>
                             <a href="#" @class([
                                 'box_2nd selectable-box',
-                                'color-border-success' => $event && $category->id == $event->event_type_id,
+                                'color-border-success' => $event && $gameCategory->id == $event->event_type_id,
                             ])>
                                 <h2 class="{{ 'inputEventTypeTitle box-title' }}">
-                                    <u>{{ $category->eventType }}</u>
+                                    <u>{{ $gameCategory->eventType }}</u>
                                 </h2>
                                 <span class="inputEventTypeDefinition" class="box-text"
-                                    style="text-align: left;">{{ $category->eventDefinitions }}</span>
+                                    style="text-align: left;">{{ $gameCategory->eventDefinitions }}</span>
                             </a>
                         </div>
                     @endif
@@ -73,10 +73,10 @@
         <br>
         <p>Finally, choose a tier for your event.</p>
         <div class="grid-3-columns box-width">
-            @foreach ($eventTierList as $category)
+            @foreach ($eventTierList as $tierCategory)
                 <section
-                    onclick="setFormValues( {'eventTier': {{ Js::from($category->eventTier) }} } );
-                        let eventTierId = {{ Js::from($category->id) }} ;
+                    onclick="setFormValues( {'eventTier': {{ Js::from($tierCategory->eventTier) }} } );
+                        let eventTierId = {{ Js::from($tierCategory->id) }} ;
                         let eventTierImg = this.querySelector('.inputEventTierImg').src;
                         let eventTierPerson = this.querySelector('.inputEventTierPerson').innerHTML;
                         let eventTierPrize = this.querySelector('.inputEventTierPrize').innerHTML;
@@ -99,22 +99,22 @@
                     class="featured-events">
                     <a href="#" @class([
                         'event selectable-box box-tier',
-                        'rounded-box-'.  strtolower($category->eventTier),
+                        'rounded-box-'.  strtolower($tierCategory->eventTier),
                         'color-border-success' =>
-                            $event && $category->id == $event->event_tier_id,
+                            $event && $tierCategory->id == $event->event_tier_id,
                     ])>
                         <div class="event_head_container ">
-                            <img id='starfish' src="{{ asset('storage/' . $category->tierIcon) }}"
+                            <img id='starfish' src="{{ asset('storage/' . $tierCategory->tierIcon) }}"
                                 class="inputEventTierImg event_head">
                         </div>
                         <br>
-                        <h4 class="inputEventTierTitle text-center">{{ $category->eventTier }}</h4>
+                        <h4 class="inputEventTierTitle text-center">{{ $tierCategory->eventTier }}</h4>
                         <div style="display: flex; justify-content: start; align-items: center">
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
                                 src="{{ asset('/assets/images/createEvent/user.png') }}">
 
                             <div>
-                                <span class="inputEventTierPerson">{{ $category->tierTeamSlot }}</span>
+                                <span class="inputEventTierPerson">{{ $tierCategory->tierTeamSlot }}</span>
                                 <span>team slots</span>
                             </div>
                         </div>
@@ -123,7 +123,7 @@
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
                                 src="{{ asset('/assets/images/createEvent/trophy.png') }}">
                             <div>
-                                <span class="inputEventTierPrize">RM {{ $category->tierPrizePool }}</span>
+                                <span class="inputEventTierPrize">RM {{ $tierCategory->tierPrizePool }}</span>
                                 <span>prize pool</span>
                             </div>
                         </div>
@@ -132,7 +132,7 @@
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
                                 src="{{ asset('/assets/images/createEvent/dollar.png') }}">
                             <div>
-                                <span class="inputEventTierEntry">RM {{ $category->tierEntryFee }}</span>
+                                <span class="inputEventTierEntry">RM {{ $tierCategory->tierEntryFee }}</span>
                                 <span>team entry fee</span>
                             </div>
                         </div>
