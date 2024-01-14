@@ -379,8 +379,15 @@ class EventController extends Controller
         if (!$event) {
             throw new ModelNotFoundException("Event not found with id: $id");
         }
+
+        $checkIfUserIsOrganizerOfEvent = $event->user_id == $authUser->id;
+        if (!$checkIfUserIsOrganizerOfEvent) {
+            throw new UnauthorizedException('You cannot view a scheduled event');
+        }
+
         return [$event, $isUserSameAsAuth, $authUser];
     }
+
 
     public function show404($error): View
     {
@@ -435,18 +442,15 @@ class EventController extends Controller
         try {
             [$event, $isUserSameAsAuth, $user] = $this->getEventAndUser($id);
             
-            // Your code to fetch $eventList (similar to what you've shown previously)
             $count = 8;
             $eventListQuery = EventDetail::query();
             $eventListQuery->with('tier');
             $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
 
-            // Access tierEntryFee data from eventTier relationship in EventDetail
             foreach ($eventList as $eventItem) {
                 $tierEntryFee = $eventItem->tier->tierEntryFee ?? null;
             }
     
-            // Get the count of associated join events for each EventDetail
             foreach ($eventList as $eventDetail) {
                 $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
             }

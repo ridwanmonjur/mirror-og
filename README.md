@@ -32,8 +32,6 @@ npm run build
 
 ln -s storage/app/public public/storage
 
-
-hit endpoint to create symlink
 /artisan/storage
 
 # Clear All Caches (Combined)
@@ -46,8 +44,8 @@ php artisan optimize:clear
 ```bash
 # Create Admin Credentials
 php artisan make:filament-user
-GO TO DAABASE
-AND GIVE USER ROLE=ADMIN
+GO TO DATABASE
+AND GIVE USER ROLE=ADMIN (compulsory!!!)
 #update Images
 
 ```
@@ -83,7 +81,6 @@ php artisan db:seed --class=EventSeeder
 ```bash
 
 # docs
-https://realrashid.github.io/sweet-alert/config
 
 # Include 'sweetalert::alert' in master layout
 @include('sweetalert::alert')

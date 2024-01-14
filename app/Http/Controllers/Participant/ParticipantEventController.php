@@ -10,12 +10,10 @@ use App\Models\EventDetail;
 use App\Models\Follow;
 use App\Models\JoinEvent;
 use App\Models\Member;
-use Illuminate\Support\Facades\Validator;
-use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\UnauthorizedException;
 
 class ParticipantEventController extends Controller
 {
@@ -95,10 +93,7 @@ class ParticipantEventController extends Controller
 
     public function teamManagement($id)
     {
-        // $teamManage = Team::Where('id',$id)->get();
-
         $teamManage = Team::where('id', $id)->get();
-
         if ($teamManage) {
             // Retrieve JoinEvents related to the team_id
             $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
@@ -153,7 +148,6 @@ class ParticipantEventController extends Controller
             return redirect()
                 ->back()
                 ->with('error', 'Team name already exists. Please choose a different name.');
-            // Redirect back to the form with an error message
         }
 
         $team->user_id = auth()->user()->id;
@@ -162,7 +156,6 @@ class ParticipantEventController extends Controller
     }
 
     /* Select Team to Register */
-
     public function SelectTeamtoRegister(Request $request)
     {
         $selectTeam = Team::all();
@@ -173,17 +166,15 @@ class ParticipantEventController extends Controller
     {
         $selectedTeamNames = $request->input('selectedTeamName');
 
-        // Loop through the selected teams if it's an array
         if (is_array($selectedTeamNames)) {
             foreach ($selectedTeamNames as $teamId) {
-                $member = new Member(); // Assuming you're creating a new Member instance
+                $member = new Member();
                 $member->team_id = $teamId;
                 $member->user_id = auth()->user()->id;
                 $member->save();
                 return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
             }
         } else {
-            // Handle the case when only one team is selected
             $member = new Member();
             $member->team_id = $selectedTeamNames;
             $member->user_id = auth()->user()->id;
@@ -205,11 +196,34 @@ class ParticipantEventController extends Controller
                 throw new ModelNotFoundException("Event not found by id: $id");
             }
 
+            $status = $event->statusResolved();
+            if (in_array($status, ['DRAFT', 'PREVEW'])) {
+                $lowerStatus = strtolower($status);
+                throw new ModelNotFoundException("Can't display event: $id with status: $lowerStatus)}");
+            }
+
             $count = 8;
             $user = Auth::user();
             $eventListQuery = EventDetail::query();
             $eventListQuery->with('tier');
             if ($user) {
+                if ($event->sub_action_private == 'private') {
+                    $checkIfUserIsOrganizerOfEvent = $event->user_id == $user->id;
+                    // change this line
+                    $checkIfUserIsInvited = true;
+                    $checkIfShouldDisallow = !($checkIfUserIsOrganizerOfEvent || $checkIfUserIsInvited);
+                    if ($checkIfShouldDisallow) {
+                        throw new UnauthorizedException("You're neither organizer nor a participant of event");
+                    }
+                }
+
+                if ($status == 'SCHEDULED') {
+                    $checkIfUserIsOrganizerOfEvent = $event->user_id == $user->id;
+                    if (!$checkIfUserIsOrganizerOfEvent) {
+                        throw new UnauthorizedException('You cannot view a scheduled event');
+                    }
+                }
+
                 $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
                 $userId = auth()->user()->id;
                 $existingJoint = JoinEvent::where('user_id', $userId)
@@ -219,6 +233,10 @@ class ParticipantEventController extends Controller
                     $tierEntryFee = $_event->eventTier?->tierEntryFee ?? null;
                 }
             } else {
+                if ($event->sub_action_private == 'private') {
+                    throw new UnauthorizedException('Login to access this event.');
+                }
+
                 $eventList = [];
                 $userId = null;
                 $existingJoint = null;
@@ -247,14 +265,11 @@ class ParticipantEventController extends Controller
         try {
             $userId = $request->input('user_id');
             $organizerId = $request->input('organizer_id');
-
-            // Check if the user is already following the organizer
             $existingFollow = Follow::where('user_id', $userId)
                 ->where('organizer_id', $organizerId)
                 ->first();
 
             if (!$existingFollow) {
-                // If not following, create a new follow record
                 Follow::create([
                     'user_id' => $userId,
                     'organizer_id' => $organizerId,
@@ -262,11 +277,9 @@ class ParticipantEventController extends Controller
 
                 return response()->json(['message' => 'Successfully followed the organizer']);
             } else {
-                // If already following, return a message
                 return response()->json(['message' => 'Successfully followed the organizer']);
             }
         } catch (QueryException $e) {
-            // Handle the database exception
             return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
         }
     }
@@ -275,8 +288,6 @@ class ParticipantEventController extends Controller
     {
         $userId = $request->input('user_id');
         $organizerId = $request->input('organizer_id');
-
-        // Find and delete the follow record for unfollowing
         Follow::where('user_id', $userId)
             ->where('organizer_id', $organizerId)
             ->delete();
@@ -292,9 +303,7 @@ class ParticipantEventController extends Controller
             ->first();
 
         if ($existingJoint) {
-            // If a record already exists, set an error message in the session.
             $errorMessage = 'You have already joined this event.';
-            // Flash the error message to the session.
             $request->session()->flash('errorMessage', $errorMessage);
         } else {
             // If no record exists, create a new entry.
