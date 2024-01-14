@@ -21,6 +21,31 @@ use Illuminate\Validation\UnauthorizedException;
 
 class EventController extends Controller
 {
+    private function getEventAndUser($id)
+    {
+        $authUser = Auth::user();
+        $event = EventDetail::with('type', 'tier', 'game')
+            ->where('user_id', $authUser->id)
+            ->find($id);
+        $isUserSameAsAuth = true;
+        if (!$event) {
+            throw new ModelNotFoundException("Event not found with id: $id");
+        }
+
+        $checkIfUserIsOrganizerOfEvent = $event->user_id == $authUser->id;
+        if (!$checkIfUserIsOrganizerOfEvent) {
+            throw new UnauthorizedException('You cannot view a scheduled event');
+        }
+
+        return [$event, $isUserSameAsAuth, $authUser];
+    }
+
+
+    public function show404($error): View
+    {
+        return view('Organizer.EventNotFound', compact('error'));
+    }
+
     public function home(): View
     {
         return view('Organizer.Home');
@@ -97,18 +122,14 @@ class EventController extends Controller
         $count = 8;
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
-
-        // Code For Getting Price from Event_Tier Table
         $eventListQuery->with('tier'); // Eager load the eventTier relationship
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
-        // Access tierEntryFee data from eventTier relationship in EventDetail
         foreach ($eventList as $event) {
             $tierEntryFee = $event->eventTier->tierEntryFee ?? null;
         }
         
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
 
-        // Get the count of associated join events for each EventDetail
         foreach ($eventList as $eventDetail) {
         $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
         }
@@ -368,31 +389,7 @@ class EventController extends Controller
         }
         return redirect('organizer/event/' . $eventDetail->id . '/success');
     }
-
-    private function getEventAndUser($id)
-    {
-        $authUser = Auth::user();
-        $event = EventDetail::with('type', 'tier', 'game')
-            ->where('user_id', $authUser->id)
-            ->find($id);
-        $isUserSameAsAuth = true;
-        if (!$event) {
-            throw new ModelNotFoundException("Event not found with id: $id");
-        }
-
-        $checkIfUserIsOrganizerOfEvent = $event->user_id == $authUser->id;
-        if (!$checkIfUserIsOrganizerOfEvent) {
-            throw new UnauthorizedException('You cannot view a scheduled event');
-        }
-
-        return [$event, $isUserSameAsAuth, $authUser];
-    }
-
-
-    public function show404($error): View
-    {
-        return view('Organizer.EventNotFound', compact('error'));
-    }
+ 
 
     public function showLive($id): View
     {
@@ -402,9 +399,7 @@ class EventController extends Controller
             $eventListQuery = EventDetail::query();
             $eventListQuery->with('tier'); 
             $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
-    
             $mappingEventState = EventDetail::mappingEventStateResolve();
-    
             foreach ($eventList as $eventItem) {
                 $tierEntryFee = $eventItem->tier?->tierEntryFee ?? null;
             }
@@ -475,6 +470,7 @@ class EventController extends Controller
         } catch (Exception $e) {
             return $this->show404("Event not found for id: $id");
         }
+        // dd($event, $event->tier, $event->type, $event->game);
         $status = $event->statusResolved();
         if ($status != 'UPCOMING' && $status != 'DRAFT') {
             return $this->show404("Event has already gone live for id: $id");

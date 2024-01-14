@@ -199,7 +199,7 @@ class ParticipantEventController extends Controller
             $status = $event->statusResolved();
             if (in_array($status, ['DRAFT', 'PREVEW'])) {
                 $lowerStatus = strtolower($status);
-                throw new ModelNotFoundException("Can't display event: $id with status: $lowerStatus)}");
+                throw new ModelNotFoundException("Can't display event: $id with status: $lowerStatus");
             }
 
             $count = 8;

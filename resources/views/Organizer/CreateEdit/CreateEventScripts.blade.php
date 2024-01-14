@@ -29,6 +29,7 @@
                     text: `Invalid event tier or event type!`
                 })
             }
+
             eventFee = eventSubTotal * (eventRate / 100);
             eventTotal = eventSubTotal + eventFee;
             if (eventTier == null || eventType == null || eventSubTotal == -1) {
@@ -39,6 +40,7 @@
                 if (!paymentMethodCondition.classList.contains("d-none")) {
                     paymentMethodCondition.classList.add("d-none");
                 }
+
                 if (paymentMethodConditionFulfilledButton.classList.contains("d-none")) {
                     paymentMethodConditionFulfilledButton.classList.remove("d-none");
                 }
@@ -52,6 +54,7 @@
                 if (!paymentMethodConditionFulfilledButton.classList.contains("d-none")) {
                     paymentMethodConditionFulfilledButton.classList.add("d-none");
                 }
+
                 if (paymentMethodCondition.classList.contains("d-none")) {
                     paymentMethodCondition.classList.remove("d-none");
                 }
@@ -68,6 +71,7 @@
 <script>
     function checkStringNullOrEmptyAndReturn(value) {
         if (value === null || value === undefined) return null;
+
         let _value = String(value).trim();
         return (_value === "") ? null : _value;
     }
@@ -282,6 +286,11 @@
     window.onload = function() {
         /* beautify preserve:start */
         let $event = {!! json_encode($event) !!};
+        console.log($event)
+        console.log($event)
+        console.log($event)
+        console.log($event)
+        console.log($event)
         /* beautify preserve:start */
         clearLocalStorage();
         if ($event) {
@@ -301,9 +310,9 @@
             // banner
             setLocalStorageFromEventObject('eventTierTitle', $event?.tier?.eventTier);
             setFormValues({
-                'gameTitleId': $event?.game?.id,
-                'eventTypeId': $event?.type?.id,
-                'eventTierId': $event?.tier?.id,
+                // 'gameTitleId': $event?.game?.id,
+                // 'eventTypeId': $event?.type?.id,
+                // 'eventTierId': $event?.tier?.id,
                 'eventTier': $event?.tier?.eventTier,
                 'eventType': $event?.type?.eventType,
                 'gameTitle': $event?.game?.gameTitle,

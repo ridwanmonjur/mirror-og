@@ -250,13 +250,13 @@ input[type="submit"]:active {
 }
 
 .side-image-absolute-top {
-    position: absolute;
+    position: fixed;
     bottom: 40vh;
-    }
+}
 
 .side-image-absolute-bottom {
-    position: absolute;
-    top: -20vh;
+    position: fixed;
+    bottom: 5vh;
 }
 
 .side-image-turtle {
@@ -367,6 +367,11 @@ input[type="submit"]:active {
 }
 
 @media screen and (min-width: 992px) {
+    .side-image-absolute-top{
+        position: fixed;
+        top: 10vh;
+        right: 10vh;
+    }
     .d-lg-none {
         display: none;
     }

@@ -18,26 +18,26 @@
                         <input type="hidden" name="eventTypeId"  id="eventTypeId">
                         <input type="hidden" name="isPaymentDone"  id="isPaymentDone">
                         <input type="hidden" name="paymentMethod"  id="paymentMethod">
-                        @include('Organizer.Layout.CreateEventTimelineBox')
+                        @include('Organizer.CreateEdit.CreateEventTimelineBox')
                         @if (session()->has('error'))
-                            @include('Organizer.Layout.CreateEventTimelineWelcome', [
+                            @include('Organizer.CreateEdit.CreateEventTimelineWelcome', [
                                 'error' => session()->get('error'),
                             ])
                         @else
-                            @include('Organizer.Layout.CreateEventTimelineWelcome')
+                            @include('Organizer.CreateEdit.CreateEventTimelineWelcome')
                         @endif
-                        @include('Organizer.Layout.CreateEventStepOneCreate')
+                        @include('Organizer.CreateEdit.CreateEventStepOneCreate')
                         @include('CommonLayout.BootstrapJs')
-                        @include('Organizer.Layout.CreateEventForm')
+                        @include('Organizer.CreateEdit.CreateEventForm')
                         @if (session()->has('success'))
-                            @include('Organizer.Layout.CreateEventSuccess')
+                            @include('Organizer.CreateEdit.CreateEventSuccess')
                         @endif
                     </form>
                 </div>
-                @include('Organizer.Layout.CreateEventPaymentModal')
+                @include('Organizer.CreateEdit.CreateEventPaymentModal')
             </div>
             <br><br>
         </main>
-        @include('Organizer.Layout.CreateEventScripts')
+        @include('Organizer.CreateEdit.CreateEventScripts')
 
     </body>
