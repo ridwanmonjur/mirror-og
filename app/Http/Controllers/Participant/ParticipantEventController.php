@@ -233,7 +233,7 @@ class ParticipantEventController extends Controller
 
             return view('Participant.ViewEvent', compact('event', 'eventList', 'followersCount', 'user', 'existingJoint'));
         } catch (Exception $e) {
-            return $this->show404($e);
+            return $this->show404($e->getMessage());
         }
     }
 
