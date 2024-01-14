@@ -204,28 +204,27 @@ class ParticipantEventController extends Controller
         $eventListQuery->with('tier');
         if ($user){
             $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
-        } else {
-            $eventList = [];
-        }
-        // Calculate followers count for the organizer
-        $organizerId = $event->user->organizer->id;
-        $followersCount = Follow::where('organizer_id', $organizerId)->count();
-
-        // Access tierEntryFee data from eventTier relationship in EventDetail
-        foreach ($eventList as $_event) {
-            $tierEntryFee = $_event->eventTier->tierEntryFee ?? null;
-        }
-
-        if ($user) {
             $userId = auth()->user()->id;
             $existingJoint = JoinEvent::where('user_id', $userId)
                 ->where('event_details_id', $event->id)
                 ->first();
+            foreach ($eventList as $_event) {
+                $tierEntryFee = $_event->eventTier?->tierEntryFee ?? null;
+            }
         } else {
+            $eventList = [];
             $userId = null;
             $existingJoint = null;
         }
 
+        $organizerId = $event?->user?->organizer?->id ?? null;
+        if ($organizerId) {
+            $followersCount = Follow::where('organizer_id', $organizerId)->count();
+        } else {
+            $followersCount = null;
+        }
+
+        
         return view('Participant.ViewEvent', compact('event', 'eventList', 'followersCount', 'user', 'existingJoint'));
     }
     public function FollowOrganizer(Request $request)
