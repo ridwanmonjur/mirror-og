@@ -20,11 +20,12 @@ body {
     border-radius: 25px;
     border: 2px solid #676767;
     padding: 20px;
-    margin-left: 30px;
-    margin-top: 15vh;
-    margin-right: 30px;
-    width: 700px;
-    /* height: 530px; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* width: 700px;
+    height: 530px; */
     background-color: #FFFBFB;
 }
 

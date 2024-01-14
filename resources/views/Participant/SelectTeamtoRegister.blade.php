@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
+    <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/registerTeam.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    {{-- <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}"> --}}
+    
 </head>
 
 <body>
-    {{-- @include('CommonLayout.NavbarGoToSearchPage') --}}
+    @include('CommonLayout.NavbarForAnother')
    
         <div class="wrapper">
 
@@ -75,7 +76,7 @@
                 </div>
 
                 <div class="text-center">
-                    <input type="submit" class="choose-payment-method" id="submitButton" disabled
+                    <input type="submit" class="submitMethod" id="submitButton" disabled
                         value="Confirm Team and Notify">
                 </div>
 
