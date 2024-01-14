@@ -11,9 +11,9 @@
                         novalidate>
                         @csrf
                         <input type="hidden" name="livePreview" id="livePreview" value="false">
-                        <input type="hidden" name="gameTitle" id="gameTitle"  value="{{$event->category->gameTitle}}">
-                        <input type="hidden" name="eventTier" id="eventTier" value="{{$event->tier->eventTier}}" >
-                        <input type="hidden" name="eventType"  id="eventType"  value="{{$event->type->eventType}}">
+                        <input type="hidden" name="gameTitle" id="gameTitle"  value="{{$event->game?->gameTitle}}">
+                        <input type="hidden" name="eventTier" id="eventTier" value="{{$event->tier?->eventTier}}" >
+                        <input type="hidden" name="eventType"  id="eventType"  value="{{$event->type?->eventType}}">
                         @if ($event && $event->payment_transaction_id != null)
                             <input type="hidden" name="isPaymentDone"  id="isPaymentDone" value="done">
                             <input type="hidden" name="paymentMethod"  id="paymentMethod" value="done">

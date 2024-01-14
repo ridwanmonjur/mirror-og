@@ -101,7 +101,7 @@
                         'event selectable-box box-tier',
                         'rounded-box-'.  strtolower($category->eventTier),
                         'color-border-success' =>
-                            $event && $category->id == $event->event_category_id,
+                            $event && $category->id == $event->event_tier_id,
                     ])>
                         <div class="event_head_container ">
                             <img id='starfish' src="{{ asset('storage/' . $category->tierIcon) }}"
@@ -236,11 +236,13 @@
                     <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
                         <input type="date" id="startDate" onchange="checkValidTime();" name="startDate"
+                            value={{"$isEventNotNull ? $event->startDate : ''"}}
                             placeholder=" Select a start date" required>
                     </div>
                     <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
                         <input type="date" id="endDate" onchange="checkValidTime();" name="endDate"
+                            value={{"$isEventNotNull ? $event->endDate : ''"}}
                             placeholder=" Select an end date" required>
                     </div>
                 </div>
@@ -252,11 +254,13 @@
                     <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
                         <input type="time" id="startTime" onchange="checkValidTime();" name="startTime"
+                            value={{"$isEventNotNull ? $event->startTime : ''"}}
                             placeholder=" Select a start time" required>
                     </div>
                     <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
                         <input type="time" id="endTime" name="endTime" onchange="checkValidTime();"
+                            value={{"$isEventNotNull ? $event->endTime : ''"}}
                             placeholder=" Select an end time" required>
                     </div>
                 </div>
@@ -288,7 +292,9 @@
         <div class="form-group mx-auto">
             <label for="eventName">Name of Event</label>
             <p class="description">Pick a good name for your event (max. 60 characters)</p>
-            <input type="text" id="eventName" name="eventName" placeholder=" Name of Event" required
+            <input 
+                value={{"$isEventNotNull ? $event->eventName : ''"}}
+                type="text" id="eventName" name="eventName" placeholder=" Name of Event" required
                 class="@error('title') is-invalid @enderror">
         </div>
     </div>
@@ -317,6 +323,7 @@
             <label for="eventDescription">Event Description</label>
             <p class="description">So, tell us a little bit about your event (max. 3,000 characters)</p>
             <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
+                value={{"$isEventNotNull ? $event->eventDescription : ''"}}
                 required></textarea>
         </div>
     </div>

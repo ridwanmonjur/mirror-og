@@ -481,6 +481,9 @@ class EventController extends Controller
         return view('Organizer.EditEvent', [
             'eventCategory' => $eventCategory,
             'event' => $event,
+            'tier' => $event->tier,
+            'game' => $event->game,
+            'type' => $event->type,
             'eventTierList' => $eventTierList,
             'eventTypeList' => $eventTypeList,
             'editMode' => 1,

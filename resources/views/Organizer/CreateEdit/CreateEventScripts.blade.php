@@ -1,6 +1,5 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
 <script>
-  
     function fillStepPaymentValues() {
         const paymentMethodConditionFulfilledButton =
             document.getElementsByClassName('choose-payment-method-condition-fulfilled')[0];
@@ -313,19 +312,19 @@
                 // 'gameTitleId': $event?.game?.id,
                 // 'eventTypeId': $event?.type?.id,
                 // 'eventTierId': $event?.tier?.id,
-                'eventTier': $event?.tier?.eventTier,
-                'eventType': $event?.type?.eventType,
-                'gameTitle': $event?.game?.gameTitle,
+                // 'eventTier': $event?.tier?.eventTier,
+                // 'eventType': $event?.type?.eventType,
+                // 'gameTitle': $event?.game?.gameTitle,
                 'eventTags': $event?.eventTags,
-                'eventDescription': $event?.eventDescription,
-                'eventName': $event?.eventName ?? '',
-                'startDate': $event?.startDate ?? '',
-                'endDate': $event?.endDate ?? '',
-                'startTime': $event?.startTime,
-                'endTime': $event?.endTime,
-                'sub_action_public': $event?.sub_action_public,
-                'sub_action_private': $event?.sub_action_private,
-                'sub_action_team': $event?.sub_action_team,
+                // 'eventDescription': $event?.eventDescription,
+                // 'eventName': $event?.eventName ?? '', --}}
+                // 'startDate': $event?.startDate ?? '',
+                // 'endDate': $event?.endDate ?? '',
+                // 'startTime': $event?.startTime,
+                // 'endTime': $event?.endTime,
+                // 'sub_action_public': $event?.sub_action_public,
+                // 'sub_action_private': $event?.sub_action_private,
+                // 'sub_action_team': $event?.sub_action_team,
             });
             new Tagify(document.querySelector('#eventTags'), [...$event?.eventTags] ?? []);
 
