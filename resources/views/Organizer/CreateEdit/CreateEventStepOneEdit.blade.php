@@ -1,7 +1,7 @@
 <div id="step-1" class="">
     <div id="loader-until-loaded" class="mt-5 text-center">
-          <img src="{{ asset('/assets/images/animation/Spin.gif') }}">
-      </div>
+        <img src="{{ asset('/assets/images/animation/Spin.gif') }}">
+    </div>
     <div id="invisible-until-loaded" class="welcome text-center d-none" style="margin-bottom: -60px !important;">
         @if (isset($error))
             <p style="color:#EF4444;">{{ $error }}</p>
@@ -21,16 +21,18 @@
                             $event && $category->id == $event->event_category_id,
                     ])
                         onclick="
-                            document.querySelectorAll('.scroll-images').forEach(element => {
-                                element.classList.remove('color-border-success');
-                            });
-                            this.classList.add('color-border-success');
-                            setFormValues( {'gameTitle': {{ Js::from($category->gameTitle) }} } ); 
-                            goToNextScreen('step-2', 'timeline-1');
-                            let gameTitleImg = this.children[0].children[0].src;
-                            localStorage.setItem('gameTitleImg', gameTitleImg);
-                            "
-                        >
+                        document.querySelectorAll('.scroll-images').forEach(element => {
+                        element.classList.remove('color-border-success');
+                        });
+                        this.classList.add('color-border-success');
+                        let categoryId =  {{ Js::from($category->id) }};
+                        setFormValues( {'gameTitle': {{ Js::from($category->gameTitle) }} } ); 
+                        goToNextScreen('step-2', 'timeline-1');
+                        let gameTitleImg = this.children[0].children[0].src;
+                        localStorage.setItem('gameTitleImg', gameTitleImg);
+                        console.log({categoryId})
+                        setFormValues( {'gameTitleId': categoryId } );
+                            ">
                         <a href="#">
                             <img class="selectable-image " src="<?php echo asset("storage/$category->gameIcon"); ?>" alt=""
                                 style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"></a>
