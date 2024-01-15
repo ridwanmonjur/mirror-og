@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonLayout.NavbarforParticipant')
 
     
     <main>
