@@ -399,15 +399,17 @@
                 </div>
                 @if ($event)
                     @if ($event->eventBanner)
-                        <img class="banner-preview-img" src="{{ bladeImageNull($event->eventBanner) }}"
-                            {!! trustedBladeHandleImageFailure() !!} id="previewImage" alt="Preview" width="350px" height="auto">
                     @else
-                        <div style="color: #EF4444;">Please enter an image</div>
-                        <img class="d-none banner-preview-img" id="previewImage" alt="Preview" width="350px"
-                            height="auto">
+                        <div style="color: #EF4444;" id="preview-image-warning">Please enter an image</div>
                     @endif
+                    <img @class(["d-none" => is_null($event->eventBanner),
+                        "banner-preview-img"]) 
+                        src="{{ bladeImageNull($event->eventBanner) }}"
+                        {!! trustedBladeHandleImageFailure() !!} 
+                        id="previewImage" alt="Preview" width="350px" height="auto"
+                    >
                 @else
-                    <img class="d-none banner-preview-img" id="previewImage" alt="Preview" width="350px"
+                    <img class="banner-preview-img" id="previewImage" alt="Preview" width="350px"
                         height="auto">
                 @endif
             </div>

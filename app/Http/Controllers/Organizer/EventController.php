@@ -280,22 +280,28 @@ class EventController extends Controller
             $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $startTime)->utc();
             $eventDetail->startDate = $carbonStartDateTime->format('Y-m-d');
             $eventDetail->startTime = $carbonStartDateTime->format('H:i');
-        } elseif ($isPreviewMode && !$isEditMode && !$isDraftMode) {
+        } elseif ($isPreviewMode && !$isEditMode) {
             $eventDetail->startDate = null;
             $eventDetail->startTime = null;
         } elseif (!$isDraftMode) {
             throw new TimeGreaterException('Start date and time must be greater than current date and time.');
+        } elseif ($isDraftMode) {
+            $eventDetail->startDate = $request->startDate;
+            $eventDetail->startTime = $request->startTime;
         }
         if ($endDate && $endTime) {
             $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $endTime)->utc();
             if ($startDate && $startTime && $carbonEndDateTime > $carbonStartDateTime) {
                 $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
                 $eventDetail->endTime = $carbonEndDateTime->format('H:i');
-            } elseif ($isPreviewMode && !$isEditMode && !$isDraftMode) {
+            } elseif ($isPreviewMode && !$isEditMode) {
                 $eventDetail->endDate = null;
                 $eventDetail->endTime = null;
             } elseif (!$isDraftMode) {
                 throw new TimeGreaterException('End date and time must be greater than start date and time.');
+            } elseif ($isDraftMode) {
+                $eventDetail->endDate = $request->endDate;
+                $eventDetail->endTime = $request->endTime;
             }
         }
         $eventDetail->eventName = $request->eventName;

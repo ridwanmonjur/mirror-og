@@ -108,15 +108,20 @@ function getFormValues(keyList = ["ALL_FORM_KEYS"]) {
 
 function previewSelectedImage(imageId, previewImageId) {
     const imageInput = document.getElementById(imageId);
+    console.log({imageId, previewImageId})
+
     if (!imageInput) {
         throw new Error("Image input not found!")
     }
 
     const previewImage = document.getElementById(previewImageId);
+    
     if (!previewImage) {
         throw new Error("Preview not found!")
     }
+    
     const file = imageInput.files[0];
+
     if (file) {
         const reader = new FileReader();
 
@@ -147,10 +152,9 @@ function previewSelectedImage(imageId, previewImageId) {
                 }
 
                 if (!isError){
-                    if (previewImage.classList.contains("d-none")) {
-                        previewImage.classList.remove("d-none");
-                    }
-    
+                    previewImage.classList.remove("d-none");
+                    let element = document.getElementById('preview-image-warning');
+                    if (element) element.classList.add('d-none');
                     previewImage.src = e.target.result;
                 }
             };

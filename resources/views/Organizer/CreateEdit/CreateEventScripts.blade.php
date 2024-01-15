@@ -233,13 +233,13 @@
             return;
         }
 
-        var allowedTypes = ['image/png', 'image/jpg'];
+        var allowedTypes = ['image/png', 'image/jpg', 'image/jpeg'];
 
         if (!allowedTypes.includes(selectedFile.type)) {
             selectedFile.value = '';
             Toast.fire({
                 icon: 'error',
-                text: "Invalid file type. Please upload a PNG or JPG file."
+                text: "Invalid file type. Please upload a PNG, JPEG or JPG file."
             })
 
             return;
