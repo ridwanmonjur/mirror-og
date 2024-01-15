@@ -510,7 +510,7 @@
                 </div>
             @endif
 
-            @if ($status == "LIVE" || $status == "ONGOING")
+            @if ($status == "UPCOMING" || $status == "ONGOING")
                 <div>
                     <h5>Event Status</h5>
                     <p class="text-success">Your {{ $event->sub_action_private }} event is live now
