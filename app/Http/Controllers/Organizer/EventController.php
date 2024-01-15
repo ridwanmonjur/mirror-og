@@ -514,10 +514,6 @@ class EventController extends Controller
                 } catch (TimeGreaterException $e) {
                     return back()->with('error', $e->getMessage());
                 }
-                $status = $eventDetail->statusResolved();
-                if ($status != 'ONGOING' && $status != 'DRAFT' && $status != 'SCHEDULED') {
-                    return $this->show404("Event has already gone live for id: $id");
-                }
                 $eventDetail->user_id = auth()->user()->id;
                 $eventDetail->eventBanner = $fileNameFinal;
                 $eventDetail->save();
