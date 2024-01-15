@@ -4,7 +4,10 @@
     function waitForElm() {
         return new Promise(resolve => {
             const observer = new MutationObserver(mutations => {
-                console.log({jquery: window.jQuery, stripe: window.Stripe})
+                console.log({
+                    jquery: window.jQuery,
+                    stripe: window.Stripe
+                })
                 if (window.jQuery && window.Stripe) {
                     let timeoutID = setTimeout(function() {
                         document.getElementById('loader-until-loaded').classList.add('d-none');
@@ -84,6 +87,24 @@
                 }
             }
         }
+    }
+
+    function fillEventTags() {
+        let eventTags = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTags');
+        if (eventTags != null) {
+            let eventTagsParsed = Object(JSON.parse(eventTags));
+            console.log({
+                eventTags: eventTags,
+                value: eventTagsParsed,
+            })
+            var tagify = new Tagify(document.querySelector('#eventTags'), 
+                [],
+            );
+            tagify.addTags(eventTagsParsed)
+        } else {
+            new Tagify(document.querySelector('#eventTags'), []);
+        }
+
     }
 </script>
 <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
@@ -333,11 +354,21 @@
             setLocalStorageFromEventObject('eventBanner', $event?.eventBanner);
             // banner
             setLocalStorageFromEventObject('eventTierTitle', tier?.eventTier);
-            new Tagify(document.querySelector('#eventTags'), [...$event?.eventTags] ?? []);
-
+            setLocalStorageFromEventObject('eventTags', $event?.eventTags);
+            if ($event?.eventTags != null) {
+            console.log({
+                eventTags: $event?.eventTags,
+                value: JSON.parse($event?.eventTags)
+            })
+        } else {
+            console.log({
+                hit: "here"
+            })
+            new Tagify(document.querySelector('#eventTags'), []);
+        }
         }
         else{
-            new Tagify(document.querySelector('#eventTags'), {});
+            new Tagify(document.querySelector('#eventTags'), []);
         }
     }
     $(document).on("keydown", ":input:not(textarea)", function(event) {

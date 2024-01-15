@@ -242,6 +242,9 @@ class EventController extends Controller
             'eventCategory' => $eventCategory,
             'event' => null,
             'editMode' => 0,
+            'tier' => null,
+            'game' => null,
+            'type' => null,
             'eventTierList' => $eventTierList,
             'eventTypeList' => $eventTypeList,
         ]);

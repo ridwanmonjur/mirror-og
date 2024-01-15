@@ -330,7 +330,7 @@
     <div class="flexbox box-width back-next">
         <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-        <button onclick="goToNextScreen('step-8', 'timeline-2')" type="button" class="oceans-gaming-default-button">
+        <button onclick="goToNextScreen('step-8', 'timeline-2'); fillEventTags();" type="button" class="oceans-gaming-default-button">
             Next > </button>
     </div>
 </div>
@@ -357,7 +357,7 @@
         </div>
     </div>
     <div class="flexbox box-width back-next">
-        <button onclick="goToNextScreen('step-7', 'timeline-2')" type="button"
+        <button onclick="goToNextScreen('step-7', 'timeline-2'); fillEventTags();" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-9', 'timeline-2')" type="button" class="oceans-gaming-default-button">
             Next > </button>
