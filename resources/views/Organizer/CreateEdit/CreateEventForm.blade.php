@@ -409,7 +409,7 @@
                         id="previewImage" alt="Preview" width="350px" height="auto"
                     >
                 @else
-                    <img class="d-none sbanner-preview-img" id="previewImage" alt="Preview" width="350px"
+                    <img class="d-none banner-preview-img" id="previewImage" alt="Preview" width="350px"
                         height="auto">
                 @endif
             </div>
