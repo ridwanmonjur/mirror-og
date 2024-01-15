@@ -32,7 +32,7 @@
                         localStorage.setItem('gameTitleImg', gameTitleImg);
                         console.log({categoryId})
                         setFormValues( {'gameTitleId': categoryId } );
-                            ">
+                        ">
                         <a href="#">
                             <img class="selectable-image " src="<?php echo asset("storage/$category->gameIcon"); ?>" alt=""
                                 style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"></a>

@@ -107,16 +107,19 @@
     function setInnerHTMLFromLocalStorage(key, element) {
         let value = checkStringNullOrEmptyAndReturnFromLocalStorage(key);
         if (value) element.innerHTML = value;
+        else console.error(`Item not in localStorage: ${key} ${value}`)
     }
 
     function setImageSrcFromLocalStorage(key, element) {
         let value = checkStringNullOrEmptyAndReturnFromLocalStorage(key);
-        if (value) element.src = value;
+        if (value && element) element.src = value;
+        else console.error(`Can't set image for: ${key}, ${value} ${value}`)
     }
 
     function setLocalStorageFromEventObject(key, property) {
         let value = checkStringNullOrEmptyAndReturn(property);
         if (value) localStorage.setItem(key, value);
+        else console.error(`Item not in localStorage: ${key} ${value}`)
     }
 
     function fillStepGameDetailsValues() {
@@ -309,27 +312,27 @@
     window.onload = function() {
         /* beautify preserve:start */
         let $event = {!! json_encode($event) !!};
+        let tier = {!! json_encode($tier) !!};
+        let type = {!! json_encode($type) !!};
+        let game = {!! json_encode($game) !!};
+        console.log({$event, tier, type, game})
         clearLocalStorage();
         if ($event) {
 
             let assetKeyWord = "{{ asset('') }}"
             // game
-            setLocalStorageFromEventObject('gameTitleImg', assetKeyWord+ 'storage/' + $event?.game?.gameIcon);
+            setLocalStorageFromEventObject('gameTitleImg', assetKeyWord+ 'storage/' + game?.gameIcon);
             // event type
-            setLocalStorageFromEventObject('eventTypeTitle', $event?.type?.eventType);
-            setLocalStorageFromEventObject('eventTypeDefinition', $event?.type?.eventDefinitions);
+            setLocalStorageFromEventObject('eventTypeTitle', type?.eventType);
+            setLocalStorageFromEventObject('eventTypeDefinition', type?.eventDefinitions);
             // tier
-            setLocalStorageFromEventObject('eventTierImg', assetKeyWord+ 'storage/' + $event?.tier?.tierIcon);
-            setLocalStorageFromEventObject('eventTierPerson', $event?.tier?.tierTeamSlot);
-            setLocalStorageFromEventObject('eventTierPrize', $event?.tier?.tierPrizePool);
-            setLocalStorageFromEventObject('eventTierEntry', $event?.tier?.tierEntryFee);
+            setLocalStorageFromEventObject('eventTierImg', assetKeyWord+ 'storage/' + tier?.tierIcon);
+            setLocalStorageFromEventObject('eventTierPerson', tier?.tierTeamSlot);
+            setLocalStorageFromEventObject('eventTierPrize', tier?.tierPrizePool);
+            setLocalStorageFromEventObject('eventTierEntry', tier?.tierEntryFee);
             setLocalStorageFromEventObject('eventBanner', $event?.eventBanner);
             // banner
-            setLocalStorageFromEventObject('eventTierTitle', $event?.tier?.eventTier);
-            {{-- setFormValues({
-                'eventTags': $event?.eventTags,
-                
-            }); --}}
+            setLocalStorageFromEventObject('eventTierTitle', tier?.eventTier);
             new Tagify(document.querySelector('#eventTags'), [...$event?.eventTags] ?? []);
 
         }

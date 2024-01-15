@@ -373,8 +373,11 @@ function goToNextScreen(nextId, nextTimeline) {
 
     if (nextId == allIDs[4]) {
         let box = document.getElementById('event-tier-display');
-        box.classList.remove("rounded-box-thickness", "rounded-box-turtle", "rounded-box-dolphin", "rounded-box-starfish");
-        box.classList.add( 'rounded-box-' + localStorage.getItem('eventTierTitle').toLowerCase());
-        box.classList.add('rounded-box-thickness');
+        let eventTierTitle = localStorage.getItem('eventTierTitle') ?? null;
+        if (eventTierTitle) {
+            box.classList.remove("rounded-box-thickness", "rounded-box-turtle", "rounded-box-dolphin", "rounded-box-starfish");
+            box.classList.add( 'rounded-box-' + eventTierTitle.toLowerCase());
+            box.classList.add('rounded-box-thickness');
+        }
     }
 }

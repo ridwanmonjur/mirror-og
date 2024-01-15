@@ -1,5 +1,5 @@
 @php
-    $isEventNotNull = !is_null($event);
+    $isEventNotNull = isset($event);
     $status = $isEventNotNull ? $event->statusResolved() : null;
     $dateStartArray = null;
     if ($isEventNotNull) {
@@ -39,7 +39,8 @@
                             @class(['container-border'])>
                             <a href="#" @class([
                                 'box_2nd selectable-box',
-                                'color-border-success' => $event && $gameCategory->id == $event->event_type_id,
+                                'color-border-success' =>
+                                    $event && $gameCategory->id == $event->event_type_id,
                             ])>
                                 <h2 class="{{ 'inputEventTypeTitle box-title' }}">
                                     <u>{{ $gameCategory->eventType }}</u>
@@ -99,7 +100,7 @@
                     class="featured-events">
                     <a href="#" @class([
                         'event selectable-box box-tier',
-                        'rounded-box-'.  strtolower($tierCategory->eventTier),
+                        'rounded-box-' . strtolower($tierCategory->eventTier),
                         'color-border-success' =>
                             $event && $tierCategory->id == $event->event_tier_id,
                     ])>
@@ -160,9 +161,7 @@
         <p>Here are the categories you've chosen for your event.</p>
     </div>
     <section class="container-border-2 grid-2" style="justify-content: center !important;">
-        <img id="outputGameTitleImg" {!! trustedBladeHandleImageFailure() !!}
-            width=225
-            height="100%"
+        <img id="outputGameTitleImg" {!! trustedBladeHandleImageFailure() !!} width=225 height="100%"
             src="{{ asset('assets/images/createEvent/exclamation.png') }}" alt=""
             style="margin: auto; border-radius: 20px; width: 225px; border: 1px dotted black; object-fit: cover; ">
         <div class="box_3rd box_3rd_max_width event_extra mx-auto">
@@ -172,15 +171,14 @@
         <div class="event_extra rounded-box" id="event-tier-display">
             <div class="event_head_container">
                 <img id="outputEventTierImg" src="{{ asset('assets/images/createEvent/question.png') }}"
-                    class="event_head" width="60" height="60"
-                >
+                    class="event_head" width="60" height="60">
             </div>
             <br>
             <h4 id="outputEventTierTitle" class="text-center mt-1">Choose a tier</h4>
             <div class="event_row">
                 <div class="icon_container mr-4 ml-3">
-                    <img width="25" height=25 id="outputEventTierImg"
-                        src="{{ asset('assets/images/user.png') }}" class="event_icon">
+                    <img width="25" height=25 id="outputEventTierImg" src="{{ asset('assets/images/user.png') }}"
+                        class="event_icon">
                 </div>
                 <div class="info_container">
                     <p id="outputEventTierPerson">X</p>
@@ -189,8 +187,8 @@
             </div>
             <div class="event_row">
                 <div class="icon_container mr-4 ml-3">
-                    <img width="25" height=25
-                        src="{{ asset('/assets/images/createEvent/trophy.png') }}" class="event_icon">
+                    <img width="25" height=25 src="{{ asset('/assets/images/createEvent/trophy.png') }}"
+                        class="event_icon">
                 </div>
                 <div class="info_container">
                     <p id="outputEventTierPrize">RM Y</p>
@@ -198,9 +196,8 @@
                 </div>
             </div>
             <div class="event_row">
-                <div class="icon_container mr-4 ml-3" >
-                    <img width="25" height=25 src="{{ asset('assets/images/dollar.png') }}"
-                        class="event_icon">
+                <div class="icon_container mr-4 ml-3">
+                    <img width="25" height=25 src="{{ asset('assets/images/dollar.png') }}" class="event_icon">
                 </div>
                 <div class="info_container">
                     <p id="outputEventTierEntry">RM Z</p>
@@ -210,7 +207,7 @@
         </div>
     </section>
     <div class="flexbox box-width back-next">
-        <button onclick="goToNextScreen('step-3', 'timeline-1'); fillStepGameDetailsValues();" type="button"
+        <button onclick="goToNextScreen('step-3', 'timeline-1');" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-5', 'timeline-2');" type="button"
             class="oceans-gaming-default-button"> Step 2 > </button>
@@ -236,14 +233,14 @@
                     <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
                         <input type="date" id="startDate" onchange="checkValidTime();" name="startDate"
-                            value="{{ $isEventNotNull ? $event->startDate : ''}}"
-                            placeholder=" Select a start date" required>
+                            value="{{ $isEventNotNull ? $event->startDate : '' }}" placeholder=" Select a start date"
+                            required>
                     </div>
                     <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
                         <input type="date" id="endDate" onchange="checkValidTime();" name="endDate"
-                            value="{{ $isEventNotNull ? $event->endDate : ''}}"
-                            placeholder=" Select an end date" required>
+                            value="{{ $isEventNotNull ? $event->endDate : '' }}" placeholder=" Select an end date"
+                            required>
                     </div>
                 </div>
             </div>
@@ -254,20 +251,21 @@
                     <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
                         <input type="time" id="startTime" onchange="checkValidTime();" name="startTime"
-                            value="{{ $isEventNotNull ? $event->startTime : ''}}"
-                            placeholder=" Select a start time" required>
+                            value="{{ $isEventNotNull ? $event->startTime : '' }}" 
+                            placeholder=" Select a start time"
+                            required>
                     </div>
                     <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
                         <input type="time" id="endTime" name="endTime" onchange="checkValidTime();"
-                            value="{{ $isEventNotNull ? $event->endTime : ''}}"
-                            placeholder=" Select an end time" required>
+                            value="{{ $isEventNotNull ? $event->endTime : '' }}" placeholder=" Select an end time"
+                            required>
                     </div>
                 </div>
             </div>
         </div>
         <div class="flexbox box-width back-next">
-            <button onclick="goToNextScreen('step-4', 'timeline-1')" type="button"
+            <button onclick="goToNextScreen('step-4', 'timeline-1'); fillStepGameDetailsValues();" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button"
                 class="oceans-gaming-default-button">
@@ -292,10 +290,8 @@
         <div class="form-group mx-auto">
             <label for="eventName">Name of Event</label>
             <p class="description">Pick a good name for your event (max. 60 characters)</p>
-            <input 
-                value="{{$isEventNotNull ? $event->eventName : ''}}"
-                type="text" id="eventName" name="eventName" placeholder=" Name of Event" required
-                class="@error('title') is-invalid @enderror">
+            <input value="{{ $isEventNotNull ? $event->eventName : '' }}" type="text" id="eventName"
+                name="eventName" placeholder=" Name of Event" required class="@error('title') is-invalid @enderror">
         </div>
     </div>
     <div class="flexbox box-width back-next">
@@ -322,9 +318,13 @@
         <div class="form-group">
             <label for="eventDescription">Event Description</label>
             <p class="description">So, tell us a little bit about your event (max. 3,000 characters)</p>
-            <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
-                value="{{$isEventNotNull ? $event->eventDescription : ''}}"
-                required></textarea>
+            @if ($isEventNotNull)
+                <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
+                    required>{{$event->eventDescription}}</textarea>
+            @else
+                <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
+                    required></textarea>
+            @endif
         </div>
     </div>
     <div class="flexbox box-width back-next">
@@ -379,7 +379,8 @@
         <div class="event-details-form box-width">
             <div class="form-group">
                 <label for="eventBanner">Event Banner</label>
-                <p class="description">A distinctive banner will help your event stand out (minimum resolution: 1400px x 600px).</p>
+                <p class="description">A distinctive banner will help your event stand out (minimum resolution: 1400px
+                    x 600px).</p>
                 <div class="banner-upload">
                     <input onchange="handleFile('eventBanner', 'previewImage');" type="file" id="eventBanner"
                         name="eventBanner" accept="image/*" required>
@@ -399,19 +400,15 @@
                 @if ($event)
                     @if ($event->eventBanner)
                         <img class="banner-preview-img" src="{{ bladeImageNull($event->eventBanner) }}"
-                            {!! trustedBladeHandleImageFailure() !!} id="previewImage" alt="Preview"
-                            width="350px" height="auto"
-                        >
+                            {!! trustedBladeHandleImageFailure() !!} id="previewImage" alt="Preview" width="350px" height="auto">
                     @else
                         <div style="color: #EF4444;">Please enter an image</div>
-                        <img class="d-none banner-preview-img" id="previewImage" alt="Preview"
-                            width="350px" height="auto"
-                        >
+                        <img class="d-none banner-preview-img" id="previewImage" alt="Preview" width="350px"
+                            height="auto">
                     @endif
                 @else
-                    <img class="d-none banner-preview-img" id="previewImage" alt="Preview"
-                        width="350px" height="auto"
-                    >
+                    <img class="d-none banner-preview-img" id="previewImage" alt="Preview" width="350px"
+                        height="auto">
                 @endif
             </div>
         </div>
