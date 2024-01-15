@@ -581,6 +581,10 @@ color: #43A4D7; */
     text-align: center;
 }
 
+.timestamp:hover{
+    cursor: pointer;
+}
+
 .time-line-box .timestamp {
     margin: auto;
     margin-bottom: 5px;

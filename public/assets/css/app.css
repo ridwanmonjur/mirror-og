@@ -87,7 +87,7 @@ div.navbar-placeholder{
     position: fixed !important;
     top: 0 !important;
     width: 100%;
-    z-index: 9999;
+    z-index: 999;
 }
 
 .mobile-navbar{
@@ -230,6 +230,6 @@ a:hover {
     margin-right: 10px !important;
 }
 
-.swal2-container {
-    z-index: 100000000000 !important;
+.swal2-container, .modal {
+    z-index: 9999 !important;
 }
