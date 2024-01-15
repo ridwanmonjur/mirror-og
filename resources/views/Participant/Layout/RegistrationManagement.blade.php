@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Management</title>
     <!-- Existing CSS links -->
-    <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/registrationManagement.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
@@ -50,11 +50,40 @@
         <div class="tab-content" id="Overview">
             <div><b>Outstanding Registration</b></div>
             <br> <br> <br>
-            
-           
-          
-                          
-                           
+            <div id="activeRostersForm" style="display: center; text-align: center;">
+                @foreach($joinEvents as $joinEvent)
+                <div class="event">
+                    <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
+                        <br>
+                        @foreach($eventsByTeam as $teamId => $users)
+                        <div class="player-info">
+                            @foreach($users as $user)
+                            <div class="player-image" style="background-image: url('https://img.freepik.com/premium-vector/sketch-hand-drawn-single-line-art-vintage-person-use-logo-poster-background_469760-4325.jpg?w=2000')"></div>
+                            <span>{{ $user['user']->name }}</span>
+                            @endforeach
+                        </div>
+                        @endforeach
+                    </div>
+                    <div class="frame1">
+                        <div class="container">
+                            <div class="left-col">
+                                <p><img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg" class="logo2">
+                                    <p style="font-size: 10px; text-align: left; margin-top: 10px; margin-left: 10px;"> {{ $joinEvent->eventDetails->eventName }}</p>
+                                </p>
+                            </div>
+                            <div class="right-col">
+                                <p><img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg" class="logo2">
+                                    <p style="font-size: 10px; text-align: left; margin-top: 10px; margin-left: 10px;"> {{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</p>
+                                    <br>
+                                    {{-- <p style="font-size: 12px; text-align: left;">1K Followers</p> --}}
+                                </p>
+                           </div>
+                           </div>
+                           </div>
+                           </div>
+                           </div>
+                           @endforeach
+                           </div>
 
     </main>
     <script>
