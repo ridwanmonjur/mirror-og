@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonLayout.NavbarforParticipant')
     
 
     <main>
@@ -34,7 +34,11 @@
             <div class="team-names">
                 <div class="team-info">
                     <h3 class="team-name" id="team-name">{{ $manage->teamName }}</h3>
-                    <button class="gear-icon-btn"><i class="fas fa-cog"></i></button>
+                    <button class="gear-icon-btn">
+                        <a href="/participant/registration-manage/{{ $manage['id'] }}">
+                          <i class="fas fa-cog"></i>
+                        </a>
+                      </button>
                 </div>
                
             </div>

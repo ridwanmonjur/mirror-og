@@ -98,7 +98,7 @@
                                     <button type="submit" id="followButton"
                                         data-following="{{ $user && $user->isFollowing($event?->user?->organizer) }}"
                                         style="background-color: {{ $user && $user->isFollowing($event?->user?->organizer) ? '#32CD32' : '#43A4D7' }}; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px;">
-                                        {{ $user && $user->isFollowing($event?->user?->organizer) ? 'Unfollow' : 'Follow' }}
+                                        {{ $user && $user->isFollowing($event?->user?->organizer) ? 'Following' : 'Follow' }}
                                     </button>
                                     {{-- here is an input for signaling whether to fetch or not --}}
                                 </form>
