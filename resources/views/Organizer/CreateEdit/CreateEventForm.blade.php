@@ -492,21 +492,43 @@
     <br>
     <div class="payment-summary">
 
-        <!-- DRAFT PART -->
         @if ($isEventNotNull)
-
             @if ($status == 'DRAFT')
                 <div>
                     <h5>Event Status</h5>
-                    <p>Your event is currently saved as a draft.</p>
+                    <p class="text-success">Your event is currently saved as draft.</p>
                 </div>
             @endif
 
-            @if ($status != 'DRAFT' && $event->sub_action_public_time != null)
+            @if ($status == "SCHEDULED")
                 <div>
                     <h5>Event Status</h5>
-                    <p>Your {{ $event->sub_action_private }} event is scheduled to launch on: {{ $combinedStr }} at
+                    <p class="text-success">Your {{ $event->sub_action_private }} event is scheduled to launch on: {{ $combinedStr }} at
                         {{ $timePart }}. </p>
+                </div>
+            @endif
+
+            @if ($status == "LIVE" || $status == "ONGOING")
+                <div>
+                    <h5>Event Status</h5>
+                    <p class="text-success">Your {{ $event->sub_action_private }} event is live now
+                    </p>
+                </div>
+            @endif
+
+            @if ($status == "ENDED")
+                <div>
+                    <h5>Event Status</h5>
+                    <p class="text-success">Your {{ $event->sub_action_private }} event has already ended
+                    </p>
+                </div>
+            @endif
+
+            @if ($status == "ENDED")
+                <div>
+                    <h5>Event Status</h5>
+                    <p class="text-success">Your {{ $event->sub_action_private }} event has already ended
+                    </p>
                 </div>
             @endif
         @endif
