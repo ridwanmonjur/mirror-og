@@ -525,14 +525,7 @@
                     </p>
                 </div>
             @endif
-
-            @if ($status == "ENDED")
-                <div>
-                    <h5>Event Status</h5>
-                    <p class="text-success">Your {{ $event->sub_action_private }} event has already ended
-                    </p>
-                </div>
-            @endif
+           
         @endif
         <input checked onchange="toggleRadio(this, 'draft'); updateLaunchButtonText('draft');" type="radio"
             id="draft" name="launch_visible" value="DRAFT">

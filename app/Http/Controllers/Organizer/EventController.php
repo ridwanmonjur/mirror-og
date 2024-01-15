@@ -484,7 +484,7 @@ class EventController extends Controller
         }
         // dd($event, $event->tier, $event->type, $event->game);
         $status = $event->statusResolved();
-        if ($status != 'UPCOMING' && $status != 'DRAFT') {
+        if ($status != 'UPCOMING' && $status != 'DRAFT' && $status != 'SCHEDULED') {
             return $this->show404("Event has already gone live for id: $id");
         }
         $eventCategory = EventCategory::all();
