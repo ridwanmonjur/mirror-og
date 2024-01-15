@@ -280,7 +280,7 @@ class EventController extends Controller
             $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $startTime)->utc();
             $eventDetail->startDate = $carbonStartDateTime->format('Y-m-d');
             $eventDetail->startTime = $carbonStartDateTime->format('H:i');
-        } elseif ($isPreviewMode && !$isEditMode) {
+        } elseif ($isPreviewMode && !$isEditMode && !$isDraftMode) {
             $eventDetail->startDate = null;
             $eventDetail->startTime = null;
         } elseif (!$isDraftMode) {
@@ -291,7 +291,7 @@ class EventController extends Controller
             if ($startDate && $startTime && $carbonEndDateTime > $carbonStartDateTime) {
                 $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
                 $eventDetail->endTime = $carbonEndDateTime->format('H:i');
-            } elseif ($isPreviewMode && !$isEditMode) {
+            } elseif ($isPreviewMode && !$isEditMode && !$isDraftMode) {
                 $eventDetail->endDate = null;
                 $eventDetail->endTime = null;
             } elseif (!$isDraftMode) {
