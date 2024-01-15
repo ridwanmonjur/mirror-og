@@ -138,6 +138,43 @@ class ParticipantEventController extends Controller
         // return view('Participant.Layout.TeamManagement', compact('teamManage'));
     }
 
+    public function registrationManagement($id)
+    {
+        $teamManage = Team::where('id', $id)->get();
+        if ($teamManage) {
+            // Retrieve JoinEvents related to the team_id
+            $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
+                $query->where('team_id', $id);
+            })
+                ->with('eventDetails', 'user')
+                ->get();
+
+            // Process the data to display the user's name once for each team
+            $eventsByTeam = [];
+            foreach ($joinEvents as $event) {
+                $userId = $event->user_id;
+                $teamId = $event->user->teams->first(function ($team) use ($id) {
+                    return $team->id == $id;
+                })->id;
+
+                if (!isset($eventsByTeam[$teamId][$userId])) {
+                    $eventsByTeam[$teamId][$userId]['user'] = $event->user;
+                    $eventsByTeam[$teamId][$userId]['events'] = [];
+                }
+
+                $eventsByTeam[$teamId][$userId]['events'][] = $event;
+            }
+
+            return view('Participant.Layout.RegistrationManagement', compact('teamManage', 'joinEvents', 'eventsByTeam'));
+        } else {
+            // Handle if the team doesn't exist
+            return redirect()
+                ->back()
+                ->with('error', 'Team not found.');
+        }
+        // return view('Participant.Layout.TeamManagement', compact('teamManage'));
+    }
+
     public function createTeamView(Request $request, $user_id)
     {
         $teamm = Team::find($user_id);
