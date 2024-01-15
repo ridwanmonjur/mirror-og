@@ -1,5 +1,8 @@
 <div id="step-1" class="">
-    <div class="welcome text-center" style="margin-bottom: -60px !important;">
+    <div id="loader-until-loaded" class="mt-5 text-center">
+          <img src="{{ asset('/assets/images/animation/Spin.gif') }}">
+      </div>
+    <div id="invisible-until-loaded" class="welcome text-center d-none" style="margin-bottom: -60px !important;">
         @if (isset($error))
             <p style="color:#EF4444;">{{ $error }}</p>
         @endif

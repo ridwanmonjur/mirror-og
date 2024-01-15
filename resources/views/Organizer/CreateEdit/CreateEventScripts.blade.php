@@ -1,5 +1,30 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
 <script>
+    function waitForElm() {
+        return new Promise(resolve => {
+            const observer = new MutationObserver(mutations => {
+                console.log({jquery: window.jQuery, stripe: window.Stripe})
+                if (window.jQuery && window.Stripe) {
+                    let timeoutID = setTimeout(function() {
+                        document.getElementById('loader-until-loaded').classList.add('d-none');
+                        document.getElementById('invisible-until-loaded').classList.remove(
+                            'd-none');
+                    }, 600);
+                    observer.disconnect();
+                    resolve(true);
+                }
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    }
+
+    waitForElm();
+
     function fillStepPaymentValues() {
         const paymentMethodConditionFulfilledButton =
             document.getElementsByClassName('choose-payment-method-condition-fulfilled')[0];
@@ -61,7 +86,6 @@
         }
     }
 </script>
-<script src="https://js.stripe.com/v3/"></script>
 <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
 <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
 <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
@@ -285,12 +309,6 @@
     window.onload = function() {
         /* beautify preserve:start */
         let $event = {!! json_encode($event) !!};
-        console.log($event)
-        console.log($event)
-        console.log($event)
-        console.log($event)
-        console.log($event)
-        /* beautify preserve:start */
         clearLocalStorage();
         if ($event) {
 
@@ -325,8 +343,6 @@
         }
     });
 </script>
-
-
 
 <script>
     function selectOption(element, label, imageUrl) {
