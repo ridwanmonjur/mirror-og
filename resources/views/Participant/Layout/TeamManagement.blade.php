@@ -375,6 +375,24 @@
             }
         }
     }
+
+    // i added this for a recentl bugs 
+
+    function initializeEventsDisplay() {
+    const eventBoxes = document.querySelectorAll('.event-box');
+
+    // Hide all events
+    eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
+
+    // Show the first two events
+    for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
+        eventBoxes[i].style.display = 'block';
+    }
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+    initializeEventsDisplay();
+    });
+
 </script>
 </body>
 
