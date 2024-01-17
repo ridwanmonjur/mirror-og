@@ -52,7 +52,7 @@
             <br> <br> <br>
             <div class="first">
                 <div id="activeRostersForm" style="display: center; text-align: center;">
-
+                    
                     <div class="event">
                         <div style="text-align: left; height: 200px; position: relative;">
                             <div class="top-middle-box" style="display: flex; align-items: center;">
@@ -65,19 +65,17 @@
                                 </div>
                             </div>
                             <br><br>
+                            @foreach($joinEvents as $joinEvent)
+                            @foreach($eventsByTeam as $teamId => $users)
                             <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                                <span>John Doe</span>
-                            </div>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                                <span>John Doe</span>
-                            </div>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                                <span>John Doe</span>
+                                @foreach($users as $user)
+                                <div class="player-image" style="background-image: url('/assets/images/dota.png')"></div>
+                                <span>{{ $user['user']->name }}</span>
+                                @endforeach
                             </div>
                         </div>
+                        @endforeach
+                        @endforeach
                         <div class="frame1">
                             <div class="container">
                                 <div class="left-col">
