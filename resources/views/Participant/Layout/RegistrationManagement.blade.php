@@ -105,7 +105,9 @@
 
             <div class="second">
                 <div class="center">
+                    @foreach($joinEvents as $joinEvent)
                     <div class="flex-wrapper">
+                        
                         <div class="single-chart">
                             <svg viewBox="0 0 36 36" class="circular-chart orange">
                             <path class="circle-bg"
@@ -127,6 +129,7 @@
                     <small>Paid: <a href="" style="color: green;">RM 100</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM 100</a></small> <br>
                     <input type="submit" onclick="" value="Contribute"><br> 
                     <button onclick="" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Confirm Registration </button>
+                    @endforeach
                 </div>
             </div>
         </div>
