@@ -34,10 +34,14 @@ function showFlashMessage(message, type) {
 
 // Toggle password
 function togglePassword() {
-  var x = document.getElementById("password");
-  if (x.type === "password") {
-    x.type = "text";
+  var passwordField = document.getElementById('password');
+  var toggleButton = document.getElementById('togglePassword');
+
+  if (passwordField.type === 'password') {
+      passwordField.type = 'text';
+      toggleButton.className = 'fa fa-eye-slash';
   } else {
-    x.type = "password";
+      passwordField.type = 'password';
+      toggleButton.className = 'fa fa-eye';
   }
 }

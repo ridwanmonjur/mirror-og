@@ -132,6 +132,12 @@ input::selection {
     z-index: 100;
 }
 
+.fa-eye-slash {
+    position: absolute;
+    right: 10px; 
+    z-index: 100;
+}
+
 .pass-txt {
     font-size: small;
 }
