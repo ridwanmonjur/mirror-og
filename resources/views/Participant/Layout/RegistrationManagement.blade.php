@@ -73,9 +73,11 @@
                                 <span>{{ $user['user']->name }}</span>
                                 @endforeach
                             </div>
+                            @endforeach
+                        @endforeach
                         </div>
-                        @endforeach
-                        @endforeach
+                        
+                        
                         <div class="frame1">
                             <div class="container">
                                 <div class="left-col">
@@ -93,7 +95,9 @@
                             </div>
                         </div>
                     </div>
+                    
                 </div>
+                
             </div>
 
             <div class="second">
