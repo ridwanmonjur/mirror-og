@@ -60,13 +60,16 @@
                                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v6h-2zm1 8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2- .9 2-2 2z"/>
                                 </svg>
                                 <div>
-                                    <div>29 Dec 2023</div>
-                                    <a href="" style="color: white; text-decoration: underline;">See Bracket</a>
+                                    <div>{{ \Carbon\Carbon::parse($joinEvent->eventDetails->startDate)->format('d M Y') }}</div>
+
+
+                                    <a href="#" style="color: white; text-decoration: underline;">See Bracket</a>
                                 </div>
                             </div>
                             <br><br>
                             
                             @foreach($eventsByTeam as $teamId => $users)
+                            
                             <div class="player-info">
                                 @foreach($users as $user)
                                 <div class="player-image" style="background-image: url('/assets/images/dota.png')"></div>
