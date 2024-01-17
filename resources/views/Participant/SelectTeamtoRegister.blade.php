@@ -76,7 +76,7 @@
                 </div>
 
                 <div class="text-center">
-                    <input type="submit" class="submitMethod" id="submitButton" disabled
+                    <input type="submit" class="submitMethod" id="submitButton" 
                         value="Confirm Team and Notify">
                 </div>
 
@@ -145,12 +145,7 @@
 
             // For Checkbox
             document.getElementById('confirmationCheckbox').addEventListener('change', function() {
-                var submitButton = document.getElementById('submitButton');
-                if (this.checked) {
-                    submitButton.removeAttribute('disabled');
-                } else {
-                    submitButton.setAttribute('disabled', 'disabled');
-                }
+               
             });
         </script>
         @include('CommonLayout.BootstrapJs')
