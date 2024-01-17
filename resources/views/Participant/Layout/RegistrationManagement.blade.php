@@ -52,7 +52,7 @@
             <br> <br> <br>
             <div class="first">
                 <div id="activeRostersForm" style="display: center; text-align: center;">
-                    
+                    @foreach($joinEvents as $joinEvent)
                     <div class="event">
                         <div style="text-align: left; height: 200px; position: relative;">
                             <div class="top-middle-box" style="display: flex; align-items: center;">
@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                             <br><br>
-                            @foreach($joinEvents as $joinEvent)
+                            
                             @foreach($eventsByTeam as $teamId => $users)
                             <div class="player-info">
                                 @foreach($users as $user)
@@ -74,28 +74,28 @@
                                 @endforeach
                             </div>
                             @endforeach
-                        @endforeach
+                        
                         </div>
                         
                         
                         <div class="frame1">
                             <div class="container">
                                 <div class="left-col">
-                                    <p><img src="css/images/dota.png" class="logo2">
-                                        <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota Challenge League Season 1</p>
+                                    <p><img src="/assets/images/dota.png" class="logo2">
+                                        <p style="font-size: 10px; text-align: left;"> {{ $joinEvent->eventDetails->eventName }}</p>
                                     </p>
                                 </div>
                                 <div class="right-col">
-                                    <p><img src="css/images/dota.png" class="logo2">
-                                        <p style="font-size: 12px; text-align: left;">Media Prima</p>
+                                    <p><img src="/assets/images/dota.png" class="logo2">
+                                        <p style="font-size: 12px; text-align: left;"> {{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</p>
                                         <br>
-                                        <p style="font-size: 12px; text-align: left;">1K Followers</p>
+                                        {{-- <p style="font-size: 12px; text-align: left;">1K Followers</p> --}}
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+                    @endforeach
                 </div>
                 
             </div>
