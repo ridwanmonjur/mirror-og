@@ -251,94 +251,146 @@
 </script>
 <script>
     let stripe = Stripe('{{ env('STRIPE_KEY') }}')
-    let clientSecret = '{{ env('STRIPE_SECRET') }}';
-    const appearance = {};
+    const appearance = {
+        theme: 'flat',
+        variables: {
+            colorText: '#30313d',
+            colorDanger: '#df1b41',
+            fontFamily: 'Ideal Sans, system-ui, sans-serif',
+            spacingUnit: '2px',
+            borderRadius: '20px',
+            colorPrimary: 'black',
+            colorBackground: '#ffffff',
 
-    const loader = 'auto';
-
-    const elements = stripe.elements({
-        clientSecret,
-        appearance,
-        loader
-    });
-
-    const cardElement = elements.create('payment', {
-        options: {
-            defaultValues: {
-                billingDetails: {
-                    name: 'John Doe',
-                    phone: '888-888-8888',
-                },
+        },
+        rules: {
+            '.Input': {
+                borderColor: '#E0E6EB',
             },
-            hidePostalCode: true
+
         }
-    })
+    };
+    console.log({
+        hi: true
+    });
+    console.log({
+        hi: true
+    });
+    console.log({
+        hi: true
+    });
+    console.log({
+        hi: true
+    });
+    console.log({
+        hi: true
+    });
+    const loader = 'auto';
     const cardForm = document.getElementById('card-form')
     const cardName = document.getElementById('card-name')
-    cardElement.mount('#card')
-    cardForm.addEventListener('submit', async (e) => {
-        e.preventDefault()
-        const {
-            paymentMethod,
-            error
-        } = await stripe.createPaymentMethod({
-            type: 'card',
-            card: cardElement,
-            billing_details: {
-                name: cardName.value
-            }
-        })
-        if (error) {
-            console.log(error)
-        } else {
-            let input = document.createElement('input')
-            input.setAttribute('type', 'hidden')
-            input.setAttribute('name', 'payment_method')
-            input.setAttribute('value', paymentMethod.id)
-            cardForm.appendChild(input)
-            // payment method created
 
-            let paymentDiv = document.querySelector('.choose-payment-method');
+    let paymentAmount = localStorage.getItem('eventTierPrize');
+    paymentAmount = String(paymentAmount);
 
-            // goToNextScreen('step-11', 'timeline-4');
-            document.getElementById('modal-close').click();
-            const form = new FormData(cardForm);
-            const data = {};
-            form.forEach((value, key) => {
-                data[key] = value;
+    if (paymentAmount) {
+        paymentAmount = paymentAmount.replace("RM ", "");
+        paymentAmount = parseInt(paymentAmount);
+
+        fetch("{{ route('stripe.createIntent') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    paymentAmount
+                })
+            })
+            .then((data) => data.json())
+            .then((json) => {
+                let clientSecret = json.data.client_secret;
+
+                elements = stripe.elements({
+                    clientSecret,
+                    appearance
+                });
+
+                const paymentElementOptions = {
+                    layout: "tabs",
+                };
+
+                const paymentElement = elements.create("payment", paymentElementOptions);
+                paymentElement.mount("#card");
+
+                cardForm.addEventListener('submit', async (e) => {
+                    e.preventDefault()
+
+                    const {
+                        paymentMethod,
+                        error
+                    } = await stripe.createPaymentMethod({
+                        type: 'card',
+                        card: cardElement,
+                        billing_details: {
+                            name: cardName.value
+                        }
+                    })
+
+                    if (error) {
+                        console.log(error)
+                    } else {
+                        let input = document.createElement('input')
+                        input.setAttribute('type', 'hidden')
+                        input.setAttribute('name', 'payment_method')
+                        input.setAttribute('value', paymentMethod.id)
+                        cardForm.appendChild(input)
+                        // payment method created
+
+                        let paymentDiv = document.querySelector('.choose-payment-method');
+
+                        // goToNextScreen('step-11', 'timeline-4');
+                        document.getElementById('modal-close').click();
+                        const form = new FormData(cardForm);
+                        const data = {};
+                        form.forEach((value, key) => {
+                            data[key] = value;
+                        });
+                        fetch("{{ route('stripe.organizerTeamPay') }}", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                },
+                                body: JSON.stringify(data)
+                            })
+                            .then(response => response.json())
+                            .then(responseData => {
+                                paymentDiv.style.backgroundColor = '#8CCD39';
+                                paymentDiv.textContent = 'Payment successful';
+                                paymentDiv.removeAttribute('data-toggle');
+                                paymentDiv.removeAttribute('data-target');
+                                setFormValues({
+                                    'isPaymentDone': true,
+                                    paymentMethod: paymentMethod.id
+                                });
+                                Toast.fire({
+                                    icon: 'success',
+                                    text: "Payment succeeded. Please proceed to the next step."
+                                })
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                Toast.fire({
+                                    icon: 'error',
+                                    text: "Payment failed. Please try again..."
+                                })
+                            })
+                    }
+                })
+
             });
-            fetch("{{ route('stripe.organizerTeamPay') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => response.json())
-                .then(responseData => {
-                    paymentDiv.style.backgroundColor = '#8CCD39';
-                    paymentDiv.textContent = 'Payment successful';
-                    paymentDiv.removeAttribute('data-toggle');
-                    paymentDiv.removeAttribute('data-target');
-                    setFormValues({
-                        'isPaymentDone': true,
-                        paymentMethod: paymentMethod.id
-                    });
-                    Toast.fire({
-                        icon: 'success',
-                        text: "Payment succeeded. Please proceed to the next step."
-                    })
-                })
-                .catch(error => {
-                    console.error(error);
-                    Toast2.fire({
-                        icon: 'error',
-                        text: "Payment failed. Please try again..."
-                    })
-                })
-        }
-    })
+    }
+
 
     function clearLocalStorage() {
         localStorage.clear();

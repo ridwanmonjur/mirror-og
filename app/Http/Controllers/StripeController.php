@@ -17,16 +17,35 @@ class StripeController extends Controller
     private $stripeClient;
     
     public function __construct() {
-        $this->stripeClient = new StripeClient(env('STRIPE_SECRET'))s;
+        $this->stripeClient = new StripeClient(env('STRIPE_SECRET'));
     }
 
 
     public function createIntent(Request $request){
-        $this->stripeClient->paymentIntents->create([
-            'amount' => $request->paymentAmount,
-            'currency' => 'myr',
-            'automatic_payment_methods' => ['enabled' => true],
-        ]);
+        try {
+            $paymentIntent = $this->stripeClient->paymentIntents->create([
+                'amount' => $request->paymentAmount,
+                'currency' => 'myr',
+                'automatic_payment_methods' => ['enabled' => true],
+            ]);
+
+            $responseData = [
+                'status' => 'success',
+                'message' => 'Payment successful',
+                'data' => [
+                    'client_secret' => $paymentIntent->client_secret,
+                   
+                ],
+            ];
+        
+            return response()->json($responseData);
+        } catch (Exception $e) {
+            return response()->json([
+                'status'=> 'error',
+                'message'=> $e->getMessage(),
+                'data'=> null
+            ]);
+        }
 
     }
     public function organizerTeamPay(Request $request)
@@ -34,7 +53,7 @@ class StripeController extends Controller
         try {
             $this->stripeClient = new StripeClient(env('STRIPE_SECRET'));
 
-            $stripeClient->paymentIntents->create([
+            $this->stripeClient->paymentIntents->create([
                 'amount' => 99 * 100,
                 'currency' => 'myr',
                 'payment_method' => $request->payment_method,
@@ -44,19 +63,19 @@ class StripeController extends Controller
                 'payment_method_types' => ['card'],
                 'automatic_payment_methods' => ['enabled' => false,],
             ]);
-            // $customer = $stripeClient->customers->create([
+            // $customer = $this->stripeClient->customers->create([
             //     'name' => $request->name,
             //     'email' => $request->email,
             //     'description' => 'My first customer',
             //      add this????????????????
             //      "card" : charge.stripe_card_token
             // ]);
-            // $invoice= $stripeClient->invoices->create([
+            // $invoice= $this->stripeClient->invoices->create([
             //     'customer' => $customer->id,
             //     'collection_method' => 'send_invoice',
             //     'days_until_due' => 0,
             // ]);
-            // $stripe->invoices->finalizeInvoice($invoice->id, []);
+            // $this->stripe->invoices->finalizeInvoice($invoice->id, []);
             $responseData = [
                 'status' => 'success',
                 'message' => 'Payment successful',

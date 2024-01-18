@@ -35,7 +35,8 @@ Route::name('stripe.')
     ->controller(StripeController::class)
     ->prefix('stripe')
     ->group(function () {
-        Route::post('payment', 'organizerTeamPay')->name('organizerTeamPay');
+        Route::post('createIntent', 'createIntent')->name('createIntent');
+        Route::post('organizerTeamPay', 'organizerTeamPay')->name('organizerTeamPay');
     });
 
 Route::post('/event/{id}/invitation', [InvitationController::class, 'store'])->name('event.invitation.store');
