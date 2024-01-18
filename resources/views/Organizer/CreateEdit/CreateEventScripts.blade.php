@@ -13,6 +13,7 @@
                         document.getElementById('loader-until-loaded').classList.add('d-none');
                         document.getElementById('invisible-until-loaded').classList.remove(
                             'd-none');
+                        fillStepPaymentValues();
                     }, 600);
                     observer.disconnect();
                     resolve(true);
@@ -47,7 +48,7 @@
             'eventType' in formValues
         ) {
 
-            let eventTier = formValues['eventTier'] ?? null;
+            let eventTier = 'Starfish' ?? null;
             let eventType = formValues['eventType'] ?? null;
             eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
             if (eventRate == -1) {
