@@ -251,7 +251,6 @@
 <script>
     let stripe = Stripe('{{ env('STRIPE_KEY') }}')
     let clientSecret = '{{ env('STRIPE_SECRET') }}';
-
     const appearance = {};
 
     const loader = 'auto';
@@ -351,7 +350,7 @@
         let type = {!! json_encode($type) !!};
         let game = {!! json_encode($game) !!};
         console.log({$event, tier, type, game})
-        clearLocalStorage();
+        // clearLocalStorage();
         if ($event) {
 
             let assetKeyWord = "{{ asset('') }}"

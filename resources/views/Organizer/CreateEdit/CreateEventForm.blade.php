@@ -425,63 +425,64 @@
     </div>
 </div>
 
-<div class="text-center d-none" id="step-10">
-    <div class="welcome" style="margin-bottom: -20px;">
-        <u>
-            <h5>
-                STEP 3: Complete the Payment
-            </h5>
-        </u>
-        <br>
-        <div class="payment-summary">
-            <h5>Payment Summary </h5>
-            <div>Event Categories</div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;Type: <span id="paymentType"> </span></div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;Tier: <span id="paymentTier"> </span></div>
-            <div class="flexbox">
-                <span>Subtotal</span>
-                <span id="paymentSubtotal" id="subtotal"></span>
-            </div>
-            <div class="flexbox">
-                <span>Event Creation Fee Rate</span>
-                <span id="paymentRate"></span>
-            </div>
-            <div class="flexbox">
-                <span>Event Creation Fee total</span>
-                <span id="paymentFee"></span>
-            </div>
-            <br>
-            <div class="flexbox">
-                <h5> TOTAL </h5>
-                <h5 id="paymentTotal"></h5>
-            </div>
-            <br>
-            <div class="text-center">
-                @if ($event && $event->payment_transaction_id != null)
-                    <button onclick="" class="choose-payment-method"
-                        style="background-color: #8CCD39 !important;" type="button">
-                        Paid successfully!
-                    </button>
-                @else
-                    <button onclick="" type="button" class="choose-payment-method" data-toggle="modal"
-                        data-target="#payment-modal">
-                        Choose a payment method
-                    </button>
-                @endif
-                <button onclick="goToNextScreen('step-1', 'timeline-1');" type="button"
-                    class="choose-payment-method-condition-fulfilled" style="background-color: #EF4444;">
-                    Choose event tier and title first
-                </button>
-            </div>
-        </div>
-        <br>
-        <div class="flexbox box-width back-next">
-            <button onclick="goToNextScreen('step-9', 'timeline-2')" type="button"
-                class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-            <button onclick="goToNextScreen('step-11', 'timeline-4')" type="button"
-                class="oceans-gaming-default-button"> Step 4 > </button>
-        </div>
+<div class="text-center" id="step-10">
+    <div id="loader-until-loaded" class="mt-5">
+        <img src="{{ asset('/assets/images/animation/Spin.gif') }}">
     </div>
+    <div class="welcome mt-5 d-none"  id="invisible-until-loaded">
+        <div class="welcome" style="margin-bottom: -20px;">
+              <u>
+                <h5>
+                    STEP 3: Complete the Payment
+                </h5>
+            </u>
+            <br>
+            <div class="payment-summary">
+                <h5>Payment Summary </h5>
+                <div>Event Categories</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;Type: <span id="paymentType"> </span></div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;Tier: <span id="paymentTier"> </span></div>
+                <div class="flexbox">
+                    <span>Subtotal</span>
+                    <span id="paymentSubtotal" id="subtotal"></span>
+                </div>
+                <div class="flexbox">
+                    <span>Event Creation Fee Rate</span>
+                    <span id="paymentRate"></span>
+                </div>
+                <div class="flexbox">
+                    <span>Event Creation Fee total</span>
+                    <span id="paymentFee"></span>
+                </div>
+                <br>
+                <div class="flexbox">
+                    <h5> TOTAL </h5>
+                    <h5 id="paymentTotal"></h5>
+                </div>
+                <br>
+                <div class="text-center">
+                    @if ($event && $event->payment_transaction_id != null)
+                        <button onclick="" class="choose-payment-method"
+                            style="background-color: #8CCD39 !important;" type="button">
+                            Paid successfully!
+                        </button>
+                    @else
+                        <button onclick="" type="button" class="choose-payment-method" data-toggle="modal"
+                            data-target="#payment-modal">
+                            Choose a payment method
+                        </button>
+                    @endif
+                    
+                </div>
+            </div>
+            <br>
+            <div class="flexbox box-width back-next">
+                <button onclick="goToNextScreen('step-9', 'timeline-2')" type="button"
+                    class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
+                <button onclick="goToNextScreen('step-11', 'timeline-4')" type="button"
+                    class="oceans-gaming-default-button"> Step 4 > </button>
+            </div>
+        </div>
 
 </div>
 
