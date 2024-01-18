@@ -19,7 +19,7 @@ div.navbar-placeholder{
 }
 
 .color-border-success-dotted {
-    border: 3px dotted #43A4D7 !important;
+    border: 3px dashed #43A4D7 !important;
     border-radius: 20px; 
 }
 
