@@ -184,7 +184,7 @@
                 <tr class="st">
                     <td>
                         <div class="player-info">
-                            <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
+                            <div class="player-image" style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')"></div>
                             <span>{{ $manage->user->name }}</span>
                         </div>
                     </td>
@@ -199,7 +199,7 @@
                         <tr class="st">
                             <td>
                                 <div class="player-info">
-                                    <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
+                                    <div class="player-image" style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png')"></div>
                                     <span>{{ $user['user']->name }}</span>
                                 </div>
                             </td>
