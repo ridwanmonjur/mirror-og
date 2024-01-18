@@ -18,6 +18,11 @@ div.navbar-placeholder{
     border-radius: 20px; 
 }
 
+.color-border-success-dotted {
+    border: 3px dotted #43A4D7 !important;
+    border-radius: 20px; 
+}
+
 .rounded-box {
     border-radius: 30px 30px;
     border-width: 1px;

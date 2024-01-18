@@ -92,16 +92,16 @@
                         localStorage.setItem('eventTierId', eventTierId);
                         fillStepGameDetailsValues();
                         document.querySelectorAll('.box-tier').forEach(element => {
-                            element.classList.remove('color-border-success');
+                            element.classList.remove('color-border-success-dotted');
                         });
-                        this.querySelector('.box-tier').classList.add('color-border-success');
+                        this.querySelector('.box-tier').classList.add('color-border-success-dotted');
                         goToNextScreen('step-4', 'timeline-1');
                         ;"
                     class="featured-events">
                     <a href="#" @class([
                         'event selectable-box box-tier',
                         'rounded-box-' . strtolower($tierCategory->eventTier),
-                        'color-border-success' =>
+                        'color-border-success-dotted' =>
                             $event && $tierCategory->id == $event->event_tier_id,
                     ])>
                         <div class="event_head_container ">
