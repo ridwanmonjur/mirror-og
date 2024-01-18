@@ -92,7 +92,9 @@
                         localStorage.setItem('eventTierId', eventTierId);
                         fillStepGameDetailsValues();
                         document.querySelectorAll('.box-tier').forEach(element => {
-                            element.classList.remove('color-border-success-dotted');
+                            element.classList.remove('color-border-success-dotted', 'rounded-box-turtle',
+                                'rounded-box-dolphin', 'rounded-box-starfish', 'rounded-box-mermaid',
+                            );
                         });
                         this.querySelector('.box-tier').classList.add('color-border-success-dotted');
                         goToNextScreen('step-4', 'timeline-1');
