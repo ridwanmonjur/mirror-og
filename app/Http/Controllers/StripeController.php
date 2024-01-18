@@ -14,12 +14,27 @@ use Stripe\Exception\CardException;
 
 class StripeController extends Controller
 {
+    private $stripeClient;
+    
+    public function __construct() {
+        $this->stripeClient = new StripeClient(env('STRIPE_SECRET'))s;
+    }
+
+
+    public function createIntent(Request $request){
+        $this->stripeClient->paymentIntents->create([
+            'amount' => $request->paymentAmount,
+            'currency' => 'myr',
+            'automatic_payment_methods' => ['enabled' => true],
+        ]);
+
+    }
     public function organizerTeamPay(Request $request)
     {
         try {
-            $stripe = new StripeClient(env('STRIPE_SECRET'));
+            $this->stripeClient = new StripeClient(env('STRIPE_SECRET'));
 
-            $stripe->paymentIntents->create([
+            $stripeClient->paymentIntents->create([
                 'amount' => 99 * 100,
                 'currency' => 'myr',
                 'payment_method' => $request->payment_method,
@@ -29,14 +44,14 @@ class StripeController extends Controller
                 'payment_method_types' => ['card'],
                 'automatic_payment_methods' => ['enabled' => false,],
             ]);
-            // $customer = $stripe->customers->create([
+            // $customer = $stripeClient->customers->create([
             //     'name' => $request->name,
             //     'email' => $request->email,
             //     'description' => 'My first customer',
             //      add this????????????????
             //      "card" : charge.stripe_card_token
             // ]);
-            // $invoice= $stripe->invoices->create([
+            // $invoice= $stripeClient->invoices->create([
             //     'customer' => $customer->id,
             //     'collection_method' => 'send_invoice',
             //     'days_until_due' => 0,

@@ -97,7 +97,7 @@
                 eventTags: eventTags,
                 value: eventTagsParsed,
             })
-            var tagify = new Tagify(document.querySelector('#eventTags'), 
+            var tagify = new Tagify(document.querySelector('#eventTags'),
                 [],
             );
             tagify.addTags(eventTagsParsed)
@@ -250,14 +250,28 @@
 </script>
 <script>
     let stripe = Stripe('{{ env('STRIPE_KEY') }}')
-    const elements = stripe.elements();
-    const cardElement = elements.create('card', {
-        style: {
-            base: {
-                fontSize: '16px'
-            }
-        },
-        hidePostalCode: true
+    let clientSecret = '{{ env('STRIPE_SECRET') }}';
+
+    const appearance = {};
+
+    const loader = 'auto';
+
+    const elements = stripe.elements({
+        clientSecret,
+        appearance,
+        loader
+    });
+
+    const cardElement = elements.create('payment', {
+        options: {
+            defaultValues: {
+                billingDetails: {
+                    name: 'John Doe',
+                    phone: '888-888-8888',
+                },
+            },
+            hidePostalCode: true
+        }
     })
     const cardForm = document.getElementById('card-form')
     const cardName = document.getElementById('card-name')
