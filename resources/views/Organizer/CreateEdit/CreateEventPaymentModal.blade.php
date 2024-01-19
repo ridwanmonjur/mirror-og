@@ -31,7 +31,12 @@
                                     <div id="card"></div>
                                 </div>
                             </div>
-                            <button type="submit" class="oceans-gaming-default-button">Pay 👉</button>
+                            <button type="submit" class="oceans-gaming-default-button">
+                                <div class="submit-texts"> Pay 👉 </div>
+                                <div class="spinner-border d-none" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </button>
                         </form>
                     </div>
                 </div>
