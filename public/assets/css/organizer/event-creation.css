@@ -554,6 +554,7 @@ color: #43A4D7; */
     flex-direction: row;
     overflow-y: hidden;
     overflow-x: visible;
+    height: 70px;
     justify-content: center;
 }
 
@@ -647,8 +648,7 @@ color: #43A4D7; */
 .time-line-box-success .status__right small {
     background-color: rgb(42, 139, 235) !important;
     color: white !important;
-    width: 18px !important;
-    height: 18px !important;
+    height: 20px !important;
 }
 
 .status__left__success small,

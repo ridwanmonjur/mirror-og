@@ -1,6 +1,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
 <script src="https://js.stripe.com/v3/"></script>
 <script>
+    // Spinner logic
+
     function waitForElm() {
         return new Promise(resolve => {
             const observer = new MutationObserver(mutations => {
@@ -13,7 +15,6 @@
                         document.getElementById('loader-until-loaded').classList.add('d-none');
                         document.getElementById('invisible-until-loaded').classList.remove(
                             'd-none');
-                        fillStepPaymentValues();
                     }, 600);
                     observer.disconnect();
                     resolve(true);
@@ -48,7 +49,7 @@
             'eventType' in formValues
         ) {
 
-            let eventTier = 'Starfish' ?? null;
+            let eventTier = formValues['eventTier'] ?? null;
             let eventType = formValues['eventType'] ?? null;
             eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
             if (eventRate == -1) {
@@ -89,24 +90,6 @@
             }
         }
     }
-
-    function fillEventTags() {
-        let eventTags = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTags');
-        if (eventTags != null) {
-            let eventTagsParsed = Object(JSON.parse(eventTags));
-            console.log({
-                eventTags: eventTags,
-                value: eventTagsParsed,
-            })
-            var tagify = new Tagify(document.querySelector('#eventTags'),
-                [],
-            );
-            tagify.addTags(eventTagsParsed)
-        } else {
-            new Tagify(document.querySelector('#eventTags'), []);
-        }
-
-    }
 </script>
 <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
 <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
@@ -142,6 +125,26 @@
         let value = checkStringNullOrEmptyAndReturn(property);
         if (value) localStorage.setItem(key, value);
         else console.error(`Item not in localStorage: ${key} ${value}`)
+    }
+</script>
+
+<script>
+    function fillEventTags() {
+        let eventTags = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTags');
+        if (eventTags != null) {
+            let eventTagsParsed = Object(JSON.parse(eventTags));
+            console.log({
+                eventTags: eventTags,
+                value: eventTagsParsed,
+            })
+            var tagify = new Tagify(document.querySelector('#eventTags'),
+                [],
+            );
+            tagify.addTags(eventTagsParsed)
+        } else {
+            new Tagify(document.querySelector('#eventTags'), []);
+        }
+
     }
 
     function fillStepGameDetailsValues() {
@@ -181,9 +184,9 @@
         setInnerHTMLFromLocalStorage('eventTierPrize', outputEventTierPrize);
         setInnerHTMLFromLocalStorage('eventTierEntry', outputEventTierEntry);
         setInnerHTMLFromLocalStorage('eventTierTitle', outputEventTierTitle);
-
     }
-
+</script>
+<script>
     function checkValidTime() {
         var startDateInput = document.getElementById('startDate');
         var endDateInput = document.getElementById('endDate');
@@ -250,52 +253,7 @@
     }
 </script>
 <script>
-    let stripe = Stripe('{{ env('STRIPE_KEY') }}')
-    const appearance = {
-        theme: 'flat',
-        variables: {
-            colorText: '#30313d',
-            colorDanger: '#df1b41',
-            fontFamily: 'Ideal Sans, system-ui, sans-serif',
-            spacingUnit: '2px',
-            borderRadius: '20px',
-            colorPrimary: 'black',
-            colorBackground: '#ffffff',
-
-        },
-        rules: {
-            '.Input': {
-                borderColor: '#E0E6EB',
-            },
-
-        }
-    };
-    console.log({
-        hi: true
-    });
-    console.log({
-        hi: true
-    });
-    console.log({
-        hi: true
-    });
-    console.log({
-        hi: true
-    });
-    console.log({
-        hi: true
-    });
-    const loader = 'auto';
-    const cardForm = document.getElementById('card-form')
-    const cardName = document.getElementById('card-name')
-
-    let paymentAmount = localStorage.getItem('eventTierPrize');
-    paymentAmount = String(paymentAmount);
-
-    if (paymentAmount) {
-        paymentAmount = paymentAmount.replace("RM ", "");
-        paymentAmount = parseInt(paymentAmount);
-
+    function initializePayment() {
         fetch("{{ route('stripe.createIntent') }}", {
                 method: "POST",
                 headers: {
@@ -325,70 +283,42 @@
                 cardForm.addEventListener('submit', async (e) => {
                     e.preventDefault()
 
-                    const {
-                        paymentMethod,
-                        error
-                    } = await stripe.createPaymentMethod({
-                        type: 'card',
-                        card: cardElement,
-                        billing_details: {
-                            name: cardName.value
-                        }
-                    })
-
-                    if (error) {
-                        console.log(error)
-                    } else {
-                        let input = document.createElement('input')
-                        input.setAttribute('type', 'hidden')
-                        input.setAttribute('name', 'payment_method')
-                        input.setAttribute('value', paymentMethod.id)
-                        cardForm.appendChild(input)
-                        // payment method created
-
-                        let paymentDiv = document.querySelector('.choose-payment-method');
-
-                        // goToNextScreen('step-11', 'timeline-4');
-                        document.getElementById('modal-close').click();
-                        const form = new FormData(cardForm);
-                        const data = {};
-                        form.forEach((value, key) => {
-                            data[key] = value;
-                        });
-                        fetch("{{ route('stripe.organizerTeamPay') }}", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                                },
-                                body: JSON.stringify(data)
-                            })
-                            .then(response => response.json())
-                            .then(responseData => {
-                                paymentDiv.style.backgroundColor = '#8CCD39';
-                                paymentDiv.textContent = 'Payment successful';
-                                paymentDiv.removeAttribute('data-toggle');
-                                paymentDiv.removeAttribute('data-target');
-                                setFormValues({
-                                    'isPaymentDone': true,
-                                    paymentMethod: paymentMethod.id
-                                });
-                                Toast.fire({
-                                    icon: 'success',
-                                    text: "Payment succeeded. Please proceed to the next step."
-                                })
-                            })
-                            .catch(error => {
-                                console.error(error);
-                                Toast.fire({
-                                    icon: 'error',
-                                    text: "Payment failed. Please try again..."
-                                })
-                            })
-                    }
+                    
                 })
-
             });
+    }
+    let stripe = Stripe('{{ env('STRIPE_KEY') }}')
+    const appearance = {
+        theme: 'flat',
+        variables: {
+            colorText: '#30313d',
+            colorDanger: '#df1b41',
+            fontFamily: 'Ideal Sans, system-ui, sans-serif',
+            spacingUnit: '2px',
+            borderRadius: '20px',
+            colorPrimary: 'black',
+            colorBackground: '#ffffff',
+
+        },
+        rules: {
+            '.Input': {
+                borderColor: '#E0E6EB',
+            },
+
+        }
+    };
+    const loader = 'auto';
+    const cardForm = document.getElementById('card-form')
+    const cardName = document.getElementById('card-name')
+
+    let paymentAmount = localStorage.getItem('eventTierPrize');
+    paymentAmount = String(paymentAmount);
+
+    if (paymentAmount) {
+        paymentAmount = paymentAmount.replace("RM ", "");
+        paymentAmount = parseInt(paymentAmount);
+        initializePayment();
+        
     }
 
 
@@ -403,7 +333,7 @@
         let type = {!! json_encode($type) !!};
         let game = {!! json_encode($game) !!};
         console.log({$event, tier, type, game})
-        // clearLocalStorage();
+        clearLocalStorage();
         if ($event) {
 
             let assetKeyWord = "{{ asset('') }}"
@@ -444,16 +374,3 @@
     });
 </script>
 
-<script>
-    function selectOption(element, label, imageUrl) {
-        const dropdownButton = element.closest('.dropdown').querySelector('.dropbtn');
-        dropdownButton.classList.add('selected');
-
-        const selectedLabel = dropdownButton.querySelector('.selected-label');
-        const selectedImage = dropdownButton.querySelector('.selected-image img');
-        selectedLabel.textContent = label;
-        selectedImage.src = imageUrl;
-
-        closeDropDown(dropdownButton);
-    }
-</script>

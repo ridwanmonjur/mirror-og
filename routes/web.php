@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Organizer\InvitationController;
-use App\Http\Controllers\Organizer\EventController;
+use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Artisan;
@@ -94,8 +94,8 @@ Route::group(['prefix' => 'organizer'], function () {
 	Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'])->name("organizer.steam.callback");
 	Route::group(['middleware' => 'auth'], function () {
 		Route::group(['middleware' => 'check-permission:organizer|admin'], function () {
-			Route::get('/home', [EventController::class, 'home'])->name("organizer.home.view");
-			Route::resource('/event', EventController::class, [
+			Route::get('/home', [OrganizerEventController::class, 'home'])->name("organizer.home.view");
+			Route::resource('/event', OrganizerEventController::class, [
 				'index' => "event.index",
 				'create' => "event.create",
 				'store' => "event.store",
@@ -105,11 +105,11 @@ Route::group(['prefix' => 'organizer'], function () {
 			]);
 			Route::get('/event/{id}/invitation', [InvitationController::class, 'index'])
 				->name('event.invitation.index');
-			Route::post('event/{id}/updateForm', [EventController::class, 'updateForm'])->name('event.updateForm');
-			Route::get('event/{id}/success', [EventController::class, 'showSuccess'])
+			Route::post('event/{id}/updateForm', [OrganizerEventController::class, 'updateForm'])->name('event.updateForm');
+			Route::get('event/{id}/success', [OrganizerEventController::class, 'showSuccess'])
 				->middleware('prevent-back-button')
 				->name("organizer.success.view");
-			Route::get('event/{id}/live', [EventController::class, 'showLive'])
+			Route::get('event/{id}/live', [OrganizerEventController::class, 'showLive'])
 				->middleware('prevent-back-button')
 				->name("organizer.live.view");
 		});

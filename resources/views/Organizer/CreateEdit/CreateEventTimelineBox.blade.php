@@ -11,14 +11,15 @@
                 <div class="timestamp" onclick="goToNextScreen('step-5', 'timeline-2')"><span>Details</span></div>
                 <div class="status" onclick="goToNextScreen('step-5', 'timeline-2')"><span><small></small></span></div>
             </div>
-            <div class="swiper-slide" id="timeline-3">
-                <div class="timestamp" onclick="goToNextScreen('step-10', 'timeline-3'); fillStepPaymentValues();"><span>Payment</span></div>
-                <div class="status" onclick="goToNextScreen('step-10', 'timeline-3'); fillStepPaymentValues();"><span><small></small></span></div>
-            </div>
-            <div class="swiper-slide swiper-slide__right" id="timeline-4">
-                <div class="timestamp" onclick="goToNextScreen('step-11', 'timeline-4')"><span
+            <div class="swiper-slide" id="timeline-launch">
+                 <div class="timestamp" onclick="goToNextScreen('step-launch-1', 'timeline-launch')"><span
                         class="date">Launch</span></div>
-                <div class="status__right" onclick="goToNextScreen('step-11', 'timeline-4')"><span><small></small></span></div>
+                <div class="status" onclick="goToNextScreen('step-launch-1', 'timeline-launch')"><span><small></small></span></div>
+            </div>
+            <div class="swiper-slide swiper-slide__right" id="timeline-payment">
+                <div class="timestamp" onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();"><span>Payment</span></div>
+                    <div class="status__right" onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();"><span><small></small></span>
+                </div>
             </div>
         </div>
     </div>
@@ -28,8 +29,8 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a onclick="goToNextScreen('step-1', 'timeline-1')">Categories</a></li>
             <li class="breadcrumb-item"><a onclick="goToNextScreen('step-5', 'timeline-2')">Details</a></li>
-            <li class="breadcrumb-item"><a onclick="goToNextScreen('step-10', 'timeline-3'); fillStepPaymentValues();">Payment</a></li>
-            <li class="breadcrumb-item"><a onclick="goToNextScreen('step-11', 'timeline-4')">Launch</a></li>
+            <li class="breadcrumb-item"><a onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">Payment</a></li>
+            <li class="breadcrumb-item"><a onclick="goToNextScreen('step-launch-1', 'timeline-launch')">Launch</a></li>
         </ol>
     </nav>
 </div>

@@ -47,20 +47,26 @@ function chooseEventType(button) {
     button.parentElement.classList.add("d-none");
 }
 
-function updateLaunchButtonText(type) {
+function updateLaunchButton(type) {
     var launchButton = document.getElementById('launch-button');
 
     switch (type) {
         case 'launch':
             launchButton.innerText = 'Launch';
+            launchButton.removeEventListener('click', goToPaymentPage);
+            launchButton.addEventListener('click', goToLaunch2ndPage);
             break;
 
         case 'schedule':
-            launchButton.innerText = 'Schedule';
+            launchButton.innerText = 'Step 4';
+            launchButton.removeEventListener('click', goToLaunch2ndPage);
+            launchButton.addEventListener('click', goToPaymentPage);
             break;
 
         case 'draft':
-            launchButton.innerText = 'Save';
+            launchButton.innerText = 'Step 4';
+            launchButton.removeEventListener('click', goToLaunch2ndPage);
+            launchButton.addEventListener('click', goToPaymentPage);
             break;
     }
 }

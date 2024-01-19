@@ -221,11 +221,11 @@ let inputKeyToStepNameMapping = {
     endDate: ['step-5', 'timeline-2'],
     endTime: ['step-5', 'timeline-2'],
     eventDescription: ['step-7', 'timeline-2'],
-    launch_visible: ['step-11', 'timeline-4'],
-    launch_date: ['step-11', 'timeline-4'],
-    launch_time: ['step-11', 'timeline-4'],
-    launch_schedule: ['step-11', 'timeline-4'],
-    isPaymentDone: ['step-10', 'timeline-3']
+    launch_visible: ['step-launch-1', 'timeline-launch'],
+    launch_date: ['step-launch-1', 'timeline-launch'],
+    launch_time: ['step-launch-1', 'timeline-launch'],
+    launch_schedule: ['step-launch-1', 'timeline-launch'],
+    isPaymentDone: ['step-payment', 'timeline-payment']
 }
 
 function closeDropDown(element, id, keyValues, key) {
@@ -295,7 +295,6 @@ function saveEvent(willGoToNextPage = true) {
     formValidation = validateFormValuesPresent([
         'gameTitle', 'eventType', 'eventTier',
         'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription',
-        'isPaymentDone',
     ]);
     if (launch_schedule != 'now' && (launch_date==null || launch_time==null)) {
         isFormValid = false;
@@ -320,14 +319,14 @@ function saveEvent(willGoToNextPage = true) {
         })
         let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
         goToNextScreen(nextId, nextTimeline);
-        if (nextId == 'step-10') {  
+        if (nextId == 'step-payment') {  
             fillStepPaymentValues();
         }
         return;
     }
     else if (launch_visible != "DRAFT" && willGoToNextPage && launch_schedule == 'now') {
         setFormValues({ 'launch_schedule': 'now' });
-        goToNextScreen('step-12', 'timeline-4');
+        goToNextScreen('step-launch-2', 'timeline-launch');
         return;
     }
     else {
@@ -340,10 +339,10 @@ function goToNextScreen(nextId, nextTimeline) {
 
     const allIDs = [
         'step-0',
-        'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6', 'step-7', 'step-8', 'step-9', 'step-10', 'step-11',
-        'step-12'];
+        'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6', 'step-7', 'step-8', 'step-9', 'step-payment', 'step-launch-1',
+        'step-launch-2'];
 
-    const allTimelines = ['timeline-1', 'timeline-2', 'timeline-3', 'timeline-4'];
+    const allTimelines = ['timeline-1', 'timeline-2', 'timeline-payment', 'timeline-launch'];
     let currentId = 'step-0';
     allIDs.forEach(id => {
         const element = document.querySelector(`#${id}`);

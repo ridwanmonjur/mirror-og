@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Organizer\InvitationController;
-use App\Http\Controllers\Organizer\EventController;
+use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\StripeController;
 use App\Models\Participant;
@@ -28,7 +28,7 @@ Route::group(['prefix' => 'participant'], function () {
 });
 
 Route::group(['prefix' => 'organizer'], function () {
-    Route::post('events/search', [EventController::class, 'search'])->name('event.search.view');
+    Route::post('events/search', [OrganizerEventController::class, 'search'])->name('event.search.view');
 });
 
 Route::name('stripe.')
