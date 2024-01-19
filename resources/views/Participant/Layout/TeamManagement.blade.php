@@ -171,33 +171,50 @@
             </div>
         </div>
         @foreach($eventsByTeam as $teamId => $users)
-        @php
-        $uniqueUsernames = collect($users)->unique('user.id');
-        $usernamesCount = $uniqueUsernames->count();
-        @endphp
-        <div class="tab-content" id="Members" style="display: none;">
-            <p style="text-align: center;">Team {{ $manage->teamName }} has {{ $usernamesCount }} members</p>
-            <table class="member-table">
-                <tbody>
-                    
-                    @foreach($users as $user)
-                    <tr class="st">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                                <span>{{ $user['user']->name }}</span>
-                            </div>
-                        </td>
-                        <td class="flag-cell">
-                            <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="USA flag">
-                        </td>
-                    </tr>
-                    @endforeach
-                    @endforeach
+    @php
+    $uniqueUsernames = collect($users)->unique('user.id');
+    $usernamesCount = $uniqueUsernames->count();
+    $creatorId = $manage->user->id;
+    @endphp
+    <div class="tab-content" id="Members" style="display: none;">
+        <p style="text-align: center;">Team {{ $manage->teamName }} has {{ $usernamesCount }} members</p>
+        <table class="member-table">
+            <tbody>
+                {{-- Display the creator's name --}}
+                <tr class="st">
+                    <td>
+                        <div class="player-info">
+                            <div class="player-image" style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')"></div>
+                            <span>{{ $manage->user->name }}</span>
+                        </div>
+                    </td>
+                    <td class="flag-cell">
+                        <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
+                    </td>
+                </tr>
+
+                {{-- Display unique member names excluding the creator --}}
+                @foreach($uniqueUsernames as $user)
+                    @if($user['user']->id !== $creatorId)
+                        <tr class="st">
+                            <td>
+                                <div class="player-info">
+                                    <div class="player-image" style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png')"></div>
+                                    <span>{{ $user['user']->name }}</span>
+                                </div>
+                            </td>
+                            <td class="flag-cell">
+                                <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
+                            </td>
+                        </tr>
                     @endif
-                </tbody>
-            </table>
-        </div>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    @endforeach
+                    @endif
+                
 
         <div class="tab-content" id="Active Rosters" style="display: center;">
 
