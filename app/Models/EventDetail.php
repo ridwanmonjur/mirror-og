@@ -67,8 +67,11 @@ class EventDetail extends Model
         $carbonNow = Carbon::now()->utc();
         // dd($this->status);
         // dd($carbonPublishedDateTime, $carbonEndDateTime, $carbonStartDateTime, $carbonNow);
+        
         if ($this->status == "DRAFT" || $this->status == "PREVIEW") {
             return "DRAFT";
+        } elseif (is_null($this->payment_transaction_id)) {
+            return "PENDING";
         } elseif (!$carbonEndDateTime || !$carbonStartDateTime) {
             Log::error("EventDetail.php: statusResolved: EventDetail with id= " . $this->id
                 . " and name= " . $this->eventName . " has null end or start date time");
@@ -76,22 +79,27 @@ class EventDetail extends Model
         } elseif ($carbonEndDateTime < $carbonNow) {
             return "ENDED";
         } else {
+
             if ($carbonStartDateTime < $carbonNow) {
                 return "ONGOING";
             } elseif ($carbonPublishedDateTime && $carbonPublishedDateTime > $carbonNow) {
                 return "SCHEDULED";
             } else return "UPCOMING";
+
         }
+
     }
     public function fixTimeToRemoveSeconds($time)
     {
         if ($time == null) {
             return null;
         }
+
         if (substr_count($time, ':') === 2) {
             $time = explode(':', $time);
             $time = $time[0] . ':' . $time[1];
         }
+
         return $time;
     }
 
@@ -100,6 +108,7 @@ class EventDetail extends Model
         if ($date == null || $time == null) {
             return null;
         }
+
         $carbonDateTime = Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $this->fixTimeToRemoveSeconds($time))
             ->utc();
         return $carbonDateTime;

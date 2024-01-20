@@ -112,6 +112,9 @@ Route::group(['prefix' => 'organizer'], function () {
 			Route::get('event/{id}/live', [OrganizerEventController::class, 'showLive'])
 				->middleware('prevent-back-button')
 				->name("organizer.live.view");
+			Route::get('event/{id}/checkout', [OrganizerEventController::class, 'showCheckout'])
+				->middleware('prevent-back-button')
+				->name("organizer.checkout.view");
 		});
 	});
 });

@@ -1,5 +1,4 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
-<script src="https://js.stripe.com/v3/"></script>
 <script>
     // Spinner logic
 
@@ -8,9 +7,8 @@
             const observer = new MutationObserver(mutations => {
                 console.log({
                     jquery: window.jQuery,
-                    stripe: window.Stripe
                 })
-                if (window.jQuery && window.Stripe) {
+                if (window.jQuery) {
                     let timeoutID = setTimeout(function() {
                         document.getElementById('loader-until-loaded').classList.add('d-none');
                         document.getElementById('invisible-until-loaded').classList.remove(
@@ -253,75 +251,6 @@
     }
 </script>
 <script>
-    function initializePayment() {
-        fetch("{{ route('stripe.createIntent') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                body: JSON.stringify({
-                    paymentAmount
-                })
-            })
-            .then((data) => data.json())
-            .then((json) => {
-                let clientSecret = json.data.client_secret;
-
-                elements = stripe.elements({
-                    clientSecret,
-                    appearance
-                });
-
-                const paymentElementOptions = {
-                    layout: "tabs",
-                };
-
-                const paymentElement = elements.create("payment", paymentElementOptions);
-                paymentElement.mount("#card");
-
-                cardForm.addEventListener('submit', async (e) => {
-                    e.preventDefault()
-
-                    
-                })
-            });
-    }
-    let stripe = Stripe('{{ env('STRIPE_KEY') }}')
-    const appearance = {
-        theme: 'flat',
-        variables: {
-            colorText: '#30313d',
-            colorDanger: '#df1b41',
-            fontFamily: 'Ideal Sans, system-ui, sans-serif',
-            spacingUnit: '2px',
-            borderRadius: '20px',
-            colorPrimary: 'black',
-            colorBackground: '#ffffff',
-
-        },
-        rules: {
-            '.Input': {
-                borderColor: '#E0E6EB',
-            },
-
-        }
-    };
-    const loader = 'auto';
-    const cardForm = document.getElementById('card-form')
-    const cardName = document.getElementById('card-name')
-
-    let paymentAmount = localStorage.getItem('eventTierPrize');
-    paymentAmount = String(paymentAmount);
-
-    if (paymentAmount) {
-        paymentAmount = paymentAmount.replace("RM ", "");
-        paymentAmount = parseInt(paymentAmount);
-        initializePayment();
-        
-    }
-
-
     function clearLocalStorage() {
         localStorage.clear();
     }
@@ -352,14 +281,7 @@
             setLocalStorageFromEventObject('eventTierTitle', tier?.eventTier);
             setLocalStorageFromEventObject('eventTags', $event?.eventTags);
             if ($event?.eventTags != null) {
-            console.log({
-                eventTags: $event?.eventTags,
-                value: JSON.parse($event?.eventTags)
-            })
         } else {
-            console.log({
-                hit: "here"
-            })
             new Tagify(document.querySelector('#eventTags'), []);
         }
         }

@@ -14,23 +14,17 @@
     <div class="box-width">
         @if ($status == 'ERROR')
             <p id="notification">Your <u>{{ strtolower($status) }}</u> event has no proper start date/ end date!</p>
-        @endif
-        
-        @if ($status == 'DRAFT')
+        @elseif ($status == 'DRAFT')
             <p id="notification">Your <u>{{ strtolower($status) }}</u> event has been created!</p>
-        @endif
-
-        @if ($status == 'SCHEDULED')
+        @elseif ($status == 'SCHEDULED')
             <p id="notification">Your <u>{{ $event->sub_action_private }}</u> event has been scheduled to launch on
                 {{ $combinedStr }} at {{ $timePart }}!</p>
-        @endif
-
-        @if ($status == 'UPCOMING' || $status == 'ONGOING')
-            <p id="notification">Your <u>{{ $event->sub_action_private }}</u> event is alreadyP live!</p>
-        @endif
-
-        @if ($status == 'ENDED')
+        @elseif ($status == 'UPCOMING' || $status == 'ONGOING')
+            <p id="notification">Your <u>{{ $event->sub_action_private }}</u> event is already live!</p>
+        @elseif ($status == 'ENDED')
             <p id="notification">Your <u>{{ $event->sub_action_private }}</u> event has ended</p>
+        @elseif ($status == 'PENDING')
+            <p id="notification"> Your {{ $event->sub_action_private ?? 'public / private' }} event's payment status is pending </p>
         @endif
 
     </div>

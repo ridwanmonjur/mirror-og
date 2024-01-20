@@ -19,15 +19,14 @@ class ParticipantEventController extends Controller
 {
     public function home(Request $request)
     {
-        // Get the currently authenticated user's ID
         $userId = Auth::id();
 
-        // Retrieve current date and time
         $currentDateTime = Carbon::now()->utc();
         $count = 6;
 
         $events = EventDetail::query()
             ->where('status', '<>', 'DRAFT')
+            ->whereNotNull('payment_transaction_id')
             ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
             ->where('sub_action_private', '<>', 'private')
             ->where(function ($query) use ($currentDateTime) {
@@ -93,26 +92,25 @@ class ParticipantEventController extends Controller
 
         return view('Participant.TeamList', compact('teamList', 'usernamesCountByTeam'));
     } else {
-        // Handle if no teams are found for the user
         return redirect()
             ->back()
             ->with('error', 'No teams found for the user.');
-    }
+        }
     }
 
 
     public function teamManagement($id)
     {
         $teamManage = Team::where('id', $id)->get();
+        
         if ($teamManage) {
-            // Retrieve JoinEvents related to the team_id
+
             $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
                 $query->where('team_id', $id);
             })
                 ->with('eventDetails', 'user')
                 ->get();
 
-            // Process the data to display the user's name once for each team
             $eventsByTeam = [];
             foreach ($joinEvents as $event) {
                 $userId = $event->user_id;
@@ -130,27 +128,25 @@ class ParticipantEventController extends Controller
 
             return view('Participant.Layout.TeamManagement', compact('teamManage', 'joinEvents', 'eventsByTeam'));
         } else {
-            // Handle if the team doesn't exist
             return redirect()
                 ->back()
                 ->with('error', 'Team not found.');
         }
-        // return view('Participant.Layout.TeamManagement', compact('teamManage'));
     }
 
     public function registrationManagement($id)
     {
         $teamManage = Team::where('id', $id)->get();
+        
         if ($teamManage) {
-            // Retrieve JoinEvents related to the team_id
             $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
                 $query->where('team_id', $id);
             })
                 ->with('eventDetails', 'user')
                 ->get();
 
-            // Process the data to display the user's name once for each team
             $eventsByTeam = [];
+        
             foreach ($joinEvents as $event) {
                 $userId = $event->user_id;
                 $teamId = $event->user->teams->first(function ($team) use ($id) {
@@ -167,7 +163,6 @@ class ParticipantEventController extends Controller
 
             return view('Participant.Layout.RegistrationManagement', compact('teamManage', 'joinEvents', 'eventsByTeam'));
         } else {
-            // Handle if the team doesn't exist
             return redirect()
                 ->back()
                 ->with('error', 'Team not found.');
@@ -184,13 +179,13 @@ class ParticipantEventController extends Controller
     public function TeamStore(Request $request)
     {
         $validatedData = $request->validate([
-            'teamName' => 'required|string|max:25', // Validation rule for teamName field
-            // You can add more validation rules if needed for other fields
+            'teamName' => 'required|string|max:25', 
         ]);
 
         $team = new Team();
         $team->teamName = $request->input('teamName');
         $existingTeam = Team::where('teamName', $team->teamName)->first();
+
         if ($existingTeam) {
             return redirect()
                 ->back()
@@ -279,12 +274,14 @@ class ParticipantEventController extends Controller
     {
         try {
             $event = EventDetail::find($id);
+
             if (!$event) {
                 throw new ModelNotFoundException("Event not found by id: $id");
             }
 
             $status = $event->statusResolved();
-            if (in_array($status, ['DRAFT', 'PREVEW'])) {
+            
+            if (in_array($status, ['DRAFT', 'PREVEW', 'PENDING'])) {
                 $lowerStatus = strtolower($status);
                 throw new ModelNotFoundException("Can't display event: $id with status: $lowerStatus");
             }
@@ -293,12 +290,15 @@ class ParticipantEventController extends Controller
             $user = Auth::user();
             $eventListQuery = EventDetail::query();
             $eventListQuery->with('tier');
+            
             if ($user) {
+                
                 if ($event->sub_action_private == 'private') {
                     $checkIfUserIsOrganizerOfEvent = $event->user_id == $user->id;
                     // change this line
                     $checkIfUserIsInvited = true;
                     $checkIfShouldDisallow = !($checkIfUserIsOrganizerOfEvent || $checkIfUserIsInvited);
+
                     if ($checkIfShouldDisallow) {
                         throw new UnauthorizedException("You're neither organizer nor a participant of event");
                     }
@@ -306,6 +306,7 @@ class ParticipantEventController extends Controller
 
                 if ($status == 'SCHEDULED') {
                     $checkIfUserIsOrganizerOfEvent = $event->user_id == $user->id;
+                    
                     if (!$checkIfUserIsOrganizerOfEvent) {
                         throw new UnauthorizedException('You cannot view a scheduled event');
                     }
@@ -320,6 +321,7 @@ class ParticipantEventController extends Controller
                     $tierEntryFee = $_event->eventTier?->tierEntryFee ?? null;
                 }
             } else {
+                
                 if ($event->sub_action_private == 'private') {
                     throw new UnauthorizedException('Login to access this event.');
                 }
@@ -330,6 +332,7 @@ class ParticipantEventController extends Controller
             }
 
             $organizerId = $event?->user?->organizer?->id ?? null;
+            
             if ($organizerId) {
                 $followersCount = Follow::where('organizer_id', $organizerId)->count();
             } else {
@@ -366,6 +369,7 @@ class ParticipantEventController extends Controller
             } else {
                 return response()->json(['message' => 'Successfully followed the organizer']);
             }
+
         } catch (QueryException $e) {
             return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
         }
@@ -375,6 +379,7 @@ class ParticipantEventController extends Controller
     {
         $userId = $request->input('user_id');
         $organizerId = $request->input('organizer_id');
+
         Follow::where('user_id', $userId)
             ->where('organizer_id', $organizerId)
             ->delete();
@@ -393,14 +398,13 @@ class ParticipantEventController extends Controller
             $errorMessage = 'You have already joined this event.';
             $request->session()->flash('errorMessage', $errorMessage);
         } else {
-            // If no record exists, create a new entry.
             $joint = new JoinEvent();
             $joint->user_id = $userId;
             $joint->event_details_id = $id;
             $joint->save();
             return redirect('/participant/selectTeam');
         }
-        // Return to the same page.
+
         return redirect()
             ->back()
             ->withInput();

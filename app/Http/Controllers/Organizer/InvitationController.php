@@ -16,19 +16,19 @@ class InvitationController extends Controller
      * Display a listing of the resource.
      */
     public function index($id)
-    {   
+    {
         $authUser = Auth::user();
         $user_id = $authUser->id;
         $participationList = User::where('role', 'PARTICIPANT')->get();
-        $event = EventDetail
-            ::with('invitationList')
+        $tier = $type = $game = null;
+        $event = EventDetail::with('invitationList')
             ->where('user_id', $user_id)
             ->find($id);
         $isUserSameAsAuth = true;
         if (!$event) {
             throw new ModelNotFoundException("Event not found with id: $id");
         }
-        return view('Organizer.Invitation', compact('event', 'isUserSameAsAuth', 'participationList', 'user_id'));
+        return view('Organizer.Invitation', compact('event', 'isUserSameAsAuth', 'participationList', 'user_id', 'game', 'tier', 'type'));
     }
 
     /**
@@ -43,8 +43,8 @@ class InvitationController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {   
-        $invitation = new Invitation;
+    {
+        $invitation = new Invitation();
         $invitation->organizer_id = $request->organizer_id;
         $invitation->event_id = $request->event_id;
         $invitation->participant_id = $request->participant_id;
@@ -54,7 +54,7 @@ class InvitationController extends Controller
             'message' => 'Payment successful',
             'data' => [
                 'invitation' => $invitation,
-            ]
+            ],
         ]);
     }
 
@@ -89,9 +89,6 @@ class InvitationController extends Controller
     {
         $invitation = Invitation::find($id);
         $invitation->delete();
-        return response()->json(
-
-            ['success' => 'Invitation deleted successfully.']
-        );
+        return response()->json(['success' => 'Invitation deleted successfully.']);
     }
 }

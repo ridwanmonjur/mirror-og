@@ -441,29 +441,38 @@
                     <h5>Event Status</h5>
                     <p class="text-success">Your event is currently saved as draft.</p>
                 </div>
-            @endif
-
-            @if ($status == 'SCHEDULED')
+            @elseif ($status == 'SCHEDULED')
                 <div>
                     <h5>Event Status</h5>
                     <p class="text-success">Your {{ $event->sub_action_private }} event is scheduled to launch on:
                         {{ $combinedStr }} at
                         {{ $timePart }}. </p>
                 </div>
-            @endif
-
-            @if ($status == 'UPCOMING' || $status == 'ONGOING')
+            @elseif ($status == 'UPCOMING' || $status == 'ONGOING')
                 <div>
                     <h5>Event Status</h5>
                     <p class="text-success">Your {{ $event->sub_action_private }} event is live now
                     </p>
                 </div>
-            @endif
-
-            @if ($status == 'ENDED')
+            @elseif ($status == 'ENDED')
                 <div>
                     <h5>Event Status</h5>
                     <p class="text-success">Your {{ $event->sub_action_private }} event has already ended
+                    </p>
+                </div>
+            @elseif ($status == 'PENDING')
+            <div>
+                <h5>Your payment status is pending!</h5>
+                    <p class="text-success">Your {{ $event->sub_action_private ?? 'public / private' }} event's payment status is pending.
+                    </p>
+                    <p class="text-success"> 
+                        @if ($event->status == "DRAFT")
+                        You chose a draft event.
+                        @else
+                        Launch type: {{ $event->sub_action_private }}
+                        <br>
+                        Launch time chosen: {{ $event->sub_action_public_time }} {{ $event->sub_action_public_date ?? 'N/A' }}
+                        @endif
                     </p>
                 </div>
             @endif
@@ -614,8 +623,8 @@
         <div class="payment-summary">
             <h5>Payment Summary </h5>
             <div>Event Categories</div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;Type: <span id="paymentType"> </span></div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;Tier: <span id="paymentTier"> </span></div>
+            <div class="ml-3">Type: <span id="paymentType"> </span></div>
+            <div class="ml-3">Tier: <span id="paymentTier"> </span></div>
             <div class="flexbox">
                 <span>Subtotal</span>
                 <span id="paymentSubtotal" id="subtotal"></span>
@@ -636,14 +645,14 @@
             <br>
             <div class="text-center">
                 @if ($event && $event->payment_transaction_id != null)
-                    <button onclick="" class="choose-payment-method"
+                    <button class="choose-payment-method"
                         style="background-color: #8CCD39 !important;" type="button">
                         Paid successfully!
                     </button>
                 @else
-                    <button onclick="" type="button" class="choose-payment-method" data-toggle="modal"
+                    <button onclick="setFormValues( {'goToCheckoutPage': 'yes'} ); saveEvent(false);" type="button" class="choose-payment-method" data-toggle="modal"
                         data-target="#payment-modal">
-                        Choose a payment method
+                        Go to checkout page
                     </button>
                 @endif
                 <button onclick="goToNextScreen('step-1', 'timeline-1');" type="button"
