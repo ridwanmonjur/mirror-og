@@ -567,7 +567,7 @@ class OrganizerEventController extends Controller
                 session()->flash('successMessageCoupon', "Applying your coupon named: $request->coupon!");
             } else {
                 $fee = $this->createNoDiscountFeeObject($fee, $event->tier->tierEntryFee);
-                session()->flash('successMessageCoupon', "Your coupon named: $request->coupon! is expired or not availabe now!");
+                session()->flash('errorMessageCoupon', "Your coupon named: $request->coupon! is expired or not availabe now!");
             }
         } else {
             if ($request->has('coupon')) {
