@@ -176,7 +176,11 @@
     $usernamesCount = $uniqueUsernames->count();
     $creatorId = $manage->user->id;
     @endphp
-    <div class="tab-content" id="Members" style="display: none;">
+    <div class="tab-content" id="Members" style="display: none; text-align: center;">
+        <div class="member-tabs" style="display: flex; justify-content: center;">
+            <button class="tab-button" onclick="showMemberTab('CurrentMembers')">Current Members</button>
+            <button class="tab-button" onclick="showMemberTab('PendingMembers')">Pending Members</button>
+        </div>
         <p style="text-align: center;">Team {{ $manage->teamName }} has {{ $usernamesCount }} members</p>
         <table class="member-table">
             <tbody>
