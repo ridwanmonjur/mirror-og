@@ -69,13 +69,12 @@
                             <br><br>
                             
                             @foreach($eventsByTeam as $teamId => $users)
-                            
+                            @foreach($users as $user)
                             <div class="player-info">
-                                @foreach($users as $user)
                                 <div class="player-image" style="background-image: url('/assets/images/dota.png')"></div>
                                 <span>{{ $user['user']->name }}</span>
-                                @endforeach
                             </div>
+                            @endforeach
                             @endforeach
                         
                         </div>
