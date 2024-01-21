@@ -314,12 +314,15 @@ class ParticipantEventController extends Controller
 
                 $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
                 $userId = auth()->user()->id;
+                
                 $existingJoint = JoinEvent::where('user_id', $userId)
                     ->where('event_details_id', $event->id)
                     ->first();
+
                 foreach ($eventList as $_event) {
                     $tierEntryFee = $_event->eventTier?->tierEntryFee ?? null;
                 }
+
             } else {
                 
                 if ($event->sub_action_private == 'private') {
@@ -396,7 +399,7 @@ class ParticipantEventController extends Controller
 
         if ($existingJoint) {
             $errorMessage = 'You have already joined this event.';
-            $request->session()->flash('errorMessage', $errorMessage);
+            session()->flash('errorMessage', $errorMessage);
         } else {
             $joint = new JoinEvent();
             $joint->user_id = $userId;
