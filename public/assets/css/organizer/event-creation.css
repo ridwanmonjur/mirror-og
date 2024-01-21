@@ -52,7 +52,6 @@ input[type="time"] {
 .form-group input[type="file"] {
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
     border-radius: 20px;
     border: 1px solid #000000;
     background-color: transparent;
@@ -483,6 +482,14 @@ main {
     background-repeat: repeat-y;
 }
 
+.main-background-2{
+    background-image: url("/assets/images/background/event-checkout-bg.png");
+    min-height: 100vh;
+    max-height: 500vh;
+    background-repeat: repeat-y repeat-x;
+    background-size: cover;
+}
+
 .navbar {
     min-height: var(--navbar-height);
     display: flex;
@@ -554,6 +561,7 @@ color: #43A4D7; */
     flex-direction: row;
     overflow-y: hidden;
     overflow-x: visible;
+    height: 70px;
     justify-content: center;
 }
 
@@ -647,8 +655,7 @@ color: #43A4D7; */
 .time-line-box-success .status__right small {
     background-color: rgb(42, 139, 235) !important;
     color: white !important;
-    width: 18px !important;
-    height: 18px !important;
+    height: 20px !important;
 }
 
 .status__left__success small,
@@ -731,19 +738,27 @@ color: #43A4D7; */
     text-decoration: underline;
 }
 
+.oceans-gaming-default-button-base,
 input[type="button"],
-.oceans-gaming-default-button {
-    width: 200px;
-    padding-top: 12px;
-    padding-bottom: 13px;
+.oceans-gaming-default-button
+{
     font-size: normal;
     margin-top: 0px;
     color: #fff;
-    padding: 10px;
     border-radius: 30px;
     background: #43A4D7;
     border: none;
-    /* border-bottom: 2px solid rgba(0, 0, 0, 0.1); */
+}
+
+input[type="button"],
+.oceans-gaming-default-button {
+    color: #fff;
+    background: #43A4D7;
+    padding-top: 12px;
+    padding-bottom: 13px;
+    padding: 10px;
+    width: 200px;
+
 }
 
 .oceans-gaming-default-button {

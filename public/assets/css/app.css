@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-div.navbar-placeholder{
-    height: 5vh;
+div.navbar-placeholder {
+    height: 5vh;    
     width: 100%;
 }
 
@@ -15,12 +15,12 @@ div.navbar-placeholder{
 
 .color-border-success {
     border: 3px solid #43A4D7 !important;
-    border-radius: 20px; 
+    border-radius: 20px;
 }
 
 .color-border-success-dotted {
     border: 3px dashed #43A4D7 !important;
-    border-radius: 20px; 
+    border-radius: 20px;
 }
 
 .rounded-box {
@@ -89,13 +89,13 @@ div.navbar-placeholder{
     padding-top: 0px !important;
     padding-bottom: 0px !important;
     background-color: white;
-    position: fixed !important;
+    position: absolute !important;
     top: 0 !important;
     width: 100%;
     z-index: 999;
 }
 
-.mobile-navbar{
+.mobile-navbar {
     position: fixed;
     top: 8vh;
     width: 100vw;
@@ -145,7 +145,7 @@ nav svg:active {
     width: 450px;
     max-width: 80vw;
     /* caret-color: #43A4D7;
-    color: #43A4D7; */
+color: #43A4D7; */
 }
 
 .search-bar svg {
@@ -231,10 +231,11 @@ a:hover {
     text-decoration: none !important;
 }
 
-.swal2-icon{
+.swal2-icon {
     margin-right: 10px !important;
 }
 
-.swal2-container, .modal {
+.swal2-container,
+.modal {
     z-index: 9999 !important;
 }

@@ -11,6 +11,7 @@ const Toast = Swal.mixin({
 function addFormValues(keyList) {
     let allFormkeyList = {};
     var createEventForm = document.forms['create-event-form'];
+    
     if (!createEventForm) {
         Toast.fire({
             icon: 'error',
@@ -21,11 +22,11 @@ function addFormValues(keyList) {
 
     for (var key of keyList) {
         var formField = createEventForm.elements[key];
+        
         if (formField) {
             var value = formField.value;
             allFormkeyList[key] = value;
         }
-
     }
     return allFormkeyList;
 }
@@ -45,6 +46,7 @@ function validateFormValuesPresent(keyList) {
 
     for (var key of keyList) {
         var formField = createEventForm.elements[key];
+        
         if (formField) {
             var value = formField.value.trim();
             if (value === '') {
@@ -61,6 +63,7 @@ function validateFormValuesPresent(keyList) {
             invalidKey = key;
         }
     }
+
     return isFormValid ? [isFormValid, null] : [isFormValid, invalidKey];
 }
 
@@ -71,6 +74,7 @@ function setFormValues(values) {
     if (createEventForm) {
         for (var key in values) {
             var formField = createEventForm.elements[key];
+            
             if (formField && values[key]) {
                 formField.value = values[key];
             } else {
@@ -95,6 +99,7 @@ function getFormValues(keyList = ["ALL_FORM_KEYS"]) {
     if (keyList[0] === "ALL_FORM_KEYS") {
         keyList = Object.keys(createEventForm.elements);
     }
+    
     for (var key of keyList) {
         var formField = createEventForm.elements[key];
 
@@ -131,6 +136,7 @@ function previewSelectedImage(imageId, previewImageId) {
             var isError = false;
         
             image.onload = function() {
+                
                 if (image.width <= 1400 ) {
                     Toast.fire({
                         icon: 'error',
@@ -161,7 +167,6 @@ function previewSelectedImage(imageId, previewImageId) {
 
         };
         reader.readAsDataURL(file);
-        
     }
 }
 
@@ -182,6 +187,7 @@ function previewSelectedImageByForm(imageId, previewImageId) {
 
     previewImage.style.objectFit = "cover";
     const file = imageInput.files[0];
+    
     if (file) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -190,7 +196,6 @@ function previewSelectedImageByForm(imageId, previewImageId) {
         }
     }
 }
-
 
 let inputKeyToInputNameMapping = {
     eventName: 'name of the event',
@@ -221,11 +226,11 @@ let inputKeyToStepNameMapping = {
     endDate: ['step-5', 'timeline-2'],
     endTime: ['step-5', 'timeline-2'],
     eventDescription: ['step-7', 'timeline-2'],
-    launch_visible: ['step-11', 'timeline-4'],
-    launch_date: ['step-11', 'timeline-4'],
-    launch_time: ['step-11', 'timeline-4'],
-    launch_schedule: ['step-11', 'timeline-4'],
-    isPaymentDone: ['step-10', 'timeline-3']
+    launch_visible: ['step-launch-1', 'timeline-launch'],
+    launch_date: ['step-launch-1', 'timeline-launch'],
+    launch_time: ['step-launch-1', 'timeline-launch'],
+    launch_schedule: ['step-launch-1', 'timeline-launch'],
+    isPaymentDone: ['step-payment', 'timeline-payment']
 }
 
 function closeDropDown(element, id, keyValues, key) {
@@ -243,15 +248,17 @@ function closeDropDown(element, id, keyValues, key) {
     `;
     setFormValues(keyValues)
 }
+
 function getElementByIdAndSetInnerHTML(id, innerHTML) {
     let documentElement = document.getElementById(id);
+    
     if (documentElement) {
         documentElement.innerHTML = innerHTML;
-    }
-    else {
+    } else {
         console.error(`Element with id ${id} not found`);
     }
 }
+
 function numberToLocaleString(number) {
     return Number(number).toLocaleString()
 }
@@ -275,10 +282,12 @@ function saveEvent(willGoToNextPage = true) {
         'launch_time_public',
         'launch_time_public'
     ])
+    
     if ('launch_visible' in launch_schedule_form) {
         launch_visible = launch_schedule_form['launch_visible'];
         launch_schedule = launch_schedule_form['launch_schedule'];
     }
+    
     if (launch_visible == "public") {
         launch_date = launch_schedule_form['launch_date_public'];
         launch_time = launch_schedule_form['launch_time_public'];
@@ -291,46 +300,55 @@ function saveEvent(willGoToNextPage = true) {
         createEventForm.submit();
         return;
     }
+    
     let isFormValid = true, invalidKey = '', formValidation = null;
+    
     formValidation = validateFormValuesPresent([
         'gameTitle', 'eventType', 'eventTier',
         'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription',
-        'isPaymentDone',
     ]);
+
     if (launch_schedule != 'now' && (launch_date==null || launch_time==null)) {
         isFormValid = false;
         invalidKey = 'launch_date';
     }
+    
     if (localStorage.getItem('eventBanner') == null && getFormValues(['eventBanner']) == null) {
         isFormValid = false;
         invalidKey = 'eventBanner';
     }
+    
     if (!launch_schedule) {
         isFormValid = false;
         invalidKey = 'launch_schedule';
     }
+    
     if (formValidation != null) {
         isFormValid = formValidation[0];
         invalidKey = formValidation[1];
     }
+    
     if (!isFormValid) {
+        
         Toast.fire({
             icon: 'error',
             text: `Didn't enter ${inputKeyToInputNameMapping[invalidKey] ?? ""}! It is a required field.`
         })
+        
         let [nextId, nextTimeline] = inputKeyToStepNameMapping[invalidKey];
+        
         goToNextScreen(nextId, nextTimeline);
-        if (nextId == 'step-10') {  
+        
+        if (nextId == 'step-payment') {  
             fillStepPaymentValues();
         }
+
         return;
-    }
-    else if (launch_visible != "DRAFT" && willGoToNextPage && launch_schedule == 'now') {
+    } else if (launch_visible != "DRAFT" && willGoToNextPage && launch_schedule == 'now') {
         setFormValues({ 'launch_schedule': 'now' });
-        goToNextScreen('step-12', 'timeline-4');
+        goToNextScreen('step-launch-2', 'timeline-launch');
         return;
-    }
-    else {
+    } else {
         createEventForm.submit();
     }
 }
@@ -340,13 +358,16 @@ function goToNextScreen(nextId, nextTimeline) {
 
     const allIDs = [
         'step-0',
-        'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6', 'step-7', 'step-8', 'step-9', 'step-10', 'step-11',
-        'step-12'];
+        'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6', 'step-7', 'step-8', 'step-9', 'step-payment', 'step-launch-1',
+        'step-launch-2'];
 
-    const allTimelines = ['timeline-1', 'timeline-2', 'timeline-3', 'timeline-4'];
+    const allTimelines = ['timeline-1', 'timeline-2', 'timeline-payment', 'timeline-launch'];
+    
     let currentId = 'step-0';
+
     allIDs.forEach(id => {
         const element = document.querySelector(`#${id}`);
+        
         if (element && !element.classList.contains("d-none")) {
             currentId = id;
         }
@@ -355,22 +376,26 @@ function goToNextScreen(nextId, nextTimeline) {
     allTimelines.forEach((timeline, _index) => {
         const paragraph = document.querySelector(`#${timeline} .timestamp span`);
         const cicle = document.querySelector(`#${timeline} small`);
+        
         if (timeline == nextTimeline) {
+            
             if (!paragraph.classList.contains("font-color-active-timeline")) paragraph.classList.add("font-color-active-timeline");
+            
             if (!cicle.classList.contains("background-active-timeline")) cicle.classList.add("background-active-timeline");
-        }
-        else {
+        } else {
             if (paragraph.classList.contains("font-color-active-timeline"))
                 paragraph.classList.remove("font-color-active-timeline");
+            
             if (cicle.classList.contains("background-active-timeline")) cicle.classList.remove("background-active-timeline");
         }
     })
+
     allIDs.forEach(id => {
         const element = document.querySelector(`#${id}`);
+        
         if (id === nextId) {
             element.classList.remove("d-none");
-        }
-        else if (element && !element.classList.contains("d-none")) {
+        } else if (element && !element.classList.contains("d-none")) {
             element.classList.add("d-none");
         }
     })
@@ -378,6 +403,7 @@ function goToNextScreen(nextId, nextTimeline) {
     if (nextId == allIDs[4]) {
         let box = document.getElementById('event-tier-display');
         let eventTierTitle = localStorage.getItem('eventTierTitle') ?? null;
+        
         if (eventTierTitle) {
             box.classList.remove("rounded-box-thickness", "rounded-box-turtle", "rounded-box-dolphin", "rounded-box-starfish");
             box.classList.add( 'rounded-box-' + eventTierTitle.toLowerCase());
