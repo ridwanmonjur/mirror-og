@@ -125,7 +125,7 @@
                           </svg>
                         </div>
                     </div>
-                    <p>Total Entry Fee: RM 200</p>
+                    <p>Total Entry Fee: RM {{ $joinEvent->eventTier->tierEntryFee }}</p>
                     <small>Paid: <a href="" style="color: green;">RM 100</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM 100</a></small> <br>
                     <input type="submit" onclick="" value="Contribute"><br> 
                     <button onclick="" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Confirm Registration </button>

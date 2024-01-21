@@ -142,7 +142,7 @@ class ParticipantEventController extends Controller
             $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
                 $query->where('team_id', $id);
             })
-                ->with('eventDetails', 'user')
+                ->with('eventDetails', 'user', 'eventTier')
                 ->get();
 
             $eventsByTeam = [];

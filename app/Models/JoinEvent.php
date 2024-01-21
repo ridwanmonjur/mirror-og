@@ -31,5 +31,10 @@ class JoinEvent extends Model
         return $this->belongsTo(EventDetail::class, 'event_details_id', 'id');
     }
 
+    public function eventTier()
+    {
+        return $this->hasOneThrough(EventTier::class, EventDetail::class, 'id', 'id', 'event_details_id', 'event_tier_id');
+    }
+
 
 }
