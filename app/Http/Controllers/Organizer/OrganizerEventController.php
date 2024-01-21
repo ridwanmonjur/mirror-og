@@ -533,6 +533,8 @@ class OrganizerEventController extends Controller
 
     public function showCheckout(Request $request): View
     {
+        session()->forget(['successMessageCoupon',  'errorMessageCoupon']);
+
         try {
             [$event, $isUserSameAsAuth] = $this->getEventAndUser($request->id);
         } catch (Exception $e) {
