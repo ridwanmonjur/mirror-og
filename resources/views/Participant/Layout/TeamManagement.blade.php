@@ -333,7 +333,7 @@
             }
         });
     });
-
+    
     function showTab(tabName) {
         // Hide all tab contents
         const tabContents = document.querySelectorAll('.tab-content');
@@ -345,6 +345,12 @@
         const selectedTab = document.getElementById(tabName);
         if (selectedTab) {
             selectedTab.style.display = 'block';
+
+            // Show the form if the "Active Rosters" tab is selected
+            if (tabName === 'Active Rosters') {
+                const activeRostersForm = document.getElementById('activeRostersForm');
+                activeRostersForm.style.display = 'block';
+            }
         }
     }
 
