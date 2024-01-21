@@ -48,3 +48,11 @@ INSERT INTO `event_details` (`id`, `gameTitle`, `gameIcon`, `eventType`, `eventD
 (18, 'Dota 2', 'dotaPoster.jpg', 'League', 'Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.a', 'Turtle', 'turtle.png', 'Awesome Event 12345679 !@#$%^&*()', '2023-11-16', '2023-11-30', '17:02:00', '21:02:00', 'COol Events523541', 'Dota 2.jpg', '\"[{\\\"value\\\":\\\"tag\\\"},{\\\"value\\\":\\\"new\\\"},{\\\"value\\\":\\\"coo\\\"},{\\\"value\\\":\\\"test\\\"},{\\\"value\\\":\\\"2345u420\\\"},{\\\"value\\\":\\\"$%$@!\\\"},{\\\"value\\\":\\\"wheee\\\"}]\"', NULL, NULL, NULL, NULL, NULL, 'UPCOMING', NULL, 5, '2023-11-06 08:03:53', '2023-11-06 08:03:53'),
 (19, 'Dota 2', 'dotaPoster.jpg', 'Tier', 'Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.a', 'Starfish', 'starfish.png', 'Awesome Event 12345679 !@#$%^&*()', '2023-11-08', '2023-11-29', '19:04:00', '22:04:00', 'Cool Event WHEEWEW!^@^@$^43t43g', 'Dota 2.jpg', '\"[{\\\"value\\\":\\\"tag\\\"},{\\\"value\\\":\\\"wiggie\\\"},{\\\"value\\\":\\\"46423623\\\"},{\\\"value\\\":\\\"^%@#^#@\\\"},{\\\"value\\\":\\\"fBFBF bf BF BF Wbfw\\\"}]\"', NULL, NULL, NULL, NULL, NULL, 'UPCOMING', NULL, 5, '2023-11-06 08:10:18', '2023-11-06 08:10:18');
 
+INSERT INTO organizer_create_event_discounts (name,coupon,`type`,amount,startDate,endDate,startTime,endTime,isEnforced) VALUES
+	 ('JAN_50','50_PERCENT','percent',50.0,'2024-01-13','2027-01-13','20:57:00','20:57:00',1),
+	 ('JAN_25','25_PERCENT','percent',25.0,'2024-01-13','2027-01-13','20:57:00','20:57:00',1),
+	 ('JAN_250RM','JAN_250RM','sum',250.0,'2024-01-13','2027-01-13','20:57:00','20:57:00',1),
+	 ('JAN_1000RM','JAN_1000RM','sum',1000.0,'2024-01-13','2027-01-13','20:57:00','20:57:00',1),
+	 ('JAN_EXPIRED','JAN_EXPIRED','sum',1000.0,'2024-01-13','2024-01-15','20:57:00','20:57:00',1),
+	 ('JAN_NOT_ENFORCED','JAN_NOT_ENFORCED','sum',1000.0,'2024-01-13','2027-01-13','20:57:00','20:57:00',0),
+	 ('JAN_NOT_STARTED','JAN_NOT_STARTED','sum',1000.0,'2026-01-13','2027-01-13','20:57:00','20:57:00',0);
