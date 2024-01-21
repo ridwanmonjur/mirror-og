@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizer;
 use App\Http\Controllers\Controller;
 use App\Models\EventDetail;
 use App\Models\EventCategory;
+use App\Models\Discount;
 use App\Models\EventTier;
 use App\Models\EventType;
 use Illuminate\Http\Request;
@@ -523,16 +524,33 @@ class OrganizerEventController extends Controller
         ]);
     }
 
-    public function showCheckout($id): View
+    public function showCheckout(Request $request): View
     {
         try {
-            [$event, $isUserSameAsAuth] = $this->getEventAndUser($id);
+            [$event, $isUserSameAsAuth] = $this->getEventAndUser($request->id);
         } catch (Exception $e) {
-            return $this->show404("Event not found with id: $id");
+            return $this->show404("Event not found with id: $request->id");
         }
 
         if (!is_null($event->payment_transaction_id)) {
-            return $this->show404("Event with id: $id has already been checked out");
+            return $this->show404("Event with id: $request->id has already been checked out");
+        }
+
+        $discount = Discount::where('coupon', $request->coupon)
+            ->orderBy('startDate', 'desc')
+            ->first();
+        $fee = [];
+
+        if (!is_null($discount)) {
+            $fee['discount'] = $discount->type == "percent" ? 
+                $discount->amount : $discount->amount;
+            $fee['entryFee'] = $event->tier->tierEntryFee * 1000 ;
+            $fee['totalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
+            $fee['finalFee'] = $fee['totalFee'] - $discount;
+        } else {
+            $fee['discount'] = 0;
+            $fee['entryFee'] = $event->tier->tierEntryFee * 1000;
+            $fee['totalFee'] = $fee['finalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
         }
 
         return view('Organizer.CheckoutEvent', [
@@ -540,6 +558,7 @@ class OrganizerEventController extends Controller
             'mappingEventState' => EventDetail::mappingEventStateResolve(),
             'isUser' => $isUserSameAsAuth,
             'livePreview' => 1,
+            'fee' => $fee
         ]);
     }
 

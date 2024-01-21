@@ -37,38 +37,52 @@
             <div class="ml-3">Region: <span id="paymentTier">South East Asia (SEA)</span></div>
             <br>
             @php
-                $entryFee = $event->tier->tierEntryFee * 1000;
-                $finalFee = $entryFee + $entryFee * 0.2;
+               
             @endphp
             <div class="flexbox w-75">
                 <span>Subtotal</span>
                 <span id="subtotal">RM
-                    <span class="transform-number"> {{ $entryFee }} </span>
+                    <span class="transform-number"> {{ $fee['entryFee'] }} </span>
                 </span>
             </div>
             <div class="flexbox w-75">
                 <span>Event Creation Fee Rate</span>
                 <span id="paymentRate">20%</span>
             </div>
+            @if ($fee['discount'] > 0)  
+            <div class="flexbox w-75">
+                <h5> Event Creation Fee </h5>
+                <h5 id="paymentTotal">RM
+                    <span class="transform-number">{{ $fee['totalFee'] }} </span>
+                </h5>
+            </div>
+            <div class="flexbox w-75">
+                <h5> Discount </h5>
+                <h5 id="paymentTotal">RM
+                    <span class="transform-number">{{ $fee['finalFee'] }} </span>
+                </h5>
+            </div>
+            @endif
             <br>
+            
             <div class="flexbox w-75">
                 <h5> TOTAL </h5>
                 <h5 id="paymentTotal">RM
-                    <span class="transform-number">{{ $finalFee }} </span>
+                    <span class="transform-number">{{ $fee['finalFee'] }} </span>
                 </h5>
             </div>
             <br>
             <div>Promo Code</div>
-            <div class="form-group w-75 d-flex">
-                <input type="text" name="name" id="" class="">
-                <div class="d-inline-block px-2"></div>
-                <button class="px-3 oceans-gaming-default-button" style="background-color: #95ADBD;">
-                    <span> Apply </span>
-                    <span class="spinner-border d-none" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </span>
-                </button>
-            </div>
+            <form method="GET">
+                <div class="form-group w-75 d-flex">
+                        <input type="text" name="coupon" id="" class="">
+                        <div class="d-inline-block px-2"></div>
+                        <button class="px-3 oceans-gaming-default-button" style="background-color: #95ADBD;">
+                            <span> Apply </span>
+                        </button>
+                </div>
+            </form>
+
             <div class="d-flex justify-content-center w-75">
                 <button type="submit" class="oceans-gaming-default-button-base oceans-gaming-gray-button px-4 py-3 mt-2">
                     <div class="submit-texts"> Confirm & Pay </div>
