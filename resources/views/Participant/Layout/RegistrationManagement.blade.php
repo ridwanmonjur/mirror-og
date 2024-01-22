@@ -116,17 +116,17 @@
                                     a 15.9155 15.9155 0 0 1 0 -31.831"
                                 />
                                 <path class="circle"
-                                  stroke-dasharray="50, 100"
+                                  stroke-dasharray="0, 100"
                                   d="M18 2.0845
                                     a 15.9155 15.9155 0 0 1 0 31.831
                                     a 15.9155 15.9155 0 0 1 0 -31.831"
                                 />
-                                <text x="18" y="20.35" class="percentage">50%</text>
+                                <text x="18" y="20.35" class="percentage">0%</text>
                               </svg>
                             </div>
                         </div>
                         <p>Total Entry Fee: RM {{ $joinEvent->eventTier->tierEntryFee }}</p>
-                        <small>Paid: <a href="" style="color: green;">RM 100</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM 100</a></small> <br>
+                        <small>Paid: <a href="" style="color: green;">RM 0</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM {{ $joinEvent->eventTier->tierEntryFee }}</a></small> <br>
                         <input type="submit" onclick="" value="Contribute"><br>
                         <button onclick="" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Confirm Registration </button>
                         <br><br><br>
