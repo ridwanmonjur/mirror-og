@@ -161,7 +161,12 @@ class ParticipantEventController extends Controller
                 $eventsByTeam[$teamId][$userId]['events'][] = $event;
             }
 
-            return view('Participant.Layout.RegistrationManagement', compact('teamManage', 'joinEvents', 'eventsByTeam'));
+        $followCounts = Follow::select('organizer_id', \DB::raw('count(user_id) as user_count'))
+        ->groupBy('organizer_id')
+        ->pluck('user_count', 'organizer_id')
+        ->toArray();
+
+        return view('Participant.Layout.RegistrationManagement', compact('teamManage', 'joinEvents', 'eventsByTeam', 'followCounts'));
         } else {
             return redirect()
                 ->back()
