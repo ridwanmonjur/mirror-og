@@ -131,6 +131,7 @@
                         <button onclick="" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Confirm Registration </button>
                         {{-- <br><br><br> --}}
                         @endforeach
+                        <br><br>
                     </div>
                 </div>
             </div>
