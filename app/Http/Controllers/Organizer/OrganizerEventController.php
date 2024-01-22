@@ -422,7 +422,9 @@ class OrganizerEventController extends Controller
             if ($transaction && $transaction->payment_id && $transaction->status == 'SUCCESS') {
             } elseif ($request->isPaymentDone == 'true' && $request->paymentMethod) {
             } else {
-                $eventDetail->status = 'PEDNING';
+                if ($eventDetail->status != 'DRAFT') { 
+                    $eventDetail->status = 'PEDNING';
+                }
             }
         }
 
@@ -545,10 +547,13 @@ class OrganizerEventController extends Controller
             return $this->show404("Event with id: $request->id has already been checked out");
         }
 
+        if (is_null($event->tier)) {
+            return $this->show404("Event with id: $request->id has no event tier chosen");
+        }
+
         if ($request->has('coupon')) {
             $discount = Discount::whereRaw('coupon = ?', [$request->coupon])
                 ->first();
-            // dd($discount, $request->coupon);
         } else {
             $discount = null;
         }

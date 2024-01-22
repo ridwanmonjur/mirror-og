@@ -1,4 +1,4 @@
-<div class="text-center"> 
+<div class="text-center">
     <small class="spinner-border " role="status">
         <small class="sr-only"></small>
     </small>
@@ -10,29 +10,59 @@
     <div class="mx-2">
         <h4>Payment Method</h4>
         <br>
-        <form id="card-form">
-            @csrf
-            <div class="form-group form-group2">
-                <label for="card-name" class="">Your name</label>
-                <input type="text" name="name" id="card-name" class="">
+        <div class="mr-5 pb-2 mb-2">
+            <div onclick="toggleArrows(event);" class="rounded-box px-3 py-2 d-flex justify-content-between"
+                data-toggle="collapse" href="#card-accordion" aria-expanded="false" aria-controls="card-accordion">
+                <div> Credit / Debit Card </div>
+                <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
             </div>
-            <div class="form-group form-group2">
-                <label for="email" class="">Email</label>
-                <input type="email" name="email" id="email" class="">
+            <div class="collapse px-3 py-2 multi-collapse" id="card-accordion">
+                @include('Organizer.Checkout.CheckoutCardOption')
             </div>
-            <div class="form-group form-group2">
-                <label for="card" class="">Card details</label>
-                <div class="form-group form-group2">
-                    <div id="card"></div>
+        </div>
+        <div class="mr-5 pb-2 mb-2">
+            <div onclick="toggleArrows(event);" class="rounded-box px-3 py-2 d-flex justify-content-between"
+                data-toggle="collapse" href="#eWallet-accordion" aria-expanded="false"
+                aria-controls="eWallet-accordion">
+                <div> eWallet </div>
+                <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
+            </div>
+            <div class="collapse px-3 py-2 multi-collapse" id="eWallet-accordion">
+            </div>
+        </div>
+        <div class="mr-5 pb-2 mb-2">
+            <div onclick="toggleArrows(event);" class="rounded-box px-3 py-2 d-flex justify-content-between"
+                data-toggle="collapse" href="#online-banking-accordion" aria-expanded="false"
+                aria-controls="online-banking-accordion">
+                <div> Online Banking (FPX) </div>
+                <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
+            </div>
+            <div class="collapse px-3 py-2 multi-collapse" id="online-banking-accordion">
+                <div class="row">
+                    @foreach (bladeGetBankLogos() as $logo)
+                        <div class="col-3">
+                            <img src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
+                            width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" 
+                            @class([
+                                "mt-3",
+                                "hover-bigger",
+                                "object-fit-cover" => $logo['cover']
+                            ])>
+                        </div>
+                    @endforeach
                 </div>
             </div>
-            <button type="submit" class="oceans-gaming-default-button">
-                <div class="submit-texts"> Pay 👉 </div>
-                <div class="spinner-border d-none" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </button>
-        </form>
+        </div>
+        <div class="mr-5 pb-2 mb-2">
+            <div onclick="toggleArrows(event);" class="rounded-box px-3 py-2 d-flex justify-content-between"
+                data-toggle="collapse" href="#other-methods-accordion" aria-expanded="false"
+                aria-controls="other-methods-accordion">
+                <div> Other Methods </div>
+                <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
+            </div>
+            <div class="collapse px-3 py-2 multi-collapse" id="other-methods-accordion">
+            </div>
+        </div>
     </div>
     <div class="mx-2">
         <h4>Payment Summary</h4>
@@ -45,7 +75,7 @@
             <div class="ml-3">Region: <span id="paymentTier">South East Asia (SEA)</span></div>
             <br>
             @php
-               
+
             @endphp
             <div class="flexbox w-75">
                 <span>Subtotal</span>
@@ -61,8 +91,9 @@
             <div class="flexbox w-75">
                 <h5> TOTAL </h5>
                 <h5 id="paymentTotal">RM
-                    @if ($fee['discount'] > 0)  
-                        <span class="transform-number mr-1" style="text-decoration: line-through;">{{ $fee['totalFee'] }} </span>
+                    @if ($fee['discount'] > 0)
+                        <span class="transform-number mr-1"
+                            style="text-decoration: line-through;">{{ $fee['totalFee'] }} </span>
                         <span class="transform-number">{{ $fee['finalFee'] }} </span>
                     @else
                         <span class="transform-number">{{ $fee['finalFee'] }} </span>
@@ -73,11 +104,12 @@
             <div>Promo Code</div>
             <form method="GET">
                 <div class="form-group w-75 d-flex">
-                        <input type="text" name="coupon" value="{{ app()->request->coupon ? app()->request->coupon : '' }}">
-                        <div class="d-inline-block px-2"></div>
-                        <button class="px-3 oceans-gaming-default-button" style="background-color: #95ADBD;">
-                            <span> Apply </span>
-                        </button>
+                    <input type="text" name="coupon"
+                        value="{{ app()->request->coupon ? app()->request->coupon : '' }}">
+                    <div class="d-inline-block px-2"></div>
+                    <button class="px-3 oceans-gaming-default-button" style="background-color: #95ADBD;">
+                        <span> Apply </span>
+                    </button>
                 </div>
             </form>
             @if (session('errorMessageCoupon'))
@@ -92,7 +124,8 @@
             @endif
 
             <div class="d-flex justify-content-center w-75">
-                <button type="submit" class="oceans-gaming-default-button-base oceans-gaming-gray-button px-4 py-3 mt-2">
+                <button type="submit"
+                    class="oceans-gaming-default-button-base oceans-gaming-gray-button px-4 py-3 mt-2">
                     <div class="submit-texts"> Confirm & Pay </div>
                     <div class="spinner-border d-none" role="status">
                         <span class="sr-only">Loading...</span>
@@ -100,7 +133,8 @@
                 </button>
             </div>
             <div class="d-flex justify-content-center w-75">
-                <button type="submit" class="oceans-gaming-default-button-base oceans-gaming-transparent-button px-2 py-2 mt-2">
+                <button type="submit"
+                    class="oceans-gaming-default-button-base oceans-gaming-transparent-button px-2 py-2 mt-2">
                     <div class="submit-texts"> Cancel </div>
                     <div class="spinner-border d-none" role="status">
                         <span class="sr-only">Loading...</span>

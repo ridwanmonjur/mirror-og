@@ -20,7 +20,6 @@ class StripeController extends Controller
         $this->stripeClient = new StripeClient(env('STRIPE_SECRET'));
     }
 
-
     public function createIntent(Request $request){
         try {
             $paymentIntent = $this->stripeClient->paymentIntents->create([
@@ -63,26 +62,27 @@ class StripeController extends Controller
                 'payment_method_types' => ['card'],
                 'automatic_payment_methods' => ['enabled' => false,],
             ]);
-            // $customer = $this->stripeClient->customers->create([
-            //     'name' => $request->name,
-            //     'email' => $request->email,
-            //     'description' => 'My first customer',
-            //      add this????????????????
-            //      "card" : charge.stripe_card_token
-            // ]);
-            // $invoice= $this->stripeClient->invoices->create([
-            //     'customer' => $customer->id,
-            //     'collection_method' => 'send_invoice',
-            //     'days_until_due' => 0,
-            // ]);
-            // $this->stripe->invoices->finalizeInvoice($invoice->id, []);
+
+            $customer = $this->stripeClient->customers->create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'description' => 'My first customer',
+            ]);
+
+            $invoice= $this->stripeClient->invoices->create([
+                'customer' => $customer->id,
+                'collection_method' => 'send_invoice',
+                'days_until_due' => 0,
+            ]);
+
+            $this->stripeClient->invoices->finalizeInvoice($invoice->id, []);
+            
             $responseData = [
                 'status' => 'success',
                 'message' => 'Payment successful',
                 'data' => [
                     'name' => $request->name,
                     'email' => $request->email,
-                    // Add other data as needed
                 ],
             ];
         

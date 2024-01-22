@@ -23,6 +23,15 @@ div.navbar-placeholder {
     border-radius: 20px;
 }
 
+.squared-box {
+    border-width: 1px;
+    border-style: solid;
+}
+
+.object-fit-cover{
+    object-fit: cover;
+}
+
 .rounded-box {
     border-radius: 30px 30px;
     border-width: 1px;
@@ -104,6 +113,7 @@ div.navbar-placeholder {
     padding-top: 20px;
 }
 
+.hover-bigger,
 .navbar img,
 .navbar svg,
 nav img,
@@ -111,6 +121,7 @@ nav svg {
     cursor: pointer;
 }
 
+.hover-bigger:hover,
 .navbar img:hover,
 nav img:hover,
 .navbar svg:hover,

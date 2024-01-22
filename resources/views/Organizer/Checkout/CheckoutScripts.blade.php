@@ -9,6 +9,24 @@
         let number = Number(text);
         element.textContent = number.toLocaleString('en');  
     })
+    
+    function toggleArrows(event) {
+        const element = event.currentTarget;
+        const parent = element.parentNode;
+        var firstElement = element.querySelector('.bi-chevron-down');
+        var secondElement = element.querySelector('.bi-chevron-up');
+        
+        if (firstElement) {
+            firstElement.classList.toggle('d-none');
+        }        
+        
+        if (secondElement) {
+            secondElement.classList.toggle('d-none');
+        }
+
+        parent.classList.toggle("squared-box");
+        element.classList.toggle("rounded-box");
+    }
 </script>
 <script>
     function checkStringNullOrEmptyAndReturn(value) {
