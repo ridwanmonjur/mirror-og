@@ -85,15 +85,19 @@
                                 <div class="container">
                                     <div class="left-col">
                                         <p><img src="/assets/images/dota.png" class="logo2">
-                                            <p style="font-size: 10px; text-align: left;"> {{ $joinEvent->eventDetails->eventName }}</p>
+                                            <p style="font-size: 14px; text-align: left;"> {{ $joinEvent->eventDetails->eventName }}</p>
                                         </p>
                                     </div>
                                     <div class="right-col">
-                                        <p><img src="/assets/images/dota.png" class="logo2">
-                                            <p style="font-size: 12px; text-align: left;"> {{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</p>
-                                            <br>
-                                            {{-- <p style="font-size: 12px; text-align: left;">1K Followers</p> --}}
+                                        <p>
+                                            <img src="/assets/images/dota.png" class="logo2">
+                                            <p style="font-size: 14px; text-align: left;">
+                                                {{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}
+                                                <br>
+                                                <span style="font-size: 12px;">1K Followers</span>
+                                            </p>
                                         </p>
+                                        
                                     </div>
                                 </div>
                             </div>
