@@ -91,11 +91,17 @@
                                     <div class="right-col">
                                         <p>
                                             <img src="/assets/images/dota.png" class="logo2">
-                                            <p style="font-size: 14px; text-align: left;">
-                                                {{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}
+                                            <p style="font-size: 14px; text-align: left; align-items: center; justify-content: space-between;">
+                                                <span>{{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</span>
                                                 <br>
                                                 <span style="font-size: 12px;">1K Followers</span>
+                                                <div style="align-items: center;">
+                                                    <button style="background-color: #43A4D7; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px; margin-left: 30px;" type="submit">Follow</button>
+                                                </div>
+                                                
+                                                
                                             </p>
+                                            
                                         </p>
                                         
                                     </div>
