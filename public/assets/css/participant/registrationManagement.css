@@ -553,6 +553,9 @@ input[type="submit"]:active {
     /* Adjust the width as needed */
     height: 100px;
     float: left;
+    margin-bottom: 20px;
+    /* Add margin for the gap */
+    box-sizing: border-box;
 }
 
 .second {
@@ -560,6 +563,15 @@ input[type="submit"]:active {
     /* Adjust the width as needed */
     height: 100px;
     float: right;
+    margin-bottom: 20px;
+    /* Add margin for the gap */
+    box-sizing: border-box;
+}
+
+.cont {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .gear-icon-btn {
