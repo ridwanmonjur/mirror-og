@@ -106,6 +106,7 @@
                 <div class="second">
                     <div class="center">
                         @foreach($joinEvents as $joinEvent)
+                        <br><br>
                         <div class="flex-wrapper">
 
                             <div class="single-chart">

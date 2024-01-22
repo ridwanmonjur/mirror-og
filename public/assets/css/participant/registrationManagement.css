@@ -556,7 +556,6 @@ input[type="submit"]:active {
 }
 
 .second {
-    padding-top: 5px;
     width: calc(50% - 10px);
     /* Adjust the width as needed */
     height: 100px;
