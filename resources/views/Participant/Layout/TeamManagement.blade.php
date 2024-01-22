@@ -181,6 +181,7 @@
             <button class="tab-button" onclick="showMemberTab('CurrentMembers')">Current Members</button>
             <button class="tab-button" onclick="showMemberTab('PendingMembers')">Pending Members</button>
         </div>
+        <div class="tab-content" id="CurrentMembers" data-type="member" style="display: none; text-align: center;">
         <p style="text-align: center;">Team {{ $manage->teamName }} has {{ $usernamesCount }} members</p>
         <table class="member-table">
             <tbody>
@@ -215,6 +216,7 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
     </div>
     @endforeach
                     @endif
@@ -421,5 +423,44 @@
     });
 
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // ... (your existing code)
+
+        // Additional code to handle member tabs
+        const currentMembersTab = document.getElementById('CurrentMembers');
+        const pendingMembersTab = document.getElementById('PendingMembers');
+
+        currentMembersTab.addEventListener('click', function() {
+            showMemberTab('CurrentMembers');
+        });
+
+        pendingMembersTab.addEventListener('click', function() {
+            showMemberTab('PendingMembers');
+        });
+    });
+
+    function showMemberTab(tabName) {
+        // Hide all member tabs
+        const memberTabs = document.querySelectorAll('.tab-content[data-type="member"]');
+        memberTabs.forEach(tab => {
+            tab.style.display = 'none';
+        });
+
+        // Show the selected member tab
+        const selectedTab = document.getElementById(tabName);
+        if (selectedTab) {
+            selectedTab.style.display = 'block';
+
+            // Load relevant data based on the tab
+            if (tabName === 'CurrentMembers') {
+                // Code to load data for current members
+            } else if (tabName === 'PendingMembers') {
+                // Code to load data for pending members
+            }
+        }
+    }
+</script>
+
 </body>
 
