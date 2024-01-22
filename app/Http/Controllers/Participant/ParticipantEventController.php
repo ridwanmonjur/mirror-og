@@ -139,14 +139,14 @@ class ParticipantEventController extends Controller
         $teamManage = Team::where('id', $id)->get();
         
         if ($teamManage) {
+
             $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
-                $query->where('team_id', $id);
+                $query->where('team_id', $id)->where('status', 'accepted');
             })
-                ->with('eventDetails', 'user', 'eventTier')
+                ->with('eventDetails', 'user')
                 ->get();
 
             $eventsByTeam = [];
-        
             foreach ($joinEvents as $event) {
                 $userId = $event->user_id;
                 $teamId = $event->user->teams->first(function ($team) use ($id) {
