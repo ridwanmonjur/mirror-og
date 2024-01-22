@@ -4,6 +4,9 @@ return [
         'ERROR' => [
             'buttonBackgroundColor' => '#EF4444', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
         ],
+        'PENDING' => [
+            'buttonBackgroundColor' => '#EF4444', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
+        ],
         'UPCOMING' => [
             'buttonBackgroundColor' => '#43A4D7', 'buttonTextColor' => 'white', 'borderColor' => 'transparent'
         ],
