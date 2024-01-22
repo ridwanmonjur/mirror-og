@@ -344,6 +344,9 @@ input[type="submit"],
 .player-info {
     display: flex;
     align-items: center;
+    border-bottom: 2px solid rgb(82, 159, 23);
+    border-radius: 40px; 
+    padding-bottom: 120px; 
 }
 
 .player-image {
