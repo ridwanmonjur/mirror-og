@@ -50,11 +50,10 @@
         <div class="tab-content" id="Overview">
             <div><b>Outstanding Registration</b></div>
             <br> <br> <br>
-            @foreach($joinEvents as $joinEvent)
             <div class="cont">
                 <div class="first">
                     <div id="activeRostersForm" style="display: center; text-align: center;">
-                        {{-- @foreach($joinEvents as $joinEvent) --}}
+                        @foreach($joinEvents as $joinEvent)
                         <div class="event">
                             <div style="text-align: left; height: 200px; position: relative;">
                                 <div class="top-middle-box" style="display: flex; align-items: center;">
@@ -99,14 +98,14 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- @endforeach --}}
+                        @endforeach
                     </div>
 
                 </div>
 
                 <div class="second">
                     <div class="center">
-                        {{-- @foreach($joinEvents as $joinEvent) --}}
+                        @foreach($joinEvents as $joinEvent)
                         <div class="flex-wrapper">
 
                             <div class="single-chart">
@@ -130,11 +129,11 @@
                         <small>Paid: <a href="" style="color: green;">RM 100</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM 100</a></small> <br>
                         <input type="submit" onclick="" value="Contribute"><br>
                         <button onclick="" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Confirm Registration </button>
-                        {{-- @endforeach --}}
+                        <br><br><br>
+                        @endforeach
                     </div>
                 </div>
             </div>
-            @endforeach
 
 
 
