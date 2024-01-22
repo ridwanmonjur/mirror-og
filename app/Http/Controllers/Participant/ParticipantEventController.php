@@ -106,7 +106,7 @@ class ParticipantEventController extends Controller
         if ($teamManage) {
 
             $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
-                $query->where('team_id', $id);
+                $query->where('team_id', $id)->where('status', 'accepted');
             })
                 ->with('eventDetails', 'user')
                 ->get();
@@ -226,25 +226,27 @@ class ParticipantEventController extends Controller
     // }
 
     public function TeamtoRegister(Request $request)
-    {
+{
     $selectedTeamNames = $request->input('selectedTeamName');
 
     if (is_array($selectedTeamNames)) {
         foreach ($selectedTeamNames as $teamId) {
             // Check if the user is already a member of the selected team
             if (!$this->userAlreadyMember($teamId)) {
-                $this->registerUserToTeam($teamId);
+                $status = auth()->user()->id == $this->getTeamCreatorId($teamId) ? 'accepted' : 'pending';
+                $this->registerUserToTeam($teamId, $status);
             }
         }
     } else {
         // Check if the user is already a member of the selected team
         if (!$this->userAlreadyMember($selectedTeamNames)) {
-            $this->registerUserToTeam($selectedTeamNames);
+            $status = auth()->user()->id == $this->getTeamCreatorId($selectedTeamNames) ? 'accepted' : 'pending';
+            $this->registerUserToTeam($selectedTeamNames, $status);
         }
     }
 
     return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
-    }
+}
 
     private function userAlreadyMember($teamId)
     {
@@ -255,12 +257,19 @@ class ParticipantEventController extends Controller
         ->exists();
     }
 
-    private function registerUserToTeam($teamId)
+    private function getTeamCreatorId($teamId)
+{
+    // Get the user_id of the team creator
+    return Team::where('id', $teamId)->value('user_id');
+}
+
+    private function registerUserToTeam($teamId, $status)
     {
     // Create a new member entry for the user and selected team
     $member = new Member();
     $member->team_id = $teamId;
     $member->user_id = auth()->user()->id;
+    $member->status = $status;
     $member->save();
     }
 

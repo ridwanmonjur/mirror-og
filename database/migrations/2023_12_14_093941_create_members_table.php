@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('team_id');
+            $table->enum('status', ['pending', 'accepted'])->default('pending');
             $table->timestamps();
 
             // Foreign key constraint
