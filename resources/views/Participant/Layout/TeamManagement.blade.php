@@ -76,13 +76,20 @@
                      <p>No events available</p>
                     @else
                     <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
+                    @php
+                    $uniqueEventDetailsIds = [];
+                    @endphp
                     @foreach($joinEvents as $key => $joinEvent)
+                    @php
+                    $eventDetailsId = $joinEvent->eventDetails->id;
+                    @endphp
+                     @if(!in_array($eventDetailsId, $uniqueEventDetailsIds))
                     <div class="event-box" id="event{{ $key + 1 }}" style="display: {{ $key === 0 ? 'block' : 'none' }};">
                     <div style="position: relative; height: 200px;">
-    <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
-        <!-- Banner image goes here -->
-    </div>
-    <div style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
+                    <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
+                    <!-- Banner image goes here -->
+                    </div>
+                    <div style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
         <!-- Circle image goes here -->
         @php
         $imagePathWithoutExtension = 'https://driftwood.gg/storage/images/event_details/' . strtolower($joinEvent->eventDetails->eventTier);
@@ -120,7 +127,11 @@
                     </div>
 
                     </div>
-                    @endforeach
+                    @php
+                        $uniqueEventDetailsIds[] = $eventDetailsId;
+                    @endphp
+                @endif
+                @endforeach
                     <button class="carousel-button" onclick="slideEvents(1)">></button>
                 </div>
                 
