@@ -76,6 +76,7 @@
                                     <span>{{ $user['user']->name }}</span>
                                 </div>
                                 @endforeach
+                                <div class="name-border"></div>
                                 @endforeach
 
                             </div>
