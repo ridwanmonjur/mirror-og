@@ -111,7 +111,7 @@ class ParticipantEventController extends Controller
                         $query->where('team_id', $id)->where('status', 'accepted');
                     })
                     ->with('eventDetails', 'user')
-                    ->groupBy('event_details_id') // Group by event_details_id to ensure uniqueness
+                    // ->groupBy('event_details_id') // Group by event_details_id to ensure uniqueness
                     ->get();
 
             $eventsByTeam = [];
