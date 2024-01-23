@@ -294,9 +294,11 @@
                         </td>
                         <td>
                             @foreach($teamManage as $team)
-                            @if(auth()->user()->id == $team->user_id) <!-- Check if the current user is the team creator -->
-                            <button onclick="approveMember('{{ $pendingMember->id }}')">✔</button>
-                            @endif
+                            @if(auth()->user()->id == $team->user_id)
+                            <!-- Check if the current user is the team creator -->
+                            <button onclick="approveMember('{{ $pendingMember->id }}')" style="background-color: #3498db; color: #fff; border: none; padding: 5px 10px; cursor: pointer; margin-right: 5px;">✔</button>
+                            <button onclick="rejectMember('{{ $pendingMember->id }}')" style="background-color: #e74c3c; color: #fff; border: none; padding: 5px 10px; cursor: pointer;">✘</button>
+                            @endif 
                             @endforeach
                         </td>
                     </tr>
