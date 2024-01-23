@@ -78,6 +78,8 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::post('/events/{id}', [ParticipantEventController::class, 'JoinEvent'])->name('join.store');
 			Route::post('/follow-organizer', [ParticipantEventController::class, 'FollowOrganizer'])->name('follow.organizer');
 			Route::delete('participant/unfollow-organizer', [ParticipantEventController::class, 'unfollowOrganizer'])->name('unfollow.organizer');
+			Route::post('participant/team/approve-member/{id}', [ParticipantEventController::class, 'approveMember'])->name('team.approve-member');
+
 		});
 	});
 });

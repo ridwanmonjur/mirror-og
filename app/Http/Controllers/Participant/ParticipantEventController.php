@@ -148,6 +148,24 @@ class ParticipantEventController extends Controller
         ->value('status');
     }
 
+
+    public function approveMember(Request $request, $id)
+    {
+        // Perform validation or authorization checks if necessary
+
+        // Update the member status to 'approved'
+        $member = Member::find($id);
+        if ($member && $member->status === 'pending') {
+            $member->status = 'accepted';
+            $member->save();
+
+            return response()->json(['success' => true, 'message' => 'Member status updated to accepted']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Invalid operation or member not found'], 400);
+    }
+
+
     public function registrationManagement($id)
     {
         $teamManage = Team::where('id', $id)->get();

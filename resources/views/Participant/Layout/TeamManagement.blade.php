@@ -296,7 +296,13 @@
                             @foreach($teamManage as $team)
                             @if(auth()->user()->id == $team->user_id)
                             <!-- Check if the current user is the team creator -->
-                            <button onclick="approveMember('{{ $pendingMember->id }}')" style="background-color: #3498db; color: #fff; border: none; padding: 5px 10px; cursor: pointer; margin-right: 5px;">✔</button>
+                            <button
+                            data-member-id="{{ $pendingMember->id }}"
+                            onclick="approveMember(this)"
+                            style="background-color: #3498db; color: #fff; border: none; padding: 5px 10px; cursor: pointer; margin-right: 5px;"
+                            >
+                            ✔
+                            </button>
                             <button onclick="rejectMember('{{ $pendingMember->id }}')" style="background-color: #e74c3c; color: #fff; border: none; padding: 5px 10px; cursor: pointer;">✘</button>
                             @endif 
                             @endforeach
@@ -549,6 +555,40 @@
                 // Code to load data for pending members
             }
         }
+    }
+</script>
+
+<script>
+    function approveMember(button) {
+        const memberId = button.getAttribute('data-member-id');
+
+        
+        const url = "{{ route('team.approve-member', ['id' => ':id']) }}".replace(':id', memberId);
+
+        
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response
+            console.log(data);
+
+            
+            if (data.success) {
+                const memberRow = button.closest('tr');
+                memberRow.remove();
+            } else {
+                console.error('Error updating member status:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error approving member:', error);
+        });
     }
 </script>
 
