@@ -104,12 +104,15 @@ class ParticipantEventController extends Controller
         $teamManage = Team::where('id', $id)->get();
         
         if ($teamManage) {
-
-            $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
-                $query->where('team_id', $id)->where('status', 'accepted');
-            })
-                ->with('eventDetails', 'user')
-                ->get();
+            $userStatus = $this->getUserStatusForTeam(auth()->user()->id, $id);
+            if ($userStatus == 'accepted') {
+                // Retrieve distinct event details for the team
+                $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
+                        $query->where('team_id', $id)->where('status', 'accepted');
+                    })
+                    ->with('eventDetails', 'user')
+                    ->groupBy('event_details_id') // Group by event_details_id to ensure uniqueness
+                    ->get();
 
             $eventsByTeam = [];
             foreach ($joinEvents as $event) {
@@ -128,10 +131,18 @@ class ParticipantEventController extends Controller
 
             return view('Participant.Layout.TeamManagement', compact('teamManage', 'joinEvents', 'eventsByTeam'));
         } else {
-            return redirect()
-                ->back()
-                ->with('error', 'Team not found.');
+            return redirect()->back()->with('error', 'You need to be an accepted member to view events.');
         }
+    } else {
+        return redirect()->back()->with('error', 'Team not found.');
+    }
+    }
+
+    private function getUserStatusForTeam($userId, $teamId)
+    {
+    return Member::where('team_id', $teamId)
+        ->where('user_id', $userId)
+        ->value('status');
     }
 
     public function registrationManagement($id)
