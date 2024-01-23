@@ -129,7 +129,10 @@ class ParticipantEventController extends Controller
                 $eventsByTeam[$teamId][$userId]['events'][] = $event;
             }
 
-            return view('Participant.Layout.TeamManagement', compact('teamManage', 'joinEvents', 'eventsByTeam'));
+            $pendingMembers = Member::where('team_id', $id)->where('status', 'pending')->with('user')->get();
+
+
+            return view('Participant.Layout.TeamManagement', compact('teamManage', 'joinEvents', 'eventsByTeam', 'pendingMembers'));
         } else {
             return redirect()->back()->with('error', 'You need to be an accepted member to view events.');
         }

@@ -217,6 +217,34 @@
             </tbody>
         </table>
     </div>
+    <div class="tab-content" id="PendingMembers" data-type="member" style="display: none; text-align: center;">
+        <p style="text-align: center;">Pending Members</p>
+        <table class="member-table">
+            <tbody>
+                @foreach($pendingMembers as $pendingMember)
+                    <tr class="st">
+                        <td>
+                            <div class="player-info">
+                                <div class="player-image" style="background-image: url('{{ $pendingMember->user->profile_image_url }}')"></div>
+                                <span>{{ $pendingMember->user->name }}</span>
+                            </div>
+                        </td>
+                        <td class="flag-cell">
+                            <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
+                        </td>
+                        <td>
+                            @foreach($teamManage as $team)
+                            @if(auth()->user()->id == $team->user_id) <!-- Check if the current user is the team creator -->
+                            <button onclick="approveMember('{{ $pendingMember->id }}')">✔</button>
+                            @endif
+                            @endforeach
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    
     </div>
     @endforeach
                     @endif
