@@ -105,7 +105,7 @@ class ParticipantEventController extends Controller
         
         if ($teamManage) {
             $userStatus = $this->getUserStatusForTeam(auth()->user()->id, $id);
-            if ($userStatus == 'accepted') {
+            if ($userStatus == 'accepted' || $userStatus === null) {
                 // Retrieve distinct event details for the team
                 $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
                         $query->where('team_id', $id)->where('status', 'accepted');
