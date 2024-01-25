@@ -91,7 +91,7 @@
             <div class="flexbox w-75">
                 <h5> TOTAL </h5>
                 <h5 id="paymentTotal">RM
-                    @if ($fee['discount'] > 0)
+                    @if ($fee['discountFee'] > 0)
                         <span class="transform-number mr-1"
                             style="text-decoration: line-through;">{{ $fee['totalFee'] }} </span>
                         <span class="transform-number">{{ $fee['finalFee'] }} </span>

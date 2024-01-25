@@ -46,7 +46,7 @@ class OrganizerEventController extends Controller
     }
 
     private function createNoDiscountFeeObject($fee, $entryFee) { 
-        $fee['discount'] = 0;
+        $fee['discountFee'] = 0;
         $fee['entryFee'] = $entryFee * 1000;
         $fee['totalFee'] = $fee['finalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
         return $fee;
@@ -423,7 +423,7 @@ class OrganizerEventController extends Controller
             } elseif ($request->isPaymentDone == 'true' && $request->paymentMethod) {
             } else {
                 if ($eventDetail->status != 'DRAFT') { 
-                    $eventDetail->status = 'PEDNING';
+                    $eventDetail->status = 'PENDING';
                 }
             }
         }
@@ -564,13 +564,17 @@ class OrganizerEventController extends Controller
             $currentDateTime = Carbon::now()->utc();
             $startTime = generateCarbonDateTime($discount->startDate, $discount->startTime);
             $endTime = generateCarbonDateTime($discount->endDate, $discount->endTime);
+            $fee['discountId'] = $discount->id;
+            $fee['discountName'] = $discount->name;
+            $fee['discountType'] = $discount->type;
+            $fee['discountAmount'] = $discount->amount;
             
             if ($startTime < $currentDateTime && $endTime > $currentDateTime && $discount->isEnforced) {
                 $fee['entryFee'] = $event->tier->tierEntryFee * 1000 ;
                 $fee['totalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
-                $fee['discount'] = $discount->type == "percent" ? 
+                $fee['discountFee'] = $discount->type == "percent" ? 
                     ( $discount->amount/ 100 ) * $fee['totalFee'] : $discount->amount;
-                $fee['finalFee'] = $fee['totalFee'] - $fee['discount'];
+                $fee['finalFee'] = $fee['totalFee'] - $fee['discountFee'];
                 session()->flash('successMessageCoupon', "Applying your coupon named: $request->coupon!");
             } else {
                 $fee = $this->createNoDiscountFeeObject($fee, $event->tier->tierEntryFee);
@@ -580,6 +584,9 @@ class OrganizerEventController extends Controller
             if ($request->has('coupon')) {
                 session()->flash('errorMessageCoupon', "Sorry, your coupon named $request->coupon can't be found!");
             }
+
+            $fee['discountId'] = $fee['discountName'] = $fee['discountType'] 
+                = $fee['discountAmount'] = null;
 
             $fee = $this->createNoDiscountFeeObject($fee, $event->tier->tierEntryFee);
         }
