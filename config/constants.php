@@ -52,96 +52,179 @@ return [
             'borderColor' => 'transparent',
         ],
     ],
+    'eWalletLogos' => [
+        [
+            'src' => 'boost-pay-ewallet-logo.png',
+            'name' => 'Boost Pay',
+            'width' => 80,
+            'height' => 60,
+            'cover' => false
+        ],
+        [
+            'src' => 'grab-pay-ewallet-logo.png',
+            'name' => 'Grab Pay',
+            'width' => 80,
+            'height' => 60,
+            'cover' => true
+        ],
+        [
+            'src' => 'paypal-ewallet-logo.png',
+            'name' => 'MAE',
+            'width' => 60,
+            'height' => 60,
+            'cover' => false
+        ],
+        [
+            'src' => 'paypal-ewallet-logo.png',
+            'name' => 'Shopee Pay',
+            'width' => 60,
+            'height' => 60,
+            'cover' => false
+        ],
+        [
+            'src' => 'touch-n-go-logo.png',
+            'name' => 'TouchNGo Pay',
+            'width' => 60,
+            'height' => 60,
+            'cover' => false
+        ],
+    ],
+    'otherEWalletLogos' => [
+        [
+            'src' => 'apple-ewallet-logo.png',
+            'name' => 'Apple Pay',
+            'width' => 80,
+            'height' => 60,
+            'cover' => false
+        ],
+        [
+            'src' => 'google-pay-ewallet-logo.png',
+            'name' => 'Google Pay',
+            'width' => 80,
+            'height' => 60,
+            'cover' => true
+        ],
+        [
+            'src' => 'paypal-ewallet-logo.png',
+            'name' => 'Paypal',
+            'width' => 60,
+            'height' => 60,
+            'cover' => false
+        ],
+    ],
     'bankLogos' => [
         [
-            'src' => 'affin-bank.png',
+            'src' => 'affin-bank-logo.jpeg',
             'name' => 'Affin Bank',
-            'width' => 100,
-            'height' => 60,
+            'width' => 80,
+            'height' => 48,
             'cover' => false
         ],
         [
             'src' => 'alliance-bank-logo.png',
             'name' => 'Alliance Bank',
-            'width' => 100,
-            'height' => 60,
+            'width' => 80,
+            'height' => 48,
             'cover' => false
         ],
         [
             'src' => 'am-bank-logo.jpg',
             'name' => 'AmBank',
-            'width' => 100,
-            'height' => 60,
+            'width' => 80,
+            'height' => 48,
             'cover' => true
         ],
         [
-            'src' => 'bank-islam-bank-logo.jpeg',
+            'src' => 'islam-bank-logo.jpg',
             'name' => 'Bank Islam',
-            'width' => 100,
-            'height' => 60,
+            'width' => 80,
+            'height' => 48,
+            'cover' => true
+        ],
+        [
+            'src' => 'rakyat-bank-logo.png',
+            'name' => 'Rakyat Bank',
+            'width' => 80,
+            'height' => 48,
             'cover' => true
         ],
         [
             'src' => 'bsn-bank-logo.png',
             'name' => 'BSN Bank',
-            'width' => 100,
-            'height' => 60,
+            'width' => 80,
+            'height' => 48,
             'cover' => false
         ],
         [
             'src' => 'cimb-bank-logo.png',
             'name' => 'CIMB Bank',
-            'width' => 100,
-            'height' => 60,
+            'width' => 80,
+            'height' => 48,
             'cover' => false
         ],
         [
             'src' => 'citi-bank-logo.avif',
             'name' => 'Citibank',
-            'width' => 100,
-            'height' => 60,
+            'width' => 80,
+            'height' => 48,
             'cover' => false
         ],
         [
-            'src' => 'hong-leong-bank-logo.jpg',
+            'src' => 'hong-leong-bank-logo.png',
             'name' => 'Hong Leong Bank',
-            'width' => 100,
-            'height' => 60,
+            'width' => 80,
+            'height' => 48,
             'cover' => true
         ],
         [
             'src' => 'hsbc-bank-logo.png',
             'name' => 'HSBC Bank',
-            'width' => 100,
-            'height' => 60,
+            'width' => 80,
+            'height' => 48,
             'cover' => false
-        ],
-        [
-            'src' => 'ocbc-bank-logo.png',
-            'name' => 'OCBC Bank',
-            'width' => 100,
-            'height' => 60,
-            'cover' => true
         ],
         [
             'src' => 'may-bank-logo.png',
             'name' => 'Maybank',
+            'width' => 80,
+            'height' => 48,
+            'cover' => false
+        ],
+       
+        [
+            'src' => 'ocbc-bank-logo.png',
+            'name' => 'OCBC Bank',
+            'width' => 80,
+            'height' => 48,
+            'cover' => false
+        ],
+        [
+            'src' => 'public-bank-logo.png',
+            'name' => 'Public Bank',
             'width' => 100,
-            'height' => 60,
+            'height' => 48,
+            'cover' => true
+        ],
+        [
+            'src' => 'rhb-bank-logo.png',
+            'name' => 'RHB Bank',
+            'width' => 80,
+            'height' => 48,
+            'cover' => true
+        ],
+       
+        [
+            'src' => 'standard-chartered-bank-logo.jpg',
+            'name' => 'Standard Chartered Bank',
+            'width' => 80,
+            'height' => 48,
             'cover' => true
         ],
         [
             'src' => 'uob-bank-logo.png',
             'name' => 'UOB Bank',
-            'width' => 100,
-            'height' => 60,
-            'cover' => true
-        ],
-        [
-            'src' => 'standard-chartered-bank-logo.jpg',
-            'name' => 'Standard Chartered Bank',
-            'width' => 100,
-            'height' => 60,
+            'width' => 80,
+            'height' => 48,
             'cover' => true
         ],
     ],

@@ -13,9 +13,18 @@ function bladeEventStatusStyleMapping($status)
     return $stylesEventStatus;
 }
 
-function bladeGetBankLogos()
+function bladeGetPaymentLogos($logoType)
 {
-    return config('constants.bankLogos');
+    $logoName = [
+        'bank'=> 'bankLogos',
+        'eWallet'=> 'eWalletLogos', 
+        'otherEWallet'=> 'otherEWalletLogos',
+        'card'=> "cardLogos",
+    ];
+
+    $logo = $logoName[$logoType];
+
+    return config("constants.$logo");
 }
 
 function fixTimeToRemoveSeconds($time)
