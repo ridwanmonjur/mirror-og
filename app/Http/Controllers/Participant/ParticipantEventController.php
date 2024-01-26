@@ -283,6 +283,18 @@ class ParticipantEventController extends Controller
         }
     }
 
+    $joinEventData = session('joinEventData');
+
+    if ($joinEventData) {
+        $joint = new JoinEvent();
+        $joint->user_id = $joinEventData['user_id'];
+        $joint->event_details_id = $joinEventData['event_details_id'];
+        $joint->save();
+    }
+
+    // Clear the JoinEvent data from the session
+    session()->forget('joinEventData');
+
     return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
 }
 
@@ -448,10 +460,11 @@ class ParticipantEventController extends Controller
             $errorMessage = 'You have already joined this event.';
             session()->flash('errorMessage', $errorMessage);
         } else {
-            $joint = new JoinEvent();
-            $joint->user_id = $userId;
-            $joint->event_details_id = $id;
-            $joint->save();
+            // Store JoinEvent data in the session
+            session(['joinEventData' => [
+            'user_id' => $userId,
+            'event_details_id' => $id,
+        ]]);
             return redirect()->route('participant.selectTeam.view', ['id' => auth()->user()->id]);
         }
 
