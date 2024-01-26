@@ -56,51 +56,51 @@ return [
         [
             'src' => 'boost-pay-ewallet-logo.png',
             'name' => 'Boost Pay',
-            'width' => 80,
+            'width' => 60,
             'height' => 60,
             'cover' => false
         ],
         [
-            'src' => 'grab-pay-ewallet-logo.png',
+            'src' => 'grab-pay-ewallet-logo.webp',
             'name' => 'Grab Pay',
-            'width' => 80,
+            'width' => 60,
             'height' => 60,
             'cover' => true
         ],
         [
-            'src' => 'paypal-ewallet-logo.png',
+            'src' => 'mae-ewallet-logo.png',
             'name' => 'MAE',
             'width' => 60,
             'height' => 60,
-            'cover' => false
+            'cover' => true
         ],
         [
-            'src' => 'paypal-ewallet-logo.png',
+            'src' => 'shopee-ewallet-logo.png',
             'name' => 'Shopee Pay',
             'width' => 60,
             'height' => 60,
-            'cover' => false
+            'cover' => true 
         ],
         [
-            'src' => 'touch-n-go-logo.png',
+            'src' => 'touch-n-go-ewallet-logo.png',
             'name' => 'TouchNGo Pay',
             'width' => 60,
             'height' => 60,
-            'cover' => false
+            'cover' => true
         ],
     ],
     'otherEWalletLogos' => [
         [
             'src' => 'apple-ewallet-logo.png',
             'name' => 'Apple Pay',
-            'width' => 80,
+            'width' => 60,
             'height' => 60,
             'cover' => false
         ],
         [
             'src' => 'google-pay-ewallet-logo.png',
             'name' => 'Google Pay',
-            'width' => 80,
+            'width' => 60,
             'height' => 60,
             'cover' => true
         ],
@@ -201,7 +201,7 @@ return [
         [
             'src' => 'public-bank-logo.png',
             'name' => 'Public Bank',
-            'width' => 100,
+            'width' => 80,
             'height' => 48,
             'cover' => true
         ],

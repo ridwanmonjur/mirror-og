@@ -6,7 +6,15 @@
 </div>
 <br>
 
-<div class="grid-2-columns mx-4">
+<div class="d-none" id="payment-element-view"> 
+    <div class="text-center" onclick="changeScreen();"> Close </div>
+    <div id="cardLogoId" class="payment-element-children-view d-none">Card view</div>
+    <div id="eWalletLogoId" class="payment-element-children-view d-none">Ewallet view</div>
+    <div id="bankLogoId" class="payment-element-children-view d-none">Bank view</div>
+    <div id="otherEWalletLogoId" class="payment-element-children-view d-none">Other view</div>
+</div>
+
+<div class="grid-2-columns mx-4" id="payment-discount-view">
     <div class="mx-2">
         <h4>Payment Method</h4>
         <br>
@@ -28,17 +36,20 @@
                 <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="eWallet-accordion">
-                <div class="grid-5-columns">
+                <div class="grid-4-columns">
                     @foreach (bladeGetPaymentLogos("eWallet") as $logo)
-                        <div>
+                        <div class="position-relative" style="width: min-content;">
                             <img src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
-                            width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" 
-                            @class([
-                                "border-radius-20px",
-                                "mt-3",
-                                "hover-bigger",
-                                "object-fit-cover" => $logo['cover']
-                            ])>
+                                width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" 
+                                onclick="onChoosePayment(event, 'eWallet', '{{$logo['name']}}');"
+                                @class([
+                                    "payment-element",
+                                    "mt-3",
+                                    "hover-bigger",
+                                    "object-fit-cover" => $logo['cover']
+                                ])
+                            >
+                            <div class="rounded-circle position-absolute bottom-0 px-1 check-tick d-none">✔</div>
                         </div>
                     @endforeach
                 </div>
@@ -54,15 +65,19 @@
             <div class="collapse px-3 py-2 multi-collapse" id="online-banking-accordion">
                 <div class="grid-5-columns">
                     @foreach (bladeGetPaymentLogos("bank") as $logo)
-                        <div>
-                            <img src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
-                            width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" 
-                            @class([
-                                "border-radius-20px",
-                                "mt-3",
-                                "hover-bigger",
-                                "object-fit-cover" => $logo['cover']
-                            ])>
+                        <div class="position-relative" style="width: min-content;">
+                            <img 
+                                src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
+                                width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" 
+                                @class([
+                                    "payment-element",
+                                    "mt-3",
+                                    "hover-bigger",
+                                    "object-fit-cover" => $logo['cover']
+                                ])
+                                onclick="onChoosePayment(event, 'bank', '{{$logo['name']}}');"
+                            >
+                            <div class="rounded-circle position-absolute bottom-0 px-1 check-tick d-none">✔</div>
                         </div>
                     @endforeach
                 </div>
@@ -76,17 +91,21 @@
                 <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="other-methods-accordion">
-                <div class="grid-5-columns">
+                <div class="grid-4-columns">
                     @foreach (bladeGetPaymentLogos("otherEWallet") as $logo)
-                        <div>
-                            <img src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
-                            width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" 
-                            @class([
-                                "border-radius-20px",
-                                "mt-3",
-                                "hover-bigger",
-                                "object-fit-cover" => $logo['cover']
-                            ])>
+                        <div class="position-relative" style="width: min-content;">
+                            <img 
+                                src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
+                                width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" 
+                                @class([
+                                    "payment-element",
+                                    "mt-3",
+                                    "hover-bigger",
+                                    "object-fit-cover" => $logo['cover']
+                                ])
+                                onclick="onChoosePayment(event, 'otherEWallet', '{{$logo['name']}}');"
+                            >
+                            <div class="rounded-circle position-absolute bottom-0 px-1 check-tick d-none">✔</div>
                         </div>
                     @endforeach
                 </div>
@@ -153,8 +172,11 @@
             @endif
 
             <div class="d-flex justify-content-center w-75">
-                <button type="submit"
-                    class="oceans-gaming-default-button-base oceans-gaming-gray-button px-4 py-3 mt-2">
+                <button 
+                    type="button"
+                    onclick="changeScreen()"
+                    class="payment-button oceans-gaming-default-button-base oceans-gaming-gray-button px-4 py-3 mt-2"
+                >
                     <div class="submit-texts"> Confirm & Pay </div>
                     <div class="spinner-border d-none" role="status">
                         <span class="sr-only">Loading...</span>

@@ -293,13 +293,9 @@ input[type="time"] {
 .event_head_container {
     text-align: center;
     position: relative;
-    /* Add relative positioning to the container */
     z-index: 1;
-    /* Set a lower z-index to keep the content below the image */
 }
 
-
-/* Style for the banner upload container */
 
 .banner-upload {
     position: relative;
@@ -307,14 +303,9 @@ input[type="time"] {
 }
 
 
-/* Style for the file input */
-
 .banner-upload input[type="file"] {
     display: none;
 }
-
-
-/* Style for the banner preview */
 
 .banner-preview {
     width: 100%;
@@ -346,12 +337,10 @@ input[type="time"] {
     justify-content: start;
     margin: 0px 0;
     padding: 10px;
-    /* Add padding here */
 }
 
 .icon_container {
     padding-left: 10px;
-    /* Add right padding to create space */
 }
 
 .event_icon {
@@ -359,8 +348,6 @@ input[type="time"] {
     height: 30px;
     display: block;
 }
-
-/* Style for the upload button */
 
 .upload-button {
     position: absolute;
