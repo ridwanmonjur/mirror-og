@@ -32,6 +32,10 @@ div.navbar-placeholder {
     object-fit: cover;
 }
 
+.cursor-pointer{
+    cursor: pointer;
+}
+
 .rounded-box {
     border-radius: 30px 30px;
     border-width: 1px;
