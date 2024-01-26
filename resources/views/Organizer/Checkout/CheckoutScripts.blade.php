@@ -29,38 +29,125 @@
     }
 </script>
 <script>
-    function checkStringNullOrEmptyAndReturn(value) {
-        if (value === null || value === undefined) return null;
+    class PaymentProcessor {
+        constructor() {
+            this.isPaymentSelected = false;
+            this.paymentType = null;
+            this.paymentElement = null;
+            this.nextStepId = null;
+        }
 
-        let _value = String(value).trim();
-        return (_value === "") ? null : _value;
+        getIsPaymentSelected() {
+            return this.isPaymentSelected;
+        }
+
+        getPaymentElement() {
+            return this.paymentElement;
+        }
+
+        getPaymentType() {
+            return this.paymentType;
+        }
+
+        getNextStepId() {
+            return this.nextStepId;
+        }
+
+        setIsPaymentSelected(value) {
+            if (typeof value === 'boolean') {
+                this.isPaymentSelected = value;
+            } else {
+                throw new Error('Invalid value for isPaymentSelected. Expected a boolean.');
+            }
+        }
+
+        setPaymentElement(value) {
+            if (typeof value === 'string') {
+                this.paymentElement = value;
+            } else {
+                throw new Error('Invalid value for paymentType. Expected a string.');
+            }
+        }
+
+        setPaymentType(value) {
+            if (typeof value === 'string') {
+                this.paymentType = value;
+                this.setNextStepId();
+            } else {
+                throw new Error('Invalid value for paymentType. Expected a string.');
+            }
+        }
+
+        setNextStepId() {
+            const stepList = {
+                'bank': 'bankLogoId',
+                'eWallet': 'eWalletLogoId',
+                'otherEWallet': 'otherEWalletLogoId',
+                'card': 'cardLogoId',
+            };
+
+            this.nextStepId = stepList[this.paymentType];
+        }
+
+        reset() {
+            this.isPaymentSelected = false;
+            this.paymentType = null;
+            this.paymentElement = null;
+            this.nextStepId = null;
+        }
     }
 
-    function checkStringNullOrEmptyAndReturnFromLocalStorage(key) {
-        let item = localStorage.getItem(key);
-        return checkStringNullOrEmptyAndReturn(item);
+    let paymentProcessor = new PaymentProcessor();
+
+    function onChoosePayment(event, type, element) {
+        let target = event.currentTarget;
+        let classNameList = ["squared-box", "border-2px"];
+        let searchQuery = `.payment-element.${classNameList[0]}`; 
+        let allElements = document.querySelectorAll(searchQuery);
+        
+        allElements.forEach((_element)=>{
+            classNameList.forEach((_class)=> {
+                _element.classList.remove(`${_class}`);
+            })
+            
+            _element.nextElementSibling.classList.add("d-none");
+        })
+
+        classNameList.forEach((_class)=> {
+            target.classList.add(`${_class}`);
+        })
+
+        target.nextElementSibling.classList.remove("d-none");
+
+        let button = document.querySelector(".payment-button");
+        button.classList.add('oceans-gaming-default-button');
+        button.classList.remove('oceans-gaming-gray-button');
+
+        paymentProcessor.setIsPaymentSelected(true);
+        paymentProcessor.setPaymentType(type);
+        paymentProcessor.setPaymentElement(element);
     }
 
-    function setInnerHTMLFromLocalStorage(key, element) {
-        let value = checkStringNullOrEmptyAndReturnFromLocalStorage(key);
-        if (value) element.innerHTML = value;
-        else console.error(`Item not in localStorage: ${key} ${value}`)
+    function changeScreen() {
+        if (paymentProcessor.getNextStepId() == null) {
+           return;
+        }
+
+        let screenPaymentView = document.getElementById('payment-element-view');
+        let checkoutView = document.getElementById('payment-discount-view');
+        let allPaymentElements = document.querySelectorAll(".payment-element-children-view");
+        let currentElementId = paymentProcessor.getNextStepId();
+        let currentElement = document.getElementById(currentElementId);
+        
+        allPaymentElements.forEach((_element)=>{
+            _element.classList.add('d-none');
+        })
+
+        currentElement.classList.remove('d-none');
+        screenPaymentView.classList.toggle('d-none');
+        checkoutView.classList.toggle('d-none');
     }
 
-    function setImageSrcFromLocalStorage(key, element) {
-        let value = checkStringNullOrEmptyAndReturnFromLocalStorage(key);
-        if (value && element) element.src = value;
-        else console.error(`Can't set image for: ${key}, ${value} ${value}`)
-    }
-
-    function setLocalStorageFromEventObject(key, property) {
-        let value = checkStringNullOrEmptyAndReturn(property);
-        if (value) localStorage.setItem(key, value);
-        else console.error(`Item not in localStorage: ${key} ${value}`)
-    }
-</script>
-
-<script>
     function initializePayment() {
         fetch("{{ route('stripe.createIntent') }}", {
                 method: "POST",
@@ -128,8 +215,5 @@
         // initializePayment();
     }
 
-    function clearLocalStorage() {
-        localStorage.clear();
-    }
 </script>
 
