@@ -452,7 +452,7 @@ class ParticipantEventController extends Controller
             $joint->user_id = $userId;
             $joint->event_details_id = $id;
             $joint->save();
-            return redirect('/participant/selectTeam');
+            return redirect()->route('participant.selectTeam.view', ['id' => auth()->user()->id]);
         }
 
         return redirect()
