@@ -186,7 +186,7 @@
             <div class="d-flex justify-content-center w-75">
                 <button type="submit"
                     class="oceans-gaming-default-button-base oceans-gaming-transparent-button px-2 py-2 mt-2">
-                    <div class="submit-texts"> Cancel </div>
+                    <a href="{{route('event.show', $event->id) }}" class="submit-texts d-block"> Cancel </a>
                     <div class="spinner-border d-none" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
