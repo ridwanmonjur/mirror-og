@@ -46,7 +46,7 @@ class OrganizerEventController extends Controller
     }
 
     private function createNoDiscountFeeObject($fee, $entryFee) { 
-        $fee['discount'] = 0;
+        $fee['discountFee'] = 0;
         $fee['entryFee'] = $entryFee * 1000;
         $fee['totalFee'] = $fee['finalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
         return $fee;
@@ -422,7 +422,9 @@ class OrganizerEventController extends Controller
             if ($transaction && $transaction->payment_id && $transaction->status == 'SUCCESS') {
             } elseif ($request->isPaymentDone == 'true' && $request->paymentMethod) {
             } else {
-                $eventDetail->status = 'PEDNING';
+                if ($eventDetail->status != 'DRAFT') { 
+                    $eventDetail->status = 'PENDING';
+                }
             }
         }
 
@@ -545,10 +547,13 @@ class OrganizerEventController extends Controller
             return $this->show404("Event with id: $request->id has already been checked out");
         }
 
+        if (is_null($event->tier)) {
+            return $this->show404("Event with id: $request->id has no event tier chosen");
+        }
+
         if ($request->has('coupon')) {
             $discount = Discount::whereRaw('coupon = ?', [$request->coupon])
                 ->first();
-            // dd($discount, $request->coupon);
         } else {
             $discount = null;
         }
@@ -559,13 +564,17 @@ class OrganizerEventController extends Controller
             $currentDateTime = Carbon::now()->utc();
             $startTime = generateCarbonDateTime($discount->startDate, $discount->startTime);
             $endTime = generateCarbonDateTime($discount->endDate, $discount->endTime);
+            $fee['discountId'] = $discount->id;
+            $fee['discountName'] = $discount->name;
+            $fee['discountType'] = $discount->type;
+            $fee['discountAmount'] = $discount->amount;
             
             if ($startTime < $currentDateTime && $endTime > $currentDateTime && $discount->isEnforced) {
                 $fee['entryFee'] = $event->tier->tierEntryFee * 1000 ;
                 $fee['totalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
-                $fee['discount'] = $discount->type == "percent" ? 
+                $fee['discountFee'] = $discount->type == "percent" ? 
                     ( $discount->amount/ 100 ) * $fee['totalFee'] : $discount->amount;
-                $fee['finalFee'] = $fee['totalFee'] - $fee['discount'];
+                $fee['finalFee'] = $fee['totalFee'] - $fee['discountFee'];
                 session()->flash('successMessageCoupon', "Applying your coupon named: $request->coupon!");
             } else {
                 $fee = $this->createNoDiscountFeeObject($fee, $event->tier->tierEntryFee);
@@ -575,6 +584,9 @@ class OrganizerEventController extends Controller
             if ($request->has('coupon')) {
                 session()->flash('errorMessageCoupon', "Sorry, your coupon named $request->coupon can't be found!");
             }
+
+            $fee['discountId'] = $fee['discountName'] = $fee['discountType'] 
+                = $fee['discountAmount'] = null;
 
             $fee = $this->createNoDiscountFeeObject($fee, $event->tier->tierEntryFee);
         }

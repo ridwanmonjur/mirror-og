@@ -71,13 +71,15 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::post('/team-management', [ParticipantEventController::class, 'TeamStore']);
 			Route::get('/team-manage/{id}', [ParticipantEventController::class, 'teamManagement'])->name("participant.teamManagement.view");
 			Route::get('/registration-manage/{id}', [ParticipantEventController::class, 'registrationManagement'])->name("participant.registrationManagement.view");
-			Route::get('/selectTeam', [ParticipantEventController::class, 'SelectTeamtoRegister']);
+			Route::get('/selectTeam', [ParticipantEventController::class, 'SelectTeamtoRegister'])->name("participant.selectTeam.view");
 			Route::post('/home', [ParticipantEventController::class, 'TeamtoRegister']);
 			Route::get('/confirm', [ParticipantEventController::class, 'ConfirmUpdate']);
 			Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent']);
 			Route::post('/events/{id}', [ParticipantEventController::class, 'JoinEvent'])->name('join.store');
 			Route::post('/follow-organizer', [ParticipantEventController::class, 'FollowOrganizer'])->name('follow.organizer');
 			Route::delete('participant/unfollow-organizer', [ParticipantEventController::class, 'unfollowOrganizer'])->name('unfollow.organizer');
+			Route::post('participant/team/approve-member/{id}', [ParticipantEventController::class, 'approveMember'])->name('team.approve-member');
+
 		});
 	});
 });

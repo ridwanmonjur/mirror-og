@@ -76,13 +76,20 @@
                      <p>No events available</p>
                     @else
                     <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
+                    @php
+                    $uniqueEventDetailsIds = [];
+                    @endphp
                     @foreach($joinEvents as $key => $joinEvent)
+                    @php
+                    $eventDetailsId = $joinEvent->eventDetails->id;
+                    @endphp
+                     @if(!in_array($eventDetailsId, $uniqueEventDetailsIds))
                     <div class="event-box" id="event{{ $key + 1 }}" style="display: {{ $key === 0 ? 'block' : 'none' }};">
                     <div style="position: relative; height: 200px;">
-    <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
-        <!-- Banner image goes here -->
-    </div>
-    <div style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
+                    <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
+                    <!-- Banner image goes here -->
+                    </div>
+                    <div style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
         <!-- Circle image goes here -->
         @php
         $imagePathWithoutExtension = 'https://driftwood.gg/storage/images/event_details/' . strtolower($joinEvent->eventDetails->eventTier);
@@ -120,7 +127,11 @@
                     </div>
 
                     </div>
-                    @endforeach
+                    @php
+                        $uniqueEventDetailsIds[] = $eventDetailsId;
+                    @endphp
+                @endif
+                @endforeach
                     <button class="carousel-button" onclick="slideEvents(1)">></button>
                 </div>
 
@@ -183,6 +194,36 @@
         </div>
         <div class="tab-content" id="CurrentMembers" data-type="member" style="display: none; text-align: center;">
         <p style="text-align: center;">Team {{ $manage->teamName }} has {{ $usernamesCount }} members</p>
+        <div class="cont">
+            <div class="leftC">
+                <span class="icon2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                    <span> Filter </span>
+                </span>
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                <span class="icon2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
+                        <path d="M15 7h6v6" />
+                    </svg>
+                    <span>
+                        Sort
+                    </span>
+                </span>
+            </div>
+
+            <div class="rightC">
+                <div class="search_box">
+                    <i class="fa fa-search"></i>
+                    <input class="nav__input" type="text" placeholder="Search for player name">
+                </div>
+                <div style="padding-right: 200px; transform: translateY(-95%);">
+                    <img src="/assets/images/add.png" height="40px" width="40px">
+                </div>
+            </div>
+        </div>
         <table class="member-table">
             <tbody>
                 {{-- Display the creator's name --}}
@@ -221,6 +262,72 @@
             </tbody>
         </table>
     </div>
+    <div class="tab-content" id="PendingMembers" data-type="member" style="display: none; text-align: center;">
+        <p style="text-align: center;">Pending Members</p>
+        <div class="cont">
+            <div class="leftC">
+                <span class="icon2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                    <span> Filter </span>
+                </span>
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                <span class="icon2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
+                        <path d="M15 7h6v6" />
+                    </svg>
+                    <span>
+                        Sort
+                    </span>
+                </span>
+            </div>
+
+            <div class="rightC">
+                <div class="search_box">
+                    <i class="fa fa-search"></i>
+                    <input class="nav__input" type="text" placeholder="Search for player name">
+                </div>
+                <div style="padding-right: 200px; transform: translateY(-95%);">
+                    <img src="/assets/images/add.png" height="40px" width="40px">
+                </div>
+            </div>
+        </div>
+        <table class="member-table">
+            <tbody>
+                @foreach($pendingMembers as $pendingMember)
+                    <tr class="st">
+                        <td>
+                            <div class="player-info">
+                                <div class="player-image" style="background-image: url('{{ $pendingMember->user->profile_image_url }}')"></div>
+                                <span>{{ $pendingMember->user->name }}</span>
+                            </div>
+                        </td>
+                        <td class="flag-cell">
+                            <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
+                        </td>
+                        <td>
+                            @foreach($teamManage as $team)
+                            @if(auth()->user()->id == $team->user_id)
+                            <!-- Check if the current user is the team creator -->
+                            <button
+                            data-member-id="{{ $pendingMember->id }}"
+                            onclick="approveMember(this)"
+                            style="background-color: #3498db; color: #fff; border: none; padding: 5px 10px; cursor: pointer; margin-right: 5px;"
+                            >
+                            ✔
+                            </button>
+                            <button onclick="rejectMember('{{ $pendingMember->id }}')" style="background-color: #e74c3c; color: #fff; border: none; padding: 5px 10px; cursor: pointer;">✘</button>
+                            @endif 
+                            @endforeach
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    
     </div>
     @endforeach
                     @endif
@@ -463,6 +570,40 @@
                 // Code to load data for pending members
             }
         }
+    }
+</script>
+
+<script>
+    function approveMember(button) {
+        const memberId = button.getAttribute('data-member-id');
+
+        
+        const url = "{{ route('team.approve-member', ['id' => ':id']) }}".replace(':id', memberId);
+
+        
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response
+            console.log(data);
+
+            
+            if (data.success) {
+                const memberRow = button.closest('tr');
+                memberRow.remove();
+            } else {
+                console.error('Error updating member status:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error approving member:', error);
+        });
     }
 </script>
 

@@ -344,6 +344,15 @@ input[type="submit"],
 .player-info {
     display: flex;
     align-items: center;
+    /* border-bottom: 2px solid rgb(82, 159, 23);
+    border-radius: 40px; 
+    padding-bottom: 120px;  */
+}
+
+.name-border{
+    border-bottom: 2px solid rgb(82, 159, 23);
+    border-radius: 40px; 
+    padding-bottom: 90px;
 }
 
 .player-image {
@@ -357,7 +366,7 @@ input[type="submit"],
 .event {
     margin-bottom: 3rem;
     overflow: auto;
-    width: 500px;
+    width: 600px;
     height: 270px;
     background: transparent;
     border: 2px solid rgb(82, 159, 23);

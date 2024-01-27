@@ -23,7 +23,6 @@ class EventDetail extends Model
         return $this->belongsTo(User::class, 'user_id','id');
     }
   
-   
     public function invitationList()
     {
         return $this->hasMany(Invitation::class, 'event_id');
@@ -65,8 +64,6 @@ class EventDetail extends Model
         $carbonEndDateTime = $this->createCarbonDateTimeFromDB($this->endDate, $this->endTime);
         $carbonStartDateTime = $this->createCarbonDateTimeFromDB($this->startDate, $this->startTime);
         $carbonNow = Carbon::now()->utc();
-        // dd($this->status);
-        // dd($carbonPublishedDateTime, $carbonEndDateTime, $carbonStartDateTime, $carbonNow);
         
         if ($this->status == "DRAFT" || $this->status == "PREVIEW") {
             return "DRAFT";
@@ -85,7 +82,6 @@ class EventDetail extends Model
             } elseif ($carbonPublishedDateTime && $carbonPublishedDateTime > $carbonNow) {
                 return "SCHEDULED";
             } else return "UPCOMING";
-
         }
 
     }

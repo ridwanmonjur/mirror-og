@@ -79,6 +79,15 @@ nav svg:active {
     display: block;
 }
 
+.nav__input {
+    border-radius: 23px;
+    height: 40px;
+    width: 40rem;
+    padding-left: 40px;
+    position: relative;
+    z-index: 1;
+}
+
 .search-bar {
     position: relative;
 }
@@ -671,4 +680,50 @@ input[type="submit"],
 .achievement-list li span.additional-text {
     margin-left: 10px; /* Adjust the spacing between the checkmark and additional text */
     color: #fff; /* Color of the additional text */
+}
+
+.search_box {
+    width: 60%;
+    position: relative;
+}
+
+.search_box input[type="text"] {
+    width: 90%;
+    padding: 10px;
+    padding-left: 40px;
+    padding-right: 60px;
+    box-sizing: border-box;
+    background: transparent;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    font-size: 18px;
+    color: #000000;
+    outline: black;
+    z-index: 1;
+}
+
+.fa-search {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #000000;
+    padding-left: 15px;
+    z-index: 2;
+}
+
+
+.cont {
+    display: flex;
+    justify-content: space-between;
+}
+
+.leftC {
+    width: 49%;
+    text-align: left;
+    padding-left: 250px;
+}
+
+.rightC {
+    width: 49%;
+    text-align: right;
 }

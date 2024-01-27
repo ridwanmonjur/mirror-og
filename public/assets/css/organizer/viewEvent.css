@@ -126,6 +126,12 @@ input[type="submit"],
     cursor: pointer;
 }
 
+.oceans-gaming-default-button[disabled] {
+    background-color: #32cd32;
+    color: #ffffff; /* Set text color to contrast with the background */
+    cursor: not-allowed; /* Change cursor to not-allowed when disabled */
+}
+
 
 .flexbox-welcome {
     display: flex;

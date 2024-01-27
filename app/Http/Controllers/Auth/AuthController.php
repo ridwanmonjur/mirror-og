@@ -35,34 +35,40 @@ class AuthController extends Controller
         } elseif ($type == 'steam') {
             $finduser = User::where('steam_id', $user->id)->first();
         }
+
         if ($finduser) {
             Auth::login($finduser);
             return $user;
         } else {
             $finduser = User::where('email', $user->email)->first();
+        
             if ($finduser) {
+                
                 if ($type == 'google') {
                     $finduser->google_id = $user->id;
                 } elseif ($type == 'steam') {
                     $finduser->steam_id = $user->id;
                 }
+                
                 $finduser->email_verified_at = now();
                 Auth::login($finduser);
                 $finduser->save();
                 return $finduser;
             } else {
-                // create new user
+                
                 $newUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,
                     'password' => bcrypt(Str::random(13)),
                 ]);
                 $newUser->email_verified_at = now();
+                
                 if ($type == 'google') {
                     $newUser->google_id = $user->id;
                 } elseif ($type == 'steam') {
                     $newUser->steam_id = $user->id;
                 }
+                
                 $newUser->save();
                 Auth::login($newUser);
                 return $newUser;
@@ -113,6 +119,7 @@ class AuthController extends Controller
     {
         $user = Socialite::driver('steam')->stateless()->user();
         $finduser = $this->_registerOrLoginUser($user, 'steam');
+        
         if ($finduser->role == 'PARTICIPANT') {
             return redirect()->route('participant.home.view');
         } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
@@ -124,8 +131,10 @@ class AuthController extends Controller
     {
         $count = 6;
         $currentDateTime = Carbon::now()->utc();
+        
         $events = EventDetail::with('game')
             ->where('status', '<>', 'DRAFT')
+            ->whereNotNull('payment_transaction_id')
             ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
             ->where('sub_action_private', '<>', 'private')
             ->where(function ($query) use ($currentDateTime) {
@@ -142,13 +151,16 @@ class AuthController extends Controller
                 return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
             })
             ->paginate($count);
-        $mappingEventState = EventDetail::mappingEventStateResolve();
+        
+            $mappingEventState = EventDetail::mappingEventStateResolve();
         $output = compact('events', 'mappingEventState');
+        
         if ($request->ajax()) {
             // dd($events);
             $view = view('LandingPageScroll', $output)->render();
             return response()->json(['html' => $view]);
         }
+        
         return view('LandingPage', $output);
     }
 
@@ -164,7 +176,6 @@ class AuthController extends Controller
 
     public function storeReset(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'token' => 'required',
             'password' => 'required|min:6',
@@ -235,7 +246,6 @@ class AuthController extends Controller
             $message->subject('Reset Password');
         });
 
-        // Redirect back with a success message
         return back()->with('success', 'Password reset link sent. Please check your email.');
     }
 
@@ -327,7 +337,8 @@ class AuthController extends Controller
         $userRole = '';
         $userRoleCapital = '';
         $validatedData = [];
-        if ($request->is('organizer/signup')) {
+        
+        if ($request->is('organizer/signup')) {          
             $userRole = 'organizer';
             $userRoleCapital = 'ORGANIZER';
             $validatedData = $request->validate([
@@ -406,6 +417,7 @@ class AuthController extends Controller
                     ->route($redirectErrorRoute)
                     ->with('error', 'An error occurred while processing your request.');
             }
+
         } catch (\Throwable $th) {
             return redirect()
                 ->route($redirectErrorRoute)

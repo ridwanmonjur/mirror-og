@@ -13,6 +13,20 @@ function bladeEventStatusStyleMapping($status)
     return $stylesEventStatus;
 }
 
+function bladeGetPaymentLogos($logoType)
+{
+    $logoName = [
+        'bank'=> 'bankLogos',
+        'eWallet'=> 'eWalletLogos', 
+        'otherEWallet'=> 'otherEWalletLogos',
+        'card'=> "cardLogos",
+    ];
+
+    $logo = $logoName[$logoType];
+
+    return config("constants.$logo");
+}
+
 function fixTimeToRemoveSeconds($time)
 {
     if ($time == null) {
@@ -28,11 +42,13 @@ function fixTimeToRemoveSeconds($time)
 function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants)
 {
     $stylesEventRatio = '';
+    
     if ($totalParticipants == 0) {
         $ratio = 0;
     } else {
         $ratio = (float) $registeredParticipants / $totalParticipants;
     }
+
     if ($ratio > 0.9) {
         $stylesEventRatio .= "background-color: #EF4444; color: white;";
     } elseif ($ratio == 0) {
@@ -42,6 +58,7 @@ function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants
     } elseif ($ratio <= 0.5) {
         $stylesEventRatio .= "background-color: #FFE325; color: black;";
     }
+    
     return $stylesEventRatio;
 }
 

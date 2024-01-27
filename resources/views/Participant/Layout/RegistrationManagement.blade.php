@@ -76,6 +76,7 @@
                                     <span>{{ $user['user']->name }}</span>
                                 </div>
                                 @endforeach
+                                <div class="name-border"></div>
                                 @endforeach
 
                             </div>
@@ -85,15 +86,25 @@
                                 <div class="container">
                                     <div class="left-col">
                                         <p><img src="/assets/images/dota.png" class="logo2">
-                                            <p style="font-size: 10px; text-align: left;"> {{ $joinEvent->eventDetails->eventName }}</p>
+                                            <p style="font-size: 14px; text-align: left;"> {{ $joinEvent->eventDetails->eventName }}</p>
                                         </p>
                                     </div>
                                     <div class="right-col">
-                                        <p><img src="/assets/images/dota.png" class="logo2">
-                                            <p style="font-size: 12px; text-align: left;"> {{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</p>
-                                            <br>
-                                            {{-- <p style="font-size: 12px; text-align: left;">1K Followers</p> --}}
+                                        <p>
+                                            <img src="/assets/images/dota.png" class="logo2">
+                                            <p style="font-size: 14px; text-align: left; align-items: center; justify-content: space-between;">
+                                                <span>{{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</span>
+                                                <br>
+                                                <span style="font-size: 12px;">{{ $followCounts[$joinEvent->eventDetails->user->organizer->id] ?? '0' }} Followers</span>
+                                                <div style="align-items: center;">
+                                                    <button style="background-color: #43A4D7; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px; margin-left: 30px;" type="submit">Follow</button>
+                                                </div>
+                                                
+                                                
+                                            </p>
+                                            
                                         </p>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -116,17 +127,17 @@
                                     a 15.9155 15.9155 0 0 1 0 -31.831"
                                 />
                                 <path class="circle"
-                                  stroke-dasharray="50, 100"
+                                  stroke-dasharray="0, 100"
                                   d="M18 2.0845
                                     a 15.9155 15.9155 0 0 1 0 31.831
                                     a 15.9155 15.9155 0 0 1 0 -31.831"
                                 />
-                                <text x="18" y="20.35" class="percentage">50%</text>
+                                <text x="18" y="20.35" class="percentage">0%</text>
                               </svg>
                             </div>
                         </div>
                         <p>Total Entry Fee: RM {{ $joinEvent->eventTier->tierEntryFee }}</p>
-                        <small>Paid: <a href="" style="color: green;">RM 100</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM 100</a></small> <br>
+                        <small>Paid: <a href="" style="color: green;">RM 0</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM {{ $joinEvent->eventTier->tierEntryFee }}</a></small> <br>
                         <input type="submit" onclick="" value="Contribute"><br>
                         <button onclick="" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Confirm Registration </button>
                         <br><br><br>
