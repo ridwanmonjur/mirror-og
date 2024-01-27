@@ -38,25 +38,25 @@
                     <div>
                         <div class="team-info">
                             <img src="css/images/logo.png" height="25px" width="50px">
-                            <a href="#">Team 1</a>
+                            <a href="">Team 1</a>
                         </div>
                     </div>
                     <div>
                         <div class="team-info">
                             <img src="css/images/logo.png" height="25px" width="50px">
-                            <a href="#">Team 2</a>
+                            <a href="">Team 2</a>
                         </div>
                     </div>
                     <div>
                         <div class="team-info">
                             <img src="css/images/logo.png" height="25px" width="50px">
-                            <a href="#">Team 3</a>
+                            <a href="">Team 3</a>
                         </div>
                     </div>
                     <div>
                         <div class="team-info">
                             <img src="css/images/logo.png" height="25px" width="50px">
-                            <a href="#">Team 4</a>
+                            <a href="">Team 4</a>
                         </div>
                     </div>
                 </div>

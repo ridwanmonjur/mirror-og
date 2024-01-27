@@ -63,7 +63,7 @@
             </a>
 
             <!-- Box 3 -->
-            <a href="#" class="clickable-box" id="imageLink3">
+            <a href="" class="clickable-box" id="imageLink3">
                 <div class="event">
                     <div class="event_head_container">
                         Manage your shop

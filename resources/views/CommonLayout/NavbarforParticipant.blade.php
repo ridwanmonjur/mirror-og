@@ -53,7 +53,7 @@
         @guest
             <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
             <div class="dropdown" data-reference="parent" data-offset="-20,-20">
-                <a href="#" role="button" class="btn dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown"
+                <a href="" role="button" class="btn dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true">Sign In</a>
                 <div id="" class="dropdown-menu" style="position: absolute; left: -60px;" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">Organizer</a>
@@ -68,7 +68,7 @@
                 <div id="teamList" class="team-dropdown-content">
                   <a href="{{ url('/participant/create-team/' . Auth::id()) }}">Create a Team</a>
                   <a href="{{ url('/participant/team-list/' . Auth::id()) }}">Team List</a>
-                  {{-- <a href="#">Team C</a> --}}
+                  {{-- <a href="">Team C</a> --}}
                   <!-- Add more teams as needed -->
                 </div>
               </div>

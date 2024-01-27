@@ -71,7 +71,7 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::post('/team-management', [ParticipantEventController::class, 'TeamStore']);
 			Route::get('/team-manage/{id}', [ParticipantEventController::class, 'teamManagement'])->name("participant.teamManagement.view");
 			Route::get('/registration-manage/{id}', [ParticipantEventController::class, 'registrationManagement'])->name("participant.registrationManagement.view");
-			Route::get('/selectTeam', [ParticipantEventController::class, 'SelectTeamtoRegister'])->name("participant.selectTeam.view");
+			Route::get('/selectTeam', [ParticipantEventController::class, 'selectTeamToRegister'])->name("participant.selectTeam.view");
 			Route::post('/home', [ParticipantEventController::class, 'TeamtoRegister']);
 			Route::get('/confirm', [ParticipantEventController::class, 'ConfirmUpdate']);
 			Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent']);

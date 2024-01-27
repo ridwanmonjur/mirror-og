@@ -236,10 +236,10 @@ class ParticipantEventController extends Controller
     }
 
     /* Select Team to Register */
-    public function SelectTeamtoRegister(Request $request)
+    public function selectTeamToRegister(Request $request)
     {
         $selectTeam = Team::all();
-        return view('Participant.SelectTeamtoRegister', compact('selectTeam'));
+        return view('Participant.SelectTeamToRegister', compact('selectTeam'));
     }
 
     // public function TeamtoRegister(Request $request)
@@ -326,7 +326,7 @@ class ParticipantEventController extends Controller
 
     public function ConfirmUpdate(Request $request)
     {
-        return view('Participant.notify');
+        return view('Participant.Notify');
     }
 
     public function ViewEvent(Request $request, $id)

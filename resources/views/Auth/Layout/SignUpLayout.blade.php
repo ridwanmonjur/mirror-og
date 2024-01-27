@@ -49,8 +49,8 @@
 
     <input type="submit" value="Register">
 
-    <div class="sign-txt">By continuing, you agree to Splash's <a href="#">Terms of Use</a>. Read our <a
-        href="#">Privacy Policy</a>.</div>
+    <div class="sign-txt">By continuing, you agree to Splash's <a href="">Terms of Use</a>. Read our <a
+        href="">Privacy Policy</a>.</div>
 
         <div class="section-bottoms">
             <p>Already have an account? <a href="{{ route('participant.signin.view') }}">Sign in</a></p>
