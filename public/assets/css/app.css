@@ -197,6 +197,9 @@ button#submit,
     border: 0px solid black;
 }
 
+.w-50s{
+    width: 100%;
+}
 
 @media screen and (min-width: 992px) {
     .payment-summary {
@@ -238,6 +241,9 @@ button#submit,
         left: 20px;
     }
 
+    .w-50s{
+        width: 50%;
+    }
 }
 
 a,
@@ -254,3 +260,4 @@ a:hover {
 .modal {
     z-index: 9999 !important;
 }
+

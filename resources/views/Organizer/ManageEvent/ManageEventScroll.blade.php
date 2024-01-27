@@ -33,7 +33,7 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
             <div class="flexbox-centered-space flex-wrap-height-at-mobile">
                 <img src="{{ $bladeEventGameImage }}" alt="menu" width="50" height="50" style="object-fit: cover; ">
                 <button
-                        data-toggle="tooltip" 
+                    data-toggle="tooltip" 
                     data-html="true" 
                     title="{{ $toolTip }}"
                     class="activate-tooltip oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
@@ -45,15 +45,15 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                         @if($event->tier)
-                        @foreach($eventList as $index => $eventDetail)
-                        @if($index == 0)
-                        <span>
-                        {{ $eventDetail->joinEventCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available'}}
-                        </span>
-                        @endif
-                        @endforeach
-                        @else
-                        <span>N/A</span>
+                            @foreach($eventList as $index => $eventDetail)
+                                @if($index == 0)
+                                    <span>
+                                    {{ $eventDetail->joinEventCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available'}}
+                                    </span>
+                                @endif
+                            @endforeach
+                            @else
+                            <span>N/A</span>
                         @endif
                 </button>
             </div>
@@ -128,11 +128,9 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
                     @endif
                 @endif
             </div>
-            <!-- Modal -->
         </div>
         
         <script>
-
             const copyUtil = (urlType) => {
                 let copyUrl = '';
                 switch (urlType) {
@@ -149,7 +147,6 @@ $toolTip.= "Published date: ". $datePublishedArray['timePart'] . " on " . $dateP
                         localStorage.setItem('copyUrl', copyUrl);
                         break;
                 }
-
             }
         </script>
     </div>
