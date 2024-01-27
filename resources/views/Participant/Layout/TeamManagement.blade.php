@@ -16,7 +16,7 @@
 
 <body>
     @include('CommonLayout.NavbarforParticipant')
-    
+
 
     <main>
 
@@ -40,9 +40,9 @@
                         </a>
                       </button>
                 </div>
-               
+
             </div>
-            
+
             <p>We are an awesome team with awesome members! Come be awesome together! Play some games and win some prizes GGEZ!</p>
             @endforeach
         </div>
@@ -94,21 +94,21 @@
         @php
         $imagePathWithoutExtension = 'https://driftwood.gg/storage/images/event_details/' . strtolower($joinEvent->eventDetails->eventTier);
         $imageExtension = pathinfo($imagePathWithoutExtension, PATHINFO_EXTENSION);
-        
+
         // Supported image extensions
         $supportedExtensions = ['jpg', 'jpeg', 'png'];
-    
+
         // If the extension is not in the supported list, default to '.png'
         $imagePath = $imagePathWithoutExtension . (in_array(strtolower($imageExtension), $supportedExtensions) ? '' : '.png');
         @endphp
-    
+
         <img src="{{ $imagePath }}" alt="Circle Image" style="width: 100%; height: 100%; object-fit: cover;">
-    
-        </div>
-    
+
         </div>
 
-                    <div class="frame1">    
+        </div>
+
+                    <div class="frame1">
                     <div class="container">
                     <div class="left-col">
                     <p>
@@ -120,7 +120,7 @@
                     <p>
                     <img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg" class="logo2">
                     <p style="font-size: 10px; text-align: left; margin-top: 10px; margin-left: 10px;"> {{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</p>
-                                            
+
                     </p>
                     </div>
                     </div>
@@ -134,7 +134,7 @@
                 @endforeach
                     <button class="carousel-button" onclick="slideEvents(1)">></button>
                 </div>
-                
+
 
             </div>
 
@@ -252,6 +252,10 @@
                             <td class="flag-cell">
                                 <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
                             </td>
+                            <td class="action-buttons">
+                                <button class="cross-button" onclick="rejectMember(this)">✖</button>
+                                <button class="tick-button" onclick="acceptMember(this)">✔</button>
+                            </td>
                         </tr>
                     @endif
                 @endforeach
@@ -327,7 +331,7 @@
     </div>
     @endforeach
                     @endif
-                
+
 
         <div class="tab-content" id="Active Rosters" style="display: center;">
 
@@ -442,7 +446,7 @@
             }
         });
     });
-    
+
     function showTab(tabName) {
         // Hide all tab contents
         const tabContents = document.querySelectorAll('.tab-content');
@@ -512,7 +516,7 @@
         }
     }
 
-    // i added this for a recentl bugs 
+    // i added this for a recentl bugs
 
     function initializeEventsDisplay() {
     const eventBoxes = document.querySelectorAll('.event-box');
