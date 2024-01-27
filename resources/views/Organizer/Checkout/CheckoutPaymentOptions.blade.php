@@ -2,7 +2,7 @@
     <small class="spinner-border " role="status">
         <small class="sr-only"></small>
     </small>
-    <small>Work in progress...</small>
+    <small>Finished for now...</small>
 </div>
 <br>
 

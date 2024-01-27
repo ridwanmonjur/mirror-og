@@ -110,19 +110,26 @@
                 _element.classList.remove(`${_class}`);
             })
             
-            _element.nextElementSibling.classList.add("d-none");
+            if (_element.nextElementSibling && 
+                _element.nextElementSibling.classList.contains('check-tick')
+            ) {
+                _element.nextElementSibling.classList.add("d-none");
+            }
         })
 
         classNameList.forEach((_class)=> {
             target.classList.add(`${_class}`);
         })
 
-        target.nextElementSibling.classList.remove("d-none");
+        if (target.nextElementSibling) target.nextElementSibling.classList.remove("d-none");
 
+        changeButtonColor(type, element);
+    }
+
+    function changeButtonColor(type, element) {
         let button = document.querySelector(".payment-button");
         button.classList.add('oceans-gaming-default-button');
         button.classList.remove('oceans-gaming-gray-button');
-
         paymentProcessor.setIsPaymentSelected(true);
         paymentProcessor.setPaymentType(type);
         paymentProcessor.setPaymentElement(element);
@@ -139,13 +146,20 @@
         let currentElementId = paymentProcessor.getNextStepId();
         let currentElement = document.getElementById(currentElementId);
         
-        allPaymentElements.forEach((_element)=>{
+        allPaymentElements?.forEach((_element)=>{
             _element.classList.add('d-none');
         })
 
-        currentElement.classList.remove('d-none');
-        screenPaymentView.classList.toggle('d-none');
-        checkoutView.classList.toggle('d-none');
+        currentElement?.classList.remove('d-none');
+        screenPaymentView?.classList.toggle('d-none');
+        checkoutView?.classList.toggle('d-none');
+    }
+
+    function selectCards() {
+        let element1 = document.querySelector('.card-select-view');
+        let element2 = document.querySelector('.card-focus-view');
+        element1.classList.toggle('d-none');
+        element2.classList.toggle('d-none');
     }
 
     function initializePayment() {
