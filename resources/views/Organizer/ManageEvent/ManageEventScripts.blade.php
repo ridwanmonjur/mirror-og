@@ -1,4 +1,8 @@
  <script>
+    function stopPropagation(event) {
+        event.stopPropagation();
+    }
+
     function toggleDropdown(id) {
         let dropdown = document.querySelector(`#${id}[data-toggle='dropdown']`);
         dropdown.parentElement.click();
@@ -41,6 +45,13 @@
         loadByPost(ENDPOINT, body);
     }
 
+
+    document.querySelectorAll('.sortIcon').forEach((element) => {
+        let cloneNode = document.querySelector(`.asc-sort-icon`).cloneNode(true);
+        element.appendChild(cloneNode);
+        cloneNode.classList.remove('d-none');
+    })
+
     function setLocalStorageFilter(event) {
         let localItem = localStorage.getItem('filter') ?? null;
         let filter = null;
@@ -63,22 +74,21 @@
         let key = event.target.value;
         let localItem = localStorage.getItem('sort') ?? null;
         let sort = null;
+        let iconValue = 'asc';
 
         if (localItem) sort = JSON.parse(localItem);
         else sort = {};
 
         if (event.target.checked) {
             sort[key] = 'asc';
-            let iconSpan = document.querySelector(`.${key}SortIcon`);
-            iconSpan.innerHTML = "";
-            let cloneNode = document.querySelector(`.asc-sort-icon`).cloneNode(true);
-            cloneNode.classList.remove('d-none');
-
-            cloneNode.onclick = () => {
+            let icon = document.querySelector(`.${key}SortIcon svg`);
+            console.log({icon, key});
+            console.log({icon, key});
+            console.log({icon, key});
+            console.log({icon, key});
+            icon.onclick = () => {
                 setLocalStorageSortIcon(key);
             }
-
-            iconSpan.appendChild(cloneNode);
         } else {
             delete sort[key];
         }
@@ -88,28 +98,37 @@
 
     function setLocalStorageSortIcon(key) {
         let input = document.querySelector(`input[value=${key}][type='radio']`);
+        let iconValue = 'asc';
         let isChecked = input.checked;
         let localItem = localStorage.getItem('sort') ?? null;
         let sort = null;
 
         if (localItem) sort = JSON.parse(localItem);
         else sort = {};
-
+        console.log({key})
+        console.log({key})
+        console.log({key})
+        console.log({key})
         let value = 'none';
 
         if (isChecked) {
             if (key in sort) {
                 value = sort[key];
-            }
-
+            }   
+            console.log({key})
+            console.log({key})
+            console.log({key})
+            console.log({key})
             if (value == 'asc') {
                 value = 'desc';
+                iconValue = 'desc';
             } else if (value == 'desc') {
                 value = 'none';
+                iconValue = 'none';
             } else {
                 value = 'asc';
+                iconValue = 'asc';
             }
-
         }
 
         if (value == 'none') {
@@ -124,7 +143,7 @@
 
         let iconSpan = document.querySelector(`.${key}SortIcon`);
         iconSpan.innerHTML = "";
-        let cloneNode = document.querySelector(`.${value}-sort-icon`).cloneNode(true);
+        let cloneNode = document.querySelector(`.${iconValue}-sort-icon`).cloneNode(true);
         cloneNode.classList.remove('d-none');
 
         cloneNode.onclick = () => {

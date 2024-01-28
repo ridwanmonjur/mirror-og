@@ -411,3 +411,31 @@ input[type="submit"]:active {
     background-color: #F8F7F0 !important;
     border: 1px solid black !important;
 }
+
+.button-design-removed{
+    background-color: transparent;
+    border-width: 0px !important;
+}
+
+.button-design-removed:active{
+    outline: none !important;
+    border-width: 0px !important;
+}
+
+.min-w-150px {
+    min-width: 150px;
+    max-width: max-content;
+}
+
+.min-w-170px {
+    min-width: 170px;
+    max-width: max-content;
+}
+
+.min-w-200px {
+    min-width: 200px;
+}
+
+.min-w-250px {
+    min-width: 250px;
+}
