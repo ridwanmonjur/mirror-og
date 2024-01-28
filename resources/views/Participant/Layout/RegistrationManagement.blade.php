@@ -64,7 +64,7 @@
                                         <div>{{ \Carbon\Carbon::parse($joinEvent->eventDetails->startDate)->format('d M Y') }}</div>
 
 
-                                        <a href="" style="color: white; text-decoration: underline;">See Bracket</a>
+                                        <a href="#" style="color: white; text-decoration: underline;">See Bracket</a>
                                     </div>
                                 </div>
                                 <br><br>
@@ -137,7 +137,7 @@
                             </div>
                         </div>
                         <p>Total Entry Fee: RM {{ $joinEvent->eventTier->tierEntryFee }}</p>
-                        <small>Paid: <a href="" style="color: green;">RM 0</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM {{ $joinEvent->eventTier->tierEntryFee }}</a></small> <br>
+                        <small>Paid: <a href="#" style="color: green;">RM 0</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="#" style="color: red;">RM {{ $joinEvent->eventTier->tierEntryFee }}</a></small> <br>
                         <input type="submit" onclick="" value="Contribute"><br>
                         <button onclick="" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Confirm Registration </button>
                         <br><br><br>

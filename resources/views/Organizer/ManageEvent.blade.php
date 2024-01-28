@@ -16,7 +16,7 @@
                     Create Event
                 </button>
             </header>
-            <div class="flexbox-filter">
+            <div class="flexbox-filter flex-wrap">
                 <p class="status-ALL">
                     <a href="{{ route('event.index', ['status' => 'ALL', 'page' => 1]) }}">All</a>
                 </p>

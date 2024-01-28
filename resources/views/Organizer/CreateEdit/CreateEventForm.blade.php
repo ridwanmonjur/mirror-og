@@ -37,7 +37,7 @@
                             localStorage.setItem('eventTypeId', eventTypeId);
                             "
                             @class(['container-border'])>
-                            <a href="" @class([
+                            <a href="#" @class([
                                 'box_2nd selectable-box',
                                 'color-border-success' =>
                                     $event && $gameCategory->id == $event->event_type_id,
@@ -100,7 +100,7 @@
                         goToNextScreen('step-4', 'timeline-1');
                         ;"
                     class="featured-events">
-                    <a href="" @class([
+                    <a href="#" @class([
                         'event selectable-box box-tier',
                         'rounded-box-' . strtolower($tierCategory->eventTier),
                         'color-border-success-dotted' =>

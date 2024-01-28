@@ -22,15 +22,17 @@
             </button>
             <div
                 onclick="stopPropagation(event);";  
-                class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTitle">
-                <div class="px-3 pt-2 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="gameTitle" value="Dota 2">
-                    <label class="mr-3" for="gameTitle">Dota 2</label>
-                </div>
-                <div class="px-3 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="gameTitle" value="Dota">
-                    <label for="gameTitle">Dota</label>
-                </div>
+                class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTitle"
+            >
+                @foreach([
+                    ['value'=> 'Dota 2'],
+                    ['value'=> 'Dota'],
+                ] as $gameTitle)
+                    <div class="px-3 min-w-150px">
+                        <input onchange="setLocalStorageFilter(event);" type="checkbox" name="gameTitle" value="{{$gameTitle['value']}}">
+                        <label for="gameTitle">{{$gameTitle['value']}}</label>
+                    </div>
+                @endforeach
             </div>
         </div>
 
@@ -49,15 +51,16 @@
             </button>
             <div
                 onclick="stopPropagation(event);"; 
-                class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterType">
-                <div class="px-3 pt-2 min-w-200px">
-                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventType" value="Tournament">
-                    <label class="mr-3" for="eventTyoe">Tournament</label>
-                </div>
-                <div class="px-3 min-w-200px">
-                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventType" value="League">
-                    <label for="eventTyoe">League</label>
-                </div>
+                class="dropdown-menu px-0 py-1 pt-3" aria-labelledby="dropdownFilterType">
+                @foreach([
+                    ['value'=> 'Tournament'],
+                    ['value'=> 'League'],
+                ] as $eventType)
+                    <div class="px-3 min-w-150px">
+                        <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTyoe" value="{{$eventType['value']}}">
+                        <label for="eventTyoe">{{$eventType['value']}}</label>
+                    </div>
+                @endforeach
             </div>
         </div>
 
@@ -75,21 +78,19 @@
             </button>
             <div
                 onclick="stopPropagation(event);"; 
-                class="dropdown-menu px-0" aria-labelledby="dropdownFilterTier"
+                class="dropdown-menu px-0 pt-3" aria-labelledby="dropdownFilterTier"
             >
-                <div class="px-3  pt-2 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier" value="Dolphin">
-                    <label for="eventTier">Dolphin</label>
-                </div>
-                <div class="px-3 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier" value="Turtle">
-                    <label for="eventTier">Turtle</label>
-                </div>
-                <div class="px-3 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier"
-                        value="Starfish">
-                    <label for="eventTier">Starfish</label>
-                </div>
+                @foreach([
+                    ['value'=> 'Dolphin'],
+                    ['value'=> 'Turtle'],
+                    ['value'=> 'Starfish'],
+                    ['value'=> 'Mermaid'],
+                ] as $eventTier)
+                    <div class="px-3 min-w-150px">
+                        <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier" value="{{$eventTier['value']}}">
+                        <label for="eventTier">{{$eventTier['value']}}</label>
+                    </div>
+                @endforeach
             </div>
         </div>
 
@@ -109,7 +110,7 @@
                 onclick="stopPropagation(event);"; 
                 class="dropdown-menu px-0" aria-labelledby="dropdownFilterTier"
             >
-                <div class="px-3  pt-2 min-w-250px">
+                <div class="px-3 pt-2 min-w-250px">
                     <input onchange="setLocalStorageFilter(event);" type="checkbox" name="region" value="SEA">
                     <label for="eventTier">South East Asia (SEA)</label>
                 </div>
