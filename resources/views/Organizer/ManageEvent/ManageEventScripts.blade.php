@@ -1,4 +1,8 @@
  <script>
+    function stopPropagation(event) {
+        event.stopPropagation();
+    }
+
     function toggleDropdown(id) {
         let dropdown = document.querySelector(`#${id}[data-toggle='dropdown']`);
         dropdown.parentElement.click();
@@ -41,6 +45,13 @@
         loadByPost(ENDPOINT, body);
     }
 
+
+    document.querySelectorAll('.sortIcon').forEach((element) => {
+        let cloneNode = document.querySelector(`.none-sort-icon`).cloneNode(true);
+        element.appendChild(cloneNode);
+        cloneNode.classList.remove('d-none');
+    })
+
     function setLocalStorageFilter(event) {
         let localItem = localStorage.getItem('filter') ?? null;
         let filter = null;
@@ -77,8 +88,6 @@
             cloneNode.onclick = () => {
                 setLocalStorageSortIcon(key);
             }
-
-            iconSpan.appendChild(cloneNode);
         } else {
             delete sort[key];
         }

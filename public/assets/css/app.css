@@ -197,7 +197,7 @@ button#submit,
     border: 0px solid black;
 }
 
-.w-50s{
+.w-60s{
     width: 100%;
 }
 
@@ -241,8 +241,8 @@ button#submit,
         left: 20px;
     }
 
-    .w-50s{
-        width: 50%;
+    .w-60s{
+        width: 80%;
     }
 }
 
@@ -259,5 +259,11 @@ a:hover {
 .swal2-container,
 .modal {
     z-index: 9999 !important;
+}
+
+@media screen and (min-width: 1300px) { 
+    .w-60s{
+        width: 60%;
+    }
 }
 
