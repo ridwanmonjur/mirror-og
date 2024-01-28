@@ -24,11 +24,11 @@
                 onclick="stopPropagation(event);";  
                 class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTitle">
                 <div class="px-3 pt-2 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="radio" name="gameTitle" value="Dota 2">
+                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="gameTitle" value="Dota 2">
                     <label class="mr-3" for="gameTitle">Dota 2</label>
                 </div>
                 <div class="px-3 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="radio" name="gameTitle" value="Dota">
+                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="gameTitle" value="Dota">
                     <label for="gameTitle">Dota</label>
                 </div>
             </div>
@@ -51,11 +51,11 @@
                 onclick="stopPropagation(event);"; 
                 class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterType">
                 <div class="px-3 pt-2 min-w-200px">
-                    <input onchange="setLocalStorageFilter(event);" type="radio" name="eventType" value="Tournament">
+                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventType" value="Tournament">
                     <label class="mr-3" for="eventTyoe">Tournament</label>
                 </div>
                 <div class="px-3 min-w-200px">
-                    <input onchange="setLocalStorageFilter(event);" type="radio" name="eventType" value="League">
+                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventType" value="League">
                     <label for="eventTyoe">League</label>
                 </div>
             </div>
@@ -78,15 +78,15 @@
                 class="dropdown-menu px-0" aria-labelledby="dropdownFilterTier"
             >
                 <div class="px-3  pt-2 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="radio" name="eventTier" value="Dolphin">
+                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier" value="Dolphin">
                     <label for="eventTier">Dolphin</label>
                 </div>
                 <div class="px-3 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="radio" name="eventTier" value="Turtle">
+                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier" value="Turtle">
                     <label for="eventTier">Turtle</label>
                 </div>
                 <div class="px-3 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="radio" name="eventTier"
+                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier"
                         value="Starfish">
                     <label for="eventTier">Starfish</label>
                 </div>
@@ -110,7 +110,7 @@
                 class="dropdown-menu px-0" aria-labelledby="dropdownFilterTier"
             >
                 <div class="px-3  pt-2 min-w-250px">
-                    <input onchange="setLocalStorageFilter(event);" type="radio" name="region" value="SEA">
+                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="region" value="SEA">
                     <label for="eventTier">South East Asia (SEA)</label>
                 </div>
             </div>
@@ -133,15 +133,15 @@
                 class="dropdown-menu px-0" aria-labelledby="dropdownFilterTier"
             >
                 <div class="px-3  pt-2 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="radio" name="eventTier" value="Dolphin">
+                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier" value="Dolphin">
                     <label for="eventTier">Dolphin</label>
                 </div>
                 <div class="px-3 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="radio" name="eventTier" value="Turtle">
+                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier" value="Turtle">
                     <label for="eventTier">Turtle</label>
                 </div>
                 <div class="px-3 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="radio" name="eventTier"
+                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier"
                         value="Starfish">
                     <label for="eventTier">Starfish</label>
                 </div>
@@ -174,25 +174,25 @@
                 onclick="stopPropagation(event);"; 
                 class="dropdown-menu px-3" aria-labelledby="dropdownSortButton">
                 <div class="sort-box d-block min-w-170px">
-                    <input class="mr-3" onchange="setLocalStorageSort(event);" type="radio" name="sort" value="recent">
+                    <input class="mr-3" onchange="setLocalStorageSort(event);" type="checkbox" name="sort" value="recent">
                     <label class="mr-3" for="recent">Recent</label>
                     <span class="recentSortIcon sortIcon">
                     </span>
                 </div>
                 <div class="sort-box d-block min-w-170px">
-                    <input class="mr-3" onchange="setLocalStorageSort(event);" type="radio" name="sort" value="aToZ">
+                    <input class="mr-3" onchange="setLocalStorageSort(event);" type="checkbox" name="sort" value="aToZ">
                     <label class="mr-3" for="aToZ">A-Z</label>
                     <span class="aToZSortIcon sortIcon">
                     </span>
                 </div>
                 <div class="sort-box d-block min-w-170px">
-                    <input class="mr-3" onchange="setLocalStorageSort(event);" type="radio" name="sort" value="startDate">
+                    <input class="mr-3" onchange="setLocalStorageSort(event);" type="checkbox" name="sort" value="startDate">
                     <label class="mr-3" for="startDate">Start Date</label>
                     <span class="startDateSortIcon sortIcon">
                     </span>
                 </div>
                 <div class="sort-box d-block min-w-170px">
-                    <input class="mr-3" onchange="setLocalStorageSort(event);" type="radio" name="sort" value="prize">
+                    <input class="mr-3" onchange="setLocalStorageSort(event);" type="checkbox" name="sort" value="prize">
                     <label class="mr-3" for="prize">Prize Pool</label>
                     <span class="prizeSortIcon sortIcon">
                     </span>
