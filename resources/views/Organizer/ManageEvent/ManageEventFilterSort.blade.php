@@ -29,7 +29,7 @@
                     ['value'=> 'Dota'],
                 ] as $gameTitle)
                     <div class="px-3 min-w-150px">
-                        <input onchange="setLocalStorageFilter(event);" type="checkbox" name="gameTitle" value="{{$gameTitle['value']}}">
+                        <input onchange="setFilterForFetch(event, '{{$gameTitle['value']}}');" type="checkbox" name="gameTitle" value="{{$gameTitle['value']}}">
                         <label for="gameTitle">{{$gameTitle['value']}}</label>
                     </div>
                 @endforeach
@@ -57,7 +57,7 @@
                     ['value'=> 'League'],
                 ] as $eventType)
                     <div class="px-3 min-w-150px">
-                        <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventType" value="{{$eventType['value']}}">
+                        <input onchange="setFilterForFetch(event, '{{$eventType['value']}}');" type="checkbox" name="eventType" value="{{$eventType['value']}}">
                         <label for="eventType">{{$eventType['value']}}</label>
                     </div>
                 @endforeach
@@ -87,7 +87,7 @@
                     ['value'=> 'Mermaid'],
                 ] as $eventTier)
                     <div class="px-3 min-w-150px">
-                        <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier" value="{{$eventTier['value']}}">
+                        <input onchange="setFilterForFetch(event, '{{$eventTier['value']}}');" type="checkbox" name="eventTier" value="{{$eventTier['value']}}">
                         <label for="eventTier">{{$eventTier['value']}}</label>
                     </div>
                 @endforeach
@@ -111,7 +111,7 @@
                 class="dropdown-menu px-0" aria-labelledby="dropdownFilterTier"
             >
                 <div class="px-3 pt-2 min-w-250px">
-                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="region" value="SEA">
+                    <input onchange="setFilterForFetch(event, 'SEA');" type="checkbox" name="region" value="SEA">
                     <label for="eventTier">South East Asia (SEA)</label>
                 </div>
             </div>
@@ -134,15 +134,15 @@
                 class="dropdown-menu px-0" aria-labelledby="dropdownFilterTier"
             >
                 <div class="px-3  pt-2 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier" value="Dolphin">
+                    <input onchange="setFilterForFetch(event, 'Dolphin');" type="checkbox" name="eventTier" value="Dolphin">
                     <label for="eventTier">Dolphin</label>
                 </div>
                 <div class="px-3 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier" value="Turtle">
+                    <input onchange="setFilterForFetch(event, 'Turtle');" type="checkbox" name="eventTier" value="Turtle">
                     <label for="eventTier">Turtle</label>
                 </div>
                 <div class="px-3 min-w-150px">
-                    <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTier"
+                    <input onchange="setFilterForFetch(event, 'Starfish');" type="checkbox" name="eventTier"
                         value="Starfish">
                     <label for="eventTier">Starfish</label>
                 </div>
@@ -179,22 +179,22 @@
                 onclick="stopPropagation(event);"; 
                 class="dropdown-menu px-3 ml-3" aria-labelledby="dropdownSortButton"
             >
-                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setLocalStorageSortKey('recent', 'Recent');">
+                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setSortForFetch('recent', 'Recent');">
                     <label class="mr-3 cursor-pointer" for="recent">Recent</label>
                     <span class="recentSortIcon sortIcon">
                     </span>
                 </div>
-                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setLocalStorageSortKey('aToZ', 'A-Z');">
+                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setSortForFetch('aToZ', 'A-Z');">
                     <label class="mr-3 cursor-pointer" for="aToZ">A-Z</label>
                     <span class="aToZSortIcon sortIcon">
                     </span>
                 </div>
-                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setLocalStorageSortKey('startDate', 'Start Date');">
+                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setSortForFetch('startDate', 'Start Date');">
                     <label class="mr-3 cursor-pointer" for="startDate">Start Date</label>
                     <span class="startDateSortIcon sortIcon">
                     </span>
                 </div>
-                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setLocalStorageSortKey('prize', 'Prize Pool');">
+                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setSortForFetch('prize', 'Prize Pool');">
                     <label class="mr-3 cursor-pointer" for="prize">Prize Pool</label>
                     <span class="prizeSortIcon sortIcon">
                     </span>

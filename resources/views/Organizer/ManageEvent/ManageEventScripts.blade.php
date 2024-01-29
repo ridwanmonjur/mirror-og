@@ -5,9 +5,6 @@
         'NONE': 'none'
     };
 
-    class FetchVariables () {
-        
-    }
     const STORAGE_KEYS = {
         'SORT_TYPE': 'sortType',
         "FILTER": 'filter',
@@ -19,6 +16,56 @@
         event.stopPropagation();
     }
 
+    class FetchVariables {
+        constructor() {
+            this.sortType = SORT_CONSTANTS['ASC'];
+            this.sortKey = '';
+            this.filter = {};
+            this.search = null;
+        }
+
+        visualize() {
+            console.log({
+                filter: this.filter,
+                search: this.search,
+                sortKey: this.sortKey,
+                sortType: this.sortType
+            });
+        }
+
+        getSortType() {
+            return this.sortType;
+        }
+
+        getSortKey() {
+            return this.sortKey;
+        }
+
+        getFilter() {
+            return this.filter;
+        }
+
+        getSearch() {
+            return this.search;
+        }
+
+        setSortKey(value) {
+            this.sortKey = value;
+        }
+
+        setFilter(value) {
+            this.filter = value;
+        }
+
+        setSearch(value) {
+            this.search = value;
+        }
+
+        setSortType(value) {
+            this.sortType = value;
+        }
+    }
+
     function toggleDropdown(id) {
         let dropdown = document.querySelector(`#${id}[data-toggle='dropdown']`);
         dropdown.parentElement.click();
@@ -26,22 +73,16 @@
 
     document.getElementById('searchInput').addEventListener('keydown',
         debounce((e) => {
-            handleInputBlur();
+            handleSearch();
         }, 1000)
     );
 
-    [STORAGE_KEYS['SORT_TYPE'], STORAGE_KEYS['FILTER'], STORAGE_KEYS["SEARCH"], STORAGE_KEYS["SORT_KEY"] ].forEach((name) => {
-        localStorage.removeItem(name);
-    })
-
-    localStorage.setItem(STORAGE_KEYS['SORT_TYPE'], SORT_CONSTANTS['ASC']);
+    let fetchVariables = new FetchVariables();
 
     var page = 1;
 
-    function onSubmit(event) {
+    function fetchSearchSort() {
         
-        event.preventDefault();
-
         let params = convertUrlStringToQueryStringOrObject({
             isObject: true
         });
@@ -54,18 +95,16 @@
 
         let body = {
             ...params,
-            filter: JSON.parse(localStorage.getItem(STORAGE_KEYS['FILTER'])),
+            filter: fetchVariables.getFilter(),
             sort: { 
-                [localStorage.getItem(STORAGE_KEYS['SORT_KEY'])] :
-                [localStorage.getItem(STORAGE_KEYS['SORT_TYPE'])]
+                [fetchVariables.getSortKey()] : fetchVariables.getSortType()
             },
             userId: Number("{{ $user->id }}"),
-            search: localStorage.getItem("search")
+            search: fetchVariables.getSearch()
         }
 
-        loadByPost(ENDPOINT, body);
+        loadByPost(ENDPOINT, body);     
     }
-
 
     document.querySelectorAll('.sortIcon').forEach((element) => {
         let cloneNode = document.querySelector(`.none-sort-icon`).cloneNode(true);
@@ -73,20 +112,10 @@
         cloneNode.classList.remove('d-none');
     })
 
-    function setLocalStorageFilter(event) {
-        let localItem = localStorage.getItem(STORAGE_KEYS['FILTER']) ?? null;
-        
-        let filter = null;
-
-        if (localItem) {
-            filter = JSON.parse(localItem);
-        } else {
-            filter = {};
-        }
+    function setFilterForFetch(event, title) {
+        let filter = fetchVariables.getFilter();
 
         let value = event.target.value;
-
-        console.log({filter, value});
 
         if (event.target.checked) {
             filter[event.target.name] = [...filter[event.target.name] ?? [], value];
@@ -96,26 +125,65 @@
             );
         }
 
-        console.log({filter, value});
-
-        localStorage.setItem(STORAGE_KEYS['FILTER'], JSON.stringify(filter));
+        fetchVariables.setFilter(filter);
+        addFilterTags(title, event.target.name, event.target.value);
+        fetchSearchSort();
+        fetchVariables.visualize();
     }
 
-    function setLocalStorageSortKey(key, title) {
-        let sortKey = localStorage.getItem(STORAGE_KEYS['SORT_KEY']) ?? null;
-        let sortType = localStorage.getItem(STORAGE_KEYS['SORT_TYPE']) ?? null;
+    function deleteTag(event, name, value) {
+        let element = event.currentTarget;
+        element.parentElement.remove();
+
+        let filter = fetchVariables.getFilter();
+
+        filter[name] = filter[name].filter(
+            _value => _value != value
+        );
+
+        fetchVariables.setFilter(filter);
+        fetchSearchSort();
+        fetchVariables.visualize();
+    }
+
+    function addFilterTags(title, name, value) {
+        let tagElement = document.getElementById('insertFilterTags');
+        console.log({tagElement, title})
+        tagElement.classList.remove('d-none');
+        tagElement.classList.add('d-flex');
+        tagElement.innerHTML += `
+            <div class="mr-3 px-3 d-flex justify-content-around" style="background-color: #95AEBD; color: white; border-radius: 30px;"> 
+                <span class="mr-3"> ${title} </span>
+                <svg
+                    onclick="deleteTag(event, '${name}', '${value}');"
+                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle mt-1 cursor-pointer" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg> 
+            </div>
+
+        `;
+        console.log({tagElement, title})
+    }
+
+    function setSortForFetch(key, title) {
+        let sortKey = fetchVariables.getSortKey();
+        let sortType = fetchVariables.getSortType();
         let sortByTitleId = document.getElementById('sortByTitleId');
         
         if (sortByTitleId) {
             sortByTitleId.textContent = title;
         }
 
-        localStorage.setItem(STORAGE_KEYS['SORT_KEY'], key);        
+        fetchVariables.setSortKey(key);
+        fetchVariables.setSortType(sortType);  
+        fetchSearchSort();
+        fetchVariables.visualize();
     }
 
-    function setLocalStorageSortType(type,) {
-        let sortType = localStorage.getItem(STORAGE_KEYS['SORT_TYPE']) ?? null;
-        let sortKey = localStorage.getItem(STORAGE_KEYS['SORT_KEY']) ?? null;
+    function setLocalStorageSortType(type) {
+        let sortType = fetchVariables.getSortType();
+        let sortKey = fetchVariables.getSortKey();
 
         if (sortType) {
             if (sortType == SORT_CONSTANTS['ASC']) {
@@ -129,8 +197,9 @@
         else { 
             sortType = SORT_CONSTANTS['ASC'];
         }
-
-        localStorage.setItem(STORAGE_KEYS['SORT_TYPE'], type);     
+        fetchVariables.setSortType(type);   
+        fetchSearchSort();
+        fetchVariables.visualize();  
 }
 </script>
 <script>
@@ -191,8 +260,11 @@
             }
         });
 
-        if (isObject) return params;
-        else return convertObjectToURLString(params);
+        if (isObject) {
+            return params;
+        } else { 
+            return convertObjectToURLString(params);
+        }
     }
 
     ENDPOINT = "/organizer/event/?" + convertUrlStringToQueryStringOrObject({
@@ -200,7 +272,7 @@
     });
 
 
-    function handleInputBlur() {
+    function handleSearch() {
         const inputElement = document.getElementById('searchInput');
         const inputValue = inputElement.value;
         const nextSearch = inputElement.nextElementSibling;
@@ -221,14 +293,13 @@
 
         params.page = 1;
         ENDPOINT = "{{ route('event.search.view') }}";
-        localStorage.setItem("search", inputValue)
+        fetchVariables.setSearch(inputValue)
 
         let body = {
             ...params,
-            filter: JSON.parse(localStorage.getItem(STORAGE_KEYS['FILTER'])),
+             filter: fetchVariables.getFilter(),
             sort: { 
-                [localStorage.getItem(STORAGE_KEYS['SORT_KEY'])] :
-                [localStorage.getItem(STORAGE_KEYS['SORT_TYPE'])]
+                [fetchVariables.getSortKey()] : fetchVariables.getSortType()
             },
             userId: Number("{{ auth()->user()->id }}"),
             search: inputValue
@@ -283,24 +354,24 @@
 
                 let body = {};
 
-                if (!params) params = {}
+                if (!params) { 
+                    params = {};
+                }
 
                 params.page = page;
                 ENDPOINT = "{{ route('event.search.view') }}";
 
                 body = {
-                    filter: JSON.parse(localStorage.getItem(STORAGE_KEYS['FILTER'])),
+                    filter: fetchVariables.getFilter(),
                     sort: { 
-                        [localStorage.getItem(STORAGE_KEYS['SORT_KEY'])] :
-                        [localStorage.getItem(STORAGE_KEYS['SORT_TYPE'])]
+                        [fetchVariables.getSortKey()] : fetchVariables.getSortType()
                     },
                     userId: Number("{{ auth()->user()->id }}"),
-                    search: localStorage.getItem("search"),
+                    search: fetchVariables.getSearch(),
                     ...params
                 }
 
                 infinteLoadMoreByPost(ENDPOINT, body);
-
             }
         }, 300)
     );

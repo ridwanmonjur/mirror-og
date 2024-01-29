@@ -94,9 +94,9 @@ function loadByPost(ENDPOINT, body) {
     let noMoreDataElement = document.querySelector('.no-more-data');
     let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
     let hasClass = noMoreDataElement.classList.contains('d-none');
-    if (hasClass) {
-    }
-    // window.history.replaceState({}, document.title, endpointFinal);
+    
+    if (hasClass) { }
+    
     fetch(ENDPOINT, {
         method: 'post',
         headers: {
@@ -119,6 +119,6 @@ function loadByPost(ENDPOINT, body) {
             }
         })
         .catch(function (error) {
-            console.log('Server error occured');
+            scrollingPaginationElement.innerHTML = "Work in Progress!";
         });
 }

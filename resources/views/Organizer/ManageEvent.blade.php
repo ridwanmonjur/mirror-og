@@ -35,9 +35,11 @@
             </div>
             @include('Organizer.ManageEvent.ManageEventFilterSort')
             </div>
+            <div class="d-none" id="insertFilterTags">
+            </div>
             <br>
             <div class="search-bar">
-                <svg onclick= "handleInputBlur();" xmlns="http://www.w3.org/2000/svg" width="24"
+                <svg onclick= "handleSearch();" xmlns="http://www.w3.org/2000/svg" width="24"
                     height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-search search-bar2-adjust">
@@ -51,6 +53,7 @@
                     Reset
                 </button>
             </div>
+
             <br><br>
             <div class="modal fade" id="shareModal" tabindex="-1" role="dialog"
                 aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -75,6 +78,7 @@
             <div class="scrolling-pagination grid-container">
                 @include('Organizer.ManageEvent.ManageEventScroll')
             </div>
+
             <div class="none-sort-icon d-none cursor-pointer" > 
                 <svg  class="asc-sort-icon d-none cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-sort-alpha-up-alt" viewBox="0 0 16 16">
                     <path d="M12.96 7H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645z"/>
