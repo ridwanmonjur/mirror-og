@@ -57,8 +57,8 @@
                     ['value'=> 'League'],
                 ] as $eventType)
                     <div class="px-3 min-w-150px">
-                        <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventTyoe" value="{{$eventType['value']}}">
-                        <label for="eventTyoe">{{$eventType['value']}}</label>
+                        <input onchange="setLocalStorageFilter(event);" type="checkbox" name="eventType" value="{{$eventType['value']}}">
+                        <label for="eventType">{{$eventType['value']}}</label>
                     </div>
                 @endforeach
             </div>
@@ -160,9 +160,13 @@
             </svg>
         </div>
         <div class="dropdown dropdown-click-outside">
-            <button class="dropbtn px-3 py-2" type="button" id="dropdownSortButton" data-toggle="dropdown"
+            <button 
+                class="dropbtn px-3 py-2 mr-3" 
+                type="button" id="dropdownSortButton" 
+                onclick="setLocalStorageSortType()"
+                data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                <span>Sort by:</span>
+                <span id="sortByTitleId">Sort by:</span>
                 <span class="dropbtn-arrow">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -173,28 +177,25 @@
             </button>
             <div
                 onclick="stopPropagation(event);"; 
-                class="dropdown-menu px-3" aria-labelledby="dropdownSortButton">
-                <div class="sort-box d-block min-w-170px">
-                    <input class="mr-3" onchange="setLocalStorageSort(event);" type="checkbox" name="sort" value="recent">
-                    <label class="mr-3" for="recent">Recent</label>
+                class="dropdown-menu px-3 ml-3" aria-labelledby="dropdownSortButton"
+            >
+                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setLocalStorageSortKey('recent', 'Recent');">
+                    <label class="mr-3 cursor-pointer" for="recent">Recent</label>
                     <span class="recentSortIcon sortIcon">
                     </span>
                 </div>
-                <div class="sort-box d-block min-w-170px">
-                    <input class="mr-3" onchange="setLocalStorageSort(event);" type="checkbox" name="sort" value="aToZ">
-                    <label class="mr-3" for="aToZ">A-Z</label>
+                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setLocalStorageSortKey('aToZ', 'A-Z');">
+                    <label class="mr-3 cursor-pointer" for="aToZ">A-Z</label>
                     <span class="aToZSortIcon sortIcon">
                     </span>
                 </div>
-                <div class="sort-box d-block min-w-170px">
-                    <input class="mr-3" onchange="setLocalStorageSort(event);" type="checkbox" name="sort" value="startDate">
-                    <label class="mr-3" for="startDate">Start Date</label>
+                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setLocalStorageSortKey('startDate', 'Start Date');">
+                    <label class="mr-3 cursor-pointer" for="startDate">Start Date</label>
                     <span class="startDateSortIcon sortIcon">
                     </span>
                 </div>
-                <div class="sort-box d-block min-w-170px">
-                    <input class="mr-3" onchange="setLocalStorageSort(event);" type="checkbox" name="sort" value="prize">
-                    <label class="mr-3" for="prize">Prize Pool</label>
+                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setLocalStorageSortKey('prize', 'Prize Pool');">
+                    <label class="mr-3 cursor-pointer" for="prize">Prize Pool</label>
                     <span class="prizeSortIcon sortIcon">
                     </span>
                 </div>

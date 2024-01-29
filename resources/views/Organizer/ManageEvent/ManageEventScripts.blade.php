@@ -1,4 +1,20 @@
  <script>
+    const SORT_CONSTANTS = {
+        'ASC' : 'asc',
+        'DESC': 'desc',
+        'NONE': 'none'
+    };
+
+    class FetchVariables () {
+        
+    }
+    const STORAGE_KEYS = {
+        'SORT_TYPE': 'sortType',
+        "FILTER": 'filter',
+        "SEARCH": 'search',
+        "SORT_KEY" : 'sortKey'
+    }
+
     function stopPropagation(event) {
         event.stopPropagation();
     }
@@ -14,9 +30,11 @@
         }, 1000)
     );
 
-    ["sort", "filter", "search", "sortType", ].forEach((name) => {
+    [STORAGE_KEYS['SORT_TYPE'], STORAGE_KEYS['FILTER'], STORAGE_KEYS["SEARCH"], STORAGE_KEYS["SORT_KEY"] ].forEach((name) => {
         localStorage.removeItem(name);
     })
+
+    localStorage.setItem(STORAGE_KEYS['SORT_TYPE'], SORT_CONSTANTS['ASC']);
 
     var page = 1;
 
@@ -36,8 +54,11 @@
 
         let body = {
             ...params,
-            filter: JSON.parse(localStorage.getItem('filter')),
-            sort: JSON.parse(localStorage.getItem('sort')),
+            filter: JSON.parse(localStorage.getItem(STORAGE_KEYS['FILTER'])),
+            sort: { 
+                [localStorage.getItem(STORAGE_KEYS['SORT_KEY'])] :
+                [localStorage.getItem(STORAGE_KEYS['SORT_TYPE'])]
+            },
             userId: Number("{{ $user->id }}"),
             search: localStorage.getItem("search")
         }
@@ -53,96 +74,64 @@
     })
 
     function setLocalStorageFilter(event) {
-        let localItem = localStorage.getItem('filter') ?? null;
+        let localItem = localStorage.getItem(STORAGE_KEYS['FILTER']) ?? null;
+        
         let filter = null;
 
-        if (localItem) filter = JSON.parse(localItem);
-        else filter = {};
+        if (localItem) {
+            filter = JSON.parse(localItem);
+        } else {
+            filter = {};
+        }
 
         let value = event.target.value;
 
-        if (event.target.checked) {
-            filter[event.target.name] = value;
-        } else {
-            delete filter[event.target.name];
-        }
-
-        localStorage.setItem('filter', JSON.stringify(filter));
-    }
-
-    function setLocalStorageSort(event) {
-        let key = event.target.value;
-        let localItem = localStorage.getItem('sort') ?? null;
-        let sort = null;
-
-        if (localItem) sort = JSON.parse(localItem);
-        else sort = {};
+        console.log({filter, value});
 
         if (event.target.checked) {
-            sort[key] = 'asc';
-            let iconSpan = document.querySelector(`.${key}SortIcon`);
-            iconSpan.innerHTML = "";
-            let cloneNode = document.querySelector(`.asc-sort-icon`).cloneNode(true);
-            cloneNode.classList.remove('d-none');
-
-            cloneNode.onclick = () => {
-                setLocalStorageSortIcon(key);
-            }
+            filter[event.target.name] = [...filter[event.target.name] ?? [], value];
         } else {
-            delete sort[key];
+            filter[event.target.name] = filter[event.target.name].filter(
+                _value => _value != value
+            );
         }
 
-        localStorage.setItem('sort', JSON.stringify(sort));
+        console.log({filter, value});
+
+        localStorage.setItem(STORAGE_KEYS['FILTER'], JSON.stringify(filter));
     }
 
-    function setLocalStorageSortIcon(key) {
-        let input = document.querySelector(`input[value=${key}][type='radio']`);
-        let isChecked = input.checked;
-        let localItem = localStorage.getItem('sort') ?? null;
-        let sort = null;
+    function setLocalStorageSortKey(key, title) {
+        let sortKey = localStorage.getItem(STORAGE_KEYS['SORT_KEY']) ?? null;
+        let sortType = localStorage.getItem(STORAGE_KEYS['SORT_TYPE']) ?? null;
+        let sortByTitleId = document.getElementById('sortByTitleId');
+        
+        if (sortByTitleId) {
+            sortByTitleId.textContent = title;
+        }
 
-        if (localItem) sort = JSON.parse(localItem);
-        else sort = {};
+        localStorage.setItem(STORAGE_KEYS['SORT_KEY'], key);        
+    }
 
-        let value = 'none';
+    function setLocalStorageSortType(type,) {
+        let sortType = localStorage.getItem(STORAGE_KEYS['SORT_TYPE']) ?? null;
+        let sortKey = localStorage.getItem(STORAGE_KEYS['SORT_KEY']) ?? null;
 
-        if (isChecked) {
-            if (key in sort) {
-                value = sort[key];
-            }
-
-            if (value == 'asc') {
-                value = 'desc';
-            } else if (value == 'desc') {
-                value = 'none';
+        if (sortType) {
+            if (sortType == SORT_CONSTANTS['ASC']) {
+                sortType = SORT_CONSTANTS['DESC'];
+            } else  if (sortType == SORT_CONSTANTS['DESC']) {
+                sortType = SORT_CONSTANTS['ASC'];
             } else {
-                value = 'asc';
+                sortType = SORT_CONSTANTS['NONE'];
             }
-
+        }
+        else { 
+            sortType = SORT_CONSTANTS['ASC'];
         }
 
-        if (value == 'none') {
-            input.checked = false;
-        }
-
-        if (input.checked) {
-            sort[key] = value;
-        } else {
-            delete sort[key];
-        }
-
-        let iconSpan = document.querySelector(`.${key}SortIcon`);
-        iconSpan.innerHTML = "";
-        let cloneNode = document.querySelector(`.${value}-sort-icon`).cloneNode(true);
-        cloneNode.classList.remove('d-none');
-
-        cloneNode.onclick = () => {
-            setLocalStorageSortIcon(key);
-        }
-
-        iconSpan.appendChild(cloneNode);
-        localStorage.setItem('sort', JSON.stringify(sort));
-    }
+        localStorage.setItem(STORAGE_KEYS['SORT_TYPE'], type);     
+}
 </script>
 <script>
     const copyUrlFunction = (copyUrl) => {
@@ -236,8 +225,11 @@
 
         let body = {
             ...params,
-            filter: JSON.parse(localStorage.getItem('filter')),
-            sort: JSON.parse(localStorage.getItem('sort')),
+            filter: JSON.parse(localStorage.getItem(STORAGE_KEYS['FILTER'])),
+            sort: { 
+                [localStorage.getItem(STORAGE_KEYS['SORT_KEY'])] :
+                [localStorage.getItem(STORAGE_KEYS['SORT_TYPE'])]
+            },
             userId: Number("{{ auth()->user()->id }}"),
             search: inputValue
         }
@@ -297,8 +289,11 @@
                 ENDPOINT = "{{ route('event.search.view') }}";
 
                 body = {
-                    filter: JSON.parse(localStorage.getItem('filter')),
-                    sort: JSON.parse(localStorage.getItem('sort')),
+                    filter: JSON.parse(localStorage.getItem(STORAGE_KEYS['FILTER'])),
+                    sort: { 
+                        [localStorage.getItem(STORAGE_KEYS['SORT_KEY'])] :
+                        [localStorage.getItem(STORAGE_KEYS['SORT_TYPE'])]
+                    },
                     userId: Number("{{ auth()->user()->id }}"),
                     search: localStorage.getItem("search"),
                     ...params
