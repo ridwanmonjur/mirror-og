@@ -127,7 +127,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="pl-3">
+                        <div class="ps-3">
                             <br><br>
                             <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
                                 <u>{{ $status ?? 'Choose event status' }}</u>
@@ -229,7 +229,7 @@
         <br>
     </main>
     @stack('script')
-    @include('CommonLayout.BootstrapJs')
+    @include('CommonLayout.BootstrapV5Js')
 
     <script>
         function goToCreateScreen() {

@@ -67,7 +67,7 @@
     }
 
     function toggleDropdown(id) {
-        let dropdown = document.querySelector(`#${id}[data-toggle='dropdown']`);
+        let dropdown = document.querySelector(`#${id}[data-bs-toggle='dropdown']`);
         dropdown.parentElement.click();
     }
 
@@ -152,8 +152,8 @@
         tagElement.classList.remove('d-none');
         tagElement.classList.add('d-flex');
         tagElement.innerHTML += `
-            <div class="mr-3 px-3 d-flex justify-content-around" style="background-color: #95AEBD; color: white; border-radius: 30px;"> 
-                <span class="mr-3"> ${title} </span>
+            <div class="me-3 px-3 d-flex justify-content-around" style="background-color: #95AEBD; color: white; border-radius: 30px;"> 
+                <span class="me-3"> ${title} </span>
                 <svg
                     onclick="deleteTag(event, '${name}', '${value}');"
                     xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle mt-1 cursor-pointer" viewBox="0 0 16 16">

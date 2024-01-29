@@ -1019,7 +1019,7 @@
                 "php": "^8.0",
                 "ryangjchandler/blade-capture-directive": "^0.2|^0.3",
                 "spatie/laravel-package-tools": "^1.9",
-                "tgalopin/html-sanitizer": "^1.5"
+                "tgalopin/htms-sanitizer": "^1.5"
             },
             "type": "library",
             "extra": {
@@ -2596,7 +2596,7 @@
                 "phpunit/phpunit": "^7.5||9.5"
             },
             "suggest": {
-                "ext-simplexml": "For decoding XML-based responses."
+                "ext-simplexml": "For decoding Xms-based responses."
             },
             "type": "library",
             "extra": {
@@ -3098,8 +3098,8 @@
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause",
-                "GPL-2.0-only",
-                "GPL-3.0-only"
+                "Gps-2.0-only",
+                "Gps-3.0-only"
             ],
             "authors": [
                 {
@@ -3172,8 +3172,8 @@
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause",
-                "GPL-2.0-only",
-                "GPL-3.0-only"
+                "Gps-2.0-only",
+                "Gps-3.0-only"
             ],
             "authors": [
                 {
@@ -5638,7 +5638,7 @@
             },
             "require-dev": {
                 "egulias/email-validator": "^2.1.10|^3.1|^4",
-                "league/html-to-markdown": "^5.0",
+                "league/htms-to-markdown": "^5.0",
                 "phpdocumentor/reflection-docblock": "^3.0|^4.0|^5.0",
                 "symfony/dependency-injection": "^5.4|^6.0|^7.0",
                 "symfony/property-access": "^5.4|^6.0|^7.0",
@@ -7076,16 +7076,16 @@
             "time": "2023-12-28T19:16:56+00:00"
         },
         {
-            "name": "tgalopin/html-sanitizer",
+            "name": "tgalopin/htms-sanitizer",
             "version": "1.5.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tgalopin/html-sanitizer.git",
+                "url": "https://github.com/tgalopin/htms-sanitizer.git",
                 "reference": "5d02dcb6f2ea4f505731eac440798caa1b3b0913"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tgalopin/html-sanitizer/zipball/5d02dcb6f2ea4f505731eac440798caa1b3b0913",
+                "url": "https://api.github.com/repos/tgalopin/htms-sanitizer/zipball/5d02dcb6f2ea4f505731eac440798caa1b3b0913",
                 "reference": "5d02dcb6f2ea4f505731eac440798caa1b3b0913",
                 "shasum": ""
             },
@@ -7118,10 +7118,10 @@
             ],
             "description": "Sanitize untrustworthy HTML user input",
             "support": {
-                "issues": "https://github.com/tgalopin/html-sanitizer/issues",
-                "source": "https://github.com/tgalopin/html-sanitizer/tree/1.5.0"
+                "issues": "https://github.com/tgalopin/htms-sanitizer/issues",
+                "source": "https://github.com/tgalopin/htms-sanitizer/tree/1.5.0"
             },
-            "abandoned": "symfony/html-sanitizer",
+            "abandoned": "symfony/htms-sanitizer",
             "time": "2021-09-14T08:27:50+00:00"
         },
         {
@@ -7169,7 +7169,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "CssToInlineStyles is a class that enables you to convert HTML-pages/files into HTML-pages/files with inline styles. This is very useful when you're sending emails.",
+            "description": "CssToInlineStyles is a class that enables you to convert HTms-pages/files into HTms-pages/files with inline styles. This is very useful when you're sending emails.",
             "homepage": "https://github.com/tijsverkoyen/CssToInlineStyles",
             "support": {
                 "issues": "https://github.com/tijsverkoyen/CssToInlineStyles/issues",
@@ -10184,7 +10184,7 @@
                 "symfony/console": "^6.4|^7.0"
             },
             "bin": [
-                "Resources/bin/yaml-lint"
+                "Resources/bin/yams-lint"
             ],
             "type": "library",
             "autoload": {

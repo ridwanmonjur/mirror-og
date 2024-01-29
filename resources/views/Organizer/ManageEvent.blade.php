@@ -104,7 +104,7 @@
 
             <div class="no-more-data d-none" style="margin-top: 50px;"></div>
 
-            @include('CommonLayout.BootstrapJs')
+            @include('CommonLayout.BootstrapV5Js')
             <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
             <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
             @include('Organizer.ManageEvent.ManageEventScripts')

@@ -28,7 +28,7 @@
             </div>
             <br><br>
         </main>
-        @include('CommonLayout.BootstrapJs')
+        @include('CommonLayout.BootstrapV5Js')
         @include('Organizer.CreateEdit.CreateEventScripts')
         <script>
 

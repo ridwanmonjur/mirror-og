@@ -18,9 +18,9 @@
     <div class="mx-2">
         <h4>Payment Method</h4>
         <br>
-        <div class="mr-5 pb-2 mb-2">
+        <div class="me-5 pb-2 mb-2">
             <div onclick="toggleArrows(event);" class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between"
-                data-toggle="collapse" href="#card-accordion" aria-expanded="false" aria-controls="card-accordion">
+                data-bs-toggle="collapse" href="#card-accordion" aria-expanded="false" aria-controls="card-accordion">
                 <div> Credit / Debit Card </div>
                 <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
             </div>
@@ -28,9 +28,9 @@
                 @include('Organizer.Checkout.CheckoutCardOption')
             </div>
         </div>
-        <div class="mr-5 pb-2 mb-2">
+        <div class="me-5 pb-2 mb-2">
             <div onclick="toggleArrows(event);" class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between"
-                data-toggle="collapse" href="#eWallet-accordion" aria-expanded="false"
+                data-bs-toggle="collapse" href="#eWallet-accordion" aria-expanded="false"
                 aria-controls="eWallet-accordion">
                 <div> eWallet </div>
                 <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
@@ -55,9 +55,9 @@
                 </div>
             </div>
         </div>
-        <div class="mr-5 pb-2 mb-2">
+        <div class="me-5 pb-2 mb-2">
             <div onclick="toggleArrows(event);" class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between"
-                data-toggle="collapse" href="#online-banking-accordion" aria-expanded="false"
+                data-bs-toggle="collapse" href="#online-banking-accordion" aria-expanded="false"
                 aria-controls="online-banking-accordion">
                 <div> Online Banking (FPX) </div>
                 <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
@@ -83,9 +83,9 @@
                 </div>
             </div>
         </div>
-        <div class="mr-5 pb-2 mb-2">
+        <div class="me-5 pb-2 mb-2">
             <div onclick="toggleArrows(event);" class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between"
-                data-toggle="collapse" href="#other-methods-accordion" aria-expanded="false"
+                data-bs-toggle="collapse" href="#other-methods-accordion" aria-expanded="false"
                 aria-controls="other-methods-accordion">
                 <div> Other Methods </div>
                 <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
@@ -117,10 +117,10 @@
         <br>
         <div>
             <div>Event Categories</div>
-            <div class="ml-3">Game: <span id="paymentType">{{ $event->game->gameTitle }}</span></div>
-            <div class="ml-3">Type: <span id="paymentType">{{ $event->type->eventType }}</span></div>
-            <div class="ml-3">Tier: <span id="paymentTier">{{ $event->tier->eventTier }}</span></div>
-            <div class="ml-3">Region: <span id="paymentTier">South East Asia (SEA)</span></div>
+            <div class="ms-3">Game: <span id="paymentType">{{ $event->game->gameTitle }}</span></div>
+            <div class="ms-3">Type: <span id="paymentType">{{ $event->type->eventType }}</span></div>
+            <div class="ms-3">Tier: <span id="paymentTier">{{ $event->tier->eventTier }}</span></div>
+            <div class="ms-3">Region: <span id="paymentTier">South East Asia (SEA)</span></div>
             <br>
             @php
 
@@ -140,7 +140,7 @@
                 <h5> TOTAL </h5>
                 <h5 id="paymentTotal">RM
                     @if ($fee['discountFee'] > 0)
-                        <span class="transform-number mr-1"
+                        <span class="transform-number me-1"
                             style="text-decoration: line-through;">{{ $fee['totalFee'] }} </span>
                         <span class="transform-number">{{ $fee['finalFee'] }} </span>
                     @else

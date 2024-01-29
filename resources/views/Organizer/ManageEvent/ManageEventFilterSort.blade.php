@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-between w-60s align-items-center flex-wrap">
-    <div class="icon2 mr-3 d-inline-block"
+    <div class="icon2 me-3 d-inline-block"
         onclick="openElementById('close-option'); openElementById('filter-option');  closeElementById('sort-option');">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-filter mt-2"
             viewBox="0 0 16 16">
@@ -8,9 +8,9 @@
         </svg>
     </div>
     <div id="filter-option" class="d-flex justify-content-start flex-wrap">
-        <div class="dropdown mr-3">
+        <div class="dropdown me-3">
             <button class="px-3 py-2 button-design-removed" type="button" id="dropdownFilterTitle"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span>Title </span>
                 <span class="dropbtn-arrow">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -36,10 +36,10 @@
             </div>
         </div>
 
-        <div class="dropdown mr-3">
+        <div class="dropdown me-3">
             <button
                 class="px-3 py-1 py-2 button-design-removed" type="button" id="dropdownFilterType"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span>Type </span>
                 <span class="dropbtn-arrow">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -64,9 +64,9 @@
             </div>
         </div>
 
-        <div class="dropdown mr-3">
+        <div class="dropdown me-3">
             <button class="px-3 py-2 button-design-removed" type="button" id="dropdownFilterTier"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span>Tier </span>
                 <span class="dropbtn-arrow">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -94,9 +94,9 @@
             </div>
         </div>
 
-        <div class="dropdown mr-3">
+        <div class="dropdown me-3">
             <button class="px-3 py-2 button-design-removed" type="button" id="dropdownFilterTier"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span>Region </span>
                 <span class="dropbtn-arrow">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -117,9 +117,9 @@
             </div>
         </div>
 
-        <div class="dropdown mr-3">
+        <div class="dropdown me-3">
             <button class="px-3 py-2 button-design-removed" type="button" id="dropdownFilterTier"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span>Date </span>
                 <span class="dropbtn-arrow">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -152,7 +152,7 @@
     </div>
 
     <div class="d-flex justify-content-between">
-        <div class="icon2 d-inline mr-2 mt-2" onclick="toggleDropdown('dropdownSortButton')" id="sortMenuButton">
+        <div class="icon2 d-inline me-2 mt-2" onclick="toggleDropdown('dropdownSortButton')" id="sortMenuButton">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                 class="bi bi-sort-down-alt" viewBox="0 0 16 16">
                 <path
@@ -161,10 +161,10 @@
         </div>
         <div class="dropdown dropdown-click-outside">
             <button 
-                class="dropbtn px-3 py-2 mr-3" 
+                class="dropbtn px-3 py-2 me-3" 
                 type="button" id="dropdownSortButton" 
                 onclick="setLocalStorageSortType()"
-                data-toggle="dropdown"
+                data-bs-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <span id="sortByTitleId">Sort by:</span>
                 <span class="dropbtn-arrow">
@@ -177,25 +177,25 @@
             </button>
             <div
                 onclick="stopPropagation(event);"; 
-                class="dropdown-menu px-3 ml-3" aria-labelledby="dropdownSortButton"
+                class="dropdown-menu px-3 ms-3" aria-labelledby="dropdownSortButton"
             >
-                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setSortForFetch('recent', 'Recent');">
-                    <label class="mr-3 cursor-pointer" for="recent">Recent</label>
+                <div class="sort-box d-block min-w-150px hover-bigger ps-3" onclick="setSortForFetch('recent', 'Recent');">
+                    <label class="me-3 cursor-pointer" for="recent">Recent</label>
                     <span class="recentSortIcon sortIcon">
                     </span>
                 </div>
-                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setSortForFetch('aToZ', 'A-Z');">
-                    <label class="mr-3 cursor-pointer" for="aToZ">A-Z</label>
+                <div class="sort-box d-block min-w-150px hover-bigger ps-3" onclick="setSortForFetch('aToZ', 'A-Z');">
+                    <label class="me-3 cursor-pointer" for="aToZ">A-Z</label>
                     <span class="aToZSortIcon sortIcon">
                     </span>
                 </div>
-                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setSortForFetch('startDate', 'Start Date');">
-                    <label class="mr-3 cursor-pointer" for="startDate">Start Date</label>
+                <div class="sort-box d-block min-w-150px hover-bigger ps-3" onclick="setSortForFetch('startDate', 'Start Date');">
+                    <label class="me-3 cursor-pointer" for="startDate">Start Date</label>
                     <span class="startDateSortIcon sortIcon">
                     </span>
                 </div>
-                <div class="sort-box d-block min-w-150px hover-bigger pl-3" onclick="setSortForFetch('prize', 'Prize Pool');">
-                    <label class="mr-3 cursor-pointer" for="prize">Prize Pool</label>
+                <div class="sort-box d-block min-w-150px hover-bigger ps-3" onclick="setSortForFetch('prize', 'Prize Pool');">
+                    <label class="me-3 cursor-pointer" for="prize">Prize Pool</label>
                     <span class="prizeSortIcon sortIcon">
                     </span>
                 </div>

@@ -34,7 +34,7 @@
                 window.location.href = "{{route('event.index') }}";
             }
         </script>
-        @include('CommonLayout.BootstrapJs')
+        @include('CommonLayout.BootstrapV5Js')
 
     </main>
 </body>

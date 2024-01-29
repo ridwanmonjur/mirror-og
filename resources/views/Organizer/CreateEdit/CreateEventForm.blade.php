@@ -178,7 +178,7 @@
             <br>
             <h4 id="outputEventTierTitle" class="text-center mt-1">Choose a tier</h4>
             <div class="event_row">
-                <div class="icon_container mr-4 ml-3">
+                <div class="icon_container me-4 ms-3">
                     <img width="25" height=25 id="outputEventTierImg" src="{{ asset('assets/images/user.png') }}"
                         class="event_icon">
                 </div>
@@ -188,7 +188,7 @@
                 </div>
             </div>
             <div class="event_row">
-                <div class="icon_container mr-4 ml-3">
+                <div class="icon_container me-4 ms-3">
                     <img width="25" height=25 src="{{ asset('/assets/images/createEvent/trophy.png') }}"
                         class="event_icon">
                 </div>
@@ -198,7 +198,7 @@
                 </div>
             </div>
             <div class="event_row">
-                <div class="icon_container mr-4 ml-3">
+                <div class="icon_container me-4 ms-3">
                     <img width="25" height=25 src="{{ asset('assets/images/dollar.png') }}" class="event_icon">
                 </div>
                 <div class="info_container">
@@ -626,8 +626,8 @@
         <div class="payment-summary">
             <h5>Payment Summary </h5>
             <div>Event Categories</div>
-            <div class="ml-3">Type: <span id="paymentType"> </span></div>
-            <div class="ml-3">Tier: <span id="paymentTier"> </span></div>
+            <div class="ms-3">Type: <span id="paymentType"> </span></div>
+            <div class="ms-3">Tier: <span id="paymentTier"> </span></div>
             <div class="flexbox">
                 <span>Subtotal</span>
                 <span id="paymentSubtotal" id="subtotal"></span>
@@ -653,7 +653,7 @@
                         Paid successfully!
                     </button>
                 @else
-                    <button onclick="setFormValues( {'goToCheckoutPage': 'yes'} ); saveEvent(false);" type="button" class="choose-payment-method" data-toggle="modal"
+                    <button onclick="setFormValues( {'goToCheckoutPage': 'yes'} ); saveEvent(false);" type="button" class="choose-payment-method" data-bs-toggle="modal"
                         data-target="#payment-modal">
                         Go to checkout page
                     </button>

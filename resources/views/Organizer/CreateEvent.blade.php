@@ -18,7 +18,7 @@
                             @include('Organizer.CreateEdit.CreateEventTimelineWelcome')
                         @endif
                         @include('Organizer.CreateEdit.CreateEventStepOne')
-                        @include('CommonLayout.BootstrapJs')
+                        @include('CommonLayout.BootstrapV5Js')
                         @include('Organizer.CreateEdit.CreateEventForm')
                         @if (session()->has('success'))
                             @include('Organizer.CreateEdit.CreateEventSuccess')

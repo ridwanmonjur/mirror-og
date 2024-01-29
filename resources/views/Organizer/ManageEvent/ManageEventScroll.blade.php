@@ -36,7 +36,7 @@
                 <div class="flexbox-centered-space flex-wrap-height-at-mobile">
                     <img src="{{ $bladeEventGameImage }}" alt="menu" width="50" height="50"
                         style="object-fit: cover; ">
-                    <button data-toggle="tooltip" data-html="true" title="{{ $toolTip }}"
+                    <button data-bs-toggle="tooltip" data-html="true" title="{{ $toolTip }}"
                         class="activate-tooltip oceans-gaming-default-button"
                         style="@php echo $stylesEventStatus; @endphp">
                         <u> {{ $status }} </u>
@@ -132,7 +132,7 @@
                         <a style="padding: none; margin: none;">
                             <button onclick=""
                                 style="padding: none; margin: none; background-color: transparent; outline: none; border: none;"
-                                type="button" data-toggle="modal" data-target="#shareModal">
+                                type="button" data-bs-toggle="modal" data-target="#shareModal">
                                 <img class="larger-hover" src="{{ asset('/assets/images/events/members-icon.png') }}"
                                     alt="members" width="30" height="30" style="object-fit: cover; ">
                             </button>
