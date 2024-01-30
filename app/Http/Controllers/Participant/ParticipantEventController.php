@@ -42,6 +42,7 @@ class ParticipantEventController extends Controller
                 }
                 return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
             })
+            ->with('tier', 'type', 'game', 'joinEvents')
             ->paginate($count);
 
         $output = [
@@ -315,12 +316,12 @@ class ParticipantEventController extends Controller
 
     private function registerUserToTeam($teamId, $status)
     {
-    // Create a new member entry for the user and selected team
-    $member = new Member();
-    $member->team_id = $teamId;
-    $member->user_id = auth()->user()->id;
-    $member->status = $status;
-    $member->save();
+        // Create a new member entry for the user and selected team
+        $member = new Member();
+        $member->team_id = $teamId;
+        $member->user_id = auth()->user()->id;
+        $member->status = $status;
+        $member->save();
     }
 
 

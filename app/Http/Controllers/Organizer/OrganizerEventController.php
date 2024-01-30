@@ -26,7 +26,7 @@ class OrganizerEventController extends Controller
     {
         $authUser = Auth::user();
 
-        $event = EventDetail::with('type', 'tier', 'game')
+        $event = EventDetail::with('type,tier,game')
             ->where('user_id', $authUser->id)
             ->find($id);
 
@@ -82,8 +82,10 @@ class OrganizerEventController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+        $userId = $user->id;
         $eventListQuery = EventDetail::query();
-        $organizer = Organizer::where('user_id', $user->id)->first();
+
+        $organizer = Organizer::where('user_id', $userId)->first();
         
         $eventListQuery->when($request->has('status'), function ($query) use ($request) {
             
@@ -151,8 +153,7 @@ class OrganizerEventController extends Controller
         $count = 8;
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
-        $eventListQuery->with('tier'); // Eager load the eventTier relationship
-        $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+        $eventListQuery->with('tier', 'type', 'game', 'joinEvents');
         
         foreach ($eventList as $event) {
             $tierEntryFee = $event->eventTier->tierEntryFee ?? null;
@@ -160,9 +161,9 @@ class OrganizerEventController extends Controller
 
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
 
-        foreach ($eventList as $eventDetail) {
-            $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
-        }
+        // foreach ($eventList as $eventDetail) {
+        //     $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
+        // }
 
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
         
