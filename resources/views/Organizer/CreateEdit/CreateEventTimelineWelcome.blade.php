@@ -1,8 +1,5 @@
   <div class="text-center" id="step-0">
-      <div id="loader-until-loaded" class="mt-5">
-          <img src="{{ asset('/assets/images/animation/Spin.gif') }}">
-      </div>
-      <div class="welcome mt-5 d-none" id="invisible-until-loaded">
+      <div class="welcome mt-5" id="invisible-until-loaded">
           <div >
               <u>
                   <h2>

@@ -1,32 +1,5 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
 <script>
-    // Spinner logic
-
-    function waitForElm() {
-        return new Promise(resolve => {
-            const observer = new MutationObserver(mutations => {
-                console.log({
-                    jquery: window.jQuery,
-                })
-                if (window.jQuery) {
-                    let timeoutID = setTimeout(function() {
-                        document.getElementById('loader-until-loaded').classList.add('d-none');
-                        document.getElementById('invisible-until-loaded').classList.remove(
-                            'd-none');
-                    }, 600);
-                    observer.disconnect();
-                    resolve(true);
-                }
-            });
-
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-        });
-    }
-
-    waitForElm();
 
     function fillStepPaymentValues() {
         const paymentMethodConditionFulfilledButton =
@@ -289,10 +262,13 @@
             new Tagify(document.querySelector('#eventTags'), []);
         }
     }
-    $(document).on("keydown", ":input:not(textarea)", function(event) {
-        if (event.key == "Enter") {
-            event.preventDefault();
-        }
+    
+    document.addEventListener("keydown", function(event) {
+    var target = event.target;
+
+    if (event.key === "Enter" && target.tagName.toLowerCase() !== "textarea" && target.tagName.toLowerCase() === "input") {
+        event.preventDefault();
+    }
     });
 </script>
 

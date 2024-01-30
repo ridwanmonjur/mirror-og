@@ -132,8 +132,7 @@ class AuthController extends Controller
         $count = 6;
         $currentDateTime = Carbon::now()->utc();
         
-        $events = EventDetail::with('game')
-            ->where('status', '<>', 'DRAFT')
+        $events = EventDetail::where('status', '<>', 'DRAFT')
             ->whereNotNull('payment_transaction_id')
             ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
             ->where('sub_action_private', '<>', 'private')

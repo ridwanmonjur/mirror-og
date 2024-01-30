@@ -21,13 +21,17 @@ class InvitationController extends Controller
         $user_id = $authUser->id;
         $participationList = User::where('role', 'PARTICIPANT')->get();
         $tier = $type = $game = null;
+        
         $event = EventDetail::with('invitationList')
             ->where('user_id', $user_id)
             ->find($id);
+        
         $isUserSameAsAuth = true;
+        
         if (!$event) {
             throw new ModelNotFoundException("Event not found with id: $id");
         }
+        
         return view('Organizer.Invitation', compact('event', 'isUserSameAsAuth', 'participationList', 'user_id', 'game', 'tier', 'type'));
     }
 
@@ -49,6 +53,7 @@ class InvitationController extends Controller
         $invitation->event_id = $request->event_id;
         $invitation->participant_id = $request->participant_id;
         $invitation->save();
+        
         return response()->json([
             'status' => 'success',
             'message' => 'Payment successful',

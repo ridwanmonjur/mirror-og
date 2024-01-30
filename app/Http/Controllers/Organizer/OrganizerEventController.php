@@ -26,7 +26,7 @@ class OrganizerEventController extends Controller
     {
         $authUser = Auth::user();
 
-        $event = EventDetail::with('type,tier,game')
+        $event = EventDetail::with('type','tier','game')
             ->where('user_id', $authUser->id)
             ->find($id);
 
@@ -281,7 +281,11 @@ class OrganizerEventController extends Controller
         });
 
         $count = 8;
-        $eventList = $eventListQuery->where('user_id', $userId)->paginate($count);
+        $eventList = $eventListQuery
+            ->where('user_id', $userId)
+            ->with('tier', 'type', 'game', 'joinEvents')
+            ->paginate($count);
+        
         $mappingEventState = EventDetail::mappingEventStateResolve();
 
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
@@ -608,7 +612,7 @@ class OrganizerEventController extends Controller
 
             $count = 8;
             $eventListQuery = EventDetail::query();
-            $eventListQuery->with('tier');
+            $eventListQuery->with('tier', 'type', 'game', 'joinEvent');
             $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
 
             foreach ($eventList as $eventItem) {

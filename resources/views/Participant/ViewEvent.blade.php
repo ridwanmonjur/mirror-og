@@ -310,5 +310,5 @@
                 });
         });
     </script>
-    @include('CommonLayout.BootstrapJs')
+    @include('CommonLayout.BootstrapV5Js')
     <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
