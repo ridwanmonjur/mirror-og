@@ -150,6 +150,7 @@ class AuthController extends Controller
                 }
                 return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
             })
+            ->with('tier', 'type', 'game')
             ->paginate($count);
         
             $mappingEventState = EventDetail::mappingEventStateResolve();
@@ -341,6 +342,7 @@ class AuthController extends Controller
         if ($request->is('organizer/signup')) {          
             $userRole = 'organizer';
             $userRoleCapital = 'ORGANIZER';
+            
             $validatedData = $request->validate([
                 'username' => 'baiL|required',
                 'email' => 'bail|required|email',
@@ -351,6 +353,7 @@ class AuthController extends Controller
         } elseif ($request->is('participant/signup')) {
             $userRole = 'participant';
             $userRoleCapital = 'PARTICIPANT';
+            
             $validatedData = $request->validate([
                 'username' => 'baiL|required',
                 'email' => 'bail|required|email',
@@ -362,6 +365,7 @@ class AuthController extends Controller
 
         $redirectErrorRoute = $userRole . '.signup.view';
         $redirectSuccessRoute = $userRole . '.signin.view';
+        
         try {
             $user = new User([
                 'name' => $validatedData['username'],
@@ -375,16 +379,20 @@ class AuthController extends Controller
             $user->save();
 
             if ($userRole == 'organizer') {
+                
                 $organizer = new Organizer([
                     'user_id' => $user->id,
                     'companyDescription' => $validatedData['companyDescription'],
                     'companyName' => $validatedData['companyName'],
                 ]);
+
                 $organizer->save();
             } elseif ($userRole == 'participant') {
+                
                 $participant = new Participant([
                     'user_id' => $user->id,
                 ]);
+                
                 $participant->save();
             }
 
@@ -430,6 +438,7 @@ class AuthController extends Controller
         $userRole = '';
         $userRoleCapital = '';
         $validatedData = [];
+        
         if ($request->is('organizer/signin')) {
             $userRole = 'organizer';
             $userRoleCapital = 'ORGANIZER';
@@ -441,7 +450,9 @@ class AuthController extends Controller
         } else {
             return redirect()->route('landing.view');
         }
+
         $redirectRoute = $userRole . '.signin.view';
+        
         try {
             $validatedData = $request->validate([
                 'email' => 'bail|required|email',
@@ -467,6 +478,7 @@ class AuthController extends Controller
                 $request->session()->regenerate();
                 $route = $userRole . '.home.view';
                 $message = 'Account signed in successfully as $userRole!';
+                
                 return redirect()
                     ->route($route)
                     ->with('success', $message);
