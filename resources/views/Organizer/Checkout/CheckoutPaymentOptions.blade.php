@@ -1,11 +1,3 @@
-<div class="text-center">
-    <small class="spinner-border " role="status">
-        <small class="sr-only"></small>
-    </small>
-    <small>Finished for now...</small>
-</div>
-<br>
-
 <div class="d-none" id="payment-element-view"> 
     <div class="text-center" onclick="changeScreen();"> Close </div>
     <div id="cardLogoId" class="payment-element-children-view d-none">Card view</div>
@@ -49,7 +41,7 @@
                                     "object-fit-cover" => $logo['cover']
                                 ])
                             >
-                            <div class="rounded-circle position-absolute bottom-0 px-1 check-tick d-none">✔</div>
+                            <div class="rounded-circle position-absolute px-1 check-tick d-none">✔</div>
                         </div>
                     @endforeach
                 </div>
@@ -77,7 +69,7 @@
                                 ])
                                 onclick="onChoosePayment(event, 'bank', '{{$logo['name']}}');"
                             >
-                            <div class="rounded-circle position-absolute bottom-0 px-1 check-tick d-none">✔</div>
+                            <div class="rounded-circle position-absolute px-1 check-tick d-none">✔</div>
                         </div>
                     @endforeach
                 </div>
@@ -105,7 +97,7 @@
                                 ])
                                 onclick="onChoosePayment(event, 'otherEWallet', '{{$logo['name']}}');"
                             >
-                            <div class="rounded-circle position-absolute bottom-0 px-1 check-tick d-none">✔</div>
+                            <div class="rounded-circle position-absolute  px-1 check-tick d-none">✔</div>
                         </div>
                     @endforeach
                 </div>

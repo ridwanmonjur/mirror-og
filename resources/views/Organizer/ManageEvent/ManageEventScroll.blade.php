@@ -36,13 +36,13 @@
                 <div class="flexbox-centered-space flex-wrap-height-at-mobile">
                     <img src="{{ $bladeEventGameImage }}" alt="menu" width="50" height="50"
                         style="object-fit: cover; ">
-                    <button data-bs-toggle="tooltip" data-html="true" title="{{ $toolTip }}"
+                    <button data-bs-toggle="tooltip" data-bs-html="true" title="{{ $toolTip }}"
                         class="activate-tooltip oceans-gaming-default-button"
                         style="@php echo $stylesEventStatus; @endphp">
                         <u> {{ $status }} </u>
                     </button>
                     <button style="@php echo $stylesEventRatio; @endphp"
-                        class="oceans-gaming-default-button oceans-gaming-default-button-small flexbox-centered-space">
+                        class="px-2 oceans-gaming-default-button oceans-gaming-default-button-small flexbox-centered-space">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" class="feather feather-user">
@@ -53,7 +53,7 @@
                             @foreach ($eventList as $index => $eventDetail)
                                 @if ($index == 0)
                                     <span>
-                                        {{ $eventDetail->joinEventCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available' }}
+                                        {{ $eventDetail->join_events_count }}/{{ $event->tier->tierTeamSlot ?? 'Not Available' }}
                                     </span>
                                 @endif
                             @endforeach

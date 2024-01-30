@@ -190,7 +190,7 @@
                                         @foreach ($eventList as $index => $eventDetail)
                                             @if ($index == 0)
                                                 <span style="position: relative; top: 5px;">
-                                                    {{ $eventDetail->joinEventCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available' }}
+                                                    {{ $eventDetail->join_events_count }}/{{ $event->tier->tierTeamSlot ?? 'Not Available' }}
                                                 </span>
                                             @endif
                                         @endforeach

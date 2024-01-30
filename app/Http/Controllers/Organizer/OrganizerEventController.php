@@ -153,7 +153,9 @@ class OrganizerEventController extends Controller
         $count = 8;
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
         $mappingEventState = EventDetail::mappingEventStateResolve();
-        $eventListQuery->with('tier', 'type', 'game', 'joinEvents');
+        $eventListQuery
+            ->with('tier', 'type', 'game', 'joinEvents')
+            ->withCount('joinEvents');
         
         foreach ($eventList as $event) {
             $tierEntryFee = $event->eventTier->tierEntryFee ?? null;
@@ -161,11 +163,10 @@ class OrganizerEventController extends Controller
 
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
 
-        // foreach ($eventList as $eventDetail) {
-        //     $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
-        // }
 
-        $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
+        $outputArray = compact('eventList', 'count', 'user', 
+            'organizer', 'mappingEventState'
+        );
         
         if ($request->ajax()) {
             $view = view('Organizer.ManageEventScroll', $outputArray)->render();
@@ -499,7 +500,7 @@ class OrganizerEventController extends Controller
 
             $count = 8;
             $eventListQuery = EventDetail::query();
-            $eventListQuery->with('tier');
+            $eventListQuery->with('tier')->withCount('joinEvents');
             $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
             $mappingEventState = EventDetail::mappingEventStateResolve();
             
@@ -507,14 +508,11 @@ class OrganizerEventController extends Controller
                 $tierEntryFee = $eventItem->tier?->tierEntryFee ?? null;
             }
 
-            foreach ($eventList as $eventDetail) {
-                $eventDetail->joinEventCount = $eventDetail->joinEvents()?->count();
-            }
-
             $livePreview = true;
 
             $outputArray = compact('eventList', 'event', 'count', 'user', 
-                'livePreview', 'mappingEventState');
+                'livePreview', 'mappingEventState'
+            );
             
             return view('Organizer.ViewEvent', $outputArray);
         } catch (Exception $e) {
@@ -612,7 +610,7 @@ class OrganizerEventController extends Controller
 
             $count = 8;
             $eventListQuery = EventDetail::query();
-            $eventListQuery->with('tier', 'type', 'game', 'joinEvent');
+            $eventListQuery->with('tier', 'type', 'game', 'joinEvents');
             $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
 
             foreach ($eventList as $eventItem) {
