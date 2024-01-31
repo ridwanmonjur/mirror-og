@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckPermission
@@ -19,7 +18,9 @@ class CheckPermission
         $currentRoleList = explode('|', $currentRoleListString);
         $user = auth()->user();
         $userAccess = strtolower($user->role);
+
         view()->share('user', $user);
+
         if ($this->checkPermissionHelper($userAccess, $currentRoleList)) {
             return $next($request);
         }
@@ -27,9 +28,11 @@ class CheckPermission
         return response()->view('Auth.SignIn')
             ->withException(new \Exception('You do not have permission to access this page'));
     }
-    private function checkPermissionHelper($userAccess, $currentRoleList)
-    {
+   
+    private  function checkPermissionHelper($userAccess, $currentRoleList){
+        
         foreach ($currentRoleList as $key => $value) {
+        
             if ($value == $userAccess) {
                 return true;
             }
