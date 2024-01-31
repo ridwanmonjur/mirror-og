@@ -30,7 +30,7 @@
             <div class="dropdown">
                 <a href="#" role="button" class="btn dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true">Sign In</a>
-                <div id="zzz" class="dropdown-menu" style="position: absolute; left: -60px;" aria-labelledby="dropdownMenuLink">
+                <div id="zzz" class="dropdown-menu" style="position: absolute; left: -90px;" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">Organizer</a>
                     <a class="dropdown-item" href="{{ route('participant.signin.view') }}">Participant</a>
                 </div>

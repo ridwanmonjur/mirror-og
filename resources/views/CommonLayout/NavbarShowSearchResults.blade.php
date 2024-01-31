@@ -24,10 +24,10 @@
     <div class="nav-buttons">
         @guest
             <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
-            <div class="dropdown" data-reference="parent" data-offset="-20,-20">
+            <div class="dropdown" data-reference="parent" data-bs-offset="-80,-80">
                 <a href="#" role="button" class="btn dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true">Sign In</a>
-                <div id="" class="dropdown-menu" style="position: absolute; left: -60px;" aria-labelledby="dropdownMenuLink">
+                <div id="" class="dropdown-menu" style="position: absolute; left: -90px;" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">Organizer</a>
                     <a class="dropdown-item" href="{{ route('participant.signin.view') }}">Participant</a>
                 </div>
