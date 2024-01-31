@@ -152,15 +152,15 @@ class AuthController extends Controller
             ->with('tier', 'type', 'game')
             ->paginate($count);
         
-            $mappingEventState = EventDetail::mappingEventStateResolve();
+        $mappingEventState = EventDetail::mappingEventStateResolve();
+        
         $output = compact('events', 'mappingEventState');
         
         if ($request->ajax()) {
-            // dd($events);
             $view = view('LandingPageScroll', $output)->render();
             return response()->json(['html' => $view]);
-        }
-        
+        } 
+
         return view('LandingPage', $output);
     }
 

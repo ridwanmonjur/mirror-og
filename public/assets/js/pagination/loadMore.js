@@ -36,37 +36,34 @@ function infinteLoadMore(page, ENDPOINT) {
   
     if (hasClass) {
         let endpointFinal = page == null ? ENDPOINT : ENDPOINT + "?page=" + page
-        
-        let xhr = new XMLHttpRequest();
-        
-        xhr.open('GET', endpointFinal, true);
-
-        xhr.onreadystatechange = function () {
-            
-            if (xhr.readyState == COMPLETE_REQUEST) { 
-                if (xhr.status == COMPLETE_STATUS) { 
-                    console.log({response: xhr.responseText})
-                    var response = JSON.parse(xhr.responseText);
-
-                    if (response.html === '') {
-                        var noMoreDataElement = document.querySelector('.no-more-data');
-                        noMoreDataElement.classList.remove('d-none');
-                        noMoreDataElement.style.display = 'flex';
-                        noMoreDataElement.style.justifyContent = 'center';
-                        noMoreDataElement.textContent = "We don't have more data to display";
-                    }
-
-                    // Assuming that the response is JSON and contains an 'html' property
-                    document.querySelector(".scrolling-pagination").insertAdjacentHTML('beforeend', response.html);
-                } else {
-                    console.log('Server error occurred');
+        console.log({endpointFinal})
+        fetch(endpointFinal, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+              },
+          })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            } else {
-                console.log('Server error occured');
-            }
-        };
-
-        xhr.send();
+                return response.json(); 
+            })
+            .then(response => {
+                if (response.html === '') {
+                    var noMoreDataElement = document.querySelector('.no-more-data');
+                    noMoreDataElement.classList.remove('d-none');
+                    noMoreDataElement.style.display = 'flex';
+                    noMoreDataElement.style.justifyContent = 'center';
+                    noMoreDataElement.textContent = "We don't have more data to display";
+                }
+        
+                scrollingPaginationElement.insertAdjacentHTML('beforeend', response.html);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
     } else {
         return;
     }
@@ -77,7 +74,9 @@ function infinteLoadMoreByPost(ENDPOINT, body) {
     let noMoreDataElement = document.querySelector('.no-more-data');
     let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
     let hasClass = noMoreDataElement.classList.contains('d-none');
+    
     if (hasClass) {
+        
         fetch(ENDPOINT, {
             method: 'post',
             headers: {
@@ -88,6 +87,7 @@ function infinteLoadMoreByPost(ENDPOINT, body) {
         })
             .then((response) => response.json())
             .then((response) => {
+                
                 if (response.html == '') {
                     noMoreDataElement.classList.remove('d-none');
                     noMoreDataElement.style.display = 'flex';
@@ -123,7 +123,7 @@ function loadByPost(ENDPOINT, body) {
     })
         .then((response) => response.json())
         .then((response) => {
-           if (response.html == '') {
+            if (response.html == '') {
                 scrollingPaginationElement.innerHTML = "";
                 noMoreDataElement.classList.remove('d-none');
                 noMoreDataElement.style.display = 'flex';

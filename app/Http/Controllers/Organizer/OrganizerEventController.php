@@ -163,13 +163,12 @@ class OrganizerEventController extends Controller
 
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
 
-
         $outputArray = compact('eventList', 'count', 'user', 
             'organizer', 'mappingEventState'
         );
-        
+
         if ($request->ajax()) {
-            $view = view('Organizer.ManageEventScroll', $outputArray)->render();
+            $view = view('Organizer.ManageEvent.ManageEventScroll', $outputArray)->render();
 
             return response()->json(['html' => $view]);
         }
@@ -282,6 +281,7 @@ class OrganizerEventController extends Controller
         });
 
         $count = 8;
+
         $eventList = $eventListQuery
             ->where('user_id', $userId)
             ->with('tier', 'type', 'game', 'joinEvents')
@@ -319,13 +319,11 @@ class OrganizerEventController extends Controller
         $isEditMode = $eventDetail->id != null;
         $isDraftMode = $request->launch_visible == 'DRAFT';
         
-        // disable preview mode checjs if edit mode
         $isPreviewMode = $isEditMode ? false : $request->livePreview == 'true';
         $carbonStartDateTime = null;
         $carbonEndDateTime = null;
         $carbonPublishedDateTime = null;
         
-        // step1
         $eventDetail->gameTitle = $request->gameTitle;
         $eventDetail->eventType = $request->eventType;
         $eventDetail->eventTier = $request->eventTier;
@@ -333,7 +331,6 @@ class OrganizerEventController extends Controller
         $eventDetail->event_tier_id = $request->eventTierId;
         $eventDetail->event_category_id = $request->gameTitleId;
         
-        // step2
         $startDate = $request->startDate;
         $startTime = $eventDetail->fixTimeToRemoveSeconds($request->startTime);
         $endDate = $request->endDate;
@@ -500,7 +497,7 @@ class OrganizerEventController extends Controller
 
             $count = 8;
             $eventListQuery = EventDetail::query();
-            $eventListQuery->with('tier')->withCount('joinEvents');
+            $eventListQuery->withCount('joinEvents');
             $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
             $mappingEventState = EventDetail::mappingEventStateResolve();
             
@@ -610,16 +607,9 @@ class OrganizerEventController extends Controller
 
             $count = 8;
             $eventListQuery = EventDetail::query();
-            $eventListQuery->with('tier', 'type', 'game', 'joinEvents');
+            $eventListQuery->withCount('joinEvents');
             $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
 
-            foreach ($eventList as $eventItem) {
-                $tierEntryFee = $eventItem->tier->tierEntryFee ?? null;
-            }
-
-            foreach ($eventList as $eventDetail) {
-                $eventDetail->joinEventCount = $eventDetail->joinEvents()->count();
-            }
         } catch (Exception $e) {
             return $this->show404("Event not found with id: $id");
         }
@@ -641,7 +631,6 @@ class OrganizerEventController extends Controller
             return $this->show404("Event not found for id: $id");
         }
         
-        // dd($event, $event->tier, $event->type, $event->game);
         $status = $event->statusResolved();
 
         if ( $status == "ENDED" ) {
