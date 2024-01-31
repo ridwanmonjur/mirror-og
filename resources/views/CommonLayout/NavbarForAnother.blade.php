@@ -25,7 +25,7 @@
     }
   </style>
 <div class="navbar-placeholder"> </div>
-<nav class="navbar">
+<nav class="navbar px-3">
     <div class="logo">
     <a href="{{ route('participant.home.view') }}">
     <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="Description">
