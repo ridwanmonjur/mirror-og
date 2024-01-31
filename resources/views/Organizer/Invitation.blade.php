@@ -51,25 +51,30 @@ extract($dateArray);
                     let participant = null;
                     const participantId = document.querySelector('select').value;
                     const addedParticipant = document.querySelector('.added-participant');
+                    
                     participant = participantListAll.filter((participantItem) => {
                         return participantItem.id == participantId;
                     });
+                    
                     if (participant[0]) {
                         participant = participant[0];
-                    }
-                    else{
+                    } else{
                         Toast.error("Participant not found.");
                     }
+
                     if (participant) {
                         const hideIfParticipant = document.querySelector('.hide-if-participant');
+                    
                         if (hideIfParticipant) {
                             hideIfParticipant.classList.add('d-none');
                         }
+                    
                         let data = {
                             event_id: "{{ $event->id }}",
                             participant_id: participantId,
                             organizer_id: "{{ $user_id }}",
                         };
+                    
                         fetch("{{ route('event.invitation.store', $event->id) }}", {
                                 method: "POST",
                                 headers: {
@@ -87,6 +92,7 @@ extract($dateArray);
                                 const participantElement = document.createElement('p');
                                 participantElement.textContent = participant?.name ?? "Can't find id of participant.";
                                 addedParticipant.appendChild(participantElement);
+                                
                                 Toast.fire({
                                     icon: 'success',
                                     text: "Successfully added user."
@@ -95,9 +101,8 @@ extract($dateArray);
                             .catch(error => {
                                 console.error(error);
                             })
-
                     }
-                } {}
+                } 
             </script>
         </div>
         <br><br>

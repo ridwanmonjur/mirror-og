@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event creation</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamCreate.css') }}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
     <link href='https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.min.css'>
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
@@ -64,7 +64,7 @@
         </div>
     </main>
 
-    @include('CommonLayout.BootstrapJs')
+    @include('CommonLayout.BootstrapV5Js')
 
 </body>
 

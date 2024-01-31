@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_event_reg.css') }}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">    
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
 </head>
 
@@ -156,7 +156,7 @@
                 dropdownContent.classList.add('d-block');
             }
         </script>
-        @include('CommonLayout.BootstrapJs')
+        @include('CommonLayout.BootstrapV5Js')
     </main>
 </body>
 

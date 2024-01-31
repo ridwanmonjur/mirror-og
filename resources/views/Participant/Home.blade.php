@@ -35,52 +35,34 @@
     <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
     <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
     <script>
-            var ENDPOINT = "{{ route('landing.view') }}";
-            var page = 1;
-            var search = null;
-            window.addEventListener(
-                "scroll",
-                throttle((e) => {
-                    var windowHeight = window.innerHeight;
-                    var documentHeight = document.documentElement.scrollHeight;
-                    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    if (scrollTop + windowHeight >= documentHeight - 200) {
-                        page++;
-                        ENDPOINT = "{{ route('landing.view') }}";
-                        console.log({
-                            search
-                        })
-                        if (!search || String(search).trim() == "") {
-                            search = null;
-                            ENDPOINT += "?page=" + page;
-                        } else {
-                            ENDPOINT += "?search=" + search + "&page=" + page;
-                        }
-                        infinteLoadMore(null, ENDPOINT);
-                    }
-                }, 300)
-            );
-        </script>
-       {{-- I think we dont need this below code  --}}
-    {{-- <script>
-        function myFunction() {
-            document.getElementById("myDropdown").classList.toggle("show");
-        }
+        var ENDPOINT = "{{ route('landing.view') }}";
+        var page = 1;
+        var search = null;
+        
+        window.addEventListener(
+            "scroll",
+            throttle((e) => {
+                
+                var windowHeight = window.innerHeight;
+                var documentHeight = document.documentElement.scrollHeight;
+                var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+                if (scrollTop + windowHeight >= documentHeight - 200) {
+                    page++;
+                    ENDPOINT = "{{ route('landing.view') }}";
 
-        // Close the dropdown if the user clicks outside of it
-        window.onclick = function(event) {
-            if (!event.target.matches('.dropbtn')) {
-                var dropdowns = document.getElementsByClassName("dropdown-content");
-                var i;
-                for (i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
+                    if (!search || String(search).trim() == "") {
+                        search = null;
+                        ENDPOINT += "?page=" + page;
+                    } else {
+                        ENDPOINT += "?search=" + search + "&page=" + page;
                     }
+                    
+                    infinteLoadMore(null, ENDPOINT);
                 }
-            }
-        }
-    </script> --}}
+            }, 300)
+        );
+    </script>
 </body>
 
 </html>

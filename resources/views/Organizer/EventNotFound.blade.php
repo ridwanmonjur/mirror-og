@@ -3,7 +3,7 @@
 @include('CommonLayout.NavbarGoToSearchPage')
 
     <main>
-        <br><br>
+        <br><br><br><br>
         <div class="text-center" >
             <div >
                 <u>
@@ -21,9 +21,7 @@
                 @endif
                 @endif
             </div>
-
             <br><br><br><br>
-
             <button onclick="goToManageScreen();" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: black; border: 1px solid black;">
                 Go to event page
             </button>

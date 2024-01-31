@@ -7,7 +7,7 @@
     <title>Registration Management</title>
     <!-- Existing CSS links -->
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/registrationManagement.css') }}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="... (the integrity hash) ..." crossorigin="anonymous">
@@ -16,10 +16,7 @@
 
 <body>
     @include('CommonLayout.NavbarforParticipant')
-
-
     <main>
-
         <div class="team-section">
             <div class="upload-container">
                 <label for="image-upload" class="upload-label">
@@ -145,12 +142,11 @@
                     </div>
                 </div>
             </div>
-
-
-
         </div>
-
     </main>
+    
+    @include('CommonLayout.BootstrapV5Js')
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const uploadButton = document.getElementById("upload-button");

@@ -28,9 +28,9 @@ class CheckPermission
         return response()->view('Auth.SignIn')
             ->withException(new \Exception('You do not have permission to access this page'));
     }
-   
-    private  function checkPermissionHelper($userAccess, $currentRoleList){
-        
+    
+    private  function checkPermissionHelper($userAccess, $currentRoleList)
+    {
         foreach ($currentRoleList as $key => $value) {
         
             if ($value == $userAccess) {

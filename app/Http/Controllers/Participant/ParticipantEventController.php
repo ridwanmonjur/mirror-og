@@ -128,7 +128,7 @@ class ParticipantEventController extends Controller
                     ->with('user')
                     ->get();
 
-                return view('Participant.Layout.TeamManagement', compact('teamManage', 'joinEvents', 'eventsByTeam', 'pendingMembers'));
+                return view('Participant.TeamManagement', compact('teamManage', 'joinEvents', 'eventsByTeam', 'pendingMembers'));
             } else {
                 return redirect()
                     ->back()
@@ -194,7 +194,7 @@ class ParticipantEventController extends Controller
                 ->pluck('user_count', 'organizer_id')
                 ->toArray();
 
-            return view('Participant.Layout.RegistrationManagement', compact('teamManage', 'joinEvents', 'eventsByTeam', 'followCounts'));
+            return view('Participant.RegistrationManagement', compact('teamManage', 'joinEvents', 'eventsByTeam', 'followCounts'));
         } else {
             return redirect()
                 ->back()
@@ -261,13 +261,16 @@ class ParticipantEventController extends Controller
         $selectedTeamNames = $request->input('selectedTeamName');
 
         if (is_array($selectedTeamNames)) {
+            
             foreach ($selectedTeamNames as $teamId) {
+                
                 if (!$this->userAlreadyMember($teamId)) {
                     $status = auth()->user()->id == $this->getTeamCreatorId($teamId) ? 'accepted' : 'pending';
                     $this->registerUserToTeam($teamId, $status);
                 }
             }
         } else {
+            
             if (!$this->userAlreadyMember($selectedTeamNames)) {
                 $status = auth()->user()->id == $this->getTeamCreatorId($selectedTeamNames) ? 'accepted' : 'pending';
                 $this->registerUserToTeam($selectedTeamNames, $status);
