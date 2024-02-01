@@ -13,18 +13,14 @@ class Authenticate extends Middleware
     protected function redirectTo(Request $request): ?string
     {
         if ($request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
-        }
-        else if ($request->is('admin/*')) {
+            return response()->json(['error' => 'This is why we getting json error in fetch?'], 401);
+        } else if ($request->is('admin/*')) {
             return "admin/login";
-        }
-        else if ($request->is('participant/*')) {
+        } else if ($request->is('participant/*')) {
             return route('participant.signin.view');
-        }
-        else if ($request->is('organizer/*')) {
+        } else if ($request->is('organizer/*')) {
             return route('organizer.signin.view');
-        }
-        else {
+        } else {
             return route('participant.signin.view');
         }
     }

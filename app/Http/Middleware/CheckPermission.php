@@ -18,14 +18,15 @@ class CheckPermission
         $currentRoleList = explode('|', $currentRoleListString);
         $user = auth()->user();
         $userAccess = strtolower($user->role);
-
+        $request->attributes->add(['user' => $user]);
         view()->share('user', $user);
 
         if ($this->checkPermissionHelper($userAccess, $currentRoleList)) {
             return $next($request);
         }
 
-        return response()->view('Auth.SignIn')
+        return response()
+            ->view('Auth.SignIn')
             ->withException(new \Exception('You do not have permission to access this page'));
     }
     

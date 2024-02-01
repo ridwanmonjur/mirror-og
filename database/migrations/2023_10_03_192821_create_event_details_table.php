@@ -13,12 +13,7 @@ return new class extends Migration
     {
         Schema::create('event_details', function (Blueprint $table) {
             $table->id();
-            $table->string('gameTitle')->nullable();
-            $table->string('gameIcon')->nullable();
-            $table->string('eventType')->nullable();
             $table->string('eventDefinitions')->nullable();
-            $table->string('eventTier')->nullable();
-            $table->string('tierIcon')->nullable();
             $table->string('eventName')->nullable();
             $table->date('startDate')->nullable();
             $table->date('endDate')->nullable();
@@ -32,10 +27,8 @@ return new class extends Migration
             $table->string('sub_action_public_date')->nullable();
             $table->string('sub_action_public_time')->nullable();
             $table->string('sub_action_private')->nullable();
-            $table->string('action')->nullable();
-            $table->string('caption')->nullable();
             $table->foreignId('user_id')->constrained(
-            table: 'users', indexName: 'event_details_user_id_foreign')->nullable();
+                table: 'users', indexName: 'event_details_user_id_foreign')->nullable();
             $table->timestamps();
         });
     }

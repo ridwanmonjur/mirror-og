@@ -51,7 +51,7 @@ function createEventElement(event) {
     const eventDiv = document.querySelector('.event');
     eventDiv.innerHTML = `
         <b>${event.eventName}</b><br>
-        <small>${event.region || 'South East Asia'}</small>
+        <small>${event.venue || 'South East Asia'}</small>
     `;
     return eventDiv;
 }
@@ -63,7 +63,7 @@ function appendEventElement(event) {
     const eventDiv = document.querySelector('.event');
     eventDiv.innerHTML += `
         <b>${event.eventName}</b><br>
-        <small>${event.region || 'South East Asia'}</small>
+        <small>${event.venue || 'South East Asia'}</small>
     `;
     return eventDiv;
 }

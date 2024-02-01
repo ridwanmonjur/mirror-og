@@ -20,7 +20,7 @@
             </div>
             <div class="league_name mt-4">
                 <b>{{ $event->eventName }}</b> <br>
-                <small>{{ $event->region ?? 'South East Asia' }}</small>
+                <small>{{ $event->venue ?? 'South East Asia' }}</small>
             </div>
             <div class="trophy_caption mt-4">
                 <img src="{{ asset('/assets/images/trophy.png') }}" class="trophy"><br>

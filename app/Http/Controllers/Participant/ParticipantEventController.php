@@ -37,10 +37,13 @@ class ParticipantEventController extends Controller
                     ->orWhereNull('sub_action_public_date');
             })
             ->when($request->has('search'), function ($query) use ($request) {
+                
                 $search = trim($request->input('search'));
+                
                 if (empty($search)) {
                     return $query;
                 }
+
                 return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
             })
             ->with('tier', 'type', 'game', 'joinEvents')
@@ -109,8 +112,11 @@ class ParticipantEventController extends Controller
                     ->get();
 
                 $eventsByTeam = [];
+
                 foreach ($joinEvents as $event) {
+                    
                     $userId = $event->user_id;
+                    
                     $teamId = $event->user->teams->first(function ($team) use ($id) {
                         return $team->id == $id;
                     })->id;
@@ -176,7 +182,9 @@ class ParticipantEventController extends Controller
             $eventsByTeam = [];
 
             foreach ($joinEvents as $event) {
+                
                 $userId = $event->user_id;
+                
                 $teamId = $event->user->teams->first(function ($team) use ($id) {
                     return $team->id == $id;
                 })->id;

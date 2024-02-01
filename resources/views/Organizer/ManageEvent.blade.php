@@ -33,7 +33,11 @@
                     <a href="{{ route('event.index', ['status' => 'ENDED', 'page' => 1]) }}">Ended</a>
                 </p>
             </div>
-            @include('Organizer.ManageEvent.ManageEventFilterSort')
+            @include('Organizer.ManageEvent.ManageEventFilterSort', [
+                'eventCategoryList' => $eventCategoryList, 
+                'eventTierList' => $eventTierList, 
+                'eventTypeList' => $eventTypeList 
+            ])
             </div>
             <div class="d-none" id="insertFilterTags">
             </div>

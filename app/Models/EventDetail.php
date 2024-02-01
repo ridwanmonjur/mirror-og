@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Exceptions\TimeGreaterException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
+use App\Models\PaymentTransaction;
 
 class EventDetail extends Model
 {
@@ -60,9 +63,16 @@ class EventDetail extends Model
 
     public function statusResolved()
     {
-        $carbonPublishedDateTime = $this->createCarbonDateTimeFromDB($this->sub_action_public_date, $this->sub_action_public_time);
-        $carbonEndDateTime = $this->createCarbonDateTimeFromDB($this->endDate, $this->endTime);
-        $carbonStartDateTime = $this->createCarbonDateTimeFromDB($this->startDate, $this->startTime);
+        $carbonPublishedDateTime = $this->createCarbonDateTimeFromDB(
+            $this->sub_action_public_date, $this->sub_action_public_time
+        );
+        $carbonEndDateTime = $this->createCarbonDateTimeFromDB(
+            $this->endDate, $this->endTime
+        );
+        $carbonStartDateTime = $this->createCarbonDateTimeFromDB(
+            $this->startDate, $this->startTime
+        );
+
         $carbonNow = Carbon::now()->utc();
         
         if ($this->status == "DRAFT" || $this->status == "PREVIEW") {
@@ -72,11 +82,12 @@ class EventDetail extends Model
         } elseif (!$carbonEndDateTime || !$carbonStartDateTime) {
             Log::error("EventDetail.php: statusResolved: EventDetail with id= " . $this->id
                 . " and name= " . $this->eventName . " has null end or start date time");
+            
             return "ERROR";
         } elseif ($carbonEndDateTime < $carbonNow) {
             return "ENDED";
         } else {
-
+            
             if ($carbonStartDateTime < $carbonNow) {
                 return "ONGOING";
             } elseif ($carbonPublishedDateTime && $carbonPublishedDateTime > $carbonNow) {
@@ -89,9 +100,7 @@ class EventDetail extends Model
     {
         if ($time == null) {
             return null;
-        }
-
-        if (substr_count($time, ':') === 2) {
+        } else if (substr_count($time, ':') === 2) {
             $time = explode(':', $time);
             $time = $time[0] . ':' . $time[1];
         }
@@ -116,8 +125,245 @@ class EventDetail extends Model
     }
 
     public function eventTier()
-{
-    return $this->belongsTo(EventTier::class, 'event_tier_id');
-}
+    {
+        return $this->belongsTo(EventTier::class, 'event_tier_id');
+    }
+
+    public static function generatePartialQueryForFilter(Request $request) {
+        $eventListQuery = self::query();
+        
+        $eventListQuery->when($request->has('status'), function ($query) use ($request) {
+            
+            $status = $request->input('status');
+            
+            if (!$status) {
+                return $query;
+            }
+
+            $currentDateTime = Carbon::now()->utc();
+            
+            if ($status == 'ALL') {
+                return $query;
+            } elseif ($status == 'DRAFT') {
+                return $query->where('status', 'DRAFT');
+            } elseif ($status == 'ENDED') {
+                return $query
+                    ->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime])
+                    ->where('status', '<>', 'PREVIEW')
+                    ->whereNotNull('payment_transaction_id')
+                    ->where('status', '<>', 'DRAFT');
+            } elseif ($status == 'LIVE') {
+                return $query
+                    ->where(function ($query) use ($currentDateTime) {
+                        return $query
+                            ->whereNull('sub_action_public_date')
+                            ->orWhereNull('sub_action_public_time')
+                            ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime]);
+                    })
+                    ->where('status', '<>', 'DRAFT')
+                    ->whereNotNull('payment_transaction_id')
+                    ->where('status', '<>', 'PREVIEW')
+                    ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
+            } elseif ($status == 'SCHEDULED') {
+                $query
+                    ->whereNotNull('sub_action_public_date')
+                    ->whereNotNull('sub_action_public_time')
+                    ->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime])
+                    ->where('status', '<>', 'DRAFT')
+                    ->where('status', '<>', 'PREVIEW')
+                    ->whereNotNull('payment_transaction_id')
+                    ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
+                // dd($query);
+                return $query;
+            } else {
+                return $query;
+            }
+        });
+
+        $eventListQuery->when($request->has('search'), function ($query) use ($request) {
+            $search = trim($request->input('search'));
+            
+            if (empty($search)) {
+                return $query;
+            }
+
+            return $query->where(function ($q) use ($search) {
+                return $q
+                    ->orWhere('eventDescription', 'LIKE', "%{$search}%")
+                    ->orWhere('eventDefinitions', 'LIKE', "%{$search}%")
+                    ->orWhere('eventTags', 'LIKE', "%{$search}%")
+                    ->orWhereHas('game', function ($query) use ($search) {
+                            $query->where('gameTitle', 'LIKE', "%$search%");
+                    });
+            });
+        });
+
+        return $eventListQuery;
+    }
+
+    public static function generateFullQueryForFilter(Request $request) {
+        $eventListQuery = self::generatePartialQueryForFilter($request);
+
+        $eventListQuery->when($request->has('sort'), function ($query) use ($request) {
+            $sort = $request->input('sort');
+            
+            if (!$sort) {
+                return $query;
+            } else {
+                foreach ($sort as $key => $value) {
+                    $query->orderBy($key, $value);
+                }
+
+                return $query;
+            }
+        });
+
+        $eventListQuery->when($request->has('filter'), function ($query) use ($request) {
+            $filter = $request->input('filter');
+
+            if (!$filter) {
+                return $query;
+            } else {
+                if (array_key_exists('eventTier', $filter)) {
+                    $query->where('event_tier_id', $filter['eventTier']);
+                } 
+                
+                if (array_key_exists('eventType', $filter)) {
+                    $query->where('event_type_id', $filter['eventType']);
+                } 
+                
+                if (array_key_exists('gameTitle', $filter)) {
+                    $query->where('event_category_id', $filter['gameTitle']);
+                }
+                
+                return $query;
+            }
+        });
+
+        return $eventListQuery;
+    }
+
+    public static function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
+    {
+        $isEditMode = $eventDetail->id != null;
+        $isDraftMode = $request->launch_visible == 'DRAFT';
+        
+        $isPreviewMode = $isEditMode ? false : $request->livePreview == 'true';
+        $carbonStartDateTime = null;
+        $carbonEndDateTime = null;
+        $carbonPublishedDateTime = null;
+        $eventDetail->event_type_id = $request->eventTypeId;
+        $eventDetail->event_tier_id = $request->eventTierId;
+        $eventDetail->event_category_id = $request->gameTitleId;
+        
+        $startDate = $request->startDate;
+        $startTime = $eventDetail->fixTimeToRemoveSeconds($request->startTime);
+        $endDate = $request->endDate;
+        $endTime = $eventDetail->fixTimeToRemoveSeconds($request->endTime);
+
+        if ($startDate && $startTime) {
+            $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate . ' ' . $startTime)->utc();
+            $eventDetail->startDate = $carbonStartDateTime->format('Y-m-d');
+            $eventDetail->startTime = $carbonStartDateTime->format('H:i');
+        } elseif ($isPreviewMode && !$isEditMode) {
+            $eventDetail->startDate = null;
+            $eventDetail->startTime = null;
+        } elseif (!$isDraftMode) {
+            throw new TimeGreaterException('Start date and time must be greater than current date and time.');
+        } elseif ($isDraftMode) {
+            $eventDetail->startDate = $request->startDate;
+            $eventDetail->startTime = $request->startTime;
+        }
+
+        if ($endDate && $endTime) {
+            $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate . ' ' . $endTime)->utc();
+            if ($startDate && $startTime && $carbonEndDateTime > $carbonStartDateTime) {
+                $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
+                $eventDetail->endTime = $carbonEndDateTime->format('H:i');
+            } elseif ($isPreviewMode && !$isEditMode) {
+                $eventDetail->endDate = null;
+                $eventDetail->endTime = null;
+            } elseif (!$isDraftMode) {
+                throw new TimeGreaterException('End date and time must be greater than start date and time.');
+            } elseif ($isDraftMode) {
+                $eventDetail->endDate = $request->endDate;
+                $eventDetail->endTime = $request->endTime;
+            }
+        }
+
+        $eventDetail->eventName = $request->eventName;
+        $eventDetail->eventDescription = $request->eventDescription;
+        $eventDetail->eventTags = $request->eventTags;
+        $transaction = $eventDetail->payment_transaction;
+
+        if ($transaction && $transaction->payment_id && $transaction->status == 'SUCCESS') {
+        } elseif ($request->isPaymentDone == 'true' && $request->paymentMethod) {
+            $transaction = new PaymentTransaction();
+            $transaction->payment_id = $request->paymentMethod;
+            $transaction->payment_status = 'SUCCESS';
+            $transaction->save();
+            $eventDetail->payment_transaction_id = $transaction->id;
+        } 
+
+        if ($request->launch_visible == 'DRAFT') {
+            $eventDetail->status = 'DRAFT';
+            $eventDetail->sub_action_public_date = null;
+            $eventDetail->sub_action_public_time = null;
+        } else {
+            
+            if ($request->launch_visible == 'public') {
+                $launch_date = $request->launch_date_public;
+                $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_public);
+            } elseif ($request->launch_visible == 'private') {
+                $launch_date = $request->launch_date_private;
+                $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_private);
+            }
+
+            if ($request->launch_schedule == 'schedule' && $launch_date && $launch_time) {
+                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date . ' ' . $launch_time)->utc();
+                
+                if ($launch_date && $launch_time && $carbonPublishedDateTime < $carbonStartDateTime && $carbonPublishedDateTime < $carbonEndDateTime) {
+                    $eventDetail->status = 'SCHEDULED';
+                    $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
+                    $eventDetail->sub_action_public_time = $carbonPublishedDateTime->format('H:i');
+                } else {
+                    throw new TimeGreaterException('Published time must be before start time and end time.');
+                }
+
+            } elseif ($request->launch_schedule == 'now') {
+                $eventDetail->status = 'UPCOMING';
+                $eventDetail->sub_action_public_date = null;
+                $eventDetail->sub_action_public_time = null;
+            } else {
+                $eventDetail->status = 'DRAFT';
+                
+                if ($launch_date && $launch_time) {
+                    $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date . ' ' . $launch_time)->utc();
+                    $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
+                    $eventDetail->sub_action_public_time = $carbonPublishedDateTime->format('H:i');
+                } else {
+                    $eventDetail->sub_action_public_date = null;
+                    $eventDetail->sub_action_public_time = null;
+                }
+            }
+
+            if ($transaction && $transaction->payment_id && $transaction->status == 'SUCCESS') {
+            } elseif ($request->isPaymentDone == 'true' && $request->paymentMethod) {
+            } else {
+                if ($eventDetail->status != 'DRAFT') { 
+                    $eventDetail->status = 'PENDING';
+                }
+            }
+        }
+
+        $eventDetail->sub_action_private = $request->launch_visible;
+        
+        if ($request->launch_visible == 'DRAFT') {
+            $eventDetail->sub_action_private = 'private';
+        }
+
+        // dd($eventDetail, $request);
+        return $eventDetail;
+    }
 
 }

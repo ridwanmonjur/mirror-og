@@ -108,7 +108,7 @@
                             <circle cx="12" cy="10" r="3"></circle>
                         </svg>
                         &nbsp;
-                        <span>{{ $event->region ?? 'South East Asia' }}</span>
+                        <span>{{ $event->venue ?? 'South East Asia' }}</span>
                     </div>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"

@@ -24,13 +24,10 @@
                 onclick="stopPropagation(event);";  
                 class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTitle"
             >
-                @foreach([
-                    ['value'=> 'Dota 2'],
-                    ['value'=> 'Dota'],
-                ] as $gameTitle)
+                @foreach($eventCategoryList as $eventCategoryItem)
                     <div class="px-3 min-w-150px">
-                        <input onchange="setFilterForFetch(event, '{{$gameTitle['value']}}');" type="checkbox" name="gameTitle" value="{{$gameTitle['value']}}">
-                        <label for="gameTitle">{{$gameTitle['value']}}</label>
+                        <input onchange="setFilterForFetch(event, '{{$eventCategoryItem['gameTitle']}}');" type="checkbox" name="gameTitle" value="{{$eventCategoryItem['id']}}">
+                        <label for="gameTitle">{{$eventCategoryItem['gameTitle']}}</label>
                     </div>
                 @endforeach
             </div>
@@ -52,13 +49,10 @@
             <div
                 onclick="stopPropagation(event);"; 
                 class="dropdown-menu px-0 py-1 pt-3" aria-labelledby="dropdownFilterType">
-                @foreach([
-                    ['value'=> 'Tournament'],
-                    ['value'=> 'League'],
-                ] as $eventType)
+                @foreach($eventTypeList as $eventType)
                     <div class="px-3 min-w-150px">
-                        <input onchange="setFilterForFetch(event, '{{$eventType['value']}}');" type="checkbox" name="eventType" value="{{$eventType['value']}}">
-                        <label for="eventType">{{$eventType['value']}}</label>
+                        <input onchange="setFilterForFetch(event, '{{$eventType['eventType']}}');" type="checkbox" name="eventType" value="{{$eventType['id']}}">
+                        <label for="eventType">{{$eventType['eventType']}}</label>
                     </div>
                 @endforeach
             </div>
@@ -80,15 +74,10 @@
                 onclick="stopPropagation(event);"; 
                 class="dropdown-menu px-0 pt-3" aria-labelledby="dropdownFilterTier"
             >
-                @foreach([
-                    ['value'=> 'Dolphin'],
-                    ['value'=> 'Turtle'],
-                    ['value'=> 'Starfish'],
-                    ['value'=> 'Mermaid'],
-                ] as $eventTier)
+                @foreach($eventTierList as $eventTier)
                     <div class="px-3 min-w-150px">
-                        <input onchange="setFilterForFetch(event, '{{$eventTier['value']}}');" type="checkbox" name="eventTier" value="{{$eventTier['value']}}">
-                        <label for="eventTier">{{$eventTier['value']}}</label>
+                        <input onchange="setFilterForFetch(event, '{{$eventTier['eventTier']}}');" type="checkbox" name="eventTier" value="{{$eventTier['id']}}">
+                        <label for="eventTier">{{$eventTier['eventTier']}}</label>
                     </div>
                 @endforeach
             </div>
@@ -111,7 +100,7 @@
                 class="dropdown-menu px-0" aria-labelledby="dropdownFilterTier"
             >
                 <div class="px-3 pt-2 min-w-250px">
-                    <input onchange="setFilterForFetch(event, 'SEA');" type="checkbox" name="region" value="SEA">
+                    <input onchange="setFilterForFetch(event, 'SEA');" type="checkbox" name="venue" value="SEA">
                     <label for="eventTier">South East Asia (SEA)</label>
                 </div>
             </div>
