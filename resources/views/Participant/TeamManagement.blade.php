@@ -297,7 +297,8 @@
                     <tr class="st">
                         <td>
                             <div class="player-info">
-                                <div class="player-image" style="background-image: url('{{ $pendingMember->user->profile_image_url }}')"></div>
+                                <div class="player-image" style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png')"></div>
+                                {{-- <div class="player-image" style="background-image: url('{{ $pendingMember->user->profile_image_url }}')"></div> --}}
                                 <span>{{ $pendingMember->user->name }}</span>
                             </div>
                         </td>
