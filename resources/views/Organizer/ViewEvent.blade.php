@@ -5,10 +5,11 @@
     $status = $event->statusResolved();
     $stylesEventStatus = bladeEventStatusStyleMapping($status);
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
-    $eventTierLower = bladeEventTowerLowerClass($event->eventTier);
+    $tier = $event->tier ? $event->tier->eventTier : null;
+    $eventTierLower = bladeEventTowerLowerClass($tier);
     $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
     extract($dateArray);
-    $eventTierLowerImg = bladeEventTierImage($event->eventTier);
+    $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
 
 @endphp
@@ -29,7 +30,7 @@
         </div>
         <br><br>
         <div class="grid-container">
-            @if ($event->eventTier)
+            @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }}">
                     <img class="side-image-absolute-bottom" src="{{ $eventTierLowerImg }}" width="180" height="125">
                 </div>
@@ -208,7 +209,7 @@
                                     </svg>
                                     &nbsp;
                                     <span
-                                        style="position: relative; top: 5px;">{{ $event->eventType ?? 'Choose event type' }}</span>
+                                        style="position: relative; top: 5px;">{{ $tier ?? 'Choose event type' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -216,7 +217,7 @@
 
                 </div>
             </div>
-            @if ($event->eventTier)
+            @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }} ">
                     <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="180"
                         height="125">

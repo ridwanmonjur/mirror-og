@@ -2,7 +2,7 @@
     @php
         $stylesEventStatus = bladeEventStatusStyleMapping($event->status);
         $stylesEventStatus .= 'padding-top: -150px; ';
-        $eventTierLowerImg = bladeEventTierImage($event->eventTier);
+        $eventTierLowerImg = bladeEventTierImage($event->tier ? $event->tier->eventTier: null);
         $eventBannerImg = bladeImageNull($event->eventBanner);
         $bladeEventGameImage = bladeImageNull($event->game ? $event->game->gameIcon : null);
     @endphp

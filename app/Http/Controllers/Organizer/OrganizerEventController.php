@@ -94,7 +94,7 @@ class OrganizerEventController extends Controller
             ->withCount('joinEvents');
         
         foreach ($eventList as $event) {
-            $tierEntryFee = $event->eventTier->tierEntryFee ?? null;
+            $tierEntryFee = $event->tier->eventTier->tierEntryFee ?? null;
         }
 
         $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);

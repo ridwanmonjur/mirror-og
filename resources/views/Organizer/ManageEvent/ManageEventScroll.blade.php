@@ -5,14 +5,15 @@
         $stylesEventStatus = bladeEventStatusStyleMapping($status);
         $stylesEventStatus .= 'padding-top: -150px; ';
         $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
-        $eventTierLower = bladeEventTowerLowerClass($event->eventTier);
+        $tier = $event->tier ? $event->tier->eventTier : null;
+        $eventTierLower = bladeEventTowerLowerClass($tier);
         
         $dateStartArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
         $dateEndArray = bladeGenerateEventStartEndDateStr($event->endDate, $event->endTime);
         $datePublishedArray = bladeGenerateEventStartEndDateStr($event->sub_action_public_date, $event->sub_action_public_time);
         extract($dateStartArray);
 
-        $eventTierLowerImg = bladeEventTierImage($event->eventTier);
+        $eventTierLowerImg = bladeEventTierImage($tier);
         $eventBannerImg = bladeImageNull($event->eventBanner);
         $bladeEventGameImage = bladeImageNull($event->game ? $event->game->gameIcon : null);
         
