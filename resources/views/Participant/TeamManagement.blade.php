@@ -605,5 +605,32 @@
     }
 </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get all search inputs and member tables
+        const searchInputs = document.querySelectorAll('.search_box input');
+        const memberTables = document.querySelectorAll('.member-table');
+
+        // Attach event listener to each search input
+        searchInputs.forEach((searchInput, index) => {
+            searchInput.addEventListener("input", function() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const memberRows = memberTables[index].querySelectorAll('tbody tr');
+
+                memberRows.forEach(row => {
+                    const playerName = row.querySelector('.player-info span').textContent.toLowerCase();
+
+                    if (playerName.includes(searchTerm)) {
+                        row.style.display = 'table-row';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+
 </body>
 
