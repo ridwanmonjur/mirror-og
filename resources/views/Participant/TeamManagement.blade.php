@@ -231,6 +231,7 @@
                         <div class="player-info">
                             <div class="player-image" style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')"></div>
                             <span>{{ $manage->user->name }}</span>
+                            <span style="margin-left: 400px;">Joined {{ $manage['user']->created_at->format('M d, Y') }}</span>
                         </div>
                     </td>
                     <td class="flag-cell">
@@ -246,6 +247,7 @@
                                 <div class="player-info">
                                     <div class="player-image" style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png')"></div>
                                     <span>{{ $user['user']->name }}</span>
+                                    <span style="margin-left: 400px;">Joined {{ $user['user']->created_at->format('M d, Y') }}</span>
                                 </div>
                             </td>
                             <td class="flag-cell">
