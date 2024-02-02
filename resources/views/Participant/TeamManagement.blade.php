@@ -7,7 +7,7 @@
     <title>Team Management</title>
     <!-- Existing CSS links -->
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="... (the integrity hash) ..." crossorigin="anonymous">
@@ -16,7 +16,7 @@
 
 <body>
     @include('CommonLayout.NavbarforParticipant')
-    <main>
+    <main class="main1">
         <div class="team-section">
             <div class="upload-container">
                 <label for="image-upload" class="upload-label">
@@ -43,7 +43,9 @@
             <p>We are an awesome team with awesome members! Come be awesome together! Play some games and win some prizes GGEZ!</p>
             @endforeach
         </div>
+    </main>
 
+    <main class="main2">
         <div class="tabs">
             <button class="tab-button" onclick="showTab('Overview')">Overview</button>
             <button class="tab-button" onclick="showTab('Members')">Members</button>
@@ -313,7 +315,7 @@
                             ✔
                             </button>
                             <button onclick="rejectMember('{{ $pendingMember->id }}')" style="background-color: #e74c3c; color: #fff; border: none; padding: 5px 10px; cursor: pointer;">✘</button>
-                            @endif 
+                            @endif
                             @endforeach
                         </td>
                     </tr>
@@ -321,7 +323,7 @@
             </tbody>
         </table>
     </div>
-    
+
     </div>
     @endforeach
                     @endif
@@ -571,10 +573,10 @@
     function approveMember(button) {
         const memberId = button.getAttribute('data-member-id');
 
-        
+
         const url = "{{ route('team.approve-member', ['id' => ':id']) }}".replace(':id', memberId);
 
-        
+
         fetch(url, {
             method: 'POST',
             headers: {
@@ -587,7 +589,7 @@
             // Handle the response
             console.log(data);
 
-            
+
             if (data.success) {
                 const memberRow = button.closest('tr');
                 memberRow.remove();
