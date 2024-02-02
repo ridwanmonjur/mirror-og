@@ -219,8 +219,10 @@
                     <input class="nav__input" type="text" placeholder="Search for player name">
                 </div>
                 <div style="padding-right: 200px; transform: translateY(-95%);">
-                    <img src="/assets/images/add.png" height="40px" width="40px">
-                </div>
+                    @if(auth()->user()->id == $manage->user_id)
+                        <img src="/assets/images/add.png" height="40px" width="40px">
+                    @endif
+                </div>                
             </div>
         </div>
         <table class="member-table">
