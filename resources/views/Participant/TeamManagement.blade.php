@@ -260,7 +260,10 @@
         </table>
     </div>
     <div class="tab-content" id="PendingMembers" data-type="member" style="display: none; text-align: center;">
-        <p style="text-align: center;">Pending Members</p>
+        @php
+        $pendingMembersCount = count($pendingMembers);
+        @endphp
+        <p style="text-align: center;">Team {{ $manage->teamName }} has {{ $pendingMembersCount }} pending members</p>
         <div class="cont">
             <div class="leftC">
                 <span class="icon2">
