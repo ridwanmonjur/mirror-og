@@ -480,6 +480,10 @@ input[type="submit"],
     width: min-content;
 }
 
+.icon2 {
+    cursor: pointer;
+}
+
 .event_status_2 {
     background-color: #78da1d;
     color: #fff;

@@ -249,10 +249,6 @@
                             <td class="flag-cell">
                                 <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
                             </td>
-                            <td class="action-buttons">
-                                <button class="cross-button" onclick="rejectMember(this)">✖</button>
-                                <button class="tick-button" onclick="acceptMember(this)">✔</button>
-                            </td>
                         </tr>
                     @endif
                 @endforeach
@@ -605,6 +601,7 @@
     }
 </script>
 
+{{-- Start Javascript for Search  --}}
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Get all search inputs and member tables
@@ -630,6 +627,8 @@
         });
     });
 </script>
+
+{{-- End Javascript for Search Member  --}}
 
 
 </body>
