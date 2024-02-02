@@ -188,15 +188,11 @@
                                     </svg>
                                     &nbsp;
                                     @if ($event->tier)
-                                        @foreach ($eventList as $index => $eventDetail)
-                                            @if ($index == 0)
-                                                <span style="position: relative; top: 5px;">
-                                                    {{ $eventDetail->join_events_count }}/{{ $event->tier->tierTeamSlot ?? 'Not Available' }}
-                                                </span>
-                                            @endif
-                                        @endforeach
+                                        <span style="position: relative; top: 5px;">
+                                            {{ $event->join_events_count }}/{{ $event->tier->tierTeamSlot ?? 'Not Available' }}
+                                        </span>
                                     @else
-                                        <span>N/A</span>
+                                        <span>No event tier chosen</span>
                                     @endif
                                 </div>
                                 <div>
@@ -223,7 +219,6 @@
                         height="125">
                 </div>
             @else
-                <!-- <div>Choose event tier</div> -->
                 <div></div>
             @endif
         </div>

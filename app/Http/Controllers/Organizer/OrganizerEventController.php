@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Exceptions\EventChangeException;
+use App\Exceptions\TimeGreaterException;
 use Illuminate\Validation\UnauthorizedException;
 
 class OrganizerEventController extends Controller
@@ -23,10 +25,9 @@ class OrganizerEventController extends Controller
     private function getEvent($userId, $id): EventDetail
     {
         $event = EventDetail::with('type','tier','game')
-            ->where('user_id', $userId)
             ->find($id);
 
-        if ($event->user_id == $userId) {
+        if ($event->user_id != $userId) {
             throw new UnauthorizedException('You cannot view an event of another organizer!');
         }
         
@@ -152,9 +153,7 @@ class OrganizerEventController extends Controller
             'eventTierList' => $eventTierList,
             'eventTypeList' => $eventTypeList,
         ]);
-    }
-
-   
+    } 
 
     public function storeEventBanner($file)
     {
@@ -272,7 +271,7 @@ class OrganizerEventController extends Controller
                     session()->flash('successMessageCoupon', "Applying your coupon named: $request->coupon!");
                 } else {
                     $fee = $this->createNoDiscountFeeObject($fee, $event->tier->tierEntryFee);
-                    session()->flash('errorMessageCoupon', "Your coupon named: $request->coupon! is expired or not availabe now!");
+                    session()->flash('errorMessageCoupon', "Your coupon named: $request->coupon! is expired or not available now!");
                 }
             } else {
                 if ($request->has('coupon')) {
@@ -304,13 +303,17 @@ class OrganizerEventController extends Controller
         try {
             $user = $request->get('user');
             $userId = $user->id;
-
-            $event = $this->getEvent($userId, $id);     
-
-            $count = 8;
-            $eventListQuery = EventDetail::query();
-            $eventListQuery->withCount('joinEvents');
-            $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
+            
+            $event = EventDetail::with('tier')
+                ->where('user_id', $userId)
+                ->withCount('joinEvents')
+                ->find($id);
+            
+            if (is_null($event)) {
+                throw new ModelNotFoundException("Event not found with id: $id");
+            } else if ($event->user_id != $userId) {
+                throw new UnauthorizedException('You cannot view an event of another organizer!');
+            }
 
         } catch (ModelNotFoundException | UnauthorizedException $e) {
             return $this->show404($e->getMessage());
@@ -323,7 +326,6 @@ class OrganizerEventController extends Controller
             'mappingEventState' => EventDetail::mappingEventStateResolve(),
             'isUser' => true,
             'livePreview' => 0,
-            'eventList' => $eventList, // Add the eventList variable to the view data
         ]);
     }
 
@@ -349,8 +351,10 @@ class OrganizerEventController extends Controller
             } else {
                 return redirect('organizer/event/' . $eventDetail->id . '/success');
             }
-        } catch (Exception $e) {
+        } catch (TimeGreaterException | EventChangeException $e ) {
             return back()->with('error', $e->getMessage());
+        }  catch (Exception $e) {
+            return back()->with('error', 'Something went wrong with saving data!');
         }
     }
 
@@ -428,7 +432,8 @@ class OrganizerEventController extends Controller
             } else {
                 return $this->show404("Event not found for id: $id");
             }
-
+        } catch (TimeGreaterException | EventChangeException $e ) {
+            return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
             return back()->with('error', 'Something went wrong with saving data!');
         }
@@ -443,7 +448,7 @@ class OrganizerEventController extends Controller
         } catch (ModelNotFoundException | UnauthorizedException $e) {
             return $this->show404($e->getMessage());
         } catch (Exception $e) {
-            return $this->show404("Failed to retrieve event!");
+            return $this->show404("Failed to delete event!");
         }
     }
 }

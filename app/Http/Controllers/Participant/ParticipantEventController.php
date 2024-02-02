@@ -10,6 +10,7 @@ use App\Models\EventDetail;
 use App\Models\Follow;
 use App\Models\JoinEvent;
 use App\Models\Member;
+use App\Models\Organizer;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -330,7 +331,12 @@ class ParticipantEventController extends Controller
     public function ViewEvent(Request $request, $id)
     {
         try {
-            $event = EventDetail::find($id);
+            $user = $request->get('user');
+            $userId = $user && $user->id ? $user->id : null;
+
+            $event = EventDetail::with('game', 'type')
+                ->withCount('joinEvents')
+                ->find($id);
 
             if (!$event) {
                 throw new ModelNotFoundException("Event not found by id: $id");
@@ -343,14 +349,9 @@ class ParticipantEventController extends Controller
                 throw new ModelNotFoundException("Can't display event: $id with status: $lowerStatus");
             }
 
-            $count = 8;
-            $user = Auth::user();
-            $eventListQuery = EventDetail::query();
-            $eventListQuery->with('tier');
-
             if ($user) {
                 if ($event->sub_action_private == 'private') {
-                    $checkIfUserIsOrganizerOfEvent = $event->user_id == $user->id;
+                    $checkIfUserIsOrganizerOfEvent = $event->user_id == $userId;
                     // change this line
                     $checkIfUserIsInvited = true;
                     $checkIfShouldDisallow = !($checkIfUserIsOrganizerOfEvent || $checkIfUserIsInvited);
@@ -361,30 +362,23 @@ class ParticipantEventController extends Controller
                 }
 
                 if ($status == 'SCHEDULED') {
-                    $checkIfUserIsOrganizerOfEvent = $event->user_id == $user->id;
+                    $checkIfUserIsOrganizerOfEvent = $event->user_id == $userId;
 
                     if (!$checkIfUserIsOrganizerOfEvent) {
                         throw new UnauthorizedException('You cannot view a scheduled event');
                     }
                 }
 
-                $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
-                $userId = auth()->user()->id;
-
                 $existingJoint = JoinEvent::where('user_id', $userId)
                     ->where('event_details_id', $event->id)
                     ->first();
 
-                foreach ($eventList as $_event) {
-                    $tierEntryFee = $_event->eventTier?->tierEntryFee ?? null;
-                }
             } else {
                 if ($event->sub_action_private == 'private') {
                     throw new UnauthorizedException('Login to access this event.');
                 }
 
                 $eventList = [];
-                $userId = null;
                 $existingJoint = null;
             }
 

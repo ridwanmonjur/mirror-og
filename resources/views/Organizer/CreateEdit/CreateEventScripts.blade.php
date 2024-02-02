@@ -2,19 +2,25 @@
 <script>
 
     function fillStepPaymentValues() {
+        
         const paymentMethodConditionFulfilledButton =
             document.getElementsByClassName('choose-payment-method-condition-fulfilled')[0];
+        
         const paymentMethodCondition = document.getElementsByClassName('choose-payment-method')[0];
+        
         let eventRate = 20,
             eventSubTotal = 0,
             eventFee = 0,
             eventTotal = 0;
+        
         let eventRateToTierMap = {
             'Starfish': 5000,
             'Turtle': 10000,
             'Dolphin': 15000
         };
+        
         let formValues = getFormValues(['eventTier', 'eventType']);
+        
         if (
             'eventTier' in formValues &&
             'eventType' in formValues
@@ -23,8 +29,9 @@
             let eventTier = formValues['eventTier'] ?? null;
             let eventType = formValues['eventType'] ?? null;
             eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
+            
             if (eventRate == -1) {
-                Toast2.fire({
+                Toast.fire({
                     icon: 'error',
                     text: `Invalid event tier or event type!`
                 })
@@ -32,6 +39,7 @@
 
             eventFee = eventSubTotal * (eventRate / 100);
             eventTotal = eventSubTotal + eventFee;
+            
             if (eventTier == null || eventType == null || eventSubTotal == -1) {
                 getElementByIdAndSetInnerHTML('paymentType', "N/A");
                 getElementByIdAndSetInnerHTML('paymentTier', "N/A");
@@ -51,6 +59,7 @@
                 getElementByIdAndSetInnerHTML('paymentRate', `${eventRate}%`);
                 getElementByIdAndSetInnerHTML('paymentFee', "RM " + numberToLocaleString(eventFee));
                 getElementByIdAndSetInnerHTML('paymentTotal', "RM " + numberToLocaleString(eventTotal));
+                
                 if (!paymentMethodConditionFulfilledButton.classList.contains("d-none")) {
                     paymentMethodConditionFulfilledButton.classList.add("d-none");
                 }
@@ -82,18 +91,21 @@
 
     function setInnerHTMLFromLocalStorage(key, element) {
         let value = checkStringNullOrEmptyAndReturnFromLocalStorage(key);
+        
         if (value) element.innerHTML = value;
         else console.error(`Item not in localStorage: ${key} ${value}`)
     }
 
     function setImageSrcFromLocalStorage(key, element) {
         let value = checkStringNullOrEmptyAndReturnFromLocalStorage(key);
+        
         if (value && element) element.src = value;
         else console.error(`Can't set image for: ${key}, ${value} ${value}`)
     }
 
     function setLocalStorageFromEventObject(key, property) {
         let value = checkStringNullOrEmptyAndReturn(property);
+        
         if (value) localStorage.setItem(key, value);
         else console.error(`Item not in localStorage: ${key} ${value}`)
     }
@@ -102,12 +114,10 @@
 <script>
     function fillEventTags() {
         let eventTags = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTags');
+        
         if (eventTags != null) {
             let eventTagsParsed = Object(JSON.parse(eventTags));
-            console.log({
-                eventTags: eventTags,
-                value: eventTagsParsed,
-            })
+            
             var tagify = new Tagify(document.querySelector('#eventTags'),
                 [],
             );
@@ -120,6 +130,7 @@
 
     function fillStepGameDetailsValues() {
         let formValues = getFormValues(['eventTier', 'eventType', 'gameTitle']);
+        
         if (
             'eventTier' in formValues &&
             'gameTitle' in formValues &&
@@ -167,9 +178,11 @@
         const endDateInputValue = endDateInput.value;
         const startTimeInputValue = startTimeInput.value;
         const endTimeInputValue = endTimeInput.value;
+        
         var now = new Date();
         var startDate = new Date(startDateInputValue + " " + startTimeInput.value);
         var endDate = new Date(endDateInput.value + " " + endTimeInput.value);
+        
         if (startDate < now || endDate <= now) {
             Toast.fire({
                 icon: 'error',
@@ -181,9 +194,11 @@
                 endDateInput.value = ""
             }
         }
+        
         if (startTimeInput.value === "" || endTimeInput.value === "") {
             return;
         }
+        
         if (endDate < startDate) {
             Toast.fire({
                 icon: 'error',
@@ -198,6 +213,7 @@
         var selectedFile = document.getElementById(inputFileId).files[0];
 
         const fileSize = selectedFile.size / 1024 / 1024; // in MiB
+        
         if (fileSize > 8) {
             selectedFile.value = '';
             Toast.fire({
@@ -234,8 +250,10 @@
         let tier = {!! json_encode($tier) !!};
         let type = {!! json_encode($type) !!};
         let game = {!! json_encode($game) !!};
+        
         console.log({$event, tier, type, game})
         clearLocalStorage();
+        
         if ($event) {
 
             let assetKeyWord = "{{ asset('') }}"
@@ -254,9 +272,9 @@
             setLocalStorageFromEventObject('eventTierTitle', tier?.eventTier);
             setLocalStorageFromEventObject('eventTags', $event?.eventTags);
             if ($event?.eventTags != null) {
-        } else {
-            new Tagify(document.querySelector('#eventTags'), []);
-        }
+            } else {
+                new Tagify(document.querySelector('#eventTags'), []);
+            }
         }
         else{
             new Tagify(document.querySelector('#eventTags'), []);
@@ -264,11 +282,11 @@
     }
     
     document.addEventListener("keydown", function(event) {
-    var target = event.target;
+        var target = event.target;
 
-    if (event.key === "Enter" && target.tagName.toLowerCase() !== "textarea" && target.tagName.toLowerCase() === "input") {
-        event.preventDefault();
-    }
+        if (event.key === "Enter" && target.tagName.toLowerCase() !== "textarea" && target.tagName.toLowerCase() === "input") {
+            event.preventDefault();
+        }
     });
 </script>
 

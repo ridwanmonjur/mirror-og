@@ -143,7 +143,7 @@
                                 class="larger-hover" src="{{ asset('/assets/images/events/clipboard-icon.png') }}"
                                 alt="clipboard" width="45" height="30" style="object-fit: cover; ">
                         </a>
-                        @if ($status != 'UPCOMING')
+                        @if ($status != 'ONGOING')
                             <a style="padding: none; margin: none;" href="{{ route('event.edit', $event->id) }}">
                                 <img onclick="goToEditScreen()" class="larger-hover"
                                     src="{{ asset('/assets/images/events/edit-icon.png') }}" alt="edit"
