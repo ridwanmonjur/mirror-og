@@ -460,7 +460,7 @@ class AuthController extends Controller
 
             if (Auth::attempt($validatedData)) {
                 $user = Auth::getProvider()->retrieveByCredentials($validatedData);
-
+        
                 if (!$user->email_verified_at) {
                     return redirect()
                         ->back()
@@ -469,18 +469,14 @@ class AuthController extends Controller
                             'error' => 'Email not verified. Please verify email first!',
                         ]);
                 }
-
-                if ($user->role != $userRoleCapital && $user->role != 'ADMIN') :
+        
+                if ($user->role != $userRoleCapital && $user->role != 'ADMIN') {
                     throw new \ErrorException("Invalid Role for $userRoleSentence");
-                endif;
-
+                }
+        
                 $request->session()->regenerate();
-                $route = $userRole . '.home.view';
-                $message = 'Account signed in successfully as $userRole!';
-                
-                return redirect()
-                    ->route($route)
-                    ->with('success', $message);
+    
+                return redirect()->intended(route($userRole . '.home.view'))->with('success', "Account signed in successfully as $userRole!");
             } else {
                 throw new \ErrorException('The email or password you entered is incorrect!');
             }
