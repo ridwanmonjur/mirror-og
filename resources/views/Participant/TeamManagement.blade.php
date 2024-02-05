@@ -132,9 +132,8 @@
                 @endif
                 @endforeach
                     <button class="carousel-button" onclick="slideEvents(1)">></button>
+                    @endif
                 </div>
-
-
             </div>
 
             <div class="team-info">
@@ -333,9 +332,7 @@
 
     </div>
     @endforeach
-                    @endif
-
-
+                
         <div class="tab-content" id="Active Rosters" style="display: center;">
 
             <p style="text-align: center;">Team {{ $manage->teamName }} has no active rosters</p>
