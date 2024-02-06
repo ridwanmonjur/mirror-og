@@ -57,9 +57,7 @@ return [
     |
     */
 
-    'links' => [
-        base_path(env('BASE_FOLDER') . "storage") => storage_path('app/public'),
-    ],
+   
 
 ];
 

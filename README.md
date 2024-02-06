@@ -30,7 +30,10 @@ npm i
 npm i -g vite
 npm run build
 
-ln -s storage/app/public public/storage
+rm -rf public/storage
+php artisan storage:link
+
+Copy file from public/assets/images/storage to public/storage (new symlink folder)
 
 /artisan/storage
 
