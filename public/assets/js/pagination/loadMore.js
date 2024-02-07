@@ -76,7 +76,6 @@ function infinteLoadMoreByPost(ENDPOINT, body) {
     let hasClass = noMoreDataElement.classList.contains('d-none');
     
     if (hasClass) {
-        
         fetch(ENDPOINT, {
             method: 'post',
             headers: {
@@ -94,11 +93,13 @@ function infinteLoadMoreByPost(ENDPOINT, body) {
                     noMoreDataElement.style.justifyContent = 'center';
                     noMoreDataElement.textContent = "We don't have more data to display";
                 } else {
-                    scrollingPaginationElement.innerHTML += response.html;
+                    scrollingPaginationElement.innerHTML += response.html ;
                 }
             })
             .catch(function (error) {
+
                 console.log('Server error occured');
+                throw new Error('Error occurred');
             });
     } else {
         return;

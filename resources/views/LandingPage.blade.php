@@ -41,11 +41,12 @@
         <script>
             var ENDPOINT = "{{ route('landing.view') }}";
             var page = 1;
+            let fetchedPage = 1;
             var search = null;
             
             window.addEventListener(
                 "scroll",
-                throttle((e) => {
+                (e) => {
                     var windowHeight = window.innerHeight;
                     var documentHeight = document.documentElement.scrollHeight;
                     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -63,8 +64,7 @@
                         
                         infinteLoadMore(null, ENDPOINT);
                     }
-                }, 300)
-            );
+                });
         </script>
         <script>
             function myFunction() {

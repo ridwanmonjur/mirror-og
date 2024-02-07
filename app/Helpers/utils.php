@@ -7,7 +7,7 @@ function generateCarbonDateTime($startDate, $startTime)
 
     if ($startDate != null && $startTime != null) {
         $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $startDate . ' ' . $startTime, 'UTC') ?? null;
-        // $carbonDateTimeUtc = $carbonDateTimeUtc->setTimezone('Asia/Singapore');
+
         return $carbonDateTimeUtc;
     } else {
        return null;

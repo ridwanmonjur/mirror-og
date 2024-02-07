@@ -22,6 +22,7 @@
             this.sortKey = '';
             this.filter = {};
             this.search = null;
+            this.fetchedPage = 1;
         }
 
         visualize() {
@@ -29,7 +30,8 @@
                 filter: this.filter,
                 search: this.search,
                 sortKey: this.sortKey,
-                sortType: this.sortType
+                sortType: this.sortType,
+                fetchedPage: this.fetchedPage                
             });
         }
 
@@ -43,6 +45,10 @@
 
         getFilter() {
             return this.filter;
+        }
+
+        getFetchedPage() {
+            return this.fetchedPage;
         }
 
         getSearch() {
@@ -63,6 +69,10 @@
 
         setSortType(value) {
             this.sortType = value;
+        }
+
+        setFetchedPage(value) {
+            this.fetchedPage = value;
         }
     }
 
@@ -119,14 +129,16 @@
 
         if (event.target.checked) {
             filter[event.target.name] = [...filter[event.target.name] ?? [], value];
+            addFilterTags(title, event.target.name, event.target.value);
+
         } else {
             filter[event.target.name] = filter[event.target.name].filter(
                 _value => _value != value
             );
+            deleteTagNewFunction();
         }
 
         fetchVariables.setFilter(filter);
-        addFilterTags(title, event.target.name, event.target.value);
         fetchSearchSort();
         fetchVariables.visualize();
     }
@@ -338,12 +350,11 @@
 
     window.addEventListener(
         "scroll",
-        throttle((e) => {
+        (e) => {
 
             var windowHeight = window.innerHeight;
             var documentHeight = document.documentElement.scrollHeight;
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
             if (scrollTop + windowHeight >= documentHeight - 200) {
                 
                 let params = convertUrlStringToQueryStringOrObject({
@@ -358,7 +369,24 @@
                     params = {};
                 }
 
+                console.log({
+                    page,
+                    fetchedPage: fetchVariables.getFetchedPage()
+                })
+
+                if ( page > fetchVariables.getFetchedPage() + 1 ) {
+                    page = fetchVariables.getFetchedPage() ;
+                    console.log({
+                        page,
+                        fetchedPage: fetchVariables.getFetchedPage()
+                    })
+                    return;
+                }
+
+                fetchVariables.setFetchedPage(page);
+
                 params.page = page;
+                
                 ENDPOINT = "{{ route('event.search.view') }}";
 
                 body = {
@@ -370,10 +398,13 @@
                     search: fetchVariables.getSearch(),
                     ...params
                 }
-
-                infinteLoadMoreByPost(ENDPOINT, body);
+                try{
+                    infinteLoadMoreByPost(ENDPOINT, body)
+                } catch {
+                    fetchVariables.setFetchedPage(page-1);
+                };
             }
-        }, 300)
+        }
     );
     
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

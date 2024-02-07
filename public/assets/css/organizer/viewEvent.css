@@ -374,13 +374,12 @@ input[type="submit"]:active {
 
 @media screen and (min-width: 992px) {
     .side-image-absolute-top{
-        position: absolute;
-        bottom: 90vh;
+        bottom: 40vh;
         right: -5vh;
     }
 
     .side-image-absolute-bottom {
-        bottom: -10vh;
+        bottom: -15vh;
     }
 
     .d-lg-none {
@@ -479,8 +478,6 @@ input[type="submit"]:active {
     }
 
     .side-image-absolute-top{
-        position: absolute;
-        bottom: 100vh;
-        right: 0vw;
+        bottom: 40vh;
     }
 }

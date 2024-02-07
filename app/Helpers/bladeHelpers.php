@@ -93,7 +93,6 @@ function bladeGenerateEventStartEndDateStr($startDate, $startTime)
 function bladeEventTierImage($eventTier)
 {
 
-    // TODO PUT THESE IN STORAGE
     if ($eventTier) {
         $eventTierLower = strtolower($eventTier);
         $eventTierLowerImg = asset('/assets/images/' . $eventTierLower . '.png');

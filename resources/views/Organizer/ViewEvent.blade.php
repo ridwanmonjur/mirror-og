@@ -1,7 +1,6 @@
 @include('Organizer.Layout.ViewEventHeadTag')
 
 @php
-
     $status = $event->statusResolved();
     $stylesEventStatus = bladeEventStatusStyleMapping($status);
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
@@ -11,7 +10,6 @@
     extract($dateArray);
     $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
-
 @endphp
 
 <body>

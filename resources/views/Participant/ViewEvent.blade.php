@@ -95,21 +95,22 @@
                                         @method('DELETE')
                                     @endif
                                     @if ($user && isset($user->id)) 
-                                        <button type="button" id="followButton"
-                                            onclick="fetchFollow({{$event?->user?->organizer?->id}}, {{$user->id }})"
+                                        <button 
+                                            type="button" id="followButton"
+                                            onclick="fetchFollow('{{$event?->user?->organizer?->id}}', '{{$user->id }}')"
                                             data-following="true"
-                                            style="background-color: '#32CD32'; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px;"
+                                            style="background-color: #32CD32; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px;"
                                         >
-                                            {{ $user->isFollowing($event?->user?->organizer) ? 'Following' : 'Follow' }}
+                                            {{ $user->isFollowing($event?->user?->organizer) ? 'Following' : 'Followzzz' }}
                                         </button>
                                     @else
                                         <button 
+                                            style="background-color: #43A4D7; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px;"
                                             type="button" id="followButton"
-                                            onclick="goToSignInPage({{$hyperLinks['followButton']}})"
+                                            onclick="goToSignInPage('{{$hyperLinks['followButton']}}')"
                                             data-following="false"
-                                            style="background-color: '#43A4D7'; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px;"
                                         >
-                                            Follow
+                                            Followyyy
                                         </button>
                                     @endif
                                     {{-- here is an input for signaling whether to fetch or not --}}
@@ -161,7 +162,25 @@
                         @endif
                         <form method="POST" action="{{ route('join.store', ['id' => $event]) }}">
                             @csrf
-
+                            @if ($user && isset($user->id)) 
+                                <button 
+                                    type="button" id="joinButton"
+                                    class="oceans-gaming-default-button"
+                                    onclick="fetchFollow('{{$event?->user?->organizer?->id}}', '{{$user->id }}')"
+                                    data-following="true"
+                                >
+                                    @if ($existingJoint)Joined @else Join @endif
+                                </button>
+                            @else
+                                <button 
+                                    class="oceans-gaming-default-button"
+                                    type="button" id="followButton"
+                                    onclick="goToSignInPage('{{$hyperLinks['joinButton']}}')"
+                                    data-following="false"
+                                >
+                                    Followyyy
+                                </button>
+                            @endif
                             @if ($existingJoint)
                                 <!-- Display the joined button -->
                                 <button type="button" class="oceans-gaming-default-button" disabled>
@@ -261,13 +280,13 @@
     </main>
     @stack('script')
     <script>
+        function goToSignInPage(hyperlink) {
+            console.log({hyperlink})
+            window.location.href = hyperlink;
+        }
+
         document.getElementById('followForm').addEventListener('submit', function(event) {
             event.preventDefault();
-
-            if (document.querySelector("input[name='user_id']").value == "NO-USER") {
-                window.location.href = "{{ $hyperLinks['joinButton'] }}";
-                return;
-            }
 
             let form = this;
             let formData = new FormData(form);

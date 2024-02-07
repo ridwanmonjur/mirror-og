@@ -130,17 +130,16 @@ class EventDetail extends Model
         return $this->belongsTo(EventTier::class, 'event_tier_id');
     }
 
-    public static function generatePartialQueryForFilter(Request $request) {
+    public static function generateOrganizerPartialQueryForFilter(Request $request) {
         $eventListQuery = self::query();
         
         $eventListQuery->when($request->has('status'), function ($query) use ($request) {
             
             $status = $request->input('status');
             
-            if (!$status) {
+            if (empty(trim($status))) {
                 return $query;
             }
-
             $currentDateTime = Carbon::now()->utc();
             
             if ($status == 'ALL') {
@@ -174,7 +173,7 @@ class EventDetail extends Model
                     ->where('status', '<>', 'PREVIEW')
                     ->whereNotNull('payment_transaction_id')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
-                // dd($query);
+                    
                 return $query;
             } else {
                 return $query;
@@ -186,61 +185,92 @@ class EventDetail extends Model
             
             if (empty($search)) {
                 return $query;
+            } else {
+                return $query->where(function ($q) use ($search) {
+                    return $q
+                        ->orWhere('eventDescription', 'LIKE', "%{$search}%")
+                        ->orWhere('eventName', 'LIKE', "%{$search}%")
+                        ->orWhere('eventTags', 'LIKE', "%{$search}%")
+                        ->orWhereHas('game', function ($query) use ($search) {
+                                $query->where('gameTitle', 'LIKE', "%$search%");
+                        });
+                });
             }
-
-            return $query->where(function ($q) use ($search) {
-                return $q
-                    ->orWhere('eventDescription', 'LIKE', "%{$search}%")
-                    ->orWhere('eventDefinitions', 'LIKE', "%{$search}%")
-                    ->orWhere('eventTags', 'LIKE', "%{$search}%")
-                    ->orWhereHas('game', function ($query) use ($search) {
-                            $query->where('gameTitle', 'LIKE', "%$search%");
-                    });
-            });
         });
 
         return $eventListQuery;
     }
 
-    public static function generateFullQueryForFilter(Request $request) {
-        $eventListQuery = self::generatePartialQueryForFilter($request);
+    public static function generateOrganizerFullQueryForFilter(Request $request) {
+        $eventListQuery = self::generateOrganizerPartialQueryForFilter($request);
 
         $eventListQuery->when($request->has('sort'), function ($query) use ($request) {
             $sort = $request->input('sort');
             
-            if (!$sort) {
-                return $query;
-            } else {
                 foreach ($sort as $key => $value) {
-                    $query->orderBy($key, $value);
+                    if (!empty(trim($key))) { 
+                        $query->orderBy($key, $value);
+                    }
                 }
 
                 return $query;
-            }
         });
 
         $eventListQuery->when($request->has('filter'), function ($query) use ($request) {
             $filter = $request->input('filter');
 
-            if (!$filter) {
-                return $query;
-            } else {
-                if (array_key_exists('eventTier', $filter)) {
-                    $query->where('event_tier_id', $filter['eventTier']);
-                } 
-                
-                if (array_key_exists('eventType', $filter)) {
-                    $query->where('event_type_id', $filter['eventType']);
-                } 
-                
-                if (array_key_exists('gameTitle', $filter)) {
-                    $query->where('event_category_id', $filter['gameTitle']);
-                }
-                
-                return $query;
+            if (array_key_exists('eventTier', $filter)) {
+                $query->where('event_tier_id', $filter['eventTier']);
+            } 
+            
+            if (array_key_exists('eventType', $filter)) {
+                $query->where('event_type_id', $filter['eventType']);
+            } 
+            
+            if (array_key_exists('gameTitle', $filter)) {
+                $query->where('event_category_id', $filter['gameTitle']);
             }
+            
+            return $query;
+            
         });
 
+        return $eventListQuery;
+    }
+
+    public static function generateParticipantFullQueryForFilter(Request $request) {
+        $eventListQuery = self::query();
+
+        $currentDateTime = Carbon::now()->utc();
+        
+        $eventListQuery->where('status', '<>', 'DRAFT')
+            ->whereNotNull('payment_transaction_id')
+            ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
+            ->where('sub_action_private', '<>', 'private')
+            ->where(function ($query) use ($currentDateTime) {
+                $query
+                    ->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) < ?', [$currentDateTime])
+                    ->orWhereNull('sub_action_public_time')
+                    ->orWhereNull('sub_action_public_date');
+            })
+            ->when($request->has('search'), function ($query) use ($request) {
+                $search = trim($request->input('search'));
+
+                if (empty($search)) {
+                    return $query;
+                } else {
+                    return $query->where(function ($q) use ($search) {
+                        return $q
+                            ->orWhere('eventDescription', 'LIKE', "%{$search}%")
+                            ->orWhere('eventName', 'LIKE', "%{$search}%")
+                            ->orWhere('eventTags', 'LIKE', "%{$search}%")
+                            ->orWhereHas('game', function ($query) use ($search) {
+                                    $query->where('gameTitle', 'LIKE', "%$search%");
+                            });
+                    });
+                }
+            });
+        
         return $eventListQuery;
     }
 

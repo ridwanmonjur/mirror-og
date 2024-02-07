@@ -475,8 +475,22 @@ class AuthController extends Controller
                 $message = 'Account signed in successfully as $userRole!';
                 
                 if ($request->has('intended')) {
-                    return redirect()
-                    ->route($request->input('intended'));
+                    $route = '';
+                    
+                    if ($request->has('eventId')) {
+                        $params = $request->input('params');
+                        if (empty($request->input('eventId'))) {
+                            $route = route($request->input('intended'));
+                        } else {
+                            $route = route($request->input('intended'), [
+                                'id' => $params
+                            ]);
+                        }
+                    } else {
+                        $route = route($request->input('intended'));
+                    }
+
+                    return redirect()->route($route);
                 } else {
                 return redirect()
                     ->route($route)

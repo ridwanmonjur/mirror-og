@@ -83,7 +83,7 @@ class OrganizerEventController extends Controller
         $organizer = Organizer::where('user_id', $userId)
             ->first();
         
-        $eventListQuery = EventDetail::generatePartialQueryForFilter($request);
+        $eventListQuery = EventDetail::generateOrganizerPartialQueryForFilter($request);
         
         $eventList = $eventListQuery->where('user_id', $user->id)
             ->paginate($count);
@@ -123,7 +123,7 @@ class OrganizerEventController extends Controller
         $organizer = Organizer::where('user_id', $user->id)->first();
         $count = 8;
 
-        $eventListQuery = EventDetail::generateFullQueryForFilter($request);
+        $eventListQuery = EventDetail::generateOrganizerFullQueryForFilter($request);
 
         $eventList = $eventListQuery
             ->where('user_id', $userId)

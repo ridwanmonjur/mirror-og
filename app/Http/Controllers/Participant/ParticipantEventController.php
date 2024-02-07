@@ -22,31 +22,9 @@ class ParticipantEventController extends Controller
     public function home(Request $request)
     {
         $userId = Auth::id();
-
-        $currentDateTime = Carbon::now()->utc();
         $count = 6;
-
-        $events = EventDetail::query()
-            ->where('status', '<>', 'DRAFT')
-            ->whereNotNull('payment_transaction_id')
-            ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
-            ->where('sub_action_private', '<>', 'private')
-            ->where(function ($query) use ($currentDateTime) {
-                $query
-                    ->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) < ?', [$currentDateTime])
-                    ->orWhereNull('sub_action_public_time')
-                    ->orWhereNull('sub_action_public_date');
-            })
-            ->when($request->has('search'), function ($query) use ($request) {
-                
-                $search = trim($request->input('search'));
-                
-                if (empty($search)) {
-                    return $query;
-                }
-
-                return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
-            })
+        $events = EventDetail::generateParticipantFullQueryForFilter($request)
+            
             ->with('tier', 'type', 'game', 'joinEvents')
             ->paginate($count);
 
@@ -353,7 +331,7 @@ class ParticipantEventController extends Controller
             if ($user) {
                 $hyperLinks = [
                     'followButton' => route('follow.organizer'),
-                    'joinButton' => route('join.store', ['id' => $event->id])
+                    'joinButton' => route('join.store', ['eventId' => $event->id])
                 ];
 
                 if ($event->sub_action_private == 'private') {
@@ -382,10 +360,11 @@ class ParticipantEventController extends Controller
             } else {
                 $hyperLinks = [
                     'followButton' => route('participant.signin.view', [
-                        'intended' => route('follow.organizer')
+                        'intended' => 'follow.organizer'
                     ]),
                     'joinButton' => route('participant.signin.view', [
-                        'intended' => route('join.store', ['id' => $event->id])
+                        'intended' => 'join.store', 
+                        'id' => $event->id
                     ]),
                 ];
 
