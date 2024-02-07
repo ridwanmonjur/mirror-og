@@ -256,12 +256,12 @@ input[type="submit"]:active {
 }
 
 .side-image-absolute-top {
-    position: fixed;
+    position: absolute;
     bottom: 40vh;
 }
 
 .side-image-absolute-bottom {
-    position: fixed;
+    position: absolute;
     bottom: 5vh;
 }
 
@@ -374,10 +374,15 @@ input[type="submit"]:active {
 
 @media screen and (min-width: 992px) {
     .side-image-absolute-top{
-        position: fixed;
-        top: 10vh;
-        right: 10vh;
+        position: absolute;
+        bottom: 90vh;
+        right: -5vh;
     }
+
+    .side-image-absolute-bottom {
+        bottom: -10vh;
+    }
+
     .d-lg-none {
         display: none;
     }
@@ -469,6 +474,13 @@ input[type="submit"]:active {
     }
 
     .side-image-absolute-bottom {
-        left: 0px;
+        left: -5vw;
+        bottom: -10vh;
+    }
+
+    .side-image-absolute-top{
+        position: absolute;
+        bottom: 100vh;
+        right: 0vw;
     }
 }

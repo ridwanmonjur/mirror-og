@@ -41,7 +41,8 @@
                     <div class="mx-2 position-relative">
 
                         <div class="d-flex justify-content-center d-lg-none">
-                            <img class="image-at-top" src="{{ $eventTierLowerImg }}"  {!! trustedBladeHandleImageFailureResize() !!}  width="120" height="90">
+                            <img class="image-at-top" src="{{ $eventTierLowerImg }}" {!! trustedBladeHandleImageFailureResize() !!}
+                                width="120" height="90">
                         </div>
                         <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;"
                             @class(['rounded-banner', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
@@ -93,15 +94,24 @@
                                     @if ($user && $user->isFollowing($event?->user?->organizer))
                                         @method('DELETE')
                                     @endif
-                                    <input type="hidden" name="user_id"
-                                        value="{{ $user && $user->id ? $user->id : '' }}">
-                                    <input type="hidden" name="organizer_id"
-                                        value="{{ $event?->user?->organizer?->id }}">
-                                    <button type="submit" id="followButton"
-                                        data-following="{{ $user && $user->isFollowing($event?->user?->organizer) }}"
-                                        style="background-color: {{ $user && $user->isFollowing($event?->user?->organizer) ? '#32CD32' : '#43A4D7' }}; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px;">
-                                        {{ $user && $user->isFollowing($event?->user?->organizer) ? 'Following' : 'Follow' }}
-                                    </button>
+                                    @if ($user && isset($user->id)) 
+                                        <button type="button" id="followButton"
+                                            onclick="fetchFollow({{$event?->user?->organizer?->id}}, {{$user->id }})"
+                                            data-following="true"
+                                            style="background-color: '#32CD32'; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px;"
+                                        >
+                                            {{ $user->isFollowing($event?->user?->organizer) ? 'Following' : 'Follow' }}
+                                        </button>
+                                    @else
+                                        <button 
+                                            type="button" id="followButton"
+                                            onclick="goToSignInPage({{$hyperLinks['followButton']}})"
+                                            data-following="false"
+                                            style="background-color: '#43A4D7'; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px;"
+                                        >
+                                            Follow
+                                        </button>
+                                    @endif
                                     {{-- here is an input for signaling whether to fetch or not --}}
                                 </form>
                             </div>
@@ -149,20 +159,8 @@
                                 {{ session('errorMessage') }}
                             </div>
                         @endif
-                        {{-- <form method="POST" action="{{ route('join.store', ['id' => $event]) }} }}">
-                                @csrf
-                                <button type="submit" class="oceans-gaming-default-button">
-                                    <u>{{$status ?? 'Choose event status'}}</u>
-                                    <u>Join</u>
-                                </button>
-                            </form> --}}
-
                         <form method="POST" action="{{ route('join.store', ['id' => $event]) }}">
                             @csrf
-
-                            @php
-
-                            @endphp
 
                             @if ($existingJoint)
                                 <!-- Display the joined button -->
@@ -242,8 +240,7 @@
                                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                 </svg>
                                 &nbsp;
-                                <span
-                                    style="position: relative; top: 5px;">{{ $tier ?? 'Choose event type' }}</span>
+                                <span style="position: relative; top: 5px;">{{ $tier ?? 'Choose event type' }}</span>
                             </div>
                         </div>
                     </div>
@@ -264,23 +261,14 @@
     </main>
     @stack('script')
     <script>
-        function goToCreateScreen() {
-            let url = "{{ route('event.create') }}";
-            window.location.href = url;
-        }
-
-        function goToEditScreen() {
-            let url = "{{ route('event.edit', $event->id) }}";
-            window.location.href = url;
-        }
-    </script>
-    <script>
         document.getElementById('followForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
-            if (document.querySelector("input[name='user_id']").value == "") {
-                window.location.href = "{{ route('participant.signin.view') }}";
+            event.preventDefault();
+
+            if (document.querySelector("input[name='user_id']").value == "NO-USER") {
+                window.location.href = "{{ $hyperLinks['joinButton'] }}";
                 return;
             }
+
             let form = this;
             let formData = new FormData(form);
 
@@ -290,8 +278,29 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Update button text and style
-                    let followButton = document.getElementById('followButton');
+                    console.log(data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        let followButton = document.getElementById('followButton');
+
+        function fetchFollow(organizer_id, user_id) {
+            if (document.querySelector("input[name='user_id']").value == "NO-USER") {
+                window.location.href = "{{ $hyperLinks['followButton'] }}";
+                return;
+            }
+            
+            fetch("{{ $hyperLinks['followButton'] }}", {
+                    method: 'POST',
+                    body: {
+                        user_id, organizer_id
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
                     let isFollowing = followButton.getAttribute('data-following') === 'true';
 
                     if (isFollowing) {
@@ -303,14 +312,13 @@
                         followButton.setAttribute('data-following', 'true');
                         followButton.style.backgroundColor = '#32CD32';
                     }
-
-                    // Display success message or handle any other action
-                    console.log(data.message);
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
-        });
+
+           
+        }
     </script>
     @include('CommonLayout.BootstrapV5Js')
     <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>

@@ -76,6 +76,7 @@ class ParticipantEventController extends Controller
 
         if ($teamList->isNotEmpty()) {
             $usernamesCountByTeam = [];
+
             foreach ($teamList as $team) {
                 $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($team) {
                     $query->where('team_id', $team->id);
@@ -331,7 +332,7 @@ class ParticipantEventController extends Controller
     public function ViewEvent(Request $request, $id)
     {
         try {
-            $user = $request->get('user');
+            $user = Auth::user();
             $userId = $user && $user->id ? $user->id : null;
 
             $event = EventDetail::with('game', 'type')
@@ -350,6 +351,11 @@ class ParticipantEventController extends Controller
             }
 
             if ($user) {
+                $hyperLinks = [
+                    'followButton' => route('follow.organizer'),
+                    'joinButton' => route('join.store', ['id' => $event->id])
+                ];
+
                 if ($event->sub_action_private == 'private') {
                     $checkIfUserIsOrganizerOfEvent = $event->user_id == $userId;
                     // change this line
@@ -374,11 +380,19 @@ class ParticipantEventController extends Controller
                     ->first();
 
             } else {
+                $hyperLinks = [
+                    'followButton' => route('participant.signin.view', [
+                        'intended' => route('follow.organizer')
+                    ]),
+                    'joinButton' => route('participant.signin.view', [
+                        'intended' => route('join.store', ['id' => $event->id])
+                    ]),
+                ];
+
                 if ($event->sub_action_private == 'private') {
                     throw new UnauthorizedException('Login to access this event.');
                 }
 
-                $eventList = [];
                 $existingJoint = null;
             }
 
@@ -390,7 +404,9 @@ class ParticipantEventController extends Controller
                 $followersCount = null;
             }
 
-            return view('Participant.ViewEvent', compact('event', 'eventList', 'followersCount', 'user', 'existingJoint'));
+            return view('Participant.ViewEvent', compact('event',
+                'followersCount', 'user', 'existingJoint', 'hyperLinks'
+            ));
         } catch (Exception $e) {
             return $this->show404($e->getMessage());
         }
@@ -419,7 +435,7 @@ class ParticipantEventController extends Controller
 
                 return response()->json(['message' => 'Successfully followed the organizer']);
             } else {
-                return response()->json(['message' => 'Successfully followed the organizer']);
+                return response()->json(['error' => 'Already followed the organizer']);
             }
         } catch (QueryException $e) {
             return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);

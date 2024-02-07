@@ -407,10 +407,6 @@ class AuthController extends Controller
                         'success' => 'Organizer Account created and verification email sent. Now verify email!',
                         'email' => $user->email,
                     ],
-                    // [
-                    //     'success' => $userRoleCapital . ' Account created successfully!',
-                    //     // 'email' => $user->email
-                    // ]
                 );
         } catch (QueryException $e) {
             Log::error($e->getMessage());
@@ -475,8 +471,17 @@ class AuthController extends Controller
                 }
         
                 $request->session()->regenerate();
-    
-                return redirect()->intended(route($userRole . '.home.view'))->with('success', "Account signed in successfully as $userRole!");
+                $route = $userRole . '.home.view';
+                $message = 'Account signed in successfully as $userRole!';
+                
+                if ($request->has('intended')) {
+                    return redirect()
+                    ->route($request->input('intended'));
+                } else {
+                return redirect()
+                    ->route($route)
+                    ->with('success', $message);
+                }
             } else {
                 throw new \ErrorException('The email or password you entered is incorrect!');
             }
