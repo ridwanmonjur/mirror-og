@@ -11,6 +11,8 @@
     extract($dateArray);
     $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
+    $bladeEventGameImage = bladeImageNull($event->game ? $event->game->gameIcon : null);
+
 @endphp
 
 <body>
@@ -78,7 +80,7 @@
                             </div>
                             <div class="flexbox-centered-space card-subtitle">
                                 <div class="flexbox-centered-space">
-                                    <img style="display: inline;" src="{{ asset('/assets/images/menu.png') }}"
+                                    <img style="display: inline;" src="{{ $bladeEventGameImage }}"
                                         class="{{ 'rounded-image rounded-box-' . $eventTierLower }}" alt="menu">
                                     &nbsp;
                                     <div class="card-organizer">

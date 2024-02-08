@@ -60,7 +60,6 @@ class OrganizerEventController extends Controller
         $combinedParams = [];
 
         foreach ($queryParams as $key => $value) {
-        
             if (is_array($value) && count($value) > 1) {
                 $combinedParams[$key] = $value;
             } else {
@@ -79,41 +78,25 @@ class OrganizerEventController extends Controller
         $user = Auth::user();
         $userId = $user->id;
         $count = 8;
-        
-        $organizer = Organizer::where('user_id', $userId)
-            ->first();
-        
+        $organizer = Organizer::where('user_id', $userId)->first();
         $eventListQuery = EventDetail::generateOrganizerPartialQueryForFilter($request);
-        
-        $eventList = $eventListQuery->where('user_id', $user->id)
-            ->paginate($count);
-        
         $mappingEventState = EventDetail::mappingEventStateResolve();
-        
-        $eventListQuery
+                
+        $eventList = $eventListQuery
             ->with('tier', 'type', 'game', 'joinEvents')
-            ->withCount('joinEvents');
-        
+            ->withCount('joinEvents')
+            ->where('user_id', $user->id)
+            ->paginate($count);
+
         foreach ($eventList as $event) {
             $tierEntryFee = $event->tier->eventTier->tierEntryFee ?? null;
         }
+        
+        $outputArray = compact('eventList', 'count', 'user', 'organizer', 
+            'mappingEventState', 'eventCategoryList', 'eventTierList', 'eventTypeList'
+        );
 
-        $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
-
-        if ($request->ajax()) {
-            $outputArray = compact('eventList', 'count', 'user', 'organizer', 
-                'mappingEventState'
-            );
-            
-            $view = view('Organizer.ManageEvent.ManageEventScroll', $outputArray)->render();
-            return response()->json(['html' => $view]);
-        } else {
-            $outputArray = compact('eventList', 'count', 'user', 'organizer', 
-                'mappingEventState', 'eventCategoryList', 'eventTierList', 'eventTypeList'
-            );
-
-            return view('Organizer.ManageEvent', $outputArray);
-        }
+        return view('Organizer.ManageEvent', $outputArray);
     }
 
     public function search(Request $request)
@@ -122,7 +105,6 @@ class OrganizerEventController extends Controller
         $user = User::find($userId);
         $organizer = Organizer::where('user_id', $user->id)->first();
         $count = 8;
-
         $eventListQuery = EventDetail::generateOrganizerFullQueryForFilter($request);
 
         $eventList = $eventListQuery

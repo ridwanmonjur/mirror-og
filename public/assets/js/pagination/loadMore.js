@@ -131,11 +131,22 @@ function loadByPost(ENDPOINT, body) {
                 noMoreDataElement.style.justifyContent = 'center';
                 noMoreDataElement.textContent = "Data not found by your query...";
             } else {
-                scrollingPaginationElement.innerHTML = "";
                 scrollingPaginationElement.innerHTML = response.html;
             }
         })
         .catch(function (error) {
             scrollingPaginationElement.innerHTML = "Work in Progress!";
         });
+}
+
+function removeData() {
+    let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
+    scrollingPaginationElement.innerHTML = "";
+}
+
+
+function resetNoMoreElement() {
+    let noMoreDataElement = document.querySelector('.no-more-data');
+    noMoreDataElement.innerHTML = "";
+    noMoreDataElement.classList.add("d-none");
 }

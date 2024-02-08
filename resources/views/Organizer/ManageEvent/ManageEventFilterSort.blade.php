@@ -152,7 +152,7 @@
             <button 
                 class="dropbtn px-3 py-2 me-3" 
                 type="button" id="dropdownSortButton" 
-                onclick="setLocalStorageSortType()"
+                onclick="setFetchSortType()"
                 data-bs-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <span id="sortByTitleId">Sort by:</span>

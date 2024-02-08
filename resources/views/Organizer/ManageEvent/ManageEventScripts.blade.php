@@ -23,6 +23,7 @@
             this.filter = {};
             this.search = null;
             this.fetchedPage = 1;
+            this.currentPage = 1;
         }
 
         visualize() {
@@ -51,6 +52,10 @@
             return this.fetchedPage;
         }
 
+        getCurrentPage() {
+            return this.currentPage;
+        }
+
         getSearch() {
             return this.search;
         }
@@ -74,6 +79,10 @@
         setFetchedPage(value) {
             this.fetchedPage = value;
         }
+
+        setCurrentPage(value) {
+            this.currentPage = value;
+        }
     }
 
     function toggleDropdown(id) {
@@ -89,10 +98,13 @@
 
     let fetchVariables = new FetchVariables();
 
-    var page = 1;
+    
 
-    function fetchSearchSort() {
-        
+    function fetchSearchSortFiter() {
+        resetNoMoreElement();
+
+      
+
         let params = convertUrlStringToQueryStringOrObject({
             isObject: true
         });
@@ -139,7 +151,7 @@
         }
 
         fetchVariables.setFilter(filter);
-        fetchSearchSort();
+        fetchSearchSortFiter();
         fetchVariables.visualize();
     }
 
@@ -154,7 +166,7 @@
         );
 
         fetchVariables.setFilter(filter);
-        fetchSearchSort();
+        fetchSearchSortFiter();
         fetchVariables.visualize();
     }
 
@@ -189,11 +201,11 @@
 
         fetchVariables.setSortKey(key);
         fetchVariables.setSortType(sortType);  
-        fetchSearchSort();
+        fetchSearchSortFiter();
         fetchVariables.visualize();
     }
 
-    function setLocalStorageSortType(type) {
+    function setFetchSortType(type) {
         let sortType = fetchVariables.getSortType();
         let sortKey = fetchVariables.getSortKey();
 
@@ -210,7 +222,7 @@
             sortType = SORT_CONSTANTS['ASC'];
         }
         fetchVariables.setSortType(type);   
-        fetchSearchSort();
+        fetchSearchSortFiter();
         fetchVariables.visualize();  
 }
 </script>
@@ -361,7 +373,7 @@
                     isObject: true
                 });
 
-                page++;
+                fetchVariables.setCurrentPage(fetchVariables.getCurrentPage() + 1);
 
                 let body = {};
 
@@ -370,22 +382,22 @@
                 }
 
                 console.log({
-                    page,
+                    currentPage: fetchVariables.getCurrentPage(),
                     fetchedPage: fetchVariables.getFetchedPage()
                 })
 
-                if ( page > fetchVariables.getFetchedPage() + 1 ) {
-                    page = fetchVariables.getFetchedPage() ;
+                if ( fetchVariables.getCurrentPage() > fetchVariables.getFetchedPage() + 1 ) {
+                    fetchVariables.setCurrentPage( fetchVariables.getFetchedPage() );
                     console.log({
-                        page,
+                        currentPage: fetchVariables.getCurrentPage(),
                         fetchedPage: fetchVariables.getFetchedPage()
                     })
                     return;
                 }
 
-                fetchVariables.setFetchedPage(page);
+                fetchVariables.setFetchedPage(fetchVariables.getCurrentPage());
 
-                params.page = page;
+                params.page = fetchVariables.getCurrentPage();
                 
                 ENDPOINT = "{{ route('event.search.view') }}";
 
@@ -401,7 +413,7 @@
                 try{
                     infinteLoadMoreByPost(ENDPOINT, body)
                 } catch {
-                    fetchVariables.setFetchedPage(page-1);
+                    fetchVariables.setFetchedPage(fetchVariables.getCurrentPage()-1);
                 };
             }
         }

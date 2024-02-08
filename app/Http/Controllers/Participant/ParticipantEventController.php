@@ -24,7 +24,6 @@ class ParticipantEventController extends Controller
         $userId = Auth::id();
         $count = 6;
         $events = EventDetail::generateParticipantFullQueryForFilter($request)
-            
             ->with('tier', 'type', 'game', 'joinEvents')
             ->paginate($count);
 

@@ -135,11 +135,12 @@ class EventDetail extends Model
         
         $eventListQuery->when($request->has('status'), function ($query) use ($request) {
             
-            $status = $request->input('status');
+            $status = $request->input('status')[0];
             
             if (empty(trim($status))) {
                 return $query;
             }
+
             $currentDateTime = Carbon::now()->utc();
             
             if ($status == 'ALL') {
@@ -220,19 +221,30 @@ class EventDetail extends Model
             $filter = $request->input('filter');
 
             if (array_key_exists('eventTier', $filter)) {
-                $query->where('event_tier_id', $filter['eventTier']);
+                return $query->where(function ($q) use ($filter) {
+                    foreach ($filter['eventTier'] as $element) {
+                        $q->orWhere('event_tier_id', $element);
+                    }
+                });
             } 
             
             if (array_key_exists('eventType', $filter)) {
-                $query->where('event_type_id', $filter['eventType']);
+                return $query->where(function ($q) use ($filter) {
+                    foreach ($filter['eventType'] as $element) {
+                        $q->orWhere('event_type_id', $element);
+                    }
+                });
             } 
             
             if (array_key_exists('gameTitle', $filter)) {
-                $query->where('event_category_id', $filter['gameTitle']);
+                return $query->where(function ($q) use ($filter) {
+                    foreach ($filter['gameTitle'] as $element) {
+                        $q->orWhere('event_category_id', $element);
+                    }
+                });
             }
             
             return $query;
-            
         });
 
         return $eventListQuery;
