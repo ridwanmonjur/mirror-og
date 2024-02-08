@@ -22,8 +22,31 @@ class ParticipantEventController extends Controller
     public function home(Request $request)
     {
         $userId = Auth::id();
+
+        $currentDateTime = Carbon::now()->utc();
         $count = 6;
-        $events = EventDetail::generateParticipantFullQueryForFilter($request)
+
+        $events = EventDetail::query()
+            ->where('status', '<>', 'DRAFT')
+            ->whereNotNull('payment_transaction_id')
+            ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
+            ->where('sub_action_private', '<>', 'private')
+            ->where(function ($query) use ($currentDateTime) {
+                $query
+                    ->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) < ?', [$currentDateTime])
+                    ->orWhereNull('sub_action_public_time')
+                    ->orWhereNull('sub_action_public_date');
+            })
+            ->when($request->has('search'), function ($query) use ($request) {
+                
+                $search = trim($request->input('search'));
+                
+                if (empty($search)) {
+                    return $query;
+                }
+
+                return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
+            })
             ->with('tier', 'type', 'game', 'joinEvents')
             ->paginate($count);
 
@@ -53,7 +76,6 @@ class ParticipantEventController extends Controller
 
         if ($teamList->isNotEmpty()) {
             $usernamesCountByTeam = [];
-
             foreach ($teamList as $team) {
                 $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($team) {
                     $query->where('team_id', $team->id);
@@ -309,7 +331,7 @@ class ParticipantEventController extends Controller
     public function ViewEvent(Request $request, $id)
     {
         try {
-            $user = Auth::user();
+            $user = $request->get('user');
             $userId = $user && $user->id ? $user->id : null;
 
             $event = EventDetail::with('game', 'type')
@@ -328,11 +350,6 @@ class ParticipantEventController extends Controller
             }
 
             if ($user) {
-                $hyperLinks = [
-                    'followButton' => route('follow.organizer'),
-                    'joinButton' => route('join.store', ['id' => $event->id])
-                ];
-
                 if ($event->sub_action_private == 'private') {
                     $checkIfUserIsOrganizerOfEvent = $event->user_id == $userId;
                     // change this line
@@ -357,21 +374,11 @@ class ParticipantEventController extends Controller
                     ->first();
 
             } else {
-                $hyperLinks = [
-                    'followButton' => route('participant.signin.view', [
-                        'intended' => 'follow.organizer',
-                        'id' => $event->id
-                    ]),
-                    'joinButton' => route('participant.signin.view', [
-                        'intended' => 'join.store', 
-                        'id' => $event->id
-                    ]),
-                ];
-
                 if ($event->sub_action_private == 'private') {
                     throw new UnauthorizedException('Login to access this event.');
                 }
 
+                $eventList = [];
                 $existingJoint = null;
             }
 
@@ -383,9 +390,7 @@ class ParticipantEventController extends Controller
                 $followersCount = null;
             }
 
-            return view('Participant.ViewEvent', compact('event',
-                'followersCount', 'user', 'existingJoint', 'hyperLinks'
-            ));
+            return view('Participant.ViewEvent', compact('event', 'eventList', 'followersCount', 'user', 'existingJoint'));
         } catch (Exception $e) {
             return $this->show404($e->getMessage());
         }
@@ -414,7 +419,7 @@ class ParticipantEventController extends Controller
 
                 return response()->json(['message' => 'Successfully followed the organizer']);
             } else {
-                return response()->json(['error' => 'Already followed the organizer']);
+                return response()->json(['message' => 'Successfully followed the organizer']);
             }
         } catch (QueryException $e) {
             return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
@@ -422,7 +427,7 @@ class ParticipantEventController extends Controller
     }
 
     public function unfollowOrganizer(Request $request)
-    {   
+    {
         $userId = $request->input('user_id');
         $organizerId = $request->input('organizer_id');
 
@@ -433,33 +438,29 @@ class ParticipantEventController extends Controller
         return response()->json(['message' => 'Successfully unfollowed the organizer']);
     }
 
-    public function JoinEvent(Request $request)
-    {   
-        try {
-            $userId = $request->input('user_id');
-            $eventId = $request->input('event_id');
+    public function JoinEvent(Request $request, $id)
+    {
+        $userId = auth()->user()->id;
+        $existingJoint = JoinEvent::where('user_id', $userId)
+            ->where('event_details_id', $id)
+            ->first();
 
-            $existingJoint = JoinEvent::where('user_id', $userId)
-                ->where('event_details_id', $eventId)
-                ->first();
+        if ($existingJoint) {
+            $errorMessage = 'You have already joined this event.';
+            session()->flash('errorMessage', $errorMessage);
+        } else {
+            session([
+                'joinEventData' => [
+                    'user_id' => $userId,
+                    'event_details_id' => $id,
+                ],
+            ]);
 
-            if ($existingJoint) {
-                $errorMessage = 'You have already joined this event.';
-                return response()->json(['error' => $errorMessage]);
-            } else {
-                session([
-                    'joinEventData' => [
-                        'user_id' => $userId,
-                        'event_details_id' => $eventId,
-                    ],
-                ]);
-                
-                return response()->json(['redirect' => [
-                    'route' => 'participant.selectTeam.view', 'params' => [ 'id' => $userId ]
-                ]]);
-            }
-        } catch (QueryException $e) {
-            return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
+            return redirect()->route('participant.selectTeam.view', ['id' => auth()->user()->id]);
         }
+
+        return redirect()
+            ->back()
+            ->withInput();
     }
 }
