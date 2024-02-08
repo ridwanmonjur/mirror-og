@@ -217,6 +217,25 @@
                         </div>                
                     </div>
                 </div>
+                <table class="member-table">
+                    <tbody>
+                        {{-- Display the creator's name --}}
+                        <tr class="st">
+                            <td>
+                                <div class="player-info">
+                                    <div class="player-image" style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')"></div>
+                                    <span>{{ $manage->user->name }}</span>
+                                    
+                                </div>
+                            </td>
+                            <td class="flag-cell">
+                                <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+        
+                
         @else
         @foreach($eventsByTeam as $teamId => $users)
     @php
