@@ -15,9 +15,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
-use ErrorException;
-use Exception;
 use Illuminate\Database\QueryException;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -89,7 +88,7 @@ class AuthController extends Controller
             } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
                 return redirect()->route('organizer.home.view');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -321,6 +320,8 @@ class AuthController extends Controller
         return Str::random(64);
     }
 
+    //SignUp Auth View
+
     public function signUp(Request $request)
     {
         return view('Auth.SignUp');
@@ -406,6 +407,10 @@ class AuthController extends Controller
                         'success' => 'Organizer Account created and verification email sent. Now verify email!',
                         'email' => $user->email,
                     ],
+                    // [
+                    //     'success' => $userRoleCapital . ' Account created successfully!',
+                    //     // 'email' => $user->email
+                    // ]
                 );
         } catch (QueryException $e) {
             Log::error($e->getMessage());
@@ -466,32 +471,14 @@ class AuthController extends Controller
                 }
         
                 if ($user->role != $userRoleCapital && $user->role != 'ADMIN') {
-                    throw new ErrorException("Invalid Role for $userRoleSentence");
+                    throw new \ErrorException("Invalid Role for $userRoleSentence");
                 }
         
                 $request->session()->regenerate();
-                $route = $userRole . '.home.view';
-                $message = 'Account signed in successfully as $userRole!';
-                if ($request->has('intended')) {
-                    $intened = $request->input('intended');
-                    
-                    if (in_array($intened, ['follow.organizer', 'join.store'])) {                        
-                        $params = $request->input('eventId');
-                        
-                        return redirect()
-                            ->route('participant.event.view', [
-                                'id' => $params, 'redirect' => true
-                            ]);
-                    } else {
-                        throw new ErrorException('Unknown inteded route!');
-                    }
-                } else {
-                return redirect()
-                    ->route($route)
-                    ->with('success', $message);
-                }
+    
+                return redirect()->intended(route($userRole . '.home.view'))->with('success', "Account signed in successfully as $userRole!");
             } else {
-                throw new ErrorException('The email or password you entered is incorrect!');
+                throw new \ErrorException('The email or password you entered is incorrect!');
             }
         } catch (QueryException $e) {
             Log::error($e->getMessage());
