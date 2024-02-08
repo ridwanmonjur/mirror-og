@@ -166,7 +166,7 @@
                                 <button 
                                     type="button" id="joinButton"
                                     class="oceans-gaming-default-button"
-                                    onclick="fetchFollow('{{$event?->user?->organizer?->id}}', '{{$user->id }}')"
+                                    onclick="fetchJoin('{{$event->id}}', '{{$user->id }}')"
                                     data-following="true"
                                 >
                                     @if ($existingJoint)Joined @else Join @endif
@@ -174,27 +174,14 @@
                             @else
                                 <button 
                                     class="oceans-gaming-default-button"
-                                    type="button" id="followButton"
+                                    type="button" id="joinButton"
                                     onclick="goToSignInPage('{{$hyperLinks['joinButton']}}')"
                                     data-following="false"
                                 >
-                                    Followyyy
-                                </button>
-                            @endif
-                            @if ($existingJoint)
-                                <!-- Display the joined button -->
-                                <button type="button" class="oceans-gaming-default-button" disabled>
-                                    <span>Joined</span>
-                                </button>
-                            @else
-                                <!-- Display the join button -->
-                                <button type="submit" class="oceans-gaming-default-button">
-                                    <span>Join</span>
+                                    Join
                                 </button>
                             @endif
                         </form>
-
-
                         <br><br>
                         <div>
                             <div>
@@ -272,7 +259,6 @@
                 <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="180" height="125">
             </div>
         @else
-            <!-- <div>Choose event tier</div> -->
             <div></div>
         @endif
         </div>
@@ -285,32 +271,36 @@
             window.location.href = hyperlink;
         }
 
-        document.getElementById('followForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+        function fetchJoin(event_id, user_id) {
 
-            let form = this;
-            let formData = new FormData(form);
-
-            fetch(form.action, {
-                    method: form.method,
-                    body: formData
+            fetch("{{ $hyperLinks['joinButton'] }}", {
+                    method: 'POST',
+                    body: {
+                        event_id, organizer_id
+                    }
                 })
                 .then(response => response.json())
                 .then(data => {
+                    if (data.error) {
+                        document.querySelector(".error-message").innerHTML = data.error;
+                    } else if (data.redirect) {
+                        window.href = data.redirect;
+                    } else if (data.message) {
+
+                    } else {
+                        throw new Error ("Nothing happened!");
+                    }
                     console.log(data.message);
                 })
                 .catch(error => {
+                    document.querySelector(".error-message").innerHTML = "Some error happened fetching your data";
                     console.error('Error:', error);
                 });
-        });
+        };
 
         let followButton = document.getElementById('followButton');
 
         function fetchFollow(organizer_id, user_id) {
-            if (document.querySelector("input[name='user_id']").value == "NO-USER") {
-                window.location.href = "{{ $hyperLinks['followButton'] }}";
-                return;
-            }
             
             fetch("{{ $hyperLinks['followButton'] }}", {
                     method: 'POST',
@@ -320,17 +310,27 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    let isFollowing = followButton.getAttribute('data-following') === 'true';
+                    if (data.error) {
+                        document.querySelector(".error-message").innerHTML = data.error;
+                    } else if (data.redirect) {
+                        window.href = data.redirect;
+                    } else if (data.message) {
+                         let isFollowing = followButton.getAttribute('data-following') === 'true';
 
-                    if (isFollowing) {
-                        followButton.innerText = 'Follow';
-                        followButton.setAttribute('data-following', 'false');
-                        followButton.style.backgroundColor = '#43A4D7';
-                    } else {
-                        followButton.innerText = 'Unfollow';
-                        followButton.setAttribute('data-following', 'true');
-                        followButton.style.backgroundColor = '#32CD32';
-                    }
+                        if (isFollowing) {
+                            followButton.innerText = 'Follow';
+                            followButton.setAttribute('data-following', 'false');
+                            followButton.style.backgroundColor = '#43A4D7';
+                        } else {
+                            followButton.innerText = 'Unfollow';
+                            followButton.setAttribute('data-following', 'true');
+                            followButton.style.backgroundColor = '#32CD32';
+                        }
+                        } else {
+                            throw new Error ("Nothing happened!");
+                        }
+                    console.log(data.message);
+                   
                 })
                 .catch(error => {
                     console.error('Error:', error);

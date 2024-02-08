@@ -331,7 +331,7 @@ class ParticipantEventController extends Controller
             if ($user) {
                 $hyperLinks = [
                     'followButton' => route('follow.organizer'),
-                    'joinButton' => route('join.store', ['eventId' => $event->id])
+                    'joinButton' => route('join.store', ['id' => $event->id])
                 ];
 
                 if ($event->sub_action_private == 'private') {
@@ -360,7 +360,8 @@ class ParticipantEventController extends Controller
             } else {
                 $hyperLinks = [
                     'followButton' => route('participant.signin.view', [
-                        'intended' => 'follow.organizer'
+                        'intended' => 'follow.organizer',
+                        'id' => $event->id
                     ]),
                     'joinButton' => route('participant.signin.view', [
                         'intended' => 'join.store', 
@@ -422,7 +423,7 @@ class ParticipantEventController extends Controller
     }
 
     public function unfollowOrganizer(Request $request)
-    {
+    {   
         $userId = $request->input('user_id');
         $organizerId = $request->input('organizer_id');
 
@@ -433,29 +434,33 @@ class ParticipantEventController extends Controller
         return response()->json(['message' => 'Successfully unfollowed the organizer']);
     }
 
-    public function JoinEvent(Request $request, $id)
-    {
-        $userId = auth()->user()->id;
-        $existingJoint = JoinEvent::where('user_id', $userId)
-            ->where('event_details_id', $id)
-            ->first();
+    public function JoinEvent(Request $request)
+    {   
+        try {
+            $userId = $request->input('user_id');
+            $eventId = $request->input('event_id');
 
-        if ($existingJoint) {
-            $errorMessage = 'You have already joined this event.';
-            session()->flash('errorMessage', $errorMessage);
-        } else {
-            session([
-                'joinEventData' => [
-                    'user_id' => $userId,
-                    'event_details_id' => $id,
-                ],
-            ]);
+            $existingJoint = JoinEvent::where('user_id', $userId)
+                ->where('event_details_id', $eventId)
+                ->first();
 
-            return redirect()->route('participant.selectTeam.view', ['id' => auth()->user()->id]);
+            if ($existingJoint) {
+                $errorMessage = 'You have already joined this event.';
+                return response()->json(['error' => $errorMessage]);
+            } else {
+                session([
+                    'joinEventData' => [
+                        'user_id' => $userId,
+                        'event_details_id' => $eventId,
+                    ],
+                ]);
+                
+                return response()->json(['redirect' => [
+                    'route' => 'participant.selectTeam.view', 'params' => [ 'id' => $userId ]
+                ]]);
+            }
+        } catch (QueryException $e) {
+            return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
         }
-
-        return redirect()
-            ->back()
-            ->withInput();
     }
 }

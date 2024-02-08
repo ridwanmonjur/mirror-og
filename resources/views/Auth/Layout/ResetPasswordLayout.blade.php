@@ -34,7 +34,6 @@
     </div>
     <div class="field">
         <input type="submit" value="Reset Password" class="oceans-gaming-default-button oceans-gaming-green-button">
-        </input>
     <br>
     <br><br>
 </form>

@@ -10,7 +10,7 @@
     action="{{route('participant.signin.action', 
         [
             'intended' => request()->get('intended'),
-            'eventId' => request()->get('eventId')
+            'eventId' => request()->get('id')
         ]
     )}}"
 >
