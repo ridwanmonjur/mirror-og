@@ -379,12 +379,6 @@ class ParticipantEventController extends Controller
                 } else {
                     $existingJoint = null;
                 }
-<<<<<<< Updated upstream
-=======
-
-                $eventList = [];
-                $existingJoint = null;
->>>>>>> Stashed changes
             }
 
             $organizerId = $event?->user?->organizer?->id ?? null;
@@ -395,11 +389,7 @@ class ParticipantEventController extends Controller
                 $followersCount = null;
             }
 
-<<<<<<< Updated upstream
             return view('Participant.ViewEvent', compact('event', 'followersCount', 'user', 'existingJoint'));
-=======
-            return view('Participant.ViewEvent', compact('event', 'eventList', 'followersCount', 'user', 'existingJoint'));
->>>>>>> Stashed changes
         } catch (Exception $e) {
             return $this->show404($e->getMessage());
         }
