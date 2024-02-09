@@ -21,10 +21,8 @@
     extract($dateArray);
     $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
+
 @endphp
 
 <body>
