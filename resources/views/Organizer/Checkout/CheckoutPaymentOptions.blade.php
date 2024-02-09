@@ -6,6 +6,8 @@
     <div id="otherEWalletLogoId" class="payment-element-children-view d-none">Other view</div>
 </div>
 
+<div id="card"> </div> 
+
 <div class="grid-2-columns mx-4" id="payment-discount-view">
     <div class="mx-2">
         <h4>Payment Method</h4>

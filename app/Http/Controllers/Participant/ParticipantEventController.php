@@ -152,7 +152,7 @@ class ParticipantEventController extends Controller
                 $query->where('team_id', $id)->where('status', 'accepted');
             })
                 ->with('eventDetails', 'user')
-                ->groupBy('event_details_id') // Group by event_details_id to ensure uniqueness
+                ->groupBy('event_details_id') 
                 ->get();
 
             $eventsByTeam = [];
@@ -178,7 +178,9 @@ class ParticipantEventController extends Controller
                 ->pluck('user_count', 'organizer_id')
                 ->toArray();
 
-            return view('Participant.RegistrationManagement', compact('teamManage', 'joinEvents', 'eventsByTeam', 'followCounts'));
+            return view('Participant.RegistrationManagement', compact('teamManage', 'joinEvents', 
+                'eventsByTeam', 'followCounts'
+            ));
         } else {
             return redirect()
                 ->back()

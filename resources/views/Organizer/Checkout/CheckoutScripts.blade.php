@@ -2,6 +2,8 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
 <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
+<script src="{{ asset('/assets/js/models/PaymentProcessor.js') }}"></script>
+
 <script>
     document.querySelectorAll('.transform-number').forEach((element)=>{
         console.log({element})
@@ -26,75 +28,6 @@
 
         parent.classList.toggle("squared-box");
         element.classList.toggle("rounded-box");
-    }
-</script>
-<script>
-    class PaymentProcessor {
-        constructor() {
-            this.isPaymentSelected = false;
-            this.paymentType = null;
-            this.paymentElement = null;
-            this.nextStepId = null;
-        }
-
-        getIsPaymentSelected() {
-            return this.isPaymentSelected;
-        }
-
-        getPaymentElement() {
-            return this.paymentElement;
-        }
-
-        getPaymentType() {
-            return this.paymentType;
-        }
-
-        getNextStepId() {
-            return this.nextStepId;
-        }
-
-        setIsPaymentSelected(value) {
-            if (typeof value === 'boolean') {
-                this.isPaymentSelected = value;
-            } else {
-                throw new Error('Invalid value for isPaymentSelected. Expected a boolean.');
-            }
-        }
-
-        setPaymentElement(value) {
-            if (typeof value === 'string') {
-                this.paymentElement = value;
-            } else {
-                throw new Error('Invalid value for paymentType. Expected a string.');
-            }
-        }
-
-        setPaymentType(value) {
-            if (typeof value === 'string') {
-                this.paymentType = value;
-                this.setNextStepId();
-            } else {
-                throw new Error('Invalid value for paymentType. Expected a string.');
-            }
-        }
-
-        setNextStepId() {
-            const stepList = {
-                'bank': 'bankLogoId',
-                'eWallet': 'eWalletLogoId',
-                'otherEWallet': 'otherEWalletLogoId',
-                'card': 'cardLogoId',
-            };
-
-            this.nextStepId = stepList[this.paymentType];
-        }
-
-        reset() {
-            this.isPaymentSelected = false;
-            this.paymentType = null;
-            this.paymentElement = null;
-            this.nextStepId = null;
-        }
     }
 
     let paymentProcessor = new PaymentProcessor();
@@ -136,7 +69,7 @@
     }
 
     function changeScreen() {
-        if (paymentProcessor.getNextStepId() == null) {
+        if (paymentProcessor.getIsPaymentSelected()) {
            return;
         }
 
@@ -226,7 +159,7 @@
     if (paymentAmount) {
         paymentAmount = paymentAmount.replace("RM ", "");
         paymentAmount = parseInt(paymentAmount);
-        // initializePayment();
+        initializePayment();
     }
 
 </script>
