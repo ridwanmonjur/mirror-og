@@ -331,7 +331,7 @@ class ParticipantEventController extends Controller
     public function ViewEvent(Request $request, $id)
     {
         try {
-            $user = $request->get('user');
+            $user = Auth::user();
             $userId = $user && $user->id ? $user->id : null;
 
             $event = EventDetail::with('game', 'type')
