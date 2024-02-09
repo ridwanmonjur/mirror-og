@@ -21,7 +21,10 @@
     extract($dateArray);
     $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 @endphp
 
 <body>
@@ -284,6 +287,47 @@
             let url = "{{ route('event.edit', $event->id) }}";
             window.location.href = url;
         }
+<<<<<<< Updated upstream
+    </script>
+    <script>
+        document.getElementById('followForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            if (document.querySelector("input[name='user_id']").value == "") {
+                window.location.href = "{{ route('participant.signin.view') }}";
+                return;
+            }
+            let form = this;
+            let formData = new FormData(form);
+
+            fetch(form.action, {
+                    method: form.method,
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Update button text and style
+                    let followButton = document.getElementById('followButton');
+                    let isFollowing = followButton.getAttribute('data-following') === 'true';
+
+                    if (isFollowing) {
+                        followButton.innerText = 'Follow';
+                        followButton.setAttribute('data-following', 'false');
+                        followButton.style.backgroundColor = '#43A4D7';
+                    } else {
+                        followButton.innerText = 'Unfollow';
+                        followButton.setAttribute('data-following', 'true');
+                        followButton.style.backgroundColor = '#32CD32';
+                    }
+
+                    // Display success message or handle any other action
+                    console.log(data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+=======
+>>>>>>> Stashed changes
     </script>
     <script>
         document.getElementById('followForm').addEventListener('submit', function(event) {
@@ -324,6 +368,10 @@
         });
     </script>
     @include('CommonLayout.BootstrapV5Js')
+<<<<<<< Updated upstream
     <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
 
 </html>
+=======
+    <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
+>>>>>>> Stashed changes

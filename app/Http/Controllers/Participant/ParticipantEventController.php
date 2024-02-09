@@ -20,8 +20,31 @@ class ParticipantEventController extends Controller
     public function home(Request $request)
     {
         $userId = Auth::id();
+
+        $currentDateTime = Carbon::now()->utc();
         $count = 6;
-        $events = EventDetail::generateParticipantFullQueryForFilter($request)
+
+        $events = EventDetail::query()
+            ->where('status', '<>', 'DRAFT')
+            ->whereNotNull('payment_transaction_id')
+            ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
+            ->where('sub_action_private', '<>', 'private')
+            ->where(function ($query) use ($currentDateTime) {
+                $query
+                    ->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) < ?', [$currentDateTime])
+                    ->orWhereNull('sub_action_public_time')
+                    ->orWhereNull('sub_action_public_date');
+            })
+            ->when($request->has('search'), function ($query) use ($request) {
+                
+                $search = trim($request->input('search'));
+                
+                if (empty($search)) {
+                    return $query;
+                }
+
+                return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
+            })
             ->with('tier', 'type', 'game', 'joinEvents')
             ->paginate($count);
 
@@ -308,7 +331,7 @@ class ParticipantEventController extends Controller
     public function ViewEvent(Request $request, $id)
     {
         try {
-            $user = Auth::user();
+            $user = $request->get('user');
             $userId = $user && $user->id ? $user->id : null;
 
             $event = EventDetail::with('game', 'type')
@@ -356,6 +379,12 @@ class ParticipantEventController extends Controller
                 } else {
                     $existingJoint = null;
                 }
+<<<<<<< Updated upstream
+=======
+
+                $eventList = [];
+                $existingJoint = null;
+>>>>>>> Stashed changes
             }
 
             $organizerId = $event?->user?->organizer?->id ?? null;
@@ -366,7 +395,11 @@ class ParticipantEventController extends Controller
                 $followersCount = null;
             }
 
+<<<<<<< Updated upstream
             return view('Participant.ViewEvent', compact('event', 'followersCount', 'user', 'existingJoint'));
+=======
+            return view('Participant.ViewEvent', compact('event', 'eventList', 'followersCount', 'user', 'existingJoint'));
+>>>>>>> Stashed changes
         } catch (Exception $e) {
             return $this->show404($e->getMessage());
         }
