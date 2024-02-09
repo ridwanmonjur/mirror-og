@@ -11,7 +11,7 @@
     $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
     $bladeEventGameImage = bladeImageNull($event->game ? $event->game->gameIcon : null);
-
+ 
 @endphp
 
 <body>

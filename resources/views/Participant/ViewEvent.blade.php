@@ -1,4 +1,14 @@
-@include('Organizer.Layout.ViewEventHeadTag')
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Event</title>
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/viewEvent.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">    
+    <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
+</head>
 
 @php
     $status = $event->statusResolved();
@@ -11,6 +21,7 @@
     extract($dateArray);
     $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
+
 @endphp
 
 <body>
@@ -314,3 +325,5 @@
     </script>
     @include('CommonLayout.BootstrapV5Js')
     <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
+
+</html>

@@ -10,8 +10,6 @@ use App\Models\EventDetail;
 use App\Models\Follow;
 use App\Models\JoinEvent;
 use App\Models\Member;
-use App\Models\Organizer;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,31 +20,8 @@ class ParticipantEventController extends Controller
     public function home(Request $request)
     {
         $userId = Auth::id();
-
-        $currentDateTime = Carbon::now()->utc();
         $count = 6;
-
-        $events = EventDetail::query()
-            ->where('status', '<>', 'DRAFT')
-            ->whereNotNull('payment_transaction_id')
-            ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
-            ->where('sub_action_private', '<>', 'private')
-            ->where(function ($query) use ($currentDateTime) {
-                $query
-                    ->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) < ?', [$currentDateTime])
-                    ->orWhereNull('sub_action_public_time')
-                    ->orWhereNull('sub_action_public_date');
-            })
-            ->when($request->has('search'), function ($query) use ($request) {
-                
-                $search = trim($request->input('search'));
-                
-                if (empty($search)) {
-                    return $query;
-                }
-
-                return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
-            })
+        $events = EventDetail::generateParticipantFullQueryForFilter($request)
             ->with('tier', 'type', 'game', 'joinEvents')
             ->paginate($count);
 
@@ -59,9 +34,9 @@ class ParticipantEventController extends Controller
         if ($request->ajax()) {
             $view = view('Participant.HomeScroll', $output)->render();
             return response()->json(['html' => $view]);
+        } else {
+            return view('Participant.Home', $output);
         }
-
-        return view('Participant.Home', $output);
     }
 
     public function teamList($user_id)
@@ -331,7 +306,7 @@ class ParticipantEventController extends Controller
     public function ViewEvent(Request $request, $id)
     {
         try {
-            $user = $request->get('user');
+            $user = Auth::user();
             $userId = $user && $user->id ? $user->id : null;
 
             $event = EventDetail::with('game', 'type')
@@ -376,10 +351,9 @@ class ParticipantEventController extends Controller
             } else {
                 if ($event->sub_action_private == 'private') {
                     throw new UnauthorizedException('Login to access this event.');
+                } else {
+                    $existingJoint = null;
                 }
-
-                $eventList = [];
-                $existingJoint = null;
             }
 
             $organizerId = $event?->user?->organizer?->id ?? null;
@@ -390,7 +364,7 @@ class ParticipantEventController extends Controller
                 $followersCount = null;
             }
 
-            return view('Participant.ViewEvent', compact('event', 'eventList', 'followersCount', 'user', 'existingJoint'));
+            return view('Participant.ViewEvent', compact('event', 'followersCount', 'user', 'existingJoint'));
         } catch (Exception $e) {
             return $this->show404($e->getMessage());
         }
