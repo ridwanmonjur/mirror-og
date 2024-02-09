@@ -20,31 +20,8 @@ class ParticipantEventController extends Controller
     public function home(Request $request)
     {
         $userId = Auth::id();
-
-        $currentDateTime = Carbon::now()->utc();
         $count = 6;
-
-        $events = EventDetail::query()
-            ->where('status', '<>', 'DRAFT')
-            ->whereNotNull('payment_transaction_id')
-            ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
-            ->where('sub_action_private', '<>', 'private')
-            ->where(function ($query) use ($currentDateTime) {
-                $query
-                    ->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) < ?', [$currentDateTime])
-                    ->orWhereNull('sub_action_public_time')
-                    ->orWhereNull('sub_action_public_date');
-            })
-            ->when($request->has('search'), function ($query) use ($request) {
-                
-                $search = trim($request->input('search'));
-                
-                if (empty($search)) {
-                    return $query;
-                }
-
-                return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
-            })
+        $events = EventDetail::generateParticipantFullQueryForFilter($request)
             ->with('tier', 'type', 'game', 'joinEvents')
             ->paginate($count);
 
