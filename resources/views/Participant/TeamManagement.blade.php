@@ -223,7 +223,9 @@
                         <tr class="st">
                             <td>
                                 <div class="player-info">
-                                    <div class="player-image" style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')"></div>
+                                    <div class="player-image" style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
+                                        <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
+                                    </div>
                                     <span>{{ $manage->user->name }}</span>
                                     
                                 </div>
@@ -288,7 +290,9 @@
                 <tr class="st">
                     <td>
                         <div class="player-info">
-                            <div class="player-image" style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')"></div>
+                            <div class="player-image" style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
+                                <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
+                            </div>
                             <span>{{ $manage->user->name }}</span>
                             <span style="margin-left: 400px;">Joined {{ $manage['user']->created_at->format('M d, Y') }}</span>
                         </div>
