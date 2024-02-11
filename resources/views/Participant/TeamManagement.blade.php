@@ -83,7 +83,7 @@
                                 $eventDetailsId = $joinEvent->eventDetails->id;
                             @endphp
                             @if(!in_array($eventDetailsId, $uniqueEventDetailsIds))
-                                <a class="d-block" href="/event/{{ $eventDetailsId }}" style="height: 470px !important;">
+                                <a class="d-block" href="/event/{{ $eventDetailsId }}">
                                     <div class="event-box" id="event{{ $key + 1 }}" style="display: {{ $key === 0 ? 'block' : 'none' }};">
                                         <div style="position: relative; height: 200px;">
                                             <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
