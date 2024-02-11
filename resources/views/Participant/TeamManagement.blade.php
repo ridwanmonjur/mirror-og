@@ -103,6 +103,7 @@
                                                 @endphp
                                                 
                                                 <img src="{{ $imagePath }}" alt="Circle Image" style="width: 100%; height: 100%; object-fit: cover;">
+                                            </a>
                                             </div>
                                         </div>
                                         <div class="frame1">
