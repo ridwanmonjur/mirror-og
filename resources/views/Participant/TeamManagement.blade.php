@@ -72,80 +72,74 @@
                 <!-- Update the event-carousel section in the Overview tab content -->
                 <div class="event-carousel">
                     @if($joinEvents->isEmpty())
-                     <p>No events available</p>
+                        <p>No events available</p>
                     @else
-                    <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
-                    @php
-                    $uniqueEventDetailsIds = [];
-                    @endphp
-                    @foreach($joinEvents as $key => $joinEvent)
-                    @php
-                    $eventDetailsId = $joinEvent->eventDetails->id;
-                    @endphp
-                     @if(!in_array($eventDetailsId, $uniqueEventDetailsIds))
-                    <div class="event-box" id="event{{ $key + 1 }}" style="display: {{ $key === 0 ? 'block' : 'none' }};">
-                    <div style="position: relative; height: 200px;">
-                    <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
-                    <!-- Banner image goes here -->
-                    </div>
-                    <div style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
-        <!-- Circle image goes here -->
-        @php
-        $imagePathWithoutExtension = 'https://driftwood.gg/storage/images/event_details/' . strtolower($joinEvent->eventDetails->eventTier);
-        $imageExtension = pathinfo($imagePathWithoutExtension, PATHINFO_EXTENSION);
-
-        // Supported image extensions
-        $supportedExtensions = ['jpg', 'jpeg', 'png'];
-
-        // If the extension is not in the supported list, default to '.png'
-        $imagePath = $imagePathWithoutExtension . (in_array(strtolower($imageExtension), $supportedExtensions) ? '' : '.png');
-        @endphp
-
-        <img src="{{ $imagePath }}" alt="Circle Image" style="width: 100%; height: 100%; object-fit: cover;">
-
-        </div>
-
-        </div>
-
-                    <div class="frame1">
-                    <div class="container">
-                    <div class="left-col">
-                    <p>
-                    <img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg" class="logo2">
-                    <p style="font-size: 14px; text-align: left; margin-top: 10px; margin-left: 10px;"> {{ $joinEvent->eventDetails->eventName }}</p>
-                    </p>
-                    </div>
-                    <div class="right-col">
-                        <p> 
-                            
-                            <img src="/assets/images/dota.png" class="logo2">
-                            <p style="font-size: 14px; text-align: left; align-items: center; justify-content: space-between;">
-                        <span>{{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</span>
-                        <br>
-                        <span style="font-size: 12px;">{{ $followCounts[$joinEvent->eventDetails->user->organizer->id] ?? '0' }} Followers</span>
-                        <div style="align-items: center;">
-                            <button style="background-color: #43A4D7; color: #FFFFFF; padding: 5px 10px; font-size: 12px; border-radius: 10px; margin-left: 30px;" type="submit">Follow</button>
-                        </div>
-                        
-                        
-                    </p>
-
-                    </p>
-                    </div>
-                    </div>
-                    </div>
-
-                    </div>
-                    @php
-                        $uniqueEventDetailsIds[] = $eventDetailsId;
-                    @endphp
-                @endif
-                @endforeach
-                    <button class="carousel-button" onclick="slideEvents(1)">></button>
+                        <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
+                        @php
+                            $uniqueEventDetailsIds = [];
+                        @endphp
+                        @foreach($joinEvents as $key => $joinEvent)
+                            @php
+                                $eventDetailsId = $joinEvent->eventDetails->id;
+                            @endphp
+                            @if(!in_array($eventDetailsId, $uniqueEventDetailsIds))
+                                <a class="d-block" href="/event/{{ $eventDetailsId }}" style="height: 470px !important;">
+                                    <div class="event-box" id="event{{ $key + 1 }}" style="display: {{ $key === 0 ? 'block' : 'none' }};">
+                                        <div style="position: relative; height: 200px;">
+                                            <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
+                                                <!-- Banner image goes here -->
+                                            </div>
+                                            <div style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
+                                                <!-- Circle image goes here -->
+                                                @php
+                                                    $imagePathWithoutExtension = 'https://driftwood.gg/storage/images/event_details/' . strtolower($joinEvent->eventDetails->eventTier);
+                                                    $imageExtension = pathinfo($imagePathWithoutExtension, PATHINFO_EXTENSION);
+                                                
+                                                    // Supported image extensions
+                                                    $supportedExtensions = ['jpg', 'jpeg', 'png'];
+                                                
+                                                    // If the extension is not in the supported list, default to '.png'
+                                                    $imagePath = $imagePathWithoutExtension . (in_array(strtolower($imageExtension), $supportedExtensions) ? '' : '.png');
+                                                @endphp
+                                                
+                                                <img src="{{ $imagePath }}" alt="Circle Image" style="width: 100%; height: 100%; object-fit: cover;">
+                                            </div>
+                                        </div>
+                                        <div class="frame1">
+                                            <div class="container">
+                                                <div class="left-col">
+                                                    <p>
+                                                        <img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg" class="logo2">
+                                                        <p style="font-size: 14px; text-align: left; margin-top: 10px; margin-left: 10px;"> {{ $joinEvent->eventDetails->eventName }}</p>
+                                                    </p>
+                                                </div>
+                                                <div class="right-col">
+                                                    <p> 
+                                                        <img src="/assets/images/dota.png" class="logo2">
+                                                        <p style="font-size: 14px; text-align: left; align-items: center; justify-content: space-between;">
+                                                            <span>{{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</span>
+                                                            <br>
+                                                            <span style="font-size: 12px;">{{ $followCounts[$joinEvent->eventDetails->user->organizer->id] ?? '0' }} Followers</span>
+                                                            <div style="align-items: center;">
+                                                                <button style="background-color: #43A4D7; color: #FFFFFF; padding: 5px 10px; font-size: 12px; border-radius: 10px; margin-left: 30px;" type="submit">Follow</button>
+                                                            </div>
+                                                        </p>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                @php
+                                    $uniqueEventDetailsIds[] = $eventDetailsId;
+                                @endphp
+                            @endif
+                        @endforeach
+                        <button class="carousel-button" onclick="slideEvents(1)">></button>
                     @endif
                 </div>
             </div>
-
+            
             <div class="team-info">
                 <div class="showcase">
                     <div><b>Showcase</b></div>
