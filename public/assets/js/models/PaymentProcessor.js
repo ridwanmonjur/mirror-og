@@ -1,9 +1,13 @@
 class PaymentProcessor {
-    constructor() {
+    constructor(paymentAmount) {
         this.isPaymentSelected = false;
         this.paymentType = null;
         this.paymentElement = null;
-        this.nextStepId = null;
+        this.paymentAmount = paymentAmount;
+    }
+
+    getPaymentAmount() {
+        return this.paymentAmount;
     }
 
     getIsPaymentSelected() {
@@ -17,11 +21,6 @@ class PaymentProcessor {
 
     getPaymentType() {
         return this.paymentType;
-    }
-
-    getNextStepId() {
-        // use this to toggle the correct payment accordion view 
-        return this.nextStepId;
     }
 
     setIsPaymentSelected(value) {
@@ -43,27 +42,14 @@ class PaymentProcessor {
     setPaymentType(value) {
         if (typeof value === 'string') {
             this.paymentType = value;
-            this.setNextStepId();
         } else {
             throw new Error('Invalid value for paymentType. Expected a string.');
         }
-    }
-
-    setNextStepId() {
-        const stepList = {
-            'bank': 'bankLogoId',
-            'eWallet': 'eWalletLogoId',
-            'otherEWallet': 'otherEWalletLogoId',
-            'card': 'cardLogoId',
-        };
-
-        this.nextStepId = stepList[this.paymentType];
     }
 
     reset() {
         this.isPaymentSelected = false;
         this.paymentType = null;
         this.paymentElement = null;
-        this.nextStepId = null;
     }
 }

@@ -30,7 +30,7 @@
         element.classList.toggle("rounded-box");
     }
 
-    let paymentProcessor = new PaymentProcessor();
+    let paymentProcessor = new PaymentProcessor({{$fee['finalFee']}});
 
     function onChoosePayment(event, type, element) {
         let target = event.currentTarget;
@@ -69,23 +69,58 @@
     }
 
     function changeScreen() {
-        if (paymentProcessor.getIsPaymentSelected()) {
+        if (!paymentProcessor.getIsPaymentSelected()) {
+           console.log({paymentProcessor, ended: true});
            return;
+        } else {
+           console.log({paymentProcessor, ended: false});
+
+            let screenPaymentView = document.getElementById('payment-element-view');
+            let checkoutView = document.getElementById('payment-discount-view');
+            let allPaymentElements = document.querySelectorAll(".payment-element-children-view");
+
+            const stepList = {
+                'bank': 'bankLogoId',
+                'eWallet': 'eWalletLogoId',
+                'otherEWallet': 'otherEWalletLogoId',
+                'card': 'cardLogoId',
+            };      
+            console.log({stepList})
+            let currentElementId  = stepList[paymentProcessor.getPaymentType()];
+            console.log({stepList, currentElementId});
+
+            let currentElement = document.getElementById(currentElementId);
+            
+            allPaymentElements?.forEach((_element)=>{
+                _element.classList.add('d-none');
+            })
+
+            currentElement?.classList.remove('d-none');
+            screenPaymentView?.classList.toggle('d-none');
+            checkoutView?.classList.toggle('d-none');
+
+            switch (paymentProcessor.getPaymentType()) {
+                case 'bank':
+                    // Do something for 'bank'
+                    console.log('Bank case');
+                    break;
+                case 'eWallet':
+                    // Do something for 'eWallet'
+                    console.log('eWallet case');
+                    break;
+                case 'otherEWallet':
+                    // Do something for 'otherEWallet'
+                    initializeApplePayment();
+                    break;
+                case 'card':
+                    initializeStripeCardPayment();
+                    break;
+                default:
+                    // Default case
+                    console.log('Default case');
+                    break;
+            }
         }
-
-        let screenPaymentView = document.getElementById('payment-element-view');
-        let checkoutView = document.getElementById('payment-discount-view');
-        let allPaymentElements = document.querySelectorAll(".payment-element-children-view");
-        let currentElementId = paymentProcessor.getNextStepId();
-        let currentElement = document.getElementById(currentElementId);
-        
-        allPaymentElements?.forEach((_element)=>{
-            _element.classList.add('d-none');
-        })
-
-        currentElement?.classList.remove('d-none');
-        screenPaymentView?.classList.toggle('d-none');
-        checkoutView?.classList.toggle('d-none');
     }
 
     function selectCards() {
@@ -95,40 +130,73 @@
         element2.classList.toggle('d-none');
     }
 
-    function initializePayment() {
-        fetch("{{ route('stripe.createIntent') }}", {
+    async function initializeStripeCardPayment() {
+        try {
+            const response = await fetch("{{ route('stripe.stripeCardIntentCreate') }}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
                 body: JSON.stringify({
-                    paymentAmount
-                })
-            })
-            .then((data) => data.json())
-            .then((json) => {
-                let clientSecret = json.data.client_secret;
-
-                elements = stripe.elements({
-                    clientSecret,
-                    appearance
-                });
-
-                const paymentElementOptions = {
-                    layout: "tabs",
-                };
-
-                const paymentElement = elements.create("payment", paymentElementOptions);
-                paymentElement.mount("#card");
-
-                cardForm.addEventListener('submit', async (e) => {
-                    e.preventDefault()
-
-                    
+                    paymentAmount: paymentProcessor.getPaymentAmount()
                 })
             });
+            
+            const json = await response.json();
+            const clientSecret = json.data.client_secret;
+            elements = stripe.elements({ clientSecret, appearance});
+            const paymentElementOptions = { layout: "tabs" };
+            const paymentElement = elements.create("payment", paymentElementOptions);
+            paymentElement.mount("#card");
+        } catch (error) {
+            console.error("Error initializing Stripe Card Payment:", error);
+        }
     }
+
+    async function finalizeStripeCardPayment(event) {
+        event.preventDefault();
+
+        try {
+            const response = await fetch("{{ route('stripe.organizerTeamPay') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    paymentAmount: paymentProcessor.getPaymentAmount()
+                })
+            });
+
+            const json = await response.json();
+        } catch (error) {
+            console.error("Error submitting card form:", error);
+        }
+    }
+
+    function initializeApplePayment() {
+        const expressCheckoutOptions = {
+        buttonType: {
+            applePay: 'buy',
+            googlePay: 'buy',
+            paypal: 'buynow'
+          }
+        }
+        
+        const elements = stripe.elements({
+            locale: 'sg',
+            mode: 'payment',
+            amount: aymentProcessor.getPaymentAmount(),
+            currency: 'myr',
+        })
+        const expressCheckoutElement = elements.create(
+            'expressCheckout',
+            expressCheckoutOptions
+        )
+        expressCheckoutElement.mount('#express-apple-checkout-element')
+    }
+
     let stripe = Stripe('{{ env('STRIPE_KEY') }}')
     const appearance = {
         theme: 'flat',
@@ -153,14 +221,6 @@
     const cardForm = document.getElementById('card-form')
     const cardName = document.getElementById('card-name')
 
-    let paymentAmount = localStorage.getItem('eventTierPrize');
-    paymentAmount = String(paymentAmount);
-
-    if (paymentAmount) {
-        paymentAmount = paymentAmount.replace("RM ", "");
-        paymentAmount = parseInt(paymentAmount);
-        initializePayment();
-    }
 
 </script>
 

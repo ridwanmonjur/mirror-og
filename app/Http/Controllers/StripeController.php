@@ -7,9 +7,13 @@ use Illuminate\Http\Request;
 
 namespace App\Http\Controllers;
 
+use App\Models\EventDetail;
+use App\Models\PaymentTransaction;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Stripe\StripeClient;
 use Illuminate\Http\Request;
+use Illuminate\Validation\UnauthorizedException;
 use Stripe\Exception\CardException;
 
 class StripeController extends Controller
@@ -20,12 +24,13 @@ class StripeController extends Controller
         $this->stripeClient = new StripeClient(env('STRIPE_SECRET'));
     }
 
-    public function createIntent(Request $request){
+    public function stripeCardIntentCreate(Request $request){
         try {
             $paymentIntent = $this->stripeClient->paymentIntents->create([
                 'amount' => $request->paymentAmount,
                 'currency' => 'myr',
-                'automatic_payment_methods' => ['enabled' => true],
+                'payment_method_types' => ['card'],
+                'automatic_payment_methods' => ['enabled' => false],
             ]);
 
             $responseData = [
@@ -33,7 +38,6 @@ class StripeController extends Controller
                 'message' => 'Payment successful',
                 'data' => [
                     'client_secret' => $paymentIntent->client_secret,
-                   
                 ],
             ];
         
@@ -50,18 +54,21 @@ class StripeController extends Controller
     public function organizerTeamPay(Request $request)
     {
         try {
-            $this->stripeClient = new StripeClient(env('STRIPE_SECRET'));
+            $transaction = new PaymentTransaction();
+            $transaction->payment_id = $request->paymentMethod;
+            $transaction->payment_status = 'SUCCESS';
+            $transaction->save();
 
-            $this->stripeClient->paymentIntents->create([
-                'amount' => 99 * 100,
-                'currency' => 'myr',
-                'payment_method' => $request->payment_method,
-                'description' => 'Demo payment with stripe',
-                'confirm' => true,
-                'receipt_email' => $request->email,
-                'payment_method_types' => ['card'],
-                'automatic_payment_methods' => ['enabled' => false,],
-            ]);
+            $event = EventDetail::find($request->eventId);
+
+            if (!$event) {
+                throw new ModelNotFoundException("Event not found with id: $request->id");
+            } else if ($event->user_id != $request->userId) {
+                throw new UnauthorizedException('You cannot view an event of another organizer!');
+            }
+        
+            $event->payment_transaction_id = $transaction->id;
+            $event->save();
 
             $customer = $this->stripeClient->customers->create([
                 'name' => $request->name,
@@ -90,7 +97,5 @@ class StripeController extends Controller
         } catch (CardException $th) {
             throw new Exception("There was a problem processing your payment", 1);
         }
-
-        return back()->withSuccess('Payment done.');
     }
 }

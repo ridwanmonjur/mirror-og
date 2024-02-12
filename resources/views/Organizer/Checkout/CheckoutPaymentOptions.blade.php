@@ -1,12 +1,24 @@
-<div class="d-none" id="payment-element-view"> 
+<div class="d" id="payment-element-view"> 
     <div class="text-center" onclick="changeScreen();"> Close </div>
-    <div id="cardLogoId" class="payment-element-children-view d-none">Card view</div>
+    <div id="cardLogoId" class="payment-element-children-view">
+        <div class="grid-2-columns mx-4"> 
+            <input name="user_id" value="{{$request->userId}}" />
+            <input name="user_id" value="{{$request->userId}}" />
+
+            <form method="POST" onsubmit="finalizeStripeCardPayment(event);" action="{{ route('stripe.organizerTeamPay') }} }}"> 
+                <div id="card"> 
+                    <button class="oceans-gaming-default-button" type="submit"> Submit </button>
+                </div> 
+            </form>
+        </div>
+    </div>
     <div id="eWalletLogoId" class="payment-element-children-view d-none">Ewallet view</div>
     <div id="bankLogoId" class="payment-element-children-view d-none">Bank view</div>
-    <div id="otherEWalletLogoId" class="payment-element-children-view d-none">Other view</div>
+    <div id="otherEWalletLogoId" class="payment-element-children-view d-none">
+        <div id="express-apple-checkout-element"> </div>
+    </div>
 </div>
 
-<div id="card"> </div> 
 
 <div class="grid-2-columns mx-4" id="payment-discount-view">
     <div class="mx-2">

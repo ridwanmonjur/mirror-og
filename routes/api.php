@@ -35,7 +35,7 @@ Route::name('stripe.')
     ->controller(StripeController::class)
     ->prefix('stripe')
     ->group(function () {
-        Route::post('createIntent', 'createIntent')->name('createIntent');
+        Route::post('card/intent', 'stripeCardIntentCreate')->name('stripeCardIntentCreate');
         Route::post('organizerTeamPay', 'organizerTeamPay')->name('organizerTeamPay');
     });
 
