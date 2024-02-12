@@ -1,16 +1,16 @@
-<div class="d" id="payment-element-view"> 
+<div class="d-none" id="payment-element-view"> 
     <div class="text-center" onclick="changeScreen();"> Close </div>
-    <div id="cardLogoId" class="payment-element-children-view">
-        <div class="grid-2-columns mx-4"> 
-            <input name="user_id" value="{{$request->userId}}" />
-            <input name="user_id" value="{{$request->userId}}" />
-
-            <form method="POST" onsubmit="finalizeStripeCardPayment(event);" action="{{ route('stripe.organizerTeamPay') }} }}"> 
-                <div id="card"> 
-                    <button class="oceans-gaming-default-button" type="submit"> Submit </button>
-                </div> 
-            </form>
-        </div>
+    <div id="cardLogoId" class="payment-element-children-view my-3 py-3 d-none">
+        <form method="POST" onsubmit="finalizeStripeCardPayment(event);" action="{{ route('stripe.organizerTeamPay') }} }}"> 
+            <input type="hidden" name="user_id" value="{{$event->userId}}" />
+            <div class="grid-2-columns mx-4"> 
+                <div id="address-element" class="mx-3 my-2 px-5"> </div> 
+                <div id="card-element" class="mx-3 my-2 px-5"> </div> 
+            </div>
+            <div class="d-flex justify-content-center my-5">
+                <button class="oceans-gaming-default-button" type="submit"> Submit </button>
+            </div>
+        </form>
     </div>
     <div id="eWalletLogoId" class="payment-element-children-view d-none">Ewallet view</div>
     <div id="bankLogoId" class="payment-element-children-view d-none">Bank view</div>

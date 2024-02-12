@@ -85,6 +85,7 @@
                 'otherEWallet': 'otherEWalletLogoId',
                 'card': 'cardLogoId',
             };      
+            
             console.log({stepList})
             let currentElementId  = stepList[paymentProcessor.getPaymentType()];
             console.log({stepList, currentElementId});
@@ -98,25 +99,21 @@
             currentElement?.classList.remove('d-none');
             screenPaymentView?.classList.toggle('d-none');
             checkoutView?.classList.toggle('d-none');
-
+            
             switch (paymentProcessor.getPaymentType()) {
                 case 'bank':
-                    // Do something for 'bank'
                     console.log('Bank case');
                     break;
                 case 'eWallet':
-                    // Do something for 'eWallet'
                     console.log('eWallet case');
                     break;
                 case 'otherEWallet':
-                    // Do something for 'otherEWallet'
                     initializeApplePayment();
                     break;
                 case 'card':
                     initializeStripeCardPayment();
                     break;
                 default:
-                    // Default case
                     console.log('Default case');
                     break;
             }
@@ -146,9 +143,17 @@
             const json = await response.json();
             const clientSecret = json.data.client_secret;
             elements = stripe.elements({ clientSecret, appearance});
-            const paymentElementOptions = { layout: "tabs" };
+            const paymentElementOptions = { 
+                type: 'accordion',
+                defaultCollapsed: false,
+                radios: false,
+                spacedAccordionItems: false
+            };
+            const addressOptions = { mode: 'billing' };
             const paymentElement = elements.create("payment", paymentElementOptions);
-            paymentElement.mount("#card");
+            const addressElement = elements.create('address', addressOptions);
+            paymentElement.mount("#card-element");
+            addressElement.mount("#address-element")
         } catch (error) {
             console.error("Error initializing Stripe Card Payment:", error);
         }
@@ -156,17 +161,22 @@
 
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
-
+        console.log({event, target: event.currentTarget})
         try {
+            const formData = new FormData(event.currentTarget);
+            const formDataObj = {};
+            formData.forEach((value, key) => {
+                formDataObj[key] = value;
+            });
+            formDataObj.paymentAmount = paymentProcessor.getPaymentAmount();
+
             const response = await fetch("{{ route('stripe.organizerTeamPay') }}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
-                body: JSON.stringify({
-                    paymentAmount: paymentProcessor.getPaymentAmount()
-                })
+                body: JSON.stringify(formDataObj)
             });
 
             const json = await response.json();
@@ -187,7 +197,7 @@
         const elements = stripe.elements({
             locale: 'sg',
             mode: 'payment',
-            amount: aymentProcessor.getPaymentAmount(),
+            amount: paymentProcessor.getPaymentAmount(),
             currency: 'myr',
         })
         const expressCheckoutElement = elements.create(
@@ -204,23 +214,24 @@
             colorText: '#30313d',
             colorDanger: '#df1b41',
             fontFamily: 'Ideal Sans, system-ui, sans-serif',
-            spacingUnit: '2px',
+            spacingUnit: '3px',
             borderRadius: '20px',
             colorPrimary: 'black',
             colorBackground: '#ffffff',
-
         },
         rules: {
-            '.Input': {
-                borderColor: '#E0E6EB',
-            },
-
+            '.Input, .Block': {
+                backgroundColor: 'transparent',
+                display: 'block',
+                border: '1.5px solid var(--colorPrimary)'
+            }
         }
     };
     const loader = 'auto';
     const cardForm = document.getElementById('card-form')
     const cardName = document.getElementById('card-name')
 
+    initializeStripeCardPayment();
 
 </script>
 
