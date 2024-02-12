@@ -231,7 +231,5 @@
     const cardForm = document.getElementById('card-form')
     const cardName = document.getElementById('card-name')
 
-    initializeStripeCardPayment();
-
 </script>
 
