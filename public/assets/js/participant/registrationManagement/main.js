@@ -87,40 +87,51 @@ function showTab(tabName) {
 
 
 // -----------------------------------------JS FOR CROWN 👑---------------------------------------------------------
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Get all username elements
+    // Get all username and crown emoji elements
     const usernames = document.querySelectorAll('.username');
+    const crownEmojis = document.querySelectorAll('.crown-emoji');
 
     // Loop through each username element
-    usernames.forEach(username => {
+    usernames.forEach((username, index) => {
         // Add event listener for mouseenter event
         username.addEventListener('mouseenter', function() {
             // Show the crown emoji for the hovered username
-            const crownEmoji = this.nextElementSibling;
+            const crownEmoji = crownEmojis[index];
             crownEmoji.style.display = 'inline-block';
         });
 
         // Add event listener for mouseleave event
-        username.addEventListener('mouseleave', function() {
-            // Hide the crown emoji when mouse leaves the username
-            const crownEmoji = this.nextElementSibling;
-            crownEmoji.style.display = 'none';
+        username.addEventListener('mouseleave', function(event) {
+            // Check if mouse is not over the crown emoji
+            if (!event.relatedTarget || event.relatedTarget !== crownEmojis[index]) {
+                // Hide the crown emoji when mouse leaves the username and crown emoji
+                const crownEmoji = crownEmojis[index];
+                crownEmoji.style.display = 'none';
+            }
         });
     });
 
-    // Get all crown emoji elements
-    const crownEmojis = document.querySelectorAll('.crown-emoji');
-
     // Loop through each crown emoji element
-    crownEmojis.forEach(crownEmoji => {
+    crownEmojis.forEach((crownEmoji, index) => {
         // Add event listener for click event
         crownEmoji.addEventListener('click', function(event) {
             event.stopPropagation(); // Prevent the click event from bubbling up to the username element
-            const userId = this.previousElementSibling.getAttribute('data-user-id');
-            
+
+            // Handle click event for the crown emoji
+            const userId = usernames[index].getAttribute('data-user-id');
+            // Implement your logic for when the crown emoji is clicked, e.g., make the user a captain
             console.log('User ID:', userId);
-            
+            // You can trigger an AJAX request here to mark the user as a captain
+        });
+
+        // Add event listener for mouseleave event
+        crownEmoji.addEventListener('mouseleave', function(event) {
+            // Check if mouse is not over the username
+            if (!event.relatedTarget || event.relatedTarget !== usernames[index]) {
+                // Hide the crown emoji when mouse leaves the crown emoji and username
+                crownEmoji.style.display = 'none';
+            }
         });
     });
 });
