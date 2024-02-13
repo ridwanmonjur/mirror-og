@@ -2,10 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Exceptions\DiscountNotFountException;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class PaymentTransaction extends Model
 {
-    use HasFactory;
+    protected $fillable = ['payment_id', 'payment_status']; 
+    protected $table = 'payment_transactions';
+
+    public static function createTransaction($paymentId, $paymentStatus) {
+        return self::create([
+            'payment_id' => $paymentId,
+            'payment_status' => $paymentStatus,
+        ]);
+    }
 }
