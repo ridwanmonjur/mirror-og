@@ -190,9 +190,6 @@ class ParticipantEventController extends Controller
     }
 
 
-
-
-
 public function makeCaptain(Request $request) {
     $userId = $request->input('userId');
     $eventId = $request->input('eventId');
