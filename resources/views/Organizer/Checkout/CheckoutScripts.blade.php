@@ -79,6 +79,23 @@
             let checkoutView = document.getElementById('payment-discount-view');
             let allPaymentElements = document.querySelectorAll(".payment-element-children-view");
 
+            const stepList = {
+                'bank': 'bankLogoId',
+                'eWallet': 'eWalletLogoId',
+                'otherEWallet': 'otherEWalletLogoId',
+                'card': 'cardLogoId',
+            };      
+            
+            console.log({stepList})
+            let currentElementId  = stepList[paymentProcessor.getPaymentType()];
+            console.log({stepList, currentElementId});
+
+            let currentElement = document.getElementById(currentElementId);
+            
+            allPaymentElements?.forEach((_element)=>{
+                _element.classList.add('d-none');
+            })
+
             currentElement?.classList.remove('d-none');
             screenPaymentView?.classList.toggle('d-none');
             checkoutView?.classList.toggle('d-none');
@@ -91,7 +108,7 @@
                     console.log('eWallet case');
                     break;
                 case 'otherEWallet':
-                    initializeStripeEWalletPayment();
+                    initializeApplePayment();
                     break;
                 case 'card':
                     initializeStripeCardPayment();
@@ -121,27 +138,26 @@
                 body: JSON.stringify({
                     paymentAmount: paymentProcessor.getPaymentAmount()
                 })
-            })
-            .then((data) => data.json())
-            .then((json) => {
-                let clientSecret = json.data.client_secret;
-
-    async function finalizeStripeCardPayment(event) {
-        event.preventDefault();
-        console.log({event, target: event.currentTarget})
-        try {
-            const work = await stripe.confirmPayment({
-                elements,
-                confirmParams: {
-                return_url: "{{route('organizer.checkout.view', ['id'=> $event->id])}}",
-                },
             });
-            const formData = new FormData(event.currentTarget);
-            const formDataObj = {};
-            formData.forEach((value, key) => {
-                formDataObj[key] = value;
-            });
-            formDataObj.paymentAmount = paymentProcessor.getPaymentAmount();
+            
+            const json = await response.json();
+            const clientSecret = json.data.client_secret;
+            elements = stripe.elements({ clientSecret, appearance});
+            const paymentElementOptions = { 
+                type: 'accordion',
+                defaultCollapsed: false,
+                radios: false,
+                spacedAccordionItems: false
+            };
+            const addressOptions = { mode: 'billing' };
+            const paymentElement = elements.create("payment", paymentElementOptions);
+            const addressElement = elements.create('address', addressOptions);
+            paymentElement.mount("#card-element");
+            addressElement.mount("#address-element")
+        } catch (error) {
+            console.error("Error initializing Stripe Card Payment:", error);
+        }
+    }
 
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
@@ -163,7 +179,13 @@
                 body: JSON.stringify(formDataObj)
             });
 
-    function initializeStripeEWalletPayment() {
+            const json = await response.json();
+        } catch (error) {
+            console.error("Error submitting card form:", error);
+        }
+    }
+
+    function initializeApplePayment() {
         const expressCheckoutOptions = {
         buttonType: {
             applePay: 'buy',
@@ -185,8 +207,6 @@
         expressCheckoutElement.mount('#express-apple-checkout-element')
     }
 
-                    
-        
     let stripe = Stripe('{{ env('STRIPE_KEY') }}')
     const appearance = {
         theme: 'flat',

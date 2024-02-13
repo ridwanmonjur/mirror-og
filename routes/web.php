@@ -117,8 +117,6 @@ Route::group(['prefix' => 'organizer'], function () {
 			Route::get('event/{id}/checkout', [OrganizerEventController::class, 'showCheckout'])
 				->middleware('prevent-back-button')
 				->name("organizer.checkout.view");
-			Route::get('event/{id}/checkout/transition', [OrganizerEventController::class, 'showCheckoutTransition'])
-				->name("organizer.checkout.transition");
 		});
 	});
 });

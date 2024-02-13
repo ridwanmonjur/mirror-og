@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Organizer;
 
-use App\Exceptions\DiscountNotFountException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\EventDetail;
@@ -12,7 +11,6 @@ use App\Models\EventTier;
 use App\Models\EventType;
 use Illuminate\View\View;
 use App\Models\Organizer;
-use App\Models\PaymentTransaction;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -24,27 +22,20 @@ use Illuminate\Validation\UnauthorizedException;
 
 class OrganizerEventController extends Controller
 {
-    private function findEventWithTypeTierGameAndThrowErrorAndUser($id)
+    private function getEvent($userId, $id): EventDetail
     {
-        $authUser = Auth::user();
-
-        $event = EventDetail::with('type,tier,game')
-            ->where('user_id', $authUser->id)
+        $event = EventDetail::with('type','tier','game')
             ->find($id);
 
-        $isUserSameAsAuth = true;
+        if ($event->user_id != $userId) {
+            throw new UnauthorizedException('You cannot view an event of another organizer!');
+        }
         
         if (!$event) {
             throw new ModelNotFoundException("Event not found with id: $id");
         }
 
-        $checkIfUserIsOrganizerOfEvent = $event->user_id == $authUser->id;
-        
-        if (!$checkIfUserIsOrganizerOfEvent) {
-            throw new UnauthorizedException('You cannot view a scheduled event');
-        }
-
-        return [$event, $isUserSameAsAuth, $authUser];
+        return $event;
     }
 
     private function createNoDiscountFeeObject($fee, $entryFee) { 
@@ -164,62 +155,28 @@ class OrganizerEventController extends Controller
         }
     }
 
-    public function store(Request $request)
-    {
-
-        try {
-        $fileNameFinal = null;
-        
-        if ($request->hasFile('eventBanner')) {
-            $fileNameFinal = $this->storeEventBanner($request->file('eventBanner'));
-        }
-        
-        $eventDetail = new EventDetail();
-        
-            $eventDetail = EventDetail::storeLogic($eventDetail, $request);
-        
-
-        $eventDetail->user_id = auth()->user()->id;
-        $eventDetail->eventBanner = $fileNameFinal;
-        $eventDetail->save();
-        
-        if ($request->livePreview == 'true') {
-            return redirect('organizer/event/' . $eventDetail->id . '/live');
-        } elseif ( $request->goToCheckoutPage == 'yes' ) {
-            return redirect('organizer/event/' . $eventDetail->id . '/checkout');
-        }
-
-        return redirect('organizer/event/' . $eventDetail->id . '/success');
-    } catch (ModelNotFoundException | UnauthorizedException | TimeGreaterException $e) {
-            return $this->show404($e->getMessage());
-        } catch (Exception $e) {
-            return $this->show404("Event not found with id: $id");
-        }
-    }
-
-    public function showLive($id): View
+    public function showLive($request, $id): View
     {
         try {
-            [$event, $isUserSameAsAuth, $user] = $this->findEventWithTypeTierGameAndThrowErrorAndUser($id);
-
+            $user = $request->get('user');
+            $userId = $user->id;
+            $event = $this->getEvent($userId, $id);
+            $isUserSameAsAuth = true;            
             $count = 8;
             $eventListQuery = EventDetail::query();
-            $eventListQuery->with('tier');
+            $eventListQuery->withCount('joinEvents');
             $eventList = $eventListQuery->where('user_id', $user->id)->paginate($count);
             $mappingEventState = EventDetail::mappingEventStateResolve();
             
             foreach ($eventList as $eventItem) {
                 $tierEntryFee = $eventItem->tier?->tierEntryFee ?? null;
             }
-
-            foreach ($eventList as $eventDetail) {
-                $eventDetail->joinEventCount = $eventDetail->joinEvents()?->count();
-            }
-
+            
             $livePreview = true;
 
             $outputArray = compact('eventList', 'event', 'count', 'user', 
-                'livePreview', 'mappingEventState');
+                'livePreview', 'mappingEventState'
+            );
             
             return view('Organizer.ViewEvent', $outputArray);
         } catch (ModelNotFoundException | UnauthorizedException $e) {
@@ -258,66 +215,69 @@ class OrganizerEventController extends Controller
         session()->forget(['successMessageCoupon',  'errorMessageCoupon']);
 
         try {
-            [$event, $isUserSameAsAuth] = $this->findEventWithTypeTierGameAndThrowErrorAndUser($request->id);
+            $user = $request->get('user');
+            $userId = $user->id;
+            $event = $this->getEvent($userId, $id);     
+            $isUserSameAsAuth = true;
+
+            if (!is_null($event->payment_transaction_id)) {
+                return $this->show404("Event with id: $id has already been checked out");
+            } else if (is_null($event->tier)) {
+                return $this->show404("Event with id: $id has no event tier chosen");
+            }
+
+            if ($request->has('coupon')) {
+                $discount = Discount::whereRaw('coupon = ?', [$request->coupon])
+                    ->first();
+            } else {
+                $discount = null;
+            }
+
+            $fee = [];
+
+            if (!is_null($discount)) {
+                $currentDateTime = Carbon::now()->utc();
+                $startTime = generateCarbonDateTime($discount->startDate, $discount->startTime);
+                $endTime = generateCarbonDateTime($discount->endDate, $discount->endTime);
+                $fee['discountId'] = $discount->id;
+                $fee['discountName'] = $discount->name;
+                $fee['discountType'] = $discount->type;
+                $fee['discountAmount'] = $discount->amount;
+                
+                if ($startTime < $currentDateTime && $endTime > $currentDateTime && $discount->isEnforced) {
+                    $fee['entryFee'] = $event->tier->tierEntryFee * 1000 ;
+                    $fee['totalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
+                    $fee['discountFee'] = $discount->type == "percent" ? 
+                        ( $discount->amount/ 100 ) * $fee['totalFee'] : $discount->amount;
+                    $fee['finalFee'] = $fee['totalFee'] - $fee['discountFee'];
+                    session()->flash('successMessageCoupon', "Applying your coupon named: $request->coupon!");
+                } else {
+                    $fee = $this->createNoDiscountFeeObject($fee, $event->tier->tierEntryFee);
+                    session()->flash('errorMessageCoupon', "Your coupon named: $request->coupon! is expired or not available now!");
+                }
+            } else {
+                if ($request->has('coupon')) {
+                    session()->flash('errorMessageCoupon', "Sorry, your coupon named $request->coupon can't be found!");
+                }
+
+                $fee['discountId'] = $fee['discountName'] = $fee['discountType'] 
+                    = $fee['discountAmount'] = null;
+
+                $fee = $this->createNoDiscountFeeObject($fee, $event->tier->tierEntryFee);
+            }
+
+            return view('Organizer.CheckoutEvent', [
+                'event' => $event,
+                'mappingEventState' => EventDetail::mappingEventStateResolve(),
+                'isUser' => $isUserSameAsAuth,
+                'livePreview' => 1,
+                'fee' => $fee
+            ]);
+        }  catch (ModelNotFoundException | UnauthorizedException $e) {
+            return $this->show404($e->getMessage());
         } catch (Exception $e) {
             return $this->show404("Event not found with id: $request->id");
-        }
-
-        if (!is_null($event->payment_transaction_id)) {
-            return $this->show404("Event with id: $request->id has already been checked out");
-        }
-
-        if (is_null($event->tier)) {
-            return $this->show404("Event with id: $request->id has no event tier chosen");
-        }
-
-        if ($request->has('coupon')) {
-            $discount = Discount::whereRaw('coupon = ?', [$request->coupon])
-                ->first();
-        } else {
-            $discount = null;
-        }
-
-        $fee = [];
-
-        if (!is_null($discount)) {
-            $currentDateTime = Carbon::now()->utc();
-            $startTime = generateCarbonDateTime($discount->startDate, $discount->startTime);
-            $endTime = generateCarbonDateTime($discount->endDate, $discount->endTime);
-            $fee['discountId'] = $discount->id;
-            $fee['discountName'] = $discount->name;
-            $fee['discountType'] = $discount->type;
-            $fee['discountAmount'] = $discount->amount;
-            
-            if ($startTime < $currentDateTime && $endTime > $currentDateTime && $discount->isEnforced) {
-                $fee['entryFee'] = $event->tier->tierEntryFee * 1000 ;
-                $fee['totalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
-                $fee['discountFee'] = $discount->type == "percent" ? 
-                    ( $discount->amount/ 100 ) * $fee['totalFee'] : $discount->amount;
-                $fee['finalFee'] = $fee['totalFee'] - $fee['discountFee'];
-                session()->flash('successMessageCoupon', "Applying your coupon named: $request->coupon!");
-            } else {
-                $fee = $this->createNoDiscountFeeObject($fee, $event->tier->tierEntryFee);
-                session()->flash('errorMessageCoupon', "Your coupon named: $request->coupon! is expired or not availabe now!");
-            }
-        } else {
-            if ($request->has('coupon')) {
-                session()->flash('errorMessageCoupon', "Sorry, your coupon named $request->coupon can't be found!");
-            }
-
-            $fee['discountId'] = $fee['discountName'] = $fee['discountType'] 
-                = $fee['discountAmount'] = null;
-
-            $fee = $this->createNoDiscountFeeObject($fee, $event->tier->tierEntryFee);
-        }
-
-        return view('Organizer.CheckoutEvent', [
-            'event' => $event,
-            'mappingEventState' => EventDetail::mappingEventStateResolve(),
-            'isUser' => $isUserSameAsAuth,
-            'livePreview' => 1,
-            'fee' => $fee
-        ]);
+        }     
     }
 
     public function show(Request $request, $id): View
@@ -351,39 +311,70 @@ class OrganizerEventController extends Controller
         ]);
     }
 
-    public function edit($id)
+    public function store(Request $request)
     {
         try {
-            [$event] = $this->findEventWithTypeTierGameAndThrowErrorAndUser($id);
+            $fileNameFinal = null;
+            
+            if ($request->hasFile('eventBanner')) {
+                $fileNameFinal = $this->storeEventBanner($request->file('eventBanner'));
+            }
+            
+            $eventDetail = new EventDetail();
+            $eventDetail = EventDetail::storeLogic($eventDetail, $request);
+            $eventDetail->user_id = $request->get('user')->id;
+            $eventDetail->eventBanner = $fileNameFinal;
+            $eventDetail->save();
+            
+            if ($request->livePreview == 'true') {
+                return redirect('organizer/event/' . $eventDetail->id . '/live');
+            } elseif ( $request->goToCheckoutPage == 'yes' ) {
+                return redirect('organizer/event/' . $eventDetail->id . '/checkout');
+            } else {
+                return redirect('organizer/event/' . $eventDetail->id . '/success');
+            }
+        } catch (TimeGreaterException | EventChangeException $e ) {
+            return back()->with('error', $e->getMessage());
+        }  catch (Exception $e) {
+            return back()->with('error', 'Something went wrong with saving data!');
+        }
+    }
+
+    public function edit(Request $request, $id)
+    {
+        try {
+            $user = $request->get('user');
+            $userId = $user->id;
+            $event = $this->getEvent($userId, $id);     
+            $status = $event->statusResolved();
+                
+            if ( $status == "ENDED" ) {
+                return $this->show404("Event has already ended id: $id");
+            }
+            
+            if ( !in_array($status, ['UPCOMING', 'DRAFT', 'SCHEDULED', 'PENDING' ] ) ) {
+                return $this->show404("Event has already gone live for id: $id");
+            }
+            
+            $eventCategory = EventCategory::all();
+            $eventTierList = EventTier::all();
+            $eventTypeList = EventType::all();
+
+            return view('Organizer.EditEvent', [
+                'eventCategory' => $eventCategory,
+                'event' => $event,
+                'tier' => $event->tier,
+                'game' => $event->game,
+                'type' => $event->type,
+                'eventTierList' => $eventTierList,
+                'eventTypeList' => $eventTypeList,
+                'editMode' => 1,
+            ]);
+        } catch (ModelNotFoundException | UnauthorizedException $e) {
+            return $this->show404($e->getMessage());
         } catch (Exception $e) {
             return $this->show404("Event not found for id: $id");
         }
-        
-        // dd($event, $event->tier, $event->type, $event->game);
-        $status = $event->statusResolved();
-
-        if ( $status == "ENDED" ) {
-            return $this->show404("Event has already ended id: $id");
-        }
-        
-        if ( !in_array($status, ['UPCOMING', 'DRAFT', 'SCHEDULED', 'PENDING' ] ) ) {
-            return $this->show404("Event has already gone live for id: $id");
-        }
-        
-        $eventCategory = EventCategory::all();
-        $eventTierList = EventTier::all();
-        $eventTypeList = EventType::all();
-        
-        return view('Organizer.EditEvent', [
-            'eventCategory' => $eventCategory,
-            'event' => $event,
-            'tier' => $event->tier,
-            'game' => $event->game,
-            'type' => $event->type,
-            'eventTierList' => $eventTierList,
-            'eventTypeList' => $eventTypeList,
-            'editMode' => 1,
-        ]);
     }
 
     public function updateForm($id, Request $request)
@@ -400,33 +391,26 @@ class OrganizerEventController extends Controller
                 
                 if ($request->hasFile('eventBanner')) {
                     $fileNameFinal = $this->storeEventBanner($request->file('eventBanner'));
-                    
+                
                     if ($eventDetail->eventBanner) {
                         $this->destroyEventBanner($eventDetail->eventBanner);
                     }
-
                 } else {
                     $fileNameFinal = $eventDetail->eventBanner;
                 }
 
-                $eventDetail = EventDetail::find($eventId);
-                
-                try {
-                    $eventDetail = $this->storeLogic($eventDetail, $request);
-                } catch (TimeGreaterException $e) {
-                    return back()->with('error', $e->getMessage());
-                }
-
-                $eventDetail->user_id = auth()->user()->id;
+                $eventDetail = EventDetail::storeLogic($eventDetail, $request);
+                $eventDetail->user_id = $request->get('user')->id;
                 $eventDetail->eventBanner = $fileNameFinal;
                 $eventDetail->save();
+
                 if ($request->livePreview == 'true') {
                     return redirect('organizer/event/' . $eventDetail->id . '/live');
                 } elseif ( $request->goToCheckoutPage == 'yes' ) {
                     return redirect('organizer/event/' . $eventDetail->id . '/checkout');
-                } else {
-                    return redirect('organizer/event/' . $eventDetail->id . '/success');
                 }
+
+                return redirect('organizer/event/' . $eventDetail->id . '/success');
             } else {
                 return $this->show404("Event not found for id: $id");
             }
@@ -439,8 +423,14 @@ class OrganizerEventController extends Controller
 
     public function destroy($id)
     {
-        [$event] = $this->findEventWithTypeTierGameAndThrowErrorAndUser($id);
-        $event->delete();
-        return redirect('organizer/event');
+        try{
+            $event = EventDetail::find($id);
+            $event->delete();
+            return redirect('organizer/event');
+        } catch (ModelNotFoundException | UnauthorizedException $e) {
+            return $this->show404($e->getMessage());
+        } catch (Exception $e) {
+            return $this->show404("Failed to delete event!");
+        }
     }
 }

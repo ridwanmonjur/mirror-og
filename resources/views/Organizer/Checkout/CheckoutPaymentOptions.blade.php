@@ -1,7 +1,7 @@
 <div class="d-none" id="payment-element-view"> 
     <div class="text-center" onclick="changeScreen();"> Close </div>
     <div id="cardLogoId" class="payment-element-children-view my-3 py-3 d-none">
-        <form method="POST" onsubmit="finalizeStripeCardPayment(event);"> 
+        <form method="POST" onsubmit="finalizeStripeCardPayment(event);" action="{{ route('stripe.organizerTeamPay') }} }}"> 
             <input type="hidden" name="user_id" value="{{$event->userId}}" />
             <div class="grid-2-columns mx-4"> 
                 <div id="address-element" class="mx-3 my-2 px-5"> </div> 
