@@ -70,11 +70,11 @@
                                 <div class="player-info" style="position: relative;">
                                     <div class="player-image" style="background-image: url('/assets/images/dota.png')"></div>
                                     <span class="username" data-user-id="{{ $user['user']->id }}">{{ $user['user']->name }}</span>
-                                    <span class="crown-emoji" style="display: none; cursor: pointer;">👑</span>
-                                    <form id="makeCaptainForm_{{ $user['user']->id }}" action="{{ route('make-captain') }}" method="POST" style="display: none;">
+                                    <form id="makeCaptainForm_{{ $user['user']->id }}" action="{{ route('make-captain') }}" method="POST" style="display: inline;">
                                         @csrf
                                         <input type="hidden" name="userId" value="{{ $user['user']->id }}">
                                         <input type="hidden" name="eventId" value="{{ $joinEvent->event_details_id }}">
+                                        <button type="submit" class="crown-emoji" style="display: none; cursor: pointer;">👑</button>
                                     </form>
                                 </div>
                                 @endforeach
