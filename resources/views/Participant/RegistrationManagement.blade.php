@@ -153,36 +153,4 @@
     
     @include('CommonLayout.BootstrapV5Js')
     <script src="{{ asset('/assets/js/participant/registrationManagement/main.js')}}"></script>
-
-    <script>
-        // Add event listener for clicking the crown emoji
-        document.querySelectorAll('.crown-emoji').forEach(function(element) {
-            element.addEventListener('click', function() {
-                var form = this.nextElementSibling;
-                var userId = form.dataset.userId;
-                
-                // Send AJAX request to make user captain
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', form.action, true);
-                xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                        var response = JSON.parse(xhr.responseText);
-                        // Show message as tooltip
-                        var tooltip = document.createElement('span');
-                        tooltip.className = 'tooltip';
-                        tooltip.textContent = response.message;
-                        form.parentNode.appendChild(tooltip);
-                        // Remove tooltip after 3 seconds
-                        setTimeout(function() {
-                            tooltip.remove();
-                        }, 3000);
-                    }
-                };
-                xhr.send(JSON.stringify({ userId: userId, eventId: form.querySelector('input[name="eventId"]').value }));
-            });
-        });
-    </script>
-    
 </body>
