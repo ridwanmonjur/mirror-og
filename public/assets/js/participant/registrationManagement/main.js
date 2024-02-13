@@ -117,12 +117,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add event listener for click event
         crownEmoji.addEventListener('click', function(event) {
             event.stopPropagation(); // Prevent the click event from bubbling up to the username element
-
-            // Handle click event for the crown emoji
             const userId = this.previousElementSibling.getAttribute('data-user-id');
-            // Implement your logic for when the crown emoji is clicked, e.g., make the user a captain
+            
             console.log('User ID:', userId);
-            // You can trigger an AJAX request here to mark the user as a captain
+            
         });
     });
 });
