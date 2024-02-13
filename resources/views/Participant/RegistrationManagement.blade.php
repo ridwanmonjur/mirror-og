@@ -70,11 +70,12 @@
                                 <div class="player-info" style="position: relative;">
                                     <div class="player-image" style="background-image: url('/assets/images/dota.png')"></div>
                                     <span class="username" data-user-id="{{ $user['user']->id }}">{{ $user['user']->name }}</span>
+                                    <span class="crown-emoji" style="display: none; cursor: pointer;">👑</span>
                                     <form id="makeCaptainForm_{{ $user['user']->id }}" action="{{ route('make-captain') }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        <input type="hidden" name="userId" value="{{ $user['user']->id }}">
-                                        <input type="hidden" name="eventId" value="{{ $joinEvent->event_details_id }}">
-                                        <button type="submit" class="crown-emoji" style="display: none; cursor: pointer;">👑</button>
+                                    @csrf
+                                    <input type="hidden" name="userId" value="{{ $user['user']->id }}">
+                                    <input type="hidden" name="eventId" value="{{ $joinEvent->event_details_id }}">
+                                    <button type="submit" class="crown-emoji-btn" style="display: none;">👑</button>
                                     </form>
                                 </div>
                                 @endforeach
@@ -153,5 +154,35 @@
     @include('CommonLayout.BootstrapV5Js')
     <script src="{{ asset('/assets/js/participant/registrationManagement/main.js')}}"></script>
 
+    <script>
+        // Add event listener for clicking the crown emoji
+        document.querySelectorAll('.crown-emoji').forEach(function(element) {
+            element.addEventListener('click', function() {
+                var form = this.nextElementSibling;
+                var userId = form.dataset.userId;
+                
+                // Send AJAX request to make user captain
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', form.action, true);
+                xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        var response = JSON.parse(xhr.responseText);
+                        // Show message as tooltip
+                        var tooltip = document.createElement('span');
+                        tooltip.className = 'tooltip';
+                        tooltip.textContent = response.message;
+                        form.parentNode.appendChild(tooltip);
+                        // Remove tooltip after 3 seconds
+                        setTimeout(function() {
+                            tooltip.remove();
+                        }, 3000);
+                    }
+                };
+                xhr.send(JSON.stringify({ userId: userId, eventId: form.querySelector('input[name="eventId"]').value }));
+            });
+        });
+    </script>
     
 </body>
