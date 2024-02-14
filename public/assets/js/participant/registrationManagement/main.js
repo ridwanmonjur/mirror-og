@@ -141,5 +141,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// -----------------------------------Create Captain------------------------------------------------------------------
+// -----------------------------------PopUp Payment on Registration Management------------------------------------------------------------------
 
+function openPopup() {
+    document.querySelector('.popup-overlay').style.display = 'flex';
+}
+
+function closePopup() {
+    document.querySelector('.popup-overlay').style.display = 'none';
+}
