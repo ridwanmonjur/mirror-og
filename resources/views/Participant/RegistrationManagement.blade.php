@@ -173,7 +173,7 @@
                                             <div class="column">
                                                 <div class="flex-wrapper">
                                                     <div class="single-chart">
-                                                        <svg viewBox="0 0 36 36" class="circular-chart orange">
+                                                        <svg viewBox="0 0 36 36" class="circular-chartx orange">
                                                     <path class="circle-bg"
                                                       d="M18 2.0845
                                                         a 15.9155 15.9155 0 0 1 0 31.831
@@ -190,14 +190,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="column" style="text-align: left;">
+                                            <div class="column">
                                                 <p>Total Entry Fee: RM 200</p>
-                                                <small>Paid: <a href="" style="color: green;">RM 100</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM 100</a></small><br><br>
-                                                <p>Selected Amount: RM 0</p><br>
+                                                <small>Paid: <a href="" style="color: green;">RM 100</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM 100</a></small><br>
+                                                <p>Selected Amount: RM 0</p>
                                             </div>
                                         </div>
                         
-                                        <input type="submit" onclick="" value="Proceed to Payment" onclick="closePopup()"><br><br>
+                                        <input type="submit" onclick="" value="Proceed to Payment" onclick="closePopup()"><br>
                                         <button onclick="closePopup()" class="oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
 
                                     </div>

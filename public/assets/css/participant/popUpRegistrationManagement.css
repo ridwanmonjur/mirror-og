@@ -176,11 +176,11 @@ input[type="submit"],
     /* Add this line to center the content */
 }
 
-.circular-chart {
+.circular-chartx {
     display: block;
     margin: 10px auto;
-    max-width: 80%;
-    max-height: 250px;
+    max-width: 40%;
+    max-height: 125px;
 }
 
 .circle-bg {
@@ -202,7 +202,7 @@ input[type="submit"],
     }
 }
 
-.circular-chart.orange .circle {
+.circular-chartx.orange .circle {
     stroke: #ff9f00;
 }
 
