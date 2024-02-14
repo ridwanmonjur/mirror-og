@@ -13,6 +13,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="... (the integrity hash) ..." crossorigin="anonymous">
 </head>
 
+<style>
+    .gray-background {
+    background-color: #ccc; /* Change this to your desired shade of gray */
+    /* Add other styling properties as needed */
+}
+
+</style>
+
 <body>
     @include('CommonLayout.NavbarforParticipant')
     <main>
@@ -51,8 +59,8 @@
                     <div id="activeRostersForm" style="display: center; text-align: center;">
                         @foreach($joinEvents as $joinEvent)
                         <div class="event">
-                            <div style="text-align: left; height: 200px; position: relative;">
-                                <div class="top-middle-box" style="display: flex; align-items: center;">
+                            <div style="text-align: left; height: 200px; position: relative; background-color: #ccc; border-radius: 40px;">
+                                <div class="top-middle-box " style="display: flex; align-items: center;">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" fill="white" style="margin-right: 10px;">
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v6h-2zm1 8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2- .9 2-2 2z"/>
                                     </svg>
@@ -72,7 +80,7 @@
                                 $isCaptain = \App\Models\Captain::where('userID', $user['user']->id)->where('eventID', $joinEvent->event_details_id)->exists();
                                 @endphp
                                 <div class="player-info" style="position: relative;">
-                                    <div class="player-image" style="background-image: url('/assets/images/dota.png')"></div>
+                                    <div class="player-image " style="background-image: url('/assets/images/dota.png')"></div>
                                     <span class="username" data-user-id="{{ $user['user']->id }}" data-is-captain="{{ $isCaptain ? 'true' : 'false' }}">{{ $user['user']->name }}</span>
                                     {{-- <span class="crown-emoji" style="display: {{ $isCaptain ? 'inline-block' : 'none' }}; cursor: pointer;">👑</span> --}}
                                     <form id="makeCaptainForm_{{ $user['user']->id }}" style="display: inline;">
