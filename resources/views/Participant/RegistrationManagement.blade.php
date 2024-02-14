@@ -153,7 +153,7 @@
                             </div>
                         </div>
                         <p>Total Entry Fee: RM {{ $joinEvent->eventTier->tierEntryFee }}</p>
-                        <small>Paid: <a href="#" style="color: green;">RM 0</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="#" style="color: red;">RM {{ $joinEvent->eventTier->tierEntryFee }}</a></small> <br>
+                        <small>Paid: <a href="#" style="color: green !important;">RM 0</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="#" style="color: red !important;">RM {{ $joinEvent->eventTier->tierEntryFee }}</a></small> <br>
                         <input type="submit" onclick="openPopup()" value="Contribute"><br>
                         {{-- PopUp Start Here --}}
                         <div class="popup-overlay" style="display: none;">
@@ -192,7 +192,7 @@
                                             </div>
                                             <div class="column">
                                                 <p>Total Entry Fee: RM {{ $joinEvent->eventTier->tierEntryFee }}</p>
-                                                <small>Paid: <a href="" style="color: green;">RM 100</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM {{ $joinEvent->eventTier->tierEntryFee }}</a></small><br>
+                                                <small>Paid: <a href="" style="color: green !important;">RM 0</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red !important;">RM {{ $joinEvent->eventTier->tierEntryFee }}</a></small><br>
                                                 <p>Selected Amount: RM 0</p>
                                             </div>
                                         </div>
