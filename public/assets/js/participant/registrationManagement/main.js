@@ -143,10 +143,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // -----------------------------------PopUp Payment on Registration Management------------------------------------------------------------------
 
-function openPopup() {
-    document.querySelector('.popup-overlay').style.display = 'flex';
+function openPopup(eventId) {
+    // Hide all popups
+    document.querySelectorAll('.popup-overlay').forEach(function(popup) {
+        popup.style.display = 'none';
+    });
+
+    // Show the popup for the specific event
+    var popupId = 'popup-overlay-' + eventId;
+    document.getElementById(popupId).style.display = 'flex';
 }
 
-function closePopup() {
-    document.querySelector('.popup-overlay').style.display = 'none';
+function closePopup(eventId) {
+    var popupId = 'popup-overlay-' + eventId;
+    document.getElementById(popupId).style.display = 'none';
 }
+

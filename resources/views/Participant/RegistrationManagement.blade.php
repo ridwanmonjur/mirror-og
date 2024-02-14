@@ -154,9 +154,9 @@
                         </div>
                         <p>Total Entry Fee: RM {{ $joinEvent->eventTier->tierEntryFee }}</p>
                         <small>Paid: <a href="#" style="color: green !important;">RM 0</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="#" style="color: red !important;">RM {{ $joinEvent->eventTier->tierEntryFee }}</a></small> <br>
-                        <input type="submit" onclick="openPopup()" value="Contribute"><br>
+                        <input type="submit" onclick="openPopup('{{ $joinEvent->id }}')" value="Contribute"><br>
                         {{-- PopUp Start Here --}}
-                        <div class="popup-overlay" style="display: none;">
+                        <div class="popup-overlay" id="popup-overlay-{{ $joinEvent->id }}" style="display: none;">
                             <!-- Popup content goes here -->
                             <div class="popup">
                                 <div class="center">
@@ -198,7 +198,7 @@
                                         </div>
                         
                                         <input type="submit" onclick="" value="Proceed to Payment" onclick="closePopup()"><br>
-                                        <button onclick="closePopup()" class="oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
+                                        <button onclick="closePopup('{{ $joinEvent->id }}')" class="oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
 
                                     </div>
                                 </div>
