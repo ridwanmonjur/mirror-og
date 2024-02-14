@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\PaymentTransaction;
 
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\UnauthorizedException;
+
 class EventDetail extends Model
 {
     use HasFactory;
@@ -61,6 +65,25 @@ class EventDetail extends Model
     {
         return $this->hasMany(JoinEvent::class, 'event_details_id', 'id');
     }
+
+    private static function storeEventBanner($file)
+    {
+        $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
+        $fileNameFinal = "images/events/$fileNameInitial";
+        $file->storeAs('images/events/', $fileNameInitial);
+        return $fileNameFinal;
+    }
+
+    public static function destroyEventBanner($file)
+    {
+        $fileNameInitial = str_replace('images/events/', '', $file);
+        $fileNameFinal = "images/events/$fileNameInitial";
+        
+        if (file_exists($fileNameFinal)) {
+            unlink($fileNameFinal);
+        }
+    }
+
 
     public function statusResolved()
     {
@@ -286,8 +309,20 @@ class EventDetail extends Model
         return $eventListQuery;
     }
 
+
+
     public static function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
     {
+        try {
+        if ($request->hasFile('eventBanner')) {
+            if ($eventDetail->eventBanner) {
+                self::destroyEventBanner($eventDetail->eventBanner);
+            }
+
+            $eventDetail->eventBanner = self::storeEventBanner($request->file('eventBanner'));
+        } 
+        } catch (Exception $e){}
+
         $isEditMode = $eventDetail->id != null;
         $isDraftMode = $request->launch_visible == 'DRAFT';
         
@@ -404,9 +439,38 @@ class EventDetail extends Model
         if ($request->launch_visible == 'DRAFT') {
             $eventDetail->sub_action_private = 'private';
         }
-
-        // dd($eventDetail, $request);
         return $eventDetail;
     }
 
+    public static function findEventWithRelationsAndThrowError($userId, $id, $relations = null, $relationCount = null): EventDetail
+    {
+        $relations ??= ['type','tier','game'];
+        $eventQuery = self::with($relations);
+
+        if ($relationCount) {
+            $eventQuery->withCount($relationCount);
+        }
+
+        $event = $eventQuery->find($id);
+        
+        if (is_null($event)) {
+            throw new ModelNotFoundException("Event not found with id: $id");
+        } else if ($event->user_id != $userId) {
+            throw new UnauthorizedException('You cannot view an event of another organizer!');
+        } else {
+            return $event;
+        }
+    }
+    public static function findEventAndThrowError($eventId, $userId) {
+        $event = self::find($eventId);
+
+        if (!$event) {
+            throw new ModelNotFoundException("Event not found with id: $eventId");
+        } else if ($event->user_id != $userId) {
+            throw new UnauthorizedException('You cannot view an event of another organizer!');
+        } else {
+            return $event;
+        }
+    }
+    
 }

@@ -9,9 +9,9 @@ namespace App\Http\Controllers;
 
 use App\Models\EventDetail;
 use App\Models\PaymentTransaction;
+use App\Models\StripePayment;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Stripe\StripeClient;
 use Illuminate\Http\Request;
 use Illuminate\Validation\UnauthorizedException;
 use Stripe\Exception\CardException;
@@ -20,22 +20,32 @@ class StripeController extends Controller
 {
     private $stripeClient;
     
-    public function __construct() {
-        $this->stripeClient = new StripeClient(env('STRIPE_SECRET'));
+    public function __construct(StripePayment $stripeClient)
+    {
+        $this->stripeClient = $stripeClient;
     }
 
     public function stripeCardIntentCreate(Request $request){
         try {
-            $paymentIntent = $this->stripeClient->paymentIntents->create([
-                'amount' => $request->paymentAmount,
-                'currency' => 'myr',
-                'payment_method_types' => ['card'],
-                'automatic_payment_methods' => ['enabled' => false],
+            $customer = null;
+
+            if (empty($request->stripeCustomerId)) {
+                $customer = $this->stripeClient->createStripeCustomer($request->name, $request->email);
+            } else {
+                $customer = $this->stripeClient->retrieveStripeCustomer($request->stripeCustomerId);
+            }
+
+            $paymentIntent = $this->stripeClient->createPaymentIntent([
+                'customer'=> $customer->id,
+                'amount' =>  $request->paymentAmount,
+                'metadata' => [
+                    'eventId' => $request->eventId
+                ]
             ]);
 
             $responseData = [
                 'status' => 'success',
-                'message' => 'Payment successful',
+                'message' => 'Payment intent creation successful',
                 'data' => [
                     'client_secret' => $paymentIntent->client_secret,
                 ],
@@ -65,24 +75,16 @@ class StripeController extends Controller
                 throw new ModelNotFoundException("Event not found with id: $request->id");
             } else if ($event->user_id != $request->userId) {
                 throw new UnauthorizedException('You cannot view an event of another organizer!');
+            } else {
+                $event->payment_transaction_id = $transaction->id;
+                $event->save();
             }
-        
-            $event->payment_transaction_id = $transaction->id;
-            $event->save();
 
-            $customer = $this->stripeClient->customers->create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'description' => 'My first customer',
-            ]);
-
-            $invoice= $this->stripeClient->invoices->create([
-                'customer' => $customer->id,
-                'collection_method' => 'send_invoice',
-                'days_until_due' => 0,
-            ]);
-
-            $this->stripeClient->invoices->finalizeInvoice($invoice->id, []);
+            $transaction = new PaymentTransaction();
+            $transaction->createStripeCustomer($request->name, $request->email);
+            $customer = $transaction->createStripeCustomer($request->name, $request->email);
+            $invoice = $transaction->createStripeInvoice($customer->id);
+            $transaction->finalizeStripeInvoice($invoice->id);
             
             $responseData = [
                 'status' => 'success',

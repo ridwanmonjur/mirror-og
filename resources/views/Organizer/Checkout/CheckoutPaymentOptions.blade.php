@@ -1,7 +1,8 @@
-<div class="d-none" id="payment-element-view"> 
+
+<div class="" id="payment-element-view"> 
     <div class="text-center" onclick="changeScreen();"> Close </div>
-    <div id="cardLogoId" class="payment-element-children-view my-3 py-3 d-none">
-        <form method="POST" onsubmit="finalizeStripeCardPayment(event);" action="{{ route('stripe.organizerTeamPay') }} }}"> 
+    <div id="cardLogoId" class="payment-element-children-view my-3 py-3">
+        <form method="POST" onsubmit="finalizeStripeCardPayment(event);"> 
             <input type="hidden" name="user_id" value="{{$event->userId}}" />
             <div class="grid-2-columns mx-4"> 
                 <div id="address-element" class="mx-3 my-2 px-5"> </div> 
@@ -19,10 +20,14 @@
     </div>
 </div>
 
-
 <div class="grid-2-columns mx-4" id="payment-discount-view">
     <div class="mx-2">
         <h4>Payment Method</h4>
+        @if (session('errorCheckout'))
+            <div class="text-danger my-2">
+                {{ session('errorCheckout') }}
+            </div>
+        @endif
         <br>
         <div class="me-5 pb-2 mb-2">
             <div onclick="toggleArrows(event);" class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between"

@@ -5,6 +5,7 @@ use App\Http\Controllers\Organizer\InvitationController;
 use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Organizer\OrganizerCheckoutController;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -115,9 +116,11 @@ Route::group(['prefix' => 'organizer'], function () {
 			Route::get('event/{id}/live', [OrganizerEventController::class, 'showLive'])
 				->middleware('prevent-back-button')
 				->name("organizer.live.view");
-			Route::get('event/{id}/checkout', [OrganizerEventController::class, 'showCheckout'])
+			Route::get('event/{id}/checkout', [OrganizerCheckoutController::class, 'showCheckout'])
 				->middleware('prevent-back-button')
 				->name("organizer.checkout.view");
+			Route::get('event/{id}/checkout/transition', [OrganizerCheckoutController::class, 'showCheckoutTransition'])
+				->name("organizer.checkout.transition");
 		});
 	});
 });

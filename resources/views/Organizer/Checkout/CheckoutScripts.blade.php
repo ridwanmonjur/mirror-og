@@ -3,7 +3,6 @@
 <script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
 <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
 <script src="{{ asset('/assets/js/models/PaymentProcessor.js') }}"></script>
-
 <script>
     document.querySelectorAll('.transform-number').forEach((element)=>{
         console.log({element})
@@ -108,7 +107,7 @@
                     console.log('eWallet case');
                     break;
                 case 'otherEWallet':
-                    initializeApplePayment();
+                    initializeStripeEWalletPayment();
                     break;
                 case 'card':
                     initializeStripeCardPayment();
@@ -136,22 +135,27 @@
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
                 body: JSON.stringify({
-                    paymentAmount: paymentProcessor.getPaymentAmount()
+                    paymentAmount: paymentProcessor.getPaymentAmount(),
+                    email: "{{$user->email}}",
+                    name: "{{$user->name}}",
+                    stripeCustomerId: "{{$user->stripe_customer_id}}",
+                    eventId: "{{$event->id}}"
                 })
             });
             
             const json = await response.json();
             const clientSecret = json.data.client_secret;
             elements = stripe.elements({ clientSecret, appearance});
-            const paymentElementOptions = { 
-                type: 'accordion',
-                defaultCollapsed: false,
-                radios: false,
-                spacedAccordionItems: false
-            };
-            const addressOptions = { mode: 'billing' };
+           
             const paymentElement = elements.create("payment", paymentElementOptions);
-            const addressElement = elements.create('address', addressOptions);
+            const addressElement = elements.create('address', addressElementOptions);
+            
+            addressElement.on('change', (event) => {
+                if (event.complete){
+                    const address = event.value.address;
+                }
+            })
+            
             paymentElement.mount("#card-element");
             addressElement.mount("#address-element")
         } catch (error) {
@@ -163,29 +167,23 @@
         event.preventDefault();
         console.log({event, target: event.currentTarget})
         try {
-            const formData = new FormData(event.currentTarget);
-            const formDataObj = {};
-            formData.forEach((value, key) => {
-                formDataObj[key] = value;
-            });
-            formDataObj.paymentAmount = paymentProcessor.getPaymentAmount();
-
-            const response = await fetch("{{ route('stripe.organizerTeamPay') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                body: JSON.stringify(formDataObj)
-            });
-
-            const json = await response.json();
+            const {error} = await stripe.confirmPayment({
+                elements,
+                confirmParams: {
+                    return_url: "{{route('organizer.checkout.transition', ['id'=> $event->id])}}",
+                    payment_method_data: {
+                        billing_details: {
+                            email: "{{$user->email}}",
+                        }
+                    }
+                }
+            }); 
         } catch (error) {
             console.error("Error submitting card form:", error);
         }
     }
 
-    function initializeApplePayment() {
+    function initializeStripeEWalletPayment() {
         const expressCheckoutOptions = {
         buttonType: {
             applePay: 'buy',
@@ -222,14 +220,28 @@
         rules: {
             '.Input, .Block': {
                 backgroundColor: 'transparent',
-                display: 'block',
                 border: '1.5px solid var(--colorPrimary)'
             }
         }
     };
+    let paymentElementOptions = { 
+        type: 'accordion',
+        defaultCollapsed: false,
+        radios: false,
+        spacedAccordionItems: false
+    };
+
+    let addressElementOptions = { mode: 'billing',   
+        blockPoBox: false,
+        fields: {
+            phone: 'never',
+        },
+    };
+
     const loader = 'auto';
     const cardForm = document.getElementById('card-form')
     const cardName = document.getElementById('card-name')
+    initializeStripeCardPayment();
 
 </script>
 
