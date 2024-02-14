@@ -7,6 +7,7 @@
     <title>Registration Management</title>
     <!-- Existing CSS links -->
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/registrationManagement.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/popUpRegistrationManagement.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">  
@@ -153,7 +154,57 @@
                         </div>
                         <p>Total Entry Fee: RM {{ $joinEvent->eventTier->tierEntryFee }}</p>
                         <small>Paid: <a href="#" style="color: green;">RM 0</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="#" style="color: red;">RM {{ $joinEvent->eventTier->tierEntryFee }}</a></small> <br>
-                        <input type="submit" onclick="" value="Contribute"><br>
+                        <input type="submit" onclick="openPopup()" value="Contribute"><br>
+                        {{-- PopUp Start Here --}}
+                        <div class="popup-overlay" style="display: none;">
+                            <!-- Popup content goes here -->
+                            <div class="popup">
+                                <div class="center">
+                                    <div class="wrapper_payment">
+                                        <p style="text-align: left;"><b>Contribution for Event</b></p>
+                                        <div class="wrapper_payment_2" style="padding: 5px;">
+                                            <img src="css/images/dota.png" alt="" style="height: 30px; width: 50px;">
+                                            <a style="text-align: left;">The Super Duper Extreme Dota Challenge League</a>
+                                        </div>
+                        
+                                        <br>
+                        
+                                        <div class="row">
+                                            <div class="column">
+                                                <div class="flex-wrapper">
+                                                    <div class="single-chart">
+                                                        <svg viewBox="0 0 36 36" class="circular-chart orange">
+                                                    <path class="circle-bg"
+                                                      d="M18 2.0845
+                                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                                    />
+                                                    <path class="circle"
+                                                      stroke-dasharray="50, 100"
+                                                      d="M18 2.0845
+                                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                                                    />
+                                                    <text x="18" y="20.35" class="percentage">50%</text>
+                                                  </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="column" style="text-align: left;">
+                                                <p>Total Entry Fee: RM 200</p>
+                                                <small>Paid: <a href="" style="color: green;">RM 100</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM 100</a></small><br><br>
+                                                <p>Selected Amount: RM 0</p><br>
+                                            </div>
+                                        </div>
+                        
+                                        <input type="submit" onclick="" value="Proceed to Payment" onclick="closePopup()"><br><br>
+                                        <button onclick="closePopup()" class="oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
+
+                                    </div>
+                                </div>
+                                </div>
+                        </div>
+                        {{-- PopUp End Here --}}
                         <button onclick="" class="oceans-gaming-default-button oceans-gaming-transparent-button"> Confirm Registration </button>
                         <br><br><br>
                         @endforeach
