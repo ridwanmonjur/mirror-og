@@ -75,11 +75,11 @@
                                     <div class="player-image" style="background-image: url('/assets/images/dota.png')"></div>
                                     <span class="username" data-user-id="{{ $user['user']->id }}" data-is-captain="{{ $isCaptain ? 'true' : 'false' }}">{{ $user['user']->name }}</span>
                                     {{-- <span class="crown-emoji" style="display: {{ $isCaptain ? 'inline-block' : 'none' }}; cursor: pointer;">👑</span> --}}
-                                    <form id="makeCaptainForm_{{ $user['user']->id }}" action="{{ route('make-captain') }}" method="POST" style="display: inline;">
+                                    <form id="makeCaptainForm_{{ $user['user']->id }}" style="display: inline;">
                                         @csrf
                                         <input type="hidden" name="userId" value="{{ $user['user']->id }}">
                                         <input type="hidden" name="eventId" value="{{ $joinEvent->event_details_id }}">
-                                        <button type="submit" class="crown-emoji" style="display: {{ $isCaptain ? 'inline-block' : 'none' }}; cursor: pointer; border: none; background: none;">👑</button>
+                                        <button type="button" id="makeCaptainBtn_{{ $user['user']->id }}" class="crown-emoji" style="display: {{ $isCaptain ? 'inline-block' : 'none' }}; cursor: pointer; border: none; background: none;">👑</button>
                                     </form>
                                 </div>
                                 @endforeach
@@ -157,4 +157,34 @@
     
     @include('CommonLayout.BootstrapV5Js')
     <script src="{{ asset('/assets/js/participant/registrationManagement/main.js')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+         // Function to handle making a user a captain
+ $(document).ready(function(){
+    $('[id^="makeCaptainBtn_"]').click(function(){
+        var userId = $(this).closest('form').find('input[name="userId"]').val();
+        var eventId = $(this).closest('form').find('input[name="eventId"]').val();
+        var form = $(this).closest('form');
+
+        $.ajax({
+            url: "{{ route('make-captain') }}",
+            type: 'POST',
+            data: {
+                userId: userId,
+                eventId: eventId,
+                "_token": "{{ csrf_token() }}"
+            },
+            success: function(response){
+                // Handle success response
+                console.log(response);
+                // You can update UI or do any other necessary action
+            },
+            error: function(xhr, status, error){
+                // Handle error
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
+    </script>
 </body>

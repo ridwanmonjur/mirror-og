@@ -143,18 +143,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // -----------------------------------Create Captain------------------------------------------------------------------
 
- // Function to handle making a user a captain
- function makeCaptain(userId, eventId) {
-    // Submit the form with the specified user ID and event ID
-    document.getElementById('makeCaptainForm_' + userId).submit();
-}
-
-// Add click event listener to the crown emoji
-document.querySelectorAll('.crown-emoji').forEach(function(emoji) {
-    emoji.addEventListener('click', function() {
-        // Retrieve user ID from the data attribute
-        var userId = emoji.previousElementSibling.getAttribute('data-user-id');
-        // Call makeCaptain function with user ID and event ID
-        makeCaptain(userId, '{{ $joinEvent->event_details_id }}');
-    });
-});

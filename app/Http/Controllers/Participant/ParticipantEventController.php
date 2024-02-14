@@ -189,30 +189,26 @@ class ParticipantEventController extends Controller
         }
     }
 
+    public function makeCaptain(Request $request)
+    {
+        $userId = $request->input('userId');
+        $eventId = $request->input('eventId');
 
-public function makeCaptain(Request $request) {
-    $userId = $request->input('userId');
-    $eventId = $request->input('eventId');
+        // Check if the event already has a captain
+        if (Captain::where('eventID', $eventId)->exists()) {
+            return response()->json(['error' => 'Event already has a captain.'], 400);
+        }
 
-    
-    // Check if the event already has a captain
-    if (Captain::where('eventID', $eventId)->exists()) {
-        return response()->json(['error' => 'Event already has a captain.'], 400);
+        // Create a new captain record
+        Captain::create([
+            'userID' => $userId,
+            'eventID' => $eventId,
+            'isCaptain' => true,
+        ]);
+
+        return response()->json(['message' => 'User has been made captain.'], 200);
     }
 
-    // Create a new captain record
-    Captain::create([
-        'userID' => $userId,
-        'eventID' => $eventId,
-        'isCaptain' => true,
-    ]);
-
-    return response()->json(['message' => 'User has been made captain.'], 200);
-}
-
-    
-    
-    
 
     public function createTeamView(Request $request, $user_id)
     {
