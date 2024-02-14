@@ -79,7 +79,7 @@
                                         @csrf
                                         <input type="hidden" name="userId" value="{{ $user['user']->id }}">
                                         <input type="hidden" name="eventId" value="{{ $joinEvent->event_details_id }}">
-                                        <button type="submit" class="crown-emoji" style="display: {{ $isCaptain ? 'inline-block' : 'none' }}; cursor: pointer;">👑</button>
+                                        <button type="submit" class="crown-emoji" style="display: {{ $isCaptain ? 'inline-block' : 'none' }}; cursor: pointer; border: none; background: none;">👑</button>
                                     </form>
                                 </div>
                                 @endforeach
