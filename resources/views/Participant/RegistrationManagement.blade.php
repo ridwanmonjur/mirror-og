@@ -191,8 +191,8 @@
                                                 </div>
                                             </div>
                                             <div class="column">
-                                                <p>Total Entry Fee: RM 200</p>
-                                                <small>Paid: <a href="" style="color: green;">RM 100</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM 100</a></small><br>
+                                                <p>Total Entry Fee: RM {{ $joinEvent->eventTier->tierEntryFee }}</p>
+                                                <small>Paid: <a href="" style="color: green;">RM 100</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red;">RM {{ $joinEvent->eventTier->tierEntryFee }}</a></small><br>
                                                 <p>Selected Amount: RM 0</p>
                                             </div>
                                         </div>
