@@ -163,8 +163,8 @@
                                     <div class="wrapper_payment">
                                         <p style="text-align: left;"><b>Contribution for Event</b></p>
                                         <div class="wrapper_payment_2" style="padding: 5px;">
-                                            <img src="css/images/dota.png" alt="" style="height: 30px; width: 50px;">
-                                            <a style="text-align: left;">The Super Duper Extreme Dota Challenge League</a>
+                                            <img src="/assets/images/dota.png" alt="" style="height: 30px; width: 50px;">
+                                            <a style="text-align: left;">{{ $joinEvent->eventDetails->eventName }}</a>
                                         </div>
                         
                                         <br>
