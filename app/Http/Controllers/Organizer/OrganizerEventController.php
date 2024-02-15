@@ -226,7 +226,7 @@ class OrganizerEventController extends Controller
             $user = $request->get('user');
             $userId = $user->id;
             $event = EventDetail::findEventWithRelationsAndThrowError(
-                $userId, $request->id, null , null
+                $userId, $id, null , null
             );  
             $status = $event->statusResolved();
                 
