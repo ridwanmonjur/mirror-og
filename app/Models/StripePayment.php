@@ -34,8 +34,6 @@ class StripePayment
         return $this->stripeClient->paymentIntents->create([
             ...$array,
             'currency' => 'myr',
-            'payment_method_types' => ['card'],
-            'automatic_payment_methods' => ['enabled' => false],
             'setup_future_usage' => 'off_session',
         ]);
     }

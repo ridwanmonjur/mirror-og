@@ -36,6 +36,7 @@ Route::name('stripe.')
     ->prefix('stripe')
     ->group(function () {
         Route::post('card/intent', 'stripeCardIntentCreate')->name('stripeCardIntentCreate');
+        Route::post('ewallet/intent', 'stripeEWalletIntentCreate')->name('stripeEwalletIntentCreate');
         Route::post('organizerTeamPay', 'organizerTeamPay')->name('organizerTeamPay');
     });
 

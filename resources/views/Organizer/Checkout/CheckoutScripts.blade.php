@@ -127,6 +127,9 @@
     }
 
     async function initializeStripeCardPayment() {
+        console.log("yes");
+        console.log("yes");
+        console.log("yes");
         try {
             const response = await fetch("{{ route('stripe.stripeCardIntentCreate') }}", {
                 method: "POST",
@@ -183,7 +186,12 @@
         }
     }
 
-    function initializeStripeEWalletPayment() {
+    async function initializeStripeEWalletPayment() {
+        console.log("now");
+        console.log("now");
+        console.log("now");
+        console.log("now");
+        console.log("now");
         const expressCheckoutOptions = {
         buttonType: {
             applePay: 'buy',
@@ -192,8 +200,7 @@
           }
         }
         
-        const elements = stripe.elements({
-            locale: 'sg',
+        const elements = await stripe.elements({
             mode: 'payment',
             amount: paymentProcessor.getPaymentAmount(),
             currency: 'myr',
@@ -241,7 +248,6 @@
     const loader = 'auto';
     const cardForm = document.getElementById('card-form')
     const cardName = document.getElementById('card-name')
-    initializeStripeCardPayment();
 
 </script>
 

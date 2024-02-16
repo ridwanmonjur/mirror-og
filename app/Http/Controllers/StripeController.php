@@ -38,6 +38,7 @@ class StripeController extends Controller
             $paymentIntent = $this->stripeClient->createPaymentIntent([
                 'customer'=> $customer->id,
                 'amount' =>  $request->paymentAmount,
+                'payment_method_types' => ['card'],
                 'metadata' => [
                     'eventId' => $request->eventId
                 ]
@@ -59,8 +60,36 @@ class StripeController extends Controller
                 'data'=> null
             ]);
         }
-
     }
+
+    public function stripeEWalletIntentCreate(Request $request){
+        try {
+            $paymentIntent = $this->stripeClient->createPaymentIntent([
+                'amount' =>  $request->paymentAmount,
+                'metadata' => [
+                    'eventId' => $request->eventId
+                ],
+                'automatic_payment_methods' => ['enabled' => true],
+            ]);
+
+            $responseData = [
+                'status' => 'success',
+                'message' => 'Payment intent creation successful',
+                'data' => [
+                    'client_secret' => $paymentIntent->client_secret,
+                ],
+            ];
+        
+            return response()->json($responseData);
+        } catch (Exception $e) {
+            return response()->json([
+                'status'=> 'error',
+                'message'=> $e->getMessage(),
+                'data'=> null
+            ]);
+        }
+    }
+
     public function organizerTeamPay(Request $request)
     {
         try {
