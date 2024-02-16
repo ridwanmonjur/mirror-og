@@ -148,23 +148,9 @@
             
             const json = await response.json();
             const clientSecret = json.data.client_secret;
-
-            const options = {
-                layout: {
-                    type: 'accordion',
-                    defaultCollapsed: false,
-                    radios: false,
-                    spacedAccordionItems: true
-                },
-                wallets: {
-                    googlePay: 'auto',
-                    applePay: 'auto'
-                }
-            };
             elements = stripe.elements({ clientSecret, appearance});
-            const paymentElement = await elements.create('payment', options);
-            paymentElement.mount("#card-element");
            
+            const paymentElement = elements.create("payment", paymentElementOptions);
             const addressElement = elements.create('address', addressElementOptions);
             
             addressElement.on('change', (event) => {
@@ -173,6 +159,7 @@
                 }
             })
             
+            paymentElement.mount("#card-element");
             addressElement.mount("#address-element")
         } catch (error) {
             console.error("Error initializing Stripe Card Payment:", error);
@@ -261,6 +248,6 @@
     const loader = 'auto';
     const cardForm = document.getElementById('card-form')
     const cardName = document.getElementById('card-name')
-    initializeStripeCardPayment();
+
 </script>
 

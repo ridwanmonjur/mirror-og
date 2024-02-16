@@ -1,7 +1,18 @@
 
 <div class="d-none" id="payment-element-view"> 
     <div class="text-center" onclick="changeScreen();"> Close </div>
-    
+    <div id="cardLogoId" class="payment-element-children-view my-3 py-3 d-none">
+        <form method="POST" onsubmit="finalizeStripeCardPayment(event);"> 
+            <input type="hidden" name="user_id" value="{{$event->userId}}" />
+            <div class="grid-2-columns mx-4"> 
+                <div id="address-element" class="mx-3 my-2 px-5"> </div> 
+                <div id="card-element" class="mx-3 my-2 px-5"> </div> 
+            </div>
+            <div class="d-flex justify-content-center my-5">
+                <button class="oceans-gaming-default-button" type="submit"> Submit </button>
+            </div>
+        </form>
+    </div>
     <div id="eWalletLogoId" class="payment-element-children-view d-none">Ewallet view</div>
     <div id="bankLogoId" class="payment-element-children-view d-none">Bank view</div>
     <div id="otherEWalletLogoId" class="payment-element-children-view d-none">
@@ -11,119 +22,103 @@
 
 <div class="grid-2-columns mx-4" id="payment-discount-view">
     <div class="mx-2">
-
         <h4>Payment Method</h4>
-        
         @if (session('errorCheckout'))
             <div class="text-danger my-2">
                 {{ session('errorCheckout') }}
             </div>
         @endif
         <br>
-        <div id="cardLogoId" class="payment-element-children-view my-3 py-3">
-            <form method="POST" onsubmit="finalizeStripeCardPayment(event);"> 
-                <input type="hidden" name="user_id" value="{{$event->userId}}" />
-                <div> 
-                    <div id="card-element" class="my-2"> </div> 
-                    <div id="address-element" class="my-2"> </div> 
-                </div>
-                <div class="d-flex justify-content-center my-5">
-                    <button class="oceans-gaming-default-button" type="submit"> Submit </button>
-                </div>
-            </form>
+        <div class="me-5 pb-2 mb-2">
+            <div onclick="toggleArrows(event);" class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between"
+                data-bs-toggle="collapse" href="#card-accordion" aria-expanded="false" aria-controls="card-accordion">
+                <div> Credit / Debit Card </div>
+                <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
+            </div>
+            <div class="collapse px-3 py-2 multi-collapse" id="card-accordion">
+                @include('Organizer.Checkout.CheckoutCardOption')
+            </div>
         </div>
-        <div class="d-none">
-            <div class="me-5 pb-2 mb-2">
-                <div onclick="toggleArrows(event);" class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between"
-                    data-bs-toggle="collapse" href="#card-accordion" aria-expanded="false" aria-controls="card-accordion">
-                    <div> Credit / Debit Card </div>
-                    <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
-                </div>
-                <div class="collapse px-3 py-2 multi-collapse" id="card-accordion">
-                    @include('Organizer.Checkout.CheckoutCardOption')
+        <div class="me-5 pb-2 mb-2">
+            <div onclick="toggleArrows(event);" class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between"
+                data-bs-toggle="collapse" href="#eWallet-accordion" aria-expanded="false"
+                aria-controls="eWallet-accordion">
+                <div> eWallet </div>
+                <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
+            </div>
+            <div class="collapse px-3 py-2 multi-collapse" id="eWallet-accordion">
+                <div class="grid-4-columns">
+                    @foreach (bladeGetPaymentLogos("eWallet") as $logo)
+                        <div class="position-relative" style="width: min-content;">
+                            <img src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
+                                width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" 
+                                onclick="onChoosePayment(event, 'eWallet', '{{$logo['name']}}');"
+                                @class([
+                                    "payment-element",
+                                    "mt-3",
+                                    "hover-bigger",
+                                    "object-fit-cover" => $logo['cover']
+                                ])
+                            >
+                            <div class="rounded-circle position-absolute px-1 check-tick d-none">✔</div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
-            <div class="me-5 pb-2 mb-2">
-                <div onclick="toggleArrows(event);" class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between"
-                    data-bs-toggle="collapse" href="#eWallet-accordion" aria-expanded="false"
-                    aria-controls="eWallet-accordion">
-                    <div> eWallet </div>
-                    <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
-                </div>
-                <div class="collapse px-3 py-2 multi-collapse" id="eWallet-accordion">
-                    <div class="grid-4-columns">
-                        @foreach (bladeGetPaymentLogos("eWallet") as $logo)
-                            <div class="position-relative" style="width: min-content;">
-                                <img src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
-                                    width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" 
-                                    onclick="onChoosePayment(event, 'eWallet', '{{$logo['name']}}');"
-                                    @class([
-                                        "payment-element",
-                                        "mt-3",
-                                        "hover-bigger",
-                                        "object-fit-cover" => $logo['cover']
-                                    ])
-                                >
-                                <div class="rounded-circle position-absolute px-1 check-tick d-none">✔</div>
-                            </div>
-                        @endforeach
-                    </div>
+        </div>
+        <div class="me-5 pb-2 mb-2">
+            <div onclick="toggleArrows(event);" class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between"
+                data-bs-toggle="collapse" href="#online-banking-accordion" aria-expanded="false"
+                aria-controls="online-banking-accordion">
+                <div> Online Banking (FPX) </div>
+                <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
+            </div>
+            <div class="collapse px-3 py-2 multi-collapse" id="online-banking-accordion">
+                <div class="grid-5-columns">
+                    @foreach (bladeGetPaymentLogos("bank") as $logo)
+                        <div class="position-relative" style="width: min-content;">
+                            <img 
+                                src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
+                                width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" 
+                                @class([
+                                    "payment-element",
+                                    "mt-3",
+                                    "hover-bigger",
+                                    "object-fit-cover" => $logo['cover']
+                                ])
+                                onclick="onChoosePayment(event, 'bank', '{{$logo['name']}}');"
+                            >
+                            <div class="rounded-circle position-absolute px-1 check-tick d-none">✔</div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
-            <div class="me-5 pb-2 mb-2">
-                <div onclick="toggleArrows(event);" class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between"
-                    data-bs-toggle="collapse" href="#online-banking-accordion" aria-expanded="false"
-                    aria-controls="online-banking-accordion">
-                    <div> Online Banking (FPX) </div>
-                    <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
-                </div>
-                <div class="collapse px-3 py-2 multi-collapse" id="online-banking-accordion">
-                    <div class="grid-5-columns">
-                        @foreach (bladeGetPaymentLogos("bank") as $logo)
-                            <div class="position-relative" style="width: min-content;">
-                                <img 
-                                    src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
-                                    width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" 
-                                    @class([
-                                        "payment-element",
-                                        "mt-3",
-                                        "hover-bigger",
-                                        "object-fit-cover" => $logo['cover']
-                                    ])
-                                    onclick="onChoosePayment(event, 'bank', '{{$logo['name']}}');"
-                                >
-                                <div class="rounded-circle position-absolute px-1 check-tick d-none">✔</div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
+        </div>
+        <div class="me-5 pb-2 mb-2">
+            <div onclick="toggleArrows(event);" class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between"
+                data-bs-toggle="collapse" href="#other-methods-accordion" aria-expanded="false"
+                aria-controls="other-methods-accordion">
+                <div> Other Methods </div>
+                <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
             </div>
-            <div class="me-5 pb-2 mb-2">
-                <div onclick="toggleArrows(event);" class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between"
-                    data-bs-toggle="collapse" href="#other-methods-accordion" aria-expanded="false"
-                    aria-controls="other-methods-accordion">
-                    <div> Other Methods </div>
-                    <div class="accordion-arrows"> @include('Organizer.Checkout.AccordionArrows') </div>
-                </div>
-                <div class="collapse px-3 py-2 multi-collapse" id="other-methods-accordion">
-                    <div class="grid-4-columns">
-                        @foreach (bladeGetPaymentLogos("otherEWallet") as $logo)
-                            <div class="position-relative" style="width: min-content;">
-                                <img 
-                                    src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
-                                    width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" 
-                                    @class([
-                                        "payment-element",
-                                        "mt-3",
-                                        "hover-bigger",
-                                        "object-fit-cover" => $logo['cover']
-                                    ])
-                                    onclick="onChoosePayment(event, 'otherEWallet', '{{$logo['name']}}');"
-                                >
-                                <div class="rounded-circle position-absolute  px-1 check-tick d-none">✔</div>
-                            </div>
-                        @endforeach
-                    </div>
+            <div class="collapse px-3 py-2 multi-collapse" id="other-methods-accordion">
+                <div class="grid-4-columns">
+                    @foreach (bladeGetPaymentLogos("otherEWallet") as $logo)
+                        <div class="position-relative" style="width: min-content;">
+                            <img 
+                                src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
+                                width="{{ $logo['width'] }}" height="{{ $logo['height'] }}" 
+                                @class([
+                                    "payment-element",
+                                    "mt-3",
+                                    "hover-bigger",
+                                    "object-fit-cover" => $logo['cover']
+                                ])
+                                onclick="onChoosePayment(event, 'otherEWallet', '{{$logo['name']}}');"
+                            >
+                            <div class="rounded-circle position-absolute  px-1 check-tick d-none">✔</div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
