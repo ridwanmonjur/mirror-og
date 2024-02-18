@@ -71,3 +71,10 @@ function appendEventElement(event) {
 function clearPlaceholder() {
     document.getElementById("teamName").removeAttribute("placeholder");
 }
+
+function restorePlaceholder() {
+    var teamNameInput = document.getElementById("teamName");
+    if (!teamNameInput.value.trim()) {
+        teamNameInput.setAttribute("placeholder", "Team Name");
+    }
+}
