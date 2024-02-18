@@ -56,7 +56,7 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                <input type="text" name="teamName" id="teamName" placeholder="Team Name" onclick="clearPlaceholder()">
+                <input type="text" name="teamName" id="teamName" placeholder="Team Names" onclick="clearPlaceholder()">
             </div>
 
             <div><input type="submit" onclick="" value="Create Team"></div>
