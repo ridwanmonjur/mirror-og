@@ -14,35 +14,35 @@ function searchNavbar(event) {
     } else {
         endpoint = "/participant/events";
     }
-    let endpointFinal = page==null? ENDPOINT: ENDPOINT + "?page=" + page
+    let endpointFinal = page == null ? ENDPOINT : ENDPOINT + "?page=" + page
         // window.history.replaceState({}, document.title, endpointFinal);
     fetch(endpointFinal, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ searchText: searchText })
-    })
-    .then(response => {
-        console.log(data);
-        data.forEach(event => {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ searchText: searchText })
+        })
+        .then(response => {
+            console.log(data);
+            data.forEach(event => {
+                createEventElement(event);
+            });
+
+            const currentUrl = new URL(window.location.href);
+
+            const queryParams = currentUrl.searchParams;
+            if (!queryParams.has('page')) {
+                const eventDiv = document.querySelector('.event');
+                eventDiv.innerHTML = ""
+            }
             createEventElement(event);
-        });
 
-        const currentUrl = new URL(window.location.href);
 
-        const queryParams = currentUrl.searchParams;
-        if (!queryParams.has('page')) {
-            const eventDiv = document.querySelector('.event');
-            eventDiv.innerHTML = ""
-        } 
-        createEventElement(event);
-
-    
-    })
-    .then(data => {
-        console.log(data);
-    })
+        })
+        .then(data => {
+            console.log(data);
+        })
 }
 
 function createEventElement(event) {
@@ -66,4 +66,8 @@ function appendEventElement(event) {
         <small>${event.venue || 'South East Asia'}</small>
     `;
     return eventDiv;
+}
+
+function clearPlaceholder() {
+    document.getElementById("teamName").removeAttribute("placeholder");
 }
