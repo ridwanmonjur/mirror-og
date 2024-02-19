@@ -81,6 +81,8 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::delete('participant/unfollow-organizer', [ParticipantEventController::class, 'unfollowOrganizer'])->name('unfollow.organizer');
 			Route::post('participant/team/approve-member/{id}', [ParticipantEventController::class, 'approveMember'])->name('team.approve-member');
 			Route::post('/make-captain', [ParticipantEventController::class, 'makeCaptain'])->name('make-captain');
+			Route::post('/delete-captain', [ParticipantEventController::class, 'deleteCaptain'])->name('delete-captain');
+
 
 		});
 	});
