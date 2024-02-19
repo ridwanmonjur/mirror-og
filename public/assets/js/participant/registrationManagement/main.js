@@ -159,3 +159,12 @@ function closePopup(eventId) {
     document.getElementById(popupId).style.display = 'none';
 }
 
+
+// Update Amount Digit 
+
+document.getElementById('dollar_amount').addEventListener('input', function(evt) {
+    let input = evt.target.value.replace(/[^\d.]/g, ''); // Remove any non-digit characters
+    let parts = input.split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Add commas for thousands
+    evt.target.value = parts.join('.'); // Rejoin the parts
+});

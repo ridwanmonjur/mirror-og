@@ -193,10 +193,17 @@
                                             <div class="column">
                                                 <p>Total Entry Fee: RM {{ $joinEvent->eventTier->tierEntryFee }}</p>
                                                 <small>Paid: <a href="" style="color: green !important;">RM 0</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red !important;">RM {{ $joinEvent->eventTier->tierEntryFee }}</a></small><br>
-                                                <small>Selected Amount: <input type="number" step="0.01" min="0" id="selectedAmount" value="0" style="width: 60px; height: 20px; font-size: 14px; padding: 5px;" /></small> <br><br>
+                                                <small>Amount: <input type="text" id="dollar_amount" style="width: 100px; height: 30px; font-size: 14px; padding: 5px;" name="dollar_amount" placeholder="RM 0.00" required></small> <br> <br>
                                             </div>
                                         </div>
-                        
+                                        <script>
+                                            document.getElementById('selectedAmount').addEventListener('input', function(evt) {
+                                                let input = evt.target.value.replace(/[^\d.]/g, ''); // Remove any non-digit characters
+                                                let parts = input.split('.');
+                                                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Add commas for thousands
+                                                evt.target.value = parts.join('.'); // Rejoin the parts
+                                            });
+                                            </script>
                                         <input type="submit" onclick="" value="Proceed to Payment" onclick="closePopup()"><br>
                                         <button onclick="closePopup('{{ $joinEvent->id }}')" class="oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
 
@@ -246,4 +253,7 @@
     });
 });
     </script>
+
+
+
 </body>
