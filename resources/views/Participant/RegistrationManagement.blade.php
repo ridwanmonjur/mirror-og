@@ -69,7 +69,7 @@
                                         <div>{{ \Carbon\Carbon::parse($joinEvent->eventDetails->startDate)->format('d M Y') }}</div>
 
 
-                                        <a href="#" style="color: white; text-decoration: underline;">See Bracket</a>
+                                        <a href="#" onclick="event.preventDefault();" style="color: white; text-decoration: underline;">See Bracket</a>
                                     </div>
                                 </div>
                                 <br><br>
