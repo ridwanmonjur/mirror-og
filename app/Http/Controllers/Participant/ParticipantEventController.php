@@ -190,24 +190,36 @@ class ParticipantEventController extends Controller
     }
 
     public function makeCaptain(Request $request)
-    {
-        $userId = $request->input('userId');
-        $eventId = $request->input('eventId');
+{
+    $userId = $request->input('userId');
+    $eventId = $request->input('eventId');
 
-        // Check if the event already has a captain
-        if (Captain::where('eventID', $eventId)->exists()) {
-            return response()->json(['error' => 'Event already has a captain.'], 400);
-        }
-
-        // Create a new captain record
-        Captain::create([
-            'userID' => $userId,
-            'eventID' => $eventId,
-            'isCaptain' => true,
-        ]);
-
-        return response()->json(['message' => 'User has been made captain.'], 200);
+    // Check if the event already has a captain assigned to the user
+    $existingCaptain = Captain::where('eventID', $eventId)->where('userID', $userId)->first();
+    
+    if ($existingCaptain) {
+        // If there's already a captain assigned to the user, delete that record
+        $existingCaptain->delete();
+        return response()->json(['message' => 'You are no longer a captain for this event.'], 200);
     }
+
+    // Check if there's already a captain for the event
+    $existingCaptainForEvent = Captain::where('eventID', $eventId)->first();
+    
+    if ($existingCaptainForEvent) {
+        // If there's already a captain for the event, return an error message
+        return response()->json(['error' => 'This event already has a captain.'], 400);
+    }
+
+    // If there's no existing captain assigned to the user and no captain for the event, create a new one
+    Captain::create([
+        'userID' => $userId,
+        'eventID' => $eventId,
+        'isCaptain' => true,
+    ]);
+
+    return response()->json(['message' => 'You are now a captain for this event.'], 200);
+}
 
 
     public function createTeamView(Request $request, $user_id)
