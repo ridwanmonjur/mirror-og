@@ -631,3 +631,15 @@ input[type="submit"]:active {
 .gear-icon-btn:hover::before {
     transform: translate(-50%, -50%) scale(2);
 }
+
+/* CSS styles for the input box */
+#dollar_amount {
+    width: 150px;
+    height: 40px;
+    font-size: 16px;
+    padding: 10px;
+    border: 2px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Add rounded corners */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    outline: none; /* Remove default outline */
+  }

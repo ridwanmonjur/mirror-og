@@ -193,7 +193,7 @@
                                             <div class="column">
                                                 <p>Total Entry Fee: RM {{ $joinEvent->eventTier->tierEntryFee }}</p>
                                                 <small>Paid: <a href="" style="color: green !important;">RM 0</a></small>&nbsp;&nbsp;&nbsp;<small>Pending: <a href="" style="color: red !important;">RM {{ $joinEvent->eventTier->tierEntryFee }}</a></small><br>
-                                                <small>Amount: <input type="text" id="dollar_amount" style="width: 100px; height: 30px; font-size: 14px; padding: 5px;" name="dollar_amount" placeholder="RM 0.00" required></small> <br> <br>
+                                                <small>Amount: <input type="text" id="dollar_amount" style="width: 130px; height: 30px; font-size: 14px; padding: 5px;" name="dollar_amount" placeholder="RM 0.00" required></small> <br> <br>
                                             </div>
                                         </div>
                                         <script>
@@ -253,6 +253,7 @@
     });
 });
     </script>
+
 
 
 
