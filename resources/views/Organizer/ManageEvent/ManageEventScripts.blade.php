@@ -1,3 +1,5 @@
+ <script src="{{ asset('/assets/js/models/ManageEventFetchProcessor.js') }}"></script>
+
  <script>
     const SORT_CONSTANTS = {
         'ASC' : 'asc',
@@ -16,74 +18,6 @@
         event.stopPropagation();
     }
 
-    class FetchVariables {
-        constructor() {
-            this.sortType = SORT_CONSTANTS['ASC'];
-            this.sortKey = '';
-            this.filter = {};
-            this.search = null;
-            this.fetchedPage = 1;
-            this.currentPage = 1;
-        }
-
-        visualize() {
-            console.log({
-                filter: this.filter,
-                search: this.search,
-                sortKey: this.sortKey,
-                sortType: this.sortType,
-                fetchedPage: this.fetchedPage                
-            });
-        }
-
-        getSortType() {
-            return this.sortType;
-        }
-
-        getSortKey() {
-            return this.sortKey;
-        }
-
-        getFilter() {
-            return this.filter;
-        }
-
-        getFetchedPage() {
-            return this.fetchedPage;
-        }
-
-        getCurrentPage() {
-            return this.currentPage;
-        }
-
-        getSearch() {
-            return this.search;
-        }
-
-        setSortKey(value) {
-            this.sortKey = value;
-        }
-
-        setFilter(value) {
-            this.filter = value;
-        }
-
-        setSearch(value) {
-            this.search = value;
-        }
-
-        setSortType(value) {
-            this.sortType = value;
-        }
-
-        setFetchedPage(value) {
-            this.fetchedPage = value;
-        }
-
-        setCurrentPage(value) {
-            this.currentPage = value;
-        }
-    }
 
     function toggleDropdown(id) {
         let dropdown = document.querySelector(`#${id}[data-bs-toggle='dropdown']`);
@@ -102,8 +36,6 @@
 
     function fetchSearchSortFiter() {
         resetNoMoreElement();
-
-      
 
         let params = convertUrlStringToQueryStringOrObject({
             isObject: true
@@ -147,7 +79,8 @@
             filter[event.target.name] = filter[event.target.name].filter(
                 _value => _value != value
             );
-            deleteTagNewFunction();
+
+            deleteTagByNameValue(event.target.name, event.target.value);
         }
 
         fetchVariables.setFilter(filter);
@@ -155,7 +88,13 @@
         fetchVariables.visualize();
     }
 
-    function deleteTag(event, name, value) {
+    function deleteTagByNameValue(name, value){
+        let id = `${name}${value}tag`;
+        let tagElement = document.getElementById(id);
+        tagElement.remove();
+    }
+
+    function deleteTagByParent(event, name, value) {
         let element = event.currentTarget;
         element.parentElement.remove();
 
@@ -173,13 +112,14 @@
     function addFilterTags(title, name, value) {
         let tagElement = document.getElementById('insertFilterTags');
         console.log({tagElement, title})
+        tagElement;
         tagElement.classList.remove('d-none');
         tagElement.classList.add('d-flex');
         tagElement.innerHTML += `
-            <div class="me-3 px-3 d-flex justify-content-around" style="background-color: #95AEBD; color: white; border-radius: 30px;"> 
+            <div id='${name}${value}tag' class="me-3 px-3 d-flex justify-content-around" style="background-color: #95AEBD; color: white; border-radius: 30px;"> 
                 <span class="me-3"> ${title} </span>
                 <svg
-                    onclick="deleteTag(event, '${name}', '${value}');"
+                    onclick="deleteTagByParent(event, '${name}', '${value}');"
                     xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle mt-1 cursor-pointer" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -194,18 +134,14 @@
         let sortKey = fetchVariables.getSortKey();
         let sortType = fetchVariables.getSortType();
         let sortByTitleId = document.getElementById('sortByTitleId');
-        
-        if (sortByTitleId) {
-            sortByTitleId.textContent = title;
-        }
-
+        sortByTitleId.textContent = title;
         fetchVariables.setSortKey(key);
         fetchVariables.setSortType(sortType);  
         fetchSearchSortFiter();
         fetchVariables.visualize();
     }
 
-    function setFetchSortType(type) {
+    function setFetchSortType() {
         let sortType = fetchVariables.getSortType();
         let sortKey = fetchVariables.getSortKey();
 
@@ -221,7 +157,8 @@
         else { 
             sortType = SORT_CONSTANTS['ASC'];
         }
-        fetchVariables.setSortType(type);   
+        
+        fetchVariables.setSortType(sortType);   
         fetchSearchSortFiter();
         fetchVariables.visualize();  
 }

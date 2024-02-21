@@ -199,18 +199,7 @@
             paypal: 'buynow'
           }
         }
-        
-        const elements = await stripe.elements({
-            mode: 'payment',
-            amount: paymentProcessor.getPaymentAmount(),
-            currency: 'myr',
-        })
-        const expressCheckoutElement = elements.create(
-            'expressCheckout',
-            expressCheckoutOptions
-        )
-        expressCheckoutElement.mount('#express-apple-checkout-element')
-    }
+      
 
     let stripe = Stripe('{{ env('STRIPE_KEY') }}')
     const appearance = {
@@ -245,9 +234,6 @@
         },
     };
 
-    const loader = 'auto';
-    const cardForm = document.getElementById('card-form')
-    const cardName = document.getElementById('card-name')
 
 </script>
 

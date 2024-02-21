@@ -202,7 +202,7 @@ button#submit,
     border: 0px solid black;
 }
 
-.w-60s{
+.w-70s{
     width: 100%;
 }
 
@@ -246,8 +246,8 @@ button#submit,
         left: 20px;
     }
 
-    .w-60s{
-        width: 80%;
+    .w-70s{
+        width: 70%;
     }
 }
 
@@ -267,8 +267,8 @@ a:hover {
 }
 
 @media screen and (min-width: 1300px) { 
-    .w-60s{
-        width: 60%;
+    .w-70s{
+        width: 70%;
     }
 }
 

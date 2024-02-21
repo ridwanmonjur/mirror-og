@@ -35,8 +35,11 @@
         <div class="card-text">
             <div>
                 <div class="flexbox-centered-space flex-wrap-height-at-mobile">
-                    <img src="{{ $bladeEventGameImage }}" alt="menu" width="50" height="50"
-                        style="object-fit: cover; ">
+                    <img src="{{ $bladeEventGameImage }}" 
+                        onerror="this.onerror=null;this.src='{{asset('assets/images/broken-image.jpeg')}}';"
+                        alt="menu" width="50" height="50"
+                        style="object-fit: cover; "
+                    >
                     <button data-bs-toggle="tooltip" data-bs-html="true" title="{{ $toolTip }}"
                         class="activate-tooltip oceans-gaming-default-button"
                         style="@php echo $stylesEventStatus; @endphp">

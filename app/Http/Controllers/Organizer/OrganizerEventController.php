@@ -80,7 +80,7 @@ class OrganizerEventController extends Controller
         $eventListQuery = EventDetail::generateOrganizerFullQueryForFilter($request);
 
         $eventList = $eventListQuery
-            ->where('user_id', $userId)
+            ->where('event_details.user_id', $userId)
             ->with('tier', 'type', 'game', 'joinEvents')
             ->paginate($count);
         

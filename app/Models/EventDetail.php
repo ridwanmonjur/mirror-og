@@ -232,8 +232,16 @@ class EventDetail extends Model
             $sort = $request->input('sort');
             
                 foreach ($sort as $key => $value) {
-                    if (!empty(trim($key))) { 
-                        $query->orderBy($key, $value);
+                    if (!empty(trim($key))) {
+                        if ($key ==  'startDate'){
+                            $query->orderBy('startDate', $value)->orderBy('startTime', $value);
+                        } else if ($key ==  'prize') {
+                            $query
+                                ->join('event_tier', 'event_details.event_tier_id', '=', 'event_tier.id')
+                                ->orderBy('event_tier.tierPrizePool', $value);
+                        } else { 
+                            $query->orderBy($key, $value);
+                        }
                     }
                 }
 
@@ -266,7 +274,36 @@ class EventDetail extends Model
                     }
                 });
             }
-            
+
+            if (array_key_exists('date', $filter)) {
+                return $query->where(function ($q) use ($filter, $request) {
+                    foreach ($filter['date'] as $element) {
+                        switch ($element)  {
+                            case 'today':
+                                $q->orWhereBetween('created_at', [now()->startOfDay(), now()]);
+                                break;
+                            case 'yesterday':
+                                $q->orWhereBetween('created_at', [now()->subDay()->startOfDay(), now()->startOfDay()]);
+                                break;
+                            case 'this-week':
+                                $q->orWhereBetween('created_at', [now()->subWeek(), now()]);
+                                break;
+                            case 'this-month':
+                                $q->orWhereBetween('created_at', [now()->subMonth(), now()]);
+                                break;
+                            case 'this-year':
+                                $q->orWhereBetween('created_at', [now()->subYear(), now()]);
+                                break;
+                            case 'custom-range':
+                                $q->orWhereBetween('created_at', [$filter['startDate'][0], $filter['endDate'][0]]);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+            }
+
             return $query;
         });
 

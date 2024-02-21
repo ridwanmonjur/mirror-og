@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-between w-60s align-items-center flex-wrap">
+<div class="d-flex justify-content-between w-70s align-items-center flex-wrap">
     <div class="icon2 me-3 d-inline-block"
         onclick="openElementById('close-option'); openElementById('filter-option');  closeElementById('sort-option');">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-filter mt-2"
@@ -25,7 +25,7 @@
                 class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTitle"
             >
                 @foreach($eventCategoryList as $eventCategoryItem)
-                    <div class="px-3 min-w-150px">
+                    <div class="px-3 min-w-150px py-1">
                         <input onchange="setFilterForFetch(event, '{{$eventCategoryItem['gameTitle']}}');" type="checkbox" name="gameTitle" value="{{$eventCategoryItem['id']}}">
                         <label for="gameTitle">{{$eventCategoryItem['gameTitle']}}</label>
                     </div>
@@ -50,7 +50,7 @@
                 onclick="stopPropagation(event);"; 
                 class="dropdown-menu px-0 py-1 pt-3" aria-labelledby="dropdownFilterType">
                 @foreach($eventTypeList as $eventType)
-                    <div class="px-3 min-w-150px">
+                    <div class="px-3 min-w-150px py-1">
                         <input onchange="setFilterForFetch(event, '{{$eventType['eventType']}}');" type="checkbox" name="eventType" value="{{$eventType['id']}}">
                         <label for="eventType">{{$eventType['eventType']}}</label>
                     </div>
@@ -75,11 +75,12 @@
                 class="dropdown-menu px-0 pt-3" aria-labelledby="dropdownFilterTier"
             >
                 @foreach($eventTierList as $eventTier)
-                    <div class="px-3 min-w-150px">
+                    <div class="px-3 min-w-150px py-1">
                         <input onchange="setFilterForFetch(event, '{{$eventTier['eventTier']}}');" type="checkbox" name="eventTier" value="{{$eventTier['id']}}">
                         <label for="eventTier">{{$eventTier['eventTier']}}</label>
                     </div>
                 @endforeach
+                
             </div>
         </div>
 
@@ -99,7 +100,7 @@
                 onclick="stopPropagation(event);"; 
                 class="dropdown-menu px-0" aria-labelledby="dropdownFilterTier"
             >
-                <div class="px-3 pt-2 min-w-250px">
+                <div class="px-3 py-2 min-w-250px">
                     <input onchange="setFilterForFetch(event, 'SEA');" type="checkbox" name="venue" value="SEA">
                     <label for="eventTier">South East Asia (SEA)</label>
                 </div>
@@ -122,18 +123,27 @@
                 onclick="stopPropagation(event);"; 
                 class="dropdown-menu px-0" aria-labelledby="dropdownFilterTier"
             >
-                <div class="px-3  pt-2 min-w-150px">
-                    <input onchange="setFilterForFetch(event, 'Dolphin');" type="checkbox" name="eventTier" value="Dolphin">
-                    <label for="eventTier">Dolphin</label>
-                </div>
-                <div class="px-3 min-w-150px">
-                    <input onchange="setFilterForFetch(event, 'Turtle');" type="checkbox" name="eventTier" value="Turtle">
-                    <label for="eventTier">Turtle</label>
-                </div>
-                <div class="px-3 min-w-150px">
-                    <input onchange="setFilterForFetch(event, 'Starfish');" type="checkbox" name="eventTier"
-                        value="Starfish">
-                    <label for="eventTier">Starfish</label>
+                @foreach([
+                    ['title' => 'Today', 'value' => 'today'],
+                    ['title' => 'Yesterday', 'value' => 'yesterday'],
+                    ['title' => 'This week', 'value' => 'this-week'],
+                    ['title' => 'This month', 'value' => 'this-month'],
+                    ['title' => 'This year', 'value' => 'this-year'],
+                ] as $eventType)
+                    <div class="px-3 py-1" style="width: 200px;">
+                        <input onchange="setFilterForFetch(event, '{{$eventType['title']}}'); " type="checkbox" name="date" value="{{$eventType['value']}}">
+                        <label for="eventType">{{$eventType['title']}}</label>
+                    </div>
+                @endforeach
+                <div class="px-3 py-1 form-row d-none">
+                    <div class="form-group">
+                    <label for="inputEmail4">Start Date</label>
+                    <input type="date" class="form-control" id="inputEmail4" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                    <label for="inputPassword4">End date</label>
+                    <input type="date" class="form-control" id="inputPassword4" placeholder="Password">
+                    </div>
                 </div>
             </div>
         </div>
@@ -150,9 +160,10 @@
         </div>
         <div class="dropdown dropdown-click-outside">
             <button 
-                class="dropbtn px-3 py-2 me-3" 
+                class="dropbtn py-2 me-3" 
                 type="button" id="dropdownSortButton" 
                 onclick="setFetchSortType()"
+                style="width: 150px; display: inline-block;"
                 data-bs-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <span id="sortByTitleId">Sort by:</span>
@@ -168,12 +179,12 @@
                 onclick="stopPropagation(event);"; 
                 class="dropdown-menu px-3 ms-3" aria-labelledby="dropdownSortButton"
             >
-                <div class="sort-box d-block min-w-150px hover-bigger ps-3" onclick="setSortForFetch('recent', 'Recent');">
+                <div class="sort-box d-block min-w-150px hover-bigger ps-3" onclick="setSortForFetch('created_at', 'Recent');">
                     <label class="me-3 cursor-pointer" for="recent">Recent</label>
                     <span class="recentSortIcon sortIcon">
                     </span>
                 </div>
-                <div class="sort-box d-block min-w-150px hover-bigger ps-3" onclick="setSortForFetch('aToZ', 'A-Z');">
+                <div class="sort-box d-block min-w-150px hover-bigger ps-3" onclick="setSortForFetch('eventName', 'A-Z');">
                     <label class="me-3 cursor-pointer" for="aToZ">A-Z</label>
                     <span class="aToZSortIcon sortIcon">
                     </span>
