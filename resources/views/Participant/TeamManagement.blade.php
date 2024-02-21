@@ -93,8 +93,16 @@
                                             <div style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
                                                 <!-- Circle image goes here -->
                                                 @php
-                                                    $imagePathWithoutExtension = 'https://driftwood.gg/storage/images/event_details/' . strtolower($joinEvent->eventDetails->eventTier);
-                                                    $imageExtension = pathinfo($imagePathWithoutExtension, PATHINFO_EXTENSION);
+                                                // $joinEvent->eventDetails->eventTier contains a JSON string
+                                                $eventTierJson = $joinEvent->eventDetails->eventTier;
+
+                                                // Decode the JSON string to an associative array
+                                                $eventTierArray = json_decode($eventTierJson, true);
+
+                                                // Extract the tiericon attribute
+                                                $tierIcon = $eventTierArray['tierIcon'];
+                                                $imagePathWithoutExtension = 'http://127.0.0.1:8000/storage/' . strtolower($tierIcon);
+                                                $imageExtension = pathinfo($imagePathWithoutExtension, PATHINFO_EXTENSION);
                                                 
                                                     // Supported image extensions
                                                     $supportedExtensions = ['jpg', 'jpeg', 'png'];
