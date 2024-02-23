@@ -79,6 +79,9 @@
                                 @php
                                 // Check if the user is a captain
                                 $isCaptain = \App\Models\Captain::where('userID', $user['user']->id)->where('eventID', $joinEvent->event_details_id)->exists();
+                                $userId = $user['user']->id;
+                                $member = \App\Models\Member::where('user_id', $userId)->where('status', 'accepted')->first();
+                                $acceptedUserId = $member ? $member->user_id : null;
                                 @endphp
                                 <div class="player-info" style="position: relative;">
                                     <div class="player-image " style="background-image: url('/assets/images/dota.png')"></div>
