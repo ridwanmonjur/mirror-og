@@ -87,7 +87,7 @@
                                     <div class="event-box" id="event{{ $key + 1 }}" style="display: {{ $key === 0 ? 'block' : 'none' }};">
                                         <div style="position: relative; height: 200px;">
                                             {{-- <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;"> --}}
-                                                <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'http://127.0.0.1:8000/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
+                                                <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
                                                 <!-- Banner image goes here -->
                                             </div>
                                             <div style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
@@ -101,7 +101,7 @@
 
                                                 // Extract the tiericon attribute
                                                 $tierIcon = $eventTierArray['tierIcon'];
-                                                $imagePathWithoutExtension = 'http://127.0.0.1:8000/storage/' . strtolower($tierIcon);
+                                                $imagePathWithoutExtension = 'https://driftwood.gg/storage/' . strtolower($tierIcon);
                                                 $imageExtension = pathinfo($imagePathWithoutExtension, PATHINFO_EXTENSION);
                                                 
                                                     // Supported image extensions
