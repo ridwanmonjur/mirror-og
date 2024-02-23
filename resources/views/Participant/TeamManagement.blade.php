@@ -120,7 +120,7 @@
                                                 <div class="left-col">
                                                     <p>
                                                         <img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg" class="logo2">
-                                                        <p style="font-size: 14px; text-align: left; margin-top: 10px; margin-left: 10px;"> {{ $joinEvent->eventDetails->eventName }}</p>
+                                                        <p class="eventName">  {{ $joinEvent->eventDetails->eventName }} </p>
                                                     </p>
                                                 </div>
                                                 <div class="right-col">
