@@ -334,7 +334,45 @@ input[type="submit"],
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
+    width: 100%;
 }
+
+.carousel-buttons {
+    text-align: center;
+}
+
+.carousel-button {
+    background-color: #43A4D7;
+    color: #FFFFFF;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.event-link {
+    text-decoration: none;
+}
+
+.event-box {
+    width: calc(33.33% - 20px);
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.event-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+}
+
+.event-details {
+    padding: 10px;
+}
+
 
 .event-box {
     width: 600px;
