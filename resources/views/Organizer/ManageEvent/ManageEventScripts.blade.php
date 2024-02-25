@@ -20,7 +20,12 @@
 
 
     function toggleDropdown(id) {
+        
         let dropdown = document.querySelector(`#${id}[data-bs-toggle='dropdown']`);
+        console.log({id, dropdown, parent: dropdown.parentElement});
+        console.log({id, dropdown, parent: dropdown.parentElement});
+        console.log({id, dropdown, parent: dropdown.parentElement});
+        console.log({id, dropdown, parent: dropdown.parentElement});
         dropdown.parentElement.click();
     }
 
@@ -30,9 +35,7 @@
         }, 1000)
     );
 
-    let fetchVariables = new FetchVariables();
-
-    
+    let fetchVariables = new FetchVariables();    
 
     function fetchSearchSortFiter() {
         resetNoMoreElement();
@@ -59,12 +62,6 @@
 
         loadByPost(ENDPOINT, body);     
     }
-
-    document.querySelectorAll('.sortIcon').forEach((element) => {
-        let cloneNode = document.querySelector(`.none-sort-icon`).cloneNode(true);
-        element.appendChild(cloneNode);
-        cloneNode.classList.remove('d-none');
-    })
 
     function setFilterForFetch(event, title) {
         let filter = fetchVariables.getFilter();
@@ -141,29 +138,34 @@
         fetchVariables.visualize();
     }
 
-    function setFetchSortType() {
+    function setFetchSortType(event) {
         let sortType = fetchVariables.getSortType();
         let sortKey = fetchVariables.getSortKey();
 
-        if (sortType) {
+        if (sortType && sortKey != "") {
+            console.log({sortType, sortKey})
             if (sortType == SORT_CONSTANTS['ASC']) {
-                sortType = SORT_CONSTANTS['DESC'];
-            } else  if (sortType == SORT_CONSTANTS['DESC']) {
+                sortType = SORT_CONSTANTS['NONE'];
+            } else if (sortType == SORT_CONSTANTS['DESC']) {
                 sortType = SORT_CONSTANTS['ASC'];
             } else {
-                sortType = SORT_CONSTANTS['NONE'];
+                sortType = SORT_CONSTANTS['DESC'];
             }
+        } else { 
+           toggleDropdown('dropdownSortButton');
+           return;
         }
-        else { 
-            sortType = SORT_CONSTANTS['ASC'];
-        }
-        
+
+        let element = document.getElementById("insertSortTypeIcon"); 
+        let cloneNode = document.querySelector(`.${sortType}-sort-icon`).cloneNode(true);
+        element.insertBefore(cloneNode, element.firstChild);
+        console.log({element, cloneNode, firstChild: element.firstChild})
+        event.currentTarget.remove();
         fetchVariables.setSortType(sortType);   
         fetchSearchSortFiter();
         fetchVariables.visualize();  
-}
-</script>
-<script>
+    }
+
     const copyUrlFunction = (copyUrl) => {
         navigator.clipboard.writeText(copyUrl).then(function() {
             console.log('Copying to clipboard was successful! Copied: ' + copyUrl);

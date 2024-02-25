@@ -232,7 +232,7 @@ class EventDetail extends Model
             $sort = $request->input('sort');
             
                 foreach ($sort as $key => $value) {
-                    if (!empty(trim($key))) {
+                    if (!empty(trim($key)) && $value != "none") {
                         if ($key ==  'startDate'){
                             $query->orderBy('startDate', $value)->orderBy('startTime', $value);
                         } else if ($key ==  'prize') {

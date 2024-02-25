@@ -1,8 +1,8 @@
 
 class FetchVariables {
     constructor() {
-        this.sortType = 'asc';
-        this.sortKey = 'created_at';
+        this.sortType = 'desc';
+        this.sortKey = '';
         this.filter = {};
         this.search = null;
         this.fetchedPage = 1;
