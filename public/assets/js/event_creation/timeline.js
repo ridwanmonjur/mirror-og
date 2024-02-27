@@ -113,8 +113,7 @@ function getFormValues(keyList = ["ALL_FORM_KEYS"]) {
 
 function previewSelectedImage(imageId, previewImageId) {
     const imageInput = document.getElementById(imageId);
-    console.log({imageId, previewImageId})
-
+    
     if (!imageInput) {
         throw new Error("Image input not found!")
     }

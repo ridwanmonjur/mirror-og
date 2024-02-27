@@ -19,8 +19,6 @@ function launchScheduleDefaultSelected(className) {
     if (element1){
         element1.checked = true;
     }
-
-    console.log(element1)
 }
 
 function addEvent(button) {

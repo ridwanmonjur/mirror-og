@@ -22,10 +22,6 @@
     function toggleDropdown(id) {
         
         let dropdown = document.querySelector(`#${id}[data-bs-toggle='dropdown']`);
-        console.log({id, dropdown, parent: dropdown.parentElement});
-        console.log({id, dropdown, parent: dropdown.parentElement});
-        console.log({id, dropdown, parent: dropdown.parentElement});
-        console.log({id, dropdown, parent: dropdown.parentElement});
         dropdown.parentElement.click();
     }
 
@@ -108,7 +104,6 @@
 
     function addFilterTags(title, name, value) {
         let tagElement = document.getElementById('insertFilterTags');
-        console.log({tagElement, title})
         tagElement;
         tagElement.classList.remove('d-none');
         tagElement.classList.add('d-flex');
@@ -124,7 +119,6 @@
             </div>
 
         `;
-        console.log({tagElement, title})
     }
 
     function setSortForFetch(key, title) {
@@ -143,7 +137,6 @@
         let sortKey = fetchVariables.getSortKey();
 
         if (sortType && sortKey != "") {
-            console.log({sortType, sortKey})
             if (sortType == SORT_CONSTANTS['ASC']) {
                 sortType = SORT_CONSTANTS['NONE'];
             } else if (sortType == SORT_CONSTANTS['DESC']) {
@@ -159,7 +152,6 @@
         let element = document.getElementById("insertSortTypeIcon"); 
         let cloneNode = document.querySelector(`.${sortType}-sort-icon`).cloneNode(true);
         element.insertBefore(cloneNode, element.firstChild);
-        console.log({element, cloneNode, firstChild: element.firstChild})
         event.currentTarget.remove();
         fetchVariables.setSortType(sortType);   
         fetchSearchSortFiter();
@@ -168,7 +160,6 @@
 
     const copyUrlFunction = (copyUrl) => {
         navigator.clipboard.writeText(copyUrl).then(function() {
-            console.log('Copying to clipboard was successful! Copied: ' + copyUrl);
         }, function(err) {
             console.error('Could not copy text to clipboard: ', err);
         });
@@ -320,17 +311,9 @@
                     params = {};
                 }
 
-                console.log({
-                    currentPage: fetchVariables.getCurrentPage(),
-                    fetchedPage: fetchVariables.getFetchedPage()
-                })
 
                 if ( fetchVariables.getCurrentPage() > fetchVariables.getFetchedPage() + 1 ) {
                     fetchVariables.setCurrentPage( fetchVariables.getFetchedPage() );
-                    console.log({
-                        currentPage: fetchVariables.getCurrentPage(),
-                        fetchedPage: fetchVariables.getFetchedPage()
-                    })
                     return;
                 }
 

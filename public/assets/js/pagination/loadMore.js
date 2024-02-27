@@ -36,7 +36,6 @@ function infinteLoadMore(page, ENDPOINT) {
   
     if (hasClass) {
         let endpointFinal = page == null ? ENDPOINT : ENDPOINT + "?page=" + page
-        console.log({endpointFinal})
         fetch(endpointFinal, {
             method: 'GET',
             headers: {

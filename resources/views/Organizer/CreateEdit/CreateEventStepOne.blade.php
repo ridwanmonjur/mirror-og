@@ -19,7 +19,6 @@
                 goToNextScreen('step-2', 'timeline-1');
                 let gameTitleImg = this.children[0].children[0].src;
                 localStorage.setItem('gameTitleImg', gameTitleImg);
-                console.log({categoryId})
                 setFormValues( {'gameTitleId': categoryId } );
                 ">
                 <a href="#">

@@ -315,9 +315,7 @@
                         followButton.setAttribute('data-following', 'true');
                         followButton.style.backgroundColor = '#32CD32';
                     }
-
-                    // Display success message or handle any other action
-                    console.log(data.message);
+                    
                 })
                 .catch(error => {
                     console.error('Error:', error);

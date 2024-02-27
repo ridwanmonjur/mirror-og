@@ -63,7 +63,6 @@
     let copyUrl = "{{ route('event.show', $event->id) }}";
     const copyUtil = () => {
         navigator.clipboard.writeText(copyUrl).then(function() {
-            console.log('Copying to clipboard was successful!');
             Swal.fire({
                 toast: true,
                 position: 'top-right',

@@ -244,9 +244,6 @@
                 "_token": "{{ csrf_token() }}"
             },
             success: function(response){
-                // Handle success response
-                console.log(response);
-                // You can update UI or do any other necessary action
             },
             error: function(xhr, status, error){
                 // Handle error

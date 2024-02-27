@@ -251,7 +251,6 @@
         let type = {!! json_encode($type) !!};
         let game = {!! json_encode($game) !!};
         
-        console.log({$event, tier, type, game})
         clearLocalStorage();
         
         if ($event) {

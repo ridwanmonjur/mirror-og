@@ -667,10 +667,6 @@
         })
         .then(response => response.json())
         .then(data => {
-            // Handle the response
-            console.log(data);
-
-
             if (data.success) {
                 const memberRow = button.closest('tr');
                 memberRow.remove();

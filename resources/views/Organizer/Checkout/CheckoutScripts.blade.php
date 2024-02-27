@@ -5,7 +5,6 @@
 <script src="{{ asset('/assets/js/models/PaymentProcessor.js') }}"></script>
 <script>
     document.querySelectorAll('.transform-number').forEach((element)=>{
-        console.log({element})
         let text = element.textContent;
         let number = Number(text);
         element.textContent = number.toLocaleString('en');  
@@ -69,11 +68,8 @@
 
     function changeScreen() {
         if (!paymentProcessor.getIsPaymentSelected()) {
-           console.log({paymentProcessor, ended: true});
            return;
         } else {
-           console.log({paymentProcessor, ended: false});
-
             let screenPaymentView = document.getElementById('payment-element-view');
             let checkoutView = document.getElementById('payment-discount-view');
             let allPaymentElements = document.querySelectorAll(".payment-element-children-view");
@@ -85,9 +81,7 @@
                 'card': 'cardLogoId',
             };      
             
-            console.log({stepList})
             let currentElementId  = stepList[paymentProcessor.getPaymentType()];
-            console.log({stepList, currentElementId});
 
             let currentElement = document.getElementById(currentElementId);
             
@@ -101,10 +95,8 @@
             
             switch (paymentProcessor.getPaymentType()) {
                 case 'bank':
-                    console.log('Bank case');
                     break;
                 case 'eWallet':
-                    console.log('eWallet case');
                     break;
                 case 'otherEWallet':
                     initializeStripeEWalletPayment();
@@ -113,7 +105,6 @@
                     initializeStripeCardPayment();
                     break;
                 default:
-                    console.log('Default case');
                     break;
             }
         }
@@ -127,9 +118,6 @@
     }
 
     async function initializeStripeCardPayment() {
-        console.log("yes");
-        console.log("yes");
-        console.log("yes");
         try {
             const response = await fetch("{{ route('stripe.stripeCardIntentCreate') }}", {
                 method: "POST",
@@ -168,7 +156,6 @@
 
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
-        console.log({event, target: event.currentTarget})
         try {
             const {error} = await stripe.confirmPayment({
                 elements,
@@ -187,11 +174,7 @@
     }
 
     async function initializeStripeEWalletPayment() {
-        console.log("now");
-        console.log("now");
-        console.log("now");
-        console.log("now");
-        console.log("now");
+       
         const expressCheckoutOptions = {
         buttonType: {
             applePay: 'buy',

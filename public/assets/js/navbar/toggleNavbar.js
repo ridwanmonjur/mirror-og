@@ -1,6 +1,5 @@
 function toggleNavbar() {
     const x = document.querySelector("nav.mobile-navbar");
-    console.log({ x })
     x.classList.toggle("d-none");
 }
 
@@ -14,8 +13,8 @@ function searchNavbar(event) {
     } else {
         endpoint = "/participant/events";
     }
-    let endpointFinal = page == null ? ENDPOINT : ENDPOINT + "?page=" + page
-        // window.history.replaceState({}, document.title, endpointFinal);
+    let endpointFinal = page == null ? ENDPOINT : ENDPOINT + "?page=" + page;
+    
     fetch(endpointFinal, {
             method: 'POST',
             headers: {
@@ -24,7 +23,6 @@ function searchNavbar(event) {
             body: JSON.stringify({ searchText: searchText })
         })
         .then(response => {
-            console.log(data);
             data.forEach(event => {
                 createEventElement(event);
             });
@@ -32,13 +30,13 @@ function searchNavbar(event) {
             const currentUrl = new URL(window.location.href);
 
             const queryParams = currentUrl.searchParams;
+            
             if (!queryParams.has('page')) {
                 const eventDiv = document.querySelector('.event');
                 eventDiv.innerHTML = ""
             }
+
             createEventElement(event);
-
-
         })
         .then(data => {
             console.log(data);
@@ -46,9 +44,8 @@ function searchNavbar(event) {
 }
 
 function createEventElement(event) {
-    // Replace this with your actual logic to create the event element
-    // Example: Create a div with event information
     const eventDiv = document.querySelector('.event');
+    
     eventDiv.innerHTML = `
         <b>${event.eventName}</b><br>
         <small>${event.venue || 'South East Asia'}</small>
@@ -58,13 +55,13 @@ function createEventElement(event) {
 
 
 function appendEventElement(event) {
-    // Replace this with your actual logic to create the event element
-    // Example: Create a div with event information
     const eventDiv = document.querySelector('.event');
+
     eventDiv.innerHTML += `
         <b>${event.eventName}</b><br>
         <small>${event.venue || 'South East Asia'}</small>
     `;
+
     return eventDiv;
 }
 

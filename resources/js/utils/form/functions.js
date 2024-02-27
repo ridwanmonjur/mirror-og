@@ -37,7 +37,6 @@ function validateFormValuesPresent(values) {
     for (var key of values) {
         var formField = createEventForm.elements[key];
         if (formField) {
-            console.log({ formField, formFieldValue: formField.value })
             var value = formField.value.trim();
             if (value === '') {
                 isFormValid = false;
@@ -61,9 +60,7 @@ function setFormValues(values) {
             
             var formField = createEventForm.elements[key];
             if (formField) {
-                console.log({ formField, formFieldValue: formField.value })
                 formField.value = values[key];
-                console.log({ formField: formField.value })
 
             } else {
                 console.error('Form field with name "' + formField + '" not found.');

@@ -47,7 +47,6 @@ extract($dateArray);
 
                 function addParticant() {
                     const participantListAll = {!!json_encode($participationList) !!};
-                    console.log(participantListAll);
                     let participant = null;
                     const participantId = document.querySelector('select').value;
                     const addedParticipant = document.querySelector('.added-participant');
@@ -88,7 +87,6 @@ extract($dateArray);
                                 response.json()
                             })
                             .then(responseData => {
-                                console.log(responseData);
                                 const participantElement = document.createElement('p');
                                 participantElement.textContent = participant?.name ?? "Can't find id of participant.";
                                 addedParticipant.appendChild(participantElement);

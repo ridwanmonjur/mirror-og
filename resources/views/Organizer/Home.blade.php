@@ -99,10 +99,7 @@
                         if (scrollTop + windowHeight >= documentHeight - 200) {
                             page++;
                             ENDPOINT = "{{ route('landing.view') }}";
-                            console.log({
-                                search
-                            })
-                            
+
                             if (!search || String(search).trim() == "") {
                                 search = null;
                                 ENDPOINT += "?page=" + page;
