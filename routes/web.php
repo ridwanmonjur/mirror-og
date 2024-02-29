@@ -19,21 +19,6 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-Route::group([
-	'prefix' => 'admin',
-	'middleware' => ['check-permission:admin'],
-	'excluded_middleware' => ['login'],
-], function () {
-});
-Route::get('/artisan/storage', function () {
-	$exitCode = Artisan::call('storage:link', []);
-	echo $exitCode; // 0 exit code for no errors.});
-});
-Route::get('/artisan/migrate', function () {
-	Artisan::call('migrate');
-	dd('migrated!');
-});
-
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
 Route::get('logout', [AuthController::class, 'logoutAction'])->name("logout.action");
 
@@ -67,23 +52,21 @@ Route::group(['prefix' => 'participant'], function () {
 	Route::group(['middleware' => 'auth'], function () {
 		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
 			Route::get('/home', [ParticipantEventController::class, 'home'])->name("participant.home.view");
-			Route::get('/team-list/{id}', [ParticipantEventController::class, 'teamList'])->name("participant.team.view");
-			Route::get('/create-team/{id}', [ParticipantEventController::class, 'createTeamView']);
-			Route::post('/team-management', [ParticipantEventController::class, 'TeamStore']);
-			Route::get('/team-manage/{id}', [ParticipantEventController::class, 'teamManagement'])->name("participant.teamManagement.view");
+			Route::get('/team/list/{id}', [ParticipantEventController::class, 'teamList'])->name("participant.team.view");
+			Route::get('/team/create/{id}', [ParticipantEventController::class, 'createTeamView'])->name("participant.team.create");
+			Route::post('/team/manage', [ParticipantEventController::class, 'teamStore'])->name("participant.team.store");
+			Route::get('/team/manage/{id}', [ParticipantEventController::class, 'teamManagement'])->name("participant.team.manage");
 			Route::get('/registration-manage/{id}', [ParticipantEventController::class, 'registrationManagement'])->name("participant.registrationManagement.view");
 			Route::get('/selectTeam', [ParticipantEventController::class, 'selectTeamToRegister'])->name("participant.selectTeam.view");
-			Route::post('/home', [ParticipantEventController::class, 'TeamtoRegister']);
-			Route::get('/confirm', [ParticipantEventController::class, 'ConfirmUpdate']);
-			Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent']);
-			Route::post('/events/{id}', [ParticipantEventController::class, 'JoinEvent'])->name('join.store');
-			Route::post('/follow-organizer', [ParticipantEventController::class, 'FollowOrganizer'])->name('follow.organizer');
+			Route::post('/home', [ParticipantEventController::class, 'teamToRegister']);
+			Route::get('/confirm', [ParticipantEventController::class, 'confirmUpdate']);
+			Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent']);
+			Route::post('/events/{id}', [ParticipantEventController::class, 'joinEvent'])->name('join.store');
+			Route::post('/follow-organizer', [ParticipantEventController::class, 'followOrganizer'])->name('follow.organizer');
 			Route::delete('participant/unfollow-organizer', [ParticipantEventController::class, 'unfollowOrganizer'])->name('unfollow.organizer');
 			Route::post('participant/team/approve-member/{id}', [ParticipantEventController::class, 'approveMember'])->name('team.approve-member');
 			Route::post('/make-captain', [ParticipantEventController::class, 'makeCaptain'])->name('make-captain');
 			Route::post('/delete-captain', [ParticipantEventController::class, 'deleteCaptain'])->name('delete-captain');
-
-
 		});
 	});
 });
@@ -109,18 +92,14 @@ Route::group(['prefix' => 'organizer'], function () {
 				'edit' => "event.edit",
 				'update' => "event.update",
 			]);
-			Route::get('/event/{id}/invitation', [InvitationController::class, 'index'])
-				->name('event.invitation.index');
+			Route::get('/event/{id}/invitation', [InvitationController::class, 'index'])->name('event.invitation.index');
 			Route::post('event/{id}/updateForm', [OrganizerEventController::class, 'updateForm'])->name('event.updateForm');
 			Route::get('event/{id}/success', [OrganizerEventController::class, 'showSuccess'])
-				->middleware('prevent-back-button')
-				->name("organizer.success.view");
-			Route::get('event/{id}/live', [OrganizerEventController::class, 'showLive'])
-				->middleware('prevent-back-button')
+				->middleware('prevent-back-button')->name("organizer.success.view");
+			Route::get('event/{id}/live', [OrganizerEventController::class, 'showLive'])->middleware('prevent-back-button')
 				->name("organizer.live.view");
 			Route::get('event/{id}/checkout', [OrganizerCheckoutController::class, 'showCheckout'])
-				->middleware('prevent-back-button')
-				->name("organizer.checkout.view");
+				->middleware('prevent-back-button')->name("organizer.checkout.view");
 			Route::get('event/{id}/checkout/transition', [OrganizerCheckoutController::class, 'showCheckoutTransition'])
 				->name("organizer.checkout.transition");
 		});

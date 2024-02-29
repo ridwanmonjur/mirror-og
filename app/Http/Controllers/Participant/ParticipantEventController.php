@@ -134,14 +134,15 @@ class ParticipantEventController extends Controller
     public function approveMember(Request $request, $id)
     {
         $member = Member::find($id);
+        
         if ($member && $member->status === 'pending') {
             $member->status = 'accepted';
             $member->save();
 
             return response()->json(['success' => true, 'message' => 'Member status updated to accepted']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Invalid operation or member not found'], 400);
         }
-
-        return response()->json(['success' => false, 'message' => 'Invalid operation or member not found'], 400);
     }
 
     public function registrationManagement($id)
@@ -194,24 +195,19 @@ class ParticipantEventController extends Controller
     $userId = $request->input('userId');
     $eventId = $request->input('eventId');
 
-    // Check if the event already has a captain assigned to the user
     $existingCaptain = Captain::where('eventID', $eventId)->where('userID', $userId)->first();
     
     if ($existingCaptain) {
-        // If there's already a captain assigned to the user, delete that record
         $existingCaptain->delete();
         return response()->json(['message' => 'You are no longer a captain for this event.'], 200);
     }
 
-    // Check if there's already a captain for the event
     $existingCaptainForEvent = Captain::where('eventID', $eventId)->first();
     
     if ($existingCaptainForEvent) {
-        // If there's already a captain for the event, return an error message
         return response()->json(['error' => 'This event already has a captain.'], 400);
     }
 
-    // If there's no existing captain assigned to the user and no captain for the event, create a new one
     Captain::create([
         'userID' => $userId,
         'eventID' => $eventId,
@@ -228,7 +224,7 @@ class ParticipantEventController extends Controller
         return view('Participant.CreateTeam', compact('teamm'));
     }
 
-    public function TeamStore(Request $request)
+    public function teamStore(Request $request)
     {
         $validatedData = $request->validate([
             'teamName' => 'required|string|max:25',
@@ -252,10 +248,10 @@ class ParticipantEventController extends Controller
     public function selectTeamToRegister(Request $request)
     {
         $selectTeam = Team::all();
-        return view('Participant.SelectTeamToRegister', compact('selectTeam'));
+        return view('Participant.selectTeamToRegister', compact('selectTeam'));
     }
 
-    // public function TeamtoRegister(Request $request)
+    // public function teamToRegister(Request $request)
     // {
     //     $selectedTeamNames = $request->input('selectedTeamName');
 
@@ -276,7 +272,7 @@ class ParticipantEventController extends Controller
     //     }
     // }
 
-    public function TeamtoRegister(Request $request)
+    public function teamToRegister(Request $request)
     {
         $selectedTeamNames = $request->input('selectedTeamName');
 
@@ -334,12 +330,12 @@ class ParticipantEventController extends Controller
         $member->save();
     }
 
-    public function ConfirmUpdate(Request $request)
+    public function confirmUpdate(Request $request)
     {
         return view('Participant.Notify');
     }
 
-    public function ViewEvent(Request $request, $id)
+    public function viewEvent(Request $request, $id)
     {
         try {
             $user = Auth::user();
@@ -411,7 +407,7 @@ class ParticipantEventController extends Controller
         return view('Organizer.EventNotFound', compact('error'));
     }
 
-    public function FollowOrganizer(Request $request)
+    public function followOrganizer(Request $request)
     {
         try {
             $userId = $request->input('user_id');
@@ -448,7 +444,7 @@ class ParticipantEventController extends Controller
         return response()->json(['message' => 'Successfully unfollowed the organizer']);
     }
 
-    public function JoinEvent(Request $request, $id)
+    public function joinEvent(Request $request, $id)
     {
         $userId = auth()->user()->id;
         $existingJoint = JoinEvent::where('user_id', $userId)

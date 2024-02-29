@@ -32,7 +32,7 @@
                 What will your team be called?
             </p>
             <br>
-            <form action="{{ url('/participant/team-management') }}" method="POST">
+            <form action="{{ url('/participant/team/manage') }}" method="POST">
                 @csrf
 
                     <!-- Display validation errors -->

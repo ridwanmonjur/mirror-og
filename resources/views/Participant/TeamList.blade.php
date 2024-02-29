@@ -63,7 +63,7 @@
                     </label>
                     <input type="file" id="image-upload" accept="image/*" style="display: none;">
                 </div>
-              <a href="/participant/team-manage/{{ $team['id'] }}"> <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3></a>
+              <a href="/participant/team/manage/{{ $team['id'] }}"> <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3></a>
                 <br>
                 <p>Total Members: {{ empty($usernamesCountByTeam[$team->id]) ? 1 : $usernamesCountByTeam[$team->id] }} </p>
             </div>
