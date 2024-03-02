@@ -62,7 +62,7 @@
                 </div>
             </div>
 
-            <!-- <button id="searchButton" onclick="filterTeams()">
+        <button id="searchButton" onclick="filterTeams()">
             <div class="team-info">
                 <div class="plus-icon">
                     <div class="circle">
@@ -71,7 +71,7 @@
                 </div>
                 Create new team
             </div>
-        </button> -->
+        </button>
 
             <div class="sidebar">
                 <p>All members in the team you select will be notified to join this event</p>
@@ -130,27 +130,22 @@
             }
 
             function selectOption(element, label, imageUrl) {
-                // Add the selected class to the parent button
                 const dropdownButton = element.closest('.dropdown').querySelector('.dropbtn');
                 dropdownButton.classList.add('selected');
 
-                // Handle selection logic here
                 const selectedLabel = dropdownButton.querySelector('.selected-label');
                 const selectedImage = dropdownButton.querySelector('.selected-image img');
                 selectedLabel.textContent = label;
                 selectedImage.src = imageUrl;
 
-                // Close the dropdown
                 closeDropDown(dropdownButton);
             }
 
-            // Function to close the dropdown
             function closeDropDown(button) {
                 const dropdownContent = button.nextElementSibling;
                 dropdownContent.classList.remove('d-block');
             }
 
-            // Function to open the dropdown
             function openDropDown(button) {
                 const dropdownContent = button.nextElementSibling;
                 dropdownContent.classList.add('d-block');

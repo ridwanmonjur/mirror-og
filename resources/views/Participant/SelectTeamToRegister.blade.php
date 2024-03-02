@@ -7,147 +7,140 @@
     <title></title>
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/registerTeam.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">    
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 
 <body>
     @include('CommonLayout.NavbarForAnother')
-   
-        <div class="wrapper">
 
-            <div class="first">
+    <div class="wrapper">
 
-                <header><u>Select Team to Register</u></header>
-            </div>
-            <br>
-            <br>
+        <div class="first">
 
-            <div class="dropdown">
-                <button class="dropbtn" onclick="toggleDropdown()">
-                    <span id="selectedTeamLabel">Select Team</span>
-                    <span class="dropbtn-arrow">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-chevron-down">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </span>
-                </button>
-                <div class="dropdown-content" id="teamList">
-                    <form action="{{ route('participant.team.register') }}" method="POST">
-                        @csrf
-                        <input type="text" id="teamSearch" oninput="filterTeams()" placeholder="Search for teams...">
-                        <div>
-                            @foreach ($selectTeam as $item)
+            <header><u>Select Team to Register</u></header>
+        </div>
+        <br>
+        <br>
+
+        <div class="dropdown">
+            <button class="dropbtn" onclick="toggleDropdown()">
+                <span id="selectedTeamLabel">Select Team</span>
+                <span class="dropbtn-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="feather feather-chevron-down">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </span>
+            </button>
+            <div class="dropdown-content" id="teamList">
+                <form action="{{ route('participant.team.register') }}" method="POST">
+                    @csrf
+                    <input type="text" id="teamSearch" oninput="filterTeams()" placeholder="Search for teams...">
+                    <div>
+                        @foreach ($selectTeam as $item)
                             <div class="team-info"
                                 onclick="selectOption(this, '{{ addslashes($item->teamName) }}', 'css/images/logo.png')">
-                                    <img src="{{ asset('/assets/images/dota.png') }}" height="25px" width="50px">
-                                    <a href="#" class="teamNameAnchor"
-                                        data-team-id="{{ $item->id }}">{{ $item->teamName }}</a>
-                                    <input type="hidden" name="selectedTeamName" value="{{ $item->id }}">
-                                </div>
-                            @endforeach
-                        </div>
+                                <img src="{{ asset('/assets/images/dota.png') }}" height="25px" width="50px">
+                                <a href="#" class="teamNameAnchor"
+                                    data-team-id="{{ $item->id }}">{{ $item->teamName }}</a>
+                                <input type="hidden" name="selectedTeamName" value="{{ $item->id }}">
+                            </div>
+                        @endforeach
+                    </div>
 
-
-                </div>
-            </div>
-
-            <div class="sidebar">
-                <p>All members in the team you select will be notified to join this event</p>
-
-                <p>Registration will NOT be confirmed until enough team members have accepted to join and payment is
-                    complete. Once enough team members have accepted and the entry fee has been paid, registration can
-                    be confirmed.</p>
-
-                <div class="remember-checkbox">
-                    <input type="checkbox" id="confirmationCheckbox" class="largerCheckbox">
-                    <p>Automatically confirm registration and lock in team when enough team members have accepted</p>
-                </div>
-
-                <div class="underline">
-                    <ul>
-                        <p><b>WARNING: Once your registration has been confirmed, no changes can be made to the team
-                                lineup for this event.</b></p>
-                    </ul>
-                </div>
-
-                <div class="text-center">
-                    <input type="submit" class="submitMethod" id="submitButton" 
-                        value="Confirm Team and Notify">
-                </div>
-
-                <div class="text-center">
-                    <button class="oceans-gaming-default-button"> Cancel</button>
-                </div>
 
             </div>
-            </form>
         </div>
 
-        <script>
-            function toggleDropdown() {
-                var dropdown = document.querySelector(".dropdown-content");
-                dropdown.classList.toggle("show");
-            }
+        <div class="sidebar">
+            <p>All members in the team you select will be notified to join this event</p>
 
-            function filterTeams() {
-                var input = document.getElementById("teamSearch").value.toLowerCase();
-                var teams = document.getElementById("teamList");
-                var teamDivs = teams.getElementsByTagName("div");
+            <p>Registration will NOT be confirmed until enough team members have accepted to join and payment is
+                complete. Once enough team members have accepted and the entry fee has been paid, registration can
+                be confirmed.</p>
 
-                for (var i = 0; i < teamDivs.length; i++) {
-                    var teamName = teamDivs[i].querySelector("a").textContent.toLowerCase();
-                    var teamLogo = teamDivs[i].querySelector("img");
+            <div class="remember-checkbox">
+                <input type="checkbox" id="confirmationCheckbox" class="largerCheckbox">
+                <p>Automatically confirm registration and lock in team when enough team members have accepted</p>
+            </div>
 
-                    if (teamName.includes(input)) {
-                        teamDivs[i].style.display = "block";
-                        teamLogo.style.display = "block";
-                    } else {
-                        teamDivs[i].style.display = "none";
-                        teamLogo.style.display = "none";
-                    }
+            <div class="underline">
+                <ul>
+                    <p><b>WARNING: Once your registration has been confirmed, no changes can be made to the team
+                            lineup for this event.</b></p>
+                </ul>
+            </div>
+
+            <div class="text-center">
+                <input type="submit" class="submitMethod" id="submitButton" value="Confirm Team and Notify">
+            </div>
+
+            <div class="text-center">
+                <button class="oceans-gaming-default-button"> Cancel</button>
+            </div>
+
+        </div>
+        </form>
+    </div>
+
+    <script>
+        function toggleDropdown() {
+            var dropdown = document.querySelector(".dropdown-content");
+            dropdown.classList.toggle("show");
+        }
+
+        function filterTeams() {
+            var input = document.getElementById("teamSearch").value.toLowerCase();
+            var teams = document.getElementById("teamList");
+            var teamDivs = teams.getElementsByTagName("div");
+
+            for (var i = 0; i < teamDivs.length; i++) {
+                var teamName = teamDivs[i].querySelector("a").textContent.toLowerCase();
+                var teamLogo = teamDivs[i].querySelector("img");
+
+                if (teamName.includes(input)) {
+                    teamDivs[i].style.display = "block";
+                    teamLogo.style.display = "block";
+                } else {
+                    teamDivs[i].style.display = "none";
+                    teamLogo.style.display = "none";
                 }
             }
+        }
 
-            function selectOption(element, label, imageUrl) {
-                const dropdownButton = document.querySelector(".dropdown .dropbtn");
-                dropdownButton.classList.add('selected');
+        function selectOption(element, label, imageUrl) {
+            const dropdownButton = document.querySelector(".dropdown .dropbtn");
+            dropdownButton.classList.add('selected');
 
-                // Set the selected team label
-                const selectedTeamLabel = document.getElementById("selectedTeamLabel");
-                selectedTeamLabel.textContent = label;
+            const selectedTeamLabel = document.getElementById("selectedTeamLabel");
+            selectedTeamLabel.textContent = label;
 
-                // Handle other selection logic if needed
-                var teamId = element.querySelector('a').getAttribute('data-team-id');
-                const selectedTeamInput = document.querySelector('input[name="selectedTeamName[]"][value="' + teamId + '"]');
-                if (!selectedTeamInput) {
-                    // Create a new hidden input for the selected team
-                    const newInput = document.createElement('input');
-                    newInput.type = 'hidden';
-                    newInput.name = 'selectedTeamName[]';
-                    newInput.value = teamId;
-                    document.querySelector('form').appendChild(newInput);
-                }
-
-                // Close the dropdown
-                closeDropDown(dropdownButton);
+            var teamId = element.querySelector('a').getAttribute('data-team-id');
+            const selectedTeamInput = document.querySelector('input[name="selectedTeamName[]"][value="' + teamId + '"]');
+            if (!selectedTeamInput) {
+                const newInput = document.createElement('input');
+                newInput.type = 'hidden';
+                newInput.name = 'selectedTeamName[]';
+                newInput.value = teamId;
+                document.querySelector('form').appendChild(newInput);
             }
 
-            function closeDropDown(button) {
-                const dropdownContent = button.nextElementSibling;
-                dropdownContent.classList.remove('show');
-            }
+            closeDropDown(dropdownButton);
+        }
 
-            // For Checkbox
-            document.getElementById('confirmationCheckbox').addEventListener('change', function() {
-               
-            });
-        </script>
-        @include('CommonLayout.BootstrapV5Js')
-    
+        function closeDropDown(button) {
+            const dropdownContent = button.nextElementSibling;
+            dropdownContent.classList.remove('show');
+        }
+
+        document.getElementById('confirmationCheckbox').addEventListener('change', function() {
+
+        });
+    </script>
+    @include('CommonLayout.BootstrapV5Js')
+
 </body>
 
 </html>
-

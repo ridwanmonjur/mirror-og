@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Event</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/viewEvent.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
 </head>
 
@@ -15,14 +15,11 @@
     $stylesEventStatus = bladeEventStatusStyleMapping($status);
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
     $tier = $event->tier ? $event->tier->eventTier : null;
-
     $eventTierLower = bladeEventTowerLowerClass($tier);
     $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
     extract($dateArray);
     $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
-
-
 @endphp
 
 <body>
@@ -42,7 +39,8 @@
         <div class="grid-container">
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }}">
-                    <img class="side-image-absolute-bottom" src="{{ $eventTierLowerImg }}" width="180" height="125">
+                    <img class="side-image-absolute-bottom" src="{{ $eventTierLowerImg }}" width="180"
+                        height="125">
                 </div>
             @else
                 <div>
@@ -53,7 +51,8 @@
                     <div class="mx-2 position-relative">
 
                         <div class="d-flex justify-content-center d-lg-none">
-                            <img class="image-at-top" src="{{ $eventTierLowerImg }}"  {!! trustedBladeHandleImageFailureResize() !!}  width="120" height="90">
+                            <img class="image-at-top" src="{{ $eventTierLowerImg }}" {!! trustedBladeHandleImageFailureResize() !!}
+                                width="120" height="90">
                         </div>
                         <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;"
                             @class(['rounded-banner', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
@@ -161,13 +160,6 @@
                                 {{ session('errorMessage') }}
                             </div>
                         @endif
-                        {{-- <form method="POST" action="{{ route('participant.event.join', ['id' => $event]) }} }}">
-                                @csrf
-                                <button type="submit" class="oceans-gaming-default-button">
-                                    <u>{{$status ?? 'Choose event status'}}</u>
-                                    <u>Join</u>
-                                </button>
-                            </form> --}}
 
                         <form method="POST" action="{{ route('participant.event.join', ['id' => $event]) }}">
                             @csrf
@@ -177,12 +169,10 @@
                             @endphp
 
                             @if ($existingJoint)
-                                <!-- Display the joined button -->
                                 <button type="button" class="oceans-gaming-default-button" disabled>
                                     <span>Joined</span>
                                 </button>
                             @else
-                                <!-- Display the join button -->
                                 <button type="submit" class="oceans-gaming-default-button">
                                     <span>Join</span>
                                 </button>
@@ -254,8 +244,7 @@
                                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                 </svg>
                                 &nbsp;
-                                <span
-                                    style="position: relative; top: 5px;">{{ $tier ?? 'Choose event type' }}</span>
+                                <span style="position: relative; top: 5px;">{{ $tier ?? 'Choose event type' }}</span>
                             </div>
                         </div>
                     </div>
@@ -268,7 +257,6 @@
                 <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="180" height="125">
             </div>
         @else
-            <!-- <div>Choose event tier</div> -->
             <div></div>
         @endif
         </div>
@@ -285,45 +273,44 @@
             let url = "{{ route('event.edit', $event->id) }}";
             window.location.href = url;
         }
-    </script>
-    <script>
-        document.getElementById('followForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
+
+        document.getElementById('followForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
             if (document.querySelector("input[name='user_id']").value == "") {
                 window.location.href = "{{ route('participant.signin.view') }}";
                 return;
             }
+
             let form = this;
             let formData = new FormData(form);
 
-            fetch(form.action, {
+            try {
+                let response = await fetch(form.action, {
                     method: form.method,
                     body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Update button text and style
-                    let followButton = document.getElementById('followButton');
-                    let isFollowing = followButton.getAttribute('data-following') === 'true';
-
-                    if (isFollowing) {
-                        followButton.innerText = 'Follow';
-                        followButton.setAttribute('data-following', 'false');
-                        followButton.style.backgroundColor = '#43A4D7';
-                    } else {
-                        followButton.innerText = 'Following';
-                        followButton.setAttribute('data-following', 'true');
-                        followButton.style.backgroundColor = '#32CD32';
-                    }
-                    
-                })
-                .catch(error => {
-                    console.error('Error:', error);
                 });
+
+                let data = await response.json();
+
+                let followButton = document.getElementById('followButton');
+                let isFollowing = followButton.getAttribute('data-following') === 'true';
+
+                if (isFollowing) {
+                    followButton.innerText = 'Follow';
+                    followButton.setAttribute('data-following', 'false');
+                    followButton.style.backgroundColor = '#43A4D7';
+                } else {
+                    followButton.innerText = 'Following';
+                    followButton.setAttribute('data-following', 'true');
+                    followButton.style.backgroundColor = '#32CD32';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
         });
     </script>
     @include('CommonLayout.BootstrapV5Js')
     <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
 
 </html>
-

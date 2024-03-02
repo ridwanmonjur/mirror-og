@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Management</title>
-    <!-- Existing CSS links -->
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="... (the integrity hash) ..." crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        integrity="... (the integrity hash) ..." crossorigin="anonymous">
 
 </head>
 
@@ -28,19 +28,20 @@
                 <input type="file" id="image-upload" accept="image/*" style="display: none;">
             </div>
             @foreach ($teamManage as $manage)
-            <div class="team-names">
-                <div class="team-info">
-                    <h3 class="team-name" id="team-name">{{ $manage->teamName }}</h3>
-                    <button class="gear-icon-btn">
-                        <a href="/participant/team/register/{{ $manage['id'] }}">
-                          <i class="fas fa-cog"></i>
-                        </a>
-                      </button>
+                <div class="team-names">
+                    <div class="team-info">
+                        <h3 class="team-name" id="team-name">{{ $manage->teamName }}</h3>
+                        <button class="gear-icon-btn">
+                            <a href="/participant/team/register/{{ $manage['id'] }}">
+                                <i class="fas fa-cog"></i>
+                            </a>
+                        </button>
+                    </div>
+
                 </div>
 
-            </div>
-
-            <p>We are an awesome team with awesome members! Come be awesome together! Play some games and win some prizes GGEZ!</p>
+                <p>We are an awesome team with awesome members! Come be awesome together! Play some games and win some
+                    prizes GGEZ!</p>
             @endforeach
         </div>
     </main>
@@ -71,345 +72,396 @@
             <div class="recent-events">
                 <!-- Update the event-carousel section in the Overview tab content -->
                 <div class="event-carousel">
-                    @if($joinEvents->isEmpty())
+                    @if ($joinEvents->isEmpty())
                         <p>No events available</p>
                     @else
-                        <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
-                        @php
-                            $uniqueEventDetailsIds = [];
-                        @endphp
-                        @foreach($joinEvents as $key => $joinEvent)
-                            @php
-                                $eventDetailsId = $joinEvent->eventDetails->id;
-                            @endphp
-                            @if(!in_array($eventDetailsId, $uniqueEventDetailsIds))
-                                <a class="d-block" href="/event/{{ $eventDetailsId }}">
-                                    <div class="event-box" id="event{{ $key + 1 }}" style="display: {{ $key === 0 ? 'block' : 'none' }};">
-                                        <div style="position: relative; height: 200px;">
-                                            {{-- <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;"> --}}
-                                                <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
-                                                <!-- Banner image goes here -->
-                                            </div>
-                                            <div style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
-                                                <!-- Circle image goes here -->
-                                                @php
-                                                // $joinEvent->eventDetails->eventTier contains a JSON string
-                                                $eventTierJson = $joinEvent->eventDetails->eventTier;
-
-                                                // Decode the JSON string to an associative array
-                                                $eventTierArray = json_decode($eventTierJson, true);
-
-                                                // Extract the tiericon attribute
-                                                $tierIcon = $eventTierArray['tierIcon'];
-                                                $imagePathWithoutExtension = 'https://driftwood.gg/storage/' . strtolower($tierIcon);
-                                                $imageExtension = pathinfo($imagePathWithoutExtension, PATHINFO_EXTENSION);
-                                                
-                                                    // Supported image extensions
-                                                    $supportedExtensions = ['jpg', 'jpeg', 'png'];
-                                                
-                                                    // If the extension is not in the supported list, default to '.png'
-                                                    $imagePath = $imagePathWithoutExtension . (in_array(strtolower($imageExtension), $supportedExtensions) ? '' : '.png');
-                                                @endphp
-                                                
-                                                <img src="{{ $imagePath }}" alt="Circle Image" style="width: 100%; height: 100%; object-fit: cover;">
-                                            </a>
-                                            </div>
-                                        </div>
-                                        <div class="frame1">
-                                            <div class="container">
-                                                <div class="left-col">
-                                                    <p>
-                                                        <img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg" class="logo2">
-                                                        <p class="eventName">  {{ $joinEvent->eventDetails->eventName }} </p>
-                                                    </p>
-                                                </div>
-                                                <div class="right-col">
-                                                    <p> 
-                                                        <img src="/assets/images/dota.png" class="logo2">
-                                                        <p style="font-size: 14px; text-align: left; align-items: center; justify-content: space-between;">
-                                                            <span>{{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</span>
-                                                            <br>
-                                                            <span style="font-size: 12px;">{{ $followCounts[$joinEvent->eventDetails->user->organizer->id] ?? '0' }} Followers</span>
-                                                            <div style="align-items: center;">
-                                                                <button style="background-color: #43A4D7; color: #FFFFFF; padding: 5px 10px; font-size: 12px; border-radius: 10px; margin-left: 30px;" type="submit">Follow</button>
-                                                            </div>
-                                                        </p>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
+                        <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;">
+                            << /button>&nbsp;&nbsp;&nbsp;
                                 @php
-                                    $uniqueEventDetailsIds[] = $eventDetailsId;
+                                    $uniqueEventDetailsIds = [];
                                 @endphp
-                            @endif
-                        @endforeach
-                        <button class="carousel-button" onclick="slideEvents(1)">></button>
-                    @endif
+                                @foreach ($joinEvents as $key => $joinEvent)
+                                    @php
+                                        $eventDetailsId = $joinEvent->eventDetails->id;
+                                    @endphp
+                                    @if (!in_array($eventDetailsId, $uniqueEventDetailsIds))
+                                        <a class="d-block" href="/event/{{ $eventDetailsId }}">
+                                            <div class="event-box" id="event{{ $key + 1 }}"
+                                                style="display: {{ $key === 0 ? 'block' : 'none' }};">
+                                                <div style="position: relative; height: 200px;">
+                                                    {{-- <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;"> --}}
+                                                    <div
+                                                        style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
+                                                        <!-- Banner image goes here -->
+                                                    </div>
+                                                    <div
+                                                        style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
+                                                        @php
+                                                            $eventTierJson = $joinEvent->eventDetails->eventTier;
+
+                                                            $eventTierArray = json_decode($eventTierJson, true);
+
+                                                            $tierIcon = $eventTierArray['tierIcon'];
+                                                            $imagePathWithoutExtension =
+                                                                'https://driftwood.gg/storage/' . strtolower($tierIcon);
+                                                            $imageExtension = pathinfo(
+                                                                $imagePathWithoutExtension,
+                                                                PATHINFO_EXTENSION,
+                                                            );
+
+                                                            $supportedExtensions = ['jpg', 'jpeg', 'png'];
+
+                                                            $imagePath =
+                                                                $imagePathWithoutExtension .
+                                                                (in_array(
+                                                                    strtolower($imageExtension),
+                                                                    $supportedExtensions,
+                                                                )
+                                                                    ? ''
+                                                                    : '.png');
+                                                        @endphp
+
+                                                        <img src="{{ $imagePath }}" alt="Circle Image"
+                                                            style="width: 100%; height: 100%; object-fit: cover;">
+                                        </a>
                 </div>
             </div>
-            
-            <div class="team-info">
-                <div class="showcase">
-                    <div><b>Showcase</b></div>
-                    <br>
-                    <div class="showcase-box">
-                        <div class="showcase-column">
-                            @php
+            <div class="frame1">
+                <div class="container">
+                    <div class="left-col">
+                        <p>
+                            <img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg"
+                                class="logo2">
+                        <p class="eventName"> {{ $joinEvent->eventDetails->eventName }} </p>
+                        </p>
+                    </div>
+                    <div class="right-col">
+                        <p>
+                            <img src="/assets/images/dota.png" class="logo2">
+                        <p
+                            style="font-size: 14px; text-align: left; align-items: center; justify-content: space-between;">
+                            <span>{{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</span>
+                            <br>
+                            <span
+                                style="font-size: 12px;">{{ $followCounts[$joinEvent->eventDetails->user->organizer->id] ?? '0' }}
+                                Followers</span>
+                        <div style="align-items: center;">
+                            <button
+                                style="background-color: #43A4D7; color: #FFFFFF; padding: 5px 10px; font-size: 12px; border-radius: 10px; margin-left: 30px;"
+                                type="submit">Follow</button>
+                        </div>
+                        </p>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+        @php
+            $uniqueEventDetailsIds[] = $eventDetailsId;
+        @endphp
+        @endif
+        @endforeach
+        <button class="carousel-button" onclick="slideEvents(1)">></button>
+        @endif
+        </div>
+        </div>
+
+        <div class="team-info">
+            <div class="showcase">
+                <div><b>Showcase</b></div>
+                <br>
+                <div class="showcase-box">
+                    <div class="showcase-column">
+                        @php
                             $eventCounts = $joinEvents->groupBy('eventDetails.id')->map->count();
                             $totalEvents = $eventCounts->sum();
-                            @endphp
-                            <p>Events Joined: {{ $totalEvents }}</p>
-                            <p>Wins: 0</p>
-                            <p>Win Streak: 0</p>
-                        </div>
-                        <div class="showcase-column">
-                            <!-- Trophy image in the second column -->
-                            <img src="{{ asset('/assets/images/trophy.jpg') }}" alt="Trophy" class="trophy">
-                        </div>
+                        @endphp
+                        <p>Events Joined: {{ $totalEvents }}</p>
+                        <p>Wins: 0</p>
+                        <p>Win Streak: 0</p>
+                    </div>
+                    <div class="showcase-column">
+                        <!-- Trophy image in the second column -->
+                        <img src="{{ asset('/assets/images/trophy.jpg') }}" alt="Trophy" class="trophy">
                     </div>
                 </div>
+            </div>
 
-                <div class="achievements">
-                    <div><b>Achievements</b></div>
-                    <br>
-                    <ul class="achievement-list">
-                        <li>
-                            <span class="additional-text">First Place - Online Tournament (2023)</span>
-                            <br>
-                            <span class="achievement-complete"></span>
-                            <br>
-                            <span class="additional-text">Get a girlfriend</span>
-                        </li>
-                        <li>
-                            <span class="additional-text">Best Team Collaboration - LAN Event (2022)</span>
-                            <br>
-                            <span class="achievement-complete"></span>
-                            <br>
-                            <span class="additional-text">Get a girlfriend</span>
-                        </li>
-                    </ul>
-                </div>
+            <div class="achievements">
+                <div><b>Achievements</b></div>
+                <br>
+                <ul class="achievement-list">
+                    <li>
+                        <span class="additional-text">First Place - Online Tournament (2023)</span>
+                        <br>
+                        <span class="achievement-complete"></span>
+                        <br>
+                        <span class="additional-text">Get a girlfriend</span>
+                    </li>
+                    <li>
+                        <span class="additional-text">Best Team Collaboration - LAN Event (2022)</span>
+                        <br>
+                        <span class="achievement-complete"></span>
+                        <br>
+                        <span class="additional-text">Get a girlfriend</span>
+                    </li>
+                </ul>
             </div>
         </div>
-        @if(empty($eventsByTeam))
-        <div class="tab-content" id="Members" style="display: none; text-align: center;">
-            <div class="member-tabs" style="display: flex; justify-content: center;">
-                <button class="tab-button" onclick="showMemberTab('CurrentMembers')">Current Members</button>
-            </div>
-            <div class="tab-content" id="CurrentMembers" data-type="member" style="display: none; text-align: center;">
-                <p style="text-align: center;">Team {{ $manage->teamName }} has 1 members</p>
-                <div class="cont">
-                    <div class="leftC">
-                        <span class="icon2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter">
-                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                            </svg>
-                            <span> Filter </span>
-                        </span>
-                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        <span class="icon2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
-                                <path d="M15 7h6v6" />
-                            </svg>
-                            <span>
-                                Sort
+        </div>
+        @if (empty($eventsByTeam))
+            <div class="tab-content" id="Members" style="display: none; text-align: center;">
+                <div class="member-tabs" style="display: flex; justify-content: center;">
+                    <button class="tab-button" onclick="showMemberTab('CurrentMembers')">Current Members</button>
+                </div>
+                <div class="tab-content" id="CurrentMembers" data-type="member"
+                    style="display: none; text-align: center;">
+                    <p style="text-align: center;">Team {{ $manage->teamName }} has 1 members</p>
+                    <div class="cont">
+                        <div class="leftC">
+                            <span class="icon2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter">
+                                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                                </svg>
+                                <span> Filter </span>
                             </span>
-                        </span>
-                    </div>
-                    <div class="rightC">
-                        <div class="search_box">
-                            <i class="fa fa-search"></i>
-                            <input class="nav__input" type="text" placeholder="Search for player name">
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                            <span class="icon2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
+                                    <path d="M15 7h6v6" />
+                                </svg>
+                                <span>
+                                    Sort
+                                </span>
+                            </span>
                         </div>
-                        <div style="padding-right: 200px; transform: translateY(-95%);">
-                            @if(auth()->user()->id == $manage->user_id)
-                                <img src="/assets/images/add.png" height="40px" width="40px">
-                            @endif
-                        </div>                
+                        <div class="rightC">
+                            <div class="search_box">
+                                <i class="fa fa-search"></i>
+                                <input class="nav__input" type="text" placeholder="Search for player name">
+                            </div>
+                            <div style="padding-right: 200px; transform: translateY(-95%);">
+                                @if (auth()->user()->id == $manage->user_id)
+                                    <img src="/assets/images/add.png" height="40px" width="40px">
+                                @endif
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <table class="member-table">
-                    <tbody>
-                        {{-- Display the creator's name --}}
-                        <tr class="st">
-                            <td>
-                                <div class="player-info">
-                                    <div class="player-image" style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
-                                        <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
+                    <table class="member-table">
+                        <tbody>
+                            {{-- Display the creator's name --}}
+                            <tr class="st">
+                                <td>
+                                    <div class="player-info">
+                                        <div class="player-image"
+                                            style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
+                                            <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
+                                        </div>
+                                        <span>{{ $manage->user->name }}</span>
+
                                     </div>
-                                    <span>{{ $manage->user->name }}</span>
-                                    
-                                </div>
-                            </td>
-                            <td class="flag-cell">
-                                <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-        
-                
-        @else
-        @foreach($eventsByTeam as $teamId => $users)
-    @php
-    $uniqueUsernames = collect($users)->unique('user.id');
-    $usernamesCount = $uniqueUsernames->count();
-    $creatorId = $manage->user->id;
-    @endphp
-    <div class="tab-content" id="Members" style="display: none; text-align: center;">
-        <div class="member-tabs" style="display: flex; justify-content: center;">
-            <button class="tab-button" onclick="showMemberTab('CurrentMembers')">Current Members</button>
-            <button class="tab-button" onclick="showMemberTab('PendingMembers')">Pending Members</button>
-        </div>
-        <div class="tab-content" id="CurrentMembers" data-type="member" style="display: none; text-align: center;">
-        <p style="text-align: center;">Team {{ $manage->teamName }} has {{ $usernamesCount }} members</p>
-        <div class="cont">
-            <div class="leftC">
-                <span class="icon2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter">
-                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                    </svg>
-                    <span> Filter </span>
-                </span>
-                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                <span class="icon2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
-                        <path d="M15 7h6v6" />
-                    </svg>
-                    <span>
-                        Sort
-                    </span>
-                </span>
-            </div>
-
-            <div class="rightC">
-                <div class="search_box">
-                    <i class="fa fa-search"></i>
-                    <input class="nav__input" type="text" placeholder="Search for player name">
-                </div>
-                <div style="padding-right: 200px; transform: translateY(-95%);">
-                    @if(auth()->user()->id == $manage->user_id)
-                        <img src="/assets/images/add.png" height="40px" width="40px">
-                    @endif
-                </div>                
-            </div>
-        </div>
-        <table class="member-table">
-            <tbody>
-                {{-- Display the creator's name --}}
-                <tr class="st">
-                    <td>
-                        <div class="player-info">
-                            <div class="player-image" style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
-                                <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
+                                </td>
+                                <td class="flag-cell">
+                                    <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
+                                        alt="User's flag">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                @else
+                    @foreach ($eventsByTeam as $teamId => $users)
+                        @php
+                            $uniqueUsernames = collect($users)->unique('user.id');
+                            $usernamesCount = $uniqueUsernames->count();
+                            $creatorId = $manage->user->id;
+                        @endphp
+                        <div class="tab-content" id="Members" style="display: none; text-align: center;">
+                            <div class="member-tabs" style="display: flex; justify-content: center;">
+                                <button class="tab-button" onclick="showMemberTab('CurrentMembers')">Current
+                                    Members</button>
+                                <button class="tab-button" onclick="showMemberTab('PendingMembers')">Pending
+                                    Members</button>
                             </div>
-                            <span>{{ $manage->user->name }}</span>
-                            <span style="margin-left: 400px;">Joined {{ $manage['user']->created_at->format('M d, Y') }}</span>
+                            <div class="tab-content" id="CurrentMembers" data-type="member"
+                                style="display: none; text-align: center;">
+                                <p style="text-align: center;">Team {{ $manage->teamName }} has {{ $usernamesCount }}
+                                    members</p>
+                                <div class="cont">
+                                    <div class="leftC">
+                                        <span class="icon2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-filter">
+                                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3">
+                                                </polygon>
+                                            </svg>
+                                            <span> Filter </span>
+                                        </span>
+                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                        <span class="icon2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
+                                                <path d="M15 7h6v6" />
+                                            </svg>
+                                            <span>
+                                                Sort
+                                            </span>
+                                        </span>
+                                    </div>
+
+                                    <div class="rightC">
+                                        <div class="search_box">
+                                            <i class="fa fa-search"></i>
+                                            <input class="nav__input" type="text"
+                                                placeholder="Search for player name">
+                                        </div>
+                                        <div style="padding-right: 200px; transform: translateY(-95%);">
+                                            @if (auth()->user()->id == $manage->user_id)
+                                                <img src="/assets/images/add.png" height="40px" width="40px">
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <table class="member-table">
+                                    <tbody>
+                                        <tr class="st">
+                                            <td>
+                                                <div class="player-info">
+                                                    <div class="player-image"
+                                                        style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
+                                                        <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
+                                                    </div>
+                                                    <span>{{ $manage->user->name }}</span>
+                                                    <span style="margin-left: 400px;">Joined
+                                                        {{ $manage['user']->created_at->format('M d, Y') }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="flag-cell">
+                                                <img class="nationality-flag"
+                                                    src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
+                                            </td>
+                                        </tr>
+
+                                        @foreach ($uniqueUsernames as $user)
+                                            @if ($user['user']->id !== $creatorId)
+                                                <tr class="st">
+                                                    <td>
+                                                        <div class="player-info">
+                                                            <div class="player-image"
+                                                                style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png')">
+                                                            </div>
+                                                            <span>{{ $user['user']->name }}</span>
+                                                            <span style="margin-left: 400px;">Joined
+                                                                {{ $user['user']->created_at->format('M d, Y') }}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="flag-cell">
+                                                        <img class="nationality-flag"
+                                                            src="{{ asset('/assets/images/china.png') }}"
+                                                            alt="User's flag">
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-content" id="PendingMembers" data-type="member"
+                                style="display: none; text-align: center;">
+                                @php
+                                    $pendingMembersCount = count($pendingMembers);
+                                @endphp
+                                <p style="text-align: center;">Team {{ $manage->teamName }} has
+                                    {{ $pendingMembersCount }} pending members</p>
+                                <div class="cont">
+                                    <div class="leftC">
+                                        <span class="icon2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-filter">
+                                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3">
+                                                </polygon>
+                                            </svg>
+                                            <span> Filter </span>
+                                        </span>
+                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                        <span class="icon2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
+                                                <path d="M15 7h6v6" />
+                                            </svg>
+                                            <span>
+                                                Sort
+                                            </span>
+                                        </span>
+                                    </div>
+
+                                    <div class="rightC">
+                                        <div class="search_box">
+                                            <i class="fa fa-search"></i>
+                                            <input class="nav__input" type="text"
+                                                placeholder="Search for player name">
+                                        </div>
+                                        <div style="padding-right: 200px; transform: translateY(-95%);">
+                                            <img src="/assets/images/add.png" height="40px" width="40px">
+                                        </div>
+                                    </div>
+                                </div>
+                                <table class="member-table">
+                                    <tbody>
+                                        @foreach ($pendingMembers as $pendingMember)
+                                            <tr class="st">
+                                                <td>
+                                                    <div class="player-info">
+                                                        <div class="player-image"
+                                                            style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png')">
+                                                        </div>
+                                                        <div class="player-image"
+                                                            style="background-image: url('{{ $pendingMember->user->profile_image_url }}')">
+                                                        </div>
+                                                        <span>{{ $pendingMember->user->name }}</span>
+                                                    </div>
+                                                </td>
+                                                <td class="flag-cell">
+                                                    <img class="nationality-flag"
+                                                        src="{{ asset('/assets/images/china.png') }}"
+                                                        alt="User's flag">
+                                                </td>
+                                                <td>
+                                                    @foreach ($teamManage as $team)
+                                                        @if (auth()->user()->id == $team->user_id)
+                                                            <button data-member-id="{{ $pendingMember->id }}"
+                                                                onclick="approveMember(this)"
+                                                                style="background-color: #3498db; color: #fff; border: none; padding: 5px 10px; cursor: pointer; margin-right: 5px;">
+                                                                ✔
+                                                            </button>
+                                                            <button onclick="rejectMember('{{ $pendingMember->id }}')"
+                                                                style="background-color: #e74c3c; color: #fff; border: none; padding: 5px 10px; cursor: pointer;">✘</button>
+                                                        @endif
+                                                    @endforeach
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
-                    </td>
-                    <td class="flag-cell">
-                        <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
-                    </td>
-                </tr>
+                    @endforeach
+        @endif
 
-                {{-- Display unique member names excluding the creator --}}
-                @foreach($uniqueUsernames as $user)
-                    @if($user['user']->id !== $creatorId)
-                        <tr class="st">
-                            <td>
-                                <div class="player-info">
-                                    <div class="player-image" style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png')"></div>
-                                    <span>{{ $user['user']->name }}</span>
-                                    <span style="margin-left: 400px;">Joined {{ $user['user']->created_at->format('M d, Y') }}</span>
-                                </div>
-                            </td>
-                            <td class="flag-cell">
-                                <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
-                            </td>
-                        </tr>
-                    @endif
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-    <div class="tab-content" id="PendingMembers" data-type="member" style="display: none; text-align: center;">
-        @php
-        $pendingMembersCount = count($pendingMembers);
-        @endphp
-        <p style="text-align: center;">Team {{ $manage->teamName }} has {{ $pendingMembersCount }} pending members</p>
-        <div class="cont">
-            <div class="leftC">
-                <span class="icon2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter">
-                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                    </svg>
-                    <span> Filter </span>
-                </span>
-                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                <span class="icon2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
-                        <path d="M15 7h6v6" />
-                    </svg>
-                    <span>
-                        Sort
-                    </span>
-                </span>
-            </div>
-
-            <div class="rightC">
-                <div class="search_box">
-                    <i class="fa fa-search"></i>
-                    <input class="nav__input" type="text" placeholder="Search for player name">
-                </div>
-                <div style="padding-right: 200px; transform: translateY(-95%);">
-                    <img src="/assets/images/add.png" height="40px" width="40px">
-                </div>
-            </div>
-        </div>
-        <table class="member-table">
-            <tbody>
-                @foreach($pendingMembers as $pendingMember)
-                    <tr class="st">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png')"></div>
-                                {{-- <div class="player-image" style="background-image: url('{{ $pendingMember->user->profile_image_url }}')"></div> --}}
-                                <span>{{ $pendingMember->user->name }}</span>
-                            </div>
-                        </td>
-                        <td class="flag-cell">
-                            <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
-                        </td>
-                        <td>
-                            @foreach($teamManage as $team)
-                            @if(auth()->user()->id == $team->user_id)
-                            <!-- Check if the current user is the team creator -->
-                            <button
-                            data-member-id="{{ $pendingMember->id }}"
-                            onclick="approveMember(this)"
-                            style="background-color: #3498db; color: #fff; border: none; padding: 5px 10px; cursor: pointer; margin-right: 5px;"
-                            >
-                            ✔
-                            </button>
-                            <button onclick="rejectMember('{{ $pendingMember->id }}')" style="background-color: #e74c3c; color: #fff; border: none; padding: 5px 10px; cursor: pointer;">✘</button>
-                            @endif
-                            @endforeach
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-
-    </div>
-    @endforeach
-    @endif
-                
         <div class="tab-content" id="Active Rosters" style="display: center;">
 
             <p style="text-align: center;">Team {{ $manage->teamName }} has no active rosters</p>
@@ -419,30 +471,39 @@
                     <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
                         <br>
                         <div class="player-info">
-                            <div class="player-image" style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')"></div>
+                            <div class="player-image"
+                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                            </div>
                             <span>Dota</span>
                         </div>
                         <div class="player-info">
-                            <div class="player-image" style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')"></div>
+                            <div class="player-image"
+                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                            </div>
                             <span>Fifa</span>
                         </div>
                         <div class="player-info">
-                            <div class="player-image" style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')"></div>
+                            <div class="player-image"
+                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                            </div>
                             <span>GTA V</span>
                         </div>
                     </div>
                     <div class="frame1">
                         <div class="container">
                             <div class="left-col">
-                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png" class="logo2">
-                                    <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota Challenge League Season 1</p>
+                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
+                                        class="logo2">
+                                <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota Challenge
+                                    League Season 1</p>
                                 </p>
                             </div>
                             <div class="right-col">
-                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png" class="logo2">
-                                    <p style="font-size: 12px; text-align: left;">Media Prima</p>
-                                    <br>
-                                    <p style="font-size: 12px; text-align: left;">1K Followers</p>
+                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
+                                        class="logo2">
+                                <p style="font-size: 12px; text-align: left;">Media Prima</p>
+                                <br>
+                                <p style="font-size: 12px; text-align: left;">1K Followers</p>
                                 </p>
                             </div>
                         </div>
@@ -450,7 +511,7 @@
                     </div>
                 </div>
 
-            </div> 
+            </div>
         </div>
 
         <div class="tab-content" id="Roster History" style="display: none;">
@@ -461,30 +522,39 @@
                     <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
                         <br>
                         <div class="player-info">
-                            <div class="player-image" style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')"></div>
+                            <div class="player-image"
+                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                            </div>
                             <span>Dota</span>
                         </div>
                         <div class="player-info">
-                            <div class="player-image" style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')"></div>
+                            <div class="player-image"
+                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                            </div>
                             <span>Fifa</span>
                         </div>
                         <div class="player-info">
-                            <div class="player-image" style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')"></div>
+                            <div class="player-image"
+                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                            </div>
                             <span>GTA V</span>
                         </div>
                     </div>
                     <div class="frame1">
                         <div class="container">
                             <div class="left-col">
-                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png" class="logo2">
-                                    <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota Challenge League Season 1</p>
+                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
+                                        class="logo2">
+                                <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota Challenge
+                                    League Season 1</p>
                                 </p>
                             </div>
                             <div class="right-col">
-                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png" class="logo2">
-                                    <p style="font-size: 12px; text-align: left;">Media Prima</p>
-                                    <br>
-                                    <p style="font-size: 12px; text-align: left;">1K Followers</p>
+                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
+                                        class="logo2">
+                                <p style="font-size: 12px; text-align: left;">Media Prima</p>
+                                <br>
+                                <p style="font-size: 12px; text-align: left;">1K Followers</p>
                                 </p>
                             </div>
                         </div>
@@ -497,218 +567,192 @@
 
     </main>
 
-@include('CommonLayout.BootstrapV5Js')
+    @include('CommonLayout.BootstrapV5Js')
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const uploadButton = document.getElementById("upload-button");
-        const imageUpload = document.getElementById("image-upload");
-        const uploadedImage = document.getElementById("uploaded-image");
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const uploadButton = document.getElementById("upload-button");
+            const imageUpload = document.getElementById("image-upload");
+            const uploadedImage = document.getElementById("uploaded-image");
 
-        uploadButton.addEventListener("click", function() {
-            imageUpload.click();
+            uploadButton.addEventListener("click", function() {
+                imageUpload.click();
+            });
+
+            imageUpload.addEventListener("change", function(e) {
+                const file = e.target.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function(readerEvent) {
+                        uploadedImage.style.backgroundImage = url(
+                            "https://www.creativefabrica.com/wp-content/uploads/2022/07/10/tiger-logo-design-Graphics-33936667-1-580x387.jpg"
+                            );
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            });
         });
 
-        imageUpload.addEventListener("change", function(e) {
-            const file = e.target.files[0];
+        function showTab(tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.style.display = 'none';
+            });
 
-            if (file) {
-                const reader = new FileReader();
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
 
-                reader.onload = function(readerEvent) {
-                    uploadedImage.style.backgroundImage = url("https://www.creativefabrica.com/wp-content/uploads/2022/07/10/tiger-logo-design-Graphics-33936667-1-580x387.jpg");
-                };
-
-                reader.readAsDataURL(file);
-            }
-        });
-    });
-
-    function showTab(tabName) {
-        // Hide all tab contents
-        const tabContents = document.querySelectorAll('.tab-content');
-        tabContents.forEach(content => {
-            content.style.display = 'none';
-        });
-
-        // Show the selected tab content
-        const selectedTab = document.getElementById(tabName);
-        if (selectedTab) {
-            selectedTab.style.display = 'block';
-
-            // Show the form if the "Active Rosters" tab is selected
-            if (tabName === 'Active Rosters') {
-                const activeRostersForm = document.getElementById('activeRostersForm');
-                activeRostersForm.style.display = 'block';
-            }
-        }
-    }
-
-    // Show the default tab content (Overview) on page load
-    document.addEventListener("DOMContentLoaded", function() {
-        showTab('Overview');
-    });
-
-    // Update the slideEvents function to toggle visibility of events dynamically
-    function slideEvents(direction) {
-        const eventBoxes = document.querySelectorAll('.event-box');
-
-        // Find the currently visible events
-        const visibleEvents = Array.from(eventBoxes).filter(eventBox => eventBox.style.display !== 'none');
-
-        // Hide all events
-        eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
-
-        let startIndex = 0;
-
-        if (visibleEvents.length > 0) {
-            // If there are visible events, calculate the starting index based on the direction
-            startIndex = (Array.from(eventBoxes).indexOf(visibleEvents[0]) + direction + eventBoxes.length) % eventBoxes.length;
-        }
-
-        // Show at most 2 events based on the starting index
-        for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
-            const index = (startIndex + i + eventBoxes.length) % eventBoxes.length;
-            eventBoxes[index].style.display = 'block';
-        }
-    }
-
-    function showTab(tabName) {
-        // Hide all tab contents
-        const tabContents = document.querySelectorAll('.tab-content');
-        tabContents.forEach(content => {
-            content.style.display = 'none';
-        });
-
-        // Show the selected tab content
-        const selectedTab = document.getElementById(tabName);
-        if (selectedTab) {
-            selectedTab.style.display = 'block';
-
-            // Show the form if the "Active Rosters" tab is selected
-            if (tabName === 'Active Rosters') {
-                const activeRostersForm = document.getElementById('activeRostersForm');
-                activeRostersForm.style.display = 'block';
+                if (tabName === 'Active Rosters') {
+                    const activeRostersForm = document.getElementById('activeRostersForm');
+                    activeRostersForm.style.display = 'block';
+                }
             }
         }
-    }
 
-    // i added this for a recentl bugs
-
-    function initializeEventsDisplay() {
-    const eventBoxes = document.querySelectorAll('.event-box');
-
-    // Hide all events
-    eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
-
-    // Show the first two events
-    for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
-        eventBoxes[i].style.display = 'block';
-    }
-    }
-    document.addEventListener("DOMContentLoaded", function() {
-    initializeEventsDisplay();
-    });
-
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // ... (your existing code)
-
-        // Additional code to handle member tabs
-        const currentMembersTab = document.getElementById('CurrentMembers');
-        const pendingMembersTab = document.getElementById('PendingMembers');
-
-        currentMembersTab.addEventListener('click', function() {
-            showMemberTab('CurrentMembers');
+        document.addEventListener("DOMContentLoaded", function() {
+            showTab('Overview');
         });
 
-        pendingMembersTab.addEventListener('click', function() {
-            showMemberTab('PendingMembers');
-        });
-    });
+        function slideEvents(direction) {
+            const eventBoxes = document.querySelectorAll('.event-box');
 
-    function showMemberTab(tabName) {
-        // Hide all member tabs
-        const memberTabs = document.querySelectorAll('.tab-content[data-type="member"]');
-        memberTabs.forEach(tab => {
-            tab.style.display = 'none';
-        });
+            const visibleEvents = Array.from(eventBoxes).filter(eventBox => eventBox.style.display !== 'none');
 
-        // Show the selected member tab
-        const selectedTab = document.getElementById(tabName);
-        if (selectedTab) {
-            selectedTab.style.display = 'block';
+            eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
 
-            // Load relevant data based on the tab
-            if (tabName === 'CurrentMembers') {
-                // Code to load data for current members
-            } else if (tabName === 'PendingMembers') {
-                // Code to load data for pending members
+            let startIndex = 0;
+
+            if (visibleEvents.length > 0) {
+                startIndex = (Array.from(eventBoxes).indexOf(visibleEvents[0]) + direction + eventBoxes.length) % eventBoxes
+                    .length;
+            }
+
+            for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
+                const index = (startIndex + i + eventBoxes.length) % eventBoxes.length;
+                eventBoxes[index].style.display = 'block';
             }
         }
-    }
-</script>
 
-<script>
-    function approveMember(button) {
-        const memberId = button.getAttribute('data-member-id');
+        function showTab(tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.style.display = 'none';
+            });
 
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
 
-        const url = "{{ route('participant.team.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
-
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-Type': 'application/json',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const memberRow = button.closest('tr');
-                memberRow.remove();
-            } else {
-                console.error('Error updating member status:', data.message);
+                if (tabName === 'Active Rosters') {
+                    const activeRostersForm = document.getElementById('activeRostersForm');
+                    activeRostersForm.style.display = 'block';
+                }
             }
-        })
-        .catch(error => {
-            console.error('Error approving member:', error);
+        }
+
+
+        function initializeEventsDisplay() {
+            const eventBoxes = document.querySelectorAll('.event-box');
+
+            eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
+
+            for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
+                eventBoxes[i].style.display = 'block';
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            initializeEventsDisplay();
         });
-    }
-</script>
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const currentMembersTab = document.getElementById('CurrentMembers');
+            const pendingMembersTab = document.getElementById('PendingMembers');
 
-{{-- Start Javascript for Search  --}}
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Get all search inputs and member tables
-        const searchInputs = document.querySelectorAll('.search_box input');
-        const memberTables = document.querySelectorAll('.member-table');
+            currentMembersTab.addEventListener('click', function() {
+                showMemberTab('CurrentMembers');
+            });
 
-        // Attach event listener to each search input
-        searchInputs.forEach((searchInput, index) => {
-            searchInput.addEventListener("input", function() {
-                const searchTerm = searchInput.value.toLowerCase();
-                const memberRows = memberTables[index].querySelectorAll('tbody tr');
+            pendingMembersTab.addEventListener('click', function() {
+                showMemberTab('PendingMembers');
+            });
+        });
 
-                memberRows.forEach(row => {
-                    const playerName = row.querySelector('.player-info span').textContent.toLowerCase();
+        function showMemberTab(tabName) {
+            const memberTabs = document.querySelectorAll('.tab-content[data-type="member"]');
+            memberTabs.forEach(tab => {
+                tab.style.display = 'none';
+            });
 
-                    if (playerName.includes(searchTerm)) {
-                        row.style.display = 'table-row';
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
+
+                if (tabName === 'CurrentMembers') {} else if (tabName === 'PendingMembers') {}
+            }
+        }
+    </script>
+
+    <script>
+        function approveMember(button) {
+            const memberId = button.getAttribute('data-member-id');
+
+
+            const url = "{{ route('participant.team.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
+
+
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const memberRow = button.closest('tr');
+                        memberRow.remove();
                     } else {
-                        row.style.display = 'none';
+                        console.error('Error updating member status:', data.message);
                     }
+                })
+                .catch(error => {
+                    console.error('Error approving member:', error);
+                });
+        }
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const searchInputs = document.querySelectorAll('.search_box input');
+            const memberTables = document.querySelectorAll('.member-table');
+
+            searchInputs.forEach((searchInput, index) => {
+                searchInput.addEventListener("input", function() {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    const memberRows = memberTables[index].querySelectorAll('tbody tr');
+
+                    memberRows.forEach(row => {
+                        const playerName = row.querySelector('.player-info span')
+                            .textContent.toLowerCase();
+
+                        if (playerName.includes(searchTerm)) {
+                            row.style.display = 'table-row';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
                 });
             });
         });
-    });
-</script>
+    </script>
 
-{{-- End Javascript for Search Member  --}}
+    {{-- End Javascript for Search Member  --}}
 
 
 </body>
-
