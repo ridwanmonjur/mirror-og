@@ -40,8 +40,9 @@ class ParticipantEventController extends Controller
         }
     }
 
-    public function teamList($user_id)
+    public function teamList(Request $request)
     {
+        $user_id = $request->attributes->get('user')->id;
         $teamList = Team::leftJoin('members', 'teams.id', '=', 'members.team_id')
             ->where(function ($query) use ($user_id) {
                 $query->where('teams.user_id', $user_id)->orWhere('members.user_id', $user_id);
@@ -218,8 +219,9 @@ class ParticipantEventController extends Controller
 }
 
 
-    public function createTeamView(Request $request, $user_id)
+    public function createTeamView(Request $request)
     {
+        $user_id = $request->attributes->get('user')->id;
         $teamm = Team::find($user_id);
         return view('Participant.CreateTeam', compact('teamm'));
     }
@@ -248,29 +250,8 @@ class ParticipantEventController extends Controller
     public function selectTeamToRegister(Request $request)
     {
         $selectTeam = Team::all();
-        return view('Participant.selectTeamToRegister', compact('selectTeam'));
+        return view('Participant.SelectTeamToRegister', compact('selectTeam'));
     }
-
-    // public function teamToRegister(Request $request)
-    // {
-    //     $selectedTeamNames = $request->input('selectedTeamName');
-
-    //     if (is_array($selectedTeamNames)) {
-    //         foreach ($selectedTeamNames as $teamId) {
-    //             $member = new Member();
-    //             $member->team_id = $teamId;
-    //             $member->user_id = auth()->user()->id;
-    //             $member->save();
-    //             return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
-    //         }
-    //     } else {
-    //         $member = new Member();
-    //         $member->team_id = $selectedTeamNames;
-    //         $member->user_id = auth()->user()->id;
-    //         $member->save();
-    //         return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
-    //     }
-    // }
 
     public function teamToRegister(Request $request)
     {
@@ -401,8 +382,6 @@ class ParticipantEventController extends Controller
             return $this->show404Participant($e->getMessage());
         }
     }
-
-   
 
     public function followOrganizer(Request $request)
     {

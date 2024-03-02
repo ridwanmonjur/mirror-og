@@ -55,8 +55,8 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::get('/home', [ParticipantEventController::class, 'home'])->name("participant.home.view");
 			
 			// Team management
-			Route::get('/team/list/{id}', [ParticipantEventController::class, 'teamList'])->name("participant.team.view");
-			Route::get('/team/create/{id}', [ParticipantEventController::class, 'createTeamView'])->name("participant.team.create");
+			Route::get('/team/list', [ParticipantEventController::class, 'teamList'])->name("participant.team.view");
+			Route::get('/team/create', [ParticipantEventController::class, 'createTeamView'])->name("participant.team.create");
 			Route::get('/team/manage/{id}', [ParticipantEventController::class, 'teamManagement'])->name("participant.team.manage");
 			Route::get('/team/register/{id}', [ParticipantEventController::class, 'registrationManagement'])->name("participant.registrationManagement.view");
 			Route::get('/team/select', [ParticipantEventController::class, 'selectTeamToRegister'])->name("participant.selectTeam.view");

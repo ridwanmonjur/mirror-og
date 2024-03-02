@@ -66,10 +66,8 @@
             <div class="team-dropdown">
                 <button onclick="toggleTeamList()" class="oceans-gaming-default-button oceans-gaming-gray-button">Where is moop?</button>
                 <div id="teamList" class="team-dropdown-content">
-                  <a href="{{ url('/participant/team/create/' . Auth::id()) }}">Create a Team</a>
-                  <a href="{{ url('/participant/team/list/' . Auth::id()) }}">Team List</a>
-                  {{-- <a href="#">Team C</a> --}}
-                  <!-- Add more teams as needed -->
+                  <a href="{{ url('/participant/team/create/' ) }}">Create a Team</a>
+                  <a href="{{ url('/participant/team/list/' ) }}">Team List</a>
                 </div>
               </div>
             <img style="position: relative; top: 0px;" width="50px" height="40px"

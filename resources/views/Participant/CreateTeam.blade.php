@@ -50,10 +50,11 @@
                             @endif
 
                             @if (session('success'))
-                                <div class="alert alert-success">
+                                <div class="text-success">
                                     {{ session('success') }}
                                 </div>
                             @endif
+
                             <input type="text" name="teamName" id="teamName" placeholder="Team Name"
                                 onclick="clearPlaceholder()" onblur="restorePlaceholder()">
                     </div>
