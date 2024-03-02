@@ -57,12 +57,13 @@ Route::group(['prefix' => 'participant'], function () {
 			// Team management
 			Route::get('/team/list', [ParticipantEventController::class, 'teamList'])->name("participant.team.view");
 			Route::get('/team/create', [ParticipantEventController::class, 'createTeamView'])->name("participant.team.create");
-			Route::get('/team/manage/{id}', [ParticipantEventController::class, 'teamManagement'])->name("participant.team.manage");
-			Route::get('/team/register/{id}', [ParticipantEventController::class, 'registrationManagement'])->name("participant.registrationManagement.view");
 			Route::get('/team/select', [ParticipantEventController::class, 'selectTeamToRegister'])->name("participant.selectTeam.view");
 			Route::get('/team/confirm', [ParticipantEventController::class, 'confirmUpdate']);
+			Route::get('/team/{id}/manage', [ParticipantEventController::class, 'teamManagement'])->name("participant.team.manage");
+			Route::get('/team/{id}/register', [ParticipantEventController::class, 'registrationManagement'])->name("participant.registrationManagement.view");
 			Route::post('/team/register', [ParticipantEventController::class, 'teamToRegister'])->name("participant.team.register");
 			Route::post('/team/manage', [ParticipantEventController::class, 'teamStore'])->name("participant.team.store");
+
 			Route::post('/team/participant/approve/{id}', [ParticipantEventController::class, 'approveMember'])->name('participant.team.member.approve');
 			Route::post('/team/captain/store', [ParticipantEventController::class, 'makeCaptain'])->name('make-captain');
 			Route::post('/team/captain/delete', [ParticipantEventController::class, 'deleteCaptain'])->name('delete-captain');

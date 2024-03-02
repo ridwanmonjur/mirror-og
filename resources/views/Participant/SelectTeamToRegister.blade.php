@@ -112,7 +112,6 @@
             }
 
             function selectOption(element, label, imageUrl) {
-                // Add the selected class to the parent button
                 const dropdownButton = document.querySelector(".dropdown .dropbtn");
                 dropdownButton.classList.add('selected');
 

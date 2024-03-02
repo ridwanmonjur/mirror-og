@@ -16,7 +16,7 @@
 
     <main>
         @foreach ($teamList as $team)
-        <a href="/participant/team/manage/{{ $team['id'] }}">
+        <a href="/participant/team/{{ $team['id'] }}/manage">
         <div class="wrapper">
             <div class="team-section">
                 <div class="upload-container">
