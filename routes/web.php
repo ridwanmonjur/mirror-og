@@ -6,84 +6,104 @@ use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\OrganizerCheckoutController;
-use Illuminate\Support\Facades\Artisan;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
+/* THIS IS THE UNSIGNED VIEW */
+// Home
 Route::get('/', [AuthController::class, 'showLandingPage'])->name("landing.view");
-Route::get('logout', [AuthController::class, 'logoutAction'])->name("logout.action");
 
-
+// Forget, reset password
 Route::get('/forget-password', [AuthController::class, 'createForget'])->name("user.forget.view");
-Route::post('/forget-password', [AuthController::class, 'storeForget'])->name("user.forget.action");
 Route::get('/reset-password/{token}', [AuthController::class, 'createReset'])->name("user.reset.view");
 Route::post('/reset-password', [AuthController::class, 'storeReset'])->name("user.reset.action");
+Route::post('/forget-password', [AuthController::class, 'storeForget'])->name("user.forget.action");
 
-// Add verify email login in login
+// Verify
 Route::get('/account/verify-resend/{email}', [AuthController::class, 'verifyResend'])->name('user.verify.resend');
 Route::get('/account/verify/{token}', [AuthController::class, 'verifyAccount'])->name('user.verify.action');
 Route::get('/account/verify-success/', [AuthController::class, 'verifySuccess'])->name('user.verify.success');
 
+// Logout
+Route::get('logout', [AuthController::class, 'logoutAction'])->name("logout.action");
 Route::post('/logout', [AuthController::class, 'logout'])->name("participant.logout.action");
 
+// Search bar
 Route::get('/event/search', [AuthController::class, 'showLandingPage'])->name('public.search.view');
 Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view');
 
+/* THIS IS THE PARTICIPANT VIEW */
 Route::group(['prefix' => 'participant'], function () {
+	
+	// Normal login
 	Route::get('/signin', [AuthController::class, 'signIn'])->name("participant.signin.view");
-	Route::get('/signup', [AuthController::class, 'signUp'])->name("participant.signup.view");
+	Route::get('/signup', [AuthController::class, 'signUp'])->name("participant.signup.view");	
 	Route::post('/signin', [AuthController::class, 'accessUser'])->name("participant.signin.action");
 	Route::post('/signup', [AuthController::class, 'storeUser'])->name("participant.signup.action");
+	
 	// Google login
 	Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name("participant.google.login");
 	Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('participant.google.callback');
+	
 	// Steam login
 	Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name("participant.steam.login");
 	Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'])->name("participant.steam.callback");
+	
+	// General participant functions
 	Route::group(['middleware' => 'auth'], function () {
 		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
+			
+			// Home page
 			Route::get('/home', [ParticipantEventController::class, 'home'])->name("participant.home.view");
+			
+			// Team management
 			Route::get('/team/list/{id}', [ParticipantEventController::class, 'teamList'])->name("participant.team.view");
 			Route::get('/team/create/{id}', [ParticipantEventController::class, 'createTeamView'])->name("participant.team.create");
-			Route::post('/team/manage', [ParticipantEventController::class, 'teamStore'])->name("participant.team.store");
 			Route::get('/team/manage/{id}', [ParticipantEventController::class, 'teamManagement'])->name("participant.team.manage");
-			Route::get('/registration-manage/{id}', [ParticipantEventController::class, 'registrationManagement'])->name("participant.registrationManagement.view");
-			Route::get('/selectTeam', [ParticipantEventController::class, 'selectTeamToRegister'])->name("participant.selectTeam.view");
-			Route::post('/home', [ParticipantEventController::class, 'teamToRegister']);
-			Route::get('/confirm', [ParticipantEventController::class, 'confirmUpdate']);
-			Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent']);
-			Route::post('/events/{id}', [ParticipantEventController::class, 'joinEvent'])->name('join.store');
-			Route::post('/follow-organizer', [ParticipantEventController::class, 'followOrganizer'])->name('follow.organizer');
-			Route::delete('participant/unfollow-organizer', [ParticipantEventController::class, 'unfollowOrganizer'])->name('unfollow.organizer');
-			Route::post('participant/team/approve-member/{id}', [ParticipantEventController::class, 'approveMember'])->name('team.approve-member');
-			Route::post('/make-captain', [ParticipantEventController::class, 'makeCaptain'])->name('make-captain');
-			Route::post('/delete-captain', [ParticipantEventController::class, 'deleteCaptain'])->name('delete-captain');
+			Route::get('/team/register/{id}', [ParticipantEventController::class, 'registrationManagement'])->name("participant.registrationManagement.view");
+			Route::get('/team/select', [ParticipantEventController::class, 'selectTeamToRegister'])->name("participant.selectTeam.view");
+			Route::get('/team/confirm', [ParticipantEventController::class, 'confirmUpdate']);
+			Route::post('/team/register', [ParticipantEventController::class, 'teamToRegister'])->name("participant.team.register");
+			Route::post('/team/manage', [ParticipantEventController::class, 'teamStore'])->name("participant.team.store");
+			Route::post('/team/participant/approve/{id}', [ParticipantEventController::class, 'approveMember'])->name('participant.team.member.approve');
+			Route::post('/team/captain/store', [ParticipantEventController::class, 'makeCaptain'])->name('make-captain');
+			Route::post('/team/captain/delete', [ParticipantEventController::class, 'deleteCaptain'])->name('delete-captain');
+			
+			// Event management
+			Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.event.view');
+			Route::post('/event/join/{id}', [ParticipantEventController::class, 'joinEvent'])->name('participant.event.join');
+			
+			// Organizer management
+			Route::post('/organizer/follow', [ParticipantEventController::class, 'followOrganizer'])->name('participant.organizer.follow');
+			Route::delete('/organizer/unfollow', [ParticipantEventController::class, 'unfollowOrganizer'])->name('participant.organizer.unfollow');
+			
 		});
 	});
 });
+
+/* THIS IS THE ORGANIZER VIEW */
 Route::group(['prefix' => 'organizer'], function () {
+	
+	// Normal login
 	Route::get('/signin', [AuthController::class, 'organizerSignin'])->name("organizer.signin.view");
 	Route::get('/signup', [AuthController::class, 'organizerSignup'])->name("organizer.signup.view");
 	Route::post('/signin', [AuthController::class, 'accessUser'])->name("organizer.signin.action");
 	Route::post('/signup', [AuthController::class, 'storeUser'])->name("organizer.signup.action");
+	
 	// Google login
 	Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name("organizer.google.login");
 	Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name("organizer.google.callback");
+	
 	// Steam login
 	Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name("organizer.steam.login");
 	Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'])->name("organizer.steam.callback");
+	
+	// General organizer functions
 	Route::group(['middleware' => 'auth'], function () {
 		Route::group(['middleware' => 'check-permission:organizer|admin'], function () {
+			
+			// Organizer home
 			Route::get('/home', [OrganizerEventController::class, 'home'])->name("organizer.home.view");
+			
+			// Event manage
 			Route::resource('/event', OrganizerEventController::class, [
 				'index' => "event.index",
 				'create' => "event.create",
@@ -92,12 +112,18 @@ Route::group(['prefix' => 'organizer'], function () {
 				'edit' => "event.edit",
 				'update' => "event.update",
 			]);
+
+			// Invite page
 			Route::get('/event/{id}/invitation', [InvitationController::class, 'index'])->name('event.invitation.index');
+			// Update invite
 			Route::post('event/{id}/updateForm', [OrganizerEventController::class, 'updateForm'])->name('event.updateForm');
+			// Success page
 			Route::get('event/{id}/success', [OrganizerEventController::class, 'showSuccess'])
 				->middleware('prevent-back-button')->name("organizer.success.view");
+			// Live page
 			Route::get('event/{id}/live', [OrganizerEventController::class, 'showLive'])->middleware('prevent-back-button')
 				->name("organizer.live.view");
+			// Checkout page
 			Route::get('event/{id}/checkout', [OrganizerCheckoutController::class, 'showCheckout'])
 				->middleware('prevent-back-button')->name("organizer.checkout.view");
 			Route::get('event/{id}/checkout/transition', [OrganizerCheckoutController::class, 'showCheckoutTransition'])
@@ -106,11 +132,5 @@ Route::group(['prefix' => 'organizer'], function () {
 	});
 });
 
-Route::group(['middleware' => ['auth']], function () {
-	Route::get('/email/verify', 'AuthController@show')->name('verification.notice');
-	Route::get('/email/verify/{id}/{hash}', 'AuthController@verify')->name('verification.verify')->middleware(['signed']);
-	Route::post('/email/resend', 'AuthController@resend')->name('verification.resend');
-});
 
-Route::get('/dashboard', [AuthController::class, 'dashboard']); // Route for Dashboard Page
 

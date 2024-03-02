@@ -40,7 +40,7 @@
                 <div class="team-info">
                     <h3 class="team-name" id="team-name">{{ $manage->teamName }}</h3>
                     <button class="gear-icon-btn">
-                        <a href="/participant/registration-manage/{{ $manage['id'] }}">
+                        <a href="/participant/team/register/{{ $manage['id'] }}">
                           <i class="fas fa-cog"></i>
                         </a>
                       </button>

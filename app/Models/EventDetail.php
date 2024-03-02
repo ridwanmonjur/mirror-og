@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Exceptions\TimeGreaterException;
-use App\Exceptions\EventChangeException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -127,9 +126,10 @@ class EventDetail extends Model
         } else if (substr_count($time, ':') === 2) {
             $time = explode(':', $time);
             $time = $time[0] . ':' . $time[1];
+            return $time;
+        } else {
+            return $time;
         }
-
-        return $time;
     }
 
     public function createCarbonDateTimeFromDB($date, $time)
@@ -351,13 +351,13 @@ class EventDetail extends Model
     public static function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
     {
         try {
-        if ($request->hasFile('eventBanner')) {
-            if ($eventDetail->eventBanner) {
-                self::destroyEventBanner($eventDetail->eventBanner);
-            }
+            if ($request->hasFile('eventBanner')) {
+                if ($eventDetail->eventBanner) {
+                    self::destroyEventBanner($eventDetail->eventBanner);
+                }
 
-            $eventDetail->eventBanner = self::storeEventBanner($request->file('eventBanner'));
-        } 
+                $eventDetail->eventBanner = self::storeEventBanner($request->file('eventBanner'));
+            } 
         } catch (Exception $e){}
 
         $isEditMode = $eventDetail->id != null;
@@ -498,7 +498,7 @@ class EventDetail extends Model
             return $event;
         }
     }
-    public static function findEventAndThrowError($eventId, $userId) {
+    public static function findEventAndThrowError($eventId, $userId): EventDetail {
         $event = self::find($eventId);
 
         if (!$event) {

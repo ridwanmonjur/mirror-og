@@ -35,7 +35,7 @@
                     </span>
                 </button>
                 <div class="dropdown-content" id="teamList">
-                    <form action="{{ url('/participant/home') }}" method="POST">
+                    <form action="{{ route('participant.team.register') }}" method="POST">
                         @csrf
                         <input type="text" id="teamSearch" oninput="filterTeams()" placeholder="Search for teams...">
                         <div>
@@ -45,8 +45,6 @@
                                     <img src="{{ asset('/assets/images/dota.png') }}" height="25px" width="50px">
                                     <a href="#" class="teamNameAnchor"
                                         data-team-id="{{ $item->id }}">{{ $item->teamName }}</a>
-                                    <!-- Hidden input to store the selected team's name as an array -->
-                                    {{-- <input type="hidden" name="selectedTeamName[]" value="{{ $item->id }}"> --}}
                                     <input type="hidden" name="selectedTeamName" value="{{ $item->id }}">
                                 </div>
                             @endforeach

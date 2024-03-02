@@ -100,7 +100,7 @@
                                 </div>
 
                                 <form id="followForm" method="POST"
-                                    action="{{ $user && $user->isFollowing($event?->user?->organizer) ? route('unfollow.organizer') : route('follow.organizer') }}">
+                                    action="{{ $user && $user->isFollowing($event?->user?->organizer) ? route('participant.organizer.unfollow') : route('participant.organizer.follow') }}">
                                     @csrf
                                     @if ($user && $user->isFollowing($event?->user?->organizer))
                                         @method('DELETE')
@@ -161,7 +161,7 @@
                                 {{ session('errorMessage') }}
                             </div>
                         @endif
-                        {{-- <form method="POST" action="{{ route('join.store', ['id' => $event]) }} }}">
+                        {{-- <form method="POST" action="{{ route('participant.event.join', ['id' => $event]) }} }}">
                                 @csrf
                                 <button type="submit" class="oceans-gaming-default-button">
                                     <u>{{$status ?? 'Choose event status'}}</u>
@@ -169,7 +169,7 @@
                                 </button>
                             </form> --}}
 
-                        <form method="POST" action="{{ route('join.store', ['id' => $event]) }}">
+                        <form method="POST" action="{{ route('participant.event.join', ['id' => $event]) }}">
                             @csrf
 
                             @php

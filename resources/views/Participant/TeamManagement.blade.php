@@ -32,7 +32,7 @@
                 <div class="team-info">
                     <h3 class="team-name" id="team-name">{{ $manage->teamName }}</h3>
                     <button class="gear-icon-btn">
-                        <a href="/participant/registration-manage/{{ $manage['id'] }}">
+                        <a href="/participant/team/register/{{ $manage['id'] }}">
                           <i class="fas fa-cog"></i>
                         </a>
                       </button>
@@ -413,7 +413,7 @@
         <div class="tab-content" id="Active Rosters" style="display: center;">
 
             <p style="text-align: center;">Team {{ $manage->teamName }} has no active rosters</p>
-            {{-- <div id="activeRostersForm" style="display: center; text-align: center;">
+            <div id="activeRostersForm" style="display: center; text-align: center;">
 
                 <div class="event">
                     <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
@@ -450,12 +450,12 @@
                     </div>
                 </div>
 
-            </div> --}}
+            </div> 
         </div>
 
         <div class="tab-content" id="Roster History" style="display: none;">
             <p style="text-align: center;">Team {{ $manage->teamName }} has no roster history</p>
-            {{-- <div id="activeRostersForm" style="display: center; text-align: center;">
+            <div id="activeRostersForm" style="display: center; text-align: center;">
 
                 <div class="event">
                     <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
@@ -492,7 +492,7 @@
                     </div>
                 </div>
 
-            </div> --}}
+            </div>
         </div>
 
     </main>
@@ -655,7 +655,7 @@
         const memberId = button.getAttribute('data-member-id');
 
 
-        const url = "{{ route('team.approve-member', ['id' => ':id']) }}".replace(':id', memberId);
+        const url = "{{ route('participant.team.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
 
 
         fetch(url, {

@@ -398,14 +398,11 @@ class ParticipantEventController extends Controller
 
             return view('Participant.ViewEvent', compact('event', 'followersCount', 'user', 'existingJoint'));
         } catch (Exception $e) {
-            return $this->show404($e->getMessage());
+            return $this->show404Participant($e->getMessage());
         }
     }
 
-    public function show404($error)
-    {
-        return view('Organizer.EventNotFound', compact('error'));
-    }
+   
 
     public function followOrganizer(Request $request)
     {

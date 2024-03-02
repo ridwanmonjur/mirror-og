@@ -11,25 +11,27 @@
                 </u>
             </div>
             <div class="box-width">
-                @if (isset($error))
                 <p id="notification">{{ $error }}</p>
-                @else
-                @if (isset($request->id))
-                <p id="notification">Event can't be found by id= {{ $request->id }}.</p>
-                @else
-                <p id="notification">Event can't be found.</p>
-                @endif
-                @endif
             </div>
             <br><br><br><br>
             <button onclick="goToManageScreen();" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: black; border: 1px solid black;">
                 Go to event page
             </button>
-
+            @if (isset($id) && isset($edit) && $edit )
+                <br><br>
+                <button onclick="goToEditScreen();" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: black; border: 1px solid black;">
+                    Edit event
+                </button>
+            @endif
         </div>
         <script>
             const goToManageScreen = () => {
                 window.location.href = "{{route('event.index') }}";
+            }
+            
+            const goToEditScreen = () => {
+                let url = "{{ route('event.edit', $id ?? -1 ) }}";
+                window.location.href = url;
             }
         </script>
         @include('CommonLayout.BootstrapV5Js')

@@ -160,7 +160,7 @@
             const {error} = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
-                    return_url: "{{route('organizer.checkout.transition', ['id'=> $event->id])}}",
+                    return_url: "{{route('organizer.checkout.transition', ['id'=> $event->id] ) }}",
                     payment_method_data: {
                         billing_details: {
                             email: "{{$user->email}}",
@@ -182,6 +182,7 @@
             paypal: 'buynow'
           }
         }
+    }
       
 
     let stripe = Stripe('{{ env('STRIPE_KEY') }}')
