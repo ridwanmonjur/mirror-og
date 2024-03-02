@@ -5,14 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Management</title>
-    <!-- Existing CSS links -->
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/registrationManagement.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/popUpRegistrationManagement.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        integrity="... (the integrity hash) ..." crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <style>
@@ -98,7 +96,7 @@
                                                     style="background-image: url('/assets/images/dota.png')"></div>
                                                 <span class="username" data-user-id="{{ $user['user']->id }}"
                                                     data-is-captain="{{ $isCaptain ? 'true' : 'false' }}">{{ $user['user']->name }}</span>
-                                                {{-- <span class="crown-emoji" style="display: {{ $isCaptain ? 'inline-block' : 'none' }}; cursor: pointer;">👑</span> --}}
+                                                <span class="crown-emoji" style="display: {{ $isCaptain ? 'inline-block' : 'none' }}; cursor: pointer;">👑</span>
                                                 <form id="makeCaptainForm_{{ $user['user']->id }}"
                                                     style="display: inline;">
                                                     @csrf
@@ -266,7 +264,7 @@
                 var form = $(this).closest('form');
 
                 $.ajax({
-                    url: "{{ route('make-captain') }}",
+                    url: "{{ route('participant.captain.add') }}",
                     type: 'POST',
                     data: {
                         userId: userId,

@@ -9,8 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        integrity="... (the integrity hash) ..." crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 </head>
 
@@ -32,7 +31,7 @@
                     <div class="team-info">
                         <h3 class="team-name" id="team-name">{{ $manage->teamName }}</h3>
                         <button class="gear-icon-btn">
-                            <a href="/participant/team/register/{{ $manage['id'] }}">
+                            <a href="/participant/team/{{ $manage['id'] }}/register">
                                 <i class="fas fa-cog"></i>
                             </a>
                         </button>
@@ -76,7 +75,7 @@
                         <p>No events available</p>
                     @else
                         <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;">
-                            << /button>&nbsp;&nbsp;&nbsp;
+                            </button>&nbsp;&nbsp;&nbsp;
                                 @php
                                     $uniqueEventDetailsIds = [];
                                 @endphp
@@ -702,7 +701,7 @@
             const memberId = button.getAttribute('data-member-id');
 
 
-            const url = "{{ route('participant.team.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
+            const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
 
 
             fetch(url, {
