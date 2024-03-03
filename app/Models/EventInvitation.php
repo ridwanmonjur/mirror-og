@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Invitation extends Model
+class EventInvitation extends Model
 {
+    protected $table = 'event_invitations';
+
     use HasFactory;
     public function organizer()
     {

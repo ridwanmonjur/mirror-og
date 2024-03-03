@@ -311,7 +311,6 @@
                     params = {};
                 }
 
-
                 if ( fetchVariables.getCurrentPage() > fetchVariables.getFetchedPage() + 1 ) {
                     fetchVariables.setCurrentPage( fetchVariables.getFetchedPage() );
                     return;

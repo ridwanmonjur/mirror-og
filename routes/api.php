@@ -25,6 +25,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'participant'], function () {
     Route::post('events', [ParticipantEventController::class, 'index'])->name('event.index');
+    Route::group(['middleware' => 'auth'], function () {
+		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
+            Route::get('/team/search/{search}', [ParticipantEventController::class, 'teamSearch'])->name("participant.team.search");
+        });
+    });
 });
 
 Route::group(['prefix' => 'organizer'], function () {

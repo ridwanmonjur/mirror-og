@@ -43,31 +43,25 @@ class ParticipantEventController extends Controller
     public function teamList(Request $request)
     {
         $user_id = $request->attributes->get('user')->id;
-        $teamList = Team::leftJoin('members', 'teams.id', '=', 'members.team_id')
-            ->where(function ($query) use ($user_id) {
-                $query->where('teams.user_id', $user_id)->orWhere('members.user_id', $user_id);
-            })
-            ->groupBy('teams.id')
-            ->select('teams.*')
-            ->get();
+        [
+            'teamList' => $teamList,
+            'teamIdList' => $teamIdList
+        ] = Team::getUserTeamList($user_id);
+    
+        if ($teamList) {
+            $joinEvents = JoinEvent::getJoinEventsByTeamIdList($teamIdList);
 
-        if ($teamList->isNotEmpty()) {
-            $usernamesCountByTeam = [];
             foreach ($teamList as $team) {
-                $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($team) {
-                    $query->where('team_id', $team->id);
-                })
-                    ->with('user')
-                    ->get();
+                $userIds = [];
 
-                $usernames = $joinEvents
-                    ->unique('user_id')
-                    ->pluck('user')
-                    ->count();
+                foreach ($joinEvents as $joinEvent) {
+                    if ($joinEvent->team_id === $team->id) {
+                        $userIds[] = $joinEvent->user->id;
+                    }
+                }
 
-                $usernamesCountByTeam[$team->id] = $usernames;
+                $usernamesCountByTeam[$team->id] = count(array_unique($userIds));
             }
-
             return view('Participant.TeamList', compact('teamList', 'usernamesCountByTeam'));
         } else {
             return redirect()

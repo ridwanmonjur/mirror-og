@@ -32,7 +32,7 @@ class EventDetail extends Model
   
     public function invitationList()
     {
-        return $this->hasMany(Invitation::class, 'event_id');
+        return $this->hasMany(EventInvitation::class, 'event_id');
     }
 
     public function tier()
@@ -82,7 +82,6 @@ class EventDetail extends Model
             unlink($fileNameFinal);
         }
     }
-
 
     public function statusResolved()
     {
@@ -345,8 +344,6 @@ class EventDetail extends Model
         
         return $eventListQuery;
     }
-
-
 
     public static function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
     {

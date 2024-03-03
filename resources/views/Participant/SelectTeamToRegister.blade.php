@@ -55,7 +55,7 @@
         </div>
 
         <div class="sidebar">
-            <p>All members in the team you select will be notified to join this event</p>
+            <p>All memberszzzzzzzzzzz in the team you select will be notified to join this event</p>
 
             <p>Registration will NOT be confirmed until enough team members have accepted to join and payment is
                 complete. Once enough team members have accepted and the entry fee has been paid, registration can
