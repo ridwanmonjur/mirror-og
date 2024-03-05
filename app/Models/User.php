@@ -66,7 +66,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function teams()
     {
-        return $this->belongsToMany(Team::class, 'members');
+        return $this->belongsToMany(Team::class, 'team_members');
     }
 
     public function isFollowing($organizer)

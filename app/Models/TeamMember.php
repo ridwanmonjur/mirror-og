@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Member extends Model
+class TeamMember extends Model
 {
     use HasFactory;
-    protected $table = 'members';
+    protected $table = 'team_members';
 
     public function user()
     {

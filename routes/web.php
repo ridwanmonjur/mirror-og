@@ -57,21 +57,21 @@ Route::group(['prefix' => 'participant'], function () {
 			// Team management
 			Route::get('/team/list', [ParticipantEventController::class, 'teamList'])->name("participant.team.view");
 			Route::get('/team/create', [ParticipantEventController::class, 'createTeamView'])->name("participant.team.create");
-			Route::get('/team/select', [ParticipantEventController::class, 'selectTeamToRegister'])->name("participant.selectTeam.view");
 			Route::get('/team/confirm', [ParticipantEventController::class, 'confirmUpdate']);
 			Route::get('/team/{id}/manage', [ParticipantEventController::class, 'teamManagement'])->name("participant.team.manage");
 			Route::get('/team/{id}/register', [ParticipantEventController::class, 'registrationManagement'])->name("participant.registrationManagement.view");
-			Route::post('/team/register', [ParticipantEventController::class, 'teamToRegister'])->name("participant.team.register");
 			Route::post('/team/manage', [ParticipantEventController::class, 'teamStore'])->name("participant.team.store");
-
 			Route::post('/team/member/approve/{id}', [ParticipantEventController::class, 'approveMember'])->name('participant.member.approve');
 			Route::post('/team/captain/store', [ParticipantEventController::class, 'makeCaptain'])->name('participant.captain.add');
 			Route::post('/team/captain/delete', [ParticipantEventController::class, 'deleteCaptain'])->name('participant.captain.remove');
 			
 			// Event management
-			Route::post('/event/{id}/join', [ParticipantEventController::class, 'joinEvent'])->name('participant.event.join');
+			Route::get('/event/{id}/join/team/create', [ParticipantEventController::class, 'createTeamToRegisterView'])->name('participant.createTeamToRegister.view');
+			Route::post('/event/{id}/join/team/select', [ParticipantEventController::class, 'selectTeamToJoinEvent'])->name('participant.selectTeamToJoin.action');
+			Route::post('/event/{id}/join/team/create', [ParticipantEventController::class, 'createTeamToRegisterView'])->name('participant.createTeamToRegister.action');
+			Route::post('/event/{id}/join/redirect/selectTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectTeamToJoinEvent'])->name('participant.event.selectTeam.redirect');
 			Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.event.view');
-			
+
 			// Organizer management
 			Route::post('/organizer/follow', [ParticipantEventController::class, 'followOrganizer'])->name('participant.organizer.follow');
 			Route::delete('/organizer/unfollow', [ParticipantEventController::class, 'unfollowOrganizer'])->name('participant.organizer.unfollow');

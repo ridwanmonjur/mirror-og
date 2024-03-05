@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('team_members', function (Blueprint $table) {
+        Schema::create('roster_members', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('team_id');
+            $table->unsignedBigInteger('join_events_id');
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->timestamps();
 
             // Foreign key constraint
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
+            $table->foreign('join_events_id')->references('id')->on('join_events')->onDelete('cascade');
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('team_members');
+        Schema::dropIfExists('roster_members');
     }
 };

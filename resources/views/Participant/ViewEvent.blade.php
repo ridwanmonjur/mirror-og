@@ -161,12 +161,8 @@
                             </div>
                         @endif
 
-                        <form method="POST" action="{{ route('participant.event.join', ['id' => $event]) }}">
+                        <form method="POST" name="joinForm" action="{{ route('participant.event.selectTeam.redirect', ['id' => $event->id]) }}">
                             @csrf
-
-                            @php
-
-                            @endphp
 
                             @if ($existingJoint)
                                 <button type="button" class="oceans-gaming-default-button" disabled>

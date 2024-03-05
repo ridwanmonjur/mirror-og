@@ -17,7 +17,7 @@ class JoinEvent extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'joiner_id', 'id');
     }
 
     public function users()
@@ -53,5 +53,15 @@ class JoinEvent extends Model
             ->get();
     }
 
+    public static function saveJoinEvent($data)
+    {
+        $joint = new JoinEvent();
+        $joint->team_id = $data['team_id'];
+        $joint->joiner_id = $data['joiner_id'];
+        $joint->joiner_participant_id = $data['joiner_participant_id'];
+        $joint->event_details_id = $data['event_details_id'];
+        $joint->save();
+        return $joint;
+    }
 
 }

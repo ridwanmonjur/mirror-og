@@ -23,7 +23,7 @@ class Team extends Model
 
     public function members()
     {
-        return $this->hasMany(Member::class, 'team_id', 'id');
+        return $this->hasMany(TeamMember::class, 'team_id', 'id');
     }
 
     private static function storeTeanBanner($file)
@@ -44,11 +44,16 @@ class Team extends Model
         }
     }
 
+    private static function getTeamByCreatorId($teamId)
+    {
+        return Team::where('id', $teamId)->value('user_id');
+    }
+
     public static function getUserTeamList($user_id)
     {
-        $teamList = self::leftJoin('members', 'teams.id', '=', 'members.team_id')
+        $teamList = self::leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
             ->where(function ($query) use ($user_id) {
-                $query->where('teams.user_id', $user_id)->orWhere('members.user_id', $user_id);
+                $query->where('teams.creator_id', $user_id)->orWhere('team_members.user_id', $user_id);
             })
             ->groupBy('teams.id')
             ->select('teams.*')

@@ -86,7 +86,7 @@
                                                     ->where('eventID', $joinEvent->event_details_id)
                                                     ->exists();
                                                 $userId = $user['user']->id;
-                                                $member = \App\Models\Member::where('user_id', $userId)
+                                                $member = \App\Models\TeamMember::where('user_id', $userId)
                                                     ->where('status', 'accepted')
                                                     ->first();
                                                 $acceptedUserId = $member ? $member->user_id : null;
