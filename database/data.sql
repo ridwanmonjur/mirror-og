@@ -14,18 +14,19 @@ INSERT INTO `organizers` (`id`, `companyName`, `companyDescription`, `created_at
 (4, 'ridwanmonjur@gmail.com', 'ridwanmonjur@gmail.com', '2023-11-10 10:02:24', '2023-11-10 10:02:24', 5);
 
 
-INSERT INTO `event_categories` (`id`, `gameTitle`, `gameIcon`, `eventType`, `eventDefinitions`, `eventTier`, `tierIcon`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 'Dota 2', 'Dota 2.jpg', 'Tournament ', 'Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.', 'Dolphin', '6.png', NULL, '2023-11-05 20:39:09', '2023-11-05 20:39:09'),
-(4, 'Dota ', 'dota.png', 'League', 'dota doing good', 'php', 'dotaPoster.jpg', NULL, '2023-11-06 03:06:58', '2023-11-06 03:06:58');
+INSERT INTO `event_categories` (`id`, `gameTitle`, `gameIcon`, `eventDefinitions`, `user_id`, `created_at`, `updated_at`) VALUES
+(1, 'Dota 2', 'download.jpg', "Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.", NULL, '2023-11-05 14:39:09', '2023-12-19 04:46:06'),
+(2, 'Dota ', 'images/event_details/dota.png', 'dota doing good', NULL, '2023-11-05 21:06:58', '2023-11-05 21:06:58');
 
-INSERT INTO `event_tier` (`id`, `eventTier`, `tierIcon`, `tierTeamSlot`, `tierPrizePool`, `tierEntryFee`, `user_id` ) VALUES
-(1, 'Dolphin', 'dolphin.png', 16, 5000, 10, NULL),
-(2, 'Turtle', 'turtle.png', 32, 10000, 20, NULL),
-(3, 'Starfish', 'starfish.png', 64, 15000, 30, NULL);
+
+INSERT INTO `event_tier` (`id`, `eventTier`, `tierIcon`, `tierTeamSlot`, `tierPrizePool`, `tierEntryFee`, `user_id`) VALUES
+(1, 'Starfish', 'images/event_details/starfish.png', '16', '5000', '10', NULL),
+(2, 'Turtle', 'images/event_details/turtle.png', '32', '10000', '20', NULL),
+(3, 'Dolphin', 'images/event_details/dolphin.png', '64', '15000', '30', NULL);
 
 INSERT INTO `event_type` (`id`, `eventType`, `eventDefinitions`) VALUES
-(1, 'Tournament ', 'Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.'),
-(2, 'League', 'dota doing good');
+(1, 'Tournament ', "You\'ll play a series of contests between a number of competitors that will result in teams getting disqualified based on results and points, till you get the final prize."),
+(2, 'League', 'The winner is decided by the highest win/ loss/ draw ratio among the participants.');
 
 
 INSERT INTO `event_details` (`id`, `gameTitle`, `gameIcon`, `eventType`, `eventDefinitions`, `eventTier`, `tierIcon`, `eventName`, `startDate`, `endDate`, `startTime`, `endTime`, `eventDescription`, `eventBanner`, `eventTags`, `status`, `venue`, `sub_action_public_date`, `sub_action_public_time`, `sub_action_private`, `action`, `caption`, `user_id`, `created_at`, `updated_at`, `event_type_id`, `event_tier_id`, `event_category_id`) VALUES

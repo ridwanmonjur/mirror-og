@@ -33,6 +33,23 @@
             </div>
         </div>
         </a>
+        @else
+         <div class="wrapper">
+            <div class="team-section">
+                <div class="upload-container">
+                    <label for="image-upload" class="upload-label">
+                        <div class="circle-container">
+                            <div id="uploaded-image" class="uploaded-image"></div>
+                            <button id="upload-button" class="upload-button" aria-hidden="true">Upload</button>
+                        </div>
+                    </label>
+                    <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                </div>
+               <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
+                <br>
+                <p>Total Members: {{ empty($usernamesCountByTeam[$team->id]) ? 1 : $usernamesCountByTeam[$team->id] }} </p>
+            </div>
+        </div>
         @endforeach
     </main>
 

@@ -17,14 +17,10 @@
         <form action="{{ route('participant.selectTeamToJoin.action', ['id' => $id]) }}" method="POST">
             @csrf
             <div class="wrapper mx-2 ">
-
                 <div class="first">
-
                     <header><u>Select Team to Register</u></header>
-
                     <br>
                     <br>
-
                     <div class="dropdown">
                         <button type="button" class="dropbtn" onclick="toggleDropdown()">
                             <span id="selectedTeamLabel">Select Team</span>
@@ -141,12 +137,6 @@
             const dropdownContent = button.nextElementSibling;
             dropdownContent.classList.remove('show');
         }
-
-        /*
-        document.getElementById('confirmationCheckbox').addEventListener('change', function() {
-
-        });
-        */
     </script>
     @include('CommonLayout.BootstrapV5Js')
 

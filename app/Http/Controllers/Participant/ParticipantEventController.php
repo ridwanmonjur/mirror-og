@@ -50,26 +50,20 @@ class ParticipantEventController extends Controller
             'teamIdList' => $teamIdList
         ] = Team::getUserTeamList($user_id);
     
-        if ($teamList) {
-            $joinEvents = JoinEvent::getJoinEventsByTeamIdList($teamIdList);
+        $joinEvents = JoinEvent::getJoinEventsByTeamIdList($teamIdList);
 
-            foreach ($teamList as $team) {
-                $userIds = [];
+        foreach ($teamList as $team) {
+            $userIds = [];
 
-                foreach ($joinEvents as $joinEvent) {
-                    if ($joinEvent->team_id === $team->id) {
-                        $userIds[] = $joinEvent->user->id;
-                    }
+            foreach ($joinEvents as $joinEvent) {
+                if ($joinEvent->team_id === $team->id) {
+                    $userIds[] = $joinEvent->user->id;
                 }
-
-                $usernamesCountByTeam[$team->id] = count(array_unique($userIds));
             }
-            return view('Participant.TeamList', compact('teamList', 'usernamesCountByTeam'));
-        } else {
-            return redirect()
-                ->back()
-                ->with('error', 'No teams found for the user.');
+
+            $usernamesCountByTeam[$team->id] = count(array_unique($userIds));
         }
+        return view('Participant.TeamList', compact('teamList', 'usernamesCountByTeam'));
     }
 
     public function teamManagement($id)
