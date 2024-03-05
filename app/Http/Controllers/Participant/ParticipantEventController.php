@@ -35,7 +35,7 @@ class ParticipantEventController extends Controller
         ];
 
         if ($request->ajax()) {
-            $view = view('Participant.HomeScroll', $output)->render();
+            $view = view("Participant.HomeScroll", $output)->render();
             return response()->json(['html' => $view]);
         } else {
             return view('Participant.Home', $output);
@@ -107,8 +107,10 @@ class ParticipantEventController extends Controller
                     ->where('status', 'pending')
                     ->with('user')
                     ->get();
-
-                return view('Participant.TeamManagement', compact('teamManage', 'joinEvents', 'eventsByTeam', 'pendingMembers'));
+                
+                $pendingMembersCount = count($pendingMembers);
+                
+                return view('Participant.TeamManagement', compact('teamManage', 'joinEvents', 'eventsByTeam', 'pendingMembers', 'pendingMembersCount'));
             } else {
                 return redirect()
                     ->back()
@@ -213,7 +215,6 @@ class ParticipantEventController extends Controller
 
         return response()->json(['message' => 'You are now a captain for this event.'], 200);
     }
-
 
     public function createTeamView()
     {
@@ -425,9 +426,9 @@ class ParticipantEventController extends Controller
         $userId = $request->attributes->get('user')->id;
         $teamId = $request->input('selectedTeamId');
         $participant = Participant::where('user_id', $userId)->get()->first();        
-        $team = Team::find($teamId);
+        $selectTeam = Team::find($teamId);
         
-        if (!$team) {
+        if (!$selectTeam) {
             throw new ModelNotFoundException("Can't find team with the id!");
         } else {
             $joinEvent = JoinEvent::saveJoinEvent([
@@ -437,9 +438,9 @@ class ParticipantEventController extends Controller
                 'event_details_id' => $id
             ]);
 
-            $teamMembers = $team->members();
+            $teamMembers = $selectTeam->members();
             $rosterList = RosterMember::bulkCreateRosterMembers($joinEvent->id, $teamMembers);
-            return view('Participant.SelectTeamToRegister', compact('selectTeam', 'count', 'id'));
+            return view('Participant.ManageTeamToRegister', compact('selectTeam', 'joinEvent', 'teamMembers', ));
         }
     }
 }

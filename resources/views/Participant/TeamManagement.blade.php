@@ -377,7 +377,7 @@
                             <div class="tab-content" id="PendingMembers" data-type="member"
                                 style="display: none; text-align: center;">
                                 @php
-                                    $pendingMembersCount = count($pendingMembers);
+                                    
                                 @endphp
                                 <p style="text-align: center;">Team {{ $manage->teamName }} has
                                     {{ $pendingMembersCount }} pending members</p>

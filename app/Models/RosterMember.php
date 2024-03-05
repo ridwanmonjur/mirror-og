@@ -26,7 +26,7 @@ class RosterMember extends Model
             ];
         }
 
-        return self::createMany($data);
+        return self::insert($data);
     }
 
 }

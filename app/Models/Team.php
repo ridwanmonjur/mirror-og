@@ -53,7 +53,12 @@ class Team extends Model
     {
         $teamList = self::leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
             ->where(function ($query) use ($user_id) {
-                $query->where('teams.creator_id', $user_id)->orWhere('team_members.user_id', $user_id);
+                $query->where('teams.creator_id', $user_id)->orWhere(
+                    function ($query) use ($user_id) {
+                        return $query->where('team_members.user_id', $user_id)
+                            ->where('status', 'accepted');
+                    });
+                    
             })
             ->groupBy('teams.id')
             ->select('teams.*')
