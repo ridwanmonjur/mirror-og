@@ -16,48 +16,18 @@ body {
     background-image: url("/assets/images/Single_Screen.png");
 }
 
+.wrapper-height {
+    padding: 20px;
+    height: 90vh;
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .wrapper {
     border-radius: 25px;
     border: 2px solid #676767;
-    padding: 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /* width: 700px;
-    height: 530px; */
-    background-color: #FFFBFB;
-}
-
-.wrapper_notify {
-    border-radius: 25px;
-    border: 2px solid #010101;
-    padding: 20px;
-    margin-left: 30px;
-    margin-top: 15vh;
-    margin-right: 30px;
-    width: 700px;
-    height: 350px;
-    background-color: #FFFBFB;
-}
-
-.first {
-    width: 40%;
-}
-
-.first_notify {
-    float: center;
-    text-align: center;
-    font-size: 20px;
-    padding-top: 0%;
-}
-
-
-.sidebar {
-    width: 55%;
-    float: right;
-    position: relative;
-    bottom: 55px;
 }
 
 p {
@@ -83,7 +53,6 @@ input[type="submit"] {
     border-radius: 30px;
     background: #43A4D7;
     border: none;
-    /* border-bottom: 2px solid rgba(0, 0, 0, 0.1); */
 }
 
 .oceans-gaming-default-button {
@@ -140,8 +109,6 @@ input.largerCheckbox {
 
 .remember-checkbox {
     display: flex;
-    /* align-items: center; */
-    /* white-space: nowrap; */
     gap: 10px;
 }
 
@@ -154,23 +121,14 @@ input.largerCheckbox {
     background-color: transparent;
     border: 1px solid black;
     border-radius: 30px;
-    /* color: white; */
     padding: 14px;
     width: 230px;
     font-size: 14px;
-    /* border: none; */
     cursor: pointer;
 }
 
-
-/* Style for the search input */
-
-
-/* Style for the search input */
-
 #teamSearch {
     width: 100%;
-    /* Make the search input same width as the button */
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid black;
@@ -178,13 +136,11 @@ input.largerCheckbox {
 }
 
 
-/* Style for the dropdown content */
-
 .dropdown-content {
     width: 300px;
     display: none;
     position: absolute;
-    background-color: transparent;
+    background-color: white;
     border: 1px solid black;
     border-radius: 30px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -192,14 +148,11 @@ input.largerCheckbox {
 }
 
 
-/* Show the dropdown content when the button is clicked */
-
 .show {
     display: block;
 }
 
 
-/* Style for the team name and logo */
 
 .team-info {
     display: flex;
@@ -230,48 +183,3 @@ input.largerCheckbox {
     align-items: center;
 }
 
-.circle {
-    width: 15px;
-    height: 15px;
-    background-color: #43A4D7;
-    /* Circle background color */
-    border-radius: 50%;
-    /* Makes it a circle */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 10px;
-    /* Adjust the margin as needed */
-}
-
-.plus {
-    font-size: 15px;
-    color: white;
-    /* Plus icon color */
-}
-
-
-
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-
-    .wrapper,
-    .wrapper_notify {
-        width: 100%;
-        margin: 10px 0;
-    }
-
-    .first,
-    .first_notify {
-        width: 100%;
-    }
-
-    .sidebar {
-        width: 100%;
-        float: none;
-        margin-top: 10px;
-        bottom: 0;
-    }
-}

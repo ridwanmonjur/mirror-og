@@ -32,7 +32,8 @@ main {
 
 */ input[type="submit"],
 .oceans-gaming-default-button {
-    width: 200px;
+    width: 300px;
+    text-overflow: wrap;
     padding-top: 12px;
     padding-bottom: 13px;
     font-size: normal;

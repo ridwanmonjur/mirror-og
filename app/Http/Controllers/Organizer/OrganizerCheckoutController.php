@@ -101,9 +101,10 @@ class OrganizerCheckoutController extends Controller
                     $event = EventDetail::findEventWithRelationsAndThrowError(
                         $userId, $id, null , 'joinEvents'
                     );
-    
-                    $event->status = $event->statusResolved();
+
                     $event->payment_transaction_id = $transaction->id;
+                    // this line must be below setting the payment transaction
+                    $event->status = $event->statusResolved();
                     $event->save();
                     
                     return view('Organizer.CheckoutEventSuccess', [

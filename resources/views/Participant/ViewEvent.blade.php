@@ -161,7 +161,7 @@
                             </div>
                         @endif
 
-                        <form method="POST" name="joinForm" action="{{ route('participant.event.selectTeam.redirect', ['id' => $event->id]) }}">
+                        <form method="POST" name="joinForm" action="{{ route('participant.event.selectOrCreateTeam.redirect', ['id' => $event->id]) }}">
                             @csrf
 
                             @if ($existingJoint)

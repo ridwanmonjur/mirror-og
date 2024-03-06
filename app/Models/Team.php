@@ -49,7 +49,7 @@ class Team extends Model
         return Team::where('id', $teamId)->value('user_id');
     }
 
-    public static function getUserTeamList($user_id)
+    public static function getUserTeamListAndPluckIds($user_id)
     {
         $teamList = self::leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
             ->where(function ($query) use ($user_id) {
@@ -75,6 +75,36 @@ class Team extends Model
             return [
                 'teamList' => null,
                 'teamIdList' => null
+            ];
+        }
+    }
+
+    public static function getUserTeamListAndCount($user_id)
+    {
+        $teamList = self::leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
+            ->where(function ($query) use ($user_id) {
+                $query->where('teams.creator_id', $user_id)->orWhere(
+                    function ($query) use ($user_id) {
+                        return $query->where('team_members.user_id', $user_id)
+                            ->where('status', 'accepted');
+                    });
+                    
+            })
+            ->groupBy('teams.id')
+            ->select('teams.*')
+            ->get();
+        
+        $count = count($teamList);
+
+        if ($teamList->isNotEmpty()) {
+            return [
+                'teamList' => $teamList,
+                'count' => $count
+            ];
+        } else {
+            return [
+                'teamList' => [],
+                'count' => 0
             ];
         }
     }
