@@ -15,25 +15,23 @@
     @include('CommonLayout.NavbarforParticipant')
 
     <main>
-        @if($count > 0)
+        @if ($count > 0)
             @foreach ($teamList as $team)
-                <a href="/participant/team/{{ $team['id'] }}/manage">
+                <a style="cursor:pointer;" href="/participant/team/{{ $team['id'] }}/manage">
                     <div class="wrapper">
                         <div class="team-section">
                             <div class="upload-container">
-                                <label for="image-upload" class="upload-label">
-                                    <div class="circle-container">
-                                        <div id="uploaded-image" class="uploaded-image"></div>
-                                    </div>
-                                </label>
-                                <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                                <div class="circle-container" style="cursor: pointer;">
+                                    <div id="uploaded-image" class="uploaded-image"></div>
+                                    </label>
+                                </div>
+                                <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
+                                <br>
+                                <p>Total Members:
+                                    {{ empty($usernamesCountByTeam[$team->id]) ? 1 : $usernamesCountByTeam[$team->id] }}
+                                </p>
                             </div>
-                            <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
-                            <br>
-                            <p>Total Members:
-                                {{ empty($usernamesCountByTeam[$team->id]) ? 1 : $usernamesCountByTeam[$team->id] }} </p>
                         </div>
-                    </div>
                 </a>
             @endforeach
         @else
@@ -45,7 +43,6 @@
                                 <div id="uploaded-image" class="uploaded-image"></div>
                             </div>
                         </label>
-                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
                     </div>
                     <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
                     <br>

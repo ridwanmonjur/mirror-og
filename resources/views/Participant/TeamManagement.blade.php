@@ -168,52 +168,49 @@
                 </div>
             </div>
         </div>
-        @if (empty($eventsByTeam))
-            <div class="tab-content" id="Members" style="display: none; text-align: center;">
-                <div class="member-tabs" style="display: flex; justify-content: center;">
-                    <button class="tab-button" onclick="showMemberTab('CurrentMembers')">Current Members</button>
-                </div>
-                <div class="tab-content" id="CurrentMembers" data-type="member"
-                    style="display: none; text-align: center;">
-                    <p style="text-align: center;">Team {{ $selectTeam->teamName }} has 1 members</p>
-                    <div class="cont">
-                        <div class="leftC">
-                            <span class="icon2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter">
-                                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                                </svg>
-                                <span> Filter </span>
+
+        <div class="tab-content" id="Members" style="display: 'none'">
+
+            <div style="text-align: center;">
+                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has 1 members</p>
+                <div class="cont">
+                    <div class="leftC">
+                        <span class="icon2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-filter">
+                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                            </svg>
+                            <span> Filter </span>
+                        </span>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        <span class="icon2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
+                                <path d="M15 7h6v6" />
+                            </svg>
+                            <span>
+                                Sort
                             </span>
-                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                            <span class="icon2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
-                                    <path d="M15 7h6v6" />
-                                </svg>
-                                <span>
-                                    Sort
-                                </span>
-                            </span>
+                        </span>
+                    </div>
+                    <div class="rightC">
+                        <div class="search_box">
+                            <i class="fa fa-search"></i>
+                            <input class="nav__input" type="text" placeholder="Search for player name">
                         </div>
-                        <div class="rightC">
-                            <div class="search_box">
-                                <i class="fa fa-search"></i>
-                                <input class="nav__input" type="text" placeholder="Search for player name">
-                            </div>
-                            <div style="padding-right: 200px; transform: translateY(-95%);">
-                                @if (auth()->user()->id == $selectTeam->user_id)
-                                    <img src="/assets/images/add.png" height="40px" width="40px">
-                                @endif
-                            </div>
+                        <div style="padding-right: 200px; transform: translateY(-95%);">
+                            @if (auth()->user()->id == $selectTeam->creator_id)
+                                <img src="/assets/images/add.png" height="40px" width="40px">
+                            @endif
                         </div>
                     </div>
-                    <table class="member-table">
-                        <tbody>
-                            {{-- Display the creator's name --}}
+                </div>
+                <table class="member-table">
+                    <tbody>
+                        @foreach ($teamMembersProcessed['accepted']['members'] as $teamMemberProcessed)
                             <tr class="st">
                                 <td>
                                     <div class="player-info">
@@ -221,7 +218,7 @@
                                             style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
                                             <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
                                         </div>
-                                        <span>{{ $selectTeam->user->name }}</span>
+                                        <span>{{ $teamMemberProcessed->user->name }}</span>
 
                                     </div>
                                 </td>
@@ -230,299 +227,117 @@
                                         alt="User's flag">
                                 </td>
                             </tr>
-                        </tbody>
-                    </table>
-                @else
-                    @foreach ($eventsByTeam as $teamId => $users)
-                        @php
-                            $uniqueUsernames = collect($users)->unique('user.id');
-                            $usernamesCount = $uniqueUsernames->count();
-                            $creatorId = $selectTeam->user->id;
-                        @endphp
-                        <div class="tab-content" id="Members" style="display: none; text-align: center;">
-                            <div class="member-tabs" style="display: flex; justify-content: center;">
-                                <button class="tab-button" onclick="showMemberTab('CurrentMembers')">Current
-                                    Members</button>
-                                <button class="tab-button" onclick="showMemberTab('PendingMembers')">Pending
-                                    Members</button>
-                            </div>
-                            <div class="tab-content" id="CurrentMembers" data-type="member"
-                                style="display: none; text-align: center;">
-                                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has
-                                    {{ $usernamesCount }}
-                                    members</p>
-                                <div class="cont">
-                                    <div class="leftC">
-                                        <span class="icon2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-filter">
-                                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3">
-                                                </polygon>
-                                            </svg>
-                                            <span> Filter </span>
-                                        </span>
-                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                        <span class="icon2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
-                                                <path d="M15 7h6v6" />
-                                            </svg>
-                                            <span>
-                                                Sort
-                                            </span>
-                                        </span>
-                                    </div>
-
-                                    <div class="rightC">
-                                        <div class="search_box">
-                                            <i class="fa fa-search"></i>
-                                            <input class="nav__input" type="text"
-                                                placeholder="Search for player name">
-                                        </div>
-                                        <div style="padding-right: 200px; transform: translateY(-95%);">
-                                            @if (auth()->user()->id == $selectTeam->user_id)
-                                                <img src="/assets/images/add.png" height="40px" width="40px">
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                                <table class="member-table">
-                                    <tbody>
-                                        <tr class="st">
-                                            <td>
-                                                <div class="player-info">
-                                                    <div class="player-image"
-                                                        style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
-                                                        <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
-                                                    </div>
-                                                    <span>{{ $selectTeam->user->name }}</span>
-                                                    <span style="margin-left: 400px;">Joined
-                                                        {{ $manage['user']->created_at->format('M d, Y') }}</span>
-                                                </div>
-                                            </td>
-                                            <td class="flag-cell">
-                                                <img class="nationality-flag"
-                                                    src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
-                                            </td>
-                                        </tr>
-
-                                        @foreach ($uniqueUsernames as $user)
-                                            @if ($user['user']->id !== $creatorId)
-                                                <tr class="st">
-                                                    <td>
-                                                        <div class="player-info">
-                                                            <div class="player-image"
-                                                                style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png')">
-                                                            </div>
-                                                            <span>{{ $user['user']->name }}</span>
-                                                            <span style="margin-left: 400px;">Joined
-                                                                {{ $user['user']->created_at->format('M d, Y') }}</span>
-                                                        </div>
-                                                    </td>
-                                                    <td class="flag-cell">
-                                                        <img class="nationality-flag"
-                                                            src="{{ asset('/assets/images/china.png') }}"
-                                                            alt="User's flag">
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="tab-content" id="PendingMembers" data-type="member"
-                                style="display: none; text-align: center;">
-                                @php
-
-                                @endphp
-                                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has
-                                    {{ $pendingMembersCount }} pending members</p>
-                                <div class="cont">
-                                    <div class="leftC">
-                                        <span class="icon2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-filter">
-                                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3">
-                                                </polygon>
-                                            </svg>
-                                            <span> Filter </span>
-                                        </span>
-                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                        <span class="icon2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
-                                                <path d="M15 7h6v6" />
-                                            </svg>
-                                            <span>
-                                                Sort
-                                            </span>
-                                        </span>
-                                    </div>
-
-                                    <div class="rightC">
-                                        <div class="search_box">
-                                            <i class="fa fa-search"></i>
-                                            <input class="nav__input" type="text"
-                                                placeholder="Search for player name">
-                                        </div>
-                                        <div style="padding-right: 200px; transform: translateY(-95%);">
-                                            <img src="/assets/images/add.png" height="40px" width="40px">
-                                        </div>
-                                    </div>
-                                </div>
-                                <table class="member-table">
-                                    <tbody>
-                                        @foreach ($pendingMembers as $pendingMember)
-                                            <tr class="st">
-                                                <td>
-                                                    <div class="player-info">
-                                                        <div class="player-image"
-                                                            style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png')">
-                                                        </div>
-                                                        <div class="player-image"
-                                                            style="background-image: url('{{ $pendingMember->user->profile_image_url }}')">
-                                                        </div>
-                                                        <span>{{ $pendingMember->user->name }}</span>
-                                                    </div>
-                                                </td>
-                                                <td class="flag-cell">
-                                                    <img class="nationality-flag"
-                                                        src="{{ asset('/assets/images/china.png') }}"
-                                                        alt="User's flag">
-                                                </td>
-                                                <td>
-                                                    @foreach ($teamManage as $team)
-                                                        @if (auth()->user()->id == $team->user_id)
-                                                            <button data-member-id="{{ $pendingMember->id }}"
-                                                                onclick="approveMember(this)"
-                                                                style="background-color: #3498db; color: #fff; border: none; padding: 5px 10px; cursor: pointer; margin-right: 5px;">
-                                                                ✔
-                                                            </button>
-                                                            <button onclick="rejectMember('{{ $pendingMember->id }}')"
-                                                                style="background-color: #e74c3c; color: #fff; border: none; padding: 5px 10px; cursor: pointer;">✘</button>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-
-                        </div>
-                    @endforeach
-        @endif
-
-        <div class="tab-content" id="Active Rosters" style="display: center;">
-
-            <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no active rosters</p>
-            <div id="activeRostersForm" style="display: center; text-align: center;">
-
-                <div class="event">
-                    <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
-                        <br>
-                        <div class="player-info">
-                            <div class="player-image"
-                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
-                            </div>
-                            <span>Dota</span>
-                        </div>
-                        <div class="player-info">
-                            <div class="player-image"
-                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
-                            </div>
-                            <span>Fifa</span>
-                        </div>
-                        <div class="player-info">
-                            <div class="player-image"
-                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
-                            </div>
-                            <span>GTA V</span>
-                        </div>
-                    </div>
-                    <div class="frame1">
-                        <div class="container">
-                            <div class="left-col">
-                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
-                                        class="logo2">
-                                <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota Challenge
-                                    League Season 1</p>
-                                </p>
-                            </div>
-                            <div class="right-col">
-                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
-                                        class="logo2">
-                                <p style="font-size: 12px; text-align: left;">Media Prima</p>
-                                <br>
-                                <p style="font-size: 12px; text-align: left;">1K Followers</p>
-                                </p>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <div class="tab-content" id="Roster History" style="display: none;">
-            <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history</p>
-            <div id="activeRostersForm" style="display: center; text-align: center;">
+        <div>
+            <div class="tab-content" id="Active Rosters" style="display: center;">
 
-                <div class="event">
-                    <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
-                        <br>
-                        <div class="player-info">
-                            <div class="player-image"
-                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no active rosters</p>
+                <div id="activeRostersForm" style="display: center; text-align: center;">
+
+                    <div class="event">
+                        <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
+                            <br>
+                            <div class="player-info">
+                                <div class="player-image"
+                                    style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                                </div>
+                                <span>Dota</span>
                             </div>
-                            <span>Dota</span>
+                            <div class="player-info">
+                                <div class="player-image"
+                                    style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                                </div>
+                                <span>Fifa</span>
+                            </div>
+                            <div class="player-info">
+                                <div class="player-image"
+                                    style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                                </div>
+                                <span>GTA V</span>
+                            </div>
                         </div>
-                        <div class="player-info">
-                            <div class="player-image"
-                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                        <div class="frame1">
+                            <div class="container">
+                                <div class="left-col">
+                                    <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
+                                            class="logo2">
+                                    <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota
+                                        Challenge
+                                        League Season 1</p>
+                                    </p>
+                                </div>
+                                <div class="right-col">
+                                    <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
+                                            class="logo2">
+                                    <p style="font-size: 12px; text-align: left;">Media Prima</p>
+                                    <br>
+                                    <p style="font-size: 12px; text-align: left;">1K Followers</p>
+                                    </p>
+                                </div>
                             </div>
-                            <span>Fifa</span>
-                        </div>
-                        <div class="player-info">
-                            <div class="player-image"
-                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
-                            </div>
-                            <span>GTA V</span>
+
                         </div>
                     </div>
-                    <div class="frame1">
-                        <div class="container">
-                            <div class="left-col">
-                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
-                                        class="logo2">
-                                <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota Challenge
-                                    League Season 1</p>
-                                </p>
-                            </div>
-                            <div class="right-col">
-                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
-                                        class="logo2">
-                                <p style="font-size: 12px; text-align: left;">Media Prima</p>
-                                <br>
-                                <p style="font-size: 12px; text-align: left;">1K Followers</p>
-                                </p>
-                            </div>
-                        </div>
 
-                    </div>
                 </div>
-
             </div>
-        </div>
+
+            <div class="tab-content" id="Roster History" style="display: none;">
+                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history</p>
+                <div id="activeRostersForm" style="display: center; text-align: center;">
+
+                    <div class="event">
+                        <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
+                            <br>
+                            <div class="player-info">
+                                <div class="player-image"
+                                    style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                                </div>
+                                <span>Dota</span>
+                            </div>
+                            <div class="player-info">
+                                <div class="player-image"
+                                    style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                                </div>
+                                <span>Fifa</span>
+                            </div>
+                            <div class="player-info">
+                                <div class="player-image"
+                                    style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                                </div>
+                                <span>GTA V</span>
+                            </div>
+                        </div>
+                        <div class="frame1">
+                            <div class="container">
+                                <div class="left-col">
+                                    <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
+                                            class="logo2">
+                                    <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota
+                                        Challenge
+                                        League Season 1</p>
+                                    </p>
+                                </div>
+                                <div class="right-col">
+                                    <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
+                                            class="logo2">
+                                    <p style="font-size: 12px; text-align: left;">Media Prima</p>
+                                    <br>
+                                    <p style="font-size: 12px; text-align: left;">1K Followers</p>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
 
     </main>
 
