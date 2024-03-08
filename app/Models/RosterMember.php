@@ -15,15 +15,18 @@ class RosterMember extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public static function bulkCreateRosterMembers($joinEventIds, $users) {
+    public static function bulkCreateRosterMembers($joinEventIds, $teamMembers) {
         $data = [];
 
-        foreach ($users as $user) {
-            $data[] = [
-                'join_events_id' => $joinEventIds,
-                'user_id' => $user->id,
-                'status' => $user->status
-            ];
+        foreach ($teamMembers as $member) {
+            if ($member->status == 'accepted') {
+                $data[] = [
+                    'join_events_id' => $joinEventIds,
+                    'user_id' => $member->user_id,
+                    'team_member_id' => $member->id,
+                    'status' => $member->status
+                ];
+            }
         }
 
         return self::insert($data);

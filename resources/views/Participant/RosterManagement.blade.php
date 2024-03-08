@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Management</title>
+    <title>Roster Management</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
@@ -47,17 +47,11 @@
     </main>
 
     <main class="main2">
-        <div class="tabs">
-            <button class="tab-button tab-button-active" onclick="showTab(event, 'CurrentMembers')">Current
-                Members</button>
-            <button class="tab-button" onclick="showTab(event, 'PendingMembers')">Pending Members</button>
-        </div>
-
-        <div class="tab-content" id="CurrentMembers">
+        <div>
             <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
-                {{ $teamMembersProcessed['accepted']['count'] }} accepted members
+                {{ $rosterMembersProcessed['accepted']['count'] }} accepted members in this roster
             </p>
-            @if ($teamMembersProcessed['accepted']['count'] != 0)
+            @if ($rosterMembersProcessed['accepted']['count'] != 0)
                 <div class="cont mt-3 pt-3">
                     <div class="leftC">
                         <span class="icon2">
@@ -94,13 +88,14 @@
                         </div>
                     </div>
                 </div>
+                <br>
                 <table class="member-table">
                     <tbody>
-                        @foreach ($teamMembersProcessed['accepted']['members'] as $member)
+                        @foreach ($rosterMembersProcessed['accepted']['members'] as $member)
                             <tr class="st">
                                 <td class="colorless-col">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                                        fill="currentColor" class="bi bi-gear gear-icon-btn" viewBox="0 0 16 16">
                                         <path
                                             d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0" />
                                         <path
@@ -120,90 +115,17 @@
                                     <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
                                         alt="User's flag">
                                 </td>
+                                <td class="flag-cell coloured-cell">
+                                    {{ $member->status }}
+                                </td>
                                 <td class="colorless-col">
-                                    @if ($user->id == $creator_id)
-                                        <button data-member-id="{{ $member->id }}"
-                                            onclick="approveMember(this)"
-                                        >
+                                    @if (in_array($member->status, ['rejected', 'pending']))
+                                        <button class="gear-icon-btn" onclick="approveMember($member->id)">
                                             ✔
                                         </button>
-                                        <button onclick="rejectMember('{{ $member->id }}')">✘</button>
                                     @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @endif
-        </div>
-        <div class="tab-content d-none" id="PendingMembers" data-type="member" style="text-align: center;">
-            <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
-                {{ $teamMembersProcessed['pending']['count'] }} pending members
-            </p>
-            @if ($teamMembersProcessed['pending']['count'] != 0)
-                <div class="cont mt-3 pt-3">
-                    <div class="leftC">
-                        <span class="icon2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter">
-                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3">
-                                </polygon>
-                            </svg>
-                            <span> Filter </span>
-                        </span>
-                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        <span class="icon2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
-                                <path d="M15 7h6v6" />
-                            </svg>
-                            <span>
-                                Sort
-                            </span>
-                        </span>
-                    </div>
-
-                    <div class="rightC">
-                        <div class="search_box">
-                            <i class="fa fa-search"></i>
-                            <input class="nav__input" type="text" placeholder="Search for player name">
-                        </div>
-                        <div style="padding-right: 200px; transform: translateY(-95%);">
-                            <img src="/assets/images/add.png" height="40px" width="40px">
-                        </div>
-                    </div>
-                </div>
-                <table class="member-table">
-                    <tbody>
-                        @foreach ($teamMembersProcessed['pending']['members'] as $member)
-                            <tr class="st">
-                                <td>
-                                    <div class="player-info">
-                                        <div class="player-image"
-                                            style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png')">
-                                        </div>
-                                        <div class="player-image"
-                                            style="background-image: url('{{ $pendingMember->user->profile_image_url }}')">
-                                        </div>
-                                        <span>{{ $member->user->name }}</span>
-                                    </div>
-                                </td>
-                                <td class="flag-cell">
-                                    <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
-                                        alt="User's flag">
-                                </td>
-                                <td>
-                                    @if ($user->id == $creator_id)
-                                        <button data-member-id="{{ $member->id }}"
-                                            onclick="approveMember(this)"
-                                            style="background-color: #3498db; color: #fff; border: none; padding: 5px 10px; cursor: pointer; margin-right: 5px;">
-                                            ✔
-                                        </button>
-                                        <button onclick="rejectMember('{{ $member->id }}')"
-                                            style="background-color: #e74c3c; color: #fff; border: none; padding: 5px 10px; cursor: pointer;">
+                                    @if (in_array($member->status, ['accepted', 'pending']))
+                                        <button class="gear-icon-btn" onclick="rejectMember('{{ $member->id }}')">
                                             ✘
                                         </button>
                                     @endif
@@ -214,6 +136,7 @@
                 </table>
             @endif
         </div>
+
     </main>
 
     @include('CommonLayout.BootstrapV5Js')
