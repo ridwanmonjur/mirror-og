@@ -109,7 +109,7 @@
                             <input class="nav__input" type="text" placeholder="Search for player name">
                         </div>
                         <div style="padding-right: 200px; transform: translateY(-95%);">
-                            @if (auth()->user()->id == $selectTeam->user_id)
+                            @if ($user->id == $selectTeam->user_id)
                                 <img src="/assets/images/add.png" height="40px" width="40px">
                             @endif
                         </div>
@@ -146,7 +146,7 @@
                     <div class="tab-content" id="CurrentMembers" data-type="member"
                         style="display: none; text-align: center;">
                         <p style="text-align: center;">Team {{ $selectTeam->teamName }} has 
-                            members
+                            {{ $teamMembersProcessed['accepted']['count'] }} members
                         </p>
                         <div class="cont">
                             <div class="leftC">
@@ -181,7 +181,7 @@
                                         placeholder="Search for player name">
                                 </div>
                                 <div style="padding-right: 200px; transform: translateY(-95%);">
-                                    @if (auth()->user()->id == $selectTeam->user_id)
+                                    @if ($user->id == $selectTeam->user_id)
                                         <img src="/assets/images/add.png" height="40px" width="40px">
                                     @endif
                                 </div>
@@ -206,26 +206,24 @@
                                             src="{{ asset('/assets/images/china.png') }}" alt="User's flag">
                                     </td>
                                 </tr>
-                                @foreach ($teamMembers as $member)
-                                    @if ($member->id !== $selectTeam->creator_id && $member->status=="accepted")
-                                        <tr class="st">
-                                            <td>
-                                                <div class="player-info">
-                                                    <div class="player-image"
-                                                        style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png')">
-                                                    </div>
-                                                    <span>{{ $member['user']->name }}</span>
-                                                    <span style="margin-left: 400px;">Joined
-                                                        {{ $member['user']->created_at->format('M d, Y') }}</span>
+                                @foreach ($teamMembersProcessed['accepted']['members'] as $member)
+                                    <tr class="st">
+                                        <td>
+                                            <div class="player-info">
+                                                <div class="player-image"
+                                                    style="background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png')">
                                                 </div>
-                                            </td>
-                                            <td class="flag-cell">
-                                                <img class="nationality-flag"
-                                                    src="{{ asset('/assets/images/china.png') }}"
-                                                    alt="User's flag">
-                                            </td>
-                                        </tr>
-                                    @endif
+                                                <span>{{ $member->user()->name }}</span>
+                                                <span style="margin-left: 400px;">Joined
+                                                    {{ $member->user()->created_at->format('M d, Y') }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="flag-cell">
+                                            <img class="nationality-flag"
+                                                src="{{ asset('/assets/images/china.png') }}"
+                                                alt="User's flag">
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -234,7 +232,8 @@
                         style="display: none; text-align: center;">
 
                         <p style="text-align: center;">Team {{ $selectTeam->teamName }} has
-                            {{ $pendingMembersCount }} pending members</p>
+                            {{ $teamMembersProcessed['pending']['count'] }} pending members
+                        </p>
                         <div class="cont">
                             <div class="leftC">
                                 <span class="icon2">
@@ -274,7 +273,7 @@
                         </div>
                         <table class="member-table">
                             <tbody>
-                                @foreach ($pendingMembers as $pendingMember)
+                                @foreach ($teamMembersProcessed['pending']['members'] as $member)
                                     <tr class="st">
                                         <td>
                                             <div class="player-info">
@@ -284,7 +283,7 @@
                                                 <div class="player-image"
                                                     style="background-image: url('{{ $pendingMember->user->profile_image_url }}')">
                                                 </div>
-                                                <span>{{ $pendingMember->user->name }}</span>
+                                                <span>{{ $pendingMember->user()->name }}</span>
                                             </div>
                                         </td>
                                         <td class="flag-cell">
@@ -294,7 +293,7 @@
                                         </td>
                                         <td>
                                             @foreach ($teamManage as $team)
-                                                @if (auth()->user()->id == $team->user_id)
+                                                @if ($user->id == $team->user_id)
                                                     <button data-member-id="{{ $pendingMember->id }}"
                                                         onclick="approveMember(this)"
                                                         style="background-color: #3498db; color: #fff; border: none; padding: 5px 10px; cursor: pointer; margin-right: 5px;">

@@ -35,7 +35,7 @@
             @foreach ($teamManage as $manage)
                 <div class="team-names">
                     <div class="team-info">
-                        <h3 class="team-name" id="team-name">{{ $manage->teamName }}</h3>
+                        <h3 class="team-name" id="team-name">{{ $selectTeam->teamName }}</h3>
                         <button class="gear-icon-btn">
                             <a href="/participant/team/register/{{ $manage['id'] }}">
                                 <i class="fas fa-cog"></i>

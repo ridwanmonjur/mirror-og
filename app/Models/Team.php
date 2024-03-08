@@ -13,7 +13,7 @@ class Team extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'creator_id');
     }
 
     public function users()
@@ -49,22 +49,23 @@ class Team extends Model
         return Team::where('id', $teamId)->value('user_id');
     }
 
-    public static function getUserTeamListAndPluckIds($user_id)
+    public static function getUserTeamAndTeamMembersAndPluckIds($user_id)
     {
         $teamList = self::leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
-            ->where(function ($query) use ($user_id) {
-                $query->where('teams.creator_id', $user_id)->orWhere(
-                    function ($query) use ($user_id) {
-                        return $query->where('team_members.user_id', $user_id)
-                            ->where('status', 'accepted');
-                    });
-                    
-            })
-            ->groupBy('teams.id')
-            ->select('teams.*')
-            ->get();
+        ->where(function ($query) use ($user_id) {
+            $query->where('teams.creator_id', $user_id)
+                ->orWhere(function ($query) use ($user_id) {
+                    $query->where('team_members.user_id', $user_id)
+                        ->where('status', 'accepted');
+                });
+        })
+        ->groupBy('teams.id')
+        ->select('teams.*')
+        ->get();
         
-        $teamIdList = $teamList->pluck('id')->toArray();
+        $teamIdList = array_map(function($member) {
+            return $member->id;
+        }, $teamList);
 
         if ($teamList->isNotEmpty()) {
             return [
@@ -81,15 +82,16 @@ class Team extends Model
 
     public static function getUserTeamListAndCount($user_id)
     {
-        $teamList = self::leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
-            ->where(function ($query) use ($user_id) {
-                $query->where('teams.creator_id', $user_id)->orWhere(
-                    function ($query) use ($user_id) {
-                        return $query->where('team_members.user_id', $user_id)
-                            ->where('status', 'accepted');
-                    });
-                    
-            })
+        $teamList = self::where(function ($query) use ($user_id) {
+                $query->where('teams.creator_id', $user_id)
+                    ->orWhereHas(
+                        function ($query) use ($user_id) {
+                            return $query->where('team_members.user_id', $user_id)
+                                ->where('status', 'accepted');
+                        }
+                    );            
+                }
+            )
             ->groupBy('teams.id')
             ->select('teams.*')
             ->get();

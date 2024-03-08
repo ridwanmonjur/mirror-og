@@ -28,6 +28,8 @@ return new class extends Migration
     {
         Schema::table('join_events', function (Blueprint $table) {
             $table->dropForeign(['team_id']);
+            $table->dropColumn('team_id');
+
             $table->foreign('user_id')
                 ->references('id')->on('users');
         });

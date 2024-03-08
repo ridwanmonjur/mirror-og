@@ -30,6 +30,11 @@ class JoinEvent extends Model
         return $this->belongsTo(EventDetail::class, 'event_details_id', 'id');
     }
 
+    public function members()
+    {
+        return $this->hasMany(TeamMember::class, 'join_events_id', 'id');
+    }
+
     public function eventTier()
     {
         return $this->hasOneThrough(EventTier::class, EventDetail::class, 'id', 'id', 'event_details_id', 'event_tier_id');
@@ -40,8 +45,8 @@ class JoinEvent extends Model
         return self::whereHas('user.teams', function ($query) use ($team_id) {
             $query->where('team_id', $team_id);
         })
-        ->with('user')
-        ->get();
+        ->with('user');
+       
     }
 
     public static function getJoinEventsByTeamIdList($teamIdList)
@@ -49,8 +54,7 @@ class JoinEvent extends Model
         return self::whereHas('user.teams', function ($query) use ($teamIdList) {
                 $query->whereIn('team_id', $teamIdList);
             })
-            ->with('user')
-            ->get();
+            ->with('user');
     }
 
     public static function saveJoinEvent($data)

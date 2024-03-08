@@ -27,9 +27,10 @@
                             What will your team be called?
                         </p>
                         <br>
-                        <form action="{{ route('participant.createTeamToJoinEvent.action', ['id' => $id]) }}"
-                            method="POST"
-                        >
+                        <form
+                            id="formSubmit"
+                            action="{{ route('participant.createTeamToJoinEvent.action', ['id' => $id]) }}"
+                            method="POST">
                             @csrf
                             @if (isset($errorMessage))
                                 <div class="text-danger">
@@ -38,10 +39,10 @@
                             @endif
                             <input type="text" name="teamName" id="teamName" placeholder="Team Name"
                                 onclick="clearPlaceholder()" onblur="restorePlaceholder()">
+                        </form>
                     </div>
                     <br><br>
-                    <div><input type="submit" value="Create & Register"></div>
-                    </form>
+                    <div><input form="formSubmit" type="submit" value="Create & Register"></div>
                 </div>
             </div>
         </div>

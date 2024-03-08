@@ -15,35 +15,9 @@
 
 <body>
     @include('CommonLayout.NavbarforParticipant')
-    <main class="main1">
-        <div class="team-section">
-            <div class="upload-container">
-                <label for="image-upload" class="upload-label">
-                    <div class="circle-container">
-                        <div id="uploaded-image" class="uploaded-image"></div>
-                        <button id="upload-button" class="upload-button" aria-hidden="true">Upload</button>
-                    </div>
-                </label>
-                <input type="file" id="image-upload" accept="image/*" style="display: none;">
-            </div>
-            @foreach ($teamManage as $manage)
-                <div class="team-names">
-                    <div class="team-info">
-                        <h3 class="team-name" id="team-name">{{ $manage->teamName }}</h3>
-                        <button class="gear-icon-btn">
-                            <a href="/participant/team/{{ $manage['id'] }}/register">
-                                <i class="fas fa-cog"></i>
-                            </a>
-                        </button>
-                    </div>
 
-                </div>
+    @include('Participant.Layout.TeamHead')
 
-                <p>We are an awesome team with awesome members! Come be awesome together! Play some games and win some
-                    prizes GGEZ!</p>
-            @endforeach
-        </div>
-    </main>
 
     <main class="main2">
         <div class="tabs">
@@ -55,159 +29,144 @@
 
         <div class="tab-content" id="Overview">
             <div style="padding-left: 200px;"><b>Recent Events</b></div>
-            {{-- <div class="recent-events">
-                <!-- Update the event-carousel section in the Overview tab content -->
-                <div class="event-carousel">
-                    <p style="text-align: center;">Team {{ $manage->teamName }} has no event history</p>
-                    <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;"><</button>&nbsp;&nbsp;&nbsp;
-                    @foreach ($eventDetail as $event)
-                    <div class="event-box" id="event1">
-                    </div>
-                    @endforeach
-                    <button class="carousel-button" onclick="slideEvents(1)">></button>
-                </div>
-            </div> --}}
 
             <div class="recent-events">
-                <!-- Update the event-carousel section in the Overview tab content -->
                 <div class="event-carousel">
-                    @if ($joinEvents->isEmpty())
+                    @if (empty($joinEvents))
                         <p>No events available</p>
                     @else
                         <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;">
-                            </button>&nbsp;&nbsp;&nbsp;
-                                @php
-                                    $uniqueEventDetailsIds = [];
-                                @endphp
-                                @foreach ($joinEvents as $key => $joinEvent)
-                                    @php
-                                        $eventDetailsId = $joinEvent->eventDetails->id;
-                                    @endphp
-                                    @if (!in_array($eventDetailsId, $uniqueEventDetailsIds))
-                                        <a class="d-block" href="/event/{{ $eventDetailsId }}">
-                                            <div class="event-box" id="event{{ $key + 1 }}"
-                                                style="display: {{ $key === 0 ? 'block' : 'none' }};">
-                                                <div style="position: relative; height: 200px;">
-                                                    {{-- <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;"> --}}
-                                                    <div
-                                                        style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
-                                                        <!-- Banner image goes here -->
-                                                    </div>
-                                                    <div
-                                                        style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
-                                                        @php
-                                                            $eventTierJson = $joinEvent->eventDetails->eventTier;
-
-                                                            $eventTierArray = json_decode($eventTierJson, true);
-
-                                                            $tierIcon = $eventTierArray['tierIcon'];
-                                                            $imagePathWithoutExtension =
-                                                                'https://driftwood.gg/storage/' . strtolower($tierIcon);
-                                                            $imageExtension = pathinfo(
-                                                                $imagePathWithoutExtension,
-                                                                PATHINFO_EXTENSION,
-                                                            );
-
-                                                            $supportedExtensions = ['jpg', 'jpeg', 'png'];
-
-                                                            $imagePath =
-                                                                $imagePathWithoutExtension .
-                                                                (in_array(
-                                                                    strtolower($imageExtension),
-                                                                    $supportedExtensions,
-                                                                )
-                                                                    ? ''
-                                                                    : '.png');
-                                                        @endphp
-
-                                                        <img src="{{ $imagePath }}" alt="Circle Image"
-                                                            style="width: 100%; height: 100%; object-fit: cover;">
-                                        </a>
-                </div>
-            </div>
-            <div class="frame1">
-                <div class="container">
-                    <div class="left-col">
-                        <p>
-                            <img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg"
-                                class="logo2">
-                        <p class="eventName"> {{ $joinEvent->eventDetails->eventName }} </p>
-                        </p>
-                    </div>
-                    <div class="right-col">
-                        <p>
-                            <img src="/assets/images/dota.png" class="logo2">
-                        <p
-                            style="font-size: 14px; text-align: left; align-items: center; justify-content: space-between;">
-                            <span>{{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</span>
-                            <br>
-                            <span
-                                style="font-size: 12px;">{{ $followCounts[$joinEvent->eventDetails->user->organizer->id] ?? '0' }}
-                                Followers</span>
-                        <div style="align-items: center;">
-                            <button
-                                style="background-color: #43A4D7; color: #FFFFFF; padding: 5px 10px; font-size: 12px; border-radius: 10px; margin-left: 30px;"
-                                type="submit">Follow</button>
-                        </div>
-                        </p>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </a>
-        @php
-            $uniqueEventDetailsIds[] = $eventDetailsId;
-        @endphp
-        @endif
-        @endforeach
-        <button class="carousel-button" onclick="slideEvents(1)">></button>
-        @endif
-        </div>
-        </div>
-
-        <div class="team-info">
-            <div class="showcase">
-                <div><b>Showcase</b></div>
-                <br>
-                <div class="showcase-box">
-                    <div class="showcase-column">
+                            &lt;
+                        </button>
                         @php
-                            $eventCounts = $joinEvents->groupBy('eventDetails.id')->map->count();
-                            $totalEvents = $eventCounts->sum();
+                            $uniqueEventDetailsIds = [];
                         @endphp
-                        <p>Events Joined: {{ $totalEvents }}</p>
-                        <p>Wins: 0</p>
-                        <p>Win Streak: 0</p>
-                    </div>
-                    <div class="showcase-column">
-                        <!-- Trophy image in the second column -->
-                        <img src="{{ asset('/assets/images/trophy.jpg') }}" alt="Trophy" class="trophy">
-                    </div>
+                        @foreach ($joinEvents as $key => $joinEvent)
+                            @php
+                                $eventDetailsId = $joinEvent->eventDetails->id;
+                            @endphp
+                            @if (!in_array($eventDetailsId, $uniqueEventDetailsIds))
+                                <a class="d-block" href="/event/{{ $eventDetailsId }}">
+                                    <div class="event-box" id="event{{ $key + 1 }}"
+                                        style="display: {{ $key === 0 ? 'block' : 'none' }};">
+                                        <div style="position: relative; height: 200px;">
+                                            {{-- <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;"> --}}
+                                            <div
+                                                style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
+                                                <!-- Banner image goes here -->
+                                            </div>
+                                            <div
+                                                style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
+                                                @php
+                                                    $eventTierJson = $joinEvent->eventDetails->eventTier;
+
+                                                    $eventTierArray = json_decode($eventTierJson, true);
+
+                                                    $tierIcon = $eventTierArray['tierIcon'];
+                                                    $imagePathWithoutExtension =
+                                                        'https://driftwood.gg/storage/' . strtolower($tierIcon);
+                                                    $imageExtension = pathinfo(
+                                                        $imagePathWithoutExtension,
+                                                        PATHINFO_EXTENSION,
+                                                    );
+
+                                                    $supportedExtensions = ['jpg', 'jpeg', 'png'];
+
+                                                    $imagePath =
+                                                        $imagePathWithoutExtension .
+                                                        (in_array(strtolower($imageExtension), $supportedExtensions)
+                                                            ? ''
+                                                            : '.png');
+                                                @endphp
+
+                                                <img src="{{ $imagePath }}" alt="Circle Image"
+                                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                                <div class="frame1">
+                                                    <div class="container">
+                                                        <div class="left-col">
+                                                            <p>
+                                                                <img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg"
+                                                                    class="logo2">
+                                                            </p>
+                                                            <p class="eventName">
+                                                                {{ $joinEvent->eventDetails->eventName }} </p>
+                                                        </div>
+                                                        <div class="right-col">
+                                                            <p>
+                                                                <img src="/assets/images/dota.png" class="logo2">
+                                                            <p
+                                                                style="font-size: 14px; text-align: left; align-items: center; justify-content: space-between;">
+                                                                <span>{{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</span>
+                                                                <br>
+                                                                <span
+                                                                    style="font-size: 12px;">{{ $followCounts[$joinEvent->eventDetails->user->organizer->id] ?? '0' }}
+                                                                    Followers</span>
+                                                            <div style="align-items: center;">
+                                                                <button
+                                                                    style="background-color: #43A4D7; color: #FFFFFF; padding: 5px 10px; font-size: 12px; border-radius: 10px; margin-left: 30px;"
+                                                                    type="submit">Follow</button>
+                                                            </div>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            @endif
+                        @endforeach
+                        <button class="carousel-button" onclick="slideEvents(1)">
+                            &gt;
+                        </button>
+                    @endif
                 </div>
             </div>
 
-            <div class="achievements">
-                <div><b>Achievements</b></div>
-                <br>
-                <ul class="achievement-list">
-                    <li>
-                        <span class="additional-text">First Place - Online Tournament (2023)</span>
-                        <br>
-                        <span class="achievement-complete"></span>
-                        <br>
-                        <span class="additional-text">Get a girlfriend</span>
-                    </li>
-                    <li>
-                        <span class="additional-text">Best Team Collaboration - LAN Event (2022)</span>
-                        <br>
-                        <span class="achievement-complete"></span>
-                        <br>
-                        <span class="additional-text">Get a girlfriend</span>
-                    </li>
-                </ul>
+
+            <div class="team-info">
+                <div class="showcase">
+                    <div><b>Showcase</b></div>
+                    <br>
+                    <div class="showcase-box">
+                        <div class="showcase-column">
+                            @php
+                                $eventCounts = $joinEvents->groupBy('eventDetails.id')->map->count();
+                                $totalEvents = $eventCounts->sum();
+                            @endphp
+                            <p>Events Joined: {{ $totalEvents }}</p>
+                            <p>Wins: 0</p>
+                            <p>Win Streak: 0</p>
+                        </div>
+                        <div class="showcase-column">
+                            <!-- Trophy image in the second column -->
+                            <img src="{{ asset('/assets/images/trophy.jpg') }}" alt="Trophy" class="trophy">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="achievements">
+                    <div><b>Achievements</b></div>
+                    <br>
+                    <ul class="achievement-list">
+                        <li>
+                            <span class="additional-text">First Place - Online Tournament (2023)</span>
+                            <br>
+                            <span class="achievement-complete"></span>
+                            <br>
+                            <span class="additional-text">Get a girlfriend</span>
+                        </li>
+                        <li>
+                            <span class="additional-text">Best Team Collaboration - LAN Event (2022)</span>
+                            <br>
+                            <span class="achievement-complete"></span>
+                            <br>
+                            <span class="additional-text">Get a girlfriend</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
         </div>
         @if (empty($eventsByTeam))
             <div class="tab-content" id="Members" style="display: none; text-align: center;">
@@ -216,7 +175,7 @@
                 </div>
                 <div class="tab-content" id="CurrentMembers" data-type="member"
                     style="display: none; text-align: center;">
-                    <p style="text-align: center;">Team {{ $manage->teamName }} has 1 members</p>
+                    <p style="text-align: center;">Team {{ $selectTeam->teamName }} has 1 members</p>
                     <div class="cont">
                         <div class="leftC">
                             <span class="icon2">
@@ -246,7 +205,7 @@
                                 <input class="nav__input" type="text" placeholder="Search for player name">
                             </div>
                             <div style="padding-right: 200px; transform: translateY(-95%);">
-                                @if (auth()->user()->id == $manage->user_id)
+                                @if (auth()->user()->id == $selectTeam->user_id)
                                     <img src="/assets/images/add.png" height="40px" width="40px">
                                 @endif
                             </div>
@@ -262,7 +221,7 @@
                                             style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
                                             <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
                                         </div>
-                                        <span>{{ $manage->user->name }}</span>
+                                        <span>{{ $selectTeam->user->name }}</span>
 
                                     </div>
                                 </td>
@@ -278,7 +237,7 @@
                         @php
                             $uniqueUsernames = collect($users)->unique('user.id');
                             $usernamesCount = $uniqueUsernames->count();
-                            $creatorId = $manage->user->id;
+                            $creatorId = $selectTeam->user->id;
                         @endphp
                         <div class="tab-content" id="Members" style="display: none; text-align: center;">
                             <div class="member-tabs" style="display: flex; justify-content: center;">
@@ -289,7 +248,8 @@
                             </div>
                             <div class="tab-content" id="CurrentMembers" data-type="member"
                                 style="display: none; text-align: center;">
-                                <p style="text-align: center;">Team {{ $manage->teamName }} has {{ $usernamesCount }}
+                                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has
+                                    {{ $usernamesCount }}
                                     members</p>
                                 <div class="cont">
                                     <div class="leftC">
@@ -324,7 +284,7 @@
                                                 placeholder="Search for player name">
                                         </div>
                                         <div style="padding-right: 200px; transform: translateY(-95%);">
-                                            @if (auth()->user()->id == $manage->user_id)
+                                            @if (auth()->user()->id == $selectTeam->user_id)
                                                 <img src="/assets/images/add.png" height="40px" width="40px">
                                             @endif
                                         </div>
@@ -339,7 +299,7 @@
                                                         style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
                                                         <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
                                                     </div>
-                                                    <span>{{ $manage->user->name }}</span>
+                                                    <span>{{ $selectTeam->user->name }}</span>
                                                     <span style="margin-left: 400px;">Joined
                                                         {{ $manage['user']->created_at->format('M d, Y') }}</span>
                                                 </div>
@@ -377,9 +337,9 @@
                             <div class="tab-content" id="PendingMembers" data-type="member"
                                 style="display: none; text-align: center;">
                                 @php
-                                    
+
                                 @endphp
-                                <p style="text-align: center;">Team {{ $manage->teamName }} has
+                                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has
                                     {{ $pendingMembersCount }} pending members</p>
                                 <div class="cont">
                                     <div class="leftC">
@@ -463,7 +423,7 @@
 
         <div class="tab-content" id="Active Rosters" style="display: center;">
 
-            <p style="text-align: center;">Team {{ $manage->teamName }} has no active rosters</p>
+            <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no active rosters</p>
             <div id="activeRostersForm" style="display: center; text-align: center;">
 
                 <div class="event">
@@ -514,7 +474,7 @@
         </div>
 
         <div class="tab-content" id="Roster History" style="display: none;">
-            <p style="text-align: center;">Team {{ $manage->teamName }} has no roster history</p>
+            <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history</p>
             <div id="activeRostersForm" style="display: center; text-align: center;">
 
                 <div class="event">
@@ -587,7 +547,7 @@
                     reader.onload = function(readerEvent) {
                         uploadedImage.style.backgroundImage = url(
                             "https://www.creativefabrica.com/wp-content/uploads/2022/07/10/tiger-logo-design-Graphics-33936667-1-580x387.jpg"
-                            );
+                        );
                     };
 
                     reader.readAsDataURL(file);
@@ -694,9 +654,7 @@
                 if (tabName === 'CurrentMembers') {} else if (tabName === 'PendingMembers') {}
             }
         }
-    </script>
 
-    <script>
         function approveMember(button) {
             const memberId = button.getAttribute('data-member-id');
 
