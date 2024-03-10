@@ -6,6 +6,7 @@ use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\OrganizerCheckoutController;
+use App\Http\Controllers\ParticipantTeamController;
 
 /* THIS IS THE UNSIGNED VIEW */
 // Home
@@ -62,12 +63,15 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::get('/team/{id}/manage', [ParticipantEventController::class, 'teamManagement'])->name("participant.team.manage");
 			Route::get('/team/{id}/register', [ParticipantEventController::class, 'registrationManagement'])->name("participant.registrationManagement.view");
 			Route::post('/team/manage', [ParticipantEventController::class, 'teamStore'])->name("participant.team.store");
-			Route::post('/team/member/approve/{id}', [ParticipantEventController::class, 'approveMember'])->name('participant.member.approve');
+			Route::post('/team/member/{id}/approve', [ParticipantTeamController::class, 'approveTeamMember'])->name('participant.member.approve');
+			Route::post('/team/member/{id}/disapprove', [ParticipantTeamController::class, 'disapproveTeamMember'])->name('participant.member.disapprove');
+			Route::post('/team/roster/{id}/approve', [ParticipantTeamController::class, 'approveRosterMember'])->name('participant.roster.approve');
+			Route::post('/team/roster/{id}/disapprove', [ParticipantTeamController::class, 'disapproveRosterMember'])->name('participant.roster.disapprove');
 			Route::post('/team/captain/store', [ParticipantEventController::class, 'makeCaptain'])->name('participant.captain.add');
 			Route::post('/team/captain/delete', [ParticipantEventController::class, 'deleteCaptain'])->name('participant.captain.remove');
 			
 			// Event management
-			Route::get('/event/{id}/team/{teamId}/manage/roster', [ParticipantEventController::class, 'rosterMemberManagement'])->name('participant.selectTeamToJoin.action');
+			Route::get('/event/{id}/team/{teamId}/manage/roster', [ParticipantEventController::class, 'rosterMemberManagement'])->name('participant.roster.manage');
 			Route::post('/event/{id}/join/team/select', [ParticipantEventController::class, 'selectTeamToJoinEvent'])->name('participant.selectTeamToJoin.action');
 			Route::post('/event/{id}/join/team/create', [ParticipantEventController::class, 'createTeamToJoinEvent'])->name('participant.createTeamToJoinEvent.action');
 			Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])->name('participant.event.selectOrCreateTeam.redirect');

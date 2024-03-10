@@ -142,141 +142,30 @@
     @include('CommonLayout.BootstrapV5Js')
 
     <script>
-        function slideEvents(direction) {
-            const eventBoxes = document.querySelectorAll('.event-box');
 
-            const visibleEvents = Array.from(eventBoxes).filter(eventBox => eventBox.style.display !== 'none');
-
-            eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
-
-            let startIndex = 0;
-
-            if (visibleEvents.length > 0) {
-                startIndex = (Array.from(eventBoxes).indexOf(visibleEvents[0]) + direction + eventBoxes.length) % eventBoxes
-                    .length;
-            }
-
-            for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
-                const index = (startIndex + i + eventBoxes.length) % eventBoxes.length;
-                eventBoxes[index].style.display = 'block';
-            }
-        }
-
-        function showTab(event, tabName) {
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => {
-                content.classList.add("d-none");
-            });
-
-            const selectedTab = document.getElementById(tabName);
-            if (selectedTab) {
-                selectedTab.classList.remove('d-none');
-                selectedTab.classList.add('tab-button-active');
-            }
-
-            const tabButtons = document.querySelectorAll('.tab-button-active');
-            tabButtons.forEach(button => {
-                button.classList.remove("tab-button-active");
-            });
-
-            let target = event.currentTarget;
-            target.classList.add('tab-button-active');
-        }
-
-        function initializeEventsDisplay() {
-            const eventBoxes = document.querySelectorAll('.event-box');
-
-            eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
-
-            for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
-                eventBoxes[i].style.display = 'block';
-            }
-        }
-        document.addEventListener("DOMContentLoaded", function() {
-            initializeEventsDisplay();
-        });
-
-        const currentMembersTab = document.getElementById('CurrentMembers');
-        const pendingMembersTab = document.getElementById('PendingMembers');
-
-        currentMembersTab.addEventListener('click', function() {
-            showMemberTab('CurrentMembers');
-        });
-
-        pendingMembersTab.addEventListener('click', function() {
-            showMemberTab('PendingMembers');
-        });
-
-
-        function showMemberTab(tabName) {
-            const memberTabs = document.querySelectorAll('.tab-content[data-type="member"]');
-            memberTabs.forEach(tab => {
-                tab.style.display = 'none';
-            });
-
-            const selectedTab = document.getElementById(tabName);
-            if (selectedTab) {
-                selectedTab.style.display = 'block';
-
-                if (tabName === 'CurrentMembers') {} else if (tabName === 'PendingMembers') {}
-            }
-        }
-
-        function approveMember(button) {
-            const memberId = button.getAttribute('data-member-id');
-
-
+        
+        function approveMember(memberId) {
             const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
 
-
-            fetch(url, {
+            try {
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Content-Type': 'application/json',
                     },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const memberRow = button.closest('tr');
-                        memberRow.remove();
-                    } else {
-                        console.error('Error updating member status:', data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error approving member:', error);
                 });
+                const data = await response.json();
+                
+                if (data.success) {
+                    const memberRow = button.closest('tr');
+                    memberRow.remove();
+                } else {
+                    console.error('Error updating member status:', data.message);
+                }
+            } catch (error) {
+                console.error('Error approving member:', error);
+            }
         }
     </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const searchInputs = document.querySelectorAll('.search_box input');
-            const memberTables = document.querySelectorAll('.member-table');
-
-            searchInputs.forEach((searchInput, index) => {
-                searchInput.addEventListener("input", function() {
-                    const searchTerm = searchInput.value.toLowerCase();
-                    const memberRows = memberTables[index].querySelectorAll('tbody tr');
-
-                    memberRows.forEach(row => {
-                        const playerName = row.querySelector('.player-info span')
-                            .textContent.toLowerCase();
-
-                        if (playerName.includes(searchTerm)) {
-                            row.style.display = 'table-row';
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    });
-                });
-            });
-        });
-    </script>
-
-    {{-- End Javascript for Search Member  --}}
-
-
 </body>

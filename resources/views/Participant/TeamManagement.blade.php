@@ -16,9 +16,7 @@
 <body>
     @include('CommonLayout.NavbarforParticipant')
     @include('Participant.Layout.TeamHead')
-    {{-- @php
-    dd($teamMembersProcessed);
-    @endphp --}}
+   
     <main class="main2">
         <div class="tabs">
             <button class="tab-button outer-tab tab-button-active"
@@ -130,7 +128,6 @@
                 @endif
             </div>
 
-
             <div class="team-info">
                 <div class="showcase">
                     <div><b>Showcase</b></div>
@@ -164,10 +161,8 @@
                         <ul class="achievement-list">
                             @foreach ($selectTeam->awards as $award)
                                 <li>
-                                    <span class="additional-text">{{ $award->name }} (2023)</span>
-                                    <br>
-                                    <span class="achievement-complete"></span>
-                                    <br>
+                                    <span class="additional-text">{{ $award->name }} (2023)</span><br>
+                                    <span class="achievement-complete"></span><br>
                                     <span class="additional-text">{{ $award->description }}</span>
                                 </li>
                             @endforeach
@@ -184,8 +179,10 @@
 
         <div class="tab-content outer-tab d-none" id="Active Rosters">
             <br><br>
-            <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no active rosters</p>
-            <div id="activeRostersForm" style="text-align: center;">
+            <p class="text-center">
+                Team {{ $selectTeam->teamName }} has no active rosters
+            </p>
+            <div id="activeRostersForm" class="tex-center mx-auto">
                 @foreach ($joinEvents as $key => $joinEvent)
                     @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
                         @include('Participant.Layout.RosterView')
@@ -197,53 +194,12 @@
         <div class="tab-content outer-tab d-none" id="Roster History">
             <br><br>
             <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history</p>
-            <div id="activeRostersForm" style="text-align: center;">
-
-                <div class="event">
-                    <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
-                        <br>
-                        <div class="player-info">
-                            <div class="player-image"
-                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
-                            </div>
-                            <span>Dota</span>
-                        </div>
-                        <div class="player-info">
-                            <div class="player-image"
-                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
-                            </div>
-                            <span>Fifa</span>
-                        </div>
-                        <div class="player-info">
-                            <div class="player-image"
-                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
-                            </div>
-                            <span>GTA V</span>
-                        </div>
-                    </div>
-                    <div class="frame1">
-                        <div class="container">
-                            <div class="left-col">
-                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
-                                        class="logo2">
-                                <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota
-                                    Challenge
-                                    League Season 1</p>
-                                </p>
-                            </div>
-                            <div class="right-col">
-                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
-                                        class="logo2">
-                                <p style="font-size: 12px; text-align: left;">Media Prima</p>
-                                <br>
-                                <p style="font-size: 12px; text-align: left;">1K Followers</p>
-                                </p>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
+            <div id="activeRostersForm" class="tex-center mx-auto">
+                @foreach ($joinEvents as $key => $joinEvent)
+                    @if (in_array($joinEvent->status, ['ENDED']))
+                        @include('Participant.Layout.RosterView')
+                    @endif
+                @endforeach
             </div>
         </div>
     </main>
@@ -330,36 +286,30 @@
         });
 
 
-        function approveMember(button) {
-            const memberId = button.getAttribute('data-member-id');
-
-
+        function approveMember(memberId) {
             const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
-
-
-            fetch(url, {
+            try {
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Content-Type': 'application/json',
                     },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const memberRow = button.closest('tr');
-                        memberRow.remove();
-                    } else {
-                        console.error('Error updating member status:', data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error approving member:', error);
                 });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const memberRow = button.closest('tr');
+                    memberRow.remove();
+                } else {
+                    console.error('Error updating member status:', data.message);
+                }
+            } catch (error) {
+                console.error('Error approving member:', error);
+            }
         }
-    </script>
-
-    <script>
+   
         document.addEventListener("DOMContentLoaded", function() {
             const searchInputs = document.querySelectorAll('.search_box input');
             const memberTables = document.querySelectorAll('.member-table');

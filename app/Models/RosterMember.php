@@ -18,10 +18,10 @@ class RosterMember extends Model
     public static function bulkCreateRosterMembers($joinEventIds, $teamMembers) {
         $data = [];
 
-        foreach ($teamMembers as $member) {
+        foreach ($teamMembers as $key=>$member) {
             if ($member->status == 'accepted') {
                 $data[] = [
-                    'join_events_id' => $joinEventIds,
+                    'join_events_id' => $joinEventIds[$key],
                     'user_id' => $member->user_id,
                     'team_member_id' => $member->id,
                     'status' => $member->status

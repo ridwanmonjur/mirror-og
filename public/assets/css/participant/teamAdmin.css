@@ -133,6 +133,11 @@ input[type="submit"],
     /* border-bottom: 2px solid rgba(0, 0, 0, 0.1); */
 }
 
+.oceans-gaming-default-button-link{
+    width: auto !important;
+    padding: 4px 10px !important;
+}
+
 .welcome {
     margin-top: 40px;
     margin-bottom: 80px;
@@ -210,6 +215,17 @@ input[type="submit"],
     .time-line-box .status__right {
         width: var(--timeline-start-width-desktop) ! important;
     }
+    .grid-3-columns {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    .grid-2-columns {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .event { 
+        width: 700px;
+    }
+
 }
 
 .team-section {
@@ -357,7 +373,6 @@ input[type="submit"],
     padding: 10px;
 }
 
-
 .event-box {
     width: 600px;
     padding: 20px;
@@ -457,16 +472,13 @@ input[type="submit"],
     margin-right: 10px;
 }
 
-
-    .crown {
-        position: absolute;
-        top: -10px; 
-        right: 90%; 
-        transform: translateX(50%) rotate(-20deg) skewX(10deg); 
-        font-size: 14px; 
-    }
-
-
+.crown {
+    position: absolute;
+    top: -10px; 
+    right: 90%; 
+    transform: translateX(50%) rotate(-20deg) skewX(10deg); 
+    font-size: 14px; 
+}
 
 .nationality-flag {
     width: 35px;
@@ -480,13 +492,19 @@ input[type="submit"],
 .event {
     margin-bottom: 3rem;
     overflow: auto;
-    width: 500px;
-    height: 270px;
+    width: 400px;
     background: transparent;
     border: 2px solid rgb(82, 159, 23);
     border-radius: 40px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     align-content: center;
+}
+
+.grid-2-columns,
+.grid-3-columns {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 1fr;
 }
 
 .event_1 {

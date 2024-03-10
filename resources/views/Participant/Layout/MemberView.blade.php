@@ -1,7 +1,11 @@
 <br>
 <div id="CurrentMembers">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
-        {{ count($teamMembers) }} accepted members
+        {{ count($teamMembers) }} accepted members &nbsp;&nbsp;
+        <button class="oceans-gaming-default-button oceans-gaming-default-button-link" 
+            onclick="window.location.href='{{route('participant.member.manage', ['id'=> $selectTeam->id ])}}'">
+            Manage Team
+        </button>            
     </p>
     @if(isset($teamMembers[0]))
         <div class="cont mt-3 pt-3">

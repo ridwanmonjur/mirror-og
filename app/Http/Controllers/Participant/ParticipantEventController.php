@@ -71,12 +71,12 @@ class ParticipantEventController extends Controller
         $user_id = $request->attributes->get('user')->id;
         $selectTeam = Team::where('id', $id)->where('creator_id', $user_id)
             ->with(['members', 'awards'])->first();
+        
         if ($selectTeam) {
-
             $joinEvents = JoinEvent::getJoinEventsForTeam($selectTeam->id)
                 ->with(['eventDetails', 'results', 'roster' => function ($q) {
-                    return $q->where('status', 'accepted');
-                } ])
+                    $q->where('status', 'accepted')->with('user');
+                }])
                 ->with('eventDetails.tier', 'eventDetails.game')
                 ->get();
 
@@ -121,12 +121,13 @@ class ParticipantEventController extends Controller
         $user_id = $request->attributes->get('user')->id;
 
         $selectTeam = Team::where('id', $teamId)->where('creator_id', $user_id)
-        ->with(['members' => function ($query) {
-            $query->where('status', 'accepted');
-        }])->first();
-
-        $joinEvent = JoinEvent::where('team_id', $teamId)->where('event_details_id', $id)->first();
+            ->with(['members' => function ($query) {
+                $query->where('status', 'accepted');
+            }])->first();
         
+        $joinEvent = JoinEvent::where('team_id', intval($teamId))->where('event_details_id', intval($id))->first();
+        
+
         if ($selectTeam && $joinEvent) {
             $creator_id = $selectTeam->creator_id;
             $teamMembers = $selectTeam->members->where('status', 'accepted');
@@ -144,20 +145,6 @@ class ParticipantEventController extends Controller
             );
         } else {
             return $this->show404Participant('You need to be a member to view events!');
-        }
-    }
-
-    public function approveMember(Request $request, $id)
-    {
-        $member = TeamMember::find($id);
-
-        if ($member && $member->status === 'pending') {
-            $member->status = 'accepted';
-            $member->save();
-
-            return response()->json(['success' => true, 'message' => 'Member status updated to accepted']);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Invalid operation or member not found'], 400);
         }
     }
 
@@ -461,8 +448,6 @@ class ParticipantEventController extends Controller
 
             if ($selectTeam && $isAlreadyMember) {
                 $teamMembers = $selectTeam->members;
-
-                dd($teamMembers, $isAlreadyMember, $selectTeam );
 
                 $this->processTeamRegistration($request, $id, $selectTeam, $teamMembers);
 
