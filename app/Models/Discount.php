@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Exceptions\DiscountNotFountException;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 

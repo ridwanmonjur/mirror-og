@@ -70,28 +70,31 @@ class ParticipantEventController extends Controller
     {
         $user_id = $request->attributes->get('user')->id;
         $selectTeam = Team::where('id', $id)->where('creator_id', $user_id)
-            ->with('members')->first();
+            ->with(['members', 'awards'])->first();
         if ($selectTeam) {
 
             $joinEvents = JoinEvent::getJoinEventsForTeam($selectTeam->id)
-                ->with('eventDetails')
+                ->with(['eventDetails', 'results', 'roster' => function ($q) {
+                    return $q->where('status', 'accepted');
+                } ])
+                ->with('eventDetails.tier', 'eventDetails.game')
                 ->get();
+
+            foreach ($joinEvents as $joinEvent) {
+                $joinEvent->status = $joinEvent->eventDetails->statusResolved();
+                $joinEvent->tier = $joinEvent->eventDetails->tier;
+                $joinEvent->game = $joinEvent->eventDetails->game;
+            }
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
 
-            $teamMembers = $selectTeam->members;
-            $teamMembersProcessed = TeamMember::processStatus($teamMembers);
-            $rosterMembers = RosterMember::where('team_id', $selectTeam->id)
-                ->whereIn('join_events_id', $joinEventIds)
-                ->where('status', 'pending')
-                ->with('users');
-            $rosterMembersProcessed = RosterMember::processStatus($rosterMembers);
+            $teamMembers = $selectTeam->members->where('status', 'accepted');
 
             return view('Participant.TeamManagement', 
-                compact('selectTeam', 'joinEvents', 'teamMembersProcessed', 'rosterMembers', 'rosterMembersProcessed')
+                compact('selectTeam', 'joinEvents', 'teamMembers')
             );
         } else {
-            return $this->show404Participant('You need to be a member to view events.!');
+            return $this->show404Participant('You need to be a member to view events!');
         }
     }
 
@@ -109,7 +112,7 @@ class ParticipantEventController extends Controller
                 compact('selectTeam', 'teamMembersProcessed', 'creator_id')
             );
         } else {
-            return $this->show404Participant('You need to be a member to view events.!');
+            return $this->show404Participant('You need to be a member to view events!');
         }
     }
 
@@ -118,11 +121,13 @@ class ParticipantEventController extends Controller
         $user_id = $request->attributes->get('user')->id;
 
         $selectTeam = Team::where('id', $teamId)->where('creator_id', $user_id)
-            ->with('members')->first();
+        ->with(['members' => function ($query) {
+            $query->where('status', 'accepted');
+        }])->first();
 
         $joinEvent = JoinEvent::where('team_id', $teamId)->where('event_details_id', $id)->first();
         
-        if ($selectTeam) {
+        if ($selectTeam && $joinEvent) {
             $creator_id = $selectTeam->creator_id;
             $teamMembers = $selectTeam->members->where('status', 'accepted');
             $memberIds = $teamMembers->pluck('id')->toArray();
@@ -138,7 +143,7 @@ class ParticipantEventController extends Controller
                 compact('selectTeam', 'joinEvent', 'rosterMembersProcessed', 'creator_id', 'rosterMembersProcessed')
             );
         } else {
-            return $this->show404Participant('You need to be a member to view events.!');
+            return $this->show404Participant('You need to be a member to view events!');
         }
     }
 

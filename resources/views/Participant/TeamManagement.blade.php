@@ -15,29 +15,33 @@
 
 <body>
     @include('CommonLayout.NavbarforParticipant')
-
     @include('Participant.Layout.TeamHead')
-
-
+    {{-- @php
+    dd($teamMembersProcessed);
+    @endphp --}}
     <main class="main2">
         <div class="tabs">
-            <button class="tab-button" onclick="showTab('Overview')">Overview</button>
-            <button class="tab-button" onclick="showTab('Members')">Members</button>
-            <button class="tab-button" onclick="showTab('Active Rosters')">Active Rosters</button>
-            <button class="tab-button" onclick="showTab('Roster History')">Roster History</button>
+            <button class="tab-button outer-tab tab-button-active"
+                onclick="showTab(event, 'Overview')">Overview</button>
+            <button class="tab-button outer-tab" onclick="showTab(event, 'Members', 'outer-tab')">Members</button>
+            <button class="tab-button outer-tab" onclick="showTab(event, 'Active Rosters', 'outer-tab')">Active
+                Rosters</button>
+            <button class="tab-button outer-tab" onclick="showTab(event, 'Roster History', 'outer-tab')">Roster
+                History</button>
         </div>
 
-        <div class="tab-content" id="Overview">
-            <div style="padding-left: 200px;"><b>Recent Events</b></div>
-
+        <div class="tab-content outer-tab" id="Overview">
+            <br><br>
+            <div class="d-flex justify-content-center"><b>Recent Events</b></div>
             <div class="recent-events">
-                <div class="event-carousel">
-                    @if (empty($joinEvents))
-                        <p>No events available</p>
-                    @else
-                        <button class="carousel-button" onclick="slideEvents(-1)" style="display: block;">
-                            &lt;
-                        </button>
+
+                @if (empty($joinEvents))
+                    <p>No events available</p>
+                @else
+                    <button class="carousel-button" onclick="slideEvents(-1)">
+                        &lt;
+                    </button>
+                    <div class="event-carousel">
                         @php
                             $uniqueEventDetailsIds = [];
                         @endphp
@@ -58,7 +62,7 @@
                                             <div
                                                 style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
                                                 @php
-                                                    $eventTierJson = $joinEvent->eventDetails->eventTier;
+                                                    $eventTierJson = $joinEvent->tier;
 
                                                     $eventTierArray = json_decode($eventTierJson, true);
 
@@ -117,11 +121,13 @@
                                 </a>
                             @endif
                         @endforeach
-                        <button class="carousel-button" onclick="slideEvents(1)">
-                            &gt;
-                        </button>
-                    @endif
-                </div>
+                    </div>
+
+                    <button class="carousel-button" onclick="slideEvents(1)">
+                        &gt;
+                    </button>
+
+                @endif
             </div>
 
 
@@ -131,13 +137,17 @@
                     <br>
                     <div class="showcase-box">
                         <div class="showcase-column">
-                            @php
-                                $eventCounts = $joinEvents->groupBy('eventDetails.id')->map->count();
-                                $totalEvents = $eventCounts->sum();
-                            @endphp
-                            <p>Events Joined: {{ $totalEvents }}</p>
-                            <p>Wins: 0</p>
-                            <p>Win Streak: 0</p>
+                            @if (count($selectTeam->awards) == 0)
+                                <p>No events available</p>
+                            @else
+                                @php
+                                    $eventCounts = $joinEvents->groupBy('eventDetails.id')->map->count();
+                                    $totalEvents = $eventCounts->sum();
+                                @endphp
+                                <p>Events Joined: {{ $totalEvents }}</p>
+                                <p>Wins: 0</p>
+                                <p>Win Streak: 0</p>
+                            @endif
                         </div>
                         <div class="showcase-column">
                             <!-- Trophy image in the second column -->
@@ -148,247 +158,142 @@
 
                 <div class="achievements">
                     <div><b>Achievements</b></div>
-                    <br>
-                    <ul class="achievement-list">
-                        <li>
-                            <span class="additional-text">First Place - Online Tournament (2023)</span>
-                            <br>
-                            <span class="achievement-complete"></span>
-                            <br>
-                            <span class="additional-text">Get a girlfriend</span>
-                        </li>
-                        <li>
-                            <span class="additional-text">Best Team Collaboration - LAN Event (2022)</span>
-                            <br>
-                            <span class="achievement-complete"></span>
-                            <br>
-                            <span class="additional-text">Get a girlfriend</span>
-                        </li>
+                    @if (count($selectTeam->awards) == 0)
+                        <p>No awards available</p>
+                    @else
+                        <ul class="achievement-list">
+                            @foreach ($selectTeam->awards as $award)
+                                <li>
+                                    <span class="additional-text">{{ $award->name }} (2023)</span>
+                                    <br>
+                                    <span class="achievement-complete"></span>
+                                    <br>
+                                    <span class="additional-text">{{ $award->description }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
                     </ul>
                 </div>
             </div>
         </div>
 
-        <div class="tab-content" id="Members" style="display: 'none'">
+        <div class="tab-content outer-tab d-none" id="Members">
+            @include('Participant.Layout.MemberView')
+        </div>
 
-            <div style="text-align: center;">
-                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has 1 members</p>
-                <div class="cont">
-                    <div class="leftC">
-                        <span class="icon2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-filter">
-                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                            </svg>
-                            <span> Filter </span>
-                        </span>
-                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        <span class="icon2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
-                                <path d="M15 7h6v6" />
-                            </svg>
-                            <span>
-                                Sort
-                            </span>
-                        </span>
-                    </div>
-                    <div class="rightC">
-                        <div class="search_box">
-                            <i class="fa fa-search"></i>
-                            <input class="nav__input" type="text" placeholder="Search for player name">
-                        </div>
-                        <div style="padding-right: 200px; transform: translateY(-95%);">
-                            @if (auth()->user()->id == $selectTeam->creator_id)
-                                <img src="/assets/images/add.png" height="40px" width="40px">
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                <table class="member-table">
-                    <tbody>
-                        @foreach ($teamMembersProcessed['accepted']['members'] as $teamMemberProcessed)
-                            <tr class="st">
-                                <td>
-                                    <div class="player-info">
-                                        <div class="player-image"
-                                            style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
-                                            <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
-                                        </div>
-                                        <span>{{ $teamMemberProcessed->user->name }}</span>
-
-                                    </div>
-                                </td>
-                                <td class="flag-cell">
-                                    <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
-                                        alt="User's flag">
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        <div class="tab-content outer-tab d-none" id="Active Rosters">
+            <br><br>
+            <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no active rosters</p>
+            <div id="activeRostersForm" style="text-align: center;">
+                @foreach ($joinEvents as $key => $joinEvent)
+                    @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
+                        @include('Participant.Layout.RosterView')
+                    @endif
+                @endforeach
             </div>
         </div>
 
-        <div>
-            <div class="tab-content" id="Active Rosters" style="display: center;">
+        <div class="tab-content outer-tab d-none" id="Roster History">
+            <br><br>
+            <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history</p>
+            <div id="activeRostersForm" style="text-align: center;">
 
-                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no active rosters</p>
-                <div id="activeRostersForm" style="display: center; text-align: center;">
-
-                    <div class="event">
-                        <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
-                            <br>
-                            <div class="player-info">
-                                <div class="player-image"
-                                    style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
-                                </div>
-                                <span>Dota</span>
+                <div class="event">
+                    <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
+                        <br>
+                        <div class="player-info">
+                            <div class="player-image"
+                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
                             </div>
-                            <div class="player-info">
-                                <div class="player-image"
-                                    style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
-                                </div>
-                                <span>Fifa</span>
-                            </div>
-                            <div class="player-info">
-                                <div class="player-image"
-                                    style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
-                                </div>
-                                <span>GTA V</span>
-                            </div>
+                            <span>Dota</span>
                         </div>
-                        <div class="frame1">
-                            <div class="container">
-                                <div class="left-col">
-                                    <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
-                                            class="logo2">
-                                    <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota
-                                        Challenge
-                                        League Season 1</p>
-                                    </p>
-                                </div>
-                                <div class="right-col">
-                                    <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
-                                            class="logo2">
-                                    <p style="font-size: 12px; text-align: left;">Media Prima</p>
-                                    <br>
-                                    <p style="font-size: 12px; text-align: left;">1K Followers</p>
-                                    </p>
-                                </div>
+                        <div class="player-info">
+                            <div class="player-image"
+                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
                             </div>
-
+                            <span>Fifa</span>
+                        </div>
+                        <div class="player-info">
+                            <div class="player-image"
+                                style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
+                            </div>
+                            <span>GTA V</span>
                         </div>
                     </div>
-
-                </div>
-            </div>
-
-            <div class="tab-content" id="Roster History" style="display: none;">
-                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history</p>
-                <div id="activeRostersForm" style="display: center; text-align: center;">
-
-                    <div class="event">
-                        <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
-                            <br>
-                            <div class="player-info">
-                                <div class="player-image"
-                                    style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
-                                </div>
-                                <span>Dota</span>
+                    <div class="frame1">
+                        <div class="container">
+                            <div class="left-col">
+                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
+                                        class="logo2">
+                                <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota
+                                    Challenge
+                                    League Season 1</p>
+                                </p>
                             </div>
-                            <div class="player-info">
-                                <div class="player-image"
-                                    style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
-                                </div>
-                                <span>Fifa</span>
-                            </div>
-                            <div class="player-info">
-                                <div class="player-image"
-                                    style="background-image: url('https://www.svgrepo.com/download/347916/radio-button.svg')">
-                                </div>
-                                <span>GTA V</span>
+                            <div class="right-col">
+                                <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
+                                        class="logo2">
+                                <p style="font-size: 12px; text-align: left;">Media Prima</p>
+                                <br>
+                                <p style="font-size: 12px; text-align: left;">1K Followers</p>
+                                </p>
                             </div>
                         </div>
-                        <div class="frame1">
-                            <div class="container">
-                                <div class="left-col">
-                                    <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
-                                            class="logo2">
-                                    <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota
-                                        Challenge
-                                        League Season 1</p>
-                                    </p>
-                                </div>
-                                <div class="right-col">
-                                    <p><img src="https://logos-world.net/wp-content/uploads/2020/12/Dota-2-Logo.png"
-                                            class="logo2">
-                                    <p style="font-size: 12px; text-align: left;">Media Prima</p>
-                                    <br>
-                                    <p style="font-size: 12px; text-align: left;">1K Followers</p>
-                                    </p>
-                                </div>
-                            </div>
 
-                        </div>
                     </div>
-
                 </div>
-            </div>
 
+            </div>
+        </div>
     </main>
 
     @include('CommonLayout.BootstrapV5Js')
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const uploadButton = document.getElementById("upload-button");
-            const imageUpload = document.getElementById("image-upload");
-            const uploadedImage = document.getElementById("uploaded-image");
-
-            uploadButton.addEventListener("click", function() {
-                imageUpload.click();
-            });
-
-            imageUpload.addEventListener("change", function(e) {
-                const file = e.target.files[0];
-
-                if (file) {
-                    const reader = new FileReader();
-
-                    reader.onload = function(readerEvent) {
-                        uploadedImage.style.backgroundImage = url(
-                            "https://www.creativefabrica.com/wp-content/uploads/2022/07/10/tiger-logo-design-Graphics-33936667-1-580x387.jpg"
-                        );
-                    };
-
-                    reader.readAsDataURL(file);
-                }
-            });
-        });
-
-        function showTab(tabName) {
-            const tabContents = document.querySelectorAll('.tab-content');
+        function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
+            const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
             tabContents.forEach(content => {
-                content.style.display = 'none';
+                content.classList.add("d-none");
             });
 
             const selectedTab = document.getElementById(tabName);
             if (selectedTab) {
-                selectedTab.style.display = 'block';
-
-                if (tabName === 'Active Rosters') {
-                    const activeRostersForm = document.getElementById('activeRostersForm');
-                    activeRostersForm.style.display = 'block';
-                }
+                selectedTab.classList.remove('d-none');
+                selectedTab.classList.add('tab-button-active');
             }
+
+            const tabButtons = document.querySelectorAll(`.tab-button-active.${extraClassNameToFilter}`);
+            tabButtons.forEach(button => {
+                button.classList.remove("tab-button-active");
+            });
+
+            let target = event.currentTarget;
+            target.classList.add('tab-button-active');
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            showTab('Overview');
+        const uploadButton = document.getElementById("upload-button");
+        const imageUpload = document.getElementById("image-upload");
+        const uploadedImage = document.getElementById("uploaded-image");
+
+        uploadButton.addEventListener("click", function() {
+            imageUpload.click();
+        });
+
+        imageUpload.addEventListener("change", function(e) {
+            const file = e.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(readerEvent) {
+                    uploadedImage.style.backgroundImage = url(
+                        "https://www.creativefabrica.com/wp-content/uploads/2022/07/10/tiger-logo-design-Graphics-33936667-1-580x387.jpg"
+                    );
+                };
+
+                reader.readAsDataURL(file);
+            }
         });
 
         function slideEvents(direction) {
@@ -411,24 +316,6 @@
             }
         }
 
-        function showTab(tabName) {
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => {
-                content.style.display = 'none';
-            });
-
-            const selectedTab = document.getElementById(tabName);
-            if (selectedTab) {
-                selectedTab.style.display = 'block';
-
-                if (tabName === 'Active Rosters') {
-                    const activeRostersForm = document.getElementById('activeRostersForm');
-                    activeRostersForm.style.display = 'block';
-                }
-            }
-        }
-
-
         function initializeEventsDisplay() {
             const eventBoxes = document.querySelectorAll('.event-box');
 
@@ -441,34 +328,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             initializeEventsDisplay();
         });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const currentMembersTab = document.getElementById('CurrentMembers');
-            const pendingMembersTab = document.getElementById('PendingMembers');
 
-            currentMembersTab.addEventListener('click', function() {
-                showMemberTab('CurrentMembers');
-            });
-
-            pendingMembersTab.addEventListener('click', function() {
-                showMemberTab('PendingMembers');
-            });
-        });
-
-        function showMemberTab(tabName) {
-            const memberTabs = document.querySelectorAll('.tab-content[data-type="member"]');
-            memberTabs.forEach(tab => {
-                tab.style.display = 'none';
-            });
-
-            const selectedTab = document.getElementById(tabName);
-            if (selectedTab) {
-                selectedTab.style.display = 'block';
-
-                if (tabName === 'CurrentMembers') {} else if (tabName === 'PendingMembers') {}
-            }
-        }
 
         function approveMember(button) {
             const memberId = button.getAttribute('data-member-id');

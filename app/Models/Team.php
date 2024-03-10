@@ -26,6 +26,11 @@ class Team extends Model
         return $this->hasMany(TeamMember::class);
     }
 
+    public function awards()
+    {
+        return $this->hasMany(Award::class, 'join_events_id', 'id');
+    }
+
     private static function storeTeanBanner($file)
     {
         $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
