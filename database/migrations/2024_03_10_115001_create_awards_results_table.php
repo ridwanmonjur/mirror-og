@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::create('awards_results', function (Blueprint $table) {
             $table->unsignedBigInteger('join_events_id');
-            $table->foreign('join_events_id')->references('id')->on('join_events');
+            $table->foreign('join_events_id')->references('id')->on('join_events')->onDelete('cascade');
             $table->unsignedBigInteger('team_id');
-            $table->foreign('team_id')->references('id')->on('teams');
-
+            $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
             $table->string('title');
             $table->string('description');
         });

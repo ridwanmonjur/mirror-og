@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('roster_members', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('join_events_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('join_events_id')->nullable();
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->timestamps();
 
             // Foreign key constraint
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('join_events_id')->references('id')->on('join_events');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('join_events_id')->references('id')->on('join_events')->onDelete('cascade');
         });
     }
 

@@ -31,16 +31,6 @@
         </div>
     </div>
     <div class="d-flex mt-2 mb-3 justify-content-center">
-        @if ($selectTeam->creator_id == $user->id)
-            <div class="me-3">
-                <form method="GET"
-                    action="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">
-                    <button class="oceans-gaming-default-button oceans-gaming-default-button-link me-2" type="submit">
-                        Manage Roster
-                    </button>
-                </form>
-            </div>
-        @endif
         <div>
             <form method="GET"
                 action="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">

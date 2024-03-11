@@ -40,7 +40,7 @@ class ParticipantTeamController extends Controller
     {
         $member = TeamMember::find($id);
 
-        if ($member && $member->status === 'pending') {
+        if ($member) {
             $member->status = 'accepted';
             $member->save();
 
@@ -54,7 +54,7 @@ class ParticipantTeamController extends Controller
     {
         $member = RosterMember::find($id);
 
-        if ($member && $member->status === 'pending') {
+        if ($member) {
             $member->status = 'accepted';
             try {
                 $member->save();
@@ -73,7 +73,7 @@ class ParticipantTeamController extends Controller
     {
         $member = TeamMember::find($id);
 
-        if ($member && $member->status != 'rejected') {
+        if ($member) {
             $member->status = 'rejected';
             $member->save();
 
@@ -87,7 +87,7 @@ class ParticipantTeamController extends Controller
     {
         $member = RosterMember::find($id);
 
-        if ($member && $member->status !== 'rejected') {
+        if ($member) {
             $member->status = 'rejected';
             $member->save();
 

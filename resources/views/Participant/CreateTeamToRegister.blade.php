@@ -15,6 +15,7 @@
 <body>
     @include('CommonLayout.NavbarforParticipant')
     <main>
+        <br><br><br>
         <div class="text-center" id="step-0">
             <div class="">
                 <div class="text-center" id="step-0">
@@ -27,19 +28,18 @@
                             What will your team be called?
                         </p>
                         <br>
-                        <form
-                            id="formSubmit"
+                        <form id="formSubmit"
                             action="{{ route('participant.createTeamToJoinEvent.action', ['id' => $id]) }}"
                             method="POST">
-                            
+
                             @include('Participant.CreateEditTeam.FormErrorsSuccess')
                             @include('Participant.CreateEditTeam.FormFields', [
-                                'team' => $team, 'buttonLabel' => 'Edit yout team'
+                                'team' => null,
+                                'buttonLabel' => 'Create & Register',
                             ])
                         </form>
                     </div>
                     <br><br>
-                    <div><input form="formSubmit" type="submit" value="Create & Register"></div>
                 </div>
             </div>
         </div>

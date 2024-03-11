@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('roster_members', function (Blueprint $table) {
             $table->foreignId('team_member_id')
                 ->constrained('team_members')
+                ->onDelete('cascade')
                 ->index('roster_members_member_id_foreign')
                 ->nullable();
         });

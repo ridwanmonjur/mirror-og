@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('event_join_results', function (Blueprint $table) {
             $table->unsignedBigInteger('join_events_id');
-            $table->foreign('join_events_id')->references('id')->on('join_events');
+            $table->foreign('join_events_id')
+                ->onDelete('cascade')
+                ->references('id')->on('join_events');
 
             $table->integer('position');
         });

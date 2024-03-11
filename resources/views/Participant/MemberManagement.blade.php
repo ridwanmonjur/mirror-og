@@ -49,6 +49,18 @@
             target.classList.add('tab-button-active');
         }
 
+        function loadTab() {
+            let currentUrl = window.location.href;
+            let urlParams = new URLSearchParams(window.location.search);
+            let tabValue = urlParams.get('tab');
+            console.log(tabValue); 
+            if (tabValue) {
+                document.getElementById(tabValue).click();
+            }
+        }
+
+        loadTab();
+
         function slideEvents(direction) {
             const eventBoxes = document.querySelectorAll('.event-box');
 
@@ -69,8 +81,7 @@
             }
         }
 
-        async function approveMember(button) {
-            const memberId = button.getAttribute('data-member-id');
+        async function approveMember(memberId) {
             const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
 
             try {
@@ -80,13 +91,24 @@
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
                 });
 
                 const responseData = await response.json();
                 if (responseData.success) {
-                    const memberRow = button.closest('tr');
-                    memberRow.remove();
+                    // window.location.reload();
+                    let currentUrl = "{{route('participant.member.manage', ['id' => $selectTeam->id])}}";
+                    currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=CurrentMembersBtn';
+                    window.location.replace(currentUrl);
+                    /*
+                        const memberRow = document.getElementById('tr-'+memberId);
+                        const clonedRow = memberRow.cloneNode(true);
+                        memberRow.remove();
+                        document.getElementById('CurrentMembersBtn').click();
+                        setTimeout(() => {
+                            const tbody = document.querySelector('tbody.accepted-member-table');
+                            tbody.appendChild(clonedRow);
+                        }, 1000);
+                    */
                 } else {
                     console.error('Error updating member status:', responseData.message);
                 }
@@ -105,13 +127,24 @@
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
                 });
 
                 const responseData = await response.json();
                 if (responseData.success) {
-                    const memberRow = button.closest('tr');
+                    // window.location.reload();
+                    let currentUrl = "{{route('participant.member.manage', ['id' => $selectTeam->id])}}";
+                    currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn';
+                    window.location.replace(currentUrl);
+                     /*
+                   const memberRow = document.getElementById('tr-'+memberId);
+                    const clonedRow = memberRow.cloneNode(true);
                     memberRow.remove();
+                    document.getElementById('PendingMembersBtn').click();
+                    setTimeout(() => {
+                        const tbody = document.querySelector('tbody.pending-member-table');
+                        tbody.appendChild(clonedRow);
+                    }, 1000);
+                    */
                 } else {
                     console.error('Error updating member status:', responseData.message);
                 }

@@ -419,8 +419,9 @@ class ParticipantEventController extends Controller
                 $this->processTeamRegistration($request, $id, $selectTeam, $teamMembers);
 
                 if ($selectTeam->creator_id) {
-                    return redirect()->route('participant.team.manage', ['id'=> $selectTeam->id])
-                ->with('successMessage', 'Successfully created and joined the event.');
+                    return redirect()->route('participant.member.manage', ['id'=> $selectTeam->id])
+                ->with('successMessage', 'Successfully created and joined the event.')
+                ->with('redirectToMemberManage', true);
                 } else {
                     return redirect()
                         ->route('participant.event.view', ['id' => $id])
@@ -452,7 +453,7 @@ class ParticipantEventController extends Controller
                 'teamName' => 'required|string|max:25',
                 'teamDescription' => 'required'
             ]);
-            
+
             $teamName = $request->input('teamName');
             $selectTeam = new Team(['teamName' => $teamName]);
             $selectTeam->teamDescription = $request->input('teamDescription');
@@ -463,8 +464,9 @@ class ParticipantEventController extends Controller
 
             $this->processTeamRegistration($request, $id, $selectTeam, $teamMembers);
 
-            return redirect()->route('participant.team.manage', ['id'=> $selectTeam->id])
-                ->with('successMessage', 'Successfully created and joined the event.');
+            return redirect()->route('participant.member.manage', ['id'=> $selectTeam->id])
+                ->with('successMessage', 'Successfully created and joined the event.')
+                ->with('redirectToMemberManage', $id);
         } else {
             return redirect()
                 ->back()
