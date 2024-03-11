@@ -1,24 +1,17 @@
-@if (session()->has('successMessage'))
+@if (isset($id))
     <div class="mb-2 text-success mx-auto text-center">
-        {{session('successMessage')}}
+        You have joined this event successfully!
+        @if ($selectTeam->creator_id == $user->id)
+            <form class="d-inline" method="GET"
+                action="{{ route('participant.roster.manage', ['id' => $id, 'teamId' => $selectTeam->id]) }}">
+                <button class="oceans-gaming-default-button oceans-gaming-default-button-link ms-2 me-2" type="submit" style="display: inline !important;">
+                    <u> Manage Roster </u>
+                </button>
+            </form>
+        @endif
     </div>
 @endif
 
-@if (session()->has('redirectToMemberManage'))
-    @if ($selectTeam->creator_id == $user->id)
-        <div class="mx-auto text-center">
-            <u> Manage the rosters for this event </u>
-            <span class="me-3 mx-auto text-center">
-                <form method="GET"
-                    action="{{ route('participant.roster.manage', ['id' => session('redirectToMemberManage'), 'teamId' => $selectTeam->id]) }}">
-                    <button class="oceans-gaming-default-button oceans-gaming-default-button-link ms-2 me-2" type="submit">
-                        Manage Roster
-                    </button>
-                </form>
-            </div>
-        </div>
-    @endif
-@endif
 <div>
   <div class="tabs">
       <button id="CurrentMembersBtn" class="tab-button inner-tab tab-button-active"

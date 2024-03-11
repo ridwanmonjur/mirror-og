@@ -21,6 +21,23 @@ use Illuminate\Validation\ValidationException;
 
 class ParticipantTeamController extends Controller
 {
+    public function teamMemberManagement(Request $request, $id)
+    {
+        $user_id = $request->attributes->get('user')->id;
+        $selectTeam = Team::where('id', $id)->where('creator_id', $user_id)
+            ->with('members')->first();
+        // dd($selectTeam);
+        if ($selectTeam) {
+            $teamMembers = $selectTeam->members;
+            $teamMembersProcessed = TeamMember::processStatus($teamMembers);
+            $creator_id = $selectTeam->creator_id;
+            return view('Participant.MemberManagement', 
+                compact('selectTeam', 'teamMembersProcessed', 'creator_id')
+            );
+        } else {
+            return $this->show404Participant('You need to be a member to view events!');
+        }
+    }
 
     public function createTeamView()
     {

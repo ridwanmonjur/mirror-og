@@ -98,10 +98,10 @@ class ParticipantEventController extends Controller
         }
     }
 
-    public function teamMemberManagement(Request $request, $id)
+    public function teamMemberManagement(Request $request, $id, $teamId)
     {
         $user_id = $request->attributes->get('user')->id;
-        $selectTeam = Team::where('id', $id)->where('creator_id', $user_id)
+        $selectTeam = Team::where('id', $teamId)->where('creator_id', $user_id)
             ->with('members')->first();
         // dd($selectTeam);
         if ($selectTeam) {
@@ -109,7 +109,7 @@ class ParticipantEventController extends Controller
             $teamMembersProcessed = TeamMember::processStatus($teamMembers);
             $creator_id = $selectTeam->creator_id;
             return view('Participant.MemberManagement', 
-                compact('selectTeam', 'teamMembersProcessed', 'creator_id')
+                compact('selectTeam', 'teamMembersProcessed', 'creator_id', 'id')
             );
         } else {
             return $this->show404Participant('You need to be a member to view events!');
@@ -139,7 +139,7 @@ class ParticipantEventController extends Controller
             $rosterMembersKeyed = RosterMember::keyBy($rosterMembers);
 
             return view('Participant.RosterManagement', 
-                compact('selectTeam', 'joinEvent', 'teamMembers', 'rosterMembersProcessed', 'creator_id', 'rosterMembersKeyed')
+                compact('selectTeam', 'joinEvent', 'teamMembers', 'rosterMembersProcessed', 'creator_id', 'rosterMembersKeyed', 'id')
             );
         } else {
             return $this->show404Participant('You need to be a member to view events!');
@@ -419,9 +419,9 @@ class ParticipantEventController extends Controller
                 $this->processTeamRegistration($request, $id, $selectTeam, $teamMembers);
 
                 if ($selectTeam->creator_id) {
-                    return redirect()->route('participant.member.manage', ['id'=> $selectTeam->id])
-                ->with('successMessage', 'Successfully created and joined the event.')
-                ->with('redirectToMemberManage', true);
+                    return redirect()->route('participant.memberManage.action', ['id'=> $id, 'teamId' => $selectTeam->id])
+                    ->with('successMessage', 'Successfully created and joined the event.')
+                    ->with('redirectToMemberManage', true);
                 } else {
                     return redirect()
                         ->route('participant.event.view', ['id' => $id])
@@ -464,8 +464,8 @@ class ParticipantEventController extends Controller
 
             $this->processTeamRegistration($request, $id, $selectTeam, $teamMembers);
 
-            return redirect()->route('participant.member.manage', ['id'=> $selectTeam->id])
-                ->with('successMessage', 'Successfully created and joined the event.')
+            return redirect()->route('participant.memberManage.action', ['id'=> $id, 'teamId' => $selectTeam->id])
+            ->with('successMessage', 'Successfully created and joined the event.')
                 ->with('redirectToMemberManage', $id);
         } else {
             return redirect()

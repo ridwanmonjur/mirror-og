@@ -60,7 +60,7 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::get('/team/create', [ParticipantTeamController::class, 'createTeamView'])->name("participant.team.create");
 			Route::get('/team/{id}/edit', [ParticipantTeamController::class, 'editTeamView'])->name("participant.team.edit");
 			Route::get('/team/confirm', [ParticipantEventController::class, 'confirmUpdate']);
-			Route::get('/team/{id}/manage/member', [ParticipantEventController::class, 'teamMemberManagement'])->name("participant.member.manage");
+			Route::get('/team/{id}/manage/member', [ParticipantTeamController::class, 'teamMemberManagement'])->name("participant.member.manage");
 			Route::get('/team/{id}/manage', [ParticipantEventController::class, 'teamManagement'])->name("participant.team.manage");
 			Route::get('/team/{id}/register', [ParticipantEventController::class, 'registrationManagement'])->name("participant.registrationManagement.view");
 			Route::post('/team/create', [ParticipantTeamController::class, 'teamStore'])->name("participant.team.store");
@@ -74,6 +74,7 @@ Route::group(['prefix' => 'participant'], function () {
 			
 			// Event management
 			Route::get('/event/{id}/team/{teamId}/manage/roster', [ParticipantEventController::class, 'rosterMemberManagement'])->name('participant.roster.manage');
+			Route::get('/event/{id}/team/{teamId}/manage/member', [ParticipantEventController::class, 'teamMemberManagement'])->name("participant.memberManage.action");
 			Route::post('/event/{id}/join/team/select', [ParticipantEventController::class, 'selectTeamToJoinEvent'])->name('participant.selectTeamToJoin.action');
 			Route::post('/event/{id}/join/team/create', [ParticipantEventController::class, 'createTeamToJoinEvent'])->name('participant.createTeamToJoinEvent.action');
 			Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])->name('participant.event.selectOrCreateTeam.redirect');

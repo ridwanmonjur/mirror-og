@@ -19,10 +19,19 @@
 
     @include('Participant.Layout.TeamHeadNoFileChange')
 
-
     <main class="main2">
+        <div class="mb-4 text-success mx-auto text-center">
+            You have joined this event successfully!
+            
+            <form class="d-inline" method="GET"
+                action="{{ route('participant.event.view', ['id' => $id]) }}">
+                <button class="oceans-gaming-default-button oceans-gaming-default-button-link ms-2 me-2" type="submit" style="display: inline !important;">
+                    <u> View Event </u>
+                </button>
+            </form>
+        </div>
         <div>
-            <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
+            <p class="text-center mx-auto">Team {{ $selectTeam->teamName }} has
                 {{ $rosterMembersProcessed['accepted']['count'] }} accepted members in this roster
             </p>
             @if (isset($teamMembers[0]))
@@ -95,9 +104,7 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    const memberRow = button.closest('tr');
-                    memberRow.remove();
-                    showTab('')
+                    window.location.reload();
                 } else {
                     console.error('Error updating member status:', data.message);
                 }
@@ -120,8 +127,7 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    const memberRow = button.closest('tr');
-                    memberRow.remove();
+                    window.location.reload();
                 } else {
                     console.error('Error updating member status:', data.message);
                 }
