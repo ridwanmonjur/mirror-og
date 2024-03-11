@@ -1,5 +1,5 @@
- @csrf
- @if ($errors->any())
+@csrf
+@if ($errors->any())
      <div class="text-danger">
          <ul>
              @foreach ($errors->all() as $error)
@@ -8,8 +8,8 @@
          </ul>
      </div>
  @endif
-@if (isset($errorMessage))
+@if (session()->has('errorMessage'))
     <div class="text-danger">
-        {{ $errorMessage }}
+        Error changing the name. Can you please try a unique name for your team?
     </div>
 @endif

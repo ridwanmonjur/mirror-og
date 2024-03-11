@@ -104,16 +104,10 @@ class ParticipantTeamController extends Controller
             'teamDescription' => 'required'
         ]);
 
-        $existingTeam = Team::where('teamName', $team->teamName)->first();
-        
-        if ($existingTeam && $team->id == $existingTeam->id) {
-            throw ValidationException::withMessages(['teamName' => 'Team name already exists. Please choose a different name.']);
-        }
-
-        $team->teamName = $request->input('teamName');
-        $team->teamDescription = $request->input('teamDescription');
-        $team->creator_id = $user_id;
-        $team->save();
+            $team->teamName = $request->input('teamName');
+            $team->teamDescription = $request->input('teamDescription');
+            $team->creator_id = $user_id;
+            $team->save();
     }
 
     public function teamStore(Request $request)
@@ -121,11 +115,17 @@ class ParticipantTeamController extends Controller
         try {
             $team = new Team();
             $user_id = $request->attributes->get('user')->id;
+            $existingTeam = Team::where('teamName', $request->input('teamName'))->exists(); 
+            
+            if ($existingTeam) {
+                throw ValidationException::withMessages(['teamName' => 'Team name already exists. Please choose a different name.']);
+            }
+            
             $this->validateAndSaveTeam($request, $team, $user_id);
             TeamMember::bulkCreateTeanMembers($team->id, [$user_id], 'accepted');
             return redirect()->route('participant.team.view', ['id' => $user_id]);
         } catch (Exception $e) {
-            return $this->show404Participant($e->getMessage());
+            return back()->with('errorMessage', $e->getMessage());
         }
     }
 
@@ -134,10 +134,16 @@ class ParticipantTeamController extends Controller
         try {
             $team = Team::findOrFail($id);
             $user_id = $request->attributes->get('user')->id;
+            $existingTeam = Team::where('teamName', $request->input('teamName'))->get(); 
+            
+            if (isset($existingTeam[0]) && $existingTeam->id == $team->id) {
+                throw ValidationException::withMessages(['teamName' => 'Team name already exists. Please choose a different name.']);
+            }
+            
             $this->validateAndSaveTeam($request, $team, $user_id);
             return redirect()->route('participant.team.view', ['id' => $user_id]);
         } catch (Exception $e) {
-            return $this->show404Participant($e->getMessage());
+            return back()->with('errorMessage', $e->getMessage());
         }
     }
 
