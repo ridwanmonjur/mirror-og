@@ -35,7 +35,7 @@
             <form method="GET"
                 action="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">
                 <button class="oceans-gaming-default-button oceans-gaming-default-button-link me-2" type="submit">
-                    Manage Registration
+                    Manage Roster
                 </button>
             </form>
         </div>

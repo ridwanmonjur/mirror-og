@@ -31,100 +31,66 @@
         <div class="tab-content outer-tab" id="Overview">
             <br><br>
             <div class="d-flex justify-content-center"><b>Recent Events</b></div>
-            <div class="recent-events">
-
+            <br> <br>
+            <div class="position-relative d-flex justify-content-center">
                 @if (empty($joinEvents))
                     <p>No events available</p>
                 @else
-                    <button class="carousel-button" onclick="slideEvents(-1)">
+                    <button class="carousel-button position-absolute" style="top: 100px; left: 20px;" onclick="slideEvents(-1)">
                         &lt;
                     </button>
-                    <div class="event-carousel">
-                        @php
-                            $uniqueEventDetailsIds = [];
-                        @endphp
-                        @foreach ($joinEvents as $key => $joinEvent)
-                            @php
-                                $eventDetailsId = $joinEvent->eventDetails->id;
-                            @endphp
-                            @if (!in_array($eventDetailsId, $uniqueEventDetailsIds))
-                                <a class="d-block" href="/event/{{ $eventDetailsId }}">
-                                    <div class="event-box" id="event{{ $key + 1 }}"
-                                        style="display: {{ $key === 0 ? 'block' : 'none' }};">
-                                        <div style="position: relative; height: 200px;">
-                                            {{-- <div style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;"> --}}
-                                            <div
-                                                style="background-image: url('{{ $joinEvent->eventDetails->eventBanner ? 'https://driftwood.gg/storage/' . $joinEvent->eventDetails->eventBanner : 'https://driftwood.gg/storage/placeholder.jpg' }}'); background-size: cover; background-position: center; text-align: left; height: 200px;">
-                                                <!-- Banner image goes here -->
-                                            </div>
-                                            <div
-                                                style="position: absolute; top: 2%; left: 50%; transform: translate(-50%, -50%); z-index: 1; width: 50px; height: 50px; overflow: hidden; border-radius: 50%;">
-                                                @php
-                                                    $eventTierJson = $joinEvent->tier;
-
-                                                    $eventTierArray = json_decode($eventTierJson, true);
-
-                                                    $tierIcon = $eventTierArray['tierIcon'];
-                                                    $imagePathWithoutExtension =
-                                                        'https://driftwood.gg/storage/' . strtolower($tierIcon);
-                                                    $imageExtension = pathinfo(
-                                                        $imagePathWithoutExtension,
-                                                        PATHINFO_EXTENSION,
-                                                    );
-
-                                                    $supportedExtensions = ['jpg', 'jpeg', 'png'];
-
-                                                    $imagePath =
-                                                        $imagePathWithoutExtension .
-                                                        (in_array(strtolower($imageExtension), $supportedExtensions)
-                                                            ? ''
-                                                            : '.png');
-                                                @endphp
-
-                                                <img src="{{ $imagePath }}" alt="Circle Image"
-                                                    style="width: 100%; height: 100%; object-fit: cover;">
-                                                <div class="frame1">
-                                                    <div class="container">
-                                                        <div class="left-col">
-                                                            <p>
-                                                                <img src="https://i.pinimg.com/originals/8a/8b/50/8a8b50da2bc4afa933718061fe291520.jpg"
-                                                                    class="logo2">
-                                                            </p>
-                                                            <p class="eventName">
-                                                                {{ $joinEvent->eventDetails->eventName }} </p>
-                                                        </div>
-                                                        <div class="right-col">
-                                                            <p>
-                                                                <img src="/assets/images/dota.png" class="logo2">
-                                                            <p
-                                                                style="font-size: 14px; text-align: left; align-items: center; justify-content: space-between;">
-                                                                <span>{{ $joinEvent->eventDetails->user->organizer->companyName ?? 'Add' }}</span>
-                                                                <br>
-                                                                <span
-                                                                    style="font-size: 12px;">{{ $followCounts[$joinEvent->eventDetails->user->organizer->id] ?? '0' }}
-                                                                    Followers</span>
-                                                            <div style="align-items: center;">
-                                                                <button
-                                                                    style="background-color: #43A4D7; color: #FFFFFF; padding: 5px 10px; font-size: 12px; border-radius: 10px; margin-left: 30px;"
-                                                                    type="submit">Follow</button>
-                                                            </div>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            @endif
-                        @endforeach
-                    </div>
-
-                    <button class="carousel-button" onclick="slideEvents(1)">
+                    <button class="carousel-button position-absolute" style="top: 100px; right: 20px;" onclick="slideEvents(1)">
                         &gt;
                     </button>
+                    <div class="event-carousel">
+                        @foreach ($joinEvents as $key => $joinEvent)
+                           <div class="event mx-auto">
+                                <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
+                                    <br>
+                                    @if (!isset($joinEvent->roster[0]))
+                                        <div class="player-info mt-1 ms-4">
+                                            <span>Empty roster</span>
+                                        </div>
+                                    @else
+                                        <ul class="player-info mt-1 ms-4">
+                                            @foreach ($joinEvent->roster as $roster)
+                                                <li>
+                                                    <span>{{ $roster->user->name }}</span>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                </div>
+                                <div class="frame1">
+                                    <div class="container d-flex justify-content-between pt-2">
+                                        <div>
+                                            <img {!! trustedBladeHandleImageFailureBanner() !!} src="{{ bladeImageNull($joinEvent->eventBanner) }}" class="logo2">
+                                            <span> {{ $joinEvent->eventDetails->eventName }} </span>
+                                        </div>
+                                        <div>
+                                            <img {!! trustedBladeHandleImageFailureBanner() !!}
+                                                src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}" class="logo2 me-2">
+                                            <span>{{ $joinEvent->game->gameTitle }}</span>
+                                            <span>1K Followers</span>
+                                        </div>
 
+                                    </div>
+                                </div>
+                                <br><br>
+                                {{-- <div class="d-flex mt-2 mb-3 justify-content-center">
+                                    <div>
+                                        <form method="GET"
+                                            action="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">
+                                            <button class="oceans-gaming-default-button oceans-gaming-default-button-link me-2" type="submit">
+                                                Manage Roster
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div> --}}
+                            </div>
+                        @endforeach
+                    </div>
+                    
                 @endif
             </div>
 

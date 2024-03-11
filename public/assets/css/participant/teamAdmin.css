@@ -334,7 +334,7 @@ input[type="submit"],
     width: 80%;
     display: grid; 
     justify-content: center;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
 }
 
 .carousel-buttons {
