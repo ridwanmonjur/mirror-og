@@ -286,7 +286,7 @@
         });
 
 
-        function approveMember(memberId) {
+        async function approveMember(memberId) {
             const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
             try {
                 const response = await fetch(url, {

@@ -20,9 +20,7 @@ body {
 
 main {
     height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    
     padding: 20px;
     background-image: url("/assets/images/Single_Screen.png");
     background-size: cover;
@@ -78,7 +76,7 @@ main {
 
 /* Style for the input box */
 
-#teamName {
+#teamName, #teamDescription {
     width: 500px;
     padding: 10px;
     margin-top: 20px;
@@ -130,7 +128,7 @@ input[type="button"]:hover {
         width: 80%; /* Adjust width for smaller screens */
     }
 
-    #teamName {
+    #teamName, #teamDescription {
         width: 80%; /* Adjust width for smaller screens */
         max-width: 300px; /* Set a maximum width */
         margin: 20px auto; /* Center the input box */

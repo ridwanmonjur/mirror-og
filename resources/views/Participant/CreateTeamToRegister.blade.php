@@ -31,14 +31,11 @@
                             id="formSubmit"
                             action="{{ route('participant.createTeamToJoinEvent.action', ['id' => $id]) }}"
                             method="POST">
-                            @csrf
-                            @if (isset($errorMessage))
-                                <div class="text-danger">
-                                    {{ $errorMessage }}
-                                </div>
-                            @endif
-                            <input type="text" name="teamName" id="teamName" placeholder="Team Name"
-                                onclick="clearPlaceholder()" onblur="restorePlaceholder()">
+                            
+                            @include('Participant.CreateEditTeam.FormErrorsSuccess')
+                            @include('Participant.CreateEditTeam.FormFields', [
+                                'team' => $team, 'buttonLabel' => 'Edit yout team'
+                            ])
                         </form>
                     </div>
                     <br><br>

@@ -12,9 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 </head>
-{{-- @php
-    dd($user);
-@endphp --}}
+
 
 <body>
     @include('CommonLayout.NavbarforParticipant')
@@ -51,48 +49,12 @@
             <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
                 {{ $rosterMembersProcessed['accepted']['count'] }} accepted members in this roster
             </p>
-            @if ($rosterMembersProcessed['accepted']['count'] != 0)
-                <div class="cont mt-3 pt-3">
-                    <div class="leftC">
-                        <span class="icon2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-filter">
-                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3">
-                                </polygon>
-                            </svg>
-                            <span> Filter </span>
-                        </span>
-                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        <span class="icon2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
-                                <path d="M15 7h6v6" />
-                            </svg>
-                            <span>
-                                Sort
-                            </span>
-                        </span>
-                    </div>
-                    <div class="rightC">
-                        <div class="search_box">
-                            <i class="fa fa-search"></i>
-                            <input class="nav__input" type="text" placeholder="Search for player name">
-                        </div>
-                        <div style="padding-right: 200px; transform: translateY(-95%);">
-                            @if ($user->id == $selectTeam->user_id)
-                                <img src="/assets/images/add.png" height="40px" width="40px">
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                <br>
+            @if (isset($teamMembers[0]))
                 <table class="member-table">
+                    <br>
                     <tbody>
-                        @foreach ($rosterMembersProcessed['accepted']['members'] as $member)
-                            <tr class="st">
+                        @foreach ($teamMembers as $member)
+                            <tr class="st tr-{{$member->id}}">
                                 <td class="colorless-col">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         fill="currentColor" class="bi bi-gear gear-icon-btn" viewBox="0 0 16 16">
@@ -116,16 +78,16 @@
                                         alt="User's flag">
                                 </td>
                                 <td class="flag-cell coloured-cell">
-                                    {{ $member->status }}
+                                    {{ $rosterMembersKeyed[$member->id]->status }}
                                 </td>
                                 <td class="colorless-col">
-                                    @if (in_array($member->status, ['rejected', 'pending']))
-                                        <button class="gear-icon-btn" onclick="approveMember($member->id)">
+                                    @if (in_array($rosterMembersKeyed[$member->id]->status, ['rejected', 'pending']))
+                                        <button id="add-{{$member->id}}" class="gear-icon-btn" onclick="approveMember({{$rosterMembersKeyed[$member->id]->id}})">
                                             ✔
                                         </button>
                                     @endif
-                                    @if (in_array($member->status, ['accepted', 'pending']))
-                                        <button class="gear-icon-btn" onclick="rejectMember('{{ $member->id }}')">
+                                    @if (in_array($rosterMembersKeyed[$member->id]->status, ['accepted', 'pending']))
+                                        <button id="remove-{{$member->id}}" class="gear-icon-btn" onclick="disapproveMember('{{$rosterMembersKeyed[$member->id]->id}}')">
                                             ✘
                                         </button>
                                     @endif
@@ -143,9 +105,32 @@
 
     <script>
 
-        
-        function approveMember(memberId) {
-            const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
+        async function approveMember(memberId) {
+            const url = "{{ route('participant.roster.approve', ['id' => ':id']) }}".replace(':id', memberId);
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    const memberRow = button.closest('tr');
+                    memberRow.remove();
+                } else {
+                    console.error('Error updating member status:', data.message);
+                }
+            } catch (error) {
+                console.error('Error approving member:', error);
+            }
+        }
+
+        async function disapproveMember(memberId) {
+            const url = "{{ route('participant.roster.disapprove', ['id' => ':id']) }}".replace(':id', memberId);
 
             try {
                 const response = await fetch(url, {

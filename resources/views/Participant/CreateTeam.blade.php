@@ -31,36 +31,12 @@
                         <p class="create-online-esports">
                             What will your team be called?
                         </p>
-                        <br>
-                        <form action="{{ url('/participant/team/manage') }}" method="POST">
-                            @csrf
-                            @if ($errors->any())
-                                <div class="text-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            @if (session('error'))
-                                <div class="text-danger">
-                                    {{ session('error') }}
-                                </div>
-                            @endif
-
-                            @if (session('success'))
-                                <div class="text-success">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
-
-                            <input type="text" name="teamName" id="teamName" placeholder="Team Name"
-                                onclick="clearPlaceholder()" onblur="restorePlaceholder()">
-                    </div>
-
-                    <div><input type="submit" onclick="" value="Create Team"></div>
-                    </form>
+                        <form action="{{ url('/participant/team/create') }}" method="POST">
+                            @include('Participant.CreateEditTeam.FormErrorsSuccess')
+                            @include('Participant.CreateEditTeam.FormFields', [
+                                'team' => null, 'buttonLabel' => 'Create'
+                            ])
+                        </form>
                 </div>
             </div>
         </div>

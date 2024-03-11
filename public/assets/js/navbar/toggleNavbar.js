@@ -65,8 +65,8 @@ function appendEventElement(event) {
     return eventDiv;
 }
 
-function clearPlaceholder() {
-    document.getElementById("teamName").removeAttribute("placeholder");
+function clearPlaceholder(element) {
+    element.removeAttribute("placeholder");
 }
 
 function restorePlaceholder() {

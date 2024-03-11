@@ -4,7 +4,7 @@ use App\Http\Controllers\Organizer\InvitationController;
 use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\StripeController;
-use App\Models\Participant;
+use App\Http\Controllers\Participant\ParticipantTeamController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

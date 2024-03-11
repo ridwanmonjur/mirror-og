@@ -15,13 +15,13 @@ class RosterMember extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public static function bulkCreateRosterMembers($joinEventIds, $teamMembers) {
+    public static function bulkCreateRosterMembers($joinEventId, $teamMembers) {
         $data = [];
 
-        foreach ($teamMembers as $key=>$member) {
+        foreach ($teamMembers as $member) {
             if ($member->status == 'accepted') {
                 $data[] = [
-                    'join_events_id' => $joinEventIds[$key],
+                    'join_events_id' => $joinEventId,
                     'user_id' => $member->user_id,
                     'team_member_id' => $member->id,
                     'status' => $member->status
@@ -85,6 +85,15 @@ class RosterMember extends Model
         }
 
         return $acceptedMembers;
+    }
+
+    public static function keyBy($rosterMembers) {
+        $associativeArray = [];
+        foreach ($rosterMembers as $rosterMember) {
+            $associativeArray[$rosterMember->team_member_id] = $rosterMember;
+        }
+
+        return $associativeArray;
     }
 
 }

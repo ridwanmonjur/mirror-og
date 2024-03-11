@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Organizer\InvitationController;
 use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
+use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\OrganizerCheckoutController;
-use App\Http\Controllers\ParticipantTeamController;
 
 /* THIS IS THE UNSIGNED VIEW */
 // Home
@@ -57,12 +57,14 @@ Route::group(['prefix' => 'participant'], function () {
 			
 			// Team management
 			Route::get('/team/list', [ParticipantEventController::class, 'teamList'])->name("participant.team.view");
-			Route::get('/team/create', [ParticipantEventController::class, 'createTeamView'])->name("participant.team.create");
+			Route::get('/team/create', [ParticipantTeamController::class, 'createTeamView'])->name("participant.team.create");
+			Route::get('/team/{id}/edit', [ParticipantTeamController::class, 'editTeamView'])->name("participant.team.edit");
 			Route::get('/team/confirm', [ParticipantEventController::class, 'confirmUpdate']);
 			Route::get('/team/{id}/manage/member', [ParticipantEventController::class, 'teamMemberManagement'])->name("participant.member.manage");
 			Route::get('/team/{id}/manage', [ParticipantEventController::class, 'teamManagement'])->name("participant.team.manage");
 			Route::get('/team/{id}/register', [ParticipantEventController::class, 'registrationManagement'])->name("participant.registrationManagement.view");
-			Route::post('/team/manage', [ParticipantEventController::class, 'teamStore'])->name("participant.team.store");
+			Route::post('/team/create', [ParticipantTeamController::class, 'teamStore'])->name("participant.team.store");
+			Route::post('/team/{id}/editStore', [ParticipantTeamController::class, 'teamEditStore'])->name("participant.team.editStore");
 			Route::post('/team/member/{id}/approve', [ParticipantTeamController::class, 'approveTeamMember'])->name('participant.member.approve');
 			Route::post('/team/member/{id}/disapprove', [ParticipantTeamController::class, 'disapproveTeamMember'])->name('participant.member.disapprove');
 			Route::post('/team/roster/{id}/approve', [ParticipantTeamController::class, 'approveRosterMember'])->name('participant.roster.approve');

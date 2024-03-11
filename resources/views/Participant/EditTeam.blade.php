@@ -25,41 +25,18 @@
                 <div class="text-center" id="step-0">
                     <div class="welcome">
                         <u>
-                            <h2>Create Your Team</h2>
+                            <h2>Edit Your Team</h2>
                         </u>
                         <br><br><br>
                         <p class="create-online-esports">
                             What will your team be called?
                         </p>
                         <br>
-                        <form action="{{ url('/participant/team/manage') }}" method="POST">
-                            @csrf
-                            @if ($errors->any())
-                                <div class="text-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            @if (session('error'))
-                                <div class="text-danger">
-                                    {{ session('error') }}
-                                </div>
-                            @endif
-
-                            @if (session('success'))
-                                <div class="text-success">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
-
-                            <input type="text" name="teamName" id="teamName" placeholder="Team Name"
-                                onclick="clearPlaceholder()" onblur="restorePlaceholder()">
-                    </div>
-
-                    <div><input type="submit" onclick="" value="Create Team"></div>
+                        <form action="{{ route('participant.team.editStore', ['id' => $team->id]) }}" method="POST">
+                            @include('Participant.CreateEditTeam.FormErrorsSuccess')
+                            @include('Participant.CreateEditTeam.FormFields', [
+                                'team' => $team, 'buttonLabel' => 'Edit'
+                            ])
                     </form>
                 </div>
             </div>

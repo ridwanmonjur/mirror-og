@@ -126,22 +126,20 @@ class ParticipantEventController extends Controller
             }])->first();
         
         $joinEvent = JoinEvent::where('team_id', intval($teamId))->where('event_details_id', intval($id))->first();
-        
 
         if ($selectTeam && $joinEvent) {
             $creator_id = $selectTeam->creator_id;
             $teamMembers = $selectTeam->members->where('status', 'accepted');
             $memberIds = $teamMembers->pluck('id')->toArray();
-            $teamMembersProcessed = TeamMember::processStatus($teamMembers);
-            $rosterMembers = RosterMember::whereIn('team_member_id', $memberIds)
-                ->where('join_events_id', $joinEvent->id)
-                ->get();
-            // dd($memberIds, $rosterMembers);
             
+            $rosterMembers = RosterMember::whereIn('team_member_id', $memberIds)
+                ->where('join_events_id', $joinEvent->id)->get();
+
             $rosterMembersProcessed = RosterMember::processStatus($rosterMembers);
+            $rosterMembersKeyed = RosterMember::keyBy($rosterMembers);
 
             return view('Participant.RosterManagement', 
-                compact('selectTeam', 'joinEvent', 'rosterMembersProcessed', 'creator_id', 'rosterMembersProcessed')
+                compact('selectTeam', 'joinEvent', 'teamMembers', 'rosterMembersProcessed', 'creator_id', 'rosterMembersKeyed')
             );
         } else {
             return $this->show404Participant('You need to be a member to view events!');
@@ -212,37 +210,6 @@ class ParticipantEventController extends Controller
         return response()->json(['message' => 'You are now a captain for this event.'], 200);
     }
 
-    public function createTeamView()
-    {
-        return view('Participant.CreateTeam');
-    }
-
-    public function teamStore(Request $request)
-    {
-        try {
-            $user_id = $request->attributes->get('user')->id;
-
-            $request->validate([
-                'teamName' => 'required|string|max:25',
-            ]);
-
-            $team = new Team();
-            $team->teamName = $request->input('teamName');
-            $existingTeam = Team::where('teamName', $team->teamName)->first();
-
-            if ($existingTeam) {
-                return redirect()->back()->with('error', 'Team name already exists. Please choose a different name.');
-            }
-
-            $team->user_id = $user_id;
-            $team->save();
-            return redirect()->route('participant.team.view', ['id' => $user_id]);
-        } catch (ValidationException $e) {
-            return $this->show404Participant($e->getMessage());
-        } catch (Exception $e) {
-            return $this->show404Participant('Error creating team!');
-        }
-    }
 
     public function teamToRegister(Request $request)
     {
@@ -481,8 +448,14 @@ class ParticipantEventController extends Controller
         ] = Team::getUserTeamListAndCount($user_id);
 
         if ($count < 5) {
+            $request->validate([
+                'teamName' => 'required|string|max:25',
+                'teamDescription' => 'required'
+            ]);
+            
             $teamName = $request->input('teamName');
             $selectTeam = new Team(['teamName' => $teamName]);
+            $selectTeam->teamDescription = $request->input('teamDescription');
             $selectTeam->creator_id = $user_id;
             $selectTeam->save();
             TeamMember::bulkCreateTeanMembers($selectTeam->id, [$user_id], 'accepted');
