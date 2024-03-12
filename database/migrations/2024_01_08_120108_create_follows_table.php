@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('organizer_id');
             $table->timestamps();
             $table->unique(['user_id', 'organizer_id']); 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('organizer_id')->references('id')->on('organizers');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('organizer_id')->references('id')->on('organizers')->onDelete('cascade');
         });
     }
 

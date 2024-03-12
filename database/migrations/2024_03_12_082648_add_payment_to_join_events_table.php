@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('captains', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('userID')->constrained('users')->onDelete('cascade');
-            $table->foreignId('teams_id')->constrained('teams')->onDelete('cascade');
+        Schema::table('join_events', function (Blueprint $table) {
+            $table->enum('payment_status', ['pending', 'completed', 'waived'])->default('pending');
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('captains');
+        Schema::table('join_events', function (Blueprint $table) {
+            $table->dropColumn('payment_status');
+        });
     }
 };

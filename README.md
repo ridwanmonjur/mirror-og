@@ -105,4 +105,10 @@ bash```
 Mail
 php artisan vendor:publish --tag=laravel-mail
 
-```
+bash```
+
+Rollback specific migration
+bash```
+php artisan migrate:rollback --path=/database/migrations/your-specific-migration.php
+php artisan migrate
+bash```

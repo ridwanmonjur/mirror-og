@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('event_invitations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('organizer_id')->nullable();
-            $table->foreign('organizer_id')->references('id')->on('users');
+            $table->foreign('organizer_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('event_id')->nullable();
-            $table->foreign('event_id')->references('id')->on('event_details');
+            $table->foreign('event_id')->references('id')->on('event_details')->onDelete('cascade');
             $table->unsignedBigInteger('participant_id')->nullable();
-            $table->foreign('participant_id')->references('id')->on('users');
+            $table->foreign('participant_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
 
         });
