@@ -299,7 +299,7 @@
                 } else {
                     followButton.innerText = 'Following';
                     followButton.setAttribute('data-following', 'true');
-                    followButton.style.backgroundColor = '#32CD32';
+                    followButton.style.backgroundColor = '#8CCD39';
                 }
             } catch (error) {
                 console.error('Error:', error);
