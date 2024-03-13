@@ -254,6 +254,10 @@
     </main>
 
     @include('CommonLayout.BootstrapV5Js')
+    <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
+    @include('CommonLayout.Toast')
+    @include('CommonLayout.Dialog')
     <script src="{{ asset('/assets/js/participant/registrationManagement/main.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -280,8 +284,5 @@
             });
         });
     </script>
-
-
-
-
+    
 </body>

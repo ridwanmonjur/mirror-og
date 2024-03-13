@@ -75,7 +75,7 @@ class ParticipantTeamController extends Controller
             $member->status = 'accepted';
             try {
                 $member->save();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Log or handle the exception
                 dd($member, $e);
             }

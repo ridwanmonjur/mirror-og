@@ -18,7 +18,6 @@
 
 <body>
     @include('CommonLayout.NavbarforParticipant')
-
     @include('Participant.Layout.TeamHeadNoFileChange')
 
     <main class="main2">
@@ -26,7 +25,9 @@
     </main>
 
     @include('CommonLayout.BootstrapV5Js')
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
+    @include('CommonLayout.Toast')
+    @include('CommonLayout.Dialog')
     <script>
         function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
             const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
@@ -53,9 +54,17 @@
             let currentUrl = window.location.href;
             let urlParams = new URLSearchParams(window.location.search);
             let tabValue = urlParams.get('tab');
-            console.log(tabValue); 
+            let successValue = urlParams.get('success');
+            
             if (tabValue) {
                 document.getElementById(tabValue).click();
+            }
+
+            if (successValue == 'true') {
+                Toast.fire({
+                    icon: 'success',
+                    text: "Successfully updated user."
+                })
             }
         }
 
@@ -97,7 +106,7 @@
                 if (responseData.success) {
                     // window.location.reload();
                     let currentUrl = "{{route('participant.member.manage', ['id' => $selectTeam->id])}}";
-                    currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=CurrentMembersBtn';
+                    currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=CurrentMembersBtn&success=true';
                     window.location.replace(currentUrl);
                     /*
                         const memberRow = document.getElementById('tr-'+memberId);
@@ -133,7 +142,7 @@
                 if (responseData.success) {
                     // window.location.reload();
                     let currentUrl = "{{route('participant.member.manage', ['id' => $selectTeam->id])}}";
-                    currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn';
+                    currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn&success=true';
                     window.location.replace(currentUrl);
                      /*
                    const memberRow = document.getElementById('tr-'+memberId);
@@ -173,6 +182,9 @@
                 });
             });
         });
+
+        
+
     </script>
 
 </body>

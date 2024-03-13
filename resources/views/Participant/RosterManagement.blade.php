@@ -16,7 +16,6 @@
 
 <body>
     @include('CommonLayout.NavbarforParticipant')
-
     @include('Participant.Layout.TeamHeadNoFileChange')
 
     <main class="main2">
@@ -87,10 +86,57 @@
     </main>
 
     @include('CommonLayout.BootstrapV5Js')
-
+    <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
+    @include('CommonLayout.Toast')
+    @include('CommonLayout.Dialog')
     <script>
+        function loadToast() {
+            let currentUrl = window.location.href;
+            let urlParams = new URLSearchParams(window.location.search);
+            let successValue = urlParams.get('success');
 
-        async function approveMember(memberId) {
+            if (successValue == 'true') {
+                Toast.fire({
+                    icon: 'success',
+                    text: "Successfully updated user."
+                })
+            }
+        }
+
+        loadToast();
+
+        let dialogForMember = new DialogForMember(); 
+
+        function takeYesAction () {
+                                    console.log({memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName()})
+
+            if (dialogForMember.getActionName() == 'approve') {
+                approveMemberAction();
+            } else {
+                disapproveMemberAction();
+            }
+        }
+
+        function takeNoAction () {
+            dialogForMember.reset();
+        }
+
+        function approveMember(memberId) {
+            dialogForMember.setMemberId(memberId);
+            dialogForMember.setActionName('approve')
+            dialogOpen('Continue with approval?', takeYesAction, takeNoAction) 
+        }
+
+        function disapproveMember(memberId) {
+            dialogForMember.setMemberId(memberId);
+            dialogForMember.setActionName('disapprove')
+            dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction) 
+        }
+
+        async function approveMemberAction() {
+            console.log({memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName()})
+            const memberId = dialogForMember.getMemberId();
             const url = "{{ route('participant.roster.approve', ['id' => ':id']) }}".replace(':id', memberId);
 
             try {
@@ -104,7 +150,9 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    window.location.reload();
+                    let currentUrl = "{{route('participant.roster.manage', ['id' => $id, 'teamId'=> $selectTeam->id])}}";
+                    currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'success=true';
+                    window.location.replace(currentUrl);
                 } else {
                     console.error('Error updating member status:', data.message);
                 }
@@ -113,7 +161,11 @@
             }
         }
 
-        async function disapproveMember(memberId) {
+        async function disapproveMemberAction() {
+            console.log({memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName()})
+
+            const memberId = dialogForMember.getMemberId();
+
             const url = "{{ route('participant.roster.disapprove', ['id' => ':id']) }}".replace(':id', memberId);
 
             try {
@@ -127,7 +179,9 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    window.location.reload();
+                    let currentUrl = "{{route('participant.roster.manage', ['id' => $id, 'teamId'=> $selectTeam->id])}}";
+                    currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'success=true';
+                    window.location.replace(currentUrl);
                 } else {
                     console.error('Error updating member status:', data.message);
                 }
