@@ -5,7 +5,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `email_verified
 (2, 'ariful.splash', 'jahorularif@gmail.com', '2023-11-05 20:44:48', NULL, NULL, '$2y$10$sDcA25DcYz.IpB3/TKxRP.kbnDc0LzSe..pGFc3g1FNIICGSmSsLi', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-05 20:44:22', '2023-11-05 20:44:48', NULL),
 (3, 'Oceans Gaming', 'oceansgamingmy@gmail.com', '2023-11-06 07:42:46', NULL, NULL, '$2y$10$0li6SVWriI9KTW.4LazL0eCR6q4TfBvbmWoqCH3rcAwEz3lEUyWgq', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-06 07:42:08', '2023-11-06 07:42:46', NULL),
 (4, 'nafis20', 'nafis20@graduate.utm.my', '2023-11-06 17:46:09', NULL, NULL, '$2y$10$WUWJt5tJ4M6Domo78yjYXuQlJAEr3DHJVM0LMN8lcW1HgZkpnVbmW', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-06 17:45:20', '2023-11-06 17:46:09', NULL),
-(5, 'ridwanmonjur@gmail.com', 'ridwanmonjur@gmail.com', NULL, 'ExkEClSE2Gm2geLOK2zMXGYb54J1THPiaY3MplANxan7pXKgRENwLzkxg9o5Lt3v', NULL, '$2y$10$lH28CRN3B5YizMg/H4L1J.Xu1v6B2.6A3pN/9tVUG/xR9nh.ibht6', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-10 10:02:24', '2023-11-10 10:02:24', NULL),
+(5, 'ridwanmonjur@gmail.com', 'ridwanmonjur@gmail.com', '2023-11-06 17:46:09', 'ExkEClSE2Gm2geLOK2zMXGYb54J1THPiaY3MplANxan7pXKgRENwLzkxg9o5Lt3v', NULL, '$2y$10$lH28CRN3B5YizMg/H4L1J.Xu1v6B2.6A3pN/9tVUG/xR9nh.ibht6', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-10 10:02:24', '2023-11-10 10:02:24', NULL),
 (6, 'participant1@gmail.com', 'participant1@gmail.com', '2023-11-06 17:46:09', 'ExkEClSE2Gm2geLOK2zMXGYb54J1THPiaY3MplANxan7pXKgRENwLzkxg9o5Lt3v', NULL, '$2y$10$lH28CRN3B5YizMg/H4L1J.Xu1v6B2.6A3pN/9tVUG/xR9nh.ibht6', NULL, NULL, 'PARTICIPANT', NULL, NULL, '2023-11-10 10:02:24', '2023-11-10 10:02:24', NULL),
 (7, 'participant2@gmail.com', 'participant2@gmail.com', '2023-11-06 17:46:09', 'ExkEClSE2Gm2geLOK2zMXGYb54J1THPiaY3MplANxan7pXKgRENwLzkxg9o5Lt3v', NULL, '$2y$10$lH28CRN3B5YizMg/H4L1J.Xu1v6B2.6A3pN/9tVUG/xR9nh.ibht6', NULL, NULL, 'PARTICIPANT', NULL, NULL, '2023-11-10 10:02:24', '2023-11-10 10:02:24', NULL),
 (8, 'participant3@gmail.com', 'participant3@gmail.com', '2023-11-06 17:46:09', 'ExkEClSE2Gm2geLOK2zMXGYb54J1THPiaY3MplANxan7pXKgRENwLzkxg9o5Lt3v', NULL, '$2y$10$lH28CRN3B5YizMg/H4L1J.Xu1v6B2.6A3pN/9tVUG/xR9nh.ibht6', NULL, NULL, 'PARTICIPANT', NULL, NULL, '2023-11-10 10:02:24', '2023-11-10 10:02:24', NULL),
@@ -16,6 +16,19 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `email_verified
 (13, 'participant8@gmail.com', 'participant8@gmail.com', '2023-11-06 17:46:09', 'ExkEClSE2Gm2geLOK2zMXGYb54J1THPiaY3MplANxan7pXKgRENwLzkxg9o5Lt3v', NULL, '$2y$10$lH28CRN3B5YizMg/H4L1J.Xu1v6B2.6A3pN/9tVUG/xR9nh.ibht6', NULL, NULL, 'PARTICIPANT', NULL, NULL, '2023-11-10 10:02:24', '2023-11-10 10:02:24', NULL),
 (14, 'participant9@gmail.com', 'participant9@gmail.com', '2023-11-06 17:46:09', 'ExkEClSE2Gm2geLOK2zMXGYb54J1THPiaY3MplANxan7pXKgRENwLzkxg9o5Lt3v', NULL, '$2y$10$lH28CRN3B5YizMg/H4L1J.Xu1v6B2.6A3pN/9tVUG/xR9nh.ibht6', NULL, NULL, 'PARTICIPANT', NULL, NULL, '2023-11-10 10:02:24', '2023-11-10 10:02:24', NULL),
 (15, 'participant10@gmail.com', 'participant10@gmail.com', '2023-11-06 17:46:09', 'ExkEClSE2Gm2geLOK2zMXGYb54J1THPiaY3MplANxan7pXKgRENwLzkxg9o5Lt3v', NULL, '$2y$10$lH28CRN3B5YizMg/H4L1J.Xu1v6B2.6A3pN/9tVUG/xR9nh.ibht6', NULL, NULL, 'PARTICIPANT', NULL, NULL, '2023-11-10 10:02:24', '2023-11-10 10:02:24', NULL);
+
+INSERT INTO participants (avatar,created_at,updated_at,user_id) VALUES
+	 (NULL,NULL,NULL,6),
+	 (NULL,NULL,NULL,7),
+	 (NULL,NULL,NULL,8),
+	 (NULL,NULL,NULL,9),
+	 (NULL,NULL,NULL,10),
+	 (NULL,NULL,NULL,11),
+	 (NULL,NULL,NULL,12),
+	 (NULL,NULL,NULL,13),
+	 (NULL,NULL,NULL,14),
+	 (NULL,NULL,NULL,14);
+
 
 
 INSERT INTO `organizers` (`id`, `companyName`, `companyDescription`, `created_at`, `updated_at`, `user_id`) VALUES
