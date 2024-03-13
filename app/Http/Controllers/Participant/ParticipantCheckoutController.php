@@ -1,21 +1,29 @@
 <?php
 
-namespace App\Http\Controllers\Organizer;
-
+namespace App\Http\Controllers\Participant;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
+use App\Models\Team;
+use App\Models\Captain;
 use App\Models\EventDetail;
+use App\Models\Follow;
+use App\Models\JoinEvent;
+use App\Models\TeamMember;
+use App\Models\Participant;
+use App\Models\RosterMember;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\UnauthorizedException;
 use App\Models\Discount;
 use Illuminate\View\View;
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\PaymentTransaction;
 use App\Models\StripePayment;
-use Illuminate\Validation\UnauthorizedException;
 
-class OrganizerCheckoutController extends Controller
+class ParticipantStripeController extends Controller
 {
-
     private $stripeClient;
     
     public function __construct(StripePayment $stripeClient)

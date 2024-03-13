@@ -110,7 +110,8 @@
                                         value="{{ $event?->user?->organizer?->id }}">
                                     <button type="submit" id="followButton"
                                         data-following="{{ $user && $user->isFollowing($event?->user?->organizer) }}"
-                                        style="background-color: {{ $user && $user->isFollowing($event?->user?->organizer) ? '#32CD32' : '#43A4D7' }}; color: #FFFFFF; padding: 5px 10px; font-size: 14px; border-radius: 10px;">
+                                        style="background-color: {{ $user && $user->isFollowing($event?->user?->organizer) ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing($event?->user?->organizer) ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+
                                         {{ $user && $user->isFollowing($event?->user?->organizer) ? 'Following' : 'Follow' }}
                                     </button>
                                     {{-- here is an input for signaling whether to fetch or not --}}
@@ -296,10 +297,12 @@
                     followButton.innerText = 'Follow';
                     followButton.setAttribute('data-following', 'false');
                     followButton.style.backgroundColor = '#43A4D7';
+                    followButton.style.color = 'white';
                 } else {
                     followButton.innerText = 'Following';
                     followButton.setAttribute('data-following', 'true');
                     followButton.style.backgroundColor = '#8CCD39';
+                    followButton.style.color = 'black';
                 }
             } catch (error) {
                 console.error('Error:', error);

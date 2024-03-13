@@ -127,8 +127,8 @@ input[type="submit"],
 }
 
 .oceans-gaming-default-button[disabled] {
-    background-color: #32cd32;
-    color: #ffffff; /* Set text color to contrast with the background */
+    background-color: #8CCD39;
+    color: rgb(84, 82, 82) !important; /* Set text color to contrast with the background */
     cursor: not-allowed; /* Change cursor to not-allowed when disabled */
 }
 

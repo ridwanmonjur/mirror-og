@@ -127,10 +127,11 @@ input[type="submit"],
 }
 
 .oceans-gaming-default-button[disabled] {
-    background-color: #32cd32;
-    color: #ffffff; /* Set text color to contrast with the background */
+    background-color: #8CCD39;
+    color: black !important; /* Set text color to contrast with the background */
     cursor: not-allowed; /* Change cursor to not-allowed when disabled */
 }
+
 
 
 .flexbox-welcome {
@@ -460,6 +461,10 @@ input[type="submit"]:active {
     .side-image-absolute-bottom {
         left: -90px;
     }
+
+    .side-image-absolute-top {
+        bottom: 90vh;
+    }
 }
 
 @media screen and (min-width: 1200px) {
@@ -478,6 +483,6 @@ input[type="submit"]:active {
     }
 
     .side-image-absolute-top{
-        bottom: 40vh;
+        bottom: 100vh;
     }
 }
