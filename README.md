@@ -32,10 +32,25 @@ npm run build
 
 rm -rf public/storage
 php artisan storage:link
-
+php artisan migrate
+Raw sql data in database/migrations/data.sql
 Copy file from public/assets/images/storage to public/storage (new symlink folder)
+npm install selenium-standalone chromedriver -g
+sudo apt install openjdk-18-jre 
+sudo apt-get --only-upgrade install google-chrome-stable
+selenium-standalone install
+php vendor/bin/codecept bootstrap
+php vendor/bin/codecept generate:cest Acceptance Signin
+php vendor/bin/codecept generate:scenarios Acceptance
+php vendor/bin/codecept run Acceptance CreateEventCest.php
+selenium-standalone start
 
-/artisan/storage
+actor: AcceptanceTester
+modules:
+    enabled:
+        - PhpBrowser:
+            url: 'http://myappurl.local'
+ php vendor/bin/codecept run
 
 # Clear All Caches (Combined)
 

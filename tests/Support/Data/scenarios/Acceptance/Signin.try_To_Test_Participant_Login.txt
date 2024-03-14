@@ -1,0 +1,8 @@
+I WANT TO TRY TO TEST PARTICIPANT LOGIN
+
+I am on page 'http://localhost:8000/participant/signin' 
+I fill field 'email','participant1@gmail.com' 
+I fill field 'password','123456' 
+I click 'Sign in' 
+I see ""What's happening?""
+
