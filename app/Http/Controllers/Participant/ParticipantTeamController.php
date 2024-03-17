@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use App\Models\Team;
-use App\Models\Captain;
+use App\Models\TeamCaptain;
 use App\Models\EventDetail;
 use App\Models\Follow;
 use App\Models\JoinEvent;
@@ -121,10 +121,12 @@ class ParticipantTeamController extends Controller
             'teamDescription' => 'required'
         ]);
 
-            $team->teamName = $request->input('teamName');
-            $team->teamDescription = $request->input('teamDescription');
-            $team->creator_id = $user_id;
-            $team->save();
+        $team->teamName = $request->input('teamName');
+        $team->teamDescription = $request->input('teamDescription');
+        $team->creator_id = $user_id;
+        $team->save();
+
+        return $team;
     }
 
     public function teamStore(Request $request)
@@ -143,7 +145,13 @@ class ParticipantTeamController extends Controller
                     throw ValidationException::withMessages(['teamName' => 'Team name already exists. Please choose a different name.']);
                 }
                 
-                $this->validateAndSaveTeam($request, $team, $user_id);
+                $team = $this->validateAndSaveTeam($request, $team, $user_id);
+                
+                TeamCaptain::create([
+                    'userID' => $user_id,
+                    'team_id' => $team->id,
+                ]);
+                
                 TeamMember::bulkCreateTeanMembers($team->id, [$user_id], 'accepted');
                 return redirect()->route('participant.team.view', ['id' => $user_id]);
             } else  {

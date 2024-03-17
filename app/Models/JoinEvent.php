@@ -67,7 +67,7 @@ class JoinEvent extends Model
             ->with('user');
     }
 
-    public static function saveJoinEvent($data)
+    public static function saveJoinEvent($data): JoinEvent
     {
         $joint = new JoinEvent();
         $joint->team_id = $data['team_id'];

@@ -169,6 +169,8 @@
                                 <button type="button" class="oceans-gaming-default-button" disabled>
                                     <span>Joined</span>
                                 </button>
+                                <br><br>
+                                <a href="{{route('participant.register.manage', ['id' => $existingJoint->team_id])}}"><u>Manage registration</u></a>
                             @else
                                 <button type="submit" class="oceans-gaming-default-button">
                                     <span>Join</span>
@@ -176,9 +178,6 @@
                             @endif
                         </form>
 
-
-                        <br><br>
-                        <div>
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"

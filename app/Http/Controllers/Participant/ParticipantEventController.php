@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use App\Models\Team;
-use App\Models\Captain;
+use App\Models\TeamCaptain;
 use App\Models\EventDetail;
 use App\Models\Follow;
 use App\Models\JoinEvent;
 use App\Models\TeamMember;
 use App\Models\Participant;
+use App\Models\RosterCaptain;
 use App\Models\RosterMember;
 use Exception;
 use Illuminate\Http\Request;
@@ -105,11 +106,14 @@ class ParticipantEventController extends Controller
             ->with('members')->first();
         // dd($selectTeam);
         if ($selectTeam) {
+            $captain = TeamCaptain::where('teams_id', $selectTeam->id);
+
             $teamMembers = $selectTeam->members;
             $teamMembersProcessed = TeamMember::processStatus($teamMembers);
             $creator_id = $selectTeam->creator_id;
+            
             return view('Participant.MemberManagement', 
-                compact('selectTeam', 'teamMembersProcessed', 'creator_id', 'id')
+                compact('selectTeam', 'teamMembersProcessed', 'creator_id', 'id', 'captain')
             );
         } else {
             return $this->show404Participant('You need to be a member to view events!');
@@ -120,14 +124,13 @@ class ParticipantEventController extends Controller
     {
         $user_id = $request->attributes->get('user')->id;
 
-        $selectTeam = Team::where('id', $teamId)->where('creator_id', $user_id)
-            ->with(['members' => function ($query) {
-                $query->where('status', 'accepted');
-            }])->first();
+        $selectTeam = Team::where('id', $teamId)->where('creator_id', $user_id)->first();
         
         $joinEvent = JoinEvent::where('team_id', intval($teamId))->where('event_details_id', intval($id))->first();
 
         if ($selectTeam && $joinEvent) {
+            $captain = RosterCaptain::where('teams_id', $selectTeam->id);
+
             $creator_id = $selectTeam->creator_id;
             $teamMembers = $selectTeam->members->where('status', 'accepted');
             $memberIds = $teamMembers->pluck('id')->toArray();
@@ -146,38 +149,30 @@ class ParticipantEventController extends Controller
         }
     }
 
-    public function registrationManagement($id)
+    public function registrationManagement(Request $request, $id)
     {
-        $teamManage = Team::where('id', $id)->get();
+        $user_id = $request->attributes->get('user')->id;
+        $selectTeam = Team::where('id', $id)->where('creator_id', $user_id)
+            ->with(['members', 'awards'])->first();
 
-        if ($teamManage) {
+        if ($selectTeam) {
             $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
                 $query->where('team_id', $id)->where('status', 'accepted');
             })
                 ->with('eventDetails', 'user')
+                ->with('eventDetails.tier', 'eventDetails.game')
                 ->groupBy('event_details_id')
                 ->get();
 
-            $eventsByTeam = [];
-
-            foreach ($joinEvents as $event) {
-                $userId = $event->user_id;
-
-                $teamId = $event->user->teams->first(function ($team) use ($id) {
-                    return $team->id == $id;
-                })->id;
-
-                if (!isset($eventsByTeam[$teamId][$userId])) {
-                    $eventsByTeam[$teamId][$userId]['user'] = $event->user;
-                    $eventsByTeam[$teamId][$userId]['events'] = [];
-                }
-
-                $eventsByTeam[$teamId][$userId]['events'][] = $event;
+            foreach ($joinEvents as $joinEvent) {
+                $joinEvent->status = $joinEvent->eventDetails->statusResolved();
+                $joinEvent->tier = $joinEvent->eventDetails->tier;
+                $joinEvent->game = $joinEvent->eventDetails->game;
             }
 
             $followCounts = Follow::select('organizer_id', DB::raw('count(user_id) as user_count'))->groupBy('organizer_id')->pluck('user_count', 'organizer_id')->toArray();
 
-            return view('Participant.RegistrationManagement', compact('teamManage', 'joinEvents', 'eventsByTeam', 'followCounts'));
+            return view('Participant.RegistrationManagement', compact('selectTeam', 'joinEvents', 'followCounts'));
         } else {
             return redirect()->back()->with('error', 'Team not found.');
         }
@@ -185,29 +180,20 @@ class ParticipantEventController extends Controller
 
     public function makeCaptain(Request $request)
     {
-        $userId = $request->input('userId');
-        $eventId = $request->input('eventId');
-
-        $existingCaptain = Captain::where('eventID', $eventId)->where('userID', $userId)->first();
+        $userId = $request->input('user_id');
+        $teamId = $request->input('team_id');
+        $existingCaptain = TeamCaptain::where('team_id', $teamId)->first();
 
         if ($existingCaptain) {
             $existingCaptain->delete();
-            return response()->json(['message' => 'You are no longer a captain for this event.'], 200);
+        } else {
+            TeamCaptain::create([
+                'userID' => $userId,
+                'team_id' => $teamId,
+            ]);
         }
 
-        $existingCaptainForEvent = Captain::where('eventID', $eventId)->first();
-
-        if ($existingCaptainForEvent) {
-            return response()->json(['error' => 'This event already has a captain.'], 400);
-        }
-
-        Captain::create([
-            'userID' => $userId,
-            'eventID' => $eventId,
-            'isCaptain' => true,
-        ]);
-
-        return response()->json(['message' => 'You are now a captain for this event.'], 200);
+        return response()->json(['message' => 'true'], 200);
     }
 
 
@@ -396,6 +382,13 @@ class ParticipantEventController extends Controller
             ]);
 
             $rosterList = RosterMember::bulkCreateRosterMembers($joinEvent->id, $teamMembers);
+            
+            RosterCaptain::create([
+                'userID' => $userId,
+                'join_events_id' => $joinEvent->id,
+            ]);
+            
+            
             $teamMembersProcessed = TeamMember::processStatus($teamMembers);
 
             return [$joinEvent, $teamMembers, $rosterList, $teamMembersProcessed];
@@ -461,6 +454,11 @@ class ParticipantEventController extends Controller
             $selectTeam->save();
             TeamMember::bulkCreateTeanMembers($selectTeam->id, [$user_id], 'accepted');
             $teamMembers = $selectTeam->members;
+            
+            TeamCaptain::create([
+                'userID' => $user_id,
+                'team_id' => $selectTeam->id,
+            ]);
 
             $this->processTeamRegistration($request, $id, $selectTeam, $teamMembers);
 

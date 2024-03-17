@@ -124,6 +124,6 @@ bash```
 
 Rollback specific migration
 bash```
-php artisan migrate:rollback --path=/database/migrations/your-specific-migration.php
+php artisan migrate:rollback --path=/database/migrations/2024_02_13_150411_create_captains_table.php
 php artisan migrate
 bash```
