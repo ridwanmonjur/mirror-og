@@ -383,6 +383,7 @@ class ParticipantEventController extends Controller
 
             $rosterList = RosterMember::bulkCreateRosterMembers($joinEvent->id, $teamMembers);
             
+            // continue work with Roster Captain
             RosterCaptain::create([
                 'userID' => $userId,
                 'join_events_id' => $joinEvent->id,
