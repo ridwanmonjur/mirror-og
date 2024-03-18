@@ -73,9 +73,9 @@
                                     </div>
                                 </div> --}}
                             </div>
-                            <div class="pie-chart">
+                            <div class="pie-chart ms-3 ps-3">
                                 <div class="pie" style="--p:20"> 20%</div>
-                                <p> Total Entry Fee : <u>RM {{$joinEvent->tier->tierEntryFee * $joinEvent->tier->tierTeamSlot}} </u></p>
+                                <p> Total Entry Fee: <u>RM {{$joinEvent->tier->tierEntryFee * $joinEvent->tier->tierTeamSlot}} </u></p>
                                 <p> Paid: <u class="text-success">RM  </u> Pending: <u class="text-danger">RM </u> </p>
                             </div>
                         @endforeach

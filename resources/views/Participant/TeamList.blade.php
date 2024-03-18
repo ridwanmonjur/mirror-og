@@ -22,7 +22,9 @@
                         <div class="team-section">
                             <div class="upload-container">
                                 <div class="circle-container" style="cursor: pointer;">
-                                    <div id="uploaded-image" class="uploaded-image"></div>
+                                    <div id="uploaded-image" class="uploaded-image"
+                                        style="background-image: url({{ $team->teamBanner ? '/storage' . '/'. $team->teamBanner: '/assets/images/fnatic.jpg' }} );"
+                                    ></div>
                                     </label>
                                 </div>
                                 <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
@@ -32,6 +34,7 @@
                                 </p>
                             </div>
                         </div>
+                    </div>
                 </a>
             @endforeach
         @else
@@ -49,6 +52,8 @@
                 </div>
             </div>
         @endif
+        <br>
+        <br>
     </main>
 
     @include('CommonLayout.BootstrapV5Js')
