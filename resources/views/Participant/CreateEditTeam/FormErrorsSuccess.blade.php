@@ -10,6 +10,6 @@
  @endif
 @if (session()->has('errorMessage'))
     <div class="text-danger">
-        Error changing the name. Can you please try a unique name for your team?
+        {{ session()->get('errorMessage') }}
     </div>
 @endif
