@@ -14,14 +14,11 @@
     @include('CommonLayout.NavbarGoToSearchPage')
     <main>
         <div class="wrapper">
-
             <div class="first">
-
                 <header><u>Select Team to Register</u></header>
             </div>
             <br>
             <br>
-
             <div class="dropdown">
                 <button class="dropbtn" onclick="toggleDropdown()">
                     Select Team
@@ -88,8 +85,11 @@
                 <div class="underline">
 
                     <ul>
-                        <p><b>WARNING: Once your registration has been confirmed, no changes can be made to the team
-                                lineup for this event.</b></p>
+                        <p>
+                            <b>WARNING: Once your registration has been confirmed, no changes can be made to the team
+                                lineup for this event.
+                            </b>
+                        </p>
                     </ul>
                 </div>
 

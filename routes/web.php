@@ -65,6 +65,7 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::get('/team/{id}/register', [ParticipantEventController::class, 'registrationManagement'])->name("participant.register.manage");
 			Route::post('/team/create', [ParticipantTeamController::class, 'teamStore'])->name("participant.team.store");
 			Route::post('/team/{id}/editStore', [ParticipantTeamController::class, 'teamEditStore'])->name("participant.team.editStore");
+			Route::post('/team/{id}/banner', [ParticipantTeamController::class, 'replaceBanner'])->name("participant.banner.action");
 			Route::post('/team/member/{id}/approve', [ParticipantTeamController::class, 'approveTeamMember'])->name('participant.member.approve');
 			Route::post('/team/member/{id}/disapprove', [ParticipantTeamController::class, 'disapproveTeamMember'])->name('participant.member.disapprove');
 			Route::post('/team/roster/{id}/approve', [ParticipantTeamController::class, 'approveRosterMember'])->name('participant.roster.approve');

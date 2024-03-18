@@ -3,7 +3,9 @@
         <div class="upload-container">
             <label for="image-upload" class="upload-label">
                 <div class="circle-container">
-                    <div id="uploaded-image" class="uploaded-image"></div>
+                    <div id="uploaded-image" class="uploaded-image"
+                        style="background-image: url({{ $selectTeam->teamBanner ? '/storage' . '/'. $selectTeam->teamBanner: '/assets/images/fnatic.jpg' }} );"
+                    ></div>
                     <button id="upload-button" class="upload-button" aria-hidden="true">Upload</button>
                 </div>
             </label>
@@ -34,3 +36,43 @@
         <p>{{ $selectTeam->teamDescription ? $selectTeam->teamDescription : 'Please add a description by editing your team...' }}</p>
     </div>
 </main>
+
+<script>
+   const uploadButton = document.getElementById("upload-button");
+        const imageUpload = document.getElementById("image-upload");
+        const uploadedImage = document.getElementById("uploaded-image");
+
+        uploadButton.addEventListener("click", function() {
+            imageUpload.click();
+        });
+
+        imageUpload.addEventListener("change", async function(e) {
+            const file = e.target.files[0];
+
+            if (file) {
+                const url = "{{ route('participant.banner.action', ['id' => $selectTeam->id] ) }}";
+                const formData = new FormData();
+                formData.append('file', file);
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                        body: formData,
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        uploadedImage.style.backgroundImage = `url(${data.data.fileName})`;
+                    } else {
+                        console.error('Error updating member status:', data.message);
+                    }
+                } catch (error) {
+                    console.error('Error approving member:', error);
+                }
+            }
+        });
+
+</script>

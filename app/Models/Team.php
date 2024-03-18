@@ -31,21 +31,16 @@ class Team extends Model
         return $this->hasMany(Award::class, 'join_events_id', 'id');
     }
 
-    private static function storeTeanBanner($file)
+   
+    public static function destroyTeanBanner($fileName)
     {
-        $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
-        $fileNameFinal = "images/team/$fileNameInitial";
-        $file->storeAs('images/team/', $fileNameInitial);
-        return $fileNameFinal;
-    }
+        if ($fileName) {
+            $fileNameInitial = str_replace('images/team/', '', $fileName);
+            $fileNameFinal = "images/team/$fileNameInitial";
 
-    public static function destroyTeanBanner($file)
-    {
-        $fileNameInitial = str_replace('images/team/', '', $file);
-        $fileNameFinal = "images/team/$fileNameInitial";
-
-        if (file_exists($fileNameFinal)) {
-            unlink($fileNameFinal);
+            if (file_exists($fileNameFinal)) {
+                unlink($fileNameFinal);
+            }
         }
     }
 

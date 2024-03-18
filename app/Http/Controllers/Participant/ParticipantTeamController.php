@@ -188,7 +188,25 @@ class ParticipantTeamController extends Controller
         }
     }
 
- 
+    public function replaceBanner(Request $request, $id) {
+        try {
+            $request->validate([
+                'file' => 'required|file'
+            ]);
+            $team = Team::findOrFail($id);
+            Team::destroyTeanBanner($team->teamBanner);
+            $file = $request->file('file');
+            $fileNameInitial = 'teamBanner-' . time() . '.' . $file->getClientOriginalExtension();
+            $fileName = "images/team/$fileNameInitial";
+            $file->storeAs('images/team/', $fileNameInitial);
+            $team->teamBanner = $fileName;
+            $fileName = asset('/storage'. '/'. $fileName);
+            $team->save();
+            return response()->json(['success' => true, 'message' => 'Succeeded', 'data' => compact('fileName')], 201);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
 
    
 }

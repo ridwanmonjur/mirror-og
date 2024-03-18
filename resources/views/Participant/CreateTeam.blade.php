@@ -17,10 +17,8 @@
     <main>
         <div class="text-center" id="step-0">
             <div class="welcome">
-                <u>
-                </u>
-                <p class="create-online-esports">
-                </p>
+                <u></u>
+                <p class="create-online-esports"> </p>
                 <br>
                 <div class="text-center" id="step-0">
                     <div class="welcome">

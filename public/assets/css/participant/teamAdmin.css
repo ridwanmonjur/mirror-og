@@ -283,7 +283,6 @@ input[type="submit"],
     background-size: cover;
     background-position: center;
     /* Default image URL */
-    background-image: url('/assets/images/fnatic.jpg');
 }
 
 .upload-button {

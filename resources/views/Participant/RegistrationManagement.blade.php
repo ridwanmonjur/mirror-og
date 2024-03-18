@@ -156,30 +156,7 @@
             target.classList.add('tab-button-active');
         }
 
-        const uploadButton = document.getElementById("upload-button");
-        const imageUpload = document.getElementById("image-upload");
-        const uploadedImage = document.getElementById("uploaded-image");
-
-        uploadButton.addEventListener("click", function() {
-            imageUpload.click();
-        });
-
-        imageUpload.addEventListener("change", function(e) {
-            const file = e.target.files[0];
-
-            if (file) {
-                const reader = new FileReader();
-
-                reader.onload = function(readerEvent) {
-                    uploadedImage.style.backgroundImage = url(
-                        "https://www.creativefabrica.com/wp-content/uploads/2022/07/10/tiger-logo-design-Graphics-33936667-1-580x387.jpg"
-                    );
-                };
-
-                reader.readAsDataURL(file);
-            }
-        });
-
+        
         function slideEvents(direction) {
             const eventBoxes = document.querySelectorAll('.event-box');
 
