@@ -26,16 +26,19 @@ class ParticipantTeamController extends Controller
         $user_id = $request->attributes->get('user')->id;
         $selectTeam = Team::where('id', $id)->where('creator_id', $user_id)
             ->with('members')->first();
-        // dd($selectTeam);
+        
         if ($selectTeam) {
+            $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
+
             $teamMembers = $selectTeam->members;
             $teamMembersProcessed = TeamMember::processStatus($teamMembers);
             $creator_id = $selectTeam->creator_id;
+            // dd($captain);
             return view('Participant.MemberManagement', 
-                compact('selectTeam', 'teamMembersProcessed', 'creator_id')
+                compact('selectTeam', 'teamMembersProcessed', 'creator_id', 'captain')
             );
         } else {
-            return $this->show404Participant('You need to be a member to view events!');
+            return $this->show404Participant('This event is missing or you need to be a member to view events!');
         }
     }
 

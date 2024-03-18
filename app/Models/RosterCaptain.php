@@ -8,4 +8,6 @@ class RosterCaptain extends Model
 {
     protected $table = 'rosters_captain';
     protected $fillable = ['userID', 'join_events_id'];
+
+    public $timestamps = false;
 }

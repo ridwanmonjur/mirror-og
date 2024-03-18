@@ -41,26 +41,28 @@
                                           d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
                                   </svg>
                               <td>
-                              <td class="coloured-cell">
-                                  <div class="player-info">
-                                      <div class="player-image"
-                                          style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
-                                          <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
-                                      </div>
-                                      <span>{{ $member->user->name }}</span>
-                                  </div>
+                              <td class="coloured-cell px-3">
+                                <div class="player-info"> 
+                                    @if ($member->id == $captain->team_member_id)
+                                        <div class="player-image"> </div>
+                                    @endif
+                                    <span>{{ $member->user->name }}</span>
+                                </div>
                               </td>
-                              <td class="flag-cell coloured-cell">
+                              <td class="flag-cell coloured-cell px-3">
                                   <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
                                       alt="User's flag">
                               </td>
                               <td>
-                                  @if ($user->id == $selectTeam->creator_id)
+                                @if ($user->id == $selectTeam->creator_id)
                                       <button id="remove-{{ $member->id }}" class="gear-icon-btn"
                                           onclick="disapproveMember({{ $member->id }})">
                                           ✘
                                       </button>
-                                  @endif
+                                @endif
+                                <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover" onclick="capatainMember({{$member->id}})">
+                                    <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
+                                </button>
                               </td>
                           </tr>
                       @endforeach
@@ -89,12 +91,9 @@
                                   </svg>
                               <td>
                               <td class="coloured-cell">
-                                  <div class="player-info">
-                                      <div class="player-image"
-                                          style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
-                                          <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
-                                      </div>
-                                      <span>{{ $member->user->name }}</span>
+                                    <div class="player-info">
+                                        <div class="player-image"></div>
+                                        <span>{{ $member->user->name }}</span>
                                   </div>
                               </td>
                               <td class="flag-cell coloured-cell">
@@ -102,12 +101,15 @@
                                       alt="User's flag">
                               </td>
                               <td>
-                                  @if ($user->id == $selectTeam->creator_id)
-                                      <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
-                                          onclick="approveMember({{ $member->id }})">
-                                          ✔
-                                      </button>
-                                  @endif
+                                    @if ($user->id == $selectTeam->creator_id)
+                                        <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
+                                            onclick="approveMember({{ $member->id }})">
+                                            ✔
+                                        </button>
+                                    @endif
+                                    <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover" onclick="capatainMember({{$member->id}})">
+                                        <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
+                                    </button>
                               </td>
                           </tr>
                       @endforeach
@@ -122,13 +124,10 @@
                                   </svg>
                               <td>
                               <td class="coloured-cell">
-                                  <div class="player-info">
-                                      <div class="player-image"
-                                          style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
-                                          <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
-                                      </div>
-                                      <span>{{ $member->user->name }}</span>
-                                  </div>
+                                    <div class="player-info">
+                                        <div class="player-image"></div>
+                                        <span>{{ $member->user->name }}</span>
+                                    </div>
                               </td>
                               <td class="flag-cell coloured-cell">
                                   <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
@@ -204,17 +203,20 @@
                               </svg>
                           <td>
                           <td class="coloured-cell">
-                              <div class="player-info">
-                                  <div class="player-image"
-                                      style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
-                                      <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
-                                  </div>
-                                  <span>{{ $member->user->name }}</span>
-                              </div>
+                                <div class="player-info"> 
+                                    @if ($member->id == $captain->team_member_id)
+                                        <div class="player-image"> </div>
+                                    @endif
+                                    <span>{{ $member->user->name }}</span>
+                                </div>
                           </td>
                           <td class="flag-cell coloured-cell">
                               <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
-                                  alt="User's flag">
+                                  alt="User's flag"
+                                >
+                                <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover" onclick="capatainMember({{$member->id}})">
+                                    <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
+                                </button>
                           </td>
                       </tr>
                   @endforeach

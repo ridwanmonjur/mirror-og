@@ -2,7 +2,9 @@
     <div class="team-section">
         <div class="upload-container">
                 <div class="circle-container">
-                    <div id="uploaded-image" class="uploaded-image"></div>
+                     <div id="uploaded-image" class="uploaded-image"
+                        style="background-image: url({{ $selectTeam->teamBanner ? '/storage' . '/'. $selectTeam->teamBanner: '/assets/images/fnatic.jpg' }} );"
+                    ></div>
                 </div>
             </label>
         </div>

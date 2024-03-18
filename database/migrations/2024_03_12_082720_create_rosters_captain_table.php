@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('rosters_captain', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('userID')->constrained('users')->onDelete('cascade');
+            $table->foreignId('team_member_id')->constrained('team_members')->onDelete('cascade');
             $table->foreignId('join_events_id')->unique()->constrained('join_events')->onDelete('cascade');
         });
     }

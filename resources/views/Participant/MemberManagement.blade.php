@@ -26,9 +26,12 @@
 
     @include('CommonLayout.BootstrapV5Js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
+    <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
     @include('CommonLayout.Toast')
     @include('CommonLayout.Dialog')
     <script>
+        let dialogForMember = new DialogForMember(); 
+
         function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
             const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
             tabContents.forEach(content => {
@@ -70,6 +73,33 @@
 
         loadTab();
 
+        function takeYesAction () {
+            console.log({memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName()})
+
+            if (dialogForMember.getActionName() == 'approve') {
+                approveMemberAction();
+            } else {
+                disapproveMemberAction();
+            }
+        }
+
+        function takeNoAction () {
+            dialogForMember.reset();
+        }
+
+        function approveMember(memberId) {
+            dialogForMember.setMemberId(memberId);
+            dialogForMember.setActionName('approve')
+            dialogOpen('Continue with approval?', takeYesAction, takeNoAction) 
+        }
+
+        function disapproveMember(memberId) {
+            dialogForMember.setMemberId(memberId);
+            dialogForMember.setActionName('disapprove')
+            dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction) 
+        }
+
+
         function slideEvents(direction) {
             const eventBoxes = document.querySelectorAll('.event-box');
 
@@ -90,9 +120,11 @@
             }
         }
 
-        async function approveMember(memberId) {
+        async function approveMemberAction() {
+            const memberId = dialogForMember.getMemberId();
             const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
-
+            console.log({memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName()})
+            
             try {
                 const response = await fetch(url, {
                     method: 'POST',
@@ -108,16 +140,7 @@
                     let currentUrl = "{{route('participant.member.manage', ['id' => $selectTeam->id])}}";
                     currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=CurrentMembersBtn&success=true';
                     window.location.replace(currentUrl);
-                    /*
-                        const memberRow = document.getElementById('tr-'+memberId);
-                        const clonedRow = memberRow.cloneNode(true);
-                        memberRow.remove();
-                        document.getElementById('CurrentMembersBtn').click();
-                        setTimeout(() => {
-                            const tbody = document.querySelector('tbody.accepted-member-table');
-                            tbody.appendChild(clonedRow);
-                        }, 1000);
-                    */
+                   
                 } else {
                     console.error('Error updating member status:', responseData.message);
                 }
@@ -126,9 +149,11 @@
             }
         }
 
-        async function disapproveMember(memberId) {
+        async function disapproveMemberAction() {
+            const memberId = dialogForMember.getMemberId();
             const url = "{{ route('participant.member.disapprove', ['id' => ':id']) }}".replace(':id', memberId);
-
+            console.log({memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName()})
+            
             try {
                 const response = await fetch(url, {
                     method: 'POST',
@@ -144,16 +169,7 @@
                     let currentUrl = "{{route('participant.member.manage', ['id' => $selectTeam->id])}}";
                     currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn&success=true';
                     window.location.replace(currentUrl);
-                     /*
-                   const memberRow = document.getElementById('tr-'+memberId);
-                    const clonedRow = memberRow.cloneNode(true);
-                    memberRow.remove();
-                    document.getElementById('PendingMembersBtn').click();
-                    setTimeout(() => {
-                        const tbody = document.querySelector('tbody.pending-member-table');
-                        tbody.appendChild(clonedRow);
-                    }, 1000);
-                    */
+                   
                 } else {
                     console.error('Error updating member status:', responseData.message);
                 }

@@ -282,6 +282,15 @@ a:hover {
     z-index: 9999 !important;
 }
 
+.swal2-popup{
+    border-radius: 50px !important;
+}
+
+.swal2-confirm, .swal2-cancel, .swal2-deny{
+    border-radius: 15px !important;
+    outline: none !important;
+}
+
 @media screen and (min-width: 1300px) { 
     .w-70s{
         width: 70%;
