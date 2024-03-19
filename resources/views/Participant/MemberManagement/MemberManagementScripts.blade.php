@@ -1,8 +1,10 @@
- <script src="{{ asset('/assets/js/models/FetchVariables.js') }}"></script>
+<script src="{{ asset('/assets/js/models/FetchVariables.js') }}"></script>
 
- <script>
+<script>
+    var ENDPOINT;
+
     const SORT_CONSTANTS = {
-        'ASC' : 'asc',
+        'ASC': 'asc',
         'DESC': 'desc',
         'NONE': 'none'
     };
@@ -11,7 +13,7 @@
         'SORT_TYPE': 'sortType',
         "FILTER": 'filter',
         "SEARCH": 'search',
-        "SORT_KEY" : 'sortKey'
+        "SORT_KEY": 'sortKey'
     }
 
     function stopPropagation(event) {
@@ -19,7 +21,7 @@
     }
 
     function toggleDropdown(id) {
-        
+
         let dropdown = document.querySelector(`#${id}[data-bs-toggle='dropdown']`);
         dropdown.parentElement.click();
     }
@@ -30,32 +32,28 @@
         }, 1000)
     );
 
-    let fetchVariables = new FetchVariables();    
+    let fetchVariables = new FetchVariables();
 
     function fetchSearchSortFiter() {
         resetNoMoreElement();
-
         let params = convertUrlStringToQueryStringOrObject({
             isObject: true
         });
 
         if (!params) params = {}
-
         params.page = 1;
-
-        ENDPOINT = "{{ route('event.search.view') }}";
+        ENDPOINT = "{{ route('participant.search') }}";
 
         let body = {
             ...params,
             filter: fetchVariables.getFilter(),
-            sort: { 
-                [fetchVariables.getSortKey()] : fetchVariables.getSortType()
+            sort: {
+                [fetchVariables.getSortKey()]: fetchVariables.getSortType()
             },
-            userId: Number("{{ $user->id }}"),
             search: fetchVariables.getSearch()
         }
 
-        loadByPost(ENDPOINT, body);     
+        loadByPost(ENDPOINT, body);
     }
 
     function setFilterForFetch(event, title) {
@@ -80,7 +78,7 @@
         fetchVariables.visualize();
     }
 
-    function deleteTagByNameValue(name, value){
+    function deleteTagByNameValue(name, value) {
         let id = `${name}${value}tag`;
         let tagElement = document.getElementById(id);
         tagElement.remove();
@@ -125,7 +123,7 @@
         let sortByTitleId = document.getElementById('sortByTitleId');
         sortByTitleId.textContent = title;
         fetchVariables.setSortKey(key);
-        fetchVariables.setSortType(sortType);  
+        fetchVariables.setSortType(sortType);
         fetchSearchSortFiter();
         fetchVariables.visualize();
     }
@@ -142,28 +140,20 @@
             } else {
                 sortType = SORT_CONSTANTS['DESC'];
             }
-        } else { 
-           toggleDropdown('dropdownSortButton');
-           return;
+        } else {
+            toggleDropdown('dropdownSortButton');
+            return;
         }
 
-        let element = document.getElementById("insertSortTypeIcon"); 
+        let element = document.getElementById("insertSortTypeIcon");
         let cloneNode = document.querySelector(`.${sortType}-sort-icon`).cloneNode(true);
         element.insertBefore(cloneNode, element.firstChild);
         event.currentTarget.remove();
-        fetchVariables.setSortType(sortType);   
+        fetchVariables.setSortType(sortType);
         fetchSearchSortFiter();
-        fetchVariables.visualize();  
+        fetchVariables.visualize();
     }
 
-    const copyUrlFunction = (copyUrl) => {
-        navigator.clipboard.writeText(copyUrl).then(function() {
-        }, function(err) {
-            console.error('Could not copy text to clipboard: ', err);
-        });
-    }
-
-    var ENDPOINT;
 
     function getQueryStringValue(key) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -172,7 +162,7 @@
 
     function convertObjectToURLString(object) {
         var queryString = "";
-        
+
         for (const [key, value] of Object.entries(object)) {
             if (Array.isArray(value)) {
                 value.forEach(function(value) {
@@ -214,28 +204,15 @@
 
         if (isObject) {
             return params;
-        } else { 
+        } else {
             return convertObjectToURLString(params);
         }
     }
-
-    ENDPOINT = "/organizer/event/?" + convertUrlStringToQueryStringOrObject({
-        isObject: false
-    });
 
 
     function handleSearch() {
         const inputElement = document.getElementById('searchInput');
         const inputValue = inputElement.value;
-        const nextSearch = inputElement.nextElementSibling;
-
-        if (nextSearch) {
-            if (String(inputValue).trim() === '') {
-                nextSearch.classList.add('d-none');
-            } else {
-                nextSearch.classList.remove('d-none')
-            }
-        }
 
         let params = convertUrlStringToQueryStringOrObject({
             isObject: true
@@ -244,18 +221,19 @@
         if (!params) params = {}
 
         params.page = 1;
-        ENDPOINT = "{{ route('event.search.view') }}";
+        ENDPOINT = "{{ route('participant.search') }}";
         fetchVariables.setSearch(inputValue)
 
         let body = {
             ...params,
-             filter: fetchVariables.getFilter(),
-            sort: { 
-                [fetchVariables.getSortKey()] : fetchVariables.getSortType()
+            filter: fetchVariables.getFilter(),
+            sort: {
+                [fetchVariables.getSortKey()]: fetchVariables.getSortType()
             },
-            userId: Number("{{ auth()->user()->id }}"),
             search: inputValue
         }
+
+        console.log({body})
 
         loadByPost(ENDPOINT, body);
     }
@@ -272,7 +250,7 @@
 
     function openElementById(id) {
         const element = document.getElementById(id);
-        
+
         if (element) {
             element?.classList.remove("d-none");
         }
@@ -288,58 +266,8 @@
 
     const sortByList = ["startDate", "endDate"];
 
-    window.addEventListener(
-        "scroll",
-        (e) => {
-
-            var windowHeight = window.innerHeight;
-            var documentHeight = document.documentElement.scrollHeight;
-            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop + windowHeight >= documentHeight - 200) {
-                
-                let params = convertUrlStringToQueryStringOrObject({
-                    isObject: true
-                });
-
-                fetchVariables.setCurrentPage(fetchVariables.getCurrentPage() + 1);
-
-                let body = {};
-
-                if (!params) { 
-                    params = {};
-                }
-
-                if ( fetchVariables.getCurrentPage() > fetchVariables.getFetchedPage() + 1 ) {
-                    fetchVariables.setCurrentPage( fetchVariables.getFetchedPage() );
-                    return;
-                }
-
-                fetchVariables.setFetchedPage(fetchVariables.getCurrentPage());
-
-                params.page = fetchVariables.getCurrentPage();
-                
-                ENDPOINT = "{{ route('event.search.view') }}";
-
-                body = {
-                    filter: fetchVariables.getFilter(),
-                    sort: { 
-                        [fetchVariables.getSortKey()] : fetchVariables.getSortType()
-                    },
-                    userId: Number("{{ auth()->user()->id }}"),
-                    search: fetchVariables.getSearch(),
-                    ...params
-                }
-                try{
-                    infinteLoadMoreByPost(ENDPOINT, body)
-                } catch {
-                    fetchVariables.setFetchedPage(fetchVariables.getCurrentPage()-1);
-                };
-            }
-        }
-    );
-    
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     })
 </script>

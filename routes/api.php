@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Organizer\InvitationController;
 use App\Http\Controllers\Organizer\OrganizerEventController;
+use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
@@ -31,6 +32,8 @@ Route::group(['prefix' => 'participant'], function () {
         });
     });
 });
+
+
 
 Route::group(['prefix' => 'organizer'], function () {
     Route::post('events/search', [OrganizerEventController::class, 'search'])->name('event.search.view');

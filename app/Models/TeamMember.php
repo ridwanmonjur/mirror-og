@@ -31,8 +31,8 @@ class TeamMember extends Model
 
     public static function processStatus($members)
     {
-        $acceptedMembers = $pendingMembers = $rejectedMembers = [];
-        $acceptedMembersCount = $pendingMembersCount = $rejectedMembersCount = 0;
+        $acceptedMembers = $pendingMembers = $rejectedMembers = $invitedMembers = [];
+        $acceptedMembersCount = $pendingMembersCount = $rejectedMembersCount = $invitedMemberCount = 0;
     
         foreach ($members as $member) {
             $status = $member->status;
@@ -46,6 +46,9 @@ class TeamMember extends Model
             } else if ($status == "rejected") {
                 $rejectedMembers[] = $member;
                 $rejectedMembersCount++;
+            } else if ($status == "invited") {
+                $invitedMembers[] = $member;
+                $invitedMemberCount++;
             }
         }
 
@@ -61,7 +64,11 @@ class TeamMember extends Model
             'rejected' => [
                 'count' => $rejectedMembersCount,
                 'members' => $rejectedMembers
-            ]
+            ],
+            'invited' => [
+                'count' => $invitedMemberCount,
+                'members' => $invitedMembers
+            ],
         ];
     }
 

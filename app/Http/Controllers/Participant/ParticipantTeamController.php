@@ -13,6 +13,7 @@ use App\Models\JoinEvent;
 use App\Models\TeamMember;
 use App\Models\Participant;
 use App\Models\RosterMember;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,19 +24,28 @@ class ParticipantTeamController extends Controller
 {
     public function teamMemberManagement(Request $request, $id)
     {
+        $page = 5;
         $user_id = $request->attributes->get('user')->id;
         $selectTeam = Team::where('id', $id)->where('creator_id', $user_id)
             ->with('members')->first();
         
         if ($selectTeam) {
             $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
-
             $teamMembers = $selectTeam->members;
             $teamMembersProcessed = TeamMember::processStatus($teamMembers);
             $creator_id = $selectTeam->creator_id;
-            // dd($captain);
+            $userList = User::where('role', 'PARTICIPANT')->with([
+                'members' => function ($q) use ($id) {
+                    $q->where('team_id', $id);
+                }
+            ])->paginate($page);
+
+            foreach ($userList as $user) {
+                $user->is_in_team = isset($user->members[0]) ? 'yes' : 'no';
+            }
+
             return view('Participant.MemberManagement', 
-                compact('selectTeam', 'teamMembersProcessed', 'creator_id', 'captain')
+                compact('selectTeam', 'teamMembersProcessed', 'creator_id', 'captain', 'userList')
             );
         } else {
             return $this->show404Participant('This event is missing or you need to be a member to view events!');
@@ -116,6 +126,23 @@ class ParticipantTeamController extends Controller
             return response()->json(['success' => false, 'message' => 'Invalid operation or roster member not found'], 400);
         }
     }
+
+    public function captainMember(Request $request, $id, $memberId)
+    {
+        $existingCaptain = TeamCaptain::where('team_id', $id)->first();
+
+        if ($existingCaptain) {
+            $existingCaptain->delete();
+        } 
+        
+        TeamCaptain::create([
+            'team_id' => $id,
+            'team_member_id' => $memberId,
+        ]);
+        
+        return response()->json(['message' => 'true'], 200);
+    }
+
 
     private function validateAndSaveTeam($request, $team, $user_id)
     {

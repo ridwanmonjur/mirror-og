@@ -21,16 +21,18 @@
     @include('Participant.Layout.TeamHeadNoFileChange')
 
     <main class="main2">
-        @include('Participant.Layout.MemberManagement')
+        @include('Participant.MemberManagement.MemberManagement')
     </main>
 
     @include('CommonLayout.BootstrapV5Js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
+    <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     @include('CommonLayout.Toast')
     @include('CommonLayout.Dialog')
+    @include('Participant.MemberManagement.MemberManagementScripts')
     <script>
-        let dialogForMember = new DialogForMember(); 
+        let dialogForMember = new DialogForMember();
 
         function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
             const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
@@ -58,9 +60,14 @@
             let urlParams = new URLSearchParams(window.location.search);
             let tabValue = urlParams.get('tab');
             let successValue = urlParams.get('success');
-            
+            let pageValue = urlParams.get('page');
+
             if (tabValue) {
                 document.getElementById(tabValue).click();
+            }
+
+            if (Number(pageValue)) {
+                document.getElementById('NewMembersBtn').click();
             }
 
             if (successValue == 'true') {
@@ -73,40 +80,60 @@
 
         loadTab();
 
-        function takeYesAction () {
-            console.log({memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName()})
+        function takeYesAction() {
+            console.log({
+                memberId: dialogForMember.getMemberId(),
+                action: dialogForMember.getActionName()
+            })
 
             if (dialogForMember.getActionName() == 'approve') {
                 approveMemberAction();
-            } else {
+            } else if (dialogForMember.getActionName() == 'disapprove') {
                 disapproveMemberAction();
+            } else if (dialogForMember.getActionName() == 'captain') {
+                disapproveMemberAction();
+            } else if (dialogForMember.getActionName() == 'invite') {
+                inviteMemberAction();
+            } else if (dialogForMember.getActionName() == 'uninvite') {
+                uninviteMemberAction();
             }
         }
 
-        function takeNoAction () {
+        function takeNoAction() {
             dialogForMember.reset();
         }
 
         function approveMember(memberId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setActionName('approve')
-            dialogOpen('Continue with approval?', takeYesAction, takeNoAction) 
+            dialogOpen('Continue with approval?', takeYesAction, takeNoAction)
+        }
+
+        function inviteMember(memberId, teamId) {
+            dialogForMember.setMemberId(memberId);
+            dialogForMember.setTeamId(teamId);
+            dialogForMember.setActionName('invite')
+            dialogOpen('Are you sure you want to send invite to this member?', takeYesAction, takeNoAction)
+        }
+
+        function uninviteMember(memberId, teamId) {
+            dialogForMember.setMemberId(memberId);
+            dialogForMember.setTeamId(teamId);
+            dialogForMember.setActionName('uninvite')
+            dialogOpen('Are you sure you want to delete your invite to this member??', takeYesAction, takeNoAction)
         }
 
         function disapproveMember(memberId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setActionName('disapprove')
-            dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction) 
+            dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
         }
 
 
         function slideEvents(direction) {
             const eventBoxes = document.querySelectorAll('.event-box');
-
             const visibleEvents = Array.from(eventBoxes).filter(eventBox => eventBox.style.display !== 'none');
-
             eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
-
             let startIndex = 0;
 
             if (visibleEvents.length > 0) {
@@ -120,64 +147,149 @@
             }
         }
 
-        async function approveMemberAction() {
+        function approveMemberAction() {
             const memberId = dialogForMember.getMemberId();
             const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
-            console.log({memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName()})
-            
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json',
-                    },
-                });
+            console.log({
+                memberId: dialogForMember.getMemberId(),
+                action: dialogForMember.getActionName()
+            });
 
-                const responseData = await response.json();
-                if (responseData.success) {
-                    // window.location.reload();
-                    let currentUrl = "{{route('participant.member.manage', ['id' => $selectTeam->id])}}";
-                    currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=CurrentMembersBtn&success=true';
-                    window.location.replace(currentUrl);
-                   
-                } else {
-                    console.error('Error updating member status:', responseData.message);
+            fetchData(url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') +
+                            'tab=CurrentMembersBtn&success=true';
+                        window.location.replace(currentUrl);
+                    } else {
+                        console.error('Error updating member status:', responseData.message);
+                    }
+                },
+                function(error) {
+                    console.error('Error approving member:', error);
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
                 }
-            } catch (error) {
-                console.error('Error approving member:', error);
-            }
+            );
         }
 
         async function disapproveMemberAction() {
             const memberId = dialogForMember.getMemberId();
             const url = "{{ route('participant.member.disapprove', ['id' => ':id']) }}".replace(':id', memberId);
-            console.log({memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName()})
-            
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json',
-                    },
-                });
+            console.log({
+                memberId: dialogForMember.getMemberId(),
+                action: dialogForMember.getActionName()
+            });
 
-                const responseData = await response.json();
-                if (responseData.success) {
-                    // window.location.reload();
-                    let currentUrl = "{{route('participant.member.manage', ['id' => $selectTeam->id])}}";
-                    currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn&success=true';
-                    window.location.replace(currentUrl);
-                   
-                } else {
-                    console.error('Error updating member status:', responseData.message);
+            fetchData(url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') +
+                            'tab=PendingMembersBtn&success=true';
+                        window.location.replace(currentUrl);
+                    } else {
+                        console.error('Error updating member status:', responseData.message);
+                    }
+                },
+                function(error) {
+                    console.error('Error disapproving member:', error);
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
                 }
-            } catch (error) {
-                console.error('Error approving member:', error);
-            }
+            );
         }
-    
+
+        async function inviteMemberAction() {
+            const memberId = dialogForMember.getMemberId();
+            const teamId = dialogForMember.getTeamId();
+            const url = "{{ route('participant.member.invite', ['id' => ':id', 'userId' => ':userId']) }}"
+                .replace(':userId', memberId)
+                .replace(':id', teamId);
+            console.log({ memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName() });
+
+            fetchData(
+                url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn&success=true';
+                        window.location.replace(currentUrl);
+                    } else {
+                        console.error('Error updating member status:', responseData.message);
+                    }
+                },
+                function(error) {
+                    console.error('Error inviting member:', error);
+                },
+                {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            );
+        }
+
+        async function unInviteMemberAction() {
+            const memberId = dialogForMember.getMemberId();
+            const teamId = dialogForMember.getTeamId();
+            const url = "{{ route('participant.member.invite', ['id' => ':id', 'userId' => ':userId']) }}"
+                .replace(':userId', memberId)
+                .replace(':id', teamId);
+
+            fetchData(
+                url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn&success=true';
+                        window.location.replace(currentUrl);
+                    } else {
+                        console.error('Error updating member status:', responseData.message);
+                    }
+                },
+                function(error) {
+                    console.error('Error uninviting member:', error);
+                },
+                {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            );
+        }
+
+        async function fetchParticipants(event) {
+            let input = event.currentTarget;
+            let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+
+            fetchData(
+                url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn&success=true';
+                        window.location.replace(currentUrl);
+                    } else {
+                        console.error('Error updating member status:', responseData.message);
+                    }
+                },
+                function(error) {
+                    console.error('Error uninviting member:', error);
+                },
+                {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            );
+        }
+
         const searchInputs = document.querySelectorAll('.search_box input');
         const memberTables = document.querySelectorAll('.member-table');
 
@@ -198,9 +310,6 @@
                 });
             });
         });
-
-        
-
     </script>
 
 </body>

@@ -14,6 +14,7 @@ use App\Models\TeamMember;
 use App\Models\Participant;
 use App\Models\RosterCaptain;
 use App\Models\RosterMember;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -94,7 +95,6 @@ class ParticipantEventController extends Controller
             }
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
-
             $teamMembers = $selectTeam->members->where('status', 'accepted');
 
             return view('Participant.TeamManagement', 
@@ -107,6 +107,7 @@ class ParticipantEventController extends Controller
 
     public function teamMemberManagement(Request $request, $id, $teamId)
     {
+        $page = 5;
         $user_id = $request->attributes->get('user')->id;
         $selectTeam = Team::where('id', $teamId)->where('creator_id', $user_id)
             ->with('members')->first();
@@ -116,14 +117,25 @@ class ParticipantEventController extends Controller
                 $teamMembers = $selectTeam->members;
                 $teamMembersProcessed = TeamMember::processStatus($teamMembers);
                 $creator_id = $selectTeam->creator_id;
+                $userList = User::where('role', 'PARTICIPANT')->with([
+                        'members' => function ($q) use ($teamId) {
+                        $q->where('team_id', $teamId);
+                    }
+                ])->paginate($page);
+
+                foreach ($userList as $user) {
+                    $user->is_in_team = $user->members->isNotEmpty() ? 'yes' : 'no';
+                }
                 
                 return view('Participant.MemberManagement', 
-                    compact('selectTeam', 'teamMembersProcessed', 'creator_id', 'id', 'captain')
+                    compact('selectTeam', 'teamMembersProcessed', 'creator_id', 'userList', 'id', 'captain')
                 );
         } else {
             return $this->show404Participant('This event is missing or you need to be a member to view events!');
         }
     }
+
+ 
 
     public function rosterMemberManagement(Request $request, $id, $teamId)
     {
@@ -179,25 +191,6 @@ class ParticipantEventController extends Controller
             return redirect()->back()->with('error', 'Team not found.');
         }
     }
-
-    public function makeCaptain(Request $request)
-    {
-        $userId = $request->input('user_id');
-        $teamId = $request->input('team_id');
-        $existingCaptain = TeamCaptain::where('team_id', $teamId)->first();
-
-        if ($existingCaptain) {
-            $existingCaptain->delete();
-        } else {
-            TeamCaptain::create([
-                'userID' => $userId,
-                'team_id' => $teamId,
-            ]);
-        }
-
-        return response()->json(['message' => 'true'], 200);
-    }
-
 
     public function teamToRegister(Request $request)
     {

@@ -2,6 +2,7 @@ class DialogForMember {
     constructor() {
         this.actionName = null;
         this.memberId = null;
+        this.teamId = null
     }
 
     getActionName() {
@@ -12,17 +13,25 @@ class DialogForMember {
         return this.memberId;
     }
 
+    getTeamId() {
+        return this.teamId;
+    }
+
     setActionName(value) {
         this.actionName = value;
-        
     }
 
     setMemberId(value) {
         this.memberId = value;
     }
 
+    setTeamId(value) {
+        this.teamId = value;
+    }
+
     reset() {
-        this.actionName = '';
-        this.memberId = '';
+        this.actionName = null;
+        this.memberId = null;
+        this.teamId = null
     }
 }

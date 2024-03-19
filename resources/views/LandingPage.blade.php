@@ -32,7 +32,6 @@
         <section class="featured-events scrolling-pagination">
             @include('LandingPageScroll')
         </section>
-
         <div class="no-more-data d-none"></div>
         <br><br>
         @include('CommonLayout.BootstrapV5Js')

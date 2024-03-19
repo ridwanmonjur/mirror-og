@@ -34,9 +34,9 @@
             <div class="rightC">
                 <div class="search_box">
                     <i class="fa fa-search"></i>
-                    <input class="nav__input" type="text" placeholder="Search for player name">
+                    <input style="font-size: 14.5px;" class="nav__input" type="text" placeholder="Search for player name">
                 </div>
-                <div style="padding-right: 200px; transform: translateY(-95%);">
+                <div>
                     @if ($user->id == $selectTeam->user_id)
                         <img src="/assets/images/add.png" height="40px" width="40px">
                     @endif
@@ -46,17 +46,14 @@
         <table class="member-table">
             <tbody>
                 @foreach ($teamMembers as $member)
-                    <tr class="st">
-                        <td class="coloured-cell">
+                    <tr class="st px-3">
+                        <td class="coloured-cell px-3">
                             <div class="player-info">
-                                <div class="player-image"
-                                    style="background-image: url('https://www.vhv.rs/dpng/d/511-5111355_register-super-admin-icon-png-transparent-png.png')">
-                                    <span class="crown">&#x1F451;</span> <!-- Crown emoji -->
-                                </div>
+                                <div class="player-image"> </div>
                                 <span>{{ $member->user->name }}</span>
                             </div>
                         </td>
-                        <td class="flag-cell coloured-cell">
+                        <td class="flag-cell coloured-cell px-3">
                             <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
                                 alt="User's flag">
                         </td>

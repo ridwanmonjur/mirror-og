@@ -1,4 +1,4 @@
-
+// ManageEventFetchProcessor
 class FetchVariables {
     constructor() {
         this.sortType = 'desc';

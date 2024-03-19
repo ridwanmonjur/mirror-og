@@ -286,6 +286,11 @@ a:hover {
     border-radius: 50px !important;
 }
 
+.page-item.active .page-link {
+    background-color: #43A4D7 !important;
+    border-color: #43A4D7 !important;
+}
+
 .swal2-confirm, .swal2-cancel, .swal2-deny{
     border-radius: 15px !important;
     outline: none !important;

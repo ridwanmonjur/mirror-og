@@ -7,6 +7,7 @@ use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\OrganizerCheckoutController;
+use App\Models\Participant;
 
 /* THIS IS THE UNSIGNED VIEW */
 // Home
@@ -48,6 +49,8 @@ Route::group(['prefix' => 'participant'], function () {
 	Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name("participant.steam.login");
 	Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'])->name("participant.steam.callback");
 	
+	Route::post('/search', [Participant::class, 'searchParticipant'])->name('participant.search');
+
 	// General participant functions
 	Route::group(['middleware' => 'auth'], function () {
 		Route::group(['middleware' => 'check-permission:participant|admin'], function () {
@@ -66,12 +69,13 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::post('/team/create', [ParticipantTeamController::class, 'teamStore'])->name("participant.team.store");
 			Route::post('/team/{id}/editStore', [ParticipantTeamController::class, 'teamEditStore'])->name("participant.team.editStore");
 			Route::post('/team/{id}/banner', [ParticipantTeamController::class, 'replaceBanner'])->name("participant.banner.action");
+			Route::post('/team/{id}/user/{userId}/invite', [ParticipantTeamController::class, 'inviteTeamMember'])->name('participant.member.invite');
+			Route::post('/team/{id}/user/{userId}/uninvite', [ParticipantTeamController::class, 'univiteTeamMember'])->name('participant.member.uninvite');
+			Route::post('/team/{id}/member/{memberId}/captain', [ParticipantTeamController::class, 'captainTeamMember'])->name('participant.member.captain');
 			Route::post('/team/member/{id}/approve', [ParticipantTeamController::class, 'approveTeamMember'])->name('participant.member.approve');
 			Route::post('/team/member/{id}/disapprove', [ParticipantTeamController::class, 'disapproveTeamMember'])->name('participant.member.disapprove');
 			Route::post('/team/roster/{id}/approve', [ParticipantTeamController::class, 'approveRosterMember'])->name('participant.roster.approve');
 			Route::post('/team/roster/{id}/disapprove', [ParticipantTeamController::class, 'disapproveRosterMember'])->name('participant.roster.disapprove');
-			Route::post('/team/captain/store', [ParticipantEventController::class, 'makeCaptain'])->name('participant.captain.add');
-			Route::post('/team/captain/delete', [ParticipantEventController::class, 'deleteCaptain'])->name('participant.captain.remove');
 			
 			// Event management
 			Route::get('/event/{id}/team/{teamId}/manage/roster', [ParticipantEventController::class, 'rosterMemberManagement'])->name('participant.roster.manage');
@@ -81,7 +85,7 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])->name('participant.event.selectOrCreateTeam.redirect');
 			Route::post('/event/{id}/join/redirect/createTeamToJoinEvent', [ParticipantEventController::class, 'redirectToCreateTeamToJoinEvent'])->name('participant.event.createTeam.redirect');
 			Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.event.view');
-
+			
 			// Organizer management
 			Route::post('/organizer/follow', [ParticipantEventController::class, 'followOrganizer'])->name('participant.organizer.follow');
 			Route::delete('/organizer/unfollow', [ParticipantEventController::class, 'unfollowOrganizer'])->name('participant.organizer.unfollow');

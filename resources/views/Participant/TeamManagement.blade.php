@@ -16,16 +16,18 @@
 <body>
     @include('CommonLayout.NavbarforParticipant')
     @include('Participant.Layout.TeamHead')
-   
+
     <main class="main2">
         <div class="tabs">
             <button class="tab-button outer-tab tab-button-active"
                 onclick="showTab(event, 'Overview')">Overview</button>
             <button class="tab-button outer-tab" onclick="showTab(event, 'Members', 'outer-tab')">Members</button>
             <button class="tab-button outer-tab" onclick="showTab(event, 'Active Rosters', 'outer-tab')">Active
-                Rosters</button>
+                Rosters
+            </button>
             <button class="tab-button outer-tab" onclick="showTab(event, 'Roster History', 'outer-tab')">Roster
-                History</button>
+                History
+            </button>
         </div>
 
         <div class="tab-content outer-tab" id="Overview">
@@ -36,15 +38,17 @@
                 @if (empty($joinEvents))
                     <p>No events available</p>
                 @else
-                    <button class="carousel-button position-absolute" style="top: 100px; left: 20px;" onclick="slideEvents(-1)">
+                    <button class="carousel-button position-absolute" style="top: 100px; left: 20px;"
+                        onclick="slideEvents(-1)">
                         &lt;
                     </button>
-                    <button class="carousel-button position-absolute" style="top: 100px; right: 20px;" onclick="slideEvents(1)">
+                    <button class="carousel-button position-absolute" style="top: 100px; right: 20px;"
+                        onclick="slideEvents(1)">
                         &gt;
                     </button>
                     <div class="event-carousel">
                         @foreach ($joinEvents as $key => $joinEvent)
-                           <div class="event mx-auto">
+                            <div class="event mx-auto">
                                 <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
                                     <br>
                                     @if (!isset($joinEvent->roster[0]))
@@ -64,12 +68,14 @@
                                 <div class="frame1">
                                     <div class="container d-flex justify-content-between pt-2">
                                         <div>
-                                            <img {!! trustedBladeHandleImageFailureBanner() !!} src="{{ bladeImageNull($joinEvent->eventBanner) }}" class="logo2">
+                                            <img {!! trustedBladeHandleImageFailureBanner() !!}
+                                                src="{{ bladeImageNull($joinEvent->eventBanner) }}" class="logo2">
                                             <span> {{ $joinEvent->eventDetails->eventName }} </span>
                                         </div>
                                         <div>
                                             <img {!! trustedBladeHandleImageFailureBanner() !!}
-                                                src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}" class="logo2 me-2">
+                                                src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
+                                                class="logo2 me-2">
                                             <span>{{ $joinEvent->game->gameTitle }}</span>
                                             <span>1K Followers</span>
                                         </div>
@@ -90,7 +96,7 @@
                             </div>
                         @endforeach
                     </div>
-                    
+
                 @endif
             </div>
 
@@ -193,7 +199,7 @@
             let target = event.currentTarget;
             target.classList.add('tab-button-active');
         }
-     
+
         function slideEvents(direction) {
             const eventBoxes = document.querySelectorAll('.event-box');
             const visibleEvents = Array.from(eventBoxes).filter(eventBox => eventBox.style.display !== 'none');
@@ -226,31 +232,6 @@
             initializeEventsDisplay();
         });
 
-
-        async function approveMember(memberId) {
-            const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json',
-                    },
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    const memberRow = button.closest('tr');
-                    memberRow.remove();
-                } else {
-                    console.error('Error updating member status:', data.message);
-                }
-            } catch (error) {
-                console.error('Error approving member:', error);
-            }
-        }
-   
         document.addEventListener("DOMContentLoaded", function() {
             const searchInputs = document.querySelectorAll('.search_box input');
             const memberTables = document.querySelectorAll('.member-table');

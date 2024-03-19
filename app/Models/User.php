@@ -61,12 +61,18 @@ class User extends Authenticatable implements FilamentUser
 
     public function team()
     {
-        return $this->hasOne(Team::class, 'user_id');
+        return $this->hasOne(Team::class, 'creator_id');
     }
 
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'team_members');
+    }
+
+
+    public function members()
+    {
+        return $this->hasMany(TeamMember::class, 'user_id');
     }
 
     public function isFollowing($organizer)

@@ -127,7 +127,7 @@
             }
         }
 
-        function takeNoAction () {
+        function takeNoAction() {
             dialogForMember.reset();
         }
 
@@ -142,6 +142,13 @@
             dialogForMember.setActionName('disapprove')
             dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction) 
         }
+
+        function disMember(memberId) {
+            dialogForMember.setMemberId(memberId);
+            dialogForMember.setActionName('disapprove')
+            dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction) 
+        }
+
 
         async function approveMemberAction() {
             console.log({memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName()})
