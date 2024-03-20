@@ -1,3 +1,6 @@
+            
+<p class="text-center">Team {{ $selectTeam->teamName }} has {{ $loop->count }} roster(s)</p>
+
 <div class="event mx-auto">
     <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
         <br>
@@ -32,12 +35,14 @@
     </div>
     <div class="d-flex mt-2 mb-3 justify-content-center">
         <div>
-            <form method="GET"
-                action="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">
-                <button class="oceans-gaming-default-button oceans-gaming-default-button-link me-2" type="submit">
-                    Manage Roster
-                </button>
-            </form>
+            @if ($selectTeam->creator_id == $user->id)
+                <form method="GET"
+                    action="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">
+                    <button class="oceans-gaming-default-button oceans-gaming-default-button-link me-2" type="submit">
+                        Manage Roster
+                    </button>
+                </form>
+            @endif
         </div>
     </div>
 </div>

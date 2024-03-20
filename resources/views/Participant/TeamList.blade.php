@@ -54,7 +54,7 @@
                             </div>
                         </label>
                     </div>
-                    <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
+                    <h3 class="team-name" id="team-name">No teams invited yet</h3>
                     <br>
                 </div>
             </div>

@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('follows', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('organizer_id');
+            $table->unsignedBigInteger('participant_user_id');
+            $table->unsignedBigInteger('organizer_user_id');
             $table->timestamps();
-            $table->unique(['user_id', 'organizer_id']); 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('organizer_id')->references('id')->on('organizers')->onDelete('cascade');
+            $table->unique(['participant_user_id', 'organizer_user_id']); 
+            $table->foreign('participant_user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('organizer_user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

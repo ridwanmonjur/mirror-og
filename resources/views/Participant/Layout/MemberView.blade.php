@@ -1,13 +1,19 @@
+@php 
+    $counTeamMembers = count($teamMembers);
+@endphp
 <br>
+
 <div id="CurrentMembers">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
-        {{ count($teamMembers) }} accepted members &nbsp;&nbsp;
-        <button class="oceans-gaming-default-button oceans-gaming-default-button-link" 
-            onclick="window.location.href='{{route('participant.member.manage', ['id'=> $selectTeam->id ])}}'">
-            Manage Team
-        </button>            
+        {{ $counTeamMembers }} accepted members &nbsp;&nbsp;
+        @if ($selectTeam->creator_id == $user->id)
+            <button class="oceans-gaming-default-button oceans-gaming-default-button-link" 
+                onclick="window.location.href='{{route('participant.member.manage', ['id'=> $selectTeam->id ])}}'">
+                Manage Team
+            </button>
+        @endif            
     </p>
-    @if(isset($teamMembers[0]))
+    @if($counTeamMembers > 0)
         <div class="cont mt-3 pt-3">
             <div class="leftC">
                 <span class="icon2">

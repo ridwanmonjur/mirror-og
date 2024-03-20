@@ -10,6 +10,7 @@ use App\Models\TeamCaptain;
 use App\Models\EventDetail;
 use App\Models\Follow;
 use App\Models\JoinEvent;
+use App\Models\Organizer;
 use App\Models\TeamMember;
 use App\Models\Participant;
 use App\Models\RosterCaptain;
@@ -53,6 +54,7 @@ class ParticipantEventController extends Controller
         
         if ($teamIdList) {
             $membersCount = TeamMember::whereIn('team_id', $teamIdList)
+                ->where('status', 'accepted')
                 ->groupBy('team_id')
                 ->select('team_id', DB::raw('COUNT(*) as member_count'))
                 ->get()
@@ -70,7 +72,7 @@ class ParticipantEventController extends Controller
     public function teamManagement(Request $request, $id)
     {
         $user_id = $request->attributes->get('user')->id;
-        $selectTeam = Team::where('id', $id)->where('creator_id', $user_id)
+        $selectTeam = Team::where('id', $id)
             ->with(['members', 'awards'])->first();
         
         if ($selectTeam) {
@@ -81,17 +83,34 @@ class ParticipantEventController extends Controller
                 ->with('eventDetails.tier', 'eventDetails.game')
                 ->get();
 
+            $userIds = $joinEvents->pluck('event_details.user_id')->flatten()->toArray();
+            $followCounts = Follow::whereIn('organizer_user_id', $userIds)
+                ->groupBy('organizer_user_id')
+                ->select('organizer_user_id', DB::raw('COUNT(*) as followCount'))
+                ->get()
+                ->pluck('followCount', 'organizer_user_id')
+                ->toArray();
+
+            $joinEventsHistory = [];
+            $joinEventsActive = [];
             foreach ($joinEvents as $joinEvent) {
                 $joinEvent->status = $joinEvent->eventDetails->statusResolved();
                 $joinEvent->tier = $joinEvent->eventDetails->tier;
                 $joinEvent->game = $joinEvent->eventDetails->game;
+                if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
+                    $joinEventsActive[] = $joinEvent;
+                } else if ($joinEvent->status == 'ENDED'){
+                    $joinEventsHistory[] = $joinEvent;
+                }
             }
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
             $teamMembers = $selectTeam->members->where('status', 'accepted');
 
+            // dd($followCounts, $user_id, $joinEvents);
+
             return view('Participant.TeamManagement', 
-                compact('selectTeam', 'joinEvents', 'teamMembers')
+                compact('selectTeam', 'joinEvents', 'teamMembers', 'joinEventsHistory', 'joinEventsActive', 'followCounts')
             );
         } else {
             return $this->show404Participant('This event is missing or you need to be a member to view events!');
@@ -123,8 +142,6 @@ class ParticipantEventController extends Controller
             return $this->show404Participant('This event is missing or you need to be a member to view events!');
         }
     }
-
- 
 
     public function rosterMemberManagement(Request $request, $id, $teamId)
     {
@@ -164,8 +181,17 @@ class ParticipantEventController extends Controller
             })
                 ->with('eventDetails', 'user')
                 ->with('eventDetails.tier', 'eventDetails.game')
+                ->withCount('user.follows')
                 ->groupBy('event_details_id')
                 ->get();
+            
+                $userIds = $joinEvents->pluck('event_details.user_id')->flatten()->toArray();
+                $followCounts = Follow::whereIn('organizer_user_id', $userIds)
+                    ->groupBy('organizer_user_id')
+                    ->select('organizer_user_id', DB::raw('COUNT(*) as followCount'))
+                    ->get()
+                    ->pluck('followCount', 'organizer_user_id')
+                    ->toArray();
 
             foreach ($joinEvents as $joinEvent) {
                 $joinEvent->status = $joinEvent->eventDetails->statusResolved();
@@ -173,9 +199,7 @@ class ParticipantEventController extends Controller
                 $joinEvent->game = $joinEvent->eventDetails->game;
             }
 
-            $followCounts = Follow::select('organizer_id', DB::raw('count(user_id) as user_count'))->groupBy('organizer_id')->pluck('user_count', 'organizer_id')->toArray();
-
-            return view('Participant.RegistrationManagement', compact('selectTeam', 'joinEvents', 'followCounts'));
+            return view('Participant.RegistrationManagement', compact('selectTeam', 'followCounts', 'joinEvents'));
         } else {
             return redirect()->back()->with('error', 'Team not found.');
         }
@@ -264,13 +288,17 @@ class ParticipantEventController extends Controller
                 }
             }
 
-            $organizerId = $event?->user?->organizer?->id ?? null;
+            $organizerId = $event?->user_id ?? null;
 
             if ($organizerId) {
-                $followersCount = Follow::where('organizer_id', $organizerId)->count();
+                $followersCount = Follow::where('organizer_user_id', $organizerId)->count();
             } else {
                 $followersCount = null;
             }
+
+            $user->isFollowing = Follow::where('participant_user_id', $userId)
+                ->where('organizer_user_id', $event->user_id)
+                ->first();
 
             return view('Participant.ViewEvent', compact('event', 'followersCount', 'user', 'existingJoint'));
         } catch (Exception $e) {
@@ -285,12 +313,12 @@ class ParticipantEventController extends Controller
             $userId = $request->input('user_id');
             $organizerId = $request->input('organizer_id');
 
-            $existingFollow = Follow::where('user_id', $userId)->where('organizer_id', $organizerId)->first();
+            $existingFollow = Follow::where('participant_user_id', $userId)->where('organizer_user_id', $organizerId)->first();
 
             if (!$existingFollow) {
                 Follow::create([
-                    'user_id' => $userId,
-                    'organizer_id' => $organizerId,
+                    'participant_user_id' => $userId,
+                    'organizer_user_id' => $organizerId,
                 ]);
 
                 return response()->json(['message' => 'Successfully followed the organizer']);
@@ -300,16 +328,6 @@ class ParticipantEventController extends Controller
         } catch (QueryException $e) {
             return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
         }
-    }
-
-    public function unfollowOrganizer(Request $request)
-    {
-        $userId = $request->input('user_id');
-        $organizerId = $request->input('organizer_id');
-
-        Follow::where('user_id', $userId)->where('organizer_id', $organizerId)->delete();
-
-        return response()->json(['message' => 'Successfully unfollowed the organizer']);
     }
 
     public function redirectToSelectOrCreateTeamToJoinEvent(Request $request, $id)

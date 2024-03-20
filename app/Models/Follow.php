@@ -10,8 +10,8 @@ class Follow extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'organizer_id',
+        'participant_user_id',
+        'organizer_user_id',
     ];
 
     public function user()

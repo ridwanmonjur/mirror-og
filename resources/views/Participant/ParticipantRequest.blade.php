@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Management</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamList.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
@@ -16,7 +17,7 @@
 <body>
     @include('CommonLayout.NavbarforParticipant')
     <main class="main2">
-        @include('Participant.ParticipantRequest.MemberManagement')
+        @include('Participant.ParticipantRequest.RequestManagement')
     </main>
 
     @include('CommonLayout.BootstrapV5Js')
@@ -124,187 +125,7 @@
             dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
         }
 
-
-        function slideEvents(direction) {
-            const eventBoxes = document.querySelectorAll('.event-box');
-            const visibleEvents = Array.from(eventBoxes).filter(eventBox => eventBox.style.display !== 'none');
-            eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
-            let startIndex = 0;
-
-            if (visibleEvents.length > 0) {
-                startIndex = (Array.from(eventBoxes).indexOf(visibleEvents[0]) + direction + eventBoxes.length) % eventBoxes
-                    .length;
-            }
-
-            for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
-                const index = (startIndex + i + eventBoxes.length) % eventBoxes.length;
-                eventBoxes[index].style.display = 'block';
-            }
-        }
-
-        function approveMemberAction() {
-            const memberId = dialogForMember.getMemberId();
-            const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
-            console.log({
-                memberId: dialogForMember.getMemberId(),
-                action: dialogForMember.getActionName()
-            });
-
-            fetchData(url,
-                function(responseData) {
-                    if (responseData.success) {
-                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') +
-                            'tab=PendingTeamBtn&success=true';
-                        window.location.replace(currentUrl);
-                    } else {
-                        console.error('Error updating member status:', responseData.message);
-                    }
-                },
-                function(error) {
-                    console.error('Error approving member:', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                }
-            );
-        }
-
-        async function disapproveMemberAction() {
-            const memberId = dialogForMember.getMemberId();
-            const url = "{{ route('participant.member.disapprove', ['id' => ':id']) }}".replace(':id', memberId);
-            console.log({
-                memberId: dialogForMember.getMemberId(),
-                action: dialogForMember.getActionName()
-            });
-
-            fetchData(url,
-                function(responseData) {
-                    if (responseData.success) {
-                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') +
-                            'tab=SentTeamBtn&success=true';
-                        window.location.replace(currentUrl);
-                    } else {
-                        console.error('Error updating member status:', responseData.message);
-                    }
-                },
-                function(error) {
-                    console.error('Error disapproving member:', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                }
-            );
-        }
-
-        async function inviteMemberAction() {
-            const memberId = dialogForMember.getMemberId();
-            const teamId = dialogForMember.getTeamId();
-            const url = "{{ route('participant.member.invite', ['id' => ':id', 'userId' => ':userId']) }}"
-                .replace(':userId', memberId)
-                .replace(':id', teamId);
-            console.log({ memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName() });
-
-            fetchData(
-                url,
-                function(responseData) {
-                    if (responseData.success) {
-                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=SentTeamBtn&success=true';
-                        window.location.replace(currentUrl);
-                    } else {
-                        console.error('Error updating member status:', responseData.message);
-                    }
-                },
-                function(error) {
-                    console.error('Error inviting member:', error);
-                },
-                {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                }
-            );
-        }
-
-        async function unInviteMemberAction() {
-            const memberId = dialogForMember.getMemberId();
-            const teamId = dialogForMember.getTeamId();
-            const url = "{{ route('participant.member.invite', ['id' => ':id', 'userId' => ':userId']) }}"
-                .replace(':userId', memberId)
-                .replace(':id', teamId);
-
-            fetchData(
-                url,
-                function(responseData) {
-                    if (responseData.success) {
-                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=SentTeamBtn&success=true';
-                        window.location.replace(currentUrl);
-                    } else {
-                        console.error('Error updating member status:', responseData.message);
-                    }
-                },
-                function(error) {
-                    console.error('Error uninviting member:', error);
-                },
-                {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                }
-            );
-        }
-
-        async function fetchParticipants(event) {
-            let input = event.currentTarget;
-            let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-
-            fetchData(
-                url,
-                function(responseData) {
-                    if (responseData.success) {
-                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=SentTeamBtn&success=true';
-                        window.location.replace(currentUrl);
-                    } else {
-                        console.error('Error updating member status:', responseData.message);
-                    }
-                },
-                function(error) {
-                    console.error('Error uninviting member:', error);
-                },
-                {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                }
-            );
-        }
-
-        const searchInputs = document.querySelectorAll('.search_box input');
-        const memberTables = document.querySelectorAll('.member-table');
-
-        searchInputs.forEach((searchInput, index) => {
-            searchInput.addEventListener("input", function() {
-                const searchTerm = searchInput.value.toLowerCase();
-                const memberRows = memberTables[index].querySelectorAll('tbody tr');
-
-                memberRows.forEach(row => {
-                    const playerName = row.querySelector('.player-info span')
-                        .textContent.toLowerCase();
-
-                    if (playerName.includes(searchTerm)) {
-                        row.style.display = 'table-row';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-        });
+        
     </script>
 
 </body>

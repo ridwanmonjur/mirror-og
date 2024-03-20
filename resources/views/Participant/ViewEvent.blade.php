@@ -99,20 +99,19 @@
                                 </div>
 
                                 <form id="followForm" method="POST"
-                                    action="{{ $user && $user->isFollowing($event?->user?->organizer) ? route('participant.organizer.unfollow') : route('participant.organizer.follow') }}">
+                                    action="{{ $user && $user->isFollowing ? route('participant.organizer.unfollow') : route('participant.organizer.follow') }}">
                                     @csrf
-                                    @if ($user && $user->isFollowing($event?->user?->organizer))
+                                    @if ($user && $user->isFollowing)
                                         @method('DELETE')
                                     @endif
                                     <input type="hidden" name="user_id"
                                         value="{{ $user && $user->id ? $user->id : '' }}">
                                     <input type="hidden" name="organizer_id"
-                                        value="{{ $event?->user?->organizer?->id }}">
+                                        value="{{ $event?->user_id }}">
                                     <button type="submit" id="followButton"
-                                        data-following="{{ $user && $user->isFollowing($event?->user?->organizer) }}"
-                                        style="background-color: {{ $user && $user->isFollowing($event?->user?->organizer) ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing($event?->user?->organizer) ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                                        style="background-color: {{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
 
-                                        {{ $user && $user->isFollowing($event?->user?->organizer) ? 'Following' : 'Follow' }}
+                                        {{ $user && $user->isFollowing ? 'Following' : 'Follow' }}
                                     </button>
                                     {{-- here is an input for signaling whether to fetch or not --}}
                                 </form>
@@ -290,16 +289,13 @@
                 let data = await response.json();
 
                 let followButton = document.getElementById('followButton');
-                let isFollowing = followButton.getAttribute('data-following') === 'true';
 
                 if (isFollowing) {
                     followButton.innerText = 'Follow';
-                    followButton.setAttribute('data-following', 'false');
                     followButton.style.backgroundColor = '#43A4D7';
                     followButton.style.color = 'white';
                 } else {
                     followButton.innerText = 'Following';
-                    followButton.setAttribute('data-following', 'true');
                     followButton.style.backgroundColor = '#8CCD39';
                     followButton.style.color = 'black';
                 }

@@ -38,14 +38,16 @@
                 @if (empty($joinEvents))
                     <p>No events available</p>
                 @else
-                    <button class="carousel-button position-absolute" style="top: 100px; left: 20px;"
-                        onclick="slideEvents(-1)">
-                        &lt;
-                    </button>
-                    <button class="carousel-button position-absolute" style="top: 100px; right: 20px;"
-                        onclick="slideEvents(1)">
-                        &gt;
-                    </button>
+                    @if (isset($joinEvents[2]))
+                        <button class="carousel-button position-absolute" style="top: 100px; left: 20px;"
+                            onclick="slideEvents(-1)">
+                            &lt;
+                        </button>
+                        <button class="carousel-button position-absolute" style="top: 100px; right: 20px;"
+                            onclick="slideEvents(1)">
+                            &gt;
+                        </button>
+                    @endif
                     <div class="event-carousel">
                         @foreach ($joinEvents as $key => $joinEvent)
                             <div class="event mx-auto">
@@ -151,26 +153,26 @@
 
         <div class="tab-content outer-tab d-none" id="Active Rosters">
             <br><br>
-            <p class="text-center">
-                Team {{ $selectTeam->teamName }} has no active rosters
-            </p>
+            @if (!isset($joinEventsActive[0]))
+                <p class="text-center">
+                    Team {{ $selectTeam->teamName }} has no active rosters
+                </p>
+            @endif
             <div id="activeRostersForm" class="tex-center mx-auto">
-                @foreach ($joinEvents as $key => $joinEvent)
-                    @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
-                        @include('Participant.Layout.RosterView')
-                    @endif
+                @foreach ($joinEventsActive as $key => $joinEvent)
+                    @include('Participant.Layout.RosterView')
                 @endforeach
             </div>
         </div>
 
         <div class="tab-content outer-tab d-none" id="Roster History">
             <br><br>
-            <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history</p>
+            @if (!isset($joinEventsHistory[0]))
+                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history</p>
+            @endif
             <div id="activeRostersForm" class="tex-center mx-auto">
-                @foreach ($joinEvents as $key => $joinEvent)
-                    @if (in_array($joinEvent->status, ['ENDED']))
-                        @include('Participant.Layout.RosterView')
-                    @endif
+                @foreach ($joinEventsHistory as $key => $joinEvent)
+                    @include('Participant.Layout.RosterView')
                 @endforeach
             </div>
         </div>
@@ -190,7 +192,6 @@
                 selectedTab.classList.remove('d-none');
                 selectedTab.classList.add('tab-button-active');
             }
-
             const tabButtons = document.querySelectorAll(`.tab-button-active.${extraClassNameToFilter}`);
             tabButtons.forEach(button => {
                 button.classList.remove("tab-button-active");

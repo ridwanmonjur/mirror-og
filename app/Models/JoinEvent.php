@@ -57,13 +57,10 @@ class JoinEvent extends Model
 
     public static function getJoinEventsForTeam($team_id)
     {
-        return self::whereHas('user.teams', function ($query) use ($team_id) {
-            $query->where('team_id', $team_id);
-        })
-        ->with('user');
+        return self::where('team_id', $team_id)
+            ->with('user');
        
     }
-
     public static function getJoinEventsByTeamIdList($teamIdList)
     {
         return self::whereHas('user.teams', function ($query) use ($teamIdList) {
