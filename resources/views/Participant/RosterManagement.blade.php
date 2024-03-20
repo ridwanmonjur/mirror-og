@@ -13,7 +13,6 @@
 
 </head>
 
-
 <body>
     @include('CommonLayout.NavbarforParticipant')
     @include('Participant.Layout.TeamHeadNoFileChange')
@@ -51,11 +50,11 @@
                                 <td>
                                 <td class="coloured-cell">
                                     <div class="player-info">
-                                        @if ($member->id == $captain->team_member_id)
-                                            <div class="player-image"> </div>
+                                        @if (isset($captain))
+                                            @if ($member->id == $captain->team_member_id)
+                                                <div class="player-image"> </div>
+                                            @endif
                                         @endif
-                                        <span>{{ $member->user->name }}</span>
-                                    </div>
                                         <span>{{ $member->user->name }}</span>
                                     </div>
                                 </td>
@@ -77,9 +76,19 @@
                                             ✘
                                         </button>
                                     @endif
-                                    <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover" onclick="capatainMember('{{$rosterMembersKeyed[$member->id]->id}}')">
-                                        <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
-                                    </button>
+                                    @if (isset($captain))
+                                        @if ($member->id != $captain->team_member_id)
+                                            <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover" onclick="capatainMember('{{$rosterMembersKeyed[$member->id]->id}}')">
+                                                <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
+                                            </button>
+                                        @endif
+                                    @else
+                                        @if ($member->id != $captain->team_member_id)
+                                            <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover" onclick="capatainMember('{{$rosterMembersKeyed[$member->id]->id}}')">
+                                                <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
+                                            </button>
+                                        @endif
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -110,6 +119,8 @@
                     icon: 'success',
                     text: "Successfully updated user."
                 })
+
+                document.querySelector('.main2').scrollIntoView();
             }
         }
 

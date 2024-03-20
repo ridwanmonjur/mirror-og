@@ -24,4 +24,8 @@ class ParticipantController extends Controller
         $view = view('Participant.MemberManagement.MemberManagementScroll', $outputArray)->render();
         return response()->json(['html' => $view]);
     }
+
+    public function viewRequest(Request $request) {
+        return view('Participant.ParticipantRequest');
+    }
 }

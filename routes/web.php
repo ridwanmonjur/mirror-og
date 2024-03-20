@@ -7,6 +7,7 @@ use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\OrganizerCheckoutController;
+use App\Http\Controllers\Participant\ParticipantController;
 use App\Models\Participant;
 
 /* THIS IS THE UNSIGNED VIEW */
@@ -55,7 +56,10 @@ Route::group(['prefix' => 'participant'], function () {
 			
 			// Home page
 			Route::get('/home', [ParticipantEventController::class, 'home'])->name("participant.home.view");
-			
+
+			// Home page
+			Route::get('/request', [ParticipantController::class, 'viewRequest'])->name("participant.request.view");
+
 			// Team management
 			Route::get('/team/list', [ParticipantEventController::class, 'teamList'])->name("participant.team.view");
 			Route::get('/team/create', [ParticipantTeamController::class, 'createTeamView'])->name("participant.team.create");

@@ -15,10 +15,8 @@
 
 <body>
     @include('CommonLayout.NavbarforParticipant')
-    @include('Participant.Layout.TeamHeadNoFileChange')
-
     <main class="main2">
-        @include('Participant.MemberManagement.MemberManagement')
+        @include('Participant.ParticipantRequest.MemberManagement')
     </main>
 
     @include('CommonLayout.BootstrapV5Js')
@@ -27,7 +25,7 @@
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     @include('CommonLayout.Toast')
     @include('CommonLayout.Dialog')
-    @include('Participant.MemberManagement.MemberManagementScripts')
+    @include('Participant.ParticipantRequest.MemberManagementScripts')
     <script>
         let dialogForMember = new DialogForMember();
 
@@ -64,7 +62,7 @@
             }
 
             if (Number(pageValue)) {
-                document.getElementById('NewMembersBtn').click();
+                document.getElementById('PrivateInvitationsBtn').click();
             }
 
             if (successValue == 'true') {
@@ -157,7 +155,7 @@
                     if (responseData.success) {
                         let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
                         currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') +
-                            'tab=CurrentMembersBtn&success=true';
+                            'tab=PendingTeamBtn&success=true';
                         window.location.replace(currentUrl);
                     } else {
                         console.error('Error updating member status:', responseData.message);
@@ -186,7 +184,7 @@
                     if (responseData.success) {
                         let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
                         currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') +
-                            'tab=PendingMembersBtn&success=true';
+                            'tab=SentTeamBtn&success=true';
                         window.location.replace(currentUrl);
                     } else {
                         console.error('Error updating member status:', responseData.message);
@@ -215,7 +213,7 @@
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn&success=true';
+                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=SentTeamBtn&success=true';
                         window.location.replace(currentUrl);
                     } else {
                         console.error('Error updating member status:', responseData.message);
@@ -244,7 +242,7 @@
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn&success=true';
+                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=SentTeamBtn&success=true';
                         window.location.replace(currentUrl);
                     } else {
                         console.error('Error updating member status:', responseData.message);
@@ -270,7 +268,7 @@
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn&success=true';
+                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=SentTeamBtn&success=true';
                         window.location.replace(currentUrl);
                     } else {
                         console.error('Error updating member status:', responseData.message);

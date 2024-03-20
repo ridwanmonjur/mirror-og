@@ -52,22 +52,15 @@ class ParticipantEventController extends Controller
         ] = Team::getUserTeamAndTeamMembersAndPluckIds($user_id);
         
         if ($teamIdList) {
-            $joinEvents = JoinEvent::getJoinEventsByTeamIdList($teamIdList)->get();
-            $count = count($teamList);
+            $membersCount = TeamMember::whereIn('team_id', $teamIdList)
+                ->groupBy('team_id')
+                ->select('team_id', DB::raw('COUNT(*) as member_count'))
+                ->get()
+                ->pluck('member_count', 'team_id');
+            
+            $count = $teamList->count();
     
-            foreach ($teamList as $team) {
-                $userIds = [];
-    
-                foreach ($joinEvents as $joinEvent) {
-                    if ($joinEvent->team_id === $team->id) {
-                        $userIds[] = $joinEvent->user->id;
-                    }
-                }
-    
-                $usernamesCountByTeam[$team->id] = count(array_unique($userIds));
-            }
-
-            return view('Participant.TeamList', compact('teamList', 'count', 'usernamesCountByTeam'));
+            return view('Participant.TeamList', compact('teamList', 'count', 'membersCount' ));
         } else {
             session()->flash('errorMessage', 'You have 0 teams! Create a team first.');
             return view('Participant.CreateTeam');
@@ -152,7 +145,7 @@ class ParticipantEventController extends Controller
             $rosterMembersKeyed = RosterMember::keyBy($rosterMembers);
 
             return view('Participant.RosterManagement', 
-                compact('selectTeam', 'joinEvent', 'teamMembers', 'rosterMembersProcessed', 'creator_id', 'rosterMembersKeyed', 'id')
+                compact('selectTeam', 'joinEvent', 'teamMembers', 'rosterMembersProcessed', 'creator_id', 'rosterMembersKeyed', 'id', 'captain')
             );
         } else {
             return $this->show404Participant('This event is missing or you need to be a member to view events!');

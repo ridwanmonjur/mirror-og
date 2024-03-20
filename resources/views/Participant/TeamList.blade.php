@@ -13,7 +13,14 @@
 
 <body>
     @include('CommonLayout.NavbarforParticipant')
-
+    <br><br> 
+    <div class="d-flex justify-content-center"> 
+        <button onclick="goToScreen();" type="button" class="btn oceans-gaming-default-button position-relative">
+            Team Requests
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+             Pending Count
+        </button>
+    </div>
     <main>
         @if ($count > 0)
             @foreach ($teamList as $team)
@@ -30,7 +37,7 @@
                                 <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
                                 <br>
                                 <p>Total Members:
-                                    {{ empty($usernamesCountByTeam[$team->id]) ? 1 : $usernamesCountByTeam[$team->id] }}
+                                    {{ $membersCount[$team->id] }}
                                 </p>
                             </div>
                         </div>
@@ -58,6 +65,11 @@
 
     @include('CommonLayout.BootstrapV5Js')
 
+    <script>
+        function goToScreen() {
+            window.location.href = "{{route('participant.request.view')}}";
+        }
+    </script>
 </body>
 
 </html>

@@ -67,7 +67,6 @@ class ParticipantTeamController extends Controller
     public function editTeamView($id)
     {
         $team = Team::findOrFail($id);
-        
         return view('Participant.EditTeam', [
             'team'=> $team
         ]);
@@ -80,7 +79,6 @@ class ParticipantTeamController extends Controller
         if ($member) {
             $member->status = 'accepted';
             $member->save();
-
             return response()->json(['success' => true, 'message' => 'Team member status updated to accepted']);
         } else {
             return response()->json(['success' => false, 'message' => 'Invalid operation or team member not found'], 400);
@@ -90,16 +88,9 @@ class ParticipantTeamController extends Controller
     public function approveRosterMember(Request $request, $id)
     {
         $member = RosterMember::find($id);
-
         if ($member) {
             $member->status = 'accepted';
-            try {
-                $member->save();
-            } catch (Exception $e) {
-                // Log or handle the exception
-                dd($member, $e);
-            }
-
+            $member->save();
             return response()->json(['success' => true, 'message' => 'Roster status updated to accepted']);
         } else {
             return response()->json(['success' => false, 'message' => 'Invalid operation or roster member not found'], 400);
@@ -113,7 +104,6 @@ class ParticipantTeamController extends Controller
         if ($member) {
             $member->status = 'rejected';
             $member->save();
-
             return response()->json(['success' => true, 'message' => 'Team member status updated to rejected']);
         } else {
             return response()->json(['success' => false, 'message' => 'Invalid operation or team member not found'], 400);
@@ -127,7 +117,6 @@ class ParticipantTeamController extends Controller
         if ($member) {
             $member->status = 'rejected';
             $member->save();
-
             return response()->json(['success' => true, 'message' => 'Roster member status updated to rejected']);
         } else {
             return response()->json(['success' => false, 'message' => 'Invalid operation or roster member not found'], 400);
