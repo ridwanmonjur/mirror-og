@@ -99,21 +99,16 @@
                                 </div>
 
                                 <form id="followForm" method="POST"
-                                    action="{{ $user && $user->isFollowing ? route('participant.organizer.unfollow') : route('participant.organizer.follow') }}">
+                                    action="{{ route('participant.organizer.follow') }}">
                                     @csrf
-                                    @if ($user && $user->isFollowing)
-                                        @method('DELETE')
-                                    @endif
                                     <input type="hidden" name="user_id"
                                         value="{{ $user && $user->id ? $user->id : '' }}">
                                     <input type="hidden" name="organizer_id"
                                         value="{{ $event?->user_id }}">
                                     <button type="submit" id="followButton"
                                         style="background-color: {{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
-
                                         {{ $user && $user->isFollowing ? 'Following' : 'Follow' }}
                                     </button>
-                                    {{-- here is an input for signaling whether to fetch or not --}}
                                 </form>
                             </div>
                             <br>
@@ -272,14 +267,11 @@
         document.getElementById('followForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            if (document.querySelector("input[name='user_id']").value == "") {
-                window.location.href = "{{ route('participant.signin.view') }}";
-                return;
-            }
-
+            let followButton = document.getElementById('followButton');
             let form = this;
             let formData = new FormData(form);
-
+            followButton.style.setProperty('pointer-events', 'none');
+    
             try {
                 let response = await fetch(form.action, {
                     method: form.method,
@@ -287,19 +279,22 @@
                 });
 
                 let data = await response.json();
-
                 let followButton = document.getElementById('followButton');
+                followButton.style.setProperty('pointer-events', 'none')
 
-                if (isFollowing) {
-                    followButton.innerText = 'Follow';
-                    followButton.style.backgroundColor = '#43A4D7';
-                    followButton.style.color = 'white';
-                } else {
+                if (data.isFollowing) {
                     followButton.innerText = 'Following';
                     followButton.style.backgroundColor = '#8CCD39';
                     followButton.style.color = 'black';
+                } else {
+                    followButton.innerText = 'Follow';
+                    followButton.style.backgroundColor = '#43A4D7';
+                    followButton.style.color = 'white';
                 }
+                
+                followButton.style.setProperty('pointer-events', 'auto');
             } catch (error) {
+                followButton.style.setProperty('pointer-events', 'auto');
                 console.error('Error:', error);
             }
         });

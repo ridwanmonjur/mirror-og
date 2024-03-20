@@ -315,15 +315,23 @@ class ParticipantEventController extends Controller
 
             $existingFollow = Follow::where('participant_user_id', $userId)->where('organizer_user_id', $organizerId)->first();
 
-            if (!$existingFollow) {
+            if ($existingFollow) {
+                $existingFollow->delete();
+                return response()->json([
+                    'message' => 'Successfully unfollowed the organizer',
+                    'isFollowing' => false
+                ], 201);
+            } else {
                 Follow::create([
                     'participant_user_id' => $userId,
                     'organizer_user_id' => $organizerId,
                 ]);
 
-                return response()->json(['message' => 'Successfully followed the organizer']);
-            } else {
-                return response()->json(['message' => 'Successfully followed the organizer']);
+                return response()->json([
+                    'message' => 'Successfully followed the organizer',
+                    'isFollowing' => true
+                ], 201);
+               
             }
         } catch (QueryException $e) {
             return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);

@@ -16,9 +16,7 @@
 
 <body>
     @include('CommonLayout.NavbarforParticipant')
-    <main class="main2">
-        @include('Participant.ParticipantRequest.RequestManagement')
-    </main>
+    @include('Participant.ParticipantRequest.RequestManagement')
 
     @include('CommonLayout.BootstrapV5Js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
@@ -124,7 +122,6 @@
             dialogForMember.setActionName('disapprove')
             dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
         }
-
         
     </script>
 
