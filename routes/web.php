@@ -49,8 +49,6 @@ Route::group(['prefix' => 'participant'], function () {
 	Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name("participant.steam.login");
 	Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'])->name("participant.steam.callback");
 	
-	Route::post('/search', [Participant::class, 'searchParticipant'])->name('participant.search');
-
 	// General participant functions
 	Route::group(['middleware' => 'auth'], function () {
 		Route::group(['middleware' => 'check-permission:participant|admin'], function () {

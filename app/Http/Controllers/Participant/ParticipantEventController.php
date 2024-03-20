@@ -117,11 +117,7 @@ class ParticipantEventController extends Controller
                 $teamMembers = $selectTeam->members;
                 $teamMembersProcessed = TeamMember::processStatus($teamMembers);
                 $creator_id = $selectTeam->creator_id;
-                $userList = User::where('role', 'PARTICIPANT')->with([
-                        'members' => function ($q) use ($teamId) {
-                        $q->where('team_id', $teamId);
-                    }
-                ])->paginate($page);
+                $userList = User::getParticipants($request, $teamId)->paginate($page);
 
                 foreach ($userList as $user) {
                     $user->is_in_team = $user->members->isNotEmpty() ? 'yes' : 'no';

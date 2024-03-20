@@ -17,11 +17,15 @@
     <div class="tabs">
         <button id="CurrentMembersBtn" class="tab-button inner-tab tab-button-active"
             onclick="showTab(event, 'CurrentMembers', 'inner-tab')">Current
-            Members</button>
+            Members
+        </button>
         <button id="PendingMembersBtn" class="tab-button inner-tab"
-            onclick="showTab(event, 'PendingMembers', 'inner-tab')">Pending Members</button>
+            onclick="showTab(event, 'PendingMembers', 'inner-tab')">
+            Pending Members
+        </button>
         <button id="NewMembersBtn" class="tab-button inner-tab" onclick="showTab(event, 'NewMembers', 'inner-tab')">New
-            Members</button>
+            Members
+        </button>
     </div>
     <br>
     <div class="tab-content inner-tab" id="CurrentMembers">

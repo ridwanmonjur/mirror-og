@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use ErrorException;
 use Illuminate\Database\QueryException;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Log;
@@ -459,7 +460,7 @@ class AuthController extends Controller
             ]);
 
             if (Auth::attempt($validatedData)) {
-                $user = Auth::getProvider()->retrieveByCredentials($validatedData);
+                $user = User::where('email', $request->email)->first();
         
                 if (!$user->email_verified_at) {
                     return redirect()
@@ -471,14 +472,18 @@ class AuthController extends Controller
                 }
         
                 if ($user->role != $userRoleCapital && $user->role != 'ADMIN') {
-                    throw new \ErrorException("Invalid Role for $userRoleSentence");
+                    throw new ErrorException("Invalid Role for $userRoleSentence");
                 }
         
                 $request->session()->regenerate();
-    
-                return redirect()->intended(route($userRole . '.home.view'))->with('success', "Account signed in successfully as $userRole!");
+
+                $token = $user->createToken('Personal Access Token')->plainTextToken;
+
+                return redirect()->intended(route($userRole . '.home.view'))
+                    ->with('success', "Account signed in successfully as $userRole!")
+                    ->with('token', $token);
             } else {
-                throw new \ErrorException('The email or password you entered is incorrect!');
+                throw new ErrorException('The email or password you entered is incorrect!');
             }
         } catch (QueryException $e) {
             Log::error($e->getMessage());

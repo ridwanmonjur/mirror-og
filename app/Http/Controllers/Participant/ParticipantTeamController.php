@@ -25,7 +25,14 @@ class ParticipantTeamController extends Controller
     public function teamMemberManagement(Request $request, $id)
     {
         $page = 5;
-        $user_id = $request->attributes->get('user')->id;
+        $user = $request->attributes->get('user');
+        if ($user) {
+            $user_id = $user->id;
+        } else {
+            $user = auth()->user();
+            $user_id = $user->id;
+        }
+
         $selectTeam = Team::where('id', $id)->where('creator_id', $user_id)
             ->with('members')->first();
         

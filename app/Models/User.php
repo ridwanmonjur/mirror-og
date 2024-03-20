@@ -11,7 +11,7 @@ use Filament\Panel;
 class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable;
-   
+
     public function canAccessFilament(): bool
     {
         return $this->role == 'ADMIN';
@@ -22,22 +22,14 @@ class User extends Authenticatable implements FilamentUser
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role'
-    ];
+    protected $fillable = ['name', 'email', 'password', 'role'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * The attributes that should be cast.
@@ -69,7 +61,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsToMany(Team::class, 'team_members');
     }
 
-
     public function members()
     {
         return $this->hasMany(TeamMember::class, 'user_id');
@@ -77,13 +68,35 @@ class User extends Authenticatable implements FilamentUser
 
     public function isFollowing($organizer)
     {
-        if (is_null($organizer)) return false;
-        return $this->following()->where('organizer_id', $organizer->id)->exists();
+        if (is_null($organizer)) {
+            return false;
+        }
+        return $this->following()
+            ->where('organizer_id', $organizer->id)
+            ->exists();
     }
 
     public function following()
     {
         return $this->belongsToMany(Organizer::class, 'follows', 'user_id', 'organizer_id');
     }
-    
+
+    public static function getParticipants($request, $teamId)
+    {
+        return self::query()
+            ->where('role', 'PARTICIPANT')
+            ->when($request->has('search'), function ($query) use ($request) {
+                $search = trim($request->input('search'));
+                if (!empty($search)) {
+                    $query->where(function ($q) use ($search) {
+                        $q->orWhere('name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%");
+                    });
+                }
+            })
+            ->with([
+                'members' => function ($query) use ($teamId) {
+                    $query->where('team_id', $teamId);
+                },
+            ]);
+    }
 }

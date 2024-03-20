@@ -42,7 +42,7 @@
 
         if (!params) params = {}
         params.page = 1;
-        ENDPOINT = "{{ route('participant.search') }}";
+        ENDPOINT = "{{ route('participant.search', ['id' => $selectTeam->id] ) }}";
 
         let body = {
             ...params,
@@ -50,6 +50,7 @@
             sort: {
                 [fetchVariables.getSortKey()]: fetchVariables.getSortType()
             },
+            teamId: {{$selectTeam->id}},
             search: fetchVariables.getSearch()
         }
 
@@ -221,7 +222,7 @@
         if (!params) params = {}
 
         params.page = 1;
-        ENDPOINT = "{{ route('participant.search') }}";
+        ENDPOINT = "{{ route('participant.search', ['id' => $selectTeam->id] ) }}";
         fetchVariables.setSearch(inputValue)
 
         let body = {
@@ -230,10 +231,9 @@
             sort: {
                 [fetchVariables.getSortKey()]: fetchVariables.getSortType()
             },
+            teamId: {{$selectTeam->id}},
             search: inputValue
         }
-
-        console.log({body})
 
         loadByPost(ENDPOINT, body);
     }
@@ -270,4 +270,5 @@
     var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     })
+    
 </script>
