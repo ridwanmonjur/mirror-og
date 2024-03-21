@@ -31,7 +31,6 @@ class ParticipantController extends Controller
     public function viewRequest(Request $request) {
         $user = $request->attributes->get('user');
         $user_id = $user->id;
-        $participant_id = $user->participant->id;
 
         // pending requests
         $invitedTeamList = Team::whereHas('members', function ($query) use ($user_id) {
@@ -40,13 +39,14 @@ class ParticipantController extends Controller
             ->get();
 
         $teamIdList = $invitedTeamList->pluck('id')->toArray();
-        $membersCount = TeamMember::whereIn('team_id', $teamIdList)
-            ->where('status', 'accepted')
-            ->groupBy('team_id')
-            ->select('team_id', DB::raw('COUNT(*) as member_count'))
-            ->get()
-            ->pluck('member_count', 'team_id');
-
+        $membersCount = DB::table('teams')
+            ->join('team_members', 'teams.id', '=', 'team_members.team_id')
+            ->whereIn('teams.id', $teamIdList)
+            ->where('team_members.status', 'accepted')
+            ->groupBy('teams.id')
+            ->selectRaw('teams.id as team_id, COALESCE(COUNT(team_members.id), 0) as member_count')
+            ->pluck('member_count', 'team_id')
+            ->toArray();
         // sentTeam
         $pendingTeamList = Team::whereHas('members', function ($query) use ($user_id) {
             $query->where('user_id', $user_id)->where('status', 'pending');
@@ -57,12 +57,17 @@ class ParticipantController extends Controller
             ->get();
 
         // invitations
-        $invitedEventsList = EventInvitation::where('participant_id', $participant_id)  
-            ->with('event')
+        $invitedEventsList = EventInvitation::where('participant_id', $user_id)  
+            ->with('event', 'event.tier', 'event.game', 'event.user')
             ->get();
 
         // dd($invitedTeamList, $pendingTeamList, $pendingTeamList, $invitedEventsList);
 
         return view('Participant.ParticipantRequest', compact('membersCount', 'invitedTeamList', 'pendingTeamList', 'invitedEventsList'));
+    }
+
+    public function viewProfile(Request $request) {
+        $user = $request->attributes->get('user');
+        return view('Participant.Profile');
     }
 }

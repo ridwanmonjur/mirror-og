@@ -73,12 +73,12 @@
                                     @endif
                                     @if (in_array($rosterMembersKeyed[$member->id]->status, ['accepted', 'pending']))
                                         <button id="remove-{{$member->id}}" class="gear-icon-btn" onclick="disapproveMember('{{$rosterMembersKeyed[$member->id]->id}}')">
-                                            ✘
+                                        ✘
                                         </button>
                                     @endif
                                     @if (isset($captain))
                                         @if ($member->id != $captain->team_member_id)
-                                            <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover" onclick="capatainMember('{{$rosterMembersKeyed[$member->id]->id}}')">
+                                            <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover ml-2" onclick="capatainMember('{{$rosterMembersKeyed[$member->id]->id}}')">
                                                 <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
                                             </button>
                                         @endif

@@ -53,14 +53,19 @@ class ParticipantEventController extends Controller
         ] = Team::getUserTeamAndTeamMembersAndPluckIds($user_id);
         
         if ($teamIdList) {
-            $membersCount = TeamMember::whereIn('team_id', $teamIdList)
-                ->where('status', 'accepted')
-                ->groupBy('team_id')
-                ->select('team_id', DB::raw('COUNT(*) as member_count'))
-                ->get()
-                ->pluck('member_count', 'team_id');
+            $membersCount = DB::table('teams')
+                ->leftJoin('team_members', function($join) {
+                    $join->on('teams.id', '=', 'team_members.team_id')
+                        ->where('team_members.status', '=', 'accepted');
+                })
+                ->whereIn('teams.id', $teamIdList)
+                ->groupBy('teams.id')
+                ->selectRaw('teams.id as team_id, COALESCE(COUNT(team_members.id), 0) as member_count')
+                ->pluck('member_count', 'team_id')
+                ->toArray();
             
             $count = $teamList->count();
+            // dd($teamIdList, $membersCount);
     
             return view('Participant.TeamList', compact('teamList', 'count', 'membersCount' ));
         } else {
@@ -83,12 +88,15 @@ class ParticipantEventController extends Controller
                 ->with('eventDetails.tier', 'eventDetails.game')
                 ->get();
 
-            $userIds = $joinEvents->pluck('event_details.user_id')->flatten()->toArray();
-            $followCounts = Follow::whereIn('organizer_user_id', $userIds)
-                ->groupBy('organizer_user_id')
-                ->select('organizer_user_id', DB::raw('COUNT(*) as followCount'))
-                ->get()
-                ->pluck('followCount', 'organizer_user_id')
+            $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
+            $followCounts =  DB::table('users')
+                ->leftJoin('follows', function($q)  {
+                    $q->on('users.id', '=', 'follows.organizer_user_id');
+                })
+                ->whereIn('users.id', $userIds)
+                ->selectRaw('users.id as organizer_user_id, COALESCE(COUNT(follows.organizer_user_id), 0) as count')
+                ->groupBy('users.id')
+                ->pluck('count', 'organizer_user_id')
                 ->toArray();
 
             $joinEventsHistory = [];
@@ -107,7 +115,7 @@ class ParticipantEventController extends Controller
             $joinEventIds = $joinEvents->pluck('id')->toArray();
             $teamMembers = $selectTeam->members->where('status', 'accepted');
 
-            // dd($followCounts, $user_id, $joinEvents);
+            // dd($joinEvents, $userIds, $followCounts, $user_id, $joinEvents);
 
             return view('Participant.TeamManagement', 
                 compact('selectTeam', 'joinEvents', 'teamMembers', 'joinEventsHistory', 'joinEventsActive', 'followCounts')
@@ -130,7 +138,6 @@ class ParticipantEventController extends Controller
                 $teamMembersProcessed = TeamMember::processStatus($teamMembers);
                 $creator_id = $selectTeam->creator_id;
                 $userList = User::getParticipants($request, $teamId)->paginate($page);
-
                 foreach ($userList as $user) {
                     $user->is_in_team = $user->members->isNotEmpty() ? 'yes' : 'no';
                 }
@@ -154,7 +161,6 @@ class ParticipantEventController extends Controller
             $creator_id = $selectTeam->creator_id;
             $teamMembers = $selectTeam->members->where('status', 'accepted');
             $memberIds = $teamMembers->pluck('id')->toArray();
-            
             $rosterMembers = RosterMember::whereIn('team_member_id', $memberIds)
                 ->where('join_events_id', $joinEvent->id)->get();
 
@@ -181,16 +187,18 @@ class ParticipantEventController extends Controller
             })
                 ->with('eventDetails', 'user')
                 ->with('eventDetails.tier', 'eventDetails.game')
-                ->withCount('user.follows')
                 ->groupBy('event_details_id')
                 ->get();
             
                 $userIds = $joinEvents->pluck('event_details.user_id')->flatten()->toArray();
-                $followCounts = Follow::whereIn('organizer_user_id', $userIds)
-                    ->groupBy('organizer_user_id')
-                    ->select('organizer_user_id', DB::raw('COUNT(*) as followCount'))
-                    ->get()
-                    ->pluck('followCount', 'organizer_user_id')
+                $followCounts = DB::table('users')
+                    ->leftJoin('follows', function($q)  {
+                        $q->on('users.id', '=', 'follows.organizer_user_id');
+                    })
+                    ->whereIn('users.id', $userIds)
+                    ->selectRaw('users.id as organizer_user_id, COALESCE(COUNT(follows.organizer_user_id), 0) as count')
+                    ->groupBy('users.id')
+                    ->pluck('count', 'organizer_user_id')
                     ->toArray();
 
             foreach ($joinEvents as $joinEvent) {
@@ -203,34 +211,6 @@ class ParticipantEventController extends Controller
         } else {
             return redirect()->back()->with('error', 'Team not found.');
         }
-    }
-
-    public function teamToRegister(Request $request)
-    {
-        $user_id = $request->attributes->get('user')->id;
-        $teamId = $request->input('selectedTeamId');
-
-        $isMember = TeamMember::where('team_id', $teamId)->where('user_id', $user_id)->exists();
-
-        if (!$isMember) {
-            $status = $user_id == Team::getTeamByCreatorId($teamId) ? 'accepted' : 'pending';
-            $member = new TeamMember();
-            $member->team_id = $teamId;
-            $member->user_id = $user_id;
-            $member->status = $status;
-            $member->save();
-        }
-
-        $joinEventData = session('joinEventData');
-
-        if ($joinEventData) {
-            $joint = new JoinEvent();
-            $joint->user_id = $joinEventData['user_id'];
-            $joint->event_details_id = $joinEventData['event_details_id'];
-            $joint->save();
-        }
-
-        return redirect()->route('participant.team.view', ['id' => auth()->user()->id]);
     }
 
     public function confirmUpdate(Request $request)
@@ -296,9 +276,11 @@ class ParticipantEventController extends Controller
                 $followersCount = null;
             }
 
-            $user->isFollowing = Follow::where('participant_user_id', $userId)
-                ->where('organizer_user_id', $event->user_id)
-                ->first();
+            if ($user) {
+                $user->isFollowing = Follow::where('participant_user_id', $userId)
+                    ->where('organizer_user_id', $event->user_id)
+                    ->first();
+            }
 
             return view('Participant.ViewEvent', compact('event', 'followersCount', 'user', 'existingJoint'));
         } catch (Exception $e) {

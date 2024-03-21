@@ -35,8 +35,8 @@
             <div class="d-flex justify-content-center"><b>Recent Events</b></div>
             <br> <br>
             <div class="position-relative d-flex justify-content-center">
-                @if (empty($joinEvents))
-                    <p>No events available</p>
+                @if (!isset($joinEvents[0]))
+                    <p>No events available!</p>
                 @else
                     @if (isset($joinEvents[2]))
                         <button class="carousel-button position-absolute" style="top: 100px; left: 20px;"
@@ -48,57 +48,62 @@
                             &gt;
                         </button>
                     @endif
-                    <div class="event-carousel">
+                    <div class="event-carousel" style="{{isset($joinEvents[1]) ? '--grid-size:1fr 1fr': '--grid-size:1fr'}}">
                         @foreach ($joinEvents as $key => $joinEvent)
-                            <div class="event mx-auto">
-                                <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
+                            <div class="position-relative">
+                                <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
+                                    <img {!! trustedBladeHandleImageFailureBanner() !!}
+                                        src="{{ bladeImageNull($joinEvent->tier ? $joinEvent->tier->tierIcon : null) }}"
+                                        class="me-2" height="60" width="80">
+                                </div>
+                                <div class="event mx-auto">
+                                    <div class="background-event"
+                                        style="background: url({{ bladeImageNull($joinEvent->eventBanner) }});">
+                                        <br>
+                                        @if (!isset($joinEvent->roster[0]))
+                                            <div class="player-info mt-1 ms-4">
+                                                <span>Empty roster</span>
+                                            </div>
+                                        @else
+                                            <ul class="player-info mt-1 ms-4 invisible-until-hover">
+                                                @foreach ($joinEvent->roster as $roster)
+                                                    <li>
+                                                        <span>{{ $roster->user->name }}</span>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </div>
+                                    <div class="frame1">
+                                        <div class="container d-flex justify-content-between pt-2">
+                                            <div>
+                                                <img {!! trustedBladeHandleImageFailureBanner() !!}
+                                                    src="{{ bladeImageNull($joinEvent->user->eventBanner) }}"
+                                                    class="logo2">
+                                                <span> {{ $joinEvent->eventDetails->eventName }} </span>
+                                            </div>
+                                            <div>
+                                                <img {!! trustedBladeHandleImageFailureBanner() !!}
+                                                    src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
+                                                    class="logo2 me-1">
+                                                <span class="me-1">{{ $joinEvent->game->gameTitle }}</span>
+                                            </div>
+                                            <div>
+                                                <span>
+                                                    @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
+                                                        1 follower 
+                                                    @else
+                                                        {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
+                                                    @endif    
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <br>
-                                    @if (!isset($joinEvent->roster[0]))
-                                        <div class="player-info mt-1 ms-4">
-                                            <span>Empty roster</span>
-                                        </div>
-                                    @else
-                                        <ul class="player-info mt-1 ms-4">
-                                            @foreach ($joinEvent->roster as $roster)
-                                                <li>
-                                                    <span>{{ $roster->user->name }}</span>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
                                 </div>
-                                <div class="frame1">
-                                    <div class="container d-flex justify-content-between pt-2">
-                                        <div>
-                                            <img {!! trustedBladeHandleImageFailureBanner() !!}
-                                                src="{{ bladeImageNull($joinEvent->eventBanner) }}" class="logo2">
-                                            <span> {{ $joinEvent->eventDetails->eventName }} </span>
-                                        </div>
-                                        <div>
-                                            <img {!! trustedBladeHandleImageFailureBanner() !!}
-                                                src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
-                                                class="logo2 me-2">
-                                            <span>{{ $joinEvent->game->gameTitle }}</span>
-                                            <span>1K Followers</span>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <br><br>
-                                {{-- <div class="d-flex mt-2 mb-3 justify-content-center">
-                                    <div>
-                                        <form method="GET"
-                                            action="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">
-                                            <button class="oceans-gaming-default-button oceans-gaming-default-button-link me-2" type="submit">
-                                                Manage Roster
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div> --}}
                             </div>
                         @endforeach
                     </div>
-
                 @endif
             </div>
 
@@ -130,7 +135,9 @@
                 <div class="achievements">
                     <div><b>Achievements</b></div>
                     @if (count($selectTeam->awards) == 0)
-                        <p>No awards available</p>
+                        <ul class="achievement-list">
+                            <p>No awards available</p>
+                        </ul>
                     @else
                         <ul class="achievement-list">
                             @foreach ($selectTeam->awards as $award)
@@ -157,24 +164,30 @@
                 <p class="text-center">
                     Team {{ $selectTeam->teamName }} has no active rosters
                 </p>
+            @else
+                <div id="activeRostersForm" class="tex-center mx-auto">
+                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ count($joinEventsActive) }} roster(s)</p>
+                    <br>
+                    @foreach ($joinEventsActive as $key => $joinEvent)
+                        @include('Participant.Layout.RosterView', ['isRegistrationView' => false])
+                    @endforeach
+                </div>
             @endif
-            <div id="activeRostersForm" class="tex-center mx-auto">
-                @foreach ($joinEventsActive as $key => $joinEvent)
-                    @include('Participant.Layout.RosterView')
-                @endforeach
-            </div>
         </div>
 
         <div class="tab-content outer-tab d-none" id="Roster History">
             <br><br>
             @if (!isset($joinEventsHistory[0]))
                 <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history</p>
+            @else
+                <div id="activeRostersForm" class="tex-center mx-auto">
+                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ count($joinEventsHistory) }} roster(s)</p>
+                    <br>
+                    @foreach ($joinEventsHistory as $key => $joinEvent)
+                        @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+                    @endforeach
+                </div>
             @endif
-            <div id="activeRostersForm" class="tex-center mx-auto">
-                @foreach ($joinEventsHistory as $key => $joinEvent)
-                    @include('Participant.Layout.RosterView')
-                @endforeach
-            </div>
         </div>
     </main>
 

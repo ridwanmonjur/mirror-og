@@ -72,6 +72,31 @@ class ParticipantTeamController extends Controller
         ]);
     }
 
+    public function inviteMember(Request $request, $id, $userId)
+    {
+        $member = TeamMember::insert([
+            'user_id' => $userId,
+            'team_id' => $id,
+            'status' => 'invited'
+        ]);
+        if ($member) {
+            return response()->json(['success' => true, 'message' => 'Team member created'], 201);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Team member not created'], 400);
+        }
+    }
+
+    public function uninviteMember(Request $request, $id)
+    {
+        $member = TeamMember::find($id);
+        if ($member) {
+            $member->delete();
+            return response()->json(['success' => true, 'message' => 'Team member invitation withdrawn']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Invalid operation or team member not found'], 400);
+        }
+    }
+
     public function approveTeamMember(Request $request, $id)
     {
         $member = TeamMember::find($id);
@@ -125,18 +150,33 @@ class ParticipantTeamController extends Controller
 
     public function captainMember(Request $request, $id, $memberId)
     {
-        $existingCaptain = TeamCaptain::where('team_id', $id)->first();
+        $existingCaptain = TeamCaptain::where('teams_id', $id)
+            ->where('team_member_id', $memberId)
+            ->first();
+        
+        if ($existingCaptain) {
+            $existingCaptain->delete();
+        } 
+        
+        TeamCaptain::insert([
+            'teams_id' => $id,
+            'team_member_id' => $memberId,
+        ]);
+        
+        return response()->json(['success' => 'true'], 200);
+    }
+
+    public function deleteCaptain(Request $request, $id, $memberId)
+    {
+        $existingCaptain = TeamCaptain::where('teams_id', $id)
+            ->where('team_member_id', $memberId)
+            ->first();
 
         if ($existingCaptain) {
             $existingCaptain->delete();
         } 
         
-        TeamCaptain::create([
-            'team_id' => $id,
-            'team_member_id' => $memberId,
-        ]);
-        
-        return response()->json(['message' => 'true'], 200);
+        return response()->json(['success' => 'true'], 200);
     }
 
 

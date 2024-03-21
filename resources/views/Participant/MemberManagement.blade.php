@@ -76,6 +76,27 @@
         }
 
         loadTab();
+        let actionMap = {
+            'approve': approveMemberAction,
+            'disapprove': disapproveMemberAction,
+            'captain': capatainMemberAction,
+            'deleteCaptain': deleteCaptainAction,
+            'invite': inviteMemberAction,
+            'uninvite': uninviteMemberAction
+        };
+
+        function reloadUrl(currentUrl, buttonName) {
+            currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + `tab=${buttonName}&success=true`;
+            window.location.replace(currentUrl);
+        }
+
+        function toastError(message, error = null) {
+            console.error(error)
+            Toast.fire({
+                icon: 'error',
+                text: message
+            });
+        }
 
         function takeYesAction() {
             console.log({
@@ -83,18 +104,16 @@
                 action: dialogForMember.getActionName()
             })
 
-            if (dialogForMember.getActionName() == 'approve') {
-                approveMemberAction();
-            } else if (dialogForMember.getActionName() == 'disapprove') {
-                disapproveMemberAction();
-            } else if (dialogForMember.getActionName() == 'captain') {
-                disapproveMemberAction();
-            } else if (dialogForMember.getActionName() == 'invite') {
-                inviteMemberAction();
-            } else if (dialogForMember.getActionName() == 'uninvite') {
-                uninviteMemberAction();
+            const actionFunction = actionMap[dialogForMember.getActionName()];
+            if (actionFunction) {
+                actionFunction();
+            } else {
+                Toast.fire({
+                    icon: 'error',
+                    text: "No action found."
+                })
             }
-        }
+        } 
 
         function takeNoAction() {
             dialogForMember.reset();
@@ -111,6 +130,20 @@
             dialogForMember.setTeamId(teamId);
             dialogForMember.setActionName('invite')
             dialogOpen('Are you sure you want to send invite to this member?', takeYesAction, takeNoAction)
+        }
+
+        function captainMember(memberId, teamId) {
+            dialogForMember.setMemberId(memberId);
+            dialogForMember.setTeamId(teamId);
+            dialogForMember.setActionName('captain')
+            dialogOpen('Are you sure you want to this user captain?', takeYesAction, takeNoAction)
+        }
+
+        function deleteCaptain(memberId, teamId) {
+            dialogForMember.setMemberId(memberId);
+            dialogForMember.setTeamId(teamId);
+            dialogForMember.setActionName('deleteCaptain')
+            dialogOpen('Are you sure you want to remove this user from captain?', takeYesAction, takeNoAction)
         }
 
         function uninviteMember(memberId, teamId) {
@@ -156,15 +189,13 @@
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') +
-                            'tab=CurrentMembersBtn&success=true';
-                        window.location.replace(currentUrl);
+                        reloadUrl(currentUrl, 'CurrentMembersBtn');
                     } else {
-                        console.error('Error updating member status:', responseData.message);
+                        toastError(responseData.message);
                     }
                 },
                 function(error) {
-                    console.error('Error approving member:', error);
+                    toastError('Error making captain.', error);
                 }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -185,15 +216,73 @@
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') +
-                            'tab=PendingMembersBtn&success=true';
-                        window.location.replace(currentUrl);
+                        reloadUrl(currentUrl, 'PendingMembersBtn');
                     } else {
-                        console.error('Error updating member status:', responseData.message);
+                        toastError(responseData.message)
                     }
                 },
                 function(error) {
-                    console.error('Error disapproving member:', error);
+                    toastError('Error disapproving member.', error);
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            );
+        }
+
+        async function capatainMemberAction() {
+            const memberId = dialogForMember.getMemberId();
+            const teamId = dialogForMember.getTeamId();
+            const url = "{{ route('participant.member.captain', ['id' => ':id', 'memberId' => ':memberId']) }}"
+                .replace(':memberId', memberId)
+                .replace(':id', teamId);
+            console.log({
+                memberId: dialogForMember.getMemberId(),
+                action: dialogForMember.getActionName()
+            });
+
+            fetchData(url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        reloadUrl(currentUrl, 'CurrentMembersBtn');
+                    } else {
+                        toastError(responseData.message);
+                    }
+                },
+                function(error) {
+                    toastError('Error making captain.', error);
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            );
+        }
+
+        async function deleteCaptainAction() {
+            const memberId = dialogForMember.getMemberId();
+            const teamId = dialogForMember.getTeamId();
+            const url = "{{ route('participant.member.deleteCaptain', ['id' => ':id', 'memberId' => ':memberId']) }}"
+                .replace(':memberId', memberId)
+                .replace(':id', teamId);
+            console.log({
+                memberId: dialogForMember.getMemberId(),
+                action: dialogForMember.getActionName()
+            });
+
+            fetchData(url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        reloadUrl(currentUrl, 'PendingMembersBtn');
+                    } else {
+                       toastError(responseData.message);
+                    }
+                },
+                function(error) {
+                    toastError('Error making captain.', error);
                 }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -215,16 +304,14 @@
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn&success=true';
-                        window.location.replace(currentUrl);
+                        reloadUrl(currentUrl, 'PendingMembersBtn');
                     } else {
-                        console.error('Error updating member status:', responseData.message);
+                       toastError(responseData.message);
                     }
                 },
                 function(error) {
-                    console.error('Error inviting member:', error);
-                },
-                {
+                    toastError('Error inviting members.', error);
+                }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     }
@@ -232,28 +319,24 @@
             );
         }
 
-        async function unInviteMemberAction() {
+        async function uninviteMemberAction() {
             const memberId = dialogForMember.getMemberId();
-            const teamId = dialogForMember.getTeamId();
-            const url = "{{ route('participant.member.invite', ['id' => ':id', 'userId' => ':userId']) }}"
-                .replace(':userId', memberId)
-                .replace(':id', teamId);
+            const url = "{{ route('participant.member.uninvite', ['id' => ':id']) }}"
+                .replace(':id', memberId);
 
             fetchData(
                 url,
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn&success=true';
-                        window.location.replace(currentUrl);
+                        reloadUrl(currentUrl, 'PendingMembersBtn');
                     } else {
-                        console.error('Error updating member status:', responseData.message);
+                        toastError(responseData.message);
                     }
                 },
                 function(error) {
-                    console.error('Error uninviting member:', error);
-                },
-                {
+                    toastError('Error uninviting members.', error);
+                }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     }
@@ -270,16 +353,15 @@
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'tab=PendingMembersBtn&success=true';
+                        reloadUrl(currentUrl, 'NewMembersBtn');
                         window.location.replace(currentUrl);
                     } else {
-                        console.error('Error updating member status:', responseData.message);
+                        toastError(responseData.message);
                     }
                 },
                 function(error) {
-                    console.error('Error uninviting member:', error);
-                },
-                {
+                    toastError('Error fetching participants.', error);
+                }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     }
@@ -307,6 +389,11 @@
                 });
             });
         });
+
+        function redirectToProfilePage(userId) {
+            window.location.href = "{{route('participant.profile.view', ['id' => ':id']) }}"
+                .replace(':id', userId);
+        }
     </script>
 
 </body>
