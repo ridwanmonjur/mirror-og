@@ -40,7 +40,7 @@ class ParticipantController extends Controller
 
         $teamIdList = $invitedTeamList->pluck('id')->toArray();
         $membersCount = DB::table('teams')
-            ->join('team_members', 'teams.id', '=', 'team_members.team_id')
+            ->leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
             ->whereIn('teams.id', $teamIdList)
             ->where('team_members.status', 'accepted')
             ->groupBy('teams.id')
@@ -61,7 +61,7 @@ class ParticipantController extends Controller
             ->with('event', 'event.tier', 'event.game', 'event.user')
             ->get();
 
-        // dd($invitedTeamList, $pendingTeamList, $pendingTeamList, $invitedEventsList);
+        // dd($invitedTeamList, $membersCount, $pendingTeamList, $pendingTeamList, $invitedEventsList);
 
         return view('Participant.ParticipantRequest', compact('membersCount', 'invitedTeamList', 'pendingTeamList', 'invitedEventsList'));
     }

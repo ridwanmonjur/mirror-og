@@ -24,7 +24,6 @@
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     @include('CommonLayout.Toast')
     @include('CommonLayout.Dialog')
-    @include('Participant.ParticipantRequest.MemberManagementScripts')
     <script>
         let dialogForMember = new DialogForMember();
 
@@ -54,6 +53,7 @@
             let urlParams = new URLSearchParams(window.location.search);
             let tabValue = urlParams.get('tab');
             let successValue = urlParams.get('success');
+            let teamName = urlParams.get('teamName');
             let pageValue = urlParams.get('page');
 
             if (tabValue) {
@@ -65,14 +65,40 @@
             }
 
             if (successValue == 'true') {
-                Toast.fire({
-                    icon: 'success',
-                    text: "Successfully updated user."
-                })
+                if (teamName) {
+                    Toast.fire({
+                        icon: 'success',
+                        text: `Successfully added team ${teamName}.`
+                    })
+                } else {
+                    Toast.fire({
+                        icon: 'success',
+                        text: "Successfully updated team."
+                    })
+                }
             }
         }
 
         loadTab();
+
+         let actionMap = {
+            'approve': approveTeamAction,
+            'disapprove': disapproveTeamAction,
+            'deleteInvite': deleteInviteMemberAction
+        };
+
+        function reloadUrl(currentUrl, buttonName, teamName) {
+            currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + `tab=${buttonName}&success=true&team=${teamName}`;
+            window.location.replace(currentUrl);
+        }
+
+        function toastError(message, error = null) {
+            console.error(error)
+            Toast.fire({
+                icon: 'error',
+                text: message
+            });
+        }
 
         function takeYesAction() {
             console.log({
@@ -80,24 +106,22 @@
                 action: dialogForMember.getActionName()
             })
 
-            if (dialogForMember.getActionName() == 'approve') {
-                approveMemberAction();
-            } else if (dialogForMember.getActionName() == 'disapprove') {
-                disapproveMemberAction();
-            } else if (dialogForMember.getActionName() == 'captain') {
-                disapproveMemberAction();
-            } else if (dialogForMember.getActionName() == 'invite') {
-                inviteMemberAction();
-            } else if (dialogForMember.getActionName() == 'uninvite') {
-                uninviteMemberAction();
+            const actionFunction = actionMap[dialogForMember.getActionName()];
+            if (actionFunction) {
+                actionFunction();
+            } else {
+                Toast.fire({
+                    icon: 'error',
+                    text: "No action found."
+                })
             }
-        }
+        } 
 
         function takeNoAction() {
             dialogForMember.reset();
         }
 
-        function approveMember(memberId) {
+        function approveTeam(memberId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setActionName('approve')
             dialogOpen('Continue with approval?', takeYesAction, takeNoAction)
@@ -110,17 +134,106 @@
             dialogOpen('Are you sure you want to send invite to this member?', takeYesAction, takeNoAction)
         }
 
-        function uninviteMember(memberId, teamId) {
+        function deleteInviteMember(memberId, teamId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setTeamId(teamId);
-            dialogForMember.setActionName('uninvite')
-            dialogOpen('Are you sure you want to delete your invite to this member??', takeYesAction, takeNoAction)
+            dialogForMember.setActionName('deleteInvite')
+            dialogOpen('Are you sure you want to delete your request to this team??', takeYesAction, takeNoAction)
         }
 
-        function disapproveMember(memberId) {
+        function disapproveTeam(memberId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setActionName('disapprove')
-            dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
+            dialogOpen('Continue with reject?', takeYesAction, takeNoAction)
+        }
+
+        function approveTeamAction() {
+            const memberId = dialogForMember.getMemberId();
+            const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
+            console.log({
+                memberId: dialogForMember.getMemberId(),
+                action: dialogForMember.getActionName()
+            });
+
+            fetchData(url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.request.view') }}";
+                        reloadUrl(currentUrl, 'InvitatedTeamBtn');
+                    } else {
+                        toastError(responseData.message);
+                    }
+                },
+                function(error) {
+                    toastError('Error making captain.', error);
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            );
+        }
+
+        async function disapproveTeamAction() {
+            const memberId = dialogForMember.getMemberId();
+            const url = "{{ route('participant.member.rejectInvite', ['id' => ':id']) }}".replace(':id', memberId);
+            console.log({
+                memberId: dialogForMember.getMemberId(),
+                action: dialogForMember.getActionName()
+            });
+
+            fetchData(url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.request.view') }}";
+                        reloadUrl(currentUrl, 'PendingTeamBtn');
+                    } else {
+                        toastError(responseData.message)
+                    }
+                },
+                function(error) {
+                    toastError('Error disapproving member.', error);
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            );
+        }
+
+        async function deleteInviteAction() {
+            const memberId = dialogForMember.getMemberId();
+            const url = "{{ route('participant.member.deleteInvite', ['id' => ':id']) }}"
+                .replace(':id', memberId);
+
+            fetchData(
+                url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.request.view') }}";
+                        reloadUrl(currentUrl, 'PendingTeamBtn');
+                    } else {
+                        toastError(responseData.message);
+                    }
+                },
+                function(error) {
+                    toastError('Error deleteInvite members.', error);
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            );
+        }
+
+        function redirectToProfilePage(userId) {
+            window.location.href = "{{route('participant.event.view', ['id' => ':id']) }}"
+                .replace(':id', userId);
+        }
+
+        function redirectToTeamPage(teamId) {
+            window.location.href = "{{route('participant.team.manage', ['id' => ':id']) }}"
+                .replace(':id', teamId);
         }
         
     </script>

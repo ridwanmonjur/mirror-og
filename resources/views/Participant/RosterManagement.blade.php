@@ -51,7 +51,7 @@
                                 <td class="coloured-cell">
                                     <div class="player-info">
                                         @if (isset($captain))
-                                            @if ($member->id == $captain->team_member_id)
+                                            @if ($captain && $member->id == $captain->team_member_id)
                                                 <div class="player-image"> </div>
                                             @endif
                                         @endif
@@ -77,13 +77,13 @@
                                         </button>
                                     @endif
                                     @if (isset($captain))
-                                        @if ($member->id != $captain->team_member_id)
+                                        @if (!$captain || $member->id != $captain->team_member_id)
                                             <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover ml-2" onclick="capatainMember('{{$rosterMembersKeyed[$member->id]->id}}')">
                                                 <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
                                             </button>
                                         @endif
                                     @else
-                                        @if ($member->id != $captain->team_member_id)
+                                        @if (!$captain || $member->id != $captain->team_member_id)
                                             <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover" onclick="capatainMember('{{$rosterMembersKeyed[$member->id]->id}}')">
                                                 <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
                                             </button>

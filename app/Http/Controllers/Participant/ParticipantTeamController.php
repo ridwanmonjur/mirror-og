@@ -74,19 +74,16 @@ class ParticipantTeamController extends Controller
 
     public function inviteMember(Request $request, $id, $userId)
     {
-        $member = TeamMember::insert([
+        TeamMember::insert([
             'user_id' => $userId,
             'team_id' => $id,
             'status' => 'invited'
         ]);
-        if ($member) {
-            return response()->json(['success' => true, 'message' => 'Team member created'], 201);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Team member not created'], 400);
-        }
+        
+        return response()->json(['success' => true, 'message' => 'Team member created'], 201);
     }
 
-    public function uninviteMember(Request $request, $id)
+    public function deleteInviteMember(Request $request, $id)
     {
         $member = TeamMember::find($id);
         if ($member) {
@@ -97,12 +94,26 @@ class ParticipantTeamController extends Controller
         }
     }
 
+    public function rejectInviteMember(Request $request, $id)
+    {
+        $member = TeamMember::find($id);
+        if ($member) {
+            $member->status = 'rejected';
+            $member->rejector = 'invitee';
+            $member->save();
+            return response()->json(['success' => true, 'message' => 'Team member invitation withdrawn']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Invalid operation or team member not found'], 400);
+        }
+    }
+
     public function approveTeamMember(Request $request, $id)
     {
         $member = TeamMember::find($id);
 
-        if ($member) {
+        if (!$member || $member->rejector == 'team') {
             $member->status = 'accepted';
+            $member->rejector = null;
             $member->save();
             return response()->json(['success' => true, 'message' => 'Team member status updated to accepted']);
         } else {
@@ -128,6 +139,7 @@ class ParticipantTeamController extends Controller
 
         if ($member) {
             $member->status = 'rejected';
+            $member->rejector = 'team';
             $member->save();
             return response()->json(['success' => true, 'message' => 'Team member status updated to rejected']);
         } else {

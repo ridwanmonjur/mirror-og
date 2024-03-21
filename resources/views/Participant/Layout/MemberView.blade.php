@@ -1,4 +1,5 @@
 @php 
+    use Carbon\Carbon;
     $counTeamMembers = count($teamMembers);
 @endphp
 <br>
@@ -55,9 +56,17 @@
                     <tr class="st px-3">
                         <td class="coloured-cell px-3">
                             <div class="player-info">
-                                <div class="player-image"> </div>
+                                @if ($captain && $member->id == $captain->team_member_id)
+                                    <div class="player-image"> </div>
+                                @endif
                                 <span>{{ $member->user->name }}</span>
                             </div>
+                        </td>
+                        <td class="coloured-cell px-3">
+                            <span>{{ $member->user->email }}</span>
+                        </td>
+                        <td class="coloured-cell px-3">
+                            <span>{{ $member->status }} {{Carbon::parse($member->updated_at)->diffForHumans()}} </span>
                         </td>
                         <td class="flag-cell coloured-cell px-3">
                             <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"

@@ -23,7 +23,7 @@
             onclick="showTab(event, 'InvitatedTeam', 'inner-tab')">
             Accept Team Requests
         </button>
-        <button id="PendingTeam" class="tab-button inner-tab" onclick="showTab(event, 'SentTeam', 'inner-tab')">
+        <button id="PendingTeamBtn" class="tab-button inner-tab" onclick="showTab(event, 'SentTeam', 'inner-tab')">
             Sent Team Requests
         </button>
         <button id="PrivateInvitationsBtn" class="tab-button inner-tab"
@@ -32,7 +32,7 @@
         </button>
     </div>
     <br>
-    <div class="tab-content inner-tab d-none" id="InvitatedTeam">
+    <div class="tab-content inner-tab" id="InvitatedTeam">
         <p class="text-center mx-auto mt-2">
             Teams requesting you to join them.
         </p>
@@ -51,14 +51,19 @@
                             <i> Requested {{ Carbon::parse($team->members[0]->updated_at)->diffForHumans() }} </i>
                             <br>
                             <p>Total Members:
-                                {{ $membersCount[$team->id] }}
+                                @if (isset($membersCount[$team->id]))
+                                    {{ $membersCount[$team->id] }}
+                                @else {{ 0 }}
+                                @endif
                             </p>
                             <div class="d-flex justify-content-around">
                                 <div class="px-5">
                                     <button class="btn btn-link gear-icon-btn"
+                                        onclick="redirectToTeamPage({{ $team->id }});"
                                         style="cursor:pointer; padding: 0; color: black; text-decoration: none;"
-                                        href="/participant/team/{{ $team['id'] }}/manage">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        >
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                             fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                                             <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
                                             <path
@@ -69,13 +74,13 @@
                                 </div>
                                 <div class="px-5">
                                     <button id="add-{{ '$team->id' }}" class="gear-icon-btn"
-                                        onclick="approveMember({{ $team->id }})">
+                                        onclick="approveTeam({{ $team->members[0]->id }})">
                                         ✔ Approve
                                     </button>
                                 </div>
                                 <div class="px-5">
                                     <button id="remove-{{ $team->id }}" class="gear-icon-btn"
-                                        onclick="disapproveMember({{ $team->id }})">
+                                        onclick="disapproveTeam({{ $team->members[0]->id }})">
                                         ✘ Reject
                                     </button>
                                 </div>
@@ -111,7 +116,9 @@
                         @foreach ($pendingTeamList as $team)
                             <tr class="st" id="tr-{{ $team->id }}">
                                 <td class="colorless-col">
-                                    <svg class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg" width="20"
+                                    <svg
+                                        onclick="redirectToTeamPage({{ $team->id }});" 
+                                        class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg" width="20"
                                         height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                                         <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
                                         <path
@@ -132,7 +139,7 @@
                                 </td>
                                 <td>
                                     <button id="add-{{ '$$team->members[0]->id' }}" class="gear-icon-btn"
-                                        onclick="approveMember({{ $team->members[0]->id }})">
+                                        onclick="approveTeam({{ $team->members[0]->id }})">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                             fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                             <path
@@ -147,11 +154,11 @@
                     </tbody>
                 </table>
             @else
-                <p class="text-center"> No team invites requested currently! </p>
+                <p class="text-center mx-auto"> No team requested currently by you! </p>
             @endif
         </div>
     </div>
-    <div class="tab-content inner-tab " id="PrivateInvitations">
+    <div class="tab-content inner-tab d-none" id="PrivateInvitations">
         <p class="text-center mx-auto mt-2">
             View all events you have been invited
         </p>
@@ -171,7 +178,10 @@
                             <span>"{{ $invitation->event->eventName }}"</span>
                             by {{ $invitation->event->user->name }}
                             {{ Carbon::parse($invitation->updated_at)->diffForHumans()}}.
-                            <button class="btn btn-link text-left d-inline">
+                            <button 
+                                onclick="redirectToProfilePage({{ $invitation->event->id }});"    
+                                class="btn btn-link text-left d-inline"
+                            >
                                <u>View event</u>
                             </button>
                         </div>
@@ -181,5 +191,5 @@
                 <p class="text-center mx-auto"> No event invites requested currently! </p>
             @endif
         </div>
-
-        <script></script>
+    </div>
+</div>

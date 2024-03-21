@@ -21,6 +21,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         // \App\Http\Middleware\ErrorHandlerMiddleware::class,
+        \App\Http\Middleware\ErrorHandlerMiddleware::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
@@ -67,5 +68,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'check-permission' => \App\Http\Middleware\CheckPermission::class,
         'prevent-back-button' => \App\Http\Middleware\PreventBackButtonMiddleware::class,
+        'prevent-back-history' => \App\Http\Middleware\PreventBackHistory::class,
+
     ];
 }

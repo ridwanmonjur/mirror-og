@@ -82,7 +82,7 @@
             'captain': capatainMemberAction,
             'deleteCaptain': deleteCaptainAction,
             'invite': inviteMemberAction,
-            'uninvite': uninviteMemberAction
+            'deleteInvite': deleteInviteMemberAction
         };
 
         function reloadUrl(currentUrl, buttonName) {
@@ -146,10 +146,10 @@
             dialogOpen('Are you sure you want to remove this user from captain?', takeYesAction, takeNoAction)
         }
 
-        function uninviteMember(memberId, teamId) {
+        function deleteInviteMember(memberId, teamId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setTeamId(teamId);
-            dialogForMember.setActionName('uninvite')
+            dialogForMember.setActionName('deleteInvite')
             dialogOpen('Are you sure you want to delete your invite to this member??', takeYesAction, takeNoAction)
         }
 
@@ -319,9 +319,9 @@
             );
         }
 
-        async function uninviteMemberAction() {
+        async function deleteInviteMemberAction() {
             const memberId = dialogForMember.getMemberId();
-            const url = "{{ route('participant.member.uninvite', ['id' => ':id']) }}"
+            const url = "{{ route('participant.member.deleteInvite', ['id' => ':id']) }}"
                 .replace(':id', memberId);
 
             fetchData(
@@ -335,7 +335,7 @@
                     }
                 },
                 function(error) {
-                    toastError('Error uninviting members.', error);
+                    toastError('Error deleting invite members.', error);
                 }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'

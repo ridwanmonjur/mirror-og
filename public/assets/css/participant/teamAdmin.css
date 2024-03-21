@@ -261,7 +261,7 @@ input[type="submit"],
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .uploaded-image {
@@ -269,6 +269,8 @@ input[type="submit"],
     height: 100%;
     background-size: cover;
     background-position: center;
+    border: 3px solid rgb(24, 115, 24);
+    border-radius: 50%;
     /* Default image URL */
 }
 

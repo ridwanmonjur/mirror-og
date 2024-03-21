@@ -37,7 +37,10 @@
                                 <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
                                 <br>
                                 <p>Total Members:
-                                    {{ $membersCount[$team->id] }}
+                                    @if (isset($membersCount[$team->id]))
+                                        {{ $membersCount[$team->id] }}
+                                    @else {{ 0 }}
+                                    @endif
                                 </p>
                             </div>
                         </div>

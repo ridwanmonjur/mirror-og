@@ -207,8 +207,8 @@
                             </td>
                             <td>
                                 @if ($user->id == $selectTeam->creator_id)
-                                    <button id="uninvite-{{ '$member->user_id' }}" class="gear-icon-btn"
-                                        onclick="uninviteMember({{ $member->id }})">
+                                    <button id="deleteInvite-{{ '$member->user_id' }}" class="gear-icon-btn"
+                                        onclick="deleteInvite({{ $member->id }})">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                             fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                             <path

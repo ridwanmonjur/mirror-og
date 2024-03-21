@@ -268,6 +268,9 @@
                 });
             });
         });
+
+        window.onbeforeunload = function(){window.location.reload();}
+
     </script>
 
 </body>
