@@ -92,13 +92,12 @@
         @else
             <div class="wrapper">
                 <div class="team-section">
-                    <div class="upload-container">
-                        <label for="image-upload" class="upload-label">
-                            <div class="circle-container">
-                                <div id="uploaded-image" class="uploaded-image"></div>
-                            </div>
-                        </label>
-                    </div>
+                    <br>
+                    <img                       
+                        src="{{asset('assets/images/animation/empty-exclamation.gif') }}"
+                        width="150"
+                        height="150"
+                    >
                     <h3 class="team-name" id="team-name">Not invited to any teams</h3>
                     <br>
                 </div>

@@ -83,6 +83,39 @@ class EventDetail extends Model
         }
     }
 
+    public function isCompleteEvent() {
+        $isComplete = true;
+        $requiredFields = [
+            'eventDefinitions',
+            'eventName',
+            'startDate',
+            'endDate',
+            'startTime',
+            'endTime',
+            'eventDescription',
+            'eventBanner',
+            'eventTags',
+            'status',
+            'venue',
+            'event_type_id',
+            'event_tier_id',
+            'event_category_id',
+            'payment_transaction_id'
+        ];
+    
+        foreach ($requiredFields as $field) {
+            if (empty($this->$field)) {
+                $isComplete = $isComplete && false; 
+            }
+
+            if(!$isComplete) {
+                return $isComplete;
+            }
+        }
+    
+        return $isComplete;
+    }
+
     public function statusResolved()
     {
         $carbonPublishedDateTime = $this->createCarbonDateTimeFromDB(
@@ -97,9 +130,9 @@ class EventDetail extends Model
 
         $carbonNow = Carbon::now()->utc();
         
-        if ($this->status == "DRAFT" || $this->status == "PREVIEW") {
+        if (in_array($this->status, ['DRAFT', 'PREVEW'])) {
             return "DRAFT";
-        } elseif (is_null($this->payment_transaction_id)) {
+        } elseif (is_null($this->payment_transaction_id) || $this->status == 'PENDING') {
             return "PENDING";
         } elseif (!$carbonEndDateTime || !$carbonStartDateTime) {
             Log::error("EventDetail.php: statusResolved: EventDetail with id= " . $this->id
@@ -169,6 +202,8 @@ class EventDetail extends Model
                 return $query;
             } elseif ($status == 'DRAFT') {
                 return $query->where('status', 'DRAFT');
+            } elseif ($status == 'PENDING') {
+                return $query->where('status', 'PENDING')->orWhereNull('payment_transaction_id');
             } elseif ($status == 'ENDED') {
                 return $query
                     ->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime])
@@ -473,6 +508,8 @@ class EventDetail extends Model
         if ($request->launch_visible == 'DRAFT') {
             $eventDetail->sub_action_private = 'private';
         }
+
+        $eventDetail->status = $eventDetail->statusResolved();
         return $eventDetail;
     }
 

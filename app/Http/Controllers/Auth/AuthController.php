@@ -133,7 +133,7 @@ class AuthController extends Controller
         $count = 6;
         $currentDateTime = Carbon::now()->utc();
         
-        $events = EventDetail::where('status', '<>', 'DRAFT')
+        $events = EventDetail::whereNotIn('status', ['DRAFT', 'PENDING'])
             ->whereNotNull('payment_transaction_id')
             ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
             ->where('sub_action_private', '<>', 'private')

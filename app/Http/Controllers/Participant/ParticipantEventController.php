@@ -154,7 +154,8 @@ class ParticipantEventController extends Controller
     public function rosterMemberManagement(Request $request, $id, $teamId)
     {
         $user_id = $request->attributes->get('user')->id;
-        $selectTeam = Team::where('id', $teamId)->where('creator_id', $user_id)->first();
+        $selectTeam = Team::where('id', $teamId)->where('creator_id', $user_id)
+            ->first();
         $joinEvent = JoinEvent::where('team_id', intval($teamId))->where('event_details_id', intval($id))->first();
 
         if ($selectTeam && $joinEvent) {
@@ -179,6 +180,11 @@ class ParticipantEventController extends Controller
     {
         $user_id = $request->attributes->get('user')->id;
         $selectTeam = Team::where('id', $id)->where('creator_id', $user_id)
+            ->orWhere(function ($query) use ($user_id) {
+                $query->whereHas('members', function ($query) use ($user_id) {
+                    $query->where('user_id', $user_id)->where('status', 'accepted');
+                });
+            })
             ->with(['members', 'awards'])->first();
 
         if ($selectTeam) {
@@ -209,7 +215,7 @@ class ParticipantEventController extends Controller
 
             return view('Participant.RegistrationManagement', compact('selectTeam', 'followCounts', 'joinEvents'));
         } else {
-            return redirect()->back()->with('error', 'Team not found.');
+            return redirect()->back()->with('error', "Team not found/ You're not authorized.");
         }
     }
 

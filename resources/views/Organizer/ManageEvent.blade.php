@@ -29,6 +29,10 @@
                 <p class="status-DRAFT">
                     <a href="{{ route('event.index', ['status' => 'DRAFT', 'page' => 1]) }}">Drafts</a>
                 </p>
+                 <p class="status-PENDING">
+                    <a href="{{ route('event.index', ['status' => 'PENDING', 'page' => 1]) }}">Pending</a>
+                </p>
+                {{-- whereNotIn('status', ['DRAFT', 'PENDING']) --}}
                 <p class="status-ENDED">
                     <a href="{{ route('event.index', ['status' => 'ENDED', 'page' => 1]) }}">Ended</a>
                 </p>

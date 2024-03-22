@@ -181,6 +181,12 @@
             dialogOpen('Continue with approval?', takeYesAction, takeNoAction)
         }
 
+           function disapproveMember(memberId) {
+            dialogForMember.setMemberId(memberId);
+            dialogForMember.setActionName('disapprove')
+            dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
+        }
+
         function captainMember(memberId, teamId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setTeamId(teamId);
@@ -195,15 +201,9 @@
             dialogOpen('Are you sure you want to remove this user from captain?', takeYesAction, takeNoAction)
         }
 
-        function disapproveMember(memberId) {
-            dialogForMember.setMemberId(memberId);
-            dialogForMember.setActionName('disapprove')
-            dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
-        }
-
         function approveMemberAction() {
             const memberId = dialogForMember.getMemberId();
-            const url = "{{ route('participant.roster.approve', ['id' => ':id']) }}".replace(':id', memberId);
+            const url = "{{ route('participant.roster.approve') }}";
             console.log({
                 memberId: dialogForMember.getMemberId(),
                 action: dialogForMember.getActionName()
@@ -212,7 +212,7 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        let currentUrl = window.location.url;
                         reloadUrl(currentUrl, 'CurrentMembersBtn');
                     } else {
                         toastError(responseData.message);
@@ -223,14 +223,19 @@
                 }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
+                    },
+                    body: JSON.stringify({
+                        'user_id' : {{ $user->id }},
+                        'join_events_id': {{ $join_event->id }},
+                        'team_member_id': memberId
+                    })
                 }
             );
         }
 
         async function disapproveMemberAction() {
             const memberId = dialogForMember.getMemberId();
-            const url = "{{ route('participant.member.disapprove', ['id' => ':id']) }}".replace(':id', memberId);
+            const url = "{{ route('participant.roster.disapprove') }}";
             console.log({
                 memberId: dialogForMember.getMemberId(),
                 action: dialogForMember.getActionName()
@@ -239,7 +244,7 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        let currentUrl = window.location.url;
                         reloadUrl(currentUrl, 'PendingMembersBtn');
                     } else {
                         toastError(responseData.message)
@@ -250,17 +255,19 @@
                 }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
+                    }, 
+                    body: JSON.stringify({
+                        'user_id' : {{ $user->id }},
+                        'join_events_id': {{ $join_event->id }},
+                        'team_member_id': memberId
+                    })
                 }
             );
         }
 
         async function capatainMemberAction() {
             const memberId = dialogForMember.getMemberId();
-            const teamId = dialogForMember.getTeamId();
-            const url = "{{ route('participant.member.captain', ['id' => ':id', 'memberId' => ':memberId']) }}"
-                .replace(':memberId', memberId)
-                .replace(':id', teamId);
+            const url = "{{ route('participant.member.captain') }}"
             console.log({
                 memberId: dialogForMember.getMemberId(),
                 action: dialogForMember.getActionName()
@@ -269,7 +276,7 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        let currentUrl = window.location.url;
                         reloadUrl(currentUrl, 'CurrentMembersBtn');
                     } else {
                         toastError(responseData.message);
@@ -280,7 +287,12 @@
                 }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
+                    },
+                    body: JSON.stringify({
+                        'teams_id' : {{ $selectTeam->id }},
+                        'join_events_id': {{ $join_event->id }},
+                        'team_member_id': memberId
+                    })
                 }
             );
         }
@@ -288,9 +300,7 @@
         async function deleteCaptainAction() {
             const memberId = dialogForMember.getMemberId();
             const teamId = dialogForMember.getTeamId();
-            const url = "{{ route('participant.member.deleteCaptain', ['id' => ':id', 'memberId' => ':memberId']) }}"
-                .replace(':memberId', memberId)
-                .replace(':id', teamId);
+            const url = "{{ route('participant.member.deleteCaptain') }}"
             console.log({
                 memberId: dialogForMember.getMemberId(),
                 action: dialogForMember.getActionName()
@@ -299,7 +309,7 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        let currentUrl = window.location.url;
                         reloadUrl(currentUrl, 'PendingMembersBtn');
                     } else {
                        toastError(responseData.message);
@@ -310,109 +320,15 @@
                 }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
+                    },
+                    body: JSON.stringify({
+                        'teams_id' : {{ $selectTeam->id }},
+                        'join_events_id': {{ $join_event->id }},
+                        'team_member_id': memberId
+                    })
                 }
             );
         }
-
-        async function inviteMemberAction() {
-            const memberId = dialogForMember.getMemberId();
-            const teamId = dialogForMember.getTeamId();
-            const url = "{{ route('participant.member.invite', ['id' => ':id', 'userId' => ':userId']) }}"
-                .replace(':userId', memberId)
-                .replace(':id', teamId);
-            console.log({ memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName() });
-
-            fetchData(
-                url,
-                function(responseData) {
-                    if (responseData.success) {
-                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        reloadUrl(currentUrl, 'PendingMembersBtn');
-                    } else {
-                       toastError(responseData.message);
-                    }
-                },
-                function(error) {
-                    toastError('Error inviting members.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                }
-            );
-        }
-
-        async function deleteInviteMemberAction() {
-            const memberId = dialogForMember.getMemberId();
-            const url = "{{ route('participant.member.deleteInvite', ['id' => ':id']) }}"
-                .replace(':id', memberId);
-
-            fetchData(
-                url,
-                function(responseData) {
-                    if (responseData.success) {
-                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        reloadUrl(currentUrl, 'PendingMembersBtn');
-                    } else {
-                        toastError(responseData.message);
-                    }
-                },
-                function(error) {
-                    toastError('Error deleting invite members.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                }
-            );
-        }
-
-        async function fetchParticipants(event) {
-            let input = event.currentTarget;
-            let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-
-            fetchData(
-                url,
-                function(responseData) {
-                    if (responseData.success) {
-                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        reloadUrl(currentUrl, 'NewMembersBtn');
-                        window.location.replace(currentUrl);
-                    } else {
-                        toastError(responseData.message);
-                    }
-                },
-                function(error) {
-                    toastError('Error fetching participants.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                }
-            );
-        }
-
-        const searchInputs = document.querySelectorAll('.search_box input');
-        const memberTables = document.querySelectorAll('.member-table');
-
-        searchInputs.forEach((searchInput, index) => {
-            searchInput.addEventListener("input", function() {
-                const searchTerm = searchInput.value.toLowerCase();
-                const memberRows = memberTables[index].querySelectorAll('tbody tr');
-
-                memberRows.forEach(row => {
-                    const playerName = row.querySelector('.player-info span')
-                        .textContent.toLowerCase();
-
-                    if (playerName.includes(searchTerm)) {
-                        row.style.display = 'table-row';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-        });
 
         function redirectToProfilePage(userId) {
             window.location.href = "{{route('participant.profile.view', ['id' => ':id']) }}"

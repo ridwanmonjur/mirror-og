@@ -68,6 +68,7 @@
                 <div id="teamList" class="team-dropdown-content">
                   <a href="{{ url('/participant/team/create/' ) }}">Create a Team</a>
                   <a href="{{ url('/participant/team/list/' ) }}">Team List</a>
+                  <a href="{{ url('/participant/request/' ) }}">Team Requests</a>
                 </div>
               </div>
             <img style="position: relative; top: 0px;" width="50px" height="40px"

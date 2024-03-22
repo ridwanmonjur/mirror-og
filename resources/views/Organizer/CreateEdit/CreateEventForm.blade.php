@@ -460,7 +460,7 @@
                 </div>
             @elseif ($status == 'PENDING')
             <div>
-                <h5>Your payment status is pending!</h5>
+                <h5>Your payment status is pending or your details are incomplete!</h5>
                     <p class="text-success">Your {{ $event->sub_action_private ?? 'public / private' }} event's payment status is pending.
                     </p>
                     <p class="text-success"> 

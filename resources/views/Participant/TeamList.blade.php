@@ -17,7 +17,6 @@
     <div class="d-flex justify-content-center"> 
         <button onclick="goToScreen();" type="button" class="btn oceans-gaming-default-button position-relative">
             Team Requests
-            
         </button>
     </div>
     <main>
@@ -29,7 +28,7 @@
                             <div class="upload-container">
                                 <div class="circle-container" style="cursor: pointer;">
                                     <div id="uploaded-image" class="uploaded-image"
-                                        style="background-image: url({{ $team->teamBanner ? '/storage' . '/'. $team->teamBanner: '/assets/images/fnatic.jpg' }} );"
+                                        style="background-image: url({{ $team->teamBanner ? '/storage' . '/'. $team->teamBanner: '/assets/images/animations/empty-exclamation.gif' }} );"
                                     ></div>
                                     </label>
                                 </div>
@@ -41,6 +40,9 @@
                                     @else {{ 0 }}
                                     @endif
                                 </p>
+                                @if ($team->creator_id == $user->id)
+                                <small><i>Created by you</i></small>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -53,10 +55,11 @@
                         <label for="image-upload" class="upload-label">
                             <div class="circle-container">
                                 <div id="uploaded-image" class="uploaded-image"></div>
+                                <img src="{{asset('animations/empty-exclamation.gif')}}" >
                             </div>
                         </label>
                     </div>
-                    <h3 class="team-name" id="team-name">No teams invited yet</h3>
+                    <h3 class="team-name" id="team-name">No teams yet</h3>
                     <br>
                 </div>
             </div>
