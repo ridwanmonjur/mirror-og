@@ -187,7 +187,15 @@ class EventDetail extends Model
     public static function generateOrganizerPartialQueryForFilter(Request $request) {
         $eventListQuery = self::query();
         $eventListQuery->when($request->has('status'), function ($query) use ($request) {
-            $status = $request->input('status')[0];
+            $status = $request->input('status');
+            if (is_array($status)) {
+                if (isset($status)) {
+                    $status = $status[0];
+                } else{
+                    return $query;
+                }
+            } 
+
             if (empty(trim($status))) {
                 return $query;
             }
@@ -275,52 +283,64 @@ class EventDetail extends Model
 
         $eventListQuery->when($request->has('filter'), function ($query) use ($request) {
             $filter = $request->input('filter');
-
             if (array_key_exists('eventTier', $filter)) {
-                return $query->where(function ($q) use ($filter) {
-                    foreach ($filter['eventTier'] as $element) {
-                        $q->orWhere('event_tier_id', $element);
-                    }
-                });
-            } 
-            
+                $query->whereIn('event_tier_id', $filter['eventTier']);
+            }
+
             if (array_key_exists('eventType', $filter)) {
-                return $query->where(function ($q) use ($filter) {
-                    foreach ($filter['eventType'] as $element) {
-                        $q->orWhere('event_type_id', $element);
-                    }
-                });
-            } 
-            
+                $query->whereIn('event_type_id', $filter['eventType']);
+            }
+
             if (array_key_exists('gameTitle', $filter)) {
-                return $query->where(function ($q) use ($filter) {
-                    foreach ($filter['gameTitle'] as $element) {
-                        $q->orWhere('event_category_id', $element);
-                    }
-                });
+                $query->whereIn('event_category_id', $filter['gameTitle']);
             }
 
             if (array_key_exists('date', $filter)) {
                 return $query->where(function ($q) use ($filter, $request) {
-                    foreach ($filter['date'] as $element) {
-                        switch ($element)  {
+                    if (isset($filter['date'][1])) {
+                        foreach ($filter['date'] as $element) {
+                            switch ($element)  {
+                                case 'today':
+                                    $q->orWhereBetween('created_at', [now()->startOfDay(), now()]);
+                                    break;
+                                case 'yesterday':
+                                    $q->orWhereBetween('created_at', [now()->subDay()->startOfDay(), now()->startOfDay()]);
+                                    break;
+                                case 'this-week':
+                                    $q->orWhereBetween('created_at', [now()->subWeek(), now()]);
+                                    break;
+                                case 'this-month':
+                                    $q->orWhereBetween('created_at', [now()->subMonth(), now()]);
+                                    break;
+                                case 'this-year':
+                                    $q->orWhereBetween('created_at', [now()->subYear(), now()]);
+                                    break;
+                                case 'custom-range':
+                                    $q->orWhereBetween('created_at', [$filter['startDate'][0], $filter['endDate'][0]]);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    } else {
+                        switch ($filter['date'])  {
                             case 'today':
-                                $q->orWhereBetween('created_at', [now()->startOfDay(), now()]);
+                                $q->whereBetween('created_at', [now()->startOfDay(), now()]);
                                 break;
                             case 'yesterday':
-                                $q->orWhereBetween('created_at', [now()->subDay()->startOfDay(), now()->startOfDay()]);
+                                $q->whereBetween('created_at', [now()->subDay()->startOfDay(), now()->startOfDay()]);
                                 break;
                             case 'this-week':
-                                $q->orWhereBetween('created_at', [now()->subWeek(), now()]);
+                                $q->whereBetween('created_at', [now()->subWeek(), now()]);
                                 break;
                             case 'this-month':
-                                $q->orWhereBetween('created_at', [now()->subMonth(), now()]);
+                                $q->whereBetween('created_at', [now()->subMonth(), now()]);
                                 break;
                             case 'this-year':
-                                $q->orWhereBetween('created_at', [now()->subYear(), now()]);
+                                $q->whereBetween('created_at', [now()->subYear(), now()]);
                                 break;
                             case 'custom-range':
-                                $q->orWhereBetween('created_at', [$filter['startDate'][0], $filter['endDate'][0]]);
+                                $q->whereBetween('created_at', [$filter['startDate'][0], $filter['endDate'][0]]);
                                 break;
                             default:
                                 break;
