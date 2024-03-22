@@ -23,7 +23,7 @@
     </div>
     <div class="nav-buttons">
         @guest
-            <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
+            {{-- <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
             <div class="dropdown" data-reference="parent" data-bs-offset="-80,-80">
                 <a href="#" role="button" class="btn dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true">Sign In</a>
@@ -31,7 +31,41 @@
                     <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">Organizer</a>
                     <a class="dropdown-item" href="{{ route('participant.signin.view') }}">Participant</a>
                 </div>
-            </div>
+            </div> --}}
+
+            <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
+<div class="dropdown" data-reference="parent" data-bs-offset="-80,-80">
+    <a href="#" role="button" class="btn dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 16s-8-1.5-8-4a6 6 0 1 1 16 0c0 2.5-8 4-8 4z"></path>
+        </svg>
+    </a>
+    <div id="" class="dropdown-menu" style="position: absolute; left: -90px;" aria-labelledby="dropdownMenuLink">
+        <div style="border: 2px solid black; width: 100px; padding: 10px; text-align: center;">
+            <p>Hi there!</p>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-smile">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+            </svg>
+        </div>
+        <a class="dropdown-item" href="{{ route('organizer.signin.view') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-in">
+                <path d="M4 12h14M11 7l5 5-5 5"></path>
+            </svg>
+            Organizer
+        </a>
+        <a class="dropdown-item" href="{{ route('participant.signin.view') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-in">
+                <path d="M4 12h14M11 7l5 5-5 5"></path>
+            </svg>
+            Participant
+        </a>
+    </div>
+</div>
         @endguest
         @auth
             <button class="oceans-gaming-default-button oceans-gaming-gray-button"> Where is moop? </button>
@@ -87,7 +121,7 @@
             if (scrollTop + windowHeight >= documentHeight - 200) {
                 page++;
                 ENDPOINT = "{{ route('landing.view') }}";
-               
+
                 if (!search || String(search).trim() == "") {
                     search = null;
                     ENDPOINT += "?page=" + page;
