@@ -24,7 +24,9 @@
         @elseif ($status == 'ENDED')
             <p id="notification">Your <u>{{ $event->sub_action_private }}</u> event has ended</p>
         @elseif ($status == 'PENDING')
-            <p id="notification"> Your {{ $event->sub_action_private ?? 'public / private' }} event's payment status is pending </p>
+            <p id="notification"> Your {{ $event->sub_action_private ?? 'public / private' }} event's payment status is pending 
+                or some details are missing!
+            </p>
         @endif
 
     </div>

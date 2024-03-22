@@ -55,10 +55,10 @@ class ParticipantStripeController extends Controller
                     ['edit' => true, 'id' => $id] 
                 );
             } else {
-
                 $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
                     'customer' => $user->stripe_customer_id,
                 ]);
+
                 [$fee, $isDiscountApplied, $error] = array_values(
                     Discount::createDiscountFeeObject($request->coupon, $event->tier->tierEntryFee)
                 );
@@ -92,8 +92,6 @@ class ParticipantStripeController extends Controller
             $user = $request->get('user');
             $userId = $user->id;
             $status = $request->get('redirect_status');
-          
-
             if ($status == "succeeded" && $request->has('payment_intent_client_secret')) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
@@ -112,7 +110,7 @@ class ParticipantStripeController extends Controller
 
                     $event->payment_transaction_id = $transaction->id;
                     // this line must be below setting the payment transaction
-                    $event->status = $event->statusResolved();
+                    $event->status = $event->isCompleteEvent() ? 'PENDING' : $event->statusResolved();
                     $event->save();
                     
                     return view('Organizer.CheckoutEventSuccess', [

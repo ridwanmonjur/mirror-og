@@ -187,21 +187,17 @@ class EventDetail extends Model
 
     public static function generateOrganizerPartialQueryForFilter(Request $request) {
         $eventListQuery = self::query();
-        
         $eventListQuery->when($request->has('status'), function ($query) use ($request) {
-            
             $status = $request->input('status')[0];
-            
             if (empty(trim($status))) {
                 return $query;
             }
 
             $currentDateTime = Carbon::now()->utc();
-            
             if ($status == 'ALL') {
                 return $query;
             } elseif ($status == 'DRAFT') {
-                return $query->where('status', 'DRAFT');
+                return $query->whereIn('status', ['DRAFT', 'PREVIEW']);
             } elseif ($status == 'PENDING') {
                 return $query->where('status', 'PENDING')->orWhereNull('payment_transaction_id');
             } elseif ($status == 'ENDED') {
@@ -223,7 +219,7 @@ class EventDetail extends Model
                     ->where('status', '<>', 'PREVIEW')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
             } elseif ($status == 'SCHEDULED') {
-                $query
+                return $query
                     ->whereNotNull('sub_action_public_date')
                     ->whereNotNull('sub_action_public_time')
                     ->whereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) > ?', [$currentDateTime])
@@ -231,8 +227,6 @@ class EventDetail extends Model
                     ->where('status', '<>', 'PREVIEW')
                     ->whereNotNull('payment_transaction_id')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
-                    
-                return $query;
             } else {
                 return $query;
             }
@@ -240,7 +234,6 @@ class EventDetail extends Model
 
         $eventListQuery->when($request->has('search'), function ($query) use ($request) {
             $search = trim($request->input('search'));
-            
             if (empty($search)) {
                 return $query;
             } else {
@@ -264,22 +257,21 @@ class EventDetail extends Model
 
         $eventListQuery->when($request->has('sort'), function ($query) use ($request) {
             $sort = $request->input('sort');
-            
-                foreach ($sort as $key => $value) {
-                    if (!empty(trim($key)) && $value != "none") {
-                        if ($key ==  'startDate'){
-                            $query->orderBy('startDate', $value)->orderBy('startTime', $value);
-                        } else if ($key ==  'prize') {
-                            $query
-                                ->join('event_tier', 'event_details.event_tier_id', '=', 'event_tier.id')
-                                ->orderBy('event_tier.tierPrizePool', $value);
-                        } else { 
-                            $query->orderBy($key, $value);
-                        }
+            foreach ($sort as $key => $value) {
+                if (!empty(trim($key)) && $value != "none") {
+                    if ($key ==  'startDate'){
+                        $query->orderBy('startDate', $value)->orderBy('startTime', $value);
+                    } else if ($key ==  'prize') {
+                        $query
+                            ->join('event_tier', 'event_details.event_tier_id', '=', 'event_tier.id')
+                            ->orderBy('event_tier.tierPrizePool', $value);
+                    } else { 
+                        $query->orderBy($key, $value);
                     }
                 }
+            }
 
-                return $query;
+            return $query;
         });
 
         $eventListQuery->when($request->has('filter'), function ($query) use ($request) {
