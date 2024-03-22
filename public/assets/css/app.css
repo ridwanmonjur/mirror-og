@@ -308,3 +308,7 @@ a:hover {
     text-decoration: none !important;
     color: black !important;
 }
+
+.dropdown-item:active {
+    color: white !important;
+}

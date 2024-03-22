@@ -86,6 +86,10 @@
         };
 
         function reloadUrl(currentUrl, buttonName) {
+            if (currentUrl.includes('?')) {
+                currentUrl = currentUrl.split('?')[0];
+            } 
+
             currentUrl += `?tab=${buttonName}&success=true`;
             window.location.replace(currentUrl);
         }

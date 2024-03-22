@@ -47,6 +47,15 @@
                             onclick="slideEvents(1)">
                             &gt;
                         </button>
+                    @else
+                        <button class="carousel-button position-absolute" style="opacity: 0.4; top: 100px; left: 20px;"
+                        >
+                            &lt;
+                        </button>
+                        <button class="carousel-button position-absolute" style="opacity: 0.4; top: 100px; right: 20px;"
+                        >
+                            &gt;
+                        </button>
                     @endif
                     <div class="event-carousel" style="{{isset($joinEvents[1]) ? '--grid-size:1fr 1fr': '--grid-size:1fr'}}">
                         @foreach ($joinEvents as $key => $joinEvent)
@@ -115,10 +124,12 @@
                 <div class="showcase">
                     <div><b>Showcase</b></div>
                     <br>
-                    <div class="showcase-box">
-                        <div class="showcase-column">
+                    <div class="showcase-box showcase-column-2">
+                        <div class="showcase-column ">
                             @if (count($selectTeam->awards) == 0)
-                                <p>No events available</p>
+                                <p>Events Joined: 0</p>
+                                <p>Wins: 0</p>
+                                <p>Win Streak: 0</p>
                             @else
                                 @php
                                     $eventCounts = $joinEvents->groupBy('eventDetails.id')->map->count();
@@ -130,8 +141,9 @@
                             @endif
                         </div>
                         <div class="showcase-column">
-                            <!-- Trophy image in the second column -->
-                            <img src="{{ asset('/assets/images/trophy.jpg') }}" alt="Trophy" class="trophy">
+                            <div class="invisible-until-hover">
+                                <img src="{{ asset('/assets/images/trophy.jpg') }}" alt="Trophy" class="trophy">
+                            </div>
                         </div>
                     </div>
                 </div>

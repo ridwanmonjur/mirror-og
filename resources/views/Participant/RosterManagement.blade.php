@@ -138,7 +138,11 @@
         };
 
         function reloadUrl(currentUrl, buttonName) {
-            currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + `tab=${buttonName}&success=true`;
+            if (currentUrl.includes('?')) {
+                currentUrl = currentUrl.split('?')[0];
+            } 
+
+            currentUrl += `?tab=${buttonName}&success=true`;
             window.location.replace(currentUrl);
         }
 
