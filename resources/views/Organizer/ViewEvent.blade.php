@@ -91,8 +91,9 @@
                                         </div>
                                     </div>
                                     @if ($livePreview)
-                                        <input type="submit" style="background-color: #8CCD39;"
-                                            value="Resume creating...." onclick="goToEditScreen();">
+                                        <button type="button" onclick="goToEditScreen();" class="btn btn-link">
+                                            <u>Resume creating....</u>
+                                        </button>
                                     @endif
                                 </div>
                                 <br>

@@ -432,7 +432,6 @@
     </div>
     <br>
     <div class="payment-summary">
-
         @if ($isEventNotNull)
             @if ($status == 'DRAFT')
                 <div>
@@ -474,7 +473,6 @@
                     </p>
                 </div>
             @endif
-
         @endif
         <input checked onchange="toggleRadio(this, 'draft'); updateLaunchButton('draft');" type="radio"
             id="draft" name="launch_visible" value="DRAFT">
@@ -667,7 +665,7 @@
             <button onclick="goToNextScreen('step-launch-1', 'timeline-launch');" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="saveEvent(false)" type="button" type="button" 
-                class="oceans-gaming-default-button"> Save, pay later </button>
+                class="oceans-gaming-default-button"> Save </button>
         </div>
     </div>
 </div>

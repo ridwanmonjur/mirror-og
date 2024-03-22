@@ -28,7 +28,6 @@
                 or some details are missing!
             </p>
         @endif
-
     </div>
     <button class="js-shareUrl oceans-gaming-default-button"
         style="padding: 10px 50px; background-color: transparent; color: black; border: 1px solid black;">

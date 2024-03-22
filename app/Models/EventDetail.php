@@ -338,9 +338,7 @@ class EventDetail extends Model
 
     public static function generateParticipantFullQueryForFilter(Request $request) {
         $eventListQuery = self::query();
-
         $currentDateTime = Carbon::now()->utc();
-        
         $eventListQuery->where('status', '<>', 'DRAFT')
             ->whereNotNull('payment_transaction_id')
             ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
@@ -433,23 +431,12 @@ class EventDetail extends Model
         $eventDetail->eventName = $request->eventName;
         $eventDetail->eventDescription = $request->eventDescription;
         $eventDetail->eventTags = $request->eventTags;
-        $transaction = $eventDetail->payment_transaction;
-
-        if ($transaction && $transaction->payment_id && $transaction->status == 'SUCCESS') {
-        } elseif ($request->isPaymentDone == 'true' && $request->paymentMethod) {
-            $transaction = new PaymentTransaction();
-            $transaction->payment_id = $request->paymentMethod;
-            $transaction->payment_status = 'SUCCESS';
-            $transaction->save();
-            $eventDetail->payment_transaction_id = $transaction->id;
-        } 
 
         if ($request->launch_visible == 'DRAFT') {
             $eventDetail->status = 'DRAFT';
             $eventDetail->sub_action_public_date = null;
             $eventDetail->sub_action_public_time = null;
         } else {
-            
             if ($request->launch_visible == 'public') {
                 $launch_date = $request->launch_date_public;
                 $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_public);
@@ -460,7 +447,6 @@ class EventDetail extends Model
 
             if ($request->launch_schedule == 'schedule' && $launch_date && $launch_time) {
                 $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date . ' ' . $launch_time)->utc();
-                
                 if ($launch_date && $launch_time && $carbonPublishedDateTime < $carbonStartDateTime && $carbonPublishedDateTime < $carbonEndDateTime) {
                     $eventDetail->status = 'SCHEDULED';
                     $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
@@ -468,39 +454,16 @@ class EventDetail extends Model
                 } else {
                     throw new TimeGreaterException('Published time must be before start time and end time.');
                 }
-
             } elseif ($request->launch_schedule == 'now') {
                 $eventDetail->status = 'UPCOMING';
                 $eventDetail->sub_action_public_date = null;
                 $eventDetail->sub_action_public_time = null;
             } else {
-                $eventDetail->status = 'DRAFT';
-                
-                if ($launch_date && $launch_time) {
-                    $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date . ' ' . $launch_time)->utc();
-                    $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
-                    $eventDetail->sub_action_public_time = $carbonPublishedDateTime->format('H:i');
-                } else {
-                    $eventDetail->sub_action_public_date = null;
-                    $eventDetail->sub_action_public_time = null;
-                }
-            }
-
-            if ($transaction && $transaction->payment_id && $transaction->status == 'SUCCESS') {
-            } elseif ($request->isPaymentDone == 'true' && $request->paymentMethod) {
-            } else {
-                if ($eventDetail->status != 'DRAFT') { 
-                    $eventDetail->status = 'PENDING';
-                }
+                throw new TimeGreaterException('Scheduled event without date and time.');
             }
         }
 
         $eventDetail->sub_action_private = $request->launch_visible;
-        
-        if ($request->launch_visible == 'DRAFT') {
-            $eventDetail->sub_action_private = 'private';
-        }
-
         $eventDetail->status = $eventDetail->statusResolved();
         return $eventDetail;
     }
