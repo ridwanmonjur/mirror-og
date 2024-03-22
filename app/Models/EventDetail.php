@@ -323,7 +323,7 @@ class EventDetail extends Model
                             }
                         }
                     } else {
-                        switch ($filter['date'])  {
+                        switch ($filter['date'][0])  {
                             case 'today':
                                 $q->whereBetween('created_at', [now()->startOfDay(), now()]);
                                 break;
