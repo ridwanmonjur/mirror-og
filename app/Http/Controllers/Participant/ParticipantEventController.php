@@ -8,6 +8,7 @@ use Illuminate\Database\QueryException;
 use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\EventDetail;
+use App\Models\EventInvitation;
 use App\Models\Follow;
 use App\Models\JoinEvent;
 use App\Models\Organizer;
@@ -179,13 +180,14 @@ class ParticipantEventController extends Controller
     public function registrationManagement(Request $request, $id)
     {
         $user_id = $request->attributes->get('user')->id;
-        $selectTeam = Team::where('id', $id)->where('creator_id', $user_id)
-            ->orWhere(function ($query) use ($user_id) {
-                $query->whereHas('members', function ($query) use ($user_id) {
-                    $query->where('user_id', $user_id)->where('status', 'accepted');
+        $selectTeam = Team::where('id', $id)->where(function ($q) use ($user_id) {
+            $q->where('creator_id', $user_id)
+                ->orWhere(function ($query) use ($user_id) {
+                    $query->whereHas('members', function ($query) use ($user_id) {
+                        $query->where('user_id', $user_id)->where('status', 'accepted');
+                    });
                 });
-            })
-            ->with(['members', 'awards'])->first();
+            })->with(['members', 'awards'])->first();
 
         if ($selectTeam) {
             $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
@@ -229,27 +231,28 @@ class ParticipantEventController extends Controller
         try {
             $user = Auth::user();
             $userId = $user && $user->id ? $user->id : null;
-
             $event = EventDetail::with('game', 'type')->withCount('joinEvents')->find($id);
-
             if (!$event) {
                 throw new ModelNotFoundException("Event not found by id: $id");
             }
 
             $status = $event->statusResolved();
-
             if (in_array($status, ['DRAFT', 'PREVEW', 'PENDING'])) {
                 $lowerStatus = strtolower($status);
                 throw new ModelNotFoundException("Can't display event: $id with status: $lowerStatus");
             }
 
-            if ($user) {
+            if ($user && $userId) {
+                $user->isFollowing = Follow::where('participant_user_id', $userId)
+                    ->where('organizer_user_id', $event->user_id)
+                    ->first();
+
+                $followersCount = Follow::where('organizer_user_id', $event->user_id)->count();
                 if ($event->sub_action_private == 'private') {
                     $checkIfUserIsOrganizerOfEvent = $event->user_id == $userId;
-                    // change this line
-                    $checkIfUserIsInvited = true;
+                    $checkIfUserIsInvited = EventInvitation::where('participant_user_id', $userId)
+                        ->where('event_id', $event->id)->exists();
                     $checkIfShouldDisallow = !($checkIfUserIsOrganizerOfEvent || $checkIfUserIsInvited);
-
                     if ($checkIfShouldDisallow) {
                         throw new UnauthorizedException("You're neither organizer nor a participant of event");
                     }
@@ -257,7 +260,6 @@ class ParticipantEventController extends Controller
 
                 if ($status == 'SCHEDULED') {
                     $checkIfUserIsOrganizerOfEvent = $event->user_id == $userId;
-
                     if (!$checkIfUserIsOrganizerOfEvent) {
                         throw new UnauthorizedException('You cannot view a scheduled event');
                     }
@@ -267,6 +269,7 @@ class ParticipantEventController extends Controller
                     ->where('event_details_id', $event->id)
                     ->first();
             } else {
+                $followersCount = null;
                 if ($event->sub_action_private == 'private') {
                     throw new UnauthorizedException('Login to access this event.');
                 } else {
@@ -274,19 +277,6 @@ class ParticipantEventController extends Controller
                 }
             }
 
-            $organizerId = $event?->user_id ?? null;
-
-            if ($organizerId) {
-                $followersCount = Follow::where('organizer_user_id', $organizerId)->count();
-            } else {
-                $followersCount = null;
-            }
-
-            if ($user) {
-                $user->isFollowing = Follow::where('participant_user_id', $userId)
-                    ->where('organizer_user_id', $event->user_id)
-                    ->first();
-            }
 
             return view('Participant.ViewEvent', compact('event', 'followersCount', 'user', 'existingJoint'));
         } catch (Exception $e) {

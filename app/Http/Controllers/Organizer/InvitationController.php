@@ -49,9 +49,9 @@ class InvitationController extends Controller
     public function store(Request $request)
     {
         $invitation = new EventInvitation();
-        $invitation->organizer_id = $request->organizer_id;
+        $invitation->organizer_user_id = $request->organizer_id;
         $invitation->event_id = $request->event_id;
-        $invitation->participant_id = $request->participant_id;
+        $invitation->participant_user_id = $request->participant_id;
         $invitation->save();
         
         return response()->json([

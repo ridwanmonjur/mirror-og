@@ -94,7 +94,6 @@ class EventDetail extends Model
             'endTime',
             'eventDescription',
             'eventBanner',
-            'eventTags',
             'status',
             'venue',
             'event_type_id',
@@ -436,7 +435,9 @@ class EventDetail extends Model
             $eventDetail->status = 'DRAFT';
             $eventDetail->sub_action_public_date = null;
             $eventDetail->sub_action_public_time = null;
+            $eventDetail->sub_action_private = 'private';
         } else {
+            $eventDetail->sub_action_private = $request->launch_visible;
             if ($request->launch_visible == 'public') {
                 $launch_date = $request->launch_date_public;
                 $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_public);
@@ -463,7 +464,6 @@ class EventDetail extends Model
             }
         }
 
-        $eventDetail->sub_action_private = $request->launch_visible;
         $eventDetail->status = $eventDetail->statusResolved();
         return $eventDetail;
     }

@@ -57,7 +57,7 @@ class ParticipantController extends Controller
             ->get();
 
         // invitations
-        $invitedEventsList = EventInvitation::where('participant_id', $user_id)  
+        $invitedEventsList = EventInvitation::where('participant_user_id', $user_id)  
             ->with('event', 'event.tier', 'event.game', 'event.user')
             ->get();
 
