@@ -15,8 +15,10 @@
 
 <body>
     @include('CommonLayout.NavbarforParticipant')
-    @include('Participant.Layout.TeamHeadNoFileChange')
-
+    @include('Participant.Layout.TeamHead')
+    @php
+        use Carbon\Carbon;
+    @endphp
     <main class="main2">
         <div class="mb-4 text-success mx-auto text-center">
             You have joined this event successfully!
@@ -30,64 +32,66 @@
         </div>
         <div>
             <p class="text-center mx-auto">Team {{ $selectTeam->teamName }} has
-                {{ $rosterMembersProcessed['accepted']['count'] }} accepted roster members 
-                from {{count($teamMembers)}} available team member(s).
+                {{ $rosterMembers->count() }} accepted roster members 
+                from {{$teamMembers->count()}} available team member(s).
             </p>
             @if (isset($teamMembers[0]))
                 <table class="member-table">
                     <br>
                     <tbody>
                         @foreach ($teamMembers as $member)
+                            @php
+                                if (isset($rosterMembersKeyedByMemberId[$member->id])) {
+                                    $isRoster = true;
+                                    $roster = $rosterMembersKeyedByMemberId[$member->id];
+                                } else {
+                                    $isRoster = false;
+                                    $roster = null;
+                                }
+                            @endphp
                             <tr class="st" id="tr-{{$member->id}}">
-                                <td class="colorless-col">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" class="bi bi-gear gear-icon-btn" viewBox="0 0 16 16">
-                                        <path
-                                            d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0" />
-                                        <path
-                                            d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z" />
-                                    </svg>                                    
-                                <td>
-                                <td class="coloured-cell">
-                                    <div class="player-info">
+                                <td class="coloured-cell" style="width: 25px;">
+                                    <span class="player-info" style="cursor: pointer;">
                                         @if (isset($captain))
                                             @if ($captain && $member->id == $captain->team_member_id)
                                                 <div class="player-image"> </div>
                                             @endif
                                         @endif
-                                        <span>{{ $member->user->name }}</span>
-                                    </div>
+                                    </span>
+                                </td>
+                                <td class="coloured-cell">
+                                    <span>{{ $member->user->name }}</span>
+                                </td>
+                                <td class="coloured-cell">
+                                    <span>{{ $member->user->email }}</span>
                                 </td>
                                 <td class="flag-cell coloured-cell">
                                     <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
                                         alt="User's flag">
                                 </td>
                                 <td class="flag-cell coloured-cell">
-                                    {{ $rosterMembersKeyed[$member->id]->status }}
+                                    @if ($isRoster)
+                                        Joined {{Carbon::parse($roster->created_at)->diffForHumans()}}
+                                    @else
+                                        Not in roster
+                                    @endif
                                 </td>
                                 <td class="colorless-col">
-                                    @if (in_array($rosterMembersKeyed[$member->id]->status, ['rejected', 'pending']))
-                                        <button id="add-{{$member->id}}" class="gear-icon-btn" onclick="approveMember({{$rosterMembersKeyed[$member->id]->id}})">
+                                    @if (!$isRoster)
+                                        <button id="add-{{$member->id}}" class="gear-icon-btn" onclick="approveMember({{$member->id}})">
                                             ✔
                                         </button>
-                                    @endif
-                                    @if (in_array($rosterMembersKeyed[$member->id]->status, ['accepted', 'pending']))
-                                        <button id="remove-{{$member->id}}" class="gear-icon-btn" onclick="disapproveMember('{{$rosterMembersKeyed[$member->id]->id}}')">
+                                    @else
+                                        <button id="remove-{{$member->id}}" class="gear-icon-btn" onclick="disapproveMember('{{$member->id}}')">
                                         ✘
                                         </button>
                                     @endif
-                                    @if (isset($captain))
-                                        @if (!$captain || $member->id != $captain->team_member_id)
-                                            <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover ml-2" onclick="capatainMember('{{$rosterMembersKeyed[$member->id]->id}}')">
-                                                <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
-                                            </button>
-                                        @endif
-                                    @else
-                                        @if (!$captain || $member->id != $captain->team_member_id)
-                                            <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover" onclick="capatainMember('{{$rosterMembersKeyed[$member->id]->id}}')">
-                                                <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
-                                            </button>
-                                        @endif
+                                </td>
+                                <td  class="colorless-col">
+                                    @if (!$captain || $member->id != $captain->team_member_id)
+                                        <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover ml-2" onclick="capatainMember('{{$member->id}}')">
+                                            <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
+                                        </button>
                                     @endif
                                 </td>
                             </tr>
@@ -126,17 +130,42 @@
 
         loadToast();
 
-        let dialogForMember = new DialogForMember(); 
+        let actionMap = {
+            'approve': approveMemberAction,
+            'disapprove': disapproveMemberAction,
+            'captain': capatainMemberAction,
+            'deleteCaptain': deleteCaptainAction,
+        };
 
-        function takeYesAction () {
-            console.log({memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName()})
-
-            if (dialogForMember.getActionName() == 'approve') {
-                approveMemberAction();
-            } else {
-                disapproveMemberAction();
-            }
+        function reloadUrl(currentUrl, buttonName) {
+            currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + `tab=${buttonName}&success=true`;
+            window.location.replace(currentUrl);
         }
+
+        function toastError(message, error = null) {
+            console.error(error)
+            Toast.fire({
+                icon: 'error',
+                text: message
+            });
+        }
+
+        function takeYesAction() {
+            console.log({
+                memberId: dialogForMember.getMemberId(),
+                action: dialogForMember.getActionName()
+            })
+
+            const actionFunction = actionMap[dialogForMember.getActionName()];
+            if (actionFunction) {
+                actionFunction();
+            } else {
+                Toast.fire({
+                    icon: 'error',
+                    text: "No action found."
+                })
+            }
+        } 
 
         function takeNoAction() {
             dialogForMember.reset();
@@ -145,76 +174,245 @@
         function approveMember(memberId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setActionName('approve')
-            dialogOpen('Continue with approval?', takeYesAction, takeNoAction) 
+            dialogOpen('Continue with approval?', takeYesAction, takeNoAction)
+        }
+
+        function captainMember(memberId, teamId) {
+            dialogForMember.setMemberId(memberId);
+            dialogForMember.setTeamId(teamId);
+            dialogForMember.setActionName('captain')
+            dialogOpen('Are you sure you want to this user captain?', takeYesAction, takeNoAction)
+        }
+
+        function deleteCaptain(memberId, teamId) {
+            dialogForMember.setMemberId(memberId);
+            dialogForMember.setTeamId(teamId);
+            dialogForMember.setActionName('deleteCaptain')
+            dialogOpen('Are you sure you want to remove this user from captain?', takeYesAction, takeNoAction)
         }
 
         function disapproveMember(memberId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setActionName('disapprove')
-            dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction) 
+            dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
         }
 
-        function disMember(memberId) {
-            dialogForMember.setMemberId(memberId);
-            dialogForMember.setActionName('disapprove')
-            dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction) 
-        }
-
-
-        async function approveMemberAction() {
-            console.log({memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName()})
+        function approveMemberAction() {
             const memberId = dialogForMember.getMemberId();
             const url = "{{ route('participant.roster.approve', ['id' => ':id']) }}".replace(':id', memberId);
+            console.log({
+                memberId: dialogForMember.getMemberId(),
+                action: dialogForMember.getActionName()
+            });
 
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
+            fetchData(url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        reloadUrl(currentUrl, 'CurrentMembersBtn');
+                    } else {
+                        toastError(responseData.message);
+                    }
+                },
+                function(error) {
+                    toastError('Error making captain.', error);
+                }, {
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json',
-                    },
-                });
-                const data = await response.json();
-                
-                if (data.success) {
-                    let currentUrl = "{{route('participant.roster.manage', ['id' => $id, 'teamId'=> $selectTeam->id])}}";
-                    currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'success=true';
-                    window.location.replace(currentUrl);
-                } else {
-                    console.error('Error updating member status:', data.message);
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
                 }
-            } catch (error) {
-                console.error('Error approving member:', error);
-            }
+            );
         }
 
         async function disapproveMemberAction() {
-            console.log({memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName()})
-
             const memberId = dialogForMember.getMemberId();
+            const url = "{{ route('participant.member.disapprove', ['id' => ':id']) }}".replace(':id', memberId);
+            console.log({
+                memberId: dialogForMember.getMemberId(),
+                action: dialogForMember.getActionName()
+            });
 
-            const url = "{{ route('participant.roster.disapprove', ['id' => ':id']) }}".replace(':id', memberId);
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
+            fetchData(url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        reloadUrl(currentUrl, 'PendingMembersBtn');
+                    } else {
+                        toastError(responseData.message)
+                    }
+                },
+                function(error) {
+                    toastError('Error disapproving member.', error);
+                }, {
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json',
-                    },
-                });
-                const data = await response.json();
-                
-                if (data.success) {
-                    let currentUrl = "{{route('participant.roster.manage', ['id' => $id, 'teamId'=> $selectTeam->id])}}";
-                    currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + 'success=true';
-                    window.location.replace(currentUrl);
-                } else {
-                    console.error('Error updating member status:', data.message);
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
                 }
-            } catch (error) {
-                console.error('Error approving member:', error);
-            }
+            );
+        }
+
+        async function capatainMemberAction() {
+            const memberId = dialogForMember.getMemberId();
+            const teamId = dialogForMember.getTeamId();
+            const url = "{{ route('participant.member.captain', ['id' => ':id', 'memberId' => ':memberId']) }}"
+                .replace(':memberId', memberId)
+                .replace(':id', teamId);
+            console.log({
+                memberId: dialogForMember.getMemberId(),
+                action: dialogForMember.getActionName()
+            });
+
+            fetchData(url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        reloadUrl(currentUrl, 'CurrentMembersBtn');
+                    } else {
+                        toastError(responseData.message);
+                    }
+                },
+                function(error) {
+                    toastError('Error making captain.', error);
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            );
+        }
+
+        async function deleteCaptainAction() {
+            const memberId = dialogForMember.getMemberId();
+            const teamId = dialogForMember.getTeamId();
+            const url = "{{ route('participant.member.deleteCaptain', ['id' => ':id', 'memberId' => ':memberId']) }}"
+                .replace(':memberId', memberId)
+                .replace(':id', teamId);
+            console.log({
+                memberId: dialogForMember.getMemberId(),
+                action: dialogForMember.getActionName()
+            });
+
+            fetchData(url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        reloadUrl(currentUrl, 'PendingMembersBtn');
+                    } else {
+                       toastError(responseData.message);
+                    }
+                },
+                function(error) {
+                    toastError('Error making captain.', error);
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            );
+        }
+
+        async function inviteMemberAction() {
+            const memberId = dialogForMember.getMemberId();
+            const teamId = dialogForMember.getTeamId();
+            const url = "{{ route('participant.member.invite', ['id' => ':id', 'userId' => ':userId']) }}"
+                .replace(':userId', memberId)
+                .replace(':id', teamId);
+            console.log({ memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName() });
+
+            fetchData(
+                url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        reloadUrl(currentUrl, 'PendingMembersBtn');
+                    } else {
+                       toastError(responseData.message);
+                    }
+                },
+                function(error) {
+                    toastError('Error inviting members.', error);
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            );
+        }
+
+        async function deleteInviteMemberAction() {
+            const memberId = dialogForMember.getMemberId();
+            const url = "{{ route('participant.member.deleteInvite', ['id' => ':id']) }}"
+                .replace(':id', memberId);
+
+            fetchData(
+                url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        reloadUrl(currentUrl, 'PendingMembersBtn');
+                    } else {
+                        toastError(responseData.message);
+                    }
+                },
+                function(error) {
+                    toastError('Error deleting invite members.', error);
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            );
+        }
+
+        async function fetchParticipants(event) {
+            let input = event.currentTarget;
+            let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+
+            fetchData(
+                url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
+                        reloadUrl(currentUrl, 'NewMembersBtn');
+                        window.location.replace(currentUrl);
+                    } else {
+                        toastError(responseData.message);
+                    }
+                },
+                function(error) {
+                    toastError('Error fetching participants.', error);
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }
+            );
+        }
+
+        const searchInputs = document.querySelectorAll('.search_box input');
+        const memberTables = document.querySelectorAll('.member-table');
+
+        searchInputs.forEach((searchInput, index) => {
+            searchInput.addEventListener("input", function() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const memberRows = memberTables[index].querySelectorAll('tbody tr');
+
+                memberRows.forEach(row => {
+                    const playerName = row.querySelector('.player-info span')
+                        .textContent.toLowerCase();
+
+                    if (playerName.includes(searchTerm)) {
+                        row.style.display = 'table-row';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        function redirectToProfilePage(userId) {
+            window.location.href = "{{route('participant.profile.view', ['id' => ':id']) }}"
+                .replace(':id', userId);
         }
     </script>
 </body>

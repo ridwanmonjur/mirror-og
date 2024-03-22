@@ -157,7 +157,7 @@ input[type="submit"],
 
 @media screen and (min-width: 992px) {
     .main1 { 
-        height: 45vh;
+        height: 50vh;
     }
     .time-line-box .status__left small {
         left: 13%;

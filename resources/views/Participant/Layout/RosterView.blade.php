@@ -67,10 +67,14 @@
                 </div>
                 <div>
                     <span>
-                        @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
-                            1 follower 
+                        @if (isset($followCounts[$joinEvent->eventDetails->user_id]))
+                            @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
+                                1 follower 
+                            @else
+                                {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
+                            @endif    
                         @else
-                            {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
+                            No followers
                         @endif    
                     </span>
                 </div>

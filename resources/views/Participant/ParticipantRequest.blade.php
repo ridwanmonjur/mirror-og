@@ -186,7 +186,7 @@
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('participant.request.view') }}";
-                        reloadUrl(currentUrl, 'PendingTeamBtn');
+                        reloadUrl(currentUrl, 'InvitatedTeamBtn');
                     } else {
                         toastError(responseData.message)
                     }
@@ -201,7 +201,7 @@
             );
         }
 
-        async function deleteInviteAction() {
+        async function deleteInviteMemberAction() {
             const memberId = dialogForMember.getMemberId();
             const url = "{{ route('participant.member.deleteInvite', ['id' => ':id']) }}"
                 .replace(':id', memberId);
@@ -227,7 +227,7 @@
         }
 
         function redirectToProfilePage(userId) {
-            window.location.href = "{{route('participant.event.view', ['id' => ':id']) }}"
+            window.location.href = "{{route('participant.profile.view', ['id' => ':id']) }}"
                 .replace(':id', userId);
         }
 

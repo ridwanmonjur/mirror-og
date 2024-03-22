@@ -17,8 +17,7 @@
     <div class="d-flex justify-content-center"> 
         <button onclick="goToScreen();" type="button" class="btn oceans-gaming-default-button position-relative">
             Team Requests
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-             Pending Count
+            
         </button>
     </div>
     <main>

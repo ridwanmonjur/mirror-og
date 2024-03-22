@@ -76,6 +76,8 @@
                                     ✘
                                     </button>
                                 @endif
+                            </td>
+                            <td>
                                 @if (!$captain || $member->id != $captain->team_member_id)
                                     <button id="captain-{{ $member->id }}" class="gear-icon-btn invisible-until-hover"
                                         onclick="captainMember({{ $member->id }}, {{ $selectTeam->id }})">
@@ -169,7 +171,7 @@
                                 Rejected {{ Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
                             <td>
-                                @if ($user->id == $selectTeam->creator_id)
+                                @if ($user->id == $selectTeam->creator_id && $member->rejector!='invitee')
                                     <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
                                         onclick="approveMember({{ $member->id }})">
                                         ✔

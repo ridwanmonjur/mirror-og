@@ -67,7 +67,6 @@ class ParticipantController extends Controller
     }
 
     public function viewProfile(Request $request) {
-        $user = $request->attributes->get('user');
         return view('Participant.Profile');
     }
 }

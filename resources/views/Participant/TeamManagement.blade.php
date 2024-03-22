@@ -90,11 +90,15 @@
                                             </div>
                                             <div>
                                                 <span>
-                                                    @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
-                                                        1 follower 
+                                                    @if (isset($followCounts[$joinEvent->eventDetails->user_id]))
+                                                        @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
+                                                            1 follower 
+                                                        @else
+                                                            {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
+                                                        @endif    
                                                     @else
-                                                        {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
-                                                    @endif    
+                                                        No followers
+                                                    @endif
                                                 </span>
                                             </div>
                                         </div>
@@ -270,6 +274,11 @@
         });
 
         window.onbeforeunload = function(){window.location.reload();}
+
+        function redirectToProfilePage(userId) {
+            window.location.href = "{{route('participant.profile.view', ['id' => ':id']) }}"
+                .replace(':id', userId);
+        }
 
     </script>
 

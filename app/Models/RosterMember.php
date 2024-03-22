@@ -24,7 +24,6 @@ class RosterMember extends Model
                     'join_events_id' => $joinEventId,
                     'user_id' => $member->user_id,
                     'team_member_id' => $member->id,
-                    'status' => $member->status
                 ];
             }
         }
@@ -39,41 +38,6 @@ class RosterMember extends Model
             ->get();
     }
 
-    public static function processStatus($members)
-    {
-        $acceptedMembers = $pendingMembers = $rejectedMembers = [];
-        $acceptedMembersCount = $pendingMembersCount = $rejectedMembersCount = 0;
-    
-        foreach ($members as $member) {
-            $status = $member->status;
-    
-            if ($status == "accepted") {
-                $acceptedMembers[] = $member;
-                $acceptedMembersCount++;
-            } else if ($status == "pending") {
-                $pendingMembers[] = $member;
-                $pendingMembersCount++;
-            } else if ($status == "rejected") {
-                $rejectedMembers[] = $member;
-                $rejectedMembersCount++;
-            }
-        }
-
-        return [
-            'accepted' => [
-                'count' => $acceptedMembersCount,
-                'members' => $acceptedMembers
-            ],
-            'pending' => [
-                'count' => $pendingMembersCount,
-                'members' => $pendingMembers
-            ],
-            'rejected' => [
-                'count' => $rejectedMembersCount,
-                'members' => $rejectedMembers
-            ]
-        ];
-    }
 
     public static function processEvents($members)
     {
@@ -87,7 +51,7 @@ class RosterMember extends Model
         return $acceptedMembers;
     }
 
-    public static function keyBy($rosterMembers) {
+    public static function keyByMemberId($rosterMembers) {
         $associativeArray = [];
         foreach ($rosterMembers as $rosterMember) {
             $associativeArray[$rosterMember->team_member_id] = $rosterMember;

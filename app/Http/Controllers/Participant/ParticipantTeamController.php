@@ -110,34 +110,42 @@ class ParticipantTeamController extends Controller
     public function approveTeamMember(Request $request, $id)
     {
         $member = TeamMember::find($id);
-
-        if (!$member || $member->rejector == 'team') {
+        if (!$member || $member->rejector != 'team') {
+            return response()->json(['success' => false, 'message' => 'Invalid operation or team member not found'], 400);
+        } else {
             $member->status = 'accepted';
             $member->rejector = null;
             $member->save();
             return response()->json(['success' => true, 'message' => 'Team member status updated to accepted']);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Invalid operation or team member not found'], 400);
         }
     }
 
-    public function approveRosterMember(Request $request, $id)
+    public function pendingTeamMember(Request $request, $id)
     {
-        $member = RosterMember::find($id);
-        if ($member) {
-            $member->status = 'accepted';
-            $member->save();
-            return response()->json(['success' => true, 'message' => 'Roster status updated to accepted']);
+        $user = $request->attributes->get('user');
+        $member = TeamMember::where('team_id', $id)->where('user_id', $user->id)->first();
+        if (!$member) {
+            TeamMember::insert([
+                'user_id' => $user->id,
+                'team_id' => $id,
+                'status' => 'pending'
+            ]);
+
+            return redirect()->back()->with('successJoin', 'Your request to this team was successful!');
         } else {
-            return response()->json(['success' => false, 'message' => 'Invalid operation or roster member not found'], 400);
+            return redirect()->back()->with('errorJoin', 'Your request to this team failed!');
         }
     }
 
     public function disapproveTeamMember(Request $request, $id)
     {
         $member = TeamMember::find($id);
+        $team = Team::where('id', $member->team_id)->first();
+        if ($member && $team) {
+            if ($team->creator_id == $member->user_id) {
+                return response()->json(['success' => false, 'message' => "Can't remove creator from team."], 400);
+            }
 
-        if ($member) {
             $member->status = 'rejected';
             $member->rejector = 'team';
             $member->save();
@@ -147,23 +155,9 @@ class ParticipantTeamController extends Controller
         }
     }
 
-    public function disapproveRosterMember(Request $request, $id)
-    {
-        $member = RosterMember::find($id);
-
-        if ($member) {
-            $member->status = 'rejected';
-            $member->save();
-            return response()->json(['success' => true, 'message' => 'Roster member status updated to rejected']);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Invalid operation or roster member not found'], 400);
-        }
-    }
-
     public function captainMember(Request $request, $id, $memberId)
     {
         $existingCaptain = TeamCaptain::where('teams_id', $id)
-            ->where('team_member_id', $memberId)
             ->first();
         
         if ($existingCaptain) {
@@ -190,7 +184,6 @@ class ParticipantTeamController extends Controller
         
         return response()->json(['success' => 'true'], 200);
     }
-
 
     private function validateAndSaveTeam($request, $team, $user_id)
     {

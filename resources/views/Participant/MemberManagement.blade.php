@@ -15,7 +15,7 @@
 
 <body>
     @include('CommonLayout.NavbarforParticipant')
-    @include('Participant.Layout.TeamHeadNoFileChange')
+    @include('Participant.Layout.TeamHead')
 
     <main class="main2">
         @include('Participant.MemberManagement.MemberManagement')
@@ -86,7 +86,7 @@
         };
 
         function reloadUrl(currentUrl, buttonName) {
-            currentUrl += (currentUrl.indexOf('?') !== -1 ? '&' : '?') + `tab=${buttonName}&success=true`;
+            currentUrl += `?tab=${buttonName}&success=true`;
             window.location.replace(currentUrl);
         }
 
@@ -276,7 +276,7 @@
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        reloadUrl(currentUrl, 'PendingMembersBtn');
+                        reloadUrl(currentUrl, 'CurrentMembersBtn');
                     } else {
                        toastError(responseData.message);
                     }

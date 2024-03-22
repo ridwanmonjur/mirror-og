@@ -8,6 +8,7 @@ use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\OrganizerCheckoutController;
 use App\Http\Controllers\Participant\ParticipantController;
+use App\Http\Controllers\Participant\ParticipantRosterController;
 use App\Models\Participant;
 
 /* THIS IS THE UNSIGNED VIEW */
@@ -77,13 +78,16 @@ Route::group(['prefix' => 'participant'], function () {
 			Route::post('/team/{id}/user/{userId}/invite', [ParticipantTeamController::class, 'inviteMember'])->name('participant.member.invite');
 			Route::post('/team/{id}/member/{memberId}/captain', [ParticipantTeamController::class, 'captainMember'])->name('participant.member.captain');
 			Route::post('/team/{id}/member/{memberId}/deleteCaptain', [ParticipantTeamController::class, 'deleteCaptain'])->name('participant.member.deleteCaptain');
+			Route::post('/team/member/{id}/pending', [ParticipantTeamController::class, 'pendingTeamMember'])->name('participant.member.pending');
 			Route::post('/team/member/{id}/approve', [ParticipantTeamController::class, 'approveTeamMember'])->name('participant.member.approve');
 			Route::post('/team/member/{id}/disapprove', [ParticipantTeamController::class, 'disapproveTeamMember'])->name('participant.member.disapprove');
 			Route::post('/team/member/{id}/deleteInvite', [ParticipantTeamController::class, 'deleteInviteMember'])->name('participant.member.deleteInvite');
 			Route::post('/team/member/{id}/rejectInvite', [ParticipantTeamController::class, 'rejectInviteMember'])->name('participant.member.rejectInvite');
-			Route::post('/team/roster/{id}/approve', [ParticipantTeamController::class, 'approveRosterMember'])->name('participant.roster.approve');
-			Route::post('/team/roster/{id}/disapprove', [ParticipantTeamController::class, 'disapproveRosterMember'])->name('participant.roster.disapprove');
-			
+			Route::post('/team/roster/approve', [ParticipantRosterController::class, 'approveRosterMember'])->name('participant.roster.approve');
+			Route::post('/team/roster/disapprove', [ParticipantRosterController::class, 'disapproveRosterMember'])->name('participant.roster.disapprove');
+			Route::post('/team/roster/captain', [ParticipantRosterController::class, 'captainRosterMember'])->name('participant.roster.captain');
+			Route::post('/team/roster/deleteCaptain', [ParticipantRosterController::class, 'deleteCaptainRosterMember'])->name('participant.roster.deleteCaptain');
+
 			// Event management
 			Route::get('/event/{id}/team/{teamId}/manage/roster', [ParticipantEventController::class, 'rosterMemberManagement'])->name('participant.roster.manage');
 			Route::get('/event/{id}/team/{teamId}/manage/member', [ParticipantEventController::class, 'teamMemberManagement'])->name("participant.memberManage.action");

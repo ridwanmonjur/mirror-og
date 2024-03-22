@@ -84,7 +84,7 @@ class ParticipantEventController extends Controller
             $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
             $joinEvents = JoinEvent::getJoinEventsForTeam($selectTeam->id)
                 ->with(['eventDetails', 'results', 'roster' => function ($q) {
-                    $q->where('status', 'accepted')->with('user');
+                    $q->with('user');
                 }])
                 ->with('eventDetails.tier', 'eventDetails.game')
                 ->get();
@@ -165,11 +165,10 @@ class ParticipantEventController extends Controller
             $rosterMembers = RosterMember::whereIn('team_member_id', $memberIds)
                 ->where('join_events_id', $joinEvent->id)->get();
 
-            $rosterMembersProcessed = RosterMember::processStatus($rosterMembers);
-            $rosterMembersKeyed = RosterMember::keyBy($rosterMembers);
+            $rosterMembersKeyedByMemberId = RosterMember::keyByMemberId($rosterMembers);
 
             return view('Participant.RosterManagement', 
-                compact('selectTeam', 'joinEvent', 'teamMembers', 'rosterMembersProcessed', 'creator_id', 'rosterMembersKeyed', 'id', 'captain')
+                compact('selectTeam', 'joinEvent', 'teamMembers', 'creator_id', 'rosterMembersKeyedByMemberId', 'rosterMembers', 'id', 'captain')
             );
         } else {
             return $this->show404Participant('This event is missing or you need to be a member to view events!');
