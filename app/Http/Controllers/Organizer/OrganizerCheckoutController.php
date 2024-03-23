@@ -104,7 +104,7 @@ class OrganizerCheckoutController extends Controller
 
                     $event->payment_transaction_id = $transaction->id;
                     // this line must be below setting the payment transaction
-                    $event->status = $event->statusResolved();
+                    $event->status = $event->isCompleteEvent() ? 'PENDING' : $event->statusResolved();
                     $event->save();
                     
                     return view('Organizer.CheckoutEventSuccess', [
