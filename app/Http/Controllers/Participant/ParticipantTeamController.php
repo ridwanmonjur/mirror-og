@@ -48,7 +48,9 @@ class ParticipantTeamController extends Controller
             return view('Participant.TeamList', compact('teamList', 'count', 'membersCount' ));
         } else {
             session()->flash('errorMessage', 'You have 0 teams! Create a team first.');
-            return view('Participant.CreateTeam');
+            $membersCount = 0;
+            $count = 0;
+            return view('Participant.TeamList', compact('teamList', 'count', 'membersCount' ));
         }
     }
 
@@ -218,7 +220,7 @@ class ParticipantTeamController extends Controller
     public function approveTeamMember(Request $request, $id)
     {
         $member = TeamMember::find($id);
-        if (!$member || $member->rejector != 'team') {
+        if (!$member || $member->rejector == 'invitee') {
             return response()->json(['success' => false, 'message' => 'Invalid operation or team member not found'], 400);
         } else {
             $member->status = 'accepted';

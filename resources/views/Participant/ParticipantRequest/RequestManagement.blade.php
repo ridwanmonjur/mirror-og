@@ -59,7 +59,7 @@
                             <div class="d-flex justify-content-around">
                                 <div class="px-5">
                                     <button class="btn btn-link gear-icon-btn"
-                                        onclick="redirectToTeamPage({{ $teamAndMember->id }});"
+                                        onclick="redirectToTeamPage({{ $teamAndMember->team_id }});"
                                         style="cursor:pointer; padding: 0; color: black; text-decoration: none;"
                                         >
                                         <svg 
