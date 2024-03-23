@@ -67,7 +67,7 @@
                                     alt="User's flag">
                             </td>
                             <td class="coloured-cell px-3">
-                                Accepted {{ Carbon::parse($member->updated_at)->diffForHumans() }}
+                                Accepted {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
                             <td>
                                 @if ($user->id == $selectTeam->creator_id)
@@ -131,7 +131,7 @@
                                     alt="User's flag">
                             </td>
                             <td class="coloured-cell px-3">
-                                Pending {{ Carbon::parse($member->updated_at)->diffForHumans() }}
+                                Pending {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
                             <td>
                                 @if ($user->id == $selectTeam->creator_id)
@@ -168,7 +168,7 @@
                                     alt="User's flag">
                             </td>
                             <td class="coloured-cell px-3">
-                                Rejected {{ Carbon::parse($member->updated_at)->diffForHumans() }}
+                                Rejected {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
                             <td>
                                 @if ($user->id == $selectTeam->creator_id && $member->rejector!='invitee')
@@ -205,12 +205,12 @@
                                     alt="User's flag">
                             </td>
                             <td class="coloured-cell px-3">
-                                Invited {{ Carbon::parse($member->updated_at)->diffForHumans() }}
+                                Invited {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
                             <td>
                                 @if ($user->id == $selectTeam->creator_id)
-                                    <button id="deleteInvite-{{ '$member->user_id' }}" class="gear-icon-btn"
-                                        onclick="deleteInvite({{ $member->id }})">
+                                    <button id="deleteInviteMember-{{ '$member->user_id' }}" class="gear-icon-btn"
+                                        onclick="deleteInviteMember({{ $member->id }})">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                             fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                             <path

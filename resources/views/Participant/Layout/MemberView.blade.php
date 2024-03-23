@@ -76,7 +76,7 @@
                             <span>{{ $member->user->email }}</span>
                         </td>
                         <td class="coloured-cell px-3">
-                            <span>{{ $member->status }} {{Carbon::parse($member->updated_at)->diffForHumans()}} </span>
+                            <span>{{ $member->status }} {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }} </span>
                         </td>
                         <td class="flag-cell coloured-cell px-3">
                             <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"

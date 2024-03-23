@@ -71,7 +71,7 @@
                                 </td>
                                 <td class="flag-cell coloured-cell">
                                     @if ($isRoster)
-                                        Joined {{Carbon::parse($roster->created_at)->diffForHumans()}}
+                                        Joined  {{is_null($roster->created_at) ? "": Carbon::parse($roster->created_at)->diffForHumans()}}
                                     @else
                                         Not in roster
                                     @endif
@@ -226,7 +226,7 @@
                     },
                     body: JSON.stringify({
                         'user_id' : {{ $user->id }},
-                        'join_events_id': {{ $join_event->id }},
+                        'joinEvents_id': {{ $joinEvent->id }},
                         'team_member_id': memberId
                     })
                 }
@@ -258,7 +258,7 @@
                     }, 
                     body: JSON.stringify({
                         'user_id' : {{ $user->id }},
-                        'join_events_id': {{ $join_event->id }},
+                        'joinEvents_id': {{ $joinEvent->id }},
                         'team_member_id': memberId
                     })
                 }
@@ -267,7 +267,7 @@
 
         async function capatainMemberAction() {
             const memberId = dialogForMember.getMemberId();
-            const url = "{{ route('participant.member.captain') }}"
+            const url = "{{ route('participant.roster.captain') }}"
             console.log({
                 memberId: dialogForMember.getMemberId(),
                 action: dialogForMember.getActionName()
@@ -290,7 +290,7 @@
                     },
                     body: JSON.stringify({
                         'teams_id' : {{ $selectTeam->id }},
-                        'join_events_id': {{ $join_event->id }},
+                        'joinEvents_id': {{ $joinEvent->id }},
                         'team_member_id': memberId
                     })
                 }
@@ -300,7 +300,7 @@
         async function deleteCaptainAction() {
             const memberId = dialogForMember.getMemberId();
             const teamId = dialogForMember.getTeamId();
-            const url = "{{ route('participant.member.deleteCaptain') }}"
+            const url = "{{ route('participant.roster.deleteCaptain') }}"
             console.log({
                 memberId: dialogForMember.getMemberId(),
                 action: dialogForMember.getActionName()
@@ -323,7 +323,7 @@
                     },
                     body: JSON.stringify({
                         'teams_id' : {{ $selectTeam->id }},
-                        'join_events_id': {{ $join_event->id }},
+                        'joinEvents_id': {{ $joinEvent->id }},
                         'team_member_id': memberId
                     })
                 }

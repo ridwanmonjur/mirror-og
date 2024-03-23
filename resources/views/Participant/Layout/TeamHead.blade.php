@@ -55,7 +55,11 @@
                             @else 
                                 <button class="px-2 w-100 h-100 gear-icon-btn-2 fw-bolder pt-1 pb-2 border-1 border-dark border-bottom" type="button">
                                     <small style="font-size: 14px;" class="ms-2">  
-                                        {{$statusMessage[$status]}}
+                                        @if ($selectTeam->creator_id == $user->id)
+                                            You've created this team
+                                        @else
+                                            {{$statusMessage[$status]}}
+                                        @endif
                                     </small>
                                 </button>
                             @endif

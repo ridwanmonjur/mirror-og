@@ -36,30 +36,30 @@
         <p class="text-center mx-auto mt-2">
             Teams requesting you to join them.
         </p>
-        @if (isset($invitedTeamList[0]))
-            @foreach ($invitedTeamList as $team)
+        @if (isset($invitedTeamAndMemberList[0]))
+            @foreach ($invitedTeamAndMemberList as $teamAndMember)
                 <div class="wrapper">
                     <div class="team-section">
                         <div class="upload-container">
                             <div class="circle-container" style="cursor: pointer;">
                                 <div id="uploaded-image" class="uploaded-image"
-                                    style="background-image: url({{ $team->teamBanner ? '/storage' . '/' . $team->teamBanner : '/assets/images/fnatic.jpg' }} );">
+                                    style="background-image: url({{ $teamAndMember->teamBanner ? '/storage' . '/' . $teamAndMember->teamBanner : '/assets/images/fnatic.jpg' }} );">
                                 </div>
                                 </label>
                             </div>
-                            <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
-                            <i> Requested {{ Carbon::parse($team->members[0]->updated_at)->diffForHumans() }} </i>
+                            <h3 class="team-name" id="team-name">{{ $teamAndMember->teamName }}</h3>
+                            <i> Requested {{ is_null($teamAndMember->updated_at) ? '' : Carbon::parse($teamAndMember->updated_at)->diffForHumans() }} </i>
                             <br>
                             <p>Total Members:
-                                @if (isset($membersCount[$team->id]))
-                                    {{ $membersCount[$team->id] }}
+                                @if (isset($membersCount[$teamAndMember->id]))
+                                    {{ $membersCount[$teamAndMember->id] }}
                                 @else {{ 0 }}
                                 @endif
                             </p>
                             <div class="d-flex justify-content-around">
                                 <div class="px-5">
                                     <button class="btn btn-link gear-icon-btn"
-                                        onclick="redirectToTeamPage({{ $team->id }});"
+                                        onclick="redirectToTeamPage({{ $teamAndMember->id }});"
                                         style="cursor:pointer; padding: 0; color: black; text-decoration: none;"
                                         >
                                         <svg 
@@ -73,14 +73,14 @@
                                     </button>
                                 </div>
                                 <div class="px-5">
-                                    <button id="add-{{ '$team->id' }}" class="gear-icon-btn"
-                                        onclick="approveTeam({{ $team->members[0]->id }})">
+                                    <button id="add-{{ '$teamAndMember->id' }}" class="gear-icon-btn"
+                                        onclick="approveTeam({{ $teamAndMember->id }})">
                                         ✔ Approve
                                     </button>
                                 </div>
                                 <div class="px-5">
-                                    <button id="remove-{{ $team->id }}" class="gear-icon-btn"
-                                        onclick="disapproveTeam({{ $team->members[0]->id }})">
+                                    <button id="remove-{{ $teamAndMember->id }}" class="gear-icon-btn"
+                                        onclick="disapproveTeam({{ $teamAndMember->id }})">
                                         ✘ Reject
                                     </button>
                                 </div>
@@ -109,14 +109,14 @@
             View your sent team requests. You may delete these requests if you don't approve of the team.
         </p>
         <div class="cont mt-3 pt-3">
-            @if (isset($pendingTeamList[0]))
+            @if (isset($pendingTeamAndMemberList[0]))
                 <table class="member-table">
                     <tbody class="pending-member-table">
-                        @foreach ($pendingTeamList as $team)
-                            <tr class="st" id="tr-{{ $team->id }}">
+                        @foreach ($pendingTeamAndMemberList as $teamAndMember)
+                            <tr class="st" id="tr-{{ $teamAndMember->team_id }}">
                                 <td class="colorless-col">
                                     <svg
-                                        onclick="redirectToTeamPage({{ $team->id }});" 
+                                        onclick="redirectToTeamPage({{ $teamAndMember->team_id }});" 
                                         class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg" width="20"
                                         height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                                         <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
@@ -126,19 +126,19 @@
                                 <td>
                                 <td class="coloured-cell px-3">
                                     <div class="player-info">
-                                        <span>{{ $team->teamName }}</span>
+                                        <span>{{ $teamAndMember->teamName }}</span>
                                     </div>
                                 </td>
                                 <td class="coloured-cell px-3">
-                                    {{ $team->teamDescription }}
+                                    {{ $teamAndMember->teamDescription }}
                                 </td>
                                 <td class="coloured-cell px-3">
                                     Sent
-                                    {{ Carbon::parse($team->members[0]->updated_at)->diffForHumans() }}
+                                    {{ is_null($teamAndMember->updated_at) ? '' : Carbon::parse($teamAndMember->updated_at)->diffForHumans() }}
                                 </td>
                                 <td>
-                                    <button id="add-{{ '$$team->members[0]->id' }}" class="gear-icon-btn"
-                                        onclick="approveTeam({{ $team->members[0]->id }})">
+                                    <button id="add-{{ '$teamAndMember->id' }}" class="gear-icon-btn"
+                                        onclick="deleteInviteMember({{ $teamAndMember->id }})">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                             fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                             <path
@@ -176,7 +176,7 @@
                             You have been invited to event
                             <span>"{{ $invitation->event->eventName }}"</span>
                             by {{ $invitation->event->user->name }}
-                            {{ Carbon::parse($invitation->updated_at)->diffForHumans()}}.
+                            {{ is_null($invitation->updated_at) ? '' : Carbon::parse($invitation->updated_at)->diffForHumans()}}.
                             <button 
                                 onclick="redirectToProfilePage({{ $invitation->event->id }});"    
                                 class="btn btn-link text-left d-inline"
