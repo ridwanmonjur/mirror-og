@@ -53,10 +53,11 @@
                 <div class="team-section">
                     <div class="upload-container">
                         <label for="image-upload" class="upload-label">
-                            <div class="circle-container">
-                                <div id="uploaded-image" class="uploaded-image"></div>
-                                <img src="{{asset('animations/empty-exclamation.gif')}}" >
-                            </div>
+                            <img                       
+                                src="{{asset('assets/images/animation/empty-exclamation.gif') }}"
+                                width="150"
+                                height="150"
+                            >
                         </label>
                     </div>
                     <h3 class="team-name" id="team-name">No teams yet</h3>
