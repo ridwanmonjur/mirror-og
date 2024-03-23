@@ -105,8 +105,14 @@ class ParticipantTeamController extends Controller
     public function teamMemberManagementRedirected(Request $request, $id, $teamId)
     {
         $page = 5;
-        $selectTeam = $this->getTeamByIdAndCreator($teamId, $request->attributes->get('user')->id);
-        return $this->handleTeamManagement($selectTeam, $id, $request, $page);
+        $user = $request->attributes->get('user') ?? auth()->user();
+        $selectTeam = Team::where('id', $teamId)
+            ->where('creator_id', $user->id)->with('members')->first();
+        if ($selectTeam) {
+            return $this->handleTeamManagement($selectTeam, $id, $request, $page);
+        } else {
+            return redirect()->route('participant.event.view', ['id' => $id]);
+        }
     }
     
     public function teamMemberManagement(Request $request, $id)
@@ -114,32 +120,26 @@ class ParticipantTeamController extends Controller
         $page = 5;
         $user = $request->attributes->get('user') ?? auth()->user();
         $user_id = $user->id;
-        $selectTeam = $this->getTeamByIdAndCreator($id, $user_id);
-        return $this->handleTeamManagement($selectTeam, $id, $request, $page);
-    }
-    
-    protected function getTeamByIdAndCreator($teamId, $userId)
-    {
-        return Team::where('id', $teamId)->where('creator_id', $userId)->with('members')->first();
-    }
-    
-    protected function handleTeamManagement($selectTeam, $id, $request, $page)
-    {
+        $selectTeam = Team::where('id', $id)
+            ->where('creator_id', $user_id)->with('members')->first();
         if ($selectTeam) {
-            $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
-            $teamMembersProcessed = TeamMember::processStatus($selectTeam->members);
-            $creator_id = $selectTeam->creator_id;
-            $userList = User::getParticipants($request, $selectTeam->id)->paginate($page);
-            foreach ($userList as $user) {
-                $user->is_in_team = $user->members->isNotEmpty() ? 'yes' : 'no';
-            }
-            return view('Participant.MemberManagement', compact('selectTeam', 'teamMembersProcessed', 'creator_id', 'userList', 'id', 'captain'));
+            return $this->handleTeamManagement($selectTeam, $id, $request, $page);
         } else {
             return $this->show404Participant('This event is missing or you need to be a member to view events!');
         }
     }
-
-  
+    
+    protected function handleTeamManagement($selectTeam, $id, $request, $page)
+    {
+        $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
+        $teamMembersProcessed = TeamMember::processStatus($selectTeam->members);
+        $creator_id = $selectTeam->creator_id;
+        $userList = User::getParticipants($request, $selectTeam->id)->paginate($page);
+        foreach ($userList as $user) {
+            $user->is_in_team = $user->members->isNotEmpty() ? 'yes' : 'no';
+        }
+        return view('Participant.MemberManagement', compact('selectTeam', 'teamMembersProcessed', 'creator_id', 'userList', 'id', 'captain'));
+    }
 
     public function rosterMemberManagement(Request $request, $id, $teamId)
     {

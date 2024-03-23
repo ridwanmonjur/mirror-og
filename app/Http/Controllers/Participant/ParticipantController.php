@@ -56,7 +56,8 @@ class ParticipantController extends Controller
             ->get();
 
         // invitations
-        $invitedEventsList = EventInvitation::where('participant_user_id', $user_id)  
+        $teamMembersList = TeamMember::where('user_id', $user_id)->pluck('team_id')->unique();
+        $invitedEventsList = EventInvitation::whereIn('team_id', $teamMembersList)  
             ->with('event', 'event.tier', 'event.game', 'event.user')
             ->get();
 

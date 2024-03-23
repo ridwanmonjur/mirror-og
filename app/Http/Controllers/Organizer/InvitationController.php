@@ -49,6 +49,7 @@ class InvitationController extends Controller
      */
     public function store(Request $request)
     {
+        $team = Team::where('id', $request->team_id)->first();
         $invitation = new EventInvitation();
         $invitation->organizer_user_id = $request->organizer_id;
         $invitation->event_id = $request->event_id;
@@ -60,6 +61,7 @@ class InvitationController extends Controller
             'message' => 'Payment successful',
             'data' => [
                 'invitation' => $invitation,
+                'team' => $team
             ],
         ]);
     }

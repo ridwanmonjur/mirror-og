@@ -250,7 +250,7 @@ class ParticipantEventController extends Controller
                 $teamMembers = $selectTeam->members;
                 $this->processTeamRegistration($request, $id, $selectTeam, $teamMembers);
 
-                if ($selectTeam->creator_id) {
+                if ($selectTeam->creator_id == $userId) {
                     return redirect()->route('participant.memberManage.action', ['id'=> $id, 'teamId' => $selectTeam->id])
                     ->with('successMessage', 'Successfully created and joined the event.')
                     ->with('redirectToMemberManage', true);

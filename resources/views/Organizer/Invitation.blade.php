@@ -18,11 +18,15 @@ extract($dateArray);
                     </u>
                     <br>
                     <div>
-                        <select onchange="addParticant();" class="form-control" style="max-width: 300px; margin: auto;">
+                        <select class="form-control" style="max-width: 300px; margin: auto;">
                             @foreach ($teamList as $team)
-                            <option value="{{$team->id}}">{{ $team->name }}</option>
+                                <option value="{{$team->id}}">{{ $team->teamName }}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div>
+                        <br>
+                        <button onclick="addParticant();" class="oceans-gaming-default-button">Add </button>
                     </div>
                 </div>
                 <div class="added-participant">
@@ -30,7 +34,7 @@ extract($dateArray);
                     @forelse ($event->invitationList as $invitation)
                     <p>{{ $invitation->team->name }}</p>
                     @empty
-                    <p class="hide-if-participant">No teams yet</p>
+                    <p class="hide-if-participant">No teams invited yet</p>
                     @endforelse
                 </div>
                 <button onclick="goToManageScreen();" class="oceans-gaming-default-button" style="padding: 5px 20px; background-color: white; color: black; border: 1px solid black; margin: auto;">
@@ -44,60 +48,46 @@ extract($dateArray);
                 }
 
                 function addParticant() {
-                    const teamListAll = {!!json_encode($teamList) !!};
-                    let team = null;
                     const teamId = document.querySelector('select').value;
+                    const teamName = document.querySelector('select').value;
                     const addedTeam = document.querySelector('.added-participant');
-                    
-                    team = teamListAll.filter((teamItem) => {
-                        return teamItem.id == teamId;
-                    });
-                    
-                    if (team[0]) {
-                        team = team[0];
-                    } else{
-                        Toast.error("Team not found.");
+                    const hideIfTeam = document.querySelector('.hide-if-participant');
+                    if (hideIfTeam) {
+                        hideIfTeam.classList.add('d-none');
                     }
-
-                    if (team) {
-                        const hideIfTeam = document.querySelector('.hide-if-participant');
-                    
-                        if (hideIfTeam) {
-                            hideIfTeam.classList.add('d-none');
-                        }
-                    
-                        let data = {
-                            event_id: "{{ $event->id }}",
-                            team_id: teamId,
-                            organizer_id: "{{ $user_id }}",
-                        };
-                    
-                        fetch("{{ route('event.invitation.store', $event->id) }}", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                                    "Accept": "application/json",
-                                },
-                                body: JSON.stringify(data)
+                
+                    let data = {
+                        event_id: "{{ $event->id }}",
+                        team_id: teamId,
+                        organizer_id: "{{ $user_id }}",
+                    };
+                
+                    fetch("{{ route('event.invitation.store', $event->id) }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                "Accept": "application/json",
+                            },
+                            body: JSON.stringify(data)
+                        })
+                        .then(response => {
+                            return response.json()
+                        })
+                        .then(responseData => {
+                            console.log({responseData})
+                            const teamElement = document.createElement('p');
+                            teamElement.textContent = responseData?.data.team.teamName;
+                            addedTeam.appendChild(teamElement);
+                            
+                            Toast.fire({
+                                icon: 'success',
+                                text: "Successfully added user."
                             })
-                            .then(response => {
-                                response.json()
-                            })
-                            .then(responseData => {
-                                const teamElement = document.createElement('p');
-                                teamElement.textContent = team?.name ?? "Can't find id of team.";
-                                addedTeam.appendChild(teamElement);
-                                
-                                Toast.fire({
-                                    icon: 'success',
-                                    text: "Successfully added user."
-                                })
-                            })
-                            .catch(error => {
-                                console.error(error);
-                            })
-                    }
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        })
                 } 
             </script>
         </div>
