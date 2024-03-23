@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizer;
 use App\Http\Controllers\Controller;
 use App\Models\EventDetail;
 use App\Models\EventInvitation;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class InvitationController extends Controller
     {
         $authUser = Auth::user();
         $user_id = $authUser->id;
-        $participationList = User::where('role', 'PARTICIPANT')->get();
+        $teamList = Team::all();
         $tier = $type = $game = null;
         
         $event = EventDetail::with('invitationList')
@@ -31,7 +32,7 @@ class InvitationController extends Controller
         if (!$event) {
             throw new ModelNotFoundException("Event not found with id: $id");
         } else {
-            return view('Organizer.Invitation', compact('event', 'isUserSameAsAuth', 'participationList', 'user_id', 'game', 'tier', 'type'));
+            return view('Organizer.Invitation', compact('event', 'isUserSameAsAuth', 'teamList', 'user_id', 'game', 'tier', 'type'));
         }
     }
 
@@ -51,7 +52,7 @@ class InvitationController extends Controller
         $invitation = new EventInvitation();
         $invitation->organizer_user_id = $request->organizer_id;
         $invitation->event_id = $request->event_id;
-        $invitation->participant_user_id = $request->participant_id;
+        $invitation->team_id = $request->team_id;
         $invitation->save();
         
         return response()->json([

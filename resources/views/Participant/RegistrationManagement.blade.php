@@ -21,33 +21,71 @@
     <main class="main2">
         <div id="Overview">
             <br><br>
-            <div><b>Recent Events</b></div>
+            <div class="mx-auto" style="width: 80%;"><b>Outstanding Registrations</b></div>
             <br> <br>
             <div class="position-relative d-flex justify-content-center">
-                @if (!isset($joinEvents))
+                @if (!isset($joinEvents[0]))
                     <p>No events available</p>
                 @else
                     <div class="event-carousel">
                         @foreach ($joinEvents as $key => $joinEvent)
                             @include('Participant.Layout.RosterView', ['isRegistrationView' => true])
-                            <div class="pie-chart ms-3 ps-3">
-                                <div class="pie" style="--p:20"> 20%</div>
-                                <p> Total Entry Fee: <u>RM {{$joinEvent->tier->tierEntryFee * $joinEvent->tier->tierTeamSlot}} </u></p>
-                                <p> Paid: <u class="text-success">RM  </u> Pending: <u class="text-danger">RM </u> </p>
-                            </div>
+                            @include('Participant.Layout.PieChart', ['isInvited' => 'no'])
                         @endforeach
                     </div>
-                   
                 @endif
             </div>
+        </div>
+        <div id="Overview">
+            <br><br>
+            <div class="mx-auto" style="width: 80%;"><b>Event Invitations</b></div>
+             <br> <br>
+            <div class="position-relative d-flex justify-content-center">
+                @if (!isset($invitedEvents[0]))
+                    <p>No events available</p>
+                @else
+                    <div class="event-carousel">
+                        @foreach ($invitedEvents as $key => $joinEvent)
+                            @include('Participant.Layout.RosterView', ['isRegistrationView' => true])
+                            @include('Participant.Layout.PieChart', ['isInvited' => 'yes'])
+                        @endforeach
+                    </div>
+                @endif
+            <br> <br>
         </div>
             
         
     </main>
 
     @include('CommonLayout.BootstrapV5Js')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+        const ctx1 = document.getElementsByClassName('myChartyes');
+        const ctx2 = document.getElementsByClassName('myChartno');
+        const allCtx = [...ctx1, ...ctx2];
+
+        allCtx.forEach(ctx => {
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: [12, 19, 3, 5, 2, 3],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+
         function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
             const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
             tabContents.forEach(content => {
@@ -72,13 +110,10 @@
         
         function slideEvents(direction) {
             const eventBoxes = document.querySelectorAll('.event-box');
-
             const visibleEvents = Array.from(eventBoxes).filter(eventBox => eventBox.style.display !== 'none');
-
             eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
 
             let startIndex = 0;
-
             if (visibleEvents.length > 0) {
                 startIndex = (Array.from(eventBoxes).indexOf(visibleEvents[0]) + direction + eventBoxes.length) % eventBoxes
                     .length;
@@ -92,7 +127,6 @@
 
         function initializeEventsDisplay() {
             const eventBoxes = document.querySelectorAll('.event-box');
-
             eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
 
             for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {

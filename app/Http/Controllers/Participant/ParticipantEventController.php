@@ -136,6 +136,40 @@ class ParticipantEventController extends Controller
         }
     }
 
+    public function registrationManagement(Request $request, $id)
+    {
+        $user_id = $request->attributes->get('user')->id;
+        $selectTeam = Team::where('id', $id)->where(function ($q) use ($user_id) {
+            $q->where('creator_id', $user_id)
+                ->orWhere(function ($query) use ($user_id) {
+                    $query->whereHas('members', function ($query) use ($user_id) {
+                        $query->where('user_id', $user_id)->where('status', 'accepted');
+                    });
+                });
+            })->with(['members', 'awards', 'invitationList'])->first();
+
+        if ($selectTeam) {
+            $invitationListIds = $selectTeam->invitationList->pluck('event_id');
+            [$joinEventUserIds, $joinEvents] = JoinEvent::getJoinEventsAndIds($id, $invitationListIds, false);
+            [$invitedEventUserIds, $invitedEvents] = JoinEvent::getJoinEventsAndIds($id, $invitationListIds, true);
+
+            $userIds = array_unique(array_merge($joinEventUserIds, $invitedEventUserIds));
+            $followCounts = DB::table('users')
+                ->leftJoin('follows', function($q)  {
+                    $q->on('users.id', '=', 'follows.organizer_user_id');
+                })
+                ->whereIn('users.id', $userIds)
+                ->selectRaw('users.id as organizer_user_id, COALESCE(COUNT(follows.organizer_user_id), 0) as count')
+                ->groupBy('users.id')
+                ->pluck('count', 'organizer_user_id')
+                ->toArray();
+
+            return view('Participant.RegistrationManagement', compact('selectTeam', 'invitedEvents', 'followCounts', 'joinEvents'));
+        } else {
+            return redirect()->back()->with('error', "Team not found/ You're not authorized.");
+        }
+    }
+
     public function redirectToSelectOrCreateTeamToJoinEvent(Request $request, $id)
     {
         $user_id = $request->attributes->get('user')->id;
@@ -189,10 +223,10 @@ class ParticipantEventController extends Controller
 
             $rosterList = RosterMember::bulkCreateRosterMembers($joinEvent->id, $teamMembers);
             
-            // continue work with Roster Captain
             RosterCaptain::insert([
                 'team_member_id' => $teamMembers[0]->id,
                 'join_events_id' => $joinEvent->id,
+                'teams_id' => $selectTeam->id
             ]);
             
             $teamMembersProcessed = TeamMember::processStatus($teamMembers);

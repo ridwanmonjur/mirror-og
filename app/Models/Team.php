@@ -31,6 +31,10 @@ class Team extends Model
         return $this->hasMany(Award::class, 'join_events_id', 'id');
     }
 
+    public function invitationList()
+    {
+        return $this->hasMany(EventInvitation::class, 'team_id');
+    }
    
     public static function destroyTeanBanner($fileName)
     {

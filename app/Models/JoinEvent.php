@@ -63,9 +63,7 @@ class JoinEvent extends Model
     }
     public static function getJoinEventsByTeamIdList($teamIdList)
     {
-        return self::whereHas('user.teams', function ($query) use ($teamIdList) {
-                $query->whereIn('team_id', $teamIdList);
-            })
+        return self::whereIn('team_id', $teamIdList)
             ->with('user');
     }
 
@@ -78,6 +76,34 @@ class JoinEvent extends Model
         $joint->event_details_id = $data['event_details_id'];
         $joint->save();
         return $joint;
+    }
+
+    public static function getJoinEventsAndIds($teamId, $invitationListIds, $whereIn = true)
+    {
+        $query = static::where('team_id', $teamId);
+
+        if ($whereIn) {
+            $query->whereIn('event_details_id', $invitationListIds);
+        } else {
+            $query->whereNotIn('event_details_id', $invitationListIds);
+        }
+
+        $joinEvents = $query->with('eventDetails', 'eventDetails.tier', 'eventDetails.game')
+            ->groupBy('event_details_id')
+            ->get();
+
+        foreach ($joinEvents as $joinEvent) {
+            $joinEvent->status = $joinEvent->eventDetails->statusResolved();
+            $joinEvent->tier = $joinEvent->eventDetails->tier;
+            $joinEvent->game = $joinEvent->eventDetails->game;
+        }
+
+        $joinEventIds = $joinEvents->pluck('id')->toArray();
+
+        return [
+            $joinEventIds,
+            $joinEvents,
+        ];
     }
 
 }

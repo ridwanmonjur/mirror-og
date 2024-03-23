@@ -45,8 +45,6 @@ class ParticipantTeamController extends Controller
                 ->toArray();
             
             $count = $teamList->count();
-            // dd($teamIdList, $membersCount);
-    
             return view('Participant.TeamList', compact('teamList', 'count', 'membersCount' ));
         } else {
             session()->flash('errorMessage', 'You have 0 teams! Create a team first.');
@@ -96,8 +94,6 @@ class ParticipantTeamController extends Controller
             $joinEventIds = $joinEvents->pluck('id')->toArray();
             $teamMembers = $selectTeam->members->where('status', 'accepted');
 
-            // dd($joinEvents, $userIds, $followCounts, $user_id, $joinEvents, $teamMembers);
-
             return view('Participant.TeamManagement', 
                 compact('selectTeam', 'joinEvents', 'captain', 'teamMembers', 'joinEventsHistory', 'joinEventsActive', 'followCounts')
             );
@@ -143,49 +139,7 @@ class ParticipantTeamController extends Controller
         }
     }
 
-    public function registrationManagement(Request $request, $id)
-    {
-        $user_id = $request->attributes->get('user')->id;
-        $selectTeam = Team::where('id', $id)->where(function ($q) use ($user_id) {
-            $q->where('creator_id', $user_id)
-                ->orWhere(function ($query) use ($user_id) {
-                    $query->whereHas('members', function ($query) use ($user_id) {
-                        $query->where('user_id', $user_id)->where('status', 'accepted');
-                    });
-                });
-            })->with(['members', 'awards'])->first();
-
-        if ($selectTeam) {
-            $joinEvents = JoinEvent::whereHas('user.teams', function ($query) use ($id) {
-                $query->where('team_id', $id)->where('status', 'accepted');
-            })
-                ->with('eventDetails', 'user')
-                ->with('eventDetails.tier', 'eventDetails.game')
-                ->groupBy('event_details_id')
-                ->get();
-            
-                $userIds = $joinEvents->pluck('event_details.user_id')->flatten()->toArray();
-                $followCounts = DB::table('users')
-                    ->leftJoin('follows', function($q)  {
-                        $q->on('users.id', '=', 'follows.organizer_user_id');
-                    })
-                    ->whereIn('users.id', $userIds)
-                    ->selectRaw('users.id as organizer_user_id, COALESCE(COUNT(follows.organizer_user_id), 0) as count')
-                    ->groupBy('users.id')
-                    ->pluck('count', 'organizer_user_id')
-                    ->toArray();
-
-            foreach ($joinEvents as $joinEvent) {
-                $joinEvent->status = $joinEvent->eventDetails->statusResolved();
-                $joinEvent->tier = $joinEvent->eventDetails->tier;
-                $joinEvent->game = $joinEvent->eventDetails->game;
-            }
-
-            return view('Participant.RegistrationManagement', compact('selectTeam', 'followCounts', 'joinEvents'));
-        } else {
-            return redirect()->back()->with('error', "Team not found/ You're not authorized.");
-        }
-    }
+  
 
     public function rosterMemberManagement(Request $request, $id, $teamId)
     {
@@ -211,8 +165,6 @@ class ParticipantTeamController extends Controller
             return $this->show404Participant('This event is missing or you need to be a member to view events!');
         }
     }
-
-   
 
     public function createTeamView()
     {
@@ -427,6 +379,4 @@ class ParticipantTeamController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
-
-   
 }

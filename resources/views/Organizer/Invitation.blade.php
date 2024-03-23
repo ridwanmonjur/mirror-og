@@ -18,10 +18,9 @@ extract($dateArray);
                     </u>
                     <br>
                     <div>
-
                         <select onchange="addParticant();" class="form-control" style="max-width: 300px; margin: auto;">
-                            @foreach ($participationList as $participant)
-                            <option value="{{$participant->id}}">{{ $participant->name }}</option>
+                            @foreach ($teamList as $team)
+                            <option value="{{$team->id}}">{{ $team->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -29,9 +28,9 @@ extract($dateArray);
                 <div class="added-participant">
                     <br>
                     @forelse ($event->invitationList as $invitation)
-                    <p>{{ $invitation->participant->name }}</p>
+                    <p>{{ $invitation->team->name }}</p>
                     @empty
-                    <p class="hide-if-participant">No participants yet</p>
+                    <p class="hide-if-participant">No teams yet</p>
                     @endforelse
                 </div>
                 <button onclick="goToManageScreen();" class="oceans-gaming-default-button" style="padding: 5px 20px; background-color: white; color: black; border: 1px solid black; margin: auto;">
@@ -45,31 +44,31 @@ extract($dateArray);
                 }
 
                 function addParticant() {
-                    const participantListAll = {!!json_encode($participationList) !!};
-                    let participant = null;
-                    const participantId = document.querySelector('select').value;
-                    const addedParticipant = document.querySelector('.added-participant');
+                    const teamListAll = {!!json_encode($teamList) !!};
+                    let team = null;
+                    const teamId = document.querySelector('select').value;
+                    const addedTeam = document.querySelector('.added-participant');
                     
-                    participant = participantListAll.filter((participantItem) => {
-                        return participantItem.id == participantId;
+                    team = teamListAll.filter((teamItem) => {
+                        return teamItem.id == teamId;
                     });
                     
-                    if (participant[0]) {
-                        participant = participant[0];
+                    if (team[0]) {
+                        team = team[0];
                     } else{
-                        Toast.error("Participant not found.");
+                        Toast.error("Team not found.");
                     }
 
-                    if (participant) {
-                        const hideIfParticipant = document.querySelector('.hide-if-participant');
+                    if (team) {
+                        const hideIfTeam = document.querySelector('.hide-if-participant');
                     
-                        if (hideIfParticipant) {
-                            hideIfParticipant.classList.add('d-none');
+                        if (hideIfTeam) {
+                            hideIfTeam.classList.add('d-none');
                         }
                     
                         let data = {
                             event_id: "{{ $event->id }}",
-                            participant_id: participantId,
+                            team_id: teamId,
                             organizer_id: "{{ $user_id }}",
                         };
                     
@@ -86,9 +85,9 @@ extract($dateArray);
                                 response.json()
                             })
                             .then(responseData => {
-                                const participantElement = document.createElement('p');
-                                participantElement.textContent = participant?.name ?? "Can't find id of participant.";
-                                addedParticipant.appendChild(participantElement);
+                                const teamElement = document.createElement('p');
+                                teamElement.textContent = team?.name ?? "Can't find id of team.";
+                                addedTeam.appendChild(teamElement);
                                 
                                 Toast.fire({
                                     icon: 'success',
