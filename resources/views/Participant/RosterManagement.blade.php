@@ -52,10 +52,11 @@
                             <tr class="st" id="tr-{{$member->id}}">
                                 <td class="coloured-cell" style="width: 25px;">
                                     <span class="player-info" style="cursor: pointer;">
-                                        @if (isset($captain))
-                                            @if ($captain && $member->id == $captain->team_member_id)
-                                                <div class="player-image"> </div>
-                                            @endif
+                                        @if ($captain && $member->id == $captain->team_member_id)
+                                            <div style="cursor: pointer;" 
+                                                class="player-image"
+                                                onclick="deleteCaptain({{$member->id}})"
+                                            > </div>
                                         @endif
                                     </span>
                                 </td>
@@ -82,14 +83,14 @@
                                             ✔
                                         </button>
                                     @else
-                                        <button id="remove-{{$member->id}}" class="gear-icon-btn" onclick="disapproveMember('{{$member->id}}')">
+                                        <button id="remove-{{$member->id}}" class="gear-icon-btn" onclick="disapproveMember({{$member->id}})">
                                         ✘
                                         </button>
                                     @endif
                                 </td>
                                 <td  class="colorless-col">
                                     @if (!$captain || $member->id != $captain->team_member_id)
-                                        <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover ml-2" onclick="capatainMember('{{$member->id}}')">
+                                        <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover ml-2" onclick="capatainMember({{$member->id}})">
                                             <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
                                         </button>
                                     @endif
@@ -107,12 +108,14 @@
 
     </main>
 
+    <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     @include('CommonLayout.BootstrapV5Js')
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
     @include('CommonLayout.Toast')
     @include('CommonLayout.Dialog')
     <script>
+        let dialogForMember = new DialogForMember();
         function loadToast() {
             let currentUrl = window.location.href;
             let urlParams = new URLSearchParams(window.location.search);
@@ -143,6 +146,7 @@
             } 
 
             currentUrl += `?tab=${buttonName}&success=true`;
+            console.log({currentUrl})
             window.location.replace(currentUrl);
         }
 
@@ -187,16 +191,14 @@
             dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
         }
 
-        function captainMember(memberId, teamId) {
+        function capatainMember(memberId) {
             dialogForMember.setMemberId(memberId);
-            dialogForMember.setTeamId(teamId);
             dialogForMember.setActionName('captain')
             dialogOpen('Are you sure you want to this user captain?', takeYesAction, takeNoAction)
         }
 
-        function deleteCaptain(memberId, teamId) {
+        function deleteCaptain(memberId) {
             dialogForMember.setMemberId(memberId);
-            dialogForMember.setTeamId(teamId);
             dialogForMember.setActionName('deleteCaptain')
             dialogOpen('Are you sure you want to remove this user from captain?', takeYesAction, takeNoAction)
         }
@@ -212,7 +214,7 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = window.location.url;
+                        let currentUrl = "{{ route('participant.roster.manage', ['id' => $joinEvent->event_details_id, 'teamId' => $selectTeam->id] ) }}";
                         reloadUrl(currentUrl, 'CurrentMembersBtn');
                     } else {
                         toastError(responseData.message);
@@ -222,11 +224,13 @@
                     toastError('Error making captain.', error);
                 }, {
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         'user_id' : {{ $user->id }},
-                        'joinEvents_id': {{ $joinEvent->id }},
+                        'join_events_id': {{ $joinEvent->id }},
                         'team_member_id': memberId
                     })
                 }
@@ -244,7 +248,7 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = window.location.url;
+                        let currentUrl = "{{ route('participant.roster.manage', ['id' => $joinEvent->event_details_id, 'teamId' => $selectTeam->id] ) }}";
                         reloadUrl(currentUrl, 'PendingMembersBtn');
                     } else {
                         toastError(responseData.message)
@@ -254,11 +258,14 @@
                     toastError('Error disapproving member.', error);
                 }, {
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     }, 
                     body: JSON.stringify({
+                        'teams_id' : {{ $selectTeam->id }},
                         'user_id' : {{ $user->id }},
-                        'joinEvents_id': {{ $joinEvent->id }},
+                        'join_events_id': {{ $joinEvent->id }},
                         'team_member_id': memberId
                     })
                 }
@@ -276,7 +283,7 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = window.location.url;
+                        let currentUrl = "{{ route('participant.roster.manage', ['id' => $joinEvent->event_details_id, 'teamId' => $selectTeam->id] ) }}";
                         reloadUrl(currentUrl, 'CurrentMembersBtn');
                     } else {
                         toastError(responseData.message);
@@ -286,11 +293,13 @@
                     toastError('Error making captain.', error);
                 }, {
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         'teams_id' : {{ $selectTeam->id }},
-                        'joinEvents_id': {{ $joinEvent->id }},
+                        'join_events_id': {{ $joinEvent->id }},
                         'team_member_id': memberId
                     })
                 }
@@ -309,7 +318,7 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = window.location.url;
+                        let currentUrl = "{{ route('participant.roster.manage', ['id' => $joinEvent->event_details_id, 'teamId' => $selectTeam->id] ) }}";
                         reloadUrl(currentUrl, 'PendingMembersBtn');
                     } else {
                        toastError(responseData.message);
@@ -319,11 +328,13 @@
                     toastError('Error making captain.', error);
                 }, {
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         'teams_id' : {{ $selectTeam->id }},
-                        'joinEvents_id': {{ $joinEvent->id }},
+                        'join_events_id': {{ $joinEvent->id }},
                         'team_member_id': memberId
                     })
                 }
