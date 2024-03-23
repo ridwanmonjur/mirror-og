@@ -1,7 +1,7 @@
 @php
     use Carbon\Carbon;
 @endphp
-@if (isset($teamId))
+@if (isset($redirect) && $redirect)
     <div class="mb-2 text-success mx-auto text-center">
         You have joined this event successfully!
         @if ($selectTeam->creator_id == $user->id)

@@ -64,7 +64,6 @@ Route::group(['prefix' => 'participant'], function () {
             // Team management
             Route::get('/team/list', [ParticipantTeamController::class, 'teamList'])
                 ->middleware('prevent-back-history')
-                ->name('participant.team.manage')
                 ->name('participant.team.view');
             Route::get('/team/create', [ParticipantTeamController::class, 'createTeamView'])->name('participant.team.create');
             Route::get('/team/{id}/edit', [ParticipantTeamController::class, 'editTeamView'])->name('participant.team.edit');

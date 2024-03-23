@@ -109,7 +109,7 @@ class ParticipantTeamController extends Controller
         $selectTeam = Team::where('id', $teamId)
             ->where('creator_id', $user->id)->with('members')->first();
         if ($selectTeam) {
-            return $this->handleTeamManagement($selectTeam, $id, $request, $page);
+            return $this->handleTeamManagement($selectTeam, $id, $request, $page, true);
         } else {
             return redirect()->route('participant.event.view', ['id' => $id]);
         }
@@ -129,7 +129,7 @@ class ParticipantTeamController extends Controller
         }
     }
     
-    protected function handleTeamManagement($selectTeam, $id, $request, $page)
+    protected function handleTeamManagement($selectTeam, $id, $request, $page, $redirect = false)
     {
         $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
         $teamMembersProcessed = TeamMember::processStatus($selectTeam->members);
@@ -138,7 +138,8 @@ class ParticipantTeamController extends Controller
         foreach ($userList as $user) {
             $user->is_in_team = $user->members->isNotEmpty() ? 'yes' : 'no';
         }
-        return view('Participant.MemberManagement', compact('selectTeam', 'teamMembersProcessed', 'creator_id', 'userList', 'id', 'captain'));
+
+        return view('Participant.MemberManagement', compact('selectTeam', 'redirect', 'teamMembersProcessed', 'creator_id', 'userList', 'id', 'captain'));
     }
 
     public function rosterMemberManagement(Request $request, $id, $teamId)
@@ -322,13 +323,15 @@ class ParticipantTeamController extends Controller
                     throw ValidationException::withMessages(['teamName' => 'Team name already exists. Please choose a different name.']);
                 }
                 
-                $team = $this->validateAndSaveTeam($request, $team, $user_id);   
-                TeamCaptain::create([
-                    'userID' => $user_id,
-                    'team_id' => $team->id,
+                $team = $this->validateAndSaveTeam($request, $team, $user_id); 
+                TeamMember::bulkCreateTeanMembers($team->id, [$user_id], 'accepted');
+                $teamMembers = $team->members;
+            
+                TeamCaptain::insert([
+                    'team_member_id' => $teamMembers[0]->id,
+                    'teams_id' => $team->id,
                 ]);
                 
-                TeamMember::bulkCreateTeanMembers($team->id, [$user_id], 'accepted');
                 return redirect()->route('participant.team.view', ['id' => $user_id]);
             } else  {
                 return back()->with('errorMessage', "You can't create more than 5 teams!");
