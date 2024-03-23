@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('join_events', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained(
-                table: 'users', indexName: 'join_events_user_id_foreign')->nullable();
+                table: 'users', indexName: 'join_events_user_id_foreign')
+                ->onDelete('cascade')->nullable();
             $table->foreignId('event_details_id')->constrained(
-                    table: 'event_details', indexName: 'join_events_id_foreign')->nullable();
+                    table: 'event_details', indexName: 'join_events_id_foreign')
+                    ->onDelete('cascade')->nullable();
             $table->timestamps();
         });
     }

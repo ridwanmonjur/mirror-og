@@ -85,31 +85,23 @@ class EventDetail extends Model
 
     public function isCompleteEvent() {
         $isComplete = true;
-        $requiredFields = [
-            'eventDefinitions',
-            'eventName',
-            'startDate',
-            'endDate',
-            'startTime',
-            'endTime',
-            'eventDescription',
-            'eventBanner',
-            'status',
-            'venue',
-            'event_type_id',
-            'event_tier_id',
-            'event_category_id',
-            'payment_transaction_id'
-        ];
-    
-        foreach ($requiredFields as $field) {
-            if (empty($this->$field)) {
-                $isComplete = $isComplete && false; 
-            }
-
-            if(!$isComplete) {
-                return $isComplete;
-            }
+        if (
+            is_null($this->eventDefinitions) ||
+            is_null($this->eventName) ||
+            is_null($this->startDate) ||
+            is_null($this->endDate) ||
+            is_null($this->startTime) ||
+            is_null($this->endTime) ||
+            is_null($this->eventDescription) ||
+            is_null($this->eventBanner) ||
+            is_null($this->status) ||
+            is_null($this->event_type_id) ||
+            is_null($this->event_tier_id) ||
+            is_null($this->event_category_id) ||
+            is_null($this->sub_action_private) ||
+            is_null($this->payment_transaction_id)
+        ) {
+            return false;
         }
     
         return $isComplete;
