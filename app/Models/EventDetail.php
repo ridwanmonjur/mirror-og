@@ -86,7 +86,6 @@ class EventDetail extends Model
     public function isCompleteEvent() {
         $isComplete = true;
         if (
-            is_null($this->eventDefinitions) ||
             is_null($this->eventName) ||
             is_null($this->startDate) ||
             is_null($this->endDate) ||
