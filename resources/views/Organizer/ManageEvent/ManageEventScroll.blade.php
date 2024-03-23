@@ -125,8 +125,21 @@
                         &nbsp;
                         <span>{{ $event->type->eventType ?? 'Choose a type' }}</span>
                     </div>
+                    <div class="d-flex justify-content-center">
+                        @if ($status!= "DRAFT" && $event->sub_action_private == "private" && !in_array($status, ['PENDING', 'ENDED'])) 
+                            <a class="m-0 mt-2 px-3 py-2 oceans-gaming-default-button text-light" href="{{ route('event.invitation.index', $event->id) }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-event" viewBox="0 0 16 16">
+                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+                                <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+                                </svg>
+                                &nbsp;
+                                <span>Send invitation</span>
+                            </a>
+                        @endif
+                    </div>
                 </div>
                 <div class="group-hover-flexbox icon2 mb-2">
+                    
                     @if (in_array($status, ['ONGOING', 'DRAFT', 'SCHEDULED']))
                         <a class="m-0 p-0" href="{{ route('event.show', $event->id) }}">
                             <svg onclick="goToLivePreview()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
