@@ -15,7 +15,7 @@
         @if ($status == 'ERROR')
             <p id="notification">Your <u>{{ strtolower($status) }}</u> event has no proper start date/ end date!</p>
         @elseif ($status == 'DRAFT')
-            <p id="notification">Your <u>{{ strtolower($status) }}</u> event has been created!</p>
+            <p id="notification">Your <u>{{ strtolower($status) }}</u> event has been {{$event->created_at != $event->updated_at ? 'updated' : 'created'}}. </p>
         @elseif ($status == 'SCHEDULED')
             <p id="notification">Your <u>{{ $event->sub_action_private }}</u> event has been scheduled to launch on
                 {{ $combinedStr }} at {{ $timePart }}!</p>

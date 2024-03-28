@@ -295,6 +295,10 @@ input[type="submit"]:active {
 
 .card-text {
     padding: 10px 20px 0px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 400px;
 }
 
 .card-text .small-text {

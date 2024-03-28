@@ -136,7 +136,7 @@
                         <div class="ps-3">
                             <br><br>
                             <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
-                                <u>{{ strtolower($status) ?? 'Choose event status' }}</u>
+                                <u>{{ $status ?? 'Choose event status' }}</u>
                             </button>
                             <br><br>
                             <div>

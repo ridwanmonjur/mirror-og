@@ -15,7 +15,6 @@
         You have successfully paid for this event!
     </div>
     <div class="text-success box-width"> 
-        Event status is {{strtolower($status)}}.
         @if ($status == 'ERROR')
             <p id="notification">Your <u>{{ strtolower($status) }}</u> event has no proper start date/ end date!</p>
         @elseif ($status == 'DRAFT')
