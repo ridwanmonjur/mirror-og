@@ -18,12 +18,12 @@
         $bladeEventGameImage = bladeImageNull($event->game ? $event->game->gameIcon : null);
         
         $eventId = $event->id;
-        $toolTip = '<div><b>Event ID: </b>' . $eventId . '<br>';
+        $toolTip = '<b>Event ID: </b>' . $eventId . '<br>';
         $toolTip .= '<b>Description: </b>' . $event->eventDescription . '<br>';
-        $toolTip .= 'Start: ' . $dateStartArray['timePart'] . ' on ' . $dateStartArray['combinedStr'] . '<br>';
-        $toolTip .= 'End: ' . $dateEndArray['timePart'] . ' on ' . $dateEndArray['combinedStr'] . '<br>';
-        $toolTip .= 'Visibilty: ' . $event->sub_action_private . '<br>' ;
-        $toolTip .= 'Published date: ' . $datePublishedArray['timePart'] . ' on ' . $datePublishedArray['combinedStr'] . '</div>';    
+        $toolTip .= '<b>Start: </b>' . $dateStartArray['timePart'] . ' on ' . $dateStartArray['combinedStr'] . '<br>';
+        $toolTip .= '<b>End: </b>' . $dateEndArray['timePart'] . ' on ' . $dateEndArray['combinedStr'] . '<br>';
+        $toolTip .= '<b>Visibilty: </b>' . $event->sub_action_private . '<br>' ;
+        $toolTip .= '<b>Published date: </b>' . $datePublishedArray['timePart'] . ' on ' . $datePublishedArray['combinedStr'] ;    
     @endphp
 
     <div class="{{ 'rounded-box rounded-box-' . $eventTierLower }} " style="padding-bottom: 2px;">
@@ -43,7 +43,7 @@
                     >
                     <button data-bs-toggle="tooltip" data-bs-html="true" title="{{ $toolTip }}"
                         class="activate-tooltip oceans-gaming-default-button"
-                        style="@php echo $stylesEventStatus; @endphp">
+                        style="@php echo $stylesEventStatus; @endphp text-align: left;">
                         <u> {{ $status }} </u>
                     </button>
                     <button style="@php echo $stylesEventRatio; @endphp"
@@ -135,6 +135,10 @@
                                 </svg>
                                 <span> Send invitation </span>
                             </a>
+                        @else 
+                            <div class="d-flex justify-content-center align-items-center my-2">
+                                <span> Event is now {{strtolower($status)}}. </span>
+                            </div>
                         @endif
                     </div>
                 </div>
