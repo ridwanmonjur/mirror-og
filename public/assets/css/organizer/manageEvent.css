@@ -183,6 +183,7 @@ input[type="submit"],
 .grid-container {
     display: grid;
     grid-template-columns: 1fr;
+    grid-auto-rows: 1fr;
     grid-gap: 40px 1%;
     padding: 5% 15% 15% 15%;
 }

@@ -3,6 +3,9 @@
         ->where('user_id', $user->id)->get();
     if (isset($teamMember[0])) {
         $status = $teamMember[0]->status;
+        if ($status == 'rejected' && $teamMember->rejector == 'invitee') {
+            $status = 'rejected_me';
+        }
     } else {
         $status = null;
     }
@@ -10,7 +13,8 @@
     $statusMessage = [
         'accepted' => "You're a member of this team.",
         "invited" => "You've been invited to this team.",
-        "rejected" => "You've rejected/ been rejected to this team.",
+        "rejected_me" => "You've declined to join this team.",
+        "rejected" => "You've been rejected to this team.",
         "pending" => "You've requested to join this team."
     ];
 @endphp
