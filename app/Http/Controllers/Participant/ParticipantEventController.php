@@ -275,7 +275,6 @@ class ParticipantEventController extends Controller
     public function createTeamToJoinEvent(Request $request, $id)
     {
         DB::beginTransaction();
-
         try{
             $user_id = $request->attributes->get('user')->id;
             [
@@ -315,7 +314,13 @@ class ParticipantEventController extends Controller
             }
         } catch (Exception $e) {
             DB::rollBack();
-            return $this->show404Participant($e->getMessage());
+            if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
+                session()->flash('errorMessage', 'Please choose a unique name!');
+            } else {
+                session()->flash('errorMessage', $e->getMessage());
+            }
+
+            return view('Participant.CreateTeamToRegister', ['id' => $id]);
         }
     }
 }
