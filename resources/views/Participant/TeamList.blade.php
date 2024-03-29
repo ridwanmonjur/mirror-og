@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarforParticipant')
+    @include('CommonLayout.NavbarGoToSearchPage')
     <br><br> 
     <div class="d-flex justify-content-center"> 
         <button onclick="goToScreen();" type="button" class="btn oceans-gaming-default-button position-relative">

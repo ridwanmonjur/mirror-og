@@ -4,7 +4,7 @@
 
 {{-- extended the Sign page --}}
 
-@extends('Auth.Layout.SignInLayout')
+@extends('Auth.Layout.ParticipantSignInLayout')
 
 @if(session('token'))
     <script>

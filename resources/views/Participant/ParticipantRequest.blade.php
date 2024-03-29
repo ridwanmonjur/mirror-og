@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarforParticipant')
+    @include('CommonLayout.NavbarGoToSearchPage')
     @include('Participant.ParticipantRequest.RequestManagement')
 
     @include('CommonLayout.BootstrapV5Js')

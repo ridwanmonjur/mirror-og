@@ -49,9 +49,9 @@ function showFlashMessage(message, type) {
 }
 
 // Toggle password
-function togglePassword() {
-    var passwordField = document.getElementById('password');
-    var toggleButton = document.getElementById('togglePassword');
+function togglePassword(fieldId, buttonId) {
+    var passwordField = document.getElementById(fieldId);
+    var toggleButton = document.getElementById(buttonId);
 
     if (passwordField.type === 'password') {
         passwordField.type = 'text';

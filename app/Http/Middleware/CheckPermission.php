@@ -26,7 +26,7 @@ class CheckPermission
         }
 
         return response()
-            ->view('Auth.SignIn')
+            ->view('Auth.ParticipantSignIn')
             ->withException(new \Exception('You do not have permission to access this page'));
     }
     

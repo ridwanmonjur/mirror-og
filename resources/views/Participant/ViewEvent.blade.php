@@ -23,7 +23,7 @@
 @endphp
 
 <body>
-    @include('CommonLayout.NavbarforParticipant')
+    @include('CommonLayout.NavbarGoToSearchPage')
     <main>
         <br class="d-none-at-desktop">
         <div class="pt-2">

@@ -151,25 +151,5 @@
 </script>
 
 <script>
-    function toggleTeamList() {
-      var teamList = document.getElementById("teamList");
-      if (teamList.style.display === "block") {
-        teamList.style.display = "none";
-      } else {
-        teamList.style.display = "block";
-      }
-    }
-  
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-      if (!event.target.matches('.oceans-gaming-default-button')) {
-        var dropdowns = document.getElementsByClassName("team-dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.style.display === "block") {
-            openDropdown.style.display = "none";
-          }
-        }
-      }
-    }
+    
   </script>

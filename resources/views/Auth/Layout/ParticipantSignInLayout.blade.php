@@ -41,7 +41,7 @@
             <input type="password" name="password" id="password" minlength="6" maxlength="24" required="true"
                 class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Password</span>
-            <i class="fa fa-eye" id="togglePassword" onclick="togglePassword()" style="cursor: pointer; margin-top: 10px"></i>
+            <i class="fa fa-eye" id="togglePassword" onclick="togglePassword('password', 'togglePassword')" style="cursor: pointer; margin-top: 10px"></i>
             <div class="field-error-message" id="password-error"></div>
         </label>
     </div>
@@ -92,6 +92,19 @@
         } else {
             placeholder.style.top = '';
             placeholder.style.fontSize = '';
+        }
+    }
+
+    function togglePassword(fieldId, buttonId) {
+        var passwordField = document.getElementById(fieldId);
+        var toggleButton = document.getElementById(buttonId);
+
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            toggleButton.className = 'fa fa-eye-slash';
+        } else {
+            passwordField.type = 'password';
+            toggleButton.className = 'fa fa-eye';
         }
     }
 </script>

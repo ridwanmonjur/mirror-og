@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarforParticipant')
+    @include('CommonLayout.NavbarGoToSearchPage')
     @include('Participant.Layout.TeamHead')
     @php
         use Carbon\Carbon;

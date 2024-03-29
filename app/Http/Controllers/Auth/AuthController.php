@@ -167,7 +167,7 @@ class AuthController extends Controller
 
     public function signIn(Request $request)
     {
-        return view('Auth.SignIn');
+        return view('Auth.ParticipantSignIn');
     }
 
     public function organizerSignIn(Request $request)
@@ -303,7 +303,7 @@ class AuthController extends Controller
 
         Mail::send('Email.verify', ['token' => $token], function ($message) use ($email) {
             $message->to($email);
-            $message->subject('Verify Password');
+            $message->subject('Verify your email');
         });
 
         return redirect()
@@ -325,7 +325,7 @@ class AuthController extends Controller
 
     public function signUp(Request $request)
     {
-        return view('Auth.SignUp');
+        return view('Auth.ParticipantSignUp');
     }
 
     public function organizerSignUp(Request $request)
@@ -339,9 +339,10 @@ class AuthController extends Controller
         $userRoleCapital = '';
         $validatedData = [];
         
-        if ($request->is('organizer/signup')) {          
+        if ($request->is('organizer/*')) {          
             $userRole = 'organizer';
             $userRoleCapital = 'ORGANIZER';
+            $userRoleFirstCapital = 'Organizer';
             
             $validatedData = $request->validate([
                 'username' => 'baiL|required',
@@ -350,9 +351,10 @@ class AuthController extends Controller
                 'companyDescription' => 'bail|required',
                 'companyName' => 'bail|required',
             ]);
-        } elseif ($request->is('participant/signup')) {
+        } elseif ($request->is('participant/*')) {
             $userRole = 'participant';
             $userRoleCapital = 'PARTICIPANT';
+            $userRoleFirstCapital = 'Participant';
             
             $validatedData = $request->validate([
                 'username' => 'baiL|required',
@@ -405,13 +407,9 @@ class AuthController extends Controller
                 ->route($redirectSuccessRoute)
                 ->with(
                     [
-                        'success' => 'Organizer Account created and verification email sent. Now verify email!',
-                        'email' => $user->email,
-                    ],
-                    // [
-                    //     'success' => $userRoleCapital . ' Account created successfully!',
-                    //     // 'email' => $user->email
-                    // ]
+                        'success' => $userRoleFirstCapital . ' account created and verification email sent. Please verify email now!',
+                        'email' => $user->email
+                    ]
                 );
         } catch (QueryException $e) {
             Log::error($e->getMessage());
@@ -439,11 +437,11 @@ class AuthController extends Controller
         $userRoleCapital = '';
         $validatedData = [];
         
-        if ($request->is('organizer/signin')) {
+        if ($request->is('organizer/*')) {
             $userRole = 'organizer';
             $userRoleCapital = 'ORGANIZER';
             $userRoleSentence = 'Organizer';
-        } elseif ($request->is('participant/signin')) {
+        } elseif ($request->is('participant/*')) {
             $userRole = 'participant';
             $userRoleCapital = 'PARTICIPANT';
             $userRoleSentence = 'Participant';
