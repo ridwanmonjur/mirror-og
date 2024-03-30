@@ -12,7 +12,6 @@
     </svg>
     <div class="search-bar d-none-at-mobile">
         <input type="text" name="search" id="search-bar"
-             onclick="goToSearchPage()"
             value="{{app('request')->input('search')}}"
             placeholder="Search for events">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -41,7 +40,6 @@
 <nav class="mobile-navbar d-centered-at-mobile d-none">
     <div class="search-bar search-bar-mobile ">
         <input
-            onclick="goToSearchPage()"
             type="text" name="search" id="search-bar-mobile"
             value="{{app('request')->input('search')}}"
             placeholder="Search for events">

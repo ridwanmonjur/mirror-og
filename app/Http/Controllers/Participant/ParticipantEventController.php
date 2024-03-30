@@ -55,7 +55,20 @@ class ParticipantEventController extends Controller
         try {
             $user = Auth::user();
             $userId = $user && $user->id ? $user->id : null;
-            $event = EventDetail::with('game', 'type')->withCount('joinEvents')->find($id);
+            $event = EventDetail::with([
+                $userId, $id, [ 'game', 'type', 'joinEvents' => function ($query) {
+                    $query->with(['members' => function ($query) {
+                        $query->where('status', 'accepted');
+                        }]);
+                    }
+                ], null
+                ]
+            )->find($id); 
+
+            $event->acceptedMembersCount = 0;
+            foreach ($event->joinEvents as $joinEvent) {
+                $event->acceptedMembersCount += $joinEvent->members->count();
+            }
             if (!$event) {
                 throw new ModelNotFoundException("Event not found by id: $id");
             }
@@ -66,12 +79,14 @@ class ParticipantEventController extends Controller
                 throw new ModelNotFoundException("Can't display event: $id with status: $lowerStatus");
             }
 
+            $followersCount = Follow::where('organizer_user_id', $event->user_id)->count();
+
             if ($user && $userId) {
                 $user->isFollowing = Follow::where('participant_user_id', $userId)
                     ->where('organizer_user_id', $event->user_id)
                     ->first();
 
-                $followersCount = Follow::where('organizer_user_id', $event->user_id)->count();
+               
                 if ($event->sub_action_private == 'private') {
                     $checkIfUserIsOrganizerOfEvent = $event->user_id == $userId;
                     $checkIfUserIsInvited = EventInvitation::where('participant_user_id', $userId)
@@ -93,7 +108,6 @@ class ParticipantEventController extends Controller
                     ->where('event_details_id', $event->id)
                     ->first();
             } else {
-                $followersCount = null;
                 if ($event->sub_action_private == 'private') {
                     throw new UnauthorizedException('Login to access this event.');
                 } else {

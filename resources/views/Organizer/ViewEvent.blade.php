@@ -11,7 +11,7 @@
     $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
     $bladeEventGameImage = bladeImageNull($event->game ? $event->game->gameIcon : null);
- 
+    $followersCount = App\Models\Follow::where('organizer_user_id', $event->user_id)->count();
 @endphp
 
 <body>
@@ -86,8 +86,9 @@
                                         &nbsp;
                                         <div class="card-organizer">
                                             <p style="display: inline;"><u>
-                                                    {{ $event->user->organizer->companyName ?? 'Add' }} </u> </p>
-                                            <p class="small-text"> <i> 104 followers </i> </p>
+                                                {{ $event->user->organizer->companyName ?? 'Add' }} </u> </p>
+                                            
+                                            <p class="small-text"> <i> {{ $followersCount }} {{ $followersCount == 1  ? 'follower' : 'followers' }} </i> </p>
                                         </div>
                                     </div>
                                     @if ($livePreview)
@@ -194,7 +195,7 @@
                                     &nbsp;
                                     @if ($event->tier)
                                         <span style="position: relative; top: 5px;">
-                                            {{ $event->join_events_count }}/{{ $event->tier->tierTeamSlot ?? 'Not Available' }}
+                                            {{ $event->acceptedMembersCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available' }}
                                         </span>
                                     @else
                                         <span>No event tier chosen</span>

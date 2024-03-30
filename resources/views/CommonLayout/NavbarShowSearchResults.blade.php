@@ -16,7 +16,7 @@
         <input type="text" name="search" id="search-bar"
             value="{{app('request')->input('search')}}"
             placeholder="Search for events">
-        <svg onclick="goToSearchPage()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" class="feather feather-search">
             <circle cx="11" cy="11" r="8"></circle>
@@ -42,7 +42,7 @@
         <input type="text" name="search" id="search-bar-mobile"
             value="{{app('request')->input('search')}}"
             placeholder="Search for events">
-        <svg onclick="goToSearchPage()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" class="feather feather-search" style="left: 40px;">
             <circle cx="11" cy="11" r="8"></circle>

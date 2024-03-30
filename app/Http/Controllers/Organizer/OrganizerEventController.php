@@ -18,6 +18,8 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Exceptions\EventChangeException;
 use App\Exceptions\TimeGreaterException;
+use App\Models\TeamMember;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\UnauthorizedException;
 
 class OrganizerEventController extends Controller
@@ -55,14 +57,33 @@ class OrganizerEventController extends Controller
         $mappingEventState = EventDetail::mappingEventStateResolve();
                 
         $eventList = $eventListQuery
-            ->with('tier', 'type', 'game', 'joinEvents')
-            ->withCount('joinEvents')
+            ->with(['tier', 'type', 'game'])
             ->where('user_id', $user->id)
             ->paginate($count);
 
+        $joinTeamIds = [];
+     
+        $acceptedMembersCount = [];
+
+        $results = DB::table('join_events')
+            ->select('join_events.event_details_id', DB::raw('COUNT(team_members.id) as accepted_members_count'))
+            ->join('team_members', 'join_events.team_id', '=', 'team_members.team_id')
+            ->where('team_members.status', '=', 'accepted')
+            ->groupBy('join_events.event_details_id')
+            ->get();
+
+        $joinEventDetailsMap = $results->pluck('accepted_members_count', 'event_details_id');
+
         foreach ($eventList as $event) {
-            $tierEntryFee = $event->tier->eventTier->tierEntryFee ?? null;
+            if ($joinEventDetailsMap->has($event->id)) {
+                $event->acceptedMembersCount = $joinEventDetailsMap[$event->id];
+            } else {
+                $event->acceptedMembersCount = 0;
+            }
         }
+
+        // dd($eventList, $results, $joinEventDetailsMap);
+        // dd($acceptedMembersCount);
         
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 
             'mappingEventState', 'eventCategoryList', 'eventTierList', 'eventTypeList'
@@ -81,8 +102,20 @@ class OrganizerEventController extends Controller
 
         $eventList = $eventListQuery
             ->where('event_details.user_id', $userId)
-            ->with('tier', 'type', 'game', 'joinEvents')
+            ->with(['tier', 'type', 'game', 'joinEvents' => function ($query) {
+                $query->with(['members' => function ($query) {
+                    $query->where('status', 'accepted');
+                    }]);
+                }
+            ])
             ->paginate($count);
+
+        foreach ($eventList as $event) {
+            $event->acceptedMembersCount = 0;
+            foreach ($event->joinEvents as $joinEvent) {
+                $event->acceptedMembersCount += $joinEvent->members->count();
+            }
+        }
         
         $mappingEventState = EventDetail::mappingEventStateResolve();
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
@@ -137,8 +170,18 @@ class OrganizerEventController extends Controller
             $livePreview = true;
 
             $event = EventDetail::findEventWithRelationsAndThrowError(
-                $userId, $request->id, null , 'joinEvents'
+                $userId, $request->id, ['joinEvents' => function ($query) {
+                    $query->with(['members' => function ($query) {
+                        $query->where('status', 'accepted');
+                        }]);
+                    }
+                ], null
             ); 
+
+            $event->acceptedMembersCount = 0;
+            foreach ($event->joinEvents as $joinEvent) {
+                $event->acceptedMembersCount += $joinEvent->members->count();
+            }
           
             $outputArray = compact( 'event',  'user', 
                 'livePreview', 'mappingEventState'
@@ -157,9 +200,20 @@ class OrganizerEventController extends Controller
         try {
             $user = $request->get('user');
             $userId = $user->id;
-            $event = EventDetail::findEventAndThrowError(
-                $id, $userId
-            );
+            $event = EventDetail::findEventWithRelationsAndThrowError(
+                $userId, $id, ['joinEvents' => function ($query) {
+                    $query->with(['members' => function ($query) {
+                        $query->where('status', 'accepted');
+                        }]);
+                    }
+                ], null
+            ); 
+
+            $event->acceptedMembersCount = 0;
+            foreach ($event->joinEvents as $joinEvent) {
+                $event->acceptedMembersCount += $joinEvent->members->count();
+            }
+
             $isUserSameAsAuth = true;
         } catch (ModelNotFoundException | UnauthorizedException $e) {
             return $this->show404Organizer($e->getMessage());
@@ -181,8 +235,22 @@ class OrganizerEventController extends Controller
             $user = $request->get('user');
             $userId = $user->id;
             $event = EventDetail::findEventWithRelationsAndThrowError(
-                $userId, $id, null , 'joinEvents'
-            );
+                $userId, $id, ['joinEvents' => function ($query) {
+                    $query->with(['members' => function ($query) {
+                        $query->where('status', 'accepted');
+                        }]);
+                    }
+                ], null
+            ); 
+
+            // dd($event);
+
+            $event->acceptedMembersCount = 0;
+            foreach ($event->joinEvents as $joinEvent) {
+                $event->acceptedMembersCount += $joinEvent->members->count();
+            }
+
+            // dd($event);
         
             return view('Organizer.ViewEvent', [
                 'event' => $event,
