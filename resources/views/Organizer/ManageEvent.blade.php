@@ -37,7 +37,7 @@
                     <a href="{{ route('event.index', ['status' => 'ENDED', 'page' => 1]) }}">Ended</a>
                 </p>
             </div>
-            @include('Organizer.ManageEvent.ManageEventFilterSort', [
+            @include('Organizer.ManageEventLayout.ManageEventFilterSort', [
                 'eventCategoryList' => $eventCategoryList, 
                 'eventTierList' => $eventTierList, 
                 'eventTypeList' => $eventTypeList 
@@ -84,7 +84,7 @@
             </div>
 
             <div class="scrolling-pagination grid-container">
-                @include('Organizer.ManageEvent.ManageEventScroll')
+                @include('Organizer.ManageEventLayout.ManageEventScroll')
             </div>
 
             <div class="d-none"> 
@@ -117,5 +117,5 @@
             @include('CommonLayout.BootstrapV5Js')
             <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
             <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
-            @include('Organizer.ManageEvent.ManageEventScripts')
+            @include('Organizer.ManageEventLayout.ManageEventScripts')
     </main>

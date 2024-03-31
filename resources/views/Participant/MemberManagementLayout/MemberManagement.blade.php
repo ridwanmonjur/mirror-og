@@ -263,7 +263,7 @@
         </div>
     </div>
     <section class="featured-events scrolling-pagination">
-        @include('Participant.MemberManagement.MemberManagementScroll')
+        @include('Participant.MemberManagementLayout.MemberManagementScroll')
     </section>
     <div class="no-more-data d-none"></div>
 </div>

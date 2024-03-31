@@ -8,26 +8,26 @@
                     <form enctype="multipart/form-data" onkeydown="return event.key != 'Enter';"
                         action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
                         @csrf
-                        @include('Organizer.CreateEdit.CreateEventHiddenForm')
-                        @include('Organizer.CreateEdit.CreateEventTimelineBox')
+                        @include('Organizer.CreateEditLayout.CreateEventHiddenForm')
+                        @include('Organizer.CreateEditLayout.CreateEventTimelineBox')
                         @if (session()->has('error'))
-                            @include('Organizer.CreateEdit.CreateEventTimelineWelcome', [
+                            @include('Organizer.CreateEditLayout.CreateEventTimelineWelcome', [
                                 'error' => session()->get('error'),
                             ])
                         @else
-                            @include('Organizer.CreateEdit.CreateEventTimelineWelcome')
+                            @include('Organizer.CreateEditLayout.CreateEventTimelineWelcome')
                         @endif
-                        @include('Organizer.CreateEdit.CreateEventStepOne')
+                        @include('Organizer.CreateEditLayout.CreateEventStepOne')
                         @include('CommonLayout.BootstrapV5Js')
-                        @include('Organizer.CreateEdit.CreateEventForm')
+                        @include('Organizer.CreateEditLayout.CreateEventForm')
                         @if (session()->has('success'))
-                            @include('Organizer.CreateEdit.CreateEventSuccess')
+                            @include('Organizer.CreateEditLayout.CreateEventSuccess')
                         @endif
                     </form>
                 </div>
             </div>
             <br><br>
         </main>
-        @include('Organizer.CreateEdit.CreateEventScripts')
+        @include('Organizer.CreateEditLayout.CreateEventScripts')
 
     </body>

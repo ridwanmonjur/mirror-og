@@ -18,7 +18,7 @@
     @include('Participant.Layout.TeamHead')
 
     <main class="main2">
-        @include('Participant.MemberManagement.MemberManagement')
+        @include('Participant.MemberManagementLayout.MemberManagement')
     </main>
 
     @include('CommonLayout.BootstrapV5Js')
@@ -27,7 +27,7 @@
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     @include('CommonLayout.Toast')
     @include('CommonLayout.Dialog')
-    @include('Participant.MemberManagement.MemberManagementScripts')
+    @include('Participant.MemberManagementLayout.MemberManagementScripts')
     <script>
         let dialogForMember = new DialogForMember();
 

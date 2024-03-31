@@ -10,18 +10,18 @@
                         action="{{ route('event.updateForm', $event->id) }}" method="post" name="create-event-form"
                         novalidate>
                         @csrf
-                        @include('Organizer.CreateEdit.EditEventHiddenForm', ['event' => $event])
-                        @include('Organizer.CreateEdit.CreateEventTimelineBox')
+                        @include('Organizer.CreateEditLayout.EditEventHiddenForm', ['event' => $event])
+                        @include('Organizer.CreateEditLayout.CreateEventTimelineBox')
                         @if (session()->has('error'))
-                            @include('Organizer.CreateEdit.EditEventStepOne', [
+                            @include('Organizer.CreateEditLayout.EditEventStepOne', [
                                 'error' => session()->get('error'),
                             ])
                         @else
-                            @include('Organizer.CreateEdit.EditEventStepOne')
+                            @include('Organizer.CreateEditLayout.EditEventStepOne')
                         @endif
-                        @include('Organizer.CreateEdit.CreateEventForm', ['event' => $event])
+                        @include('Organizer.CreateEditLayout.CreateEventForm', ['event' => $event])
                         @if (session()->has('success'))
-                            @include('Organizer.CreateEdit.CreateEventSuccess')
+                            @include('Organizer.CreateEditLayout.CreateEventSuccess')
                         @endif
                     </form>
                 </div>
@@ -29,7 +29,7 @@
             <br><br>
         </main>
         @include('CommonLayout.BootstrapV5Js')
-        @include('Organizer.CreateEdit.CreateEventScripts')
+        @include('Organizer.CreateEditLayout.CreateEventScripts')
         <script>
 
         </script>

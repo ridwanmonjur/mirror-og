@@ -30,8 +30,8 @@
                             What will your team be called?
                         </p>
                         <form action="{{ url('/participant/team/create') }}" method="POST">
-                            @include('Participant.CreateEditTeam.FormErrorsSuccess')
-                            @include('Participant.CreateEditTeam.FormFields', [
+                            @include('Participant.CreateEditTeamLayout.FormErrorsSuccess')
+                            @include('Participant.CreateEditTeamLayout.FormFields', [
                                 'team' => null, 'buttonLabel' => 'Create'
                             ])
                         </form>
