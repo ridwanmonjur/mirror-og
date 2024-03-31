@@ -55,14 +55,12 @@ class ParticipantEventController extends Controller
         try {
             $user = Auth::user();
             $userId = $user && $user->id ? $user->id : null;
-            $event = EventDetail::with([
-                $userId, $id, [ 'game', 'type', 'joinEvents' => function ($query) {
+            $event = EventDetail::with([ 'game', 'type', 'joinEvents' => function ($query) {
                     $query->with(['members' => function ($query) {
                         $query->where('status', 'accepted');
                         }]);
                     }
                 ], null
-                ]
             )->find($id); 
 
             $event->acceptedMembersCount = 0;
