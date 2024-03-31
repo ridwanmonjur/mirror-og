@@ -6,6 +6,7 @@ use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\EventStructureController;
 use App\Http\Controllers\Organizer\OrganizerCheckoutController;
 use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantRosterController;
@@ -134,6 +135,7 @@ Route::group(['prefix' => 'organizer'], function () {
         Route::group(['middleware' => ['check-permission:organizer|admin', 'prevent-back-history']], function () {
             // Organizer home
             Route::get('/home', [OrganizerEventController::class, 'home'])->name('organizer.home.view');
+            Route::resource('event.structure', EventStructureController::class)->parameters(['structure' => 'id']);
 
             // Event manage
             Route::resource('/event', OrganizerEventController::class, [
