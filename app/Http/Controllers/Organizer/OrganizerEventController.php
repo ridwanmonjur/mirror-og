@@ -64,7 +64,6 @@ class OrganizerEventController extends Controller
         $joinTeamIds = [];
      
         $acceptedMembersCount = [];
-
         $results = DB::table('join_events')
             ->select('join_events.event_details_id', DB::raw('COUNT(team_members.id) as accepted_members_count'))
             ->join('team_members', 'join_events.team_id', '=', 'team_members.team_id')
@@ -73,7 +72,6 @@ class OrganizerEventController extends Controller
             ->get();
 
         $joinEventDetailsMap = $results->pluck('accepted_members_count', 'event_details_id');
-
         foreach ($eventList as $event) {
             if ($joinEventDetailsMap->has($event->id)) {
                 $event->acceptedMembersCount = $joinEventDetailsMap[$event->id];
@@ -102,18 +100,23 @@ class OrganizerEventController extends Controller
 
         $eventList = $eventListQuery
             ->where('event_details.user_id', $userId)
-            ->with(['tier', 'type', 'game', 'joinEvents' => function ($query) {
-                $query->with(['members' => function ($query) {
-                    $query->where('status', 'accepted');
-                    }]);
-                }
-            ])
+            ->with(['tier', 'type', 'game'])
             ->paginate($count);
 
+        $acceptedMembersCount = [];
+        $results = DB::table('join_events')
+            ->select('join_events.event_details_id', DB::raw('COUNT(team_members.id) as accepted_members_count'))
+            ->join('team_members', 'join_events.team_id', '=', 'team_members.team_id')
+            ->where('team_members.status', '=', 'accepted')
+            ->groupBy('join_events.event_details_id')
+            ->get();
+
+        $joinEventDetailsMap = $results->pluck('accepted_members_count', 'event_details_id');
         foreach ($eventList as $event) {
-            $event->acceptedMembersCount = 0;
-            foreach ($event->joinEvents as $joinEvent) {
-                $event->acceptedMembersCount += $joinEvent->members->count();
+            if ($joinEventDetailsMap->has($event->id)) {
+                $event->acceptedMembersCount = $joinEventDetailsMap[$event->id];
+            } else {
+                $event->acceptedMembersCount = 0;
             }
         }
         
