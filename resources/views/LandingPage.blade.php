@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarShowSearchResults')
+    @include('CommonLayout.NavbarGoToSearchPage', ['search' => true ])
 
     <main>
         <section class="hero">

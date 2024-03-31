@@ -26,7 +26,7 @@
             @include('CommonLayout.Navbar.NavbarGuest')
         @endguest
         @auth
-            @if ($user->role == 'PARTICIPANT')
+            @if (isset($user) && $user->role == 'PARTICIPANT')
                 @include('CommonLayout.Navbar.WhereIsMoop')
             @endif
             <img style="position: relative; top: 0px;" width="50px" height="40px"
@@ -69,7 +69,7 @@
             Sign in as participant</a>
         @endguest
         @auth
-            @if ($user->role == 'PARTICIPANT')
+            @if (isset($user) && $user->role == 'PARTICIPANT')
                 @include('CommonLayout.Navbar.WhereIsMoop')
             @endif
             <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
@@ -80,6 +80,10 @@
 </nav>
 <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
 <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
-@include('CommonLayout.Navbar.NavbarGoToSearchPageScript')
+@if (isset($search))
+    @include('CommonLayout.Navbar.NavbarShowSearchResultsScript')
+@else
+    @include('CommonLayout.Navbar.NavbarGoToSearchPageScript')\
+@endif
 <br>
 <br>
