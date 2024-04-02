@@ -21,7 +21,7 @@
     <div class="field">
         <label for="email" class="placeholder-moves-up-container">
             <input type="email" name="email" id="email" required="true" class="input-area" oninput="movePlaceholderUp(this)">
-            <span class="placeholder-moves-up">Email address</span>
+            <span class="placeholder-moves-up">Email Address</span>
             <div class="field-error-message d-none"></div>
         </label>
     </div>
