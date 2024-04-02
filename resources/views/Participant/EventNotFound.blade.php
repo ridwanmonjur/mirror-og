@@ -1,6 +1,6 @@
 @include('Organizer.Layout.CreateEventHeadTag')
 <body style="margin-top: 0 !important;">
-@include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonLayout.NavbarGoToParticipant')
 
     <main>
         <br><br><br><br>

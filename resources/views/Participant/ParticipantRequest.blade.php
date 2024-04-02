@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonLayout.NavbarGoToParticipant')
     @include('Participant.ParticipantRequestLayout.RequestManagement')
 
     @include('CommonLayout.BootstrapV5Js')
@@ -90,7 +90,7 @@
         function reloadUrl(currentUrl, buttonName, teamName) {
             if (currentUrl.includes('?')) {
                 currentUrl = currentUrl.split('?')[0];
-            } 
+            }
 
             currentUrl += `?tab=${buttonName}&success=true&team=${teamName}`;
             window.location.replace(currentUrl);
@@ -119,7 +119,7 @@
                     text: "No action found."
                 })
             }
-        } 
+        }
 
         function takeNoAction() {
             dialogForMember.reset();
@@ -239,7 +239,7 @@
             window.location.href = "{{route('participant.team.manage', ['id' => ':id']) }}"
                 .replace(':id', teamId);
         }
-        
+
     </script>
 
 </body>

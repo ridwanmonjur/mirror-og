@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonLayout.NavbarGoToParticipant')
     @include('Participant.Layout.TeamHead')
 
     <main class="main2">
@@ -101,10 +101,10 @@
                                                 <span>
                                                     @if (isset($followCounts[$joinEvent->eventDetails->user_id]))
                                                         @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
-                                                            1 follower 
+                                                            1 follower
                                                         @else
                                                             {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
-                                                        @endif    
+                                                        @endif
                                                     @else
                                                         No followers
                                                     @endif

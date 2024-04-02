@@ -76,7 +76,7 @@ Route::group(['prefix' => 'participant'], function () {
                 ->middleware('prevent-back-history')
                 ->name('participant.team.manage');
             Route::get('/team/{id}/register', [ParticipantEventController::class, 'registrationManagement'])->name('participant.register.manage');
-            
+
             Route::post('/team/roster/approve', [ParticipantRosterController::class, 'approveRosterMember'])->name('participant.roster.approve');
             Route::post('/team/roster/disapprove', [ParticipantRosterController::class, 'disapproveRosterMember'])->name('participant.roster.disapprove');
             Route::post('/team/roster/captain', [ParticipantRosterController::class, 'captainRosterMember'])->name('participant.roster.captain');
@@ -92,7 +92,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/team/member/{id}/disapprove', [ParticipantTeamController::class, 'disapproveTeamMember'])->name('participant.member.disapprove');
             Route::post('/team/member/{id}/deleteInvite', [ParticipantTeamController::class, 'deleteInviteMember'])->name('participant.member.deleteInvite');
             Route::post('/team/member/{id}/rejectInvite', [ParticipantTeamController::class, 'rejectInviteMember'])->name('participant.member.rejectInvite');
-          
+
             // Event management
             Route::get('/event/{id}/team/{teamId}/manage/roster', [ParticipantTeamController::class, 'rosterMemberManagement'])
                 ->middleware('prevent-back-history')->name('participant.roster.manage');

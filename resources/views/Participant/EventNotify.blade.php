@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonLayout.NavbarGoToParticipant')
     <main>
         <div class="wrapper_notify">
 

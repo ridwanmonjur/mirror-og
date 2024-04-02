@@ -77,8 +77,6 @@ form .field {
     border: 1px solid #bfbfbf;
     border-bottom-width: 2px;
     transition: all 0.2s ease;
-    backface-visibility: hidden;
-    display: block
 }
 
 form {
