@@ -53,10 +53,11 @@ class ParticipantTeamController extends Controller
             return view('Participant.TeamList', compact('teamList', 'count', 'membersCount' ));
         }
     }
+    
 
     public function teamManagement(Request $request, $id)
     {
-        $user_id = $request->attributes->get('user')->id;
+        $user_id = $request->attributes->get('user')?->id ?? null;
         $selectTeam = Team::where('id', $id)
             ->with(['members', 'awards'])->first();
         

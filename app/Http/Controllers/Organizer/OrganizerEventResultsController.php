@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizer;
 use App\Http\Controllers\Controller;
 use App\Models\Award;
 use App\Models\AwardResults;
+use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,10 @@ class OrganizerEventResultsController extends Controller
      */
     public function index(Request $request, $id)
     {
+        $event = EventDetail::select(['id', 'eventBanner', 'eventName', 'eventDescription'])
+            ->findOrFail($id);
+    
+        // dd($event);
         $awardList = Award::all();
         $awardsResultList = AwardResults::where('event_details_id', $id)->get();
         $joinEventList = DB::table('join_events')
@@ -23,7 +28,10 @@ class OrganizerEventResultsController extends Controller
             ->where('join_events.event_details_id', '=', $id)
             ->select('join_events.event_details_id', 'join_events.team_id', 'teams.*')
             ->get();
-        dd($awardList, $awardsResultList, $joinEventList);
+        
+        return view('Organizer.EventResults', compact(
+            'event', 'awardList', 'awardsResultList', 'joinEventList'
+        ));
 
     }
 

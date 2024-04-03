@@ -34,6 +34,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('participant.log
 // Search bar
 Route::get('/event/search', [AuthController::class, 'showLandingPage'])->name('public.search.view');
 Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view');
+Route::get('/team/{id}/view', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
 
 /* THIS IS THE PARTICIPANT VIEW */
 Route::group(['prefix' => 'participant'], function () {
