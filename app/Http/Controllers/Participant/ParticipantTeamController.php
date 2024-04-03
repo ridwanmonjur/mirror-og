@@ -57,7 +57,8 @@ class ParticipantTeamController extends Controller
 
     public function teamManagement(Request $request, $id)
     {
-        $user_id = $request->attributes->get('user')?->id ?? null;
+        $user = $request->attributes->get('user');
+        $user_id = $user?->id ?? null;
         $selectTeam = Team::where('id', $id)
             ->with(['members', 'awards'])->first();
         
@@ -97,9 +98,15 @@ class ParticipantTeamController extends Controller
             $joinEventIds = $joinEvents->pluck('id')->toArray();
             $teamMembers = $selectTeam->members->where('status', 'accepted');
 
-            return view('Participant.TeamManagement', 
-                compact('selectTeam', 'joinEvents', 'captain', 'teamMembers', 'joinEventsHistory', 'joinEventsActive', 'followCounts')
-            );
+            if (isset($user) && $user->role == "PARTICIPANT") {
+                return view('Participant.TeamManagement', 
+                    compact('selectTeam', 'joinEvents', 'captain', 'teamMembers', 'joinEventsHistory', 'joinEventsActive', 'followCounts')
+                );
+            } else {
+                return view('Participant.TeamView', 
+                    compact('selectTeam', 'joinEvents', 'captain', 'teamMembers', 'joinEventsHistory', 'joinEventsActive', 'followCounts')
+                );
+            }
         } else {
             return $this->show404Participant('This event is missing or you need to be a member to view events!');
         }

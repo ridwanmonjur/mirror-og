@@ -14,7 +14,7 @@
 
 <body>
     @include('CommonLayout.NavbarGoToSearchPage')
-    @include('Participant.Layout.TeamHead')
+    @include('Participant.Layout.TeamHeadOrganizerOrPublic')
 
     <main class="main2">
         <div class="tabs">

@@ -22,15 +22,23 @@ class OrganizerEventResultsController extends Controller
     
         // dd($event);
         $awardList = Award::all();
-        $awardsResultList = AwardResults::where('event_details_id', $id)->get();
-        $joinEventList = DB::table('join_events')
+        $awardsResult = AwardResults::where('event_details_id', $id)->get();
+        $awardsResultMap = [];
+        foreach ($awardsResult as $item) {
+            $awardsResultMap[$item->id] = $item;
+        }
+        // dd($awardsResultMap);
+
+        $joinEventAndTeamList = DB::table('join_events')
             ->join('teams', 'join_events.team_id', '=', 'teams.id')
             ->where('join_events.event_details_id', '=', $id)
-            ->select('join_events.event_details_id', 'join_events.team_id', 'teams.*')
+            ->leftJoin('event_join_results', 'join_events.id', '=', 'event_join_results.join_events_id')
+            ->where('join_events.event_details_id', '=', $id)
+            ->select('join_events.id', 'join_events.event_details_id', 'join_events.team_id', 'teams.*', 'event_join_results.*')
             ->get();
-        
+
         return view('Organizer.EventResults', compact(
-            'event', 'awardList', 'awardsResultList', 'joinEventList'
+            'event', 'awardList', 'awardsResultMap', 'joinEventAndTeamList'
         ));
 
     }

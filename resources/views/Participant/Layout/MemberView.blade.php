@@ -7,7 +7,7 @@
 <div id="CurrentMembers">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
         {{ $counTeamMembers }} accepted members &nbsp;&nbsp;
-        @if ($selectTeam->creator_id == $user->id)
+        @if (isset($user) && $selectTeam->creator_id == $user->id)
             <button class="oceans-gaming-default-button oceans-gaming-default-button-link" 
                 onclick="window.location.href='{{route('participant.member.manage', ['id'=> $selectTeam->id ])}}'">
                 Manage Team
@@ -44,7 +44,7 @@
                     <input style="font-size: 14.5px;" class="nav__input" type="text" placeholder="Search for player name">
                 </div>
                 <div>
-                    @if ($user->id == $selectTeam->user_id)
+                    @if (isset($user) && $user->id == $selectTeam->user_id)
                         <img src="/assets/images/add.png" height="40px" width="40px">
                     @endif
                 </div>

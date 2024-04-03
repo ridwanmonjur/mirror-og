@@ -40,7 +40,7 @@
                 </ul>
             @endif
             <div class="d-flex mt-2 mb-3 justify-content-center">
-                @if ($selectTeam->creator_id == $user->id && !$isRegistrationView)
+                @if (isset($user) && $selectTeam->creator_id == $user->id && !$isRegistrationView)
                     <div class="d-flex w-100 justify-content-center mt-2">
                         <form method="GET"
                             action="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">
