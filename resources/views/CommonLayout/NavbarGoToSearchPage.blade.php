@@ -85,7 +85,7 @@
 @if (isset($search))
     @include('CommonLayout.Navbar.NavbarShowSearchResultsScript')
 @else
-    @include('CommonLayout.Navbar.NavbarGoToSearchPageScript')\
+    @include('CommonLayout.Navbar.NavbarGoToSearchPageScript')
 @endif
 <br>
 <br>
