@@ -29,11 +29,7 @@
             @if (isset($user) && $user->role == 'PARTICIPANT')
                 @include('CommonLayout.Navbar.WhereIsMoop')
             @endif
-            <img style="position: relative; top: 0px;" width="50px" height="40px"
-                src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
-            {{-- <img style="position: relative; top: 0px;" width="70px" height="40px"
-                src="{{ asset('/assets/images/navbar-crown.png') }}" alt=""> --}}
-            <a class="" style="text-decoration: none;position: relative; top: 10px;" href="{{ route('logout.action') }}">Logout</a>
+            @include('CommonLayout.Navbar.NavbarProfile')
         @endauth
     </div>
 </nav>

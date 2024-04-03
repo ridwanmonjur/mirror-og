@@ -4,9 +4,9 @@
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
         Sign In
     </a>
-    <div class="dropdown-menu" style="position: absolute; left: -10px;" aria-labelledby="dropdownMenuLink">
-        <div class="border-dark border-2 border-bottom text-center">
-            <p class="d-block w-100 m-0 pt-1 pb-2">Hi there!
+    <div class="dropdown-menu" style="position: absolute; left: -60px; width: 200px;" aria-labelledby="dropdownMenuLink">
+        <div class="border-dark border-2 border-bottom text-start ps-4">
+            <p class="d-block w-100 m-0 pt-2 pb-3">Hi there Nafis!
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-smile" style="margin-left: 5px;">
@@ -17,7 +17,7 @@
                 </svg>
             </p>
         </div>
-        <a class="dropdown-item py-2" href="{{ route('organizer.signin.view') }}">
+        <a class="dropdown-item py-3" href="{{ route('organizer.signin.view') }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                 class="bi bi-person-fill-gear" viewBox="0 0 16 16">
                 <path
@@ -25,7 +25,7 @@
             </svg>&nbsp;
             Organizer
         </a>
-        <a class="dropdown-item py-2" href="{{ route('participant.signin.view') }}">
+        <a class="dropdown-item py-3" href="{{ route('participant.signin.view') }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                 class="bi bi-people-fill" viewBox="0 0 16 16">
                 <path
