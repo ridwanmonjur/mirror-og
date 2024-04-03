@@ -6,8 +6,8 @@ use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\EventStructureController;
 use App\Http\Controllers\Organizer\OrganizerCheckoutController;
+use App\Http\Controllers\Organizer\OrganizerEventResultsController;
 use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantRosterController;
 use App\Models\Participant;
@@ -135,7 +135,11 @@ Route::group(['prefix' => 'organizer'], function () {
         Route::group(['middleware' => ['check-permission:organizer|admin', 'prevent-back-history']], function () {
             // Organizer home
             Route::get('/home', [OrganizerEventController::class, 'home'])->name('organizer.home.view');
-            Route::resource('event.structure', EventStructureController::class)->parameters(['structure' => 'id']);
+            Route::resource('event.results', OrganizerEventResultsController::class)
+                ->parameters(['results' => 'id'])
+                ->only(['index', 'create', 'store', 'edit', 'update']);
+            Route::post('/event/{id}/awards', [OrganizerEventResultsController::class, 'storeAward'])->name('event.awards.create');
+            Route::delete('/event/{id}/awards/{awardId}', [OrganizerEventResultsController::class, 'destroyAward'])->name('event.awards.create');
 
             // Event manage
             Route::resource('/event', OrganizerEventController::class, [

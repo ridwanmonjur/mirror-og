@@ -28,7 +28,7 @@ class Team extends Model
 
     public function awards()
     {
-        return $this->hasMany(Award::class, 'join_events_id', 'id');
+        return $this->hasMany(AwardResults::class, 'join_events_id', 'id');
     }
 
     public function invitationList()
