@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToParticipant')
+    @include('CommonLayout.NavbarGoToSearchPage')
     @include('Participant.Layout.TeamHead')
 
     <main class="main2">
@@ -88,7 +88,7 @@
         function reloadUrl(currentUrl, buttonName) {
             if (currentUrl.includes('?')) {
                 currentUrl = currentUrl.split('?')[0];
-            }
+            } 
 
             currentUrl += `?tab=${buttonName}&success=true`;
             window.location.replace(currentUrl);
@@ -117,7 +117,7 @@
                     text: "No action found."
                 })
             }
-        }
+        } 
 
         function takeNoAction() {
             dialogForMember.reset();

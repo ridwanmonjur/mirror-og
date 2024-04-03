@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToParticipant')
+    @include('CommonLayout.NavbarGoToSearchPage')
     @include('Participant.Layout.TeamHead')
     @php
         use Carbon\Carbon;
@@ -22,7 +22,7 @@
     <main class="main2">
         <div class="mb-4 text-success mx-auto text-center">
             You have joined this event successfully!
-
+            
             <form class="d-inline" method="GET"
                 action="{{ route('participant.event.view', ['id' => $id]) }}">
                 <button class="oceans-gaming-default-button oceans-gaming-default-button-link ms-2 me-2" type="submit" style="display: inline !important;">
@@ -32,7 +32,7 @@
         </div>
         <div>
             <p class="text-center mx-auto">Team {{ $selectTeam->teamName }} has
-                {{ $rosterMembers->count() }} accepted roster members
+                {{ $rosterMembers->count() }} accepted roster members 
                 from {{$teamMembers->count()}} available team member(s).
             </p>
             @if (isset($teamMembers[0]))
@@ -53,7 +53,7 @@
                                 <td class="coloured-cell" style="width: 25px;">
                                     <span class="player-info" style="cursor: pointer;">
                                         @if ($captain && $member->id == $captain->team_member_id)
-                                            <div style="cursor: pointer;"
+                                            <div style="cursor: pointer;" 
                                                 class="player-image"
                                                 onclick="deleteCaptain({{$member->id}})"
                                             > </div>
@@ -143,7 +143,7 @@
         function reloadUrl(currentUrl, buttonName) {
             if (currentUrl.includes('?')) {
                 currentUrl = currentUrl.split('?')[0];
-            }
+            } 
 
             currentUrl += `?tab=${buttonName}&success=true`;
             console.log({currentUrl})
@@ -173,7 +173,7 @@
                     text: "No action found."
                 })
             }
-        }
+        } 
 
         function takeNoAction() {
             dialogForMember.reset();
@@ -261,7 +261,7 @@
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
-                    },
+                    }, 
                     body: JSON.stringify({
                         'teams_id' : {{ $selectTeam->id }},
                         'user_id' : {{ $user->id }},

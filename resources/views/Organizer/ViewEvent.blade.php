@@ -15,7 +15,7 @@
 @endphp
 
 <body>
-    @include('CommonLayout.NavbarGoToOrg')
+    @include('CommonLayout.NavbarGoToSearchPage')
 
     <main>
         <br class="d-none-at-desktop">
@@ -80,14 +80,14 @@
                                     @if ($bladeEventGameImage)
                                         <img style="display: inline;" src="{{ $bladeEventGameImage }}"
                                             class="{{ 'rounded-image rounded-box-' . $eventTierLower }}" alt="menu">
-                                    @else
+                                    @else 
                                         <div class="{{ 'rounded-image rounded-box-' . $eventTierLower }}" alt="menu"> </div>
                                     @endif
                                         &nbsp;
                                         <div class="card-organizer">
                                             <p style="display: inline;"><u>
                                                 {{ $event->user->organizer->companyName ?? 'Add' }} </u> </p>
-
+                                            
                                             <p class="small-text"> <i> {{ $followersCount }} {{ $followersCount == 1  ? 'follower' : 'followers' }} </i> </p>
                                         </div>
                                     </div>

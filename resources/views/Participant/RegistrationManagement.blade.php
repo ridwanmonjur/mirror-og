@@ -15,9 +15,9 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToParticipant')
+    @include('CommonLayout.NavbarGoToSearchPage')
     @include('Participant.Layout.TeamHead')
-
+   
     <main class="main2">
         <div id="Overview">
             <br><br>
@@ -53,8 +53,8 @@
                 @endif
             <br> <br>
         </div>
-
-
+            
+        
     </main>
 
     @include('CommonLayout.BootstrapV5Js')
@@ -107,7 +107,7 @@
             target.classList.add('tab-button-active');
         }
 
-
+        
         function slideEvents(direction) {
             const eventBoxes = document.querySelectorAll('.event-box');
             const visibleEvents = Array.from(eventBoxes).filter(eventBox => eventBox.style.display !== 'none');
@@ -148,9 +148,9 @@
                         'Content-Type': 'application/json',
                     },
                 });
-
+                
                 const data = await response.json();
-
+                
                 if (data.success) {
                     const memberRow = button.closest('tr');
                     memberRow.remove();
@@ -161,7 +161,7 @@
                 console.error('Error approving member:', error);
             }
         }
-
+   
         document.addEventListener("DOMContentLoaded", function() {
             const searchInputs = document.querySelectorAll('.search_box input');
             const memberTables = document.querySelectorAll('.member-table');

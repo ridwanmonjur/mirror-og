@@ -5,7 +5,7 @@ extract($dateArray);
 @endphp
 
 <body>
-    @include('CommonLayout.NavbarGoToOrg')
+        @include('CommonLayout.NavbarGoToSearchPage')
     <main>
         <div>
             @include('Organizer.CreateEditLayout.CreateEventTimelineBox')
@@ -55,13 +55,13 @@ extract($dateArray);
                     if (hideIfTeam) {
                         hideIfTeam.classList.add('d-none');
                     }
-
+                
                     let data = {
                         event_id: "{{ $event->id }}",
                         team_id: teamId,
                         organizer_id: "{{ $user_id }}",
                     };
-
+                
                     fetch("{{ route('event.invitation.store', $event->id) }}", {
                             method: "POST",
                             headers: {
@@ -79,7 +79,7 @@ extract($dateArray);
                             const teamElement = document.createElement('p');
                             teamElement.textContent = responseData?.data.team.teamName;
                             addedTeam.appendChild(teamElement);
-
+                            
                             Toast.fire({
                                 icon: 'success',
                                 text: "Successfully added user."
@@ -88,7 +88,7 @@ extract($dateArray);
                         .catch(error => {
                             console.error(error);
                         })
-                }
+                } 
             </script>
         </div>
         <br><br>

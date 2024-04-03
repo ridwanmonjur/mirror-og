@@ -1,9 +1,7 @@
 {{-- <div class="navbar-placeholder"> </div> --}}
 <nav class="navbar px-3">
     <div class="logo">
-        <a href="{{ route('landing.view') }}"> <!-- Link to the home route -->
-            <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
-        </a>
+        <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
     </div>
     <svg style="margin-top: 10px; margin-right: 10px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

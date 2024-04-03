@@ -1,7 +1,7 @@
 @include('Organizer.Layout.CheckoutEventHeadTag')
 
 <body>
-    @include('CommonLayout.NavbarGoToOrg')
+    @include('CommonLayout.NavbarGoToSearchPage')
     <main class="main-background-2">
         <br><br><br>
         @include('Organizer.CheckoutLayout.CheckoutPaymentOptions', ['event' => $event])
