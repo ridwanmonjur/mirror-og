@@ -23,7 +23,7 @@
 @endphp
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonLayout.NavbarGoToParticipant')
     <main>
         <br class="d-none-at-desktop">
         <div class="pt-2">
@@ -271,7 +271,7 @@
             let form = this;
             let formData = new FormData(form);
             followButton.style.setProperty('pointer-events', 'none');
-    
+
             try {
                 let response = await fetch(form.action, {
                     method: form.method,
@@ -291,7 +291,7 @@
                     followButton.style.backgroundColor = '#43A4D7';
                     followButton.style.color = 'white';
                 }
-                
+
                 followButton.style.setProperty('pointer-events', 'auto');
             } catch (error) {
                 followButton.style.setProperty('pointer-events', 'auto');

@@ -1,6 +1,6 @@
 @include('Organizer.Layout.CreateEventHeadTag')
 <body style="margin-top: 0 !important;">
-@include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonLayout.NavbarGoToOrg')
 
     <main>
         <br><br><br><br>
@@ -28,7 +28,7 @@
             const goToManageScreen = () => {
                 window.location.href = "{{route('event.index') }}";
             }
-            
+
             const goToEditScreen = () => {
                 let url = "{{ route('event.edit', $id ?? -1 ) }}";
                 window.location.href = url;

@@ -8,12 +8,12 @@
     <title>Organizer Home Page</title>
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/home.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonLayout.NavbarGoToOrg')
     <main>
         <section class="hero">
             <img src="{{ asset('/assets/images/events/ss.png') }}" alt="">
@@ -87,15 +87,15 @@
                 var ENDPOINT = "{{ route('landing.view') }}";
                 var page = 1;
                 var search = null;
-                
+
                 window.addEventListener(
                     "scroll",
                     throttle((e) => {
-                        
+
                         var windowHeight = window.innerHeight;
                         var documentHeight = document.documentElement.scrollHeight;
                         var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                        
+
                         if (scrollTop + windowHeight >= documentHeight - 200) {
                             page++;
                             ENDPOINT = "{{ route('landing.view') }}";
@@ -106,7 +106,7 @@
                             } else {
                                 ENDPOINT += "?search=" + search + "&page=" + page;
                             }
-                            
+
                             infinteLoadMore(null, ENDPOINT);
                         }
                     }, 300)

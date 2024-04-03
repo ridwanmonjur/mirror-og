@@ -1,7 +1,7 @@
 {{-- <div class="navbar-placeholder"> </div> --}}
 <nav class="navbar px-3">
     <div class="logo">
-        <a href="{{ route('landing.view') }}"> <!-- Link to the home route -->
+        <a href="{{ route('organizer.home.view') }}"> <!-- Link to the home route -->
             <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
         </a>
     </div>

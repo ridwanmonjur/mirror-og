@@ -12,9 +12,9 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
-    <br><br> 
-    <div class="d-flex justify-content-center"> 
+    @include('CommonLayout.NavbarGoToParticipant')
+    <br><br>
+    <div class="d-flex justify-content-center">
         <button onclick="goToScreen();" type="button" class="btn oceans-gaming-default-button position-relative">
             Team Requests
         </button>
@@ -53,7 +53,7 @@
                 <div class="team-section">
                     <div class="upload-container">
                         <label for="image-upload" class="upload-label">
-                            <img                       
+                            <img
                                 src="{{asset('assets/images/animation/empty-exclamation.gif') }}"
                                 width="150"
                                 height="150"
