@@ -1,4 +1,11 @@
 {{-- <div class="navbar-placeholder"> </div> --}}
+@auth
+@php
+    if (!isset($user)) {
+        $user = auth()->user();
+    }
+@endphp
+@endauth
 <nav class="navbar px-3">
     <div class="logo">
         <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">

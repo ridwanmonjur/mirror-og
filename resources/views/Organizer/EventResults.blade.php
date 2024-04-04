@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/viewEvent.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/eventResults.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
 </head>
 @php
@@ -92,7 +92,7 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                                <div class="modal fade" id='rank-modal' tabindex="-1" aria-labelledby={{'rank-modal' . $loop->index . 'label'}} aria-hidden="true">
+                                <div class="modal fade" id='rank-modal' tabindex="-1" aria-labelledby={{'rank-modal' . 'label'}} aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                         <div class="modal-header">
