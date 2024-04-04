@@ -36,7 +36,7 @@
             @if (isset($user) && $user->role == 'PARTICIPANT')
                 @include('CommonLayout.Navbar.WhereIsMoop')
             @endif
-            @include('CommonLayout.Navbar.NavbarProfile')
+            @include('CommonLayout.Navbar.NavbarAuth')
         @endauth
     </div>
 </nav>
