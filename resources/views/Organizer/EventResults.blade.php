@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/eventResults.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
+    
 </head>
 @php
     use Carbon\Carbon;

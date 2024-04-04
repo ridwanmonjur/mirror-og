@@ -412,11 +412,6 @@ input[type="submit"]:active {
     outline: none !important;
 }
 
-.dropdown-menu {
-    background-color: #F8F7F0 !important;
-    border: 1px solid black !important;
-}
-
 .button-design-removed{
     background-color: transparent;
     border-width: 0px !important;

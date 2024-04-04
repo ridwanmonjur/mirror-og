@@ -1,10 +1,10 @@
 {{-- <div class="navbar-placeholder"> </div> --}}
 @auth
-@php
-    if (!isset($user)) {
-        $user = auth()->user();
-    }
-@endphp
+    @php
+        if (!isset($user)) {
+            $user = auth()->user();
+        }
+    @endphp
 @endauth
 <nav class="navbar px-3">
     <div class="logo">
@@ -72,11 +72,27 @@
             Sign in as participant</a>
         @endguest
         @auth
-            @if (isset($user) && $user->role == 'PARTICIPANT')
-                @include('CommonLayout.Navbar.WhereIsMoop')
+            <div class="text-center px-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div style="height: 45px; width: 50px;"
+                        class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </div>
+                    <div style="text-overflow: ellipsis; overflow: hidden;" class="text-start ms-2">
+                        Hi, {{ $user->name }}. Have a good day?
+                    </div>
+                </div>
+            </div>
+            @if ($user->role == 'PARTICIPANT' || $user->role == 'ADMIN')
+                <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Create a team N_EDIT</a>
+                <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Team list N_EDIT</a>
+                <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Team requeusts N_EDIT</a>
+            @endif
+            @if ($user->role == 'ORGANIZER' || $user->role == 'ADMIN')
+                <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Create an event N_EDIT</a>
+                <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Manage event N_EDIT</a>
             @endif
             <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
-            {{-- <img width="70px" height="40px" src="{{ asset('/assets/images/navbar-crown.png') }}" alt=""> --}}
             <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Logout</a>
         @endauth
     </div>

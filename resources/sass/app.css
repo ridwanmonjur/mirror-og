@@ -338,3 +338,9 @@ a:hover {
   .team-dropdown-content a:hover {
     background-color: #f1f1f1;
   }
+
+  .dropdown-menu {
+    background-color: #ffffff !important;
+    border: 1px solid black !important;
+}
+

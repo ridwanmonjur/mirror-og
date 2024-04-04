@@ -7,7 +7,7 @@
     <title></title>
     <link rel="stylesheet" href="css/style.css">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
+    
 </head>
 
 <body>
