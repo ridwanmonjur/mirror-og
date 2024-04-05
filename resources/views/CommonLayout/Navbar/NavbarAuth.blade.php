@@ -3,9 +3,34 @@
         aria-haspopup="true" aria-expanded="true">
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt="">
     </a>
-    <div class="dropdown-menu" style="position: absolute; left: -60px;" aria-labelledby="dropdownMenuLink">
+    <div class="dropdown-menu" style="position: absolute; left: -200px; width: 300px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLink">
         @php
         $notificationList = [
+            [
+                'icon' => 'I',
+                'url' => 'url',
+                'message' => 'N__Edit remove bell icon...'
+            ],
+            [
+                'icon' => 'I',
+                'url' => 'url',
+                'message' => 'This is the notification for planning with random url and zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz...'
+            ],
+            [
+                'icon' => 'I',
+                'url' => 'url',
+                'message' => '1. Should have for ending event (organizer)'
+            ],
+            [
+                'icon' => 'I',
+                'url' => 'url',
+                'message' => '1. Should have for live (organizer), payment 2 wks (participant + organizer) event'
+            ],
+            [
+                'icon' => 'I',
+                'url' => 'url',
+                'message' => '1. Should have for (payment succeeded) event'
+            ],
             [
                 'icon' => 'I',
                 'url' => 'url',
@@ -14,24 +39,25 @@
         ];
         @endphp
         @foreach($notificationList as $notification)
-            <div class="border-dark border-2 border-bottom text-center px-2">
-                <div class="d-flex justify-content-between align-items-center py-3">
-                    <div style="height: 45px; width: 80px;"
-                        class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle">
+            <div class="text-center px-2 border-light border-0">
+                <div class="d-flex justify-content-start align-items-center pt-2">
+                    <div style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
+                        class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle"
+                    >
                         {{ $notification['icon'] }}
                     </div>
-                    <div style="text-overflow: ellipsis; overflow: hidden;" class="text-start ms-2">
-                        <small> {{ $notification['message'] }}</small>
+                    <div style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word;" class="text-start ms-2">
+                        {{ $notification['message'] }}
                     </div>
                 </div>
-                <div class="d-flex justify-content-between align-items-center py-3">
+                <div class="d-flex justify-content-between align-items-center">
                     <a href="{{$notification['url']}}" class="btn btn-link">Go to link</a>
-                    <div>
                 </div>
             </div>
-
+            @if (isset($notificationList[ $loop->index + 1 ]))
+                <hr class="my-0">
+            @endif
         @endforeach
-        </div>
     </div>
 </div>
 
