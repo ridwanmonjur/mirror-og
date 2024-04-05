@@ -6,10 +6,27 @@
         }
     @endphp
 @endauth
+@php
+    if (isset($user)) {
+        $role = $user->role;
+        if ($role == 'PARTICIPANT') {
+            $routeLogo = route('landing.view');
+        } else if ($role == 'ORGANIZER') {
+            $routeLogo = route('organizer.home.view');
+        }
+        else {
+            $routeLogo = route('landing.view');
+        }
+    } else {
+        $routeLogo = route('landing.view');
+    }
+@endphp
 <nav class="navbar px-3">
-    <div class="logo">
-        <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
-    </div>
+    <a href="{{ $routeLogo }}">
+        <div class="logo">
+            <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
+        </div>
+    </a>
     <svg style="margin-top: 10px; margin-right: 10px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
         stroke-linejoin="round" class="feather feather-menu menu-toggle" onclick="toggleNavbar()">
