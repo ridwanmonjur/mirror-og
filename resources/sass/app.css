@@ -202,6 +202,10 @@ button#submit,
     border: 0px solid black;
 }
 
+.dropdown-toggle::after{
+    /* content: " "; */
+} 
+
 .w-70s{
     width: 100%;
 }
@@ -344,3 +348,30 @@ a:hover {
     border: 1px solid black !important;
 }
 
+
+.custom-scrollbar {
+    overflow-y: auto;
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #ece4e4 #f0f0f0; /* For Firefox */
+  }
+  
+  /* For WebKit browsers (Chrome, Safari) */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+  }
+  
+  /* For Firefox */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #ccc #f0f0f0;
+  }
+
+  
