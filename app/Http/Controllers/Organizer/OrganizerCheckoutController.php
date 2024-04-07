@@ -85,7 +85,6 @@ class OrganizerCheckoutController extends Controller
             $userId = $user->id;
             $status = $request->get('redirect_status');
           
-
             if ($status == "succeeded" && $request->has('payment_intent_client_secret')) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
@@ -95,7 +94,7 @@ class OrganizerCheckoutController extends Controller
                     $paymentIntent["metadata"]["eventId"] == $id
                 ) {
                     $transaction = PaymentTransaction::createTransaction(
-                        $intentId, "SUCCESS"
+                        $intentId, "SUCCESS", $paymentIntent["amount"]
                     );
     
                     $event = EventDetail::findEventWithRelationsAndThrowError(

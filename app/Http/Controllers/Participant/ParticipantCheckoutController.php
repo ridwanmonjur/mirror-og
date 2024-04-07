@@ -101,7 +101,7 @@ class ParticipantStripeController extends Controller
                     $paymentIntent["metadata"]["eventId"] == $id
                 ) {
                     $transaction = PaymentTransaction::createTransaction(
-                        $intentId, "SUCCESS"
+                        $intentId, "SUCCESS", $paymentIntent["amount"]
                     );
     
                     $event = EventDetail::findEventWithRelationsAndThrowError(

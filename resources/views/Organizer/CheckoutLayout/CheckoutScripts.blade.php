@@ -122,7 +122,9 @@
                     email: "{{ $user->email }}",
                     name: "{{ $user->name }}",
                     stripeCustomerId: "{{ $user->stripe_customer_id }}",
-                    eventId: "{{ $event->id }}"
+                    metadata : {
+                        eventId: "{{ $event->id }}"
+                    }
                 })
             });
 

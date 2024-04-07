@@ -77,6 +77,7 @@
                 <div style="text-overflow: ellipsis; overflow: hidden;" class="text-start ms-2">
                     <small> {{ $user->name }}</small>
                     <small> {{ $user->email }}</small>
+                    <small> N__Edit put the links </small>
                 </div>
             </div>
         </div>

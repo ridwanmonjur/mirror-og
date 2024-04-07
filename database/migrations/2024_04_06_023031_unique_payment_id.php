@@ -12,20 +12,25 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payment_transactions', function (Blueprint $table) {
-            $table->unsignedBigInteger('discount_id')->nullable();
-            $table->foreign('discount_id')->references('id')->on('organizer_create_event_discounts');
-            $table->double('payment_amount')->nullable();
-            $table->double('discount_amount')->nullable();
+            $table->dropForeign('discount_id');
+            $table->dropColumn(['discount_id', 'discount_amount']);
+            $table->dropColumn('updated_at');
         });
     }
-
+    
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
         Schema::table('payment_transactions', function (Blueprint $table) {
-            //
+            $table->unsignedBigInteger('discount_id')->nullable();
+            $table->double('discount_amount')->nullable();
+            $table->foreign('discount_id')->references('id')->on('discounts');
+            $table->timestamp('updated_at')->nullable();
         });
     }
+
+    
+    
 };

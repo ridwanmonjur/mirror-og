@@ -47,8 +47,6 @@ Route::name('stripe.')
     ->prefix('stripe')
     ->group(function () {
         Route::post('card/intent', 'stripeCardIntentCreate')->name('stripeCardIntentCreate');
-        Route::post('ewallet/intent', 'stripeEWalletIntentCreate')->name('stripeEwalletIntentCreate');
-        Route::post('organizerTeamPay', 'organizerTeamPay')->name('organizerTeamPay');
     });
 
 Route::post('/event/{id}/invitation', [InvitationController::class, 'store'])->name('event.invitation.store');
