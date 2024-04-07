@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 </head>
@@ -101,10 +101,10 @@
                                                 <span>
                                                     @if (isset($followCounts[$joinEvent->eventDetails->user_id]))
                                                         @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
-                                                            1 follower 
+                                                            1 follower
                                                         @else
                                                             {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
-                                                        @endif    
+                                                        @endif
                                                     @else
                                                         No followers
                                                     @endif
@@ -212,87 +212,167 @@
     @include('CommonLayout.BootstrapV5Js')
 
     <script>
-        function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
-            const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
-            tabContents.forEach(content => {
-                content.classList.add("d-none");
-            });
+        // function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
+        //     const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
+        //     tabContents.forEach(content => {
+        //         content.classList.add("d-none");
+        //     });
 
-            const selectedTab = document.getElementById(tabName);
-            if (selectedTab) {
-                selectedTab.classList.remove('d-none');
-                selectedTab.classList.add('tab-button-active');
-            }
-            const tabButtons = document.querySelectorAll(`.tab-button-active.${extraClassNameToFilter}`);
-            tabButtons.forEach(button => {
-                button.classList.remove("tab-button-active");
-            });
+        //     const selectedTab = document.getElementById(tabName);
+        //     if (selectedTab) {
+        //         selectedTab.classList.remove('d-none');
+        //         selectedTab.classList.add('tab-button-active');
+        //     }
+        //     const tabButtons = document.querySelectorAll(`.tab-button-active.${extraClassNameToFilter}`);
+        //     tabButtons.forEach(button => {
+        //         button.classList.remove("tab-button-active");
+        //     });
 
-            let target = event.currentTarget;
-            target.classList.add('tab-button-active');
-        }
+        //     let target = event.currentTarget;
+        //     target.classList.add('tab-button-active');
+        // }
 
-        function slideEvents(direction) {
-            const eventBoxes = document.querySelectorAll('.event-box');
-            const visibleEvents = Array.from(eventBoxes).filter(eventBox => eventBox.style.display !== 'none');
-            eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
+        // function slideEvents(direction) {
+        //     const eventBoxes = document.querySelectorAll('.event-box');
+        //     const visibleEvents = Array.from(eventBoxes).filter(eventBox => eventBox.style.display !== 'none');
+        //     eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
 
-            let startIndex = 0;
+        //     let startIndex = 0;
 
-            if (visibleEvents.length > 0) {
-                startIndex = (Array.from(eventBoxes).indexOf(visibleEvents[0]) + direction + eventBoxes.length) % eventBoxes
-                    .length;
-            }
+        //     if (visibleEvents.length > 0) {
+        //         startIndex = (Array.from(eventBoxes).indexOf(visibleEvents[0]) + direction + eventBoxes.length) % eventBoxes
+        //             .length;
+        //     }
 
-            for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
-                const index = (startIndex + i + eventBoxes.length) % eventBoxes.length;
-                eventBoxes[index].style.display = 'block';
-            }
-        }
+        //     for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
+        //         const index = (startIndex + i + eventBoxes.length) % eventBoxes.length;
+        //         eventBoxes[index].style.display = 'block';
+        //     }
+        // }
 
-        function initializeEventsDisplay() {
-            const eventBoxes = document.querySelectorAll('.event-box');
+        // function initializeEventsDisplay() {
+        //     const eventBoxes = document.querySelectorAll('.event-box');
 
-            eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
+        //     eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
 
-            for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
-                eventBoxes[i].style.display = 'block';
-            }
-        }
+        //     for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
+        //         eventBoxes[i].style.display = 'block';
+        //     }
+        // }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            initializeEventsDisplay();
+        // document.addEventListener("DOMContentLoaded", function() {
+        //     initializeEventsDisplay();
+        // });
+
+        // document.addEventListener("DOMContentLoaded", function() {
+        //     const searchInputs = document.querySelectorAll('.search_box input');
+        //     const memberTables = document.querySelectorAll('.member-table');
+
+        //     searchInputs.forEach((searchInput, index) => {
+        //         searchInput.addEventListener("input", function() {
+        //             const searchTerm = searchInput.value.toLowerCase();
+        //             const memberRows = memberTables[index].querySelectorAll('tbody tr');
+
+        //             memberRows.forEach(row => {
+        //                 const playerName = row.querySelector('.player-info span')
+        //                     .textContent.toLowerCase();
+
+        //                 if (playerName.includes(searchTerm)) {
+        //                     row.style.display = 'table-row';
+        //                 } else {
+        //                     row.style.display = 'none';
+        //                 }
+        //             });
+        //         });
+        //     });
+        // });
+
+        // window.onbeforeunload = function(){window.location.reload();}
+
+        // function redirectToProfilePage(userId) {
+        //     window.location.href = "{{route('participant.profile.view', ['id' => ':id']) }}"
+        //         .replace(':id', userId);
+        // }
+
+        let currentSlide = 0;
+    const maxSlides = Math.ceil({{ count($joinEvents) }}/2);
+
+    function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
+        const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
+        tabContents.forEach(content => {
+            content.classList.add("d-none");
         });
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const searchInputs = document.querySelectorAll('.search_box input');
-            const memberTables = document.querySelectorAll('.member-table');
+        const selectedTab = document.getElementById(tabName);
+        if (selectedTab) {
+            selectedTab.classList.remove('d-none');
+            selectedTab.classList.add('tab-button-active');
+        }
+        const tabButtons = document.querySelectorAll(`.tab-button-active.${extraClassNameToFilter}`);
+        tabButtons.forEach(button => {
+            button.classList.remove("tab-button-active");
+        });
 
-            searchInputs.forEach((searchInput, index) => {
-                searchInput.addEventListener("input", function() {
-                    const searchTerm = searchInput.value.toLowerCase();
-                    const memberRows = memberTables[index].querySelectorAll('tbody tr');
+        let target = event.currentTarget;
+        target.classList.add('tab-button-active');
+    }
 
-                    memberRows.forEach(row => {
-                        const playerName = row.querySelector('.player-info span')
-                            .textContent.toLowerCase();
+    function showEvents(direction) {
+        currentSlide += direction;
+        const eventBoxes = document.querySelectorAll('.event-box');
 
-                        if (playerName.includes(searchTerm)) {
-                            row.style.display = 'table-row';
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    });
+        const startIndex = currentSlide * 2;
+        const endIndex = startIndex + 1;
+
+        eventBoxes.forEach(eventBox => {
+            eventBox.style.display = 'none';
+        });
+
+        for (let i = startIndex; i <= Math.min(endIndex, {{ count($joinEvents) }} - 1); i++) {
+            eventBoxes[i].style.display = 'block';
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const eventBoxes = document.querySelectorAll('.event-box');
+        eventBoxes.forEach(eventBox => {
+            eventBox.style.display = 'none';
+        });
+
+        for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
+            eventBoxes[i].style.display = 'block';
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInputs = document.querySelectorAll('.search_box input');
+        const memberTables = document.querySelectorAll('.member-table');
+
+        searchInputs.forEach((searchInput, index) => {
+            searchInput.addEventListener("input", function() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const memberRows = memberTables[index].querySelectorAll('tbody tr');
+
+                memberRows.forEach(row => {
+                    const playerName = row.querySelector('.player-info span')
+                        .textContent.toLowerCase();
+
+                    if (playerName.includes(searchTerm)) {
+                        row.style.display = 'table-row';
+                    } else {
+                        row.style.display = 'none';
+                    }
                 });
             });
         });
+    });
 
-        window.onbeforeunload = function(){window.location.reload();}
+    window.onbeforeunload = function(){window.location.reload();}
 
-        function redirectToProfilePage(userId) {
-            window.location.href = "{{route('participant.profile.view', ['id' => ':id']) }}"
-                .replace(':id', userId);
-        }
+    function redirectToProfilePage(userId) {
+        window.location.href = "{{route('participant.profile.view', ['id' => ':id']) }}"
+            .replace(':id', userId);
+    }
 
     </script>
 
