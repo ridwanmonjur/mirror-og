@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class InvitationController extends Controller
+class OrganizerInvitationController extends Controller
 {
     /**
      * Display a listing of the resource.

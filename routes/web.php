@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Organizer\InvitationController;
+use App\Http\Controllers\Organizer\OrganizerInvitationController;
 use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
@@ -153,7 +153,7 @@ Route::group(['prefix' => 'organizer'], function () {
             ]);
 
             // Invite page
-            Route::get('/event/{id}/invitation', [InvitationController::class, 'index'])->name('event.invitation.index');
+            Route::get('/event/{id}/invitation', [OrganizerInvitationController::class, 'index'])->name('event.invitation.index');
             // Update invite
             Route::post('event/{id}/updateForm', [OrganizerEventController::class, 'updateForm'])->name('event.updateForm');
             // Success page

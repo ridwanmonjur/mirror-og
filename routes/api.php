@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Organizer\InvitationController;
+use App\Http\Controllers\Organizer\OrganizerInvitationController;
 use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
@@ -49,6 +49,6 @@ Route::name('stripe.')
         Route::post('card/intent', 'stripeCardIntentCreate')->name('stripeCardIntentCreate');
     });
 
-Route::post('/event/{id}/invitation', [InvitationController::class, 'store'])->name('event.invitation.store');
+Route::post('/event/{id}/invitation', [OrganizerInvitationController::class, 'store'])->name('event.invitation.store');
 
 // Route::any('/admin', 'AdminController@index')->middleware('check-permission:admin');

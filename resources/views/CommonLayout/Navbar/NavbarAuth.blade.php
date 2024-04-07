@@ -70,14 +70,14 @@
         aria-labelledby="dropdownMenuLinkSignedIn">
         <div class="border-dark border-2 border-bottom text-center px-2">
             <div class="d-flex justify-content-between align-items-center py-3">
-                <div style="height: 45px; width: 80px;"
+                <div style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
                     class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle">
                     {{ strtoupper(substr($user->name, 0, 1)) }}
                 </div>
                 <div style="text-overflow: ellipsis; overflow: hidden;" class="text-start ms-2">
                     <small> {{ $user->name }}</small>
                     <small> {{ $user->email }}</small>
-                    <small> N__Edit put the links </small>
+                    {{-- <small> N__Edit put the profile link </small> --}}
                 </div>
             </div>
         </div>
