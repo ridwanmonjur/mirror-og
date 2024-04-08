@@ -149,71 +149,6 @@ input[type="submit"],
     font-size: larger;
 }
 
-@media screen and (min-width: 600px) {
-    .swiper-container {
-        display: block;
-    }
-}
-
-@media screen and (min-width: 992px) {
-    .main1 { 
-        height: 50vh;
-    }
-    .time-line-box .status__left small {
-        left: 13%;
-    }
-    main {
-        padding: 20px 0px;
-    }
-    .payment-summary {
-        padding-left: 40px;
-        padding-right: 40px;
-    }
-    .flexbox {
-        display: flex;
-        justify-content: space-between;
-    }
-    .search-bar {
-        display: block;
-    }
-    .search-bar input {
-        padding-left: 60px;
-    }
-    .navbar .nav-buttons {
-        display: block;
-    }
-    .d-none-at-mobile {
-        display: block;
-    }
-    .menu-toggle {
-        display: none;
-    }
-    .d-centered-at-mobile {
-        display: none;
-    }
-    .search-bar svg {
-        left: 20px;
-    }
-    .swiper-slide {
-        text-indent: 0px;
-        font-size: 1rem;
-        width: var(--timeline-normal-width-desktop);
-    }
-    .swiper-slide__left {
-        width: var(--timeline-start-width-desktop) !important;
-    }
-    .grid-3-columns {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-    .grid-2-columns {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .event { 
-        width: 700px;
-    }
-
-}
 
 .team-section {
     display: flex;
@@ -480,27 +415,18 @@ input[type="submit"],
 .event {
     margin-bottom: 3rem;
     overflow: auto;
-    width: 400px;
+    max-width: 90vw;
     background: transparent;
     border: 2px solid rgb(82, 159, 23);
     border-radius: 40px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     align-content: center;
+    overflow: hidden;
 }
 
-.background-event {
-    background-repeat: no-repeat; 
-    object-fit: cover; 
-    background-size: 400px 200px !important; 
-    text-align: left; 
-    height: 200px; 
-    z-index: -1;
-}
-
-.background-event:hover {
-    background-blend-mode: lighten;
-    opacity: 0.8;
-    cursor: pointer;
+.event-width {
+    width: 400px;
+    height: 250px;
 }
 
 .grid-2-columns,
@@ -609,9 +535,7 @@ input[type="submit"],
     text-align: center;
 }
 
-.league_caption {
-    font-size: 20px;
-}
+
 
 .league_name {
     text-align: left;
@@ -753,7 +677,27 @@ input[type="submit"],
     text-align: right;
 }
 
+.gray-scale-image {
+    transition: filter 0.3s ease-in-out;
+}
+
+.gray-scale-image:hover {
+    filter: grayscale(100%);
+}
+
 .invisible-until-hover {
+    visibility: hidden;
+}
+
+.visible-until-hover {
+    visibility: visible;
+}
+
+.gray-until-hover {
+    visibility: visible;
+}
+
+.visible-until-hover-parent:hover .visible-until-hover{
     visibility: hidden;
 }
 
@@ -761,8 +705,73 @@ input[type="submit"],
     visibility: visible;
 }
 
+
+@media screen and (min-width: 600px) {
+    .swiper-container {
+        display: block;
+    }
+}
+
 @media screen and (min-width: 992px) {
     .event-carousel {
         grid-template-columns: var(--grid-size);
     }
+
+    .main1 { 
+        height: 50vh;
+    }
+    .time-line-box .status__left small {
+        left: 13%;
+    }
+    main {
+        padding: 20px 0px;
+    }
+    .payment-summary {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+    .flexbox {
+        display: flex;
+        justify-content: space-between;
+    }
+    .search-bar {
+        display: block;
+    }
+    .search-bar input {
+        padding-left: 60px;
+    }
+    .navbar .nav-buttons {
+        display: block;
+    }
+    .d-none-at-mobile {
+        display: block;
+    }
+    .menu-toggle {
+        display: none;
+    }
+    .d-centered-at-mobile {
+        display: none;
+    }
+    .search-bar svg {
+        left: 20px;
+    }
+    .swiper-slide {
+        text-indent: 0px;
+        font-size: 1rem;
+        width: var(--timeline-normal-width-desktop);
+    }
+    .swiper-slide__left {
+        width: var(--timeline-start-width-desktop) !important;
+    }
+    .grid-3-columns {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    .grid-2-columns {
+        grid-template-columns: 1fr 1fr;
+    }
+    .event-width {
+        width: 500px;
+        height: 300px;
+    } 
+
 }

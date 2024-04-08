@@ -1,8 +1,4 @@
-@php
-    $backgroundImage = '/storage' . '/' . $joinEvent->eventDetails->eventBanner;
-    $stylesImage = "background: url($backgroundImage); object-fit: cover;";
-@endphp
-<div class="position-relative">
+<div class="position-relative mb-2">
     <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
         @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
             <ul class="achievement-list px-4">
@@ -27,16 +23,22 @@
             </ul>
         @endif
     </div>
-
-    <div class="event mx-auto" style="margin-bottom : 0;">
-        <div class="background-event flex-column d-flex justify-content-between"
-            style="{{ $stylesImage }} ">
+    <div class="event mx-auto event-width cursor-pointer visible-until-hover-parent" style="margin-bottom : 0;">
+        <img class="visible-until-hover" style="object-fit: cover; border-radius: 40px; border-bottom: 2px solid rgb(82, 159, 23);" src="{{'/storage' . '/' . $joinEvent->eventDetails->eventBanner}}" width="100%" height="80%;">
+        <div class="mt-4 ms-4 position-absolute" style="top: 20px;">
+            {{-- @if (isset($user) && $selectTeam->creator_id == $user->id && !$isRegistrationView)
+                <form method="GET"
+                    action="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">
+                    <button class="btn btn-link me-2" type="submit">
+                        <u> Manage Roster </u>
+                    </button>
+                </form>
+                <br>
+            @endif --}}
             @if (!isset($joinEvent->roster[0]))
-                <div class="player-info mt-4 ms-4">
-                    <span>Empty roster</span>
-                </div>
+                <span>Empty roster</span>
             @else
-                <ul class="player-info mt-4 ms-4 invisible-until-hover">
+                <ul class="d-flex flex-column flex-start">
                     @foreach ($joinEvent->roster as $roster)
                         <li>
                             <span>{{ $roster->user->name }}</span>
@@ -44,47 +46,43 @@
                     @endforeach
                 </ul>
             @endif
-            <div class="d-flex mt-2 mb-3 justify-content-center">
-                @if (isset($user) && $selectTeam->creator_id == $user->id && !$isRegistrationView)
-                    <div class="d-flex w-100 justify-content-center mt-2">
-                        <form method="GET"
-                            action="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">
-                            <button class="btn btn-link me-2" type="submit">
-                               <u> Manage Roster </u>
-                            </button>
-                        </form>
-                    </div>
-                @endif
-            </div>
         </div>
         <div class="frame1" style="margin-bottom: 0;">
-            <div class="container d-flex justify-content-between pt-2">
+            <div class="container d-flex justify-content-between">
                 <div>
-                    <img {!! trustedBladeHandleImageFailureBanner() !!} src="{{ bladeImageNull($joinEvent->user->eventBanner) }}"
+                    <img style="object-fit: cover;" src="{{ bladeImageNull($joinEvent->user->eventBanner) }}"
                         class="me-1 logo2">
                     <span> {{ $joinEvent->eventDetails->eventName }} </span>
                 </div>
                 <div>
-                    <img {!! trustedBladeHandleImageFailureBanner() !!}
-                        src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
-                        class="logo2 me-1">
-                    <span class="me-1">{{ $joinEvent->game->gameTitle }}</span>
+                    <div class="d-flex justify-content-center mt-1">
+                        <img {!! trustedBladeHandleImageFailureBanner() !!}
+                            src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
+                            class="logo2 me-1">
+                        <div class="text-start">
+                            <span>{{ $joinEvent->game->gameTitle }}</span>
+                            <br>
+                            <small>
+                                @if (isset($followCounts[$joinEvent->eventDetails->user_id]))
+                                    @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
+                                        1 follower 
+                                    @else
+                                        {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
+                                    @endif    
+                                @else
+                                    No followers
+                                @endif    
+                            </small>
+                        </div>
+                    </div>
+                    <div>
+                        
+                    </div>
                 </div>
                 <div>
-                    <span>
-                        @if (isset($followCounts[$joinEvent->eventDetails->user_id]))
-                            @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
-                                1 follower 
-                            @else
-                                {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
-                            @endif    
-                        @else
-                            No followers
-                        @endif    
-                    </span>
+                    
                 </div>
             </div>
         </div>
-        <br>
     </div>
 </div>

@@ -65,7 +65,7 @@
                                         class="me-2" height="60" width="80">
                                 </div>
                                 <div class="event mx-auto">
-                                    <div class="background-event"
+                                    <div class=""
                                         style="background: url({{ bladeImageNull($joinEvent->eventBanner) }});">
                                         <br>
                                         @if (!isset($joinEvent->roster[0]))

@@ -57,64 +57,9 @@
                             &gt;
                         </button>
                     @endif
-                    <div class="event-carousel" style="{{isset($joinEvents[1]) ? '--grid-size:1fr 1fr': '--grid-size:1fr'}}">
+                    <div class="event-carousel" style="{{isset($joinEvents[1]) ? '--grid-size:1fr 1fr;': '--grid-size:1fr;'}}">
                         @foreach ($joinEvents as $key => $joinEvent)
-                            <div class="position-relative">
-                                <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
-                                    <img {!! trustedBladeHandleImageFailureBanner() !!}
-                                        src="{{ bladeImageNull($joinEvent->tier ? $joinEvent->tier->tierIcon : null) }}"
-                                        class="me-2" height="60" width="80">
-                                </div>
-                                <div class="event mx-auto">
-                                    <div class="background-event"
-                                        style="background: url({{ bladeImageNull($joinEvent->eventBanner) }});">
-                                        <br>
-                                        @if (!isset($joinEvent->roster[0]))
-                                            <div class="player-info mt-1 ms-4">
-                                                <span>Empty roster</span>
-                                            </div>
-                                        @else
-                                            <ul class="player-info mt-1 ms-4 invisible-until-hover">
-                                                @foreach ($joinEvent->roster as $roster)
-                                                    <li>
-                                                        <span>{{ $roster->user->name }}</span>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        @endif
-                                    </div>
-                                    <div class="frame1">
-                                        <div class="container d-flex justify-content-between pt-2">
-                                            <div>
-                                                <img {!! trustedBladeHandleImageFailureBanner() !!}
-                                                    src="{{ bladeImageNull($joinEvent->user->eventBanner) }}"
-                                                    class="logo2">
-                                                <span> {{ $joinEvent->eventDetails->eventName }} </span>
-                                            </div>
-                                            <div>
-                                                <img {!! trustedBladeHandleImageFailureBanner() !!}
-                                                    src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
-                                                    class="logo2 me-1">
-                                                <span class="me-1">{{ $joinEvent->game->gameTitle }}</span>
-                                            </div>
-                                            <div>
-                                                <span>
-                                                    @if (isset($followCounts[$joinEvent->eventDetails->user_id]))
-                                                        @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
-                                                            1 follower 
-                                                        @else
-                                                            {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
-                                                        @endif    
-                                                    @else
-                                                        No followers
-                                                    @endif
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br>
-                                </div>
-                            </div>
+                            @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
                         @endforeach
                     </div>
                 @endif
