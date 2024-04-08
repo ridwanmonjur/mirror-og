@@ -202,6 +202,22 @@ button#submit,
     border: 0px solid black;
 }
 
+.oceans-gaming-transparent-button {
+    background: transparent;
+    border: 1px solid black;
+    color: black;
+}
+
+.oceans-gaming-green-button {
+    background: #8CCD39;
+    color: white;
+}
+
+.oceans-gaming-gray-button {
+    background: #A6A6A6;
+    color: white;
+}
+
 .dropdown-toggle::after{
     /* content: " "; */
 } 

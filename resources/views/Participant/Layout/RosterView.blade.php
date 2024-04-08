@@ -1,3 +1,7 @@
+@php
+    $backgroundImage = '/storage' . '/' . $joinEvent->eventDetails->eventBanner;
+    $stylesImage = "background: url($backgroundImage); object-fit: cover;";
+@endphp
 <div class="position-relative">
     <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
         @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
@@ -23,9 +27,10 @@
             </ul>
         @endif
     </div>
+
     <div class="event mx-auto" style="margin-bottom : 0;">
         <div class="background-event flex-column d-flex justify-content-between"
-            style="background: url({{ bladeImageNull($joinEvent->eventBanner) }});">
+            style="{{ $stylesImage }} ">
             @if (!isset($joinEvent->roster[0]))
                 <div class="player-info mt-4 ms-4">
                     <span>Empty roster</span>

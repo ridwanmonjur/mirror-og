@@ -164,7 +164,7 @@ class ParticipantEventController extends Controller
             $invitationListIds = $selectTeam->invitationList->pluck('event_id');
             [$joinEventUserIds, $joinEvents] = JoinEvent::getJoinEventsAndIds($id, $invitationListIds, false);
             [$invitedEventUserIds, $invitedEvents] = JoinEvent::getJoinEventsAndIds($id, $invitationListIds, true);
-
+                
             $userIds = array_unique(array_merge($joinEventUserIds, $invitedEventUserIds));
             $followCounts = DB::table('users')
                 ->leftJoin('follows', function($q)  {
@@ -225,7 +225,6 @@ class ParticipantEventController extends Controller
         try {
             $userId = $request->attributes->get('user')->id;
             $participant = Participant::where('user_id', $userId)->firstOrFail();
-
             $joinEvent = JoinEvent::saveJoinEvent([
                 'team_id' => $selectTeam->id,
                 'joiner_id' => $userId,
@@ -234,7 +233,6 @@ class ParticipantEventController extends Controller
             ]);
 
             $rosterList = RosterMember::bulkCreateRosterMembers($joinEvent->id, $teamMembers);
-            
             RosterCaptain::insert([
                 'team_member_id' => $teamMembers[0]->id,
                 'join_events_id' => $joinEvent->id,

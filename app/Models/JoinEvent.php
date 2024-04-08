@@ -55,12 +55,17 @@ class JoinEvent extends Model
         return $this->hasOneThrough(EventTier::class, EventDetail::class, 'id', 'id', 'event_details_id', 'event_tier_id');
     }
 
+    public function participantPayments()
+    {
+        return $this->hasMany(ParticipantPayment::class, 'join_events_id');
+    }
+
     public static function getJoinEventsForTeam($team_id)
     {
         return self::where('team_id', $team_id)
             ->with('user');
-       
     }
+
     public static function getJoinEventsByTeamIdList($teamIdList)
     {
         return self::whereIn('team_id', $teamIdList)
@@ -88,9 +93,14 @@ class JoinEvent extends Model
             $query->whereNotIn('event_details_id', $invitationListIds);
         }
 
-        $joinEvents = $query->with('eventDetails', 'eventDetails.tier', 'eventDetails.game')
+        $joinEvents = $query->with([
+                'eventDetails', 'eventDetails.tier', 'eventDetails.game', 'participantPayments', 'participantPayments.members.user'
+            ])
+            ->withSum('participantPayments', 'payment_amount')
             ->groupBy('event_details_id')
             ->get();
+
+        // dd($joinEvents);
 
         foreach ($joinEvents as $joinEvent) {
             $joinEvent->status = $joinEvent->eventDetails->statusResolved();
