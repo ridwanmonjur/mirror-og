@@ -36,7 +36,7 @@
                 <div>
                     <div>
                         <div class="card-organizer">
-                            <h3>
+                            <h3 class="card-text-2-lines">
                                 {{ $event->eventName ?? 'No name yet' }}
                             </h3>
                             <p> {{ $event->eventDescription }} </p>

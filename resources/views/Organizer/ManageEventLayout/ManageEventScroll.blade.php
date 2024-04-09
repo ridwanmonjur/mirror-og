@@ -71,7 +71,7 @@
                     </button>
                 </div>
                 <br>
-                <p style="max-height : 60px; text-overflow:ellipsis; overflow:hidden; ">
+                <p class="card-text-2-lines">
                     <u>{{ $event->eventName ?? 'Choose a name' }}</u></p>
                 <p class="small-text"><i>
                         {{ $organizer->companyName ?? 'Choose organization name' }}
