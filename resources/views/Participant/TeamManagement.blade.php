@@ -49,9 +49,6 @@
                     <div class="event-carousel-styles event-carousel-works" style="{{isset($joinEvents[1]) ? '--grid-size:1fr 1fr;': '--grid-size:1fr;'}}">
                         @foreach ($joinEvents as $key => $joinEvent)
                             @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
-                            @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
-                            @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
-
                         @endforeach
                     </div>
                 @endif
@@ -167,36 +164,18 @@
             target.classList.add('tab-button-active');
         }
 
-        function slideEvents(direction) {
-            const eventBoxes = document.querySelectorAll('.event-box');
-            const visibleEvents = Array.from(eventBoxes).filter(eventBox => eventBox.style.display !== 'none');
-            eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
-
-            let startIndex = 0;
-
-            if (visibleEvents.length > 0) {
-                startIndex = (Array.from(eventBoxes).indexOf(visibleEvents[0]) + direction + eventBoxes.length) % eventBoxes
-                    .length;
-            }
-
-            for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
-                const index = (startIndex + i + eventBoxes.length) % eventBoxes.length;
-                eventBoxes[index].style.display = 'block';
-            }
-        }
-
         let currentIndex = 0;
 
         function carouselWork(increment = 0) {
             const eventBoxes = document.querySelectorAll('.event-carousel-works > div');
-            console.log({eventBoxes})
             let boxLength = eventBoxes.length;
             let newSum = currentIndex + increment;
             if (newSum >= boxLength || newSum < 0) {
                 return;
-            } 
+            } else {
+                currentIndex = newSum;
+            }
 
-            currentIndex = newSum;
 
             // carousel top button working
             const button1 = document.querySelector('.carousel-button:nth-child(1)');
