@@ -1,4 +1,4 @@
-<div class="position-relative mb-2">
+<div class="position-relative mb-5">
     <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
         @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
             <ul class="achievement-list px-4">

@@ -38,28 +38,20 @@
                 @if (!isset($joinEvents[0]))
                     <p>No events available!</p>
                 @else
-                    @if (isset($joinEvents[2]))
-                        <button class="carousel-button position-absolute" style="top: 100px; left: 20px;"
-                            onclick="slideEvents(-1)">
-                            &lt;
-                        </button>
-                        <button class="carousel-button position-absolute" style="top: 100px; right: 20px;"
-                            onclick="slideEvents(1)">
-                            &gt;
-                        </button>
-                    @else
-                        <button class="carousel-button position-absolute" style="opacity: 0.4; top: 100px; left: 20px;"
-                        >
-                            &lt;
-                        </button>
-                        <button class="carousel-button position-absolute" style="opacity: 0.4; top: 100px; right: 20px;"
-                        >
-                            &gt;
-                        </button>
-                    @endif
-                    <div class="event-carousel" style="{{isset($joinEvents[1]) ? '--grid-size:1fr 1fr;': '--grid-size:1fr;'}}">
+                    <button class="carousel-button position-absolute" style="top: 100px; left: 20px;"
+                        onclick="carouselWork(-2)">
+                        &lt;
+                    </button>
+                    <button class="carousel-button position-absolute" style="top: 100px; right: 20px;"
+                        onclick="carouselWork(2)">
+                        &gt;
+                    </button>
+                    <div class="event-carousel-styles event-carousel-works" style="{{isset($joinEvents[1]) ? '--grid-size:1fr 1fr;': '--grid-size:1fr;'}}">
                         @foreach ($joinEvents as $key => $joinEvent)
                             @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+                            @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+                            @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+
                         @endforeach
                     </div>
                 @endif
@@ -131,7 +123,6 @@
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         @include('Participant.Layout.RosterView', ['isRegistrationView' => false])
-                        <br><br>
                     @endforeach
                 </div>
             @endif
@@ -147,7 +138,6 @@
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
-                        <br><br>
                     @endforeach
                 </div>
             @endif
@@ -195,39 +185,58 @@
             }
         }
 
-        function initializeEventsDisplay() {
-            const eventBoxes = document.querySelectorAll('.event-box');
+        let currentIndex = 0;
 
-            eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
+        function carouselWork(increment = 0) {
+            const eventBoxes = document.querySelectorAll('.event-carousel-works > div');
+            console.log({eventBoxes})
+            let boxLength = eventBoxes.length;
+            let newSum = currentIndex + increment;
+            if (newSum >= boxLength || newSum < 0) {
+                return;
+            } 
 
-            for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
-                eventBoxes[i].style.display = 'block';
+            currentIndex = newSum;
+
+            // carousel top button working
+            const button1 = document.querySelector('.carousel-button:nth-child(1)');
+            const button2 = document.querySelector('.carousel-button:nth-child(2)');
+            button1.style.opacity = (currentIndex <= 2) ? '0.4' : '1';
+            button2.style.opacity = (currentIndex >= boxLength - 2) ? '0.4' : '1';
+            
+            // carousel swing
+            for (let i = 0; i < currentIndex; i++) {
+                eventBoxes[i].classList.add('d-none');
+            }
+
+            for (let i = currentIndex; i < currentIndex + 2; i++) {
+                eventBoxes[i].classList.remove('d-none');
+            }
+
+            for (let i = currentIndex + 2; i < boxLength; i++) {
+                eventBoxes[i].classList.add('d-none');
             }
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            initializeEventsDisplay();
-        });
+        carouselWork();
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const searchInputs = document.querySelectorAll('.search_box input');
-            const memberTables = document.querySelectorAll('.member-table');
+        const searchInputs = document.querySelectorAll('.search_box input');
+        const memberTables = document.querySelectorAll('.member-table');
 
-            searchInputs.forEach((searchInput, index) => {
-                searchInput.addEventListener("input", function() {
-                    const searchTerm = searchInput.value.toLowerCase();
-                    const memberRows = memberTables[index].querySelectorAll('tbody tr');
+        searchInputs.forEach((searchInput, index) => {
+            searchInput.addEventListener("input", function() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const memberRows = memberTables[index].querySelectorAll('tbody tr');
 
-                    memberRows.forEach(row => {
-                        const playerName = row.querySelector('.player-info span')
-                            .textContent.toLowerCase();
+                memberRows.forEach(row => {
+                    const playerName = row.querySelector('.player-info span')
+                        .textContent.toLowerCase();
 
-                        if (playerName.includes(searchTerm)) {
-                            row.style.display = 'table-row';
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    });
+                    if (playerName.includes(searchTerm)) {
+                        row.style.display = 'table-row';
+                    } else {
+                        row.style.display = 'none';
+                    }
                 });
             });
         });

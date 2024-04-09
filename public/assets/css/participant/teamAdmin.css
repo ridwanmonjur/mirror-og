@@ -254,7 +254,7 @@ input[type="submit"],
     border-bottom: 2px solid #000;
 }
 
-.event-carousel {
+.event-carousel-styles {
     width: 80%;
     display: grid; 
     justify-content: center;
@@ -713,7 +713,7 @@ input[type="submit"],
 }
 
 @media screen and (min-width: 992px) {
-    .event-carousel {
+    .event-carousel-styles {
         grid-template-columns: var(--grid-size);
     }
 

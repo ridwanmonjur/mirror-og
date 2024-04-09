@@ -56,7 +56,7 @@
                             &gt;
                         </button>
                     @endif
-                    <div class="event-carousel" style="{{isset($joinEvents[1]) ? '--grid-size:1fr 1fr': '--grid-size:1fr'}}">
+                    <div class="event-carousel-styles" style="{{isset($joinEvents[1]) ? '--grid-size:1fr 1fr': '--grid-size:1fr'}}">
                         @foreach ($joinEvents as $key => $joinEvent)
                             <div class="position-relative">
                                 <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
