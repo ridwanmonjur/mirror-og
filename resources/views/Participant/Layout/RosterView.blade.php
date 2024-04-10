@@ -66,7 +66,7 @@
                             <span>{{ $joinEvent->game->gameTitle }}</span>
                             <br>
                             <small 
-                                data-count="{{$followCounts[$joinEvent->eventDetails->user_id]}}"
+                                data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id]: 0 }} "
                                 class="{{'followCounts' . $joinEvent->eventDetails?->user_id}}"
                             >
                                 @if (isset($followCounts[$joinEvent->eventDetails->user_id]))
