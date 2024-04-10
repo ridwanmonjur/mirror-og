@@ -94,7 +94,7 @@ class JoinEvent extends Model
         }
 
         $joinEvents = $query->with([
-                'eventDetails', 'eventDetails.tier', 'eventDetails.game', 'participantPayments', 'participantPayments.members.user'
+                'eventDetails', 'eventDetails.tier', 'eventDetails.user', 'eventDetails.game', 'participantPayments', 'participantPayments.members.user'
             ])
             ->withSum('participantPayments', 'payment_amount')
             ->groupBy('event_details_id')

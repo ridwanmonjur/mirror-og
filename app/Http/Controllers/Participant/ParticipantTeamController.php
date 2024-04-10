@@ -102,8 +102,6 @@ class ParticipantTeamController extends Controller
                 } else if ($joinEvent->status == 'ENDED'){
                     $joinEventsHistory[] = $joinEvent;
                 }
-
-                $values[]= [$joinEvent->isFollowing, $joinEvent->eventDetails->user_id, $isFollowing];
             }
 
             // dd($values);

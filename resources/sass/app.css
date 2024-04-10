@@ -429,3 +429,12 @@ a:hover {
 .popover__message {
     text-align: center;
 }
+
+.modal-content {
+    -webkit-border-radius: 30px !important;
+    -moz-border-radius: 30px !important;
+    border-radius: 30px !important;
+    -webkit-border: 30px !important;
+    -moz-border: 30px !important;
+    border: 30px !important;
+  }

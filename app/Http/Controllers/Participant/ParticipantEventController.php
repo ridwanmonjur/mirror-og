@@ -175,8 +175,38 @@ class ParticipantEventController extends Controller
                 ->groupBy('users.id')
                 ->pluck('count', 'organizer_user_id')
                 ->toArray();
+            
+            $isFollowing = DB::table('follows')
+                ->where('participant_user_id', $user_id)
+                ->whereIn('organizer_user_id', $userIds)
+                ->pluck('organizer_user_id', 'organizer_user_id')
+                ->toArray();
 
-            return view('Participant.RegistrationManagement', compact('selectTeam', 'invitedEvents', 'followCounts', 'joinEvents'));
+            foreach ($joinEvents as $joinEvent) {
+                $joinEvent->status = $joinEvent->eventDetails->statusResolved();
+                $joinEvent->tier = $joinEvent->eventDetails->tier;
+                $joinEvent->game = $joinEvent->eventDetails->game;
+                $joinEvent->isFollowing = array_key_exists($joinEvent->eventDetails->user_id, $isFollowing) ;
+                if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
+                    $joinEventsActive[] = $joinEvent;
+                } else if ($joinEvent->status == 'ENDED'){
+                    $joinEventsHistory[] = $joinEvent;
+                }
+            }
+
+            foreach ($invitedEvents as $joinEvent) {
+                $joinEvent->status = $joinEvent->eventDetails->statusResolved();
+                $joinEvent->tier = $joinEvent->eventDetails->tier;
+                $joinEvent->game = $joinEvent->eventDetails->game;
+                $joinEvent->isFollowing = array_key_exists($joinEvent->eventDetails->user_id, $isFollowing) ;
+                if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
+                    $joinEventsActive[] = $joinEvent;
+                } else if ($joinEvent->status == 'ENDED'){
+                    $joinEventsHistory[] = $joinEvent;
+                }
+            }
+
+            return view('Participant.RegistrationManagement', compact('selectTeam', 'invitedEvents', 'followCounts', 'joinEvents', 'isFollowing'));
         } else {
             return redirect()->back()->with('error', "Team not found/ You're not authorized.");
         }
