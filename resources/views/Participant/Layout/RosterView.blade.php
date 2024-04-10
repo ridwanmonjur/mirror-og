@@ -65,7 +65,10 @@
                         <div class="text-start">
                             <span>{{ $joinEvent->game->gameTitle }}</span>
                             <br>
-                            <small>
+                            <small 
+                                data-count="{{$followCounts[$joinEvent->eventDetails->user_id]}}"
+                                class="{{'followCounts' . $joinEvent->eventDetails?->user_id}}"
+                            >
                                 @if (isset($followCounts[$joinEvent->eventDetails->user_id]))
                                     @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
                                         1 follower 
@@ -103,6 +106,7 @@
             event.preventDefault();
 
             let followButtons = document.getElementsByClassName("{{'followButton' . $joinEvent->eventDetails?->user_id}}");
+            let followCounts = document.getElementsByClassName("{{'followCounts' . $joinEvent->eventDetails?->user_id}}");
             console.log({followButtons});
             let form = this;
             let formData = new FormData(form);
@@ -132,6 +136,24 @@
 
                     followButton.style.setProperty('pointer-events', 'auto');
                 });
+
+                let count = Number(followCounts[0].dataset.count);
+                if (data.isFollowing) {
+                    count++;
+                } else {
+                    count--;
+                }
+                                
+                [...followCounts].forEach( (followCount) => {
+                    followCount.dataset.count = count;
+                    if (count == 1) {
+                        followCount.innerHTML = '1 follower';
+                    } else if (count == 0) {
+                        followCount.innerHTML = `No followers`;
+                    } else {
+                        followCount.innerHTML = `${followCount.dataset.count} followers`;
+                    }
+                })
             } catch (error) {
                 [...followButtons].forEach(function(followButton) {
                     followButton.style.setProperty('pointer-events', 'auto');
