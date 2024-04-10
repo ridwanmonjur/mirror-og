@@ -67,8 +67,9 @@ class ParticipantTeamController extends Controller
             $joinEvents = JoinEvent::getJoinEventsForTeam($selectTeam->id)
                 ->with(['eventDetails', 'results', 'roster' => function ($q) {
                     $q->with('user');
-                }])
-                ->with('eventDetails.tier', 'eventDetails.game')
+                }, 'eventDetails.tier', 'eventDetails.game', 
+                    'eventDetails.user'
+                ])
                 ->get();
 
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
@@ -82,18 +83,30 @@ class ParticipantTeamController extends Controller
                 ->pluck('count', 'organizer_user_id')
                 ->toArray();
 
+            $isFollowing = DB::table('follows')
+                ->where('participant_user_id', $user_id)
+                ->whereIn('organizer_user_id', $userIds)
+                ->pluck('organizer_user_id', 'organizer_user_id')
+                ->toArray();
+
             $joinEventsHistory = [];
             $joinEventsActive = [];
+            $values = []; 
             foreach ($joinEvents as $joinEvent) {
                 $joinEvent->status = $joinEvent->eventDetails->statusResolved();
                 $joinEvent->tier = $joinEvent->eventDetails->tier;
                 $joinEvent->game = $joinEvent->eventDetails->game;
+                $joinEvent->isFollowing = array_key_exists($joinEvent->eventDetails->user_id, $isFollowing) ;
                 if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
                     $joinEventsActive[] = $joinEvent;
                 } else if ($joinEvent->status == 'ENDED'){
                     $joinEventsHistory[] = $joinEvent;
                 }
+
+                $values[]= [$joinEvent->isFollowing, $joinEvent->eventDetails->user_id, $isFollowing];
             }
+
+            // dd($values);
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
             $teamMembers = $selectTeam->members->where('status', 'accepted');

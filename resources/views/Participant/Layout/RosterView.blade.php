@@ -1,3 +1,6 @@
+@php
+    $random_int = rand(0, 999);
+@endphp
 <div class="position-relative mb-5">
     <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
         @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
@@ -25,7 +28,7 @@
     </div>
     <div class="event mx-auto event-width cursor-pointer visible-until-hover-parent" style="margin-bottom : 0;">
         <img class="visible-until-hover" style="object-fit: cover; border-radius: 40px; border-bottom: 2px solid rgb(82, 159, 23);" src="{{'/storage' . '/' . $joinEvent->eventDetails->eventBanner}}" width="100%" height="80%;">
-        <div class="mt-4 ms-4 position-absolute" style="top: 20px;">
+        <div class="invisible-until-hover mt-4 ms-4 position-absolute" style="top: 20px;" style="width: 100%; background-color: red;">
             {{-- @if (isset($user) && $selectTeam->creator_id == $user->id && !$isRegistrationView)
                 <form method="GET"
                     action="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">
@@ -75,14 +78,67 @@
                             </small>
                         </div>
                     </div>
-                    <div>
-                        
-                    </div>
                 </div>
                 <div>
-                    
+                    <div>
+                        <form id="{{'followForm' . $joinEvent->id . $random_int }}" method="POST"
+                            action="{{ route('participant.organizer.follow') }}">
+                            @csrf
+                            <input type="hidden" name="user_id"
+                                value="{{ $user && $user->id ? $user->id : '' }}">
+                            <input type="hidden" name="organizer_id"
+                                value="{{ $joinEvent->eventDetails?->user_id }}">
+                            <button type="submit" class="{{'followButton' . $joinEvent->eventDetails?->user_id}}"
+                                style="background-color: {{ $user && $joinEvent->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $joinEvent->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                                {{ $joinEvent->isFollowing ? 'Following' : 'Follow' }}
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById("{{'followForm' . $joinEvent->id . $random_int }}").addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            let followButtons = document.getElementsByClassName("{{'followButton' . $joinEvent->eventDetails?->user_id}}");
+            console.log({followButtons});
+            let form = this;
+            let formData = new FormData(form);
+            [...followButtons].forEach((button) => {
+                button.style.setProperty('pointer-events', 'none');
+            });    
+
+            try {
+                let response = await fetch(form.action, {
+                    method: form.method,
+                    body: formData
+                });
+
+                let data = await response.json();
+                [...followButtons].forEach( (followButton) => {
+                    followButton.style.setProperty('pointer-events', 'none');
+
+                    if (data.isFollowing) {
+                        followButton.innerText = 'Following';
+                        followButton.style.backgroundColor = '#8CCD39';
+                        followButton.style.color = 'black';
+                    } else {
+                        followButton.innerText = 'Follow';
+                        followButton.style.backgroundColor = '#43A4D7';
+                        followButton.style.color = 'white';
+                    }
+
+                    followButton.style.setProperty('pointer-events', 'auto');
+                });
+            } catch (error) {
+                [...followButtons].forEach(function(followButton) {
+                    followButton.style.setProperty('pointer-events', 'auto');
+                });
+
+                console.error('Error:', error);
+            }
+        });
+    </script>
 </div>
