@@ -4,20 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Management</title>
+    <title>Registration Management</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/pie-chart.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
 </head>
-
+<script>
+    let registrationPaymnentMap = {}; 
+</script>
 <body>
     @include('CommonLayout.NavbarGoToSearchPage')
     @include('Participant.Layout.TeamHead')
-   
     <main class="main2">
         <div id="Overview">
             <br><br>
@@ -61,51 +58,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        const ctx1 = document.getElementsByClassName('myChartyes');
-        const ctx2 = document.getElementsByClassName('myChartno');
-        const allCtx = [...ctx1, ...ctx2];
-        const data = [
-            <?php foreach ($joinEvents as $joinEvent): ?>
-                [
-                <?php foreach ($joinEvent->participantPayments as $paymentParticipant): ?>
-                    { 
-                        label: "<?php echo $paymentParticipant->memeber->user->name; ?>", 
-                        value: <?php echo $paymentParticipant->payment->value; ?> 
-                    },
-                <?php endforeach; ?>
-                ]
-            <?php endforeach; ?>
-        ];
-        console.log({data})
-
-        allCtx.forEach( (ctx, index) => {
-            const ctx = canvas.getContext('2d');
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = Math.min(canvas.width, canvas.height) / 2 - 10;
-            let total = data.reduce((acc, cur) => acc + cur.value, 0);
-            let startAngle = -Math.PI / 2;
-            
-            data[index].forEach((item, index) => {
-                let angle = (2 * Math.PI * item.value) / total;
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, radius, startAngle, startAngle + angle);
-                ctx.lineTo(centerX, centerY);
-                ctx.fillStyle = getRandomColor();
-                ctx.fill();
-                ctx.closePath();
-                startAngle += angle;
-            });
-
-            function getRandomColor() {
-                const letters = '0123456789ABCDEF';
-                let color = '#';
-                for (let i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
             }
-        });
+            return color;
+        }
 
         function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
             const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
