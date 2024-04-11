@@ -14,7 +14,6 @@
 <div class="ms-3 d-flex flex-column justify-content-between position-relative popover__wrapper">
     <div class="mx-auto text-center popover__title">
         <div class="pie animate no-round" style="{{$styles}}">{{$percent}}%</div>
-
         <p> Total Entry Fee: <u>RM {{$total}} </u></p>
         <span>Paid: <u class="text-success">RM {{$exisitngSum}}</u> 
         <span>Pending: <u style="color: red;">RM {{($pedning)}} </u> <span></p>
@@ -39,18 +38,44 @@
    <div class="modal fade" id={{'payModal' . $random_int}} tabindex="-1" aria-labelledby={{'#payModal' . $random_int. 'Label'}} aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
             <div class="modal-body">
-                ...
+                <div class="mx-auto text-center">
+                    <div class="pie animate no-round" style="{{$styles}}">{{$percent}}%</div>
+                    <p> Total Entry Fee: <u>RM {{$total}} </u></p>
+                    <span>Paid: <u class="text-success">RM {{$exisitngSum}}</u> 
+                    <span>Pending: <u style="color: red;">RM {{($pedning)}} </u> <span></p>
+                </div>
+                <div class="text-center"> 
+                    <input type="text" value="00.00" oninput="updateInput(this)" onkeydown="keydown(this)" style="direction: ltr;">
+                </div>
+                <div class="mx-auto text-center">
+                    <button class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button">Proceed to payment</button>
+                    <br>
+                    <button  data-bs-dismiss="modal" class="mt-2 btn oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary text-light">Save changes</button>
-            </div>
-            </div>
+            <br>
         </div>
     </div>
 </div>
+<script>
+    function updateInput(input) {
+        let newValue = input.value.replace(/[^\d.]/g, '');
+        console.log({newValue, letters: newValue.substr(0, 4), zletters: newValue.substr(1, 5)});
+        if (newValue.substr(0, 4) == '00.00') {
+            newValue = newValue.substr(1, 5);
+        } else if (newValue.charAt(0) === '0') {
+            
+        } 
+        
+        newValue = parseFloat(newValue).toFixed(2);
+        input.value = newValue;
+    }
+
+    function keydown(input) {
+        if (event.key === "Backspace" || event.key === "Delete" ||
+            (event.key.length === 1 && !/\d/.test(event.key))) {
+            event.preventDefault();
+        }
+    }
+</script>
