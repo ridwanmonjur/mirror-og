@@ -291,9 +291,7 @@ class ParticipantEventController extends Controller
                 $this->processTeamRegistration($request, $id, $selectTeam, $teamMembers);
 
                 if ($selectTeam->creator_id == $userId) {
-                    return redirect()->route('participant.memberManage.action', ['id'=> $id, 'teamId' => $selectTeam->id])
-                    ->with('successMessage', 'Successfully created and joined the event.')
-                    ->with('redirectToMemberManage', true);
+                    return view('Participant.EventNotify', compact('id', 'selectTeam'));
                 } else {
                     return redirect()
                         ->route('participant.event.view', ['id' => $id])
@@ -344,9 +342,7 @@ class ParticipantEventController extends Controller
                 $this->processTeamRegistration($request, $id, $selectTeam, $teamMembers);
                 
                 DB::commit();
-                return redirect()->route('participant.memberManage.action', ['id'=> $id, 'teamId' => $selectTeam->id])
-                    ->with('successMessage', 'Successfully created and joined the event.')
-                    ->with('redirectToMemberManage', $id);
+                return view('Participant.EventNotify', compact('id', 'selectTeam'));
             } else {
                 return redirect()
                     ->back()

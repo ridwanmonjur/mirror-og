@@ -135,6 +135,21 @@ class ParticipantTeamController extends Controller
             return redirect()->route('participant.event.view', ['id' => $id]);
         }
     }
+
+    public function eventNotifyRedirected(Request $request, $id, $teamId)
+    {
+        $page = 5;
+        $user = $request->attributes->get('user') ?? auth()->user();
+        $selectTeam = Team::where('id', $teamId)
+            ->where('creator_id', $user->id)->with('members')->first();
+        if ($selectTeam) {
+            return redirect()->route('participant.memberManage.action', ['id'=> $id, 'teamId' => $selectTeam->id])
+                ->with('successMessage', 'Successfully created and joined the event.')
+                ->with('redirectToMemberManage', true);
+        } else {
+            return redirect()->route('participant.event.view', ['id' => $id]);
+        }
+    }
     
     public function teamMemberManagement(Request $request, $id)
     {
@@ -144,7 +159,7 @@ class ParticipantTeamController extends Controller
         $selectTeam = Team::where('id', $id)
             ->where('creator_id', $user_id)->with('members')->first();
         if ($selectTeam) {
-            return $this->handleTeamManagement($selectTeam, $id, $request, $page);
+            return view('Participant.Notify', compact('selectTeam', 'id'));
         } else {
             return $this->show404Participant('This event is missing or you need to be a member to view events!');
         }
