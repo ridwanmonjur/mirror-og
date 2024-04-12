@@ -38,6 +38,7 @@
         <div class="team-names">
             <div class="team-info">
                 <h3 class="team-name" id="team-name">{{ $selectTeam->teamName }}</h3>
+                @if ($user->role == "PARTICIPANT")
                 <div class="dropdown">
                     <button class="gear-icon-btn me-2 position-relative" style="top: 10px;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
@@ -100,6 +101,7 @@
                         @endif
                     </div>
                 </div>
+                @endif
             </div>
         </div>
         <div>

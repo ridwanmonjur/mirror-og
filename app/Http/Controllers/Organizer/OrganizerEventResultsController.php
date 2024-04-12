@@ -17,7 +17,9 @@ class OrganizerEventResultsController extends Controller
      */
     public function index(Request $request, $id)
     {
-        $event = EventDetail::select(['id', 'eventBanner', 'eventName', 'eventDescription'])
+        $event = EventDetail
+            ::with(['tier'])
+            ->select(['id', 'eventBanner', 'eventName', 'eventDescription', 'event_tier_id' ])
             ->findOrFail($id);
     
         // dd($event);
@@ -30,17 +32,41 @@ class OrganizerEventResultsController extends Controller
         // dd($awardsResultMap);
 
         $joinEventAndTeamList = DB::table('join_events')
-            ->join('teams', 'join_events.team_id', '=', 'teams.id')
             ->where('join_events.event_details_id', '=', $id)
-            ->leftJoin('event_join_results', 'join_events.id', '=', 'event_join_results.join_events_id')
-            ->where('join_events.event_details_id', '=', $id)
-            ->select('join_events.id', 'join_events.event_details_id', 'join_events.team_id', 'teams.*', 'event_join_results.*')
+            ->leftJoin('teams', function ($join) use ($id) {
+                $join->on('join_events.team_id', '=', 'teams.id');
+            })
+            ->leftJoin('event_join_results', function ($join) use ($id) {
+                $join->on('join_events.id', '=', 'event_join_results.join_events_id');
+            })
+            ->leftJoin('awards_results', function ($join) use ($id) {
+                $join->on('join_events.id', '=', 'awards_results.join_events_id');
+            })
+            ->select('join_events.id as id1', 
+                'join_events.event_details_id', 
+                'join_events.team_id',
+                'teams.*', 
+                'event_join_results.position',
+                'awards_results.award_id',
+        );
+
+        $joinEventAndTeamList = DB::table(DB::raw("({$joinEventAndTeamList->toSql()}) as join_events2"))
+            ->mergeBindings($joinEventAndTeamList)
+            ->leftJoin('awards', function ($join) {
+                $join->on('join_events2.award_id', '=', 'awards.id'); // Corrected the join condition
+            })
+            ->select(
+                'join_events2.*', 
+                'awards.title as awards_title', 
+                'awards.image as awards_image'
+            )
             ->get();
+            // dd($joinEventAndTeamList);
+            
 
         return view('Organizer.EventResults', compact(
             'event', 'awardList', 'awardsResultMap', 'joinEventAndTeamList'
         ));
-
     }
 
     /**

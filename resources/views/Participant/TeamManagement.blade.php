@@ -8,7 +8,13 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
-
+@auth
+    @php
+        if (!isset($user)) {
+            $user = auth()->user();
+        }
+    @endphp
+@endauth
 <body>
     @include('CommonLayout.NavbarGoToSearchPage')
     @include('Participant.Layout.TeamHead')

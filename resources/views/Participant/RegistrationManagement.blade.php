@@ -88,60 +88,6 @@
             target.classList.add('tab-button-active');
         }
 
-        
-        function slideEvents(direction) {
-            const eventBoxes = document.querySelectorAll('.event-box');
-            const visibleEvents = Array.from(eventBoxes).filter(eventBox => eventBox.style.display !== 'none');
-            eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
-
-            let startIndex = 0;
-            if (visibleEvents.length > 0) {
-                startIndex = (Array.from(eventBoxes).indexOf(visibleEvents[0]) + direction + eventBoxes.length) % eventBoxes
-                    .length;
-            }
-
-            for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
-                const index = (startIndex + i + eventBoxes.length) % eventBoxes.length;
-                eventBoxes[index].style.display = 'block';
-            }
-        }
-
-        function initializeEventsDisplay() {
-            const eventBoxes = document.querySelectorAll('.event-box');
-            eventBoxes.forEach(eventBox => (eventBox.style.display = 'none'));
-
-            for (let i = 0; i < Math.min(2, eventBoxes.length); i++) {
-                eventBoxes[i].style.display = 'block';
-            }
-        }
-        document.addEventListener("DOMContentLoaded", function() {
-            initializeEventsDisplay();
-        });
-
-
-        async function approveMember(memberId) {
-            const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json',
-                    },
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    const memberRow = button.closest('tr');
-                    memberRow.remove();
-                } else {
-                    console.error('Error updating member status:', data.message);
-                }
-            } catch (error) {
-                console.error('Error approving member:', error);
-            }
-        }
    
         document.addEventListener("DOMContentLoaded", function() {
             const searchInputs = document.querySelectorAll('.search_box input');
