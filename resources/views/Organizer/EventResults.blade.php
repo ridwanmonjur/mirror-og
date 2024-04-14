@@ -203,7 +203,9 @@
                                                 {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
                                             </td>
                                             <td class="colorless-column px-1 ps-4 text-start">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                <svg 
+                                                    onclick="deleteAward({{$joinEventAndTeam->results_id}})"
+                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                     <path
                                                         d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
@@ -335,7 +337,7 @@
 
         function deleteAward(id) {
             awardToDeleteId = id;
-            dialogOpen('Are you sure you want to remove this user from captain?', deleteAwardAction, takeNoAction)
+            dialogOpen('Are you sure you want to remove this award from this user?', deleteAwardAction, takeNoAction)
         }
 
         function editCreatePosition(event) {
@@ -386,7 +388,7 @@
                     }
                 },
                 function(error) {
-                    toastError('Error disapproving member.', error);
+                    toastError('Error adding award.', error);
                 }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -396,8 +398,7 @@
                     body: JSON.stringify({
                         'team_id': Number(teamId),
                         'award_id': Number(awardId),
-                                                'event_details_id': {{ $event->id }}
-
+                        'event_details_id': {{ $event->id }}
                     })
                 }
             );
@@ -418,8 +419,9 @@
                     }
                 },
                 function(error) {
-                    toastError('Error making captain.', error);
+                    toastError('Error deleting award.', error);
                 }, {
+                    method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Accept': 'application/json',

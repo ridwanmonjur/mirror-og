@@ -53,6 +53,7 @@ class OrganizerEventResultsController extends Controller
                 'join_events.event_details_id', 
                 'join_events.team_id',
                 'teams.*',
+                'awards_results.id as results_id',
                 'awards_results.award_id',
             );
 
@@ -108,16 +109,19 @@ class OrganizerEventResultsController extends Controller
     {
         try {
             $awardId = $request->input('award_id');
-            $joinEventId = $request->input('join_events_id');
+            $eventId = $request->input('event_details_id');
             $teamId = $request->input('team_id');
-            $joinEventExists = DB::table('join_events')->where('id', $joinEventId)->exists();
+            $joinEvent = DB::table('join_events')
+                ->where('team_id', $teamId)
+                ->where('event_details_id', $eventId)
+                ->get()->first();
             $awardExists = DB::table('awards')->where('id', $awardId)->exists();
             $teamExists = DB::table('teams')->where('id', $teamId)->exists();
-            if ($joinEventExists && $awardExists && $teamExists) {
+            if ($joinEvent && $awardExists && $teamExists) {
                 DB::table('awards_results')->insert([
                     'team_id' => $teamId,
                     'award_id' => $awardId,
-                    'join_events_id' => $joinEventId,
+                    'join_events_id' => $joinEvent->id,
                 ]);
             
                 return response()->json(['success' => true, 'message' => 'Award given successfully'], 200);
@@ -138,10 +142,10 @@ class OrganizerEventResultsController extends Controller
     /**
      * Remove the specified award from storage.
      */
-    public function destroy($id)
+    public function destroyAward($id, $awardId)
     {
         try {
-            DB::table('awards')->where('id', $id)->delete();
+            DB::table('awards_results')->where('id', $awardId)->delete();
             return response()->json(['success' => true, 'message' => 'Award deleted successfully'], 200);
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => 'Award not found'], 404);
