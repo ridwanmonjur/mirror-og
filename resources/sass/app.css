@@ -405,20 +405,27 @@ a:hover {
 
 .scrollbarline::-webkit-scrollbar {
     width: 1px; 
+    height: 6px;
+    scrollbar-width: thin;
+    position: absolute;
+    left: 50px;
+    margin-left: 25px;
   }
   
   .scrollbarline::-webkit-scrollbar-track {
     background: transparent; 
-    max-width: 80%;
+    scrollbar-width: thin;
+    height: 6px;
   }
   
   .scrollbarline::-webkit-scrollbar-thumb {
     background: rgb(156, 155, 155);
     border-radius: 60px; 
+    height: 6px;
   }
   
   .scrollbarline::-webkit-scrollbar-thumb:hover {
-    background: #555; 
+    background: #d2d0d0; 
   }
 
 @media screen and (min-width: 992px) {

@@ -172,8 +172,8 @@
                                 </th>
                             </thead>
                             <tbody class="accepted-member-table text-start">
-                                @foreach ($joinEventAndTeamList as $key => $joinEventAndTeam)
-                                    @if (is_null($joinEventAndTeam->id))
+                                @foreach ($awardAndTeamList as $key => $joinEventAndTeam)
+                                    @if (!is_null($joinEventAndTeam->award_id))
                                         <tr class="st">
                                             <td class="colorless-col px-3">
                                                 <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
@@ -189,7 +189,7 @@
                                                 @if (is_null($joinEventAndTeam->awards_image))
                                                     No awards
                                                 @else
-                                                    <img src="{{ '/storage' . '/' . $joinEventAndTeam->awards_image }}">
+                                                    <img src="{{ '/storage' . '/' . $joinEventAndTeam->awards_image }}" style="object-fit: cover;" width="50px" height="25px">
                                                 @endif
                                                 {{ $joinEventAndTeam->awards_title ? $joinEventAndTeam->awards_title : '' }}
                                             </td>
@@ -218,6 +218,7 @@
                                     aria-labelledby={{ 'award-modal' . 'label' }} aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
+                                        <form onsubmit="addAward(event);">
                                             <div class="modal-body modal-body-overflow scrollbarline pe-4">
                                                 <div class="mx-auto text-center mt-3">
                                                     <h5> Choose an award and team </h5>
@@ -233,7 +234,7 @@
                                                             style="max-width: 200px !important;" 
                                                         >
                                                             @foreach($joinEventAndTeamList as $joinEventAndTeam)
-                                                                <option value="{{$joinEventAndTeam->id1}}">{{$joinEventAndTeam->teamName}}</option> 
+                                                                <option value="{{$joinEventAndTeam->team_id}}">{{$joinEventAndTeam->teamName}}</option> 
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -241,32 +242,29 @@
                                                     <label class="form-check-label fw-bold">
                                                             Choose award
                                                         </label>
-                                                    <div class="d-flex flex-row justify-content-center px-4 mt-0" >
-                                                        
+                                                    <div class="d-flex flex-row justify-content-start ps-2 pe-5 mt-0" >
                                                         @foreach($awardList as $award)
                                                             <div class="form-check mx-auto text-center px-2" >
-                                                                <br>
                                                                 <input class="form-check-input text-center mx-auto" type="radio" name="awardId" value="{{$award->id}}">
-                                                                <br>
                                                                 <label class="form-check-label" for="awardId">
                                                                     <span> {{$award->title}} </span>
                                                                     <br>
                                                                     <img src="{{ '/storage' . '/' . $award->image}}" width="150" style="object-fit: cover;"> </span>
                                                                     <br>
                                                                 </label>
-                                                                <br>
                                                             </div>
                                                         @endforeach
                                                     </div>
                                                     <br>
-                                                    <button type="button" class="oceans-gaming-default-button"
-                                                        data-bs-dismiss="modal">Submit
+                                                    <button type="submit" class="oceans-gaming-default-button"
+                                                        >Submit
                                                     </button>
                                                     <button type="button" class="oceans-gaming-default-button oceans-gaming-gray-button"
                                                         data-bs-dismiss="modal">Close
                                                     </button>
                                                 </div>
                                             </div>
+                                        </form>
                                         </div>
                                     </div>
                             </tbody>
@@ -291,27 +289,23 @@
             let currentUrl = window.location.href;
             let urlParams = new URLSearchParams(window.location.search);
             let successValue = urlParams.get('success');
+            let message = urlParams.get('message');
             if (successValue == 'true') {
                 Toast.fire({
                     icon: 'success',
-                    text: "Successfully updated user."
+                    text: message 
                 })
-
-                document.querySelector('.main2').scrollIntoView();
             }
         }
 
         loadToast();
 
-        function reloadUrl(currentUrl, buttonName) {
+        function reloadUrl(currentUrl, message) {
             if (currentUrl.includes('?')) {
                 currentUrl = currentUrl.split('?')[0];
             }
 
-            currentUrl += `?tab=${buttonName}&success=true`;
-            console.log({
-                currentUrl
-            })
+            currentUrl += `?success=true&message=${message}`;
             window.location.replace(currentUrl);
         }
 
@@ -349,13 +343,12 @@
             let formData = new FormData(event.target);
             let joinEventId = formData.get('id');
             let joinEventPosition = formData.get('position');
-            console.log({joinEventId, joinEventPosition});
-            const url = "{{ route('event.results.create', ['event' => $event->id]) }}";
+            const url = "{{ route('event.results.store', ['event' => $event->id]) }}";
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('event.results.index', ['event' => $event->id]) }}";
-                        reloadUrl(currentUrl, null);
+                        reloadUrl(currentUrl, responseData.message);
                     } else {
                         toastError(responseData.message);
                     }
@@ -376,19 +369,18 @@
             );
         }
 
-        async function addAward(teamId, awardId, joinEventId) {
-            const memberId = dialogForMember.getMemberId();
-            const url = "{{ route('event.awards.create', ['id' => $event->id]) }}";
-            console.log({
-                memberId: dialogForMember.getMemberId(),
-                action: dialogForMember.getActionName()
-            });
+        async function addAward(event) {
+            event.preventDefault();
+            let formData = new FormData(event.target);
+            let teamId = formData.get('teamId');
+            let awardId = formData.get('awardId');
+            const url = "{{ route('event.awards.store', ['id' => $event->id]) }}";
 
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('event.results.index', ['event' => $event->id]) }}";
-                        reloadUrl(currentUrl, null);
+                        reloadUrl(currentUrl, responseData.message);
                     } else {
                         toastError(responseData.message)
                     }
@@ -402,10 +394,10 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        'team_id': teamId,
-                        'award_id': awardId,
-                        'join_events_id': joinEventId,
-                        'event_details_id': {{ $event->id }}
+                        'team_id': Number(teamId),
+                        'award_id': Number(awardId),
+                                                'event_details_id': {{ $event->id }}
+
                     })
                 }
             );
@@ -420,7 +412,7 @@
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('event.results.index', ['event' => $event->id]) }}";
-                        reloadUrl(currentUrl, null);
+                        reloadUrl(currentUrl, responseData.message);
                     } else {
                         toastError(responseData.message);
                     }

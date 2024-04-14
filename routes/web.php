@@ -140,8 +140,8 @@ Route::group(['prefix' => 'organizer'], function () {
             Route::get('/home', [OrganizerEventController::class, 'home'])->name('organizer.home.view');
             Route::resource('event.results', OrganizerEventResultsController::class)
                 ->parameters(['results' => 'id'])
-                ->only(['index', 'create']);
-            Route::post('/event/{id}/awards', [OrganizerEventResultsController::class, 'storeAward'])->name('event.awards.create');
+                ->only(['index', 'store']);
+            Route::post('/event/{id}/awards', [OrganizerEventResultsController::class, 'storeAward'])->name('event.awards.store');
             Route::delete('/event/{id}/awards/{awardId}', [OrganizerEventResultsController::class, 'destroyAward'])->name('event.awards.destroy');
 
             // Event manage
