@@ -426,7 +426,7 @@ input[type="submit"],
 
 .event-width {
     width: 400px;
-    height: 250px;
+    min-height: 250px;
 }
 
 .grid-2-columns,
@@ -713,9 +713,6 @@ input[type="submit"],
 }
 
 @media screen and (min-width: 992px) {
-    .event-carousel-styles {
-        grid-template-columns: var(--grid-size);
-    }
 
     .main1 { 
         height: 50vh;
@@ -774,4 +771,10 @@ input[type="submit"],
         height: 300px;
     } 
 
+}
+
+@media screen and (min-width: 1200px) {
+    .event-carousel-styles {
+        grid-template-columns: var(--grid-size);
+    }
 }

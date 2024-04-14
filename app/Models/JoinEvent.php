@@ -116,4 +116,18 @@ class JoinEvent extends Model
         ];
     }
 
+    public static function processEvents($events, &$activeEvents, &$historyEvents, $isFollowing) {
+        foreach ($events as $joinEvent) {
+            $joinEvent->status = $joinEvent->eventDetails->statusResolved();
+            $joinEvent->tier = $joinEvent->eventDetails->tier;
+            $joinEvent->game = $joinEvent->eventDetails->game;
+            $joinEvent->isFollowing = array_key_exists($joinEvent->eventDetails->user_id, $isFollowing);
+            if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
+                $activeEvents[] = $joinEvent;
+            } else if ($joinEvent->status == 'ENDED') {
+                $historyEvents[] = $joinEvent;
+            }
+        }
+    }
+
 }

@@ -9,9 +9,6 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/common/pie-chart.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
-<script>
-    let registrationPaymnentMap = {}; 
-</script>
 <body>
     @include('CommonLayout.NavbarGoToSearchPage')
     @include('Participant.Layout.TeamHead')
@@ -27,7 +24,7 @@
                     <div class="event-carousel-styles">
                         @foreach ($joinEvents as $key => $joinEvent)
                             @include('Participant.Layout.RosterView', ['isRegistrationView' => true])
-                            @include('Participant.Layout.PieChart', ['isInvited' => 'no'])
+                            @include('Participant.Layout.PieChart', ['isInvited' => false])
                         @endforeach
                     </div>
                 @endif
@@ -44,7 +41,7 @@
                     <div class="event-carousel-styles">
                         @foreach ($invitedEvents as $key => $joinEvent)
                             @include('Participant.Layout.RosterView', ['isRegistrationView' => true])
-                            @include('Participant.Layout.PieChart', ['isInvited' => 'yes'])
+                            @include('Participant.Layout.PieChart', ['isInvited' => true])
                         @endforeach
                     </div>
                 @endif
@@ -56,8 +53,69 @@
 
     @include('CommonLayout.BootstrapV5Js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
+        let registrationPaymentModalMap = {}; 
+
+        function updateInput(input) {
+            let modalId = input.dataset.modalId;
+
+            if (!(registrationPaymentModalMap.hasOwnProperty(modalId))) {
+                registrationPaymentModalMap[modalId] = 0;
+            } 
+
+            let index = registrationPaymentModalMap[modalId];
+            let totalLetters = 4;
+            let newValue = input.value.replace(/[^\d]/g, '');
+            let lettersToTake = index - totalLetters;
+            let isMoreThanTotalLetters = lettersToTake >= 0;
+            if (isMoreThanTotalLetters) {
+                let length = newValue.length;
+                newValue = newValue.substr(0, lettersToTake + 3) + '.' + newValue.substr(lettersToTake + 3, 2);
+                console.log("yers")
+            } else { 
+                newValue = newValue.substr(1, 2) + '.' + newValue.substr(3, 2);
+            }
+            registrationPaymentModalMap[modalId] ++;
+            
+            input.value = newValue;
+            putAmount(input.dataset.modalId, newValue, Number(input.dataset.totalAmount), Number(input.dataset.existingAmount));
+        }
+
+        function keydown(input) {
+            let modalId = input.dataset.modalId;
+            if (event.key === "Backspace" || event.key === "Delete") { 
+                event.preventDefault();
+            }
+            if (event.key.length === 1 && !/\d/.test(event.key)) {
+                event.preventDefault();
+            }
+        }
+
+        function moveCursorToEnd(input) {
+            input.focus(); 
+            input.setSelectionRange(input.value.length, input.value.length);
+        }
+
+        function putAmount(modalId, inputValue, total, existing) {
+            let putAmountTextSpan = document.querySelector('#payModal' + modalId + ' .putAmountClass');
+            let pieChart = document.querySelector('#payModal' + modalId + ' .pie');
+            inputValue = Number(inputValue);
+            console.log({inputValue, existing, total})
+            let percent = ((existing + inputValue) * 100) / total; 
+            pieChart.style.setProperty('--p', percent);
+            pieChart.innerText = percent.toFixed(2) + "%" ;
+            putAmountTextSpan.innerText = inputValue.toFixed(2);
+        }
+
+        function resetInput(button) {
+            let input = document.querySelector('#payModal' + button.dataset.modalId + " input[name='amount']");
+            registrationPaymentModalMap[button.dataset.modalId] = 0;
+            input.value = input.defaultValue;
+            putAmount(button.dataset.modalId, 0.00, Number(button.dataset.totalAmount), Number(button.dataset.existingAmount));
+        }
+    </script>
+    <script>
+
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
             let color = '#';

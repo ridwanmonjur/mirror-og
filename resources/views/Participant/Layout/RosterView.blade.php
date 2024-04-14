@@ -51,19 +51,23 @@
             @endif
         </div>
         <div class="frame1" style="margin-bottom: 0;">
-            <div class="container d-flex justify-content-between">
-                <div>
-                    <img style="object-fit: cover;" src="{{ bladeImageNull($joinEvent->user->eventBanner) }}"
-                        class="me-1 logo2">
-                    <span> {{ $joinEvent->eventDetails->eventName }} </span>
+            <div class="container d-flex justify-content-between flex-wrap">
+                <div class="d-flex justify-content-start mt-1">
+                    <img {!! trustedBladeHandleImageFailureBanner() !!}
+                        style="max-width: 50px; "
+                        src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
+                        class="object-fit-cover"
+                        width="50px" height="30px"
+                    >
+                    <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventDetails->eventName }} </span>
                 </div>
                 <div>
                     <div class="d-flex justify-content-center mt-1">
-                        <img {!! trustedBladeHandleImageFailureBanner() !!}
-                            src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
-                            class="logo2 me-1">
+                        <img style="object-fit: cover;" src="{{ bladeImageNull($joinEvent->user->eventBanner) }}"
+                            class="me-1 logo2">
+                        
                         <div class="text-start">
-                            <span>{{ $joinEvent->game->gameTitle }}</span>
+                            <span>{{ $joinEvent->user->name }}</span>
                             <br>
                             <small 
                                 data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id]: 0 }} "
