@@ -62,19 +62,9 @@
                     <br>
                     <div class="showcase-box showcase-column-2">
                         <div class="showcase-column ">
-                            @if (count($selectTeam->awards) == 0)
-                                <p>Events Joined: 0</p>
-                                <p>Wins: 0</p>
-                                <p>Win Streak: 0</p>
-                            @else
-                                @php
-                                    $eventCounts = $joinEvents->groupBy('eventDetails.id')->map->count();
-                                    $totalEvents = $eventCounts->sum();
-                                @endphp
-                                <p>Events Joined: {{ $totalEvents }}</p>
-                                <p>Wins: 0</p>
-                                <p>Win Streak: 0</p>
-                            @endif
+                            <p>Events Joined: {{ $totalEvents }}</p>
+                            <p>Wins: 0</p>
+                            <p>Win Streak: 0</p>
                         </div>
                         <div class="showcase-column">
                             <div class="invisible-until-hover">

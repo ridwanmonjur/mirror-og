@@ -167,6 +167,7 @@ class AuthController extends Controller
 
     public function signIn(Request $request)
     {
+        session()->put('url.intended', $request->input('url'));
         return view('Auth.ParticipantSignIn');
     }
 

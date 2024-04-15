@@ -309,15 +309,7 @@
 
             currentUrl += `?success=true&message=${message}`;
             window.location.replace(currentUrl);
-        }
-
-        function toastError(message, error = null) {
-            console.error(error)
-            Toast.fire({
-                icon: 'error',
-                text: message
-            });
-        }
+        }     
 
         function takeYesAction() {
             const actionFunction = actionMap[dialogForMember.getActionName()];

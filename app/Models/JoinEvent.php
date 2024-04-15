@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class JoinEvent extends Model
 {
@@ -66,6 +67,18 @@ class JoinEvent extends Model
             ->with('user');
     }
 
+    public static function getJoinEventsCountForTeam($team_id)
+    {
+        return self::where('team_id', $team_id)
+            ->count();
+    }
+
+    public static function getJoinEventsWinCountForTeam($team_id)
+    {
+        return DB::table('join_events')->where('team_id', $team_id)
+            ->count();
+    }
+
     public static function getJoinEventsByTeamIdList($teamIdList)
     {
         return self::whereIn('team_id', $teamIdList)
@@ -116,18 +129,23 @@ class JoinEvent extends Model
         ];
     }
 
-    public static function processEvents($events, &$activeEvents, &$historyEvents, $isFollowing) {
+    public static function processEvents($events, $isFollowing) {
+        $activeEvents = [];
+        $historyEvents = [];
+    
         foreach ($events as $joinEvent) {
             $joinEvent->status = $joinEvent->eventDetails->statusResolved();
             $joinEvent->tier = $joinEvent->eventDetails->tier;
             $joinEvent->game = $joinEvent->eventDetails->game;
             $joinEvent->isFollowing = array_key_exists($joinEvent->eventDetails->user_id, $isFollowing);
+            
             if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
                 $activeEvents[] = $joinEvent;
             } else if ($joinEvent->status == 'ENDED') {
                 $historyEvents[] = $joinEvent;
             }
         }
+    
+        return ['joinEvents'=> $events, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents];
     }
-
 }

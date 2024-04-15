@@ -7,7 +7,6 @@
     <title>View Event</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/viewEvent.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    
 </head>
 
 @php
@@ -101,14 +100,35 @@
                                 <form id="followForm" method="POST"
                                     action="{{ route('participant.organizer.follow') }}">
                                     @csrf
+                                    <input type="hidden" name="role"
+                                        value="{{ $user && $user->id ? $user->role : '' }}">
                                     <input type="hidden" name="user_id"
                                         value="{{ $user && $user->id ? $user->id : '' }}">
                                     <input type="hidden" name="organizer_id"
                                         value="{{ $event?->user_id }}">
-                                    <button type="submit" id="followButton"
-                                        style="background-color: {{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
-                                        {{ $user && $user->isFollowing ? 'Following' : 'Follow' }}
-                                    </button>
+                                    @guest
+                                        <button type="button"
+                                            onclick="reddirectToLoginWithIntened('{{route('public.event.view', ['id'=> $event->id])}}')"
+                                            id="followButton"
+                                            style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                                            Follow
+                                        </button>
+                                    @endguest
+                                    @auth
+                                        @if ($user->role == 'PARTICIPANT')
+                                            <button type="submit" id="followButton"
+                                                style="background-color: {{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                                                {{ $user && $user->isFollowing ? 'Following' : 'Follow' }}
+                                            </button>
+                                        @else
+                                            <button type="button"
+                                                onclick="toastWarningAboutRole(this);"
+                                                id="followButton"
+                                                style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                                                Follow
+                                            </button>
+                                        @endif
+                                    @endauth
                                 </form>
                             </div>
                             <br>
@@ -158,7 +178,6 @@
 
                         <form method="POST" name="joinForm" action="{{ route('participant.event.selectOrCreateTeam.redirect', ['id' => $event->id]) }}">
                             @csrf
-
                             @if ($existingJoint)
                                 <button type="button" class="oceans-gaming-default-button" disabled>
                                     <span>Joined</span>
@@ -166,9 +185,25 @@
                                 <br><br>
                                 <a href="{{route('participant.register.manage', ['id' => $existingJoint->team_id])}}"><u>Manage registration</u></a>
                             @else
-                                <button type="submit" class="oceans-gaming-default-button">
-                                    <span>Join</span>
-                                </button>
+                                @guest
+                                    <button type="submit" class="oceans-gaming-default-button">
+                                        <span>Join</span>
+                                    </button>
+                                @endguest
+                                @auth
+                                    @if ($user->role == "PARTICIPANT")
+                                        <button type="submit" class="oceans-gaming-default-button">
+                                            <span>Join</span>
+                                        </button>
+                                    @else
+                                        <button 
+                                            onclick="toastWarningAboutRole(this);"
+                                            type="button" class="oceans-gaming-default-button"
+                                        >
+                                            <span>Join</span>
+                                        </button>
+                                    @endif
+                                @endauth
                             @endif
                         </form>
 
@@ -252,8 +287,17 @@
         </div>
         <br>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
     @stack('script')
+    @include('CommonLayout.Toast')
     <script>
+        function reddirectToLoginWithIntened(route) {
+            route = encodeURIComponent(route);
+            let url = "{{ route('participant.signin.view') }}";
+            url+= `?url=${route}`;
+            window.location.href = url;
+        }
+
         function goToCreateScreen() {
             let url = "{{ route('event.create') }}";
             window.location.href = url;
@@ -273,6 +317,8 @@
             followButton.style.setProperty('pointer-events', 'none');
     
             try {
+                let user_id = formData.get('user_id');
+                console.log({user})
                 let response = await fetch(form.action, {
                     method: form.method,
                     body: formData
@@ -295,7 +341,7 @@
                 followButton.style.setProperty('pointer-events', 'auto');
             } catch (error) {
                 followButton.style.setProperty('pointer-events', 'auto');
-                console.error('Error:', error);
+                toastError('Error unfollowing.', error);
             }
         });
     </script>

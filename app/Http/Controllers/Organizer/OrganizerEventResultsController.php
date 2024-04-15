@@ -28,12 +28,8 @@ class OrganizerEventResultsController extends Controller
         $awardList = Award::all();
         $joinEventAndTeamList = DB::table('join_events')
             ->where('join_events.event_details_id', '=', $id)
-            ->leftJoin('teams', function ($join) use ($id) {
-                $join->on('join_events.team_id', '=', 'teams.id');
-            })
-            ->leftJoin('event_join_results', function ($join) use ($id) {
-                $join->on('join_events.id', '=', 'event_join_results.join_events_id');
-            })
+            ->leftJoin('teams', 'join_events.team_id', '=', 'teams.id')
+            ->leftJoin('event_join_results', 'join_events.id', '=', 'event_join_results.join_events_id')
             ->select('join_events.id as id1', 
                 'join_events.event_details_id', 
                 'join_events.team_id',
@@ -41,29 +37,18 @@ class OrganizerEventResultsController extends Controller
                 'event_join_results.position',
         )->get();
         
-        $subquery = DB::table('join_events')
+        $awardAndTeamList = DB::table('join_events')
             ->where('join_events.event_details_id', '=', $id)
-            ->leftJoin('teams', function ($join) use ($id) {
-                $join->on('join_events.team_id', '=', 'teams.id');
-            })
-            ->leftJoin('awards_results', function ($join) use ($id) {
-                $join->on('join_events.id', '=', 'awards_results.join_events_id');
-            })
-            ->select('join_events.id as id1', 
+            ->leftJoin('teams', 'join_events.team_id', '=', 'teams.id')
+            ->leftJoin('awards_results', 'join_events.id', '=', 'awards_results.join_events_id')
+            ->leftJoin('awards', 'awards_results.award_id', '=', 'awards.id')
+            ->select(
+                'join_events.id as id1', 
                 'join_events.event_details_id', 
                 'join_events.team_id',
                 'teams.*',
                 'awards_results.id as results_id',
                 'awards_results.award_id',
-            );
-
-        $awardAndTeamList = DB::table(DB::raw("({$subquery->toSql()}) as join_events2"))
-            ->mergeBindings($subquery)
-            ->leftJoin('awards', function ($join) {
-                $join->on('join_events2.award_id', '=', 'awards.id'); 
-            })
-            ->select(
-                'join_events2.*', 
                 'awards.title as awards_title', 
                 'awards.image as awards_image'
             )
