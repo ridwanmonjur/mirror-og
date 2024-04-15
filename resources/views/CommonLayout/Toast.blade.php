@@ -17,8 +17,8 @@
         });
     }
 
-    function toastWarningAboutRole(button) {
-        toastError('Participants can follow organizers only!');
+    function toastWarningAboutRole(button, message) {
+        toastError(message);
         button.style.cursor = 'not-allowed';
     }
 </script>

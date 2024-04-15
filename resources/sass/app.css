@@ -479,13 +479,15 @@ a:hover {
     .modal-body-overflow {
         max-width: 900px !important;
     }
+
+
+    .text-truncate-2-lines {
+        -webkit-line-clamp: 2;
+        width: 180px !important;
+        height: 50px;
+        overflow: hidden;
+        display: block;
+        text-overflow: ellipsis;
+    }
 }
 
-.text-truncate-2-lines {
-    -webkit-line-clamp: 2;
-    width: 150px !important;
-    height: 50px;
-    overflow: hidden;
-    display: block;
-    text-overflow: ellipsis;
-}

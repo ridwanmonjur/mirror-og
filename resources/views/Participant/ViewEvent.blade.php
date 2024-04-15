@@ -122,7 +122,7 @@
                                             </button>
                                         @else
                                             <button type="button"
-                                                onclick="toastWarningAboutRole(this);"
+                                                onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
                                                 id="followButton"
                                                 style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                                                 Follow
@@ -197,7 +197,7 @@
                                         </button>
                                     @else
                                         <button 
-                                            onclick="toastWarningAboutRole(this);"
+                                            onclick="toastWarningAboutRole(this, 'Participants can join only!');"
                                             type="button" class="oceans-gaming-default-button"
                                         >
                                             <span>Join</span>

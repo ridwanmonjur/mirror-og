@@ -75,9 +75,31 @@ class JoinEvent extends Model
 
     public static function getJoinEventsWinCountForTeam($team_id)
     {
-        return DB::table('join_events')->where('team_id', $team_id)
-            ->count();
+        $joins = DB::table('event_join_results')
+            ->whereIn('join_events_id', function($q) use ($team_id) {
+                $q->select('id')
+                    ->from('join_events')
+                    ->where('team_id', $team_id);
+            })->get();
+        
+        $sumPositionOne = 0;
+        $streak = 0;
+        $maxStreak = 0;
+        
+        foreach ($joins as $join) {
+            if ($join->position == 1) {
+                $sumPositionOne++;
+            } else {
+                $maxStreak = max($maxStreak, $streak);
+                $streak = 0;
+            }
+        
+            $streak++;
+        }
+            
+        return ['wins' => $sumPositionOne, 'streak' => $streak];
     }
+   
 
     public static function getJoinEventsByTeamIdList($teamIdList)
     {

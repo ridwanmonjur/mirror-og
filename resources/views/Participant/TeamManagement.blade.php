@@ -63,8 +63,8 @@
                     <div class="showcase-box showcase-column-2">
                         <div class="showcase-column ">
                             <p>Events Joined: {{ $totalEvents }}</p>
-                            <p>Wins: 0</p>
-                            <p>Win Streak: 0</p>
+                            <p>Wins: {{ $wins }}</p>
+                            <p>Win Streak: {{ $streak }}</p>
                         </div>
                         <div class="showcase-column">
                             <div class="invisible-until-hover">
@@ -132,10 +132,18 @@
             @endif
         </div>
     </main>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
+    @include('CommonLayout.Toast')
     @include('CommonLayout.BootstrapV5Js')
 
     <script>
+        function reddirectToLoginWithIntened(route) {
+            route = encodeURIComponent(route);
+            let url = "{{ route('participant.signin.view') }}";
+            url+= `?url=${route}`;
+            window.location.href = url;
+        }
+        
         function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
             const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
             tabContents.forEach(content => {
@@ -167,7 +175,6 @@
             } else {
                 currentIndex = newSum;
             }
-
 
             // carousel top button working
             const button1 = document.querySelector('.carousel-button:nth-child(1)');

@@ -60,9 +60,23 @@ class ParticipantTeamController extends Controller
         $user = $request->attributes->get('user');
         $user_id = $user?->id ?? null;
         $selectTeam = Team::where('id', $id)
-            ->with(['members', 'awards'])->first();
-        
+            ->with(['members'])->first();        
         if ($selectTeam) {
+            $awardAndTeamList = DB::table('join_events')
+                ->where('join_events.team_id', $selectTeam->id)
+                ->join('awards_results', 'join_events.id', '=', 'awards_results.join_events_id')
+                ->leftJoin('awards', 'awards_results.award_id', '=', 'awards.id')
+            ->groupBy('awards.id')
+            ->select(
+                'awards.id',
+                DB::raw('COUNT(awards.id) as awards_count'),
+                'awards_results.id as results_id',
+                'awards_results.award_id',
+                'awards.title as awards_title', 
+                'awards.image as awards_image'
+                )
+                ->get();
+            dd($awardAndTeamList);
             $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
             $joinEvents = JoinEvent::getJoinEventsForTeam($selectTeam->id)
                 ->with(['eventDetails', 'results', 'roster' => function ($q) {
@@ -72,6 +86,8 @@ class ParticipantTeamController extends Controller
                 ->get();
             
             $totalEvents = JoinEvent::getJoinEventsCountForTeam($selectTeam->id);
+            ['wins' => $wins, 'streak' => $streak] = 
+                JoinEvent::getJoinEventsWinCountForTeam($selectTeam->id);
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
             $followCounts =  DB::table('users')
                 ->leftJoin('follows', function($q)  {
@@ -99,8 +115,9 @@ class ParticipantTeamController extends Controller
             $teamMembers = $selectTeam->members->where('status', 'accepted');
 
             return view('Participant.TeamManagement', 
-                compact('selectTeam', 'joinEvents', 'captain', 'teamMembers', 
-                    'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEvents'
+                compact('selectTeam', 'joinEvents', 'captain', 'teamMembers',
+                    'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEvents',
+                    'wins', 'streak' 
                 )
             );
         } else {

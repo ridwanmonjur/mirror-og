@@ -57,51 +57,63 @@
                         style="max-width: 50px; "
                         src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
                         class="object-fit-cover"
-                        width="50px" height="30px"
+                        width="60px" height="40px"
                     >
                     <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventDetails->eventName }} </span>
                 </div>
-                <div>
-                    <div class="d-flex justify-content-center mt-1">
-                        <img style="object-fit: cover;" src="{{ bladeImageNull($joinEvent->user->eventBanner) }}"
-                            class="me-1 logo2">
-                        
-                        <div class="text-start">
-                            <span>{{ $joinEvent->user->name }}</span>
-                            <br>
-                            <small 
-                                data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id]: 0 }} "
-                                class="{{'followCounts' . $joinEvent->eventDetails?->user_id}}"
-                            >
-                                @if (isset($followCounts[$joinEvent->eventDetails->user_id]))
-                                    @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
-                                        1 follower 
-                                    @else
-                                        {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
-                                    @endif    
+                <div class="d-flex justify-content-center mt-1">
+                    <img style="object-fit: cover;" src="{{ bladeImageNull($joinEvent->user->eventBanner) }}"
+                        class="me-1 logo2">
+                    <div class="text-start">
+                        <span>{{ $joinEvent->user->name }}</span>
+                        <br>
+                        <small 
+                            data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id]: 0 }} "
+                            class="{{'followCounts' . $joinEvent->eventDetails?->user_id}}"
+                        >
+                            @if (isset($followCounts[$joinEvent->eventDetails->user_id]))
+                                @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
+                                    1 follower 
                                 @else
-                                    No followers
+                                    {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
                                 @endif    
-                            </small>
-                        </div>
+                            @else
+                                No followers
+                            @endif    
+                        </small>
                     </div>
                 </div>
-                <div>
-                    <div>
-                        <form id="{{'followForm' . $joinEvent->id . $random_int }}" method="POST"
-                            action="{{ route('participant.organizer.follow') }}">
-                            @csrf
-                            <input type="hidden" name="user_id"
-                                value="{{ $user && $user->id ? $user->id : '' }}">
-                            <input type="hidden" name="organizer_id"
-                                value="{{ $joinEvent->eventDetails?->user_id }}">
-                            <button type="submit" class="{{'followButton' . $joinEvent->eventDetails?->user_id}}"
-                                style="background-color: {{ $user && $joinEvent->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $joinEvent->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                <form id="{{'followForm' . $joinEvent->id . $random_int }}" method="POST"
+                    action="{{ route('participant.organizer.follow') }}">
+                    @csrf
+                    <input type="hidden" name="user_id"
+                        value="{{ $user && $user->id ? $user->id : '' }}">
+                    <input type="hidden" name="organizer_id"
+                        value="{{ $joinEvent->eventDetails?->user_id }}">
+                    @guest
+                        <button type="button"
+                            onclick="reddirectToLoginWithIntened('{{route('public.team.view', ['id'=> $selectTeam->id])}}')"
+                            id="followButton"
+                            style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                            Follow
+                        </button>
+                    @endguest
+                    @auth
+                        @if ($user->role == 'PARTICIPANT')
+                            <button type="submit" id="followButton"
+                                style="background-color: {{ $joinEvent->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $joinEvent->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                                 {{ $joinEvent->isFollowing ? 'Following' : 'Follow' }}
                             </button>
-                        </form>
-                    </div>
-                </div>
+                        @else
+                            <button type="button"
+                                onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
+                                id="followButton"
+                                style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                                Follow
+                            </button>
+                        @endif
+                    @endauth
+                </form>
             </div>
         </div>
     </div>
