@@ -143,7 +143,7 @@ class JoinEvent extends Model
             $joinEvent->game = $joinEvent->eventDetails->game;
         }
 
-        $joinEventIds = $joinEvents->pluck('id')->toArray();
+        $joinEventIds = $joinEvents->pluck('eventDetails.user.id')->toArray();
 
         return [
             $joinEventIds,

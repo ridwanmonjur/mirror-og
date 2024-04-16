@@ -75,7 +75,7 @@ class ParticipantTeamController extends Controller
             ['wins' => $wins, 'streak' => $streak] = 
                 JoinEvent::getJoinEventsWinCountForTeam($selectTeam->id);
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
-            $followCounts =  Follow::getFollowCounts($userIds);
+            $followCounts = Follow::getFollowCounts($userIds);
             $isFollowing = Follow::getIsFollowing($user_id, $userIds);
             $joinEventsHistory = [];
             $joinEventsActive = [];

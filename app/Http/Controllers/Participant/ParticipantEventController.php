@@ -164,48 +164,13 @@ class ParticipantEventController extends Controller
             $invitationListIds = $selectTeam->invitationList->pluck('event_id');
             [$joinEventUserIds, $joinEvents] = JoinEvent::getJoinEventsAndIds($id, $invitationListIds, false);
             [$invitedEventUserIds, $invitedEvents] = JoinEvent::getJoinEventsAndIds($id, $invitationListIds, true);
-                
+            // dd($invitationListIds, $joinEventUserIds, $invitedEventUserIds);
+
             $userIds = array_unique(array_merge($joinEventUserIds, $invitedEventUserIds));
-            $followCounts = DB::table('users')
-                ->leftJoin('follows', function($q)  {
-                    $q->on('users.id', '=', 'follows.organizer_user_id');
-                })
-                ->whereIn('users.id', $userIds)
-                ->selectRaw('users.id as organizer_user_id, COALESCE(COUNT(follows.organizer_user_id), 0) as count')
-                ->groupBy('users.id')
-                ->pluck('count', 'organizer_user_id')
-                ->toArray();
-            
-            $isFollowing = DB::table('follows')
-                ->where('participant_user_id', $user_id)
-                ->whereIn('organizer_user_id', $userIds)
-                ->pluck('organizer_user_id', 'organizer_user_id')
-                ->toArray();
-
-            foreach ($joinEvents as $joinEvent) {
-                $joinEvent->status = $joinEvent->eventDetails->statusResolved();
-                $joinEvent->tier = $joinEvent->eventDetails->tier;
-                $joinEvent->game = $joinEvent->eventDetails->game;
-                $joinEvent->isFollowing = array_key_exists($joinEvent->eventDetails->user_id, $isFollowing) ;
-                if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
-                    $joinEventsActive[] = $joinEvent;
-                } else if ($joinEvent->status == 'ENDED'){
-                    $joinEventsHistory[] = $joinEvent;
-                }
-            }
-
-            foreach ($invitedEvents as $joinEvent) {
-                $joinEvent->status = $joinEvent->eventDetails->statusResolved();
-                $joinEvent->tier = $joinEvent->eventDetails->tier;
-                $joinEvent->game = $joinEvent->eventDetails->game;
-                $joinEvent->isFollowing = array_key_exists($joinEvent->eventDetails->user_id, $isFollowing) ;
-                if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
-                    $joinEventsActive[] = $joinEvent;
-                } else if ($joinEvent->status == 'ENDED'){
-                    $joinEventsHistory[] = $joinEvent;
-                }
-            }
-
+            $followCounts = Follow::getFollowCounts($userIds);
+            $isFollowing = Follow::getIsFollowing($user_id, $userIds);
+            ['joinEvents' => $joinEvents, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents] 
+                = JoinEvent::processEvents($joinEvents, $isFollowing);
             return view('Participant.RegistrationManagement', compact('selectTeam', 'invitedEvents', 'followCounts', 'joinEvents', 'isFollowing'));
         } else {
             return redirect()->back()->with('error', "Team not found/ You're not authorized.");
