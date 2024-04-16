@@ -99,7 +99,7 @@ class JoinEvent extends Model
             
         return ['wins' => $sumPositionOne, 'streak' => $streak];
     }
-   
+
 
     public static function getJoinEventsByTeamIdList($teamIdList)
     {

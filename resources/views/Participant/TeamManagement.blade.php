@@ -76,17 +76,17 @@
 
                 <div class="achievements">
                     <div><b>Achievements</b></div>
-                    @if (count($selectTeam->awards) == 0)
+                    @if (!isset($awardList[0]))
                         <ul class="achievement-list">
                             <p>No awards available</p>
                         </ul>
                     @else
                         <ul class="achievement-list">
-                            @foreach ($selectTeam->awards as $award)
+                            @foreach ($awardList as $award)
                                 <li>
-                                    <span class="additional-text">{{ $award->name }} (2023)</span><br>
+                                    <span class="additional-text">{{ $award->awards_title }} (2023)</span><br>
                                     <span class="achievement-complete"></span><br>
-                                    <span class="additional-text">{{ $award->description }}</span>
+                                    {{-- <span class="additional-text">{{ $award->description }}</span> --}}
                                 </li>
                             @endforeach
                         </ul>

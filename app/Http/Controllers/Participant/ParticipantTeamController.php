@@ -62,21 +62,7 @@ class ParticipantTeamController extends Controller
         $selectTeam = Team::where('id', $id)
             ->with(['members'])->first();        
         if ($selectTeam) {
-            $awardAndTeamList = DB::table('join_events')
-                ->where('join_events.team_id', $selectTeam->id)
-                ->join('awards_results', 'join_events.id', '=', 'awards_results.join_events_id')
-                ->leftJoin('awards', 'awards_results.award_id', '=', 'awards.id')
-            ->groupBy('awards.id')
-            ->select(
-                'awards.id',
-                DB::raw('COUNT(awards.id) as awards_count'),
-                'awards_results.id as results_id',
-                'awards_results.award_id',
-                'awards.title as awards_title', 
-                'awards.image as awards_image'
-                )
-                ->get();
-            dd($awardAndTeamList);
+            $awardList = $selectTeam->getAwardListByTeam();
             $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
             $joinEvents = JoinEvent::getJoinEventsForTeam($selectTeam->id)
                 ->with(['eventDetails', 'results', 'roster' => function ($q) {
@@ -89,27 +75,13 @@ class ParticipantTeamController extends Controller
             ['wins' => $wins, 'streak' => $streak] = 
                 JoinEvent::getJoinEventsWinCountForTeam($selectTeam->id);
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
-            $followCounts =  DB::table('users')
-                ->leftJoin('follows', function($q)  {
-                    $q->on('users.id', '=', 'follows.organizer_user_id');
-                })
-                ->whereIn('users.id', $userIds)
-                ->selectRaw('users.id as organizer_user_id, COALESCE(COUNT(follows.organizer_user_id), 0) as count')
-                ->groupBy('users.id')
-                ->pluck('count', 'organizer_user_id')
-                ->toArray();
-
-            $isFollowing = DB::table('follows')
-                ->where('participant_user_id', $user_id)
-                ->whereIn('organizer_user_id', $userIds)
-                ->pluck('organizer_user_id', 'organizer_user_id')
-                ->toArray();
-
+            $followCounts =  Follow::getFollowCounts($userIds);
+            $isFollowing = Follow::getIsFollowing($user_id, $userIds);
             $joinEventsHistory = [];
             $joinEventsActive = [];
             $values = []; 
-            ['joinEvents' => $joinEvents, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents] = JoinEvent::processEvents($joinEvents, $isFollowing);
-            // dd($values);
+            ['joinEvents' => $joinEvents, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents] 
+                = JoinEvent::processEvents($joinEvents, $isFollowing);
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
             $teamMembers = $selectTeam->members->where('status', 'accepted');
@@ -117,7 +89,7 @@ class ParticipantTeamController extends Controller
             return view('Participant.TeamManagement', 
                 compact('selectTeam', 'joinEvents', 'captain', 'teamMembers',
                     'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEvents',
-                    'wins', 'streak' 
+                    'wins', 'streak', 'awardList'
                 )
             );
         } else {
@@ -393,7 +365,9 @@ class ParticipantTeamController extends Controller
             
             if (isset($existingTeam)) {
                 if ($existingTeam['id'] != $team->id) {
-                    throw ValidationException::withMessages(['teamName' => 'Team name already exists. Please choose a different name.']);
+                    throw ValidationException::withMessages([
+                        'teamName' => 'Team name already exists. Please choose a different name.'
+                    ]);
                 } 
             }
 

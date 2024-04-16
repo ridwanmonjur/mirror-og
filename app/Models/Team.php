@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Team extends Model
 {
@@ -105,5 +106,22 @@ class Team extends Model
                 'count' => 0,
             ];
         }
+    }
+
+    public function getAwardListByTeam() {
+        return DB::table('join_events')
+            ->where('join_events.team_id', $this->id)
+            ->join('awards_results', 'join_events.id', '=', 'awards_results.join_events_id')
+            ->leftJoin('awards', 'awards_results.award_id', '=', 'awards.id')
+            ->groupBy('awards.id')
+            ->select(
+                'awards.id',
+                DB::raw('COUNT(awards.id) as awards_count'),
+                'awards_results.id as results_id',
+                'awards_results.award_id',
+                'awards.title as awards_title', 
+                'awards.image as awards_image'
+            )
+            ->get();
     }
 }
