@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('join_events', function (Blueprint $table) {
-            $table->unique(['team_id', 'event_details_id']);
+            // $table->unique(['team_id', 'event_details_id']);
         });
     }
 
