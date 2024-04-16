@@ -24,7 +24,7 @@
             <label for="image-upload" class="upload-label">
                 <div class="circle-container">
                     <div id="uploaded-image" class="uploaded-image"
-                        style="background-image: url({{ $selectTeam->teamBanner }} );"
+                        style="background-image: url({{ '/storage' . '/'. $team->teamBanner }} );"
                     ></div>
                     @if ($selectTeam->creator_id == $user->id)
                         <button id="upload-button" class="upload-button" aria-hidden="true">Upload</button>
