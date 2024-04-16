@@ -33,6 +33,7 @@
     </div>
    <div class="modal fade" id={{'payModal' . $random_int}} tabindex="-1" aria-labelledby={{'#payModal' . $random_int. 'Label'}} aria-hidden="true">
         <div class="modal-dialog">
+            <form method="POST" action="{{route('participant.roster.manage', ['id' => $joinEvent->event_details_id, 'teamId' => $joinEvent->team_id ]) }}"> 
             <div class="modal-content">
             <div class="modal-body">
                 <div class="mx-auto text-center">
@@ -65,6 +66,7 @@
                     <button data-bs-dismiss="modal" class="mt-2 btn oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
                 </div>
             </div>
+            </form>
             <br>
         </div>
     </div>

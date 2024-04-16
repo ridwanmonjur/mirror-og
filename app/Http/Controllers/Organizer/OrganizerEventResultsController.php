@@ -42,6 +42,7 @@ class OrganizerEventResultsController extends Controller
             ->leftJoin('teams', 'join_events.team_id', '=', 'teams.id')
             ->leftJoin('awards_results', 'join_events.id', '=', 'awards_results.join_events_id')
             ->leftJoin('awards', 'awards_results.award_id', '=', 'awards.id')
+            // ->leftJoin('achievements', 'join_events.id', '=', 'achievements.join_event_id')
             ->select(
                 'join_events.id as id1', 
                 'join_events.event_details_id', 
@@ -50,14 +51,34 @@ class OrganizerEventResultsController extends Controller
                 'awards_results.id as results_id',
                 'awards_results.award_id',
                 'awards.title as awards_title', 
-                'awards.image as awards_image'
+                'awards.image as awards_image',
+                // 'achievements.id as achievements_id', 
+                // 'achievements.title as achievements_title', 
+                // 'achievements.description as achievements_description',
+                // 'achievements.created_at as achievements_created_at',
+            )
+            ->get();
+
+            $achievementsAndTeamList = DB::table('join_events')
+            ->where('join_events.event_details_id', '=', $id)
+            ->leftJoin('teams', 'join_events.team_id', '=', 'teams.id')
+            ->leftJoin('achievements', 'join_events.id', '=', 'achievements.join_event_id')
+            ->select(
+                'join_events.id as id1', 
+                'join_events.event_details_id', 
+                'join_events.team_id',
+                'teams.*',
+                'achievements.id as achievements_id', 
+                'achievements.title as achievements_title', 
+                'achievements.description as achievements_description',
+                'achievements.created_at as achievements_created_at',
             )
             ->get();
         // dd($joinEventAndTeamList, $awardAndTeamList, $awardList);
             
 
         return view('Organizer.EventResults', compact(
-            'event', 'awardList', 'joinEventAndTeamList', 'awardAndTeamList'
+            'event', 'awardList', 'joinEventAndTeamList', 'awardAndTeamList', 'achievementsAndTeamList'
         ));
     }
 
@@ -99,6 +120,7 @@ class OrganizerEventResultsController extends Controller
             $joinEvent = DB::table('join_events')
                 ->where('team_id', $teamId)
                 ->where('event_details_id', $eventId)
+                ->select('id', 'team_id')
                 ->get()->first();
             $awardExists = DB::table('awards')->where('id', $awardId)->exists();
             $teamExists = DB::table('teams')->where('id', $teamId)->exists();
@@ -120,7 +142,45 @@ class OrganizerEventResultsController extends Controller
                 return response()->json(['success' => false, 'message' => 'Database error'], 500);
             }
         }
-        
+    }
+
+     /**
+     * Store a newly created award in storage.
+     */
+    public function storeAchievements(Request $request)
+    {
+        try {
+            $title = $request->input('title');
+            $description = $request->input('description');
+            $eventId = $request->input('event_details_id');
+            $teamId = $request->input('team_id');
+            $joinEvent = DB::table('join_events')
+                ->select('id', 'team_id')
+                ->where('team_id', $teamId)
+                ->where('event_details_id', $eventId)
+                ->get()->first();
+                
+            // dd($joinEvent, $teamId);
+            
+            $teamExists = DB::table('teams')->where('id', $teamId)->exists();
+            if ($joinEvent && $teamExists) {
+                DB::table('achievements')->insert([
+                    'join_event_id' => $joinEvent->id,
+                    'title' => $title,
+                    'description' => $description,
+                ]);
+            
+                return response()->json(['success' => true, 'message' => 'Achievement given successfully'], 200);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Join event or team not found'], 404);
+            }
+        } catch (QueryException $e) {
+            if ($e->errorInfo[1] == 1062) { 
+                return response()->json(['success' => false, 'message' => 'Achievement already exists'], 422);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Database error'], 500);
+            }
+        }
     }
 
 
@@ -134,6 +194,16 @@ class OrganizerEventResultsController extends Controller
             return response()->json(['success' => true, 'message' => 'Award deleted successfully'], 200);
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => 'Award not found'], 404);
+        }
+    }
+
+    public function destroyAchievements($id, $achievementId)
+    {
+        try {
+            DB::table('achievements')->where('id', $achievementId)->delete();
+            return response()->json(['success' => true, 'message' => 'Achievement deleted successfully'], 200);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Achievement not found'], 404);
         }
     }
 }

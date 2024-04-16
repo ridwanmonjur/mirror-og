@@ -151,7 +151,6 @@
                             </table>
                         </div>
                         <div class="tab-content outer-tab d-none mx-auto" id="Awards">
-
                             <div class="mx-auto member-table d-flex justify-content-center">
                                 <button data-bs-toggle="modal" data-bs-target="{{ '#award' . '-modal' }}"
                                     class="oceans-gaming-default-button">
@@ -231,7 +230,7 @@
                                         @endif
                                     @endforeach
                                     <div class="modal fade" id='award-modal' tabindex="-1"
-                                        aria-labelledby={{ 'award-modal' . 'label' }} aria-hidden="true">
+                                        aria-labelledby={{ 'award-modal-label' }} aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <form onsubmit="addAward(event);">
@@ -289,6 +288,142 @@
                                                 </form>
                                             </div>
                                         </div>
+                                     </div>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-content outer-tab d-none mx-auto" id="Achievements">
+                            <div class="mx-auto member-table d-flex justify-content-center">
+                                <button data-bs-toggle="modal" data-bs-target="{{ '#achievements-modal' }}"
+                                    class="oceans-gaming-default-button">
+                                    Add an achievement
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"
+                                            fill="currentColor" class="text-light pt-1 bi bi-plus-circle ms-3"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                            <path
+                                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                            <table class="member-table text-start mx-auto" style="margin-left: -5px;">
+                                <thead class="accepted-member-table text-start">
+                                    <th></th>
+                                    <th class="text-start">
+                                        Achievement
+                                    </th>
+                                    <th class="text-start">
+                                        Description
+                                    </th>
+                                    <th class="text-start">
+                                        Year
+                                    </th>
+                                    <th class="text-start">
+                                        Team Name
+                                    </th>
+                                    <th class="text-start">
+                                        Team Description
+                                    </th>
+                                    <th class="text-start">
+                                        Team Created
+                                    </th>
+                                </thead>
+                                <tbody class="accepted-member-table text-start">
+                                    @foreach ($achievementsAndTeamList as $key => $joinEventAndTeam)
+                                        @if (!is_null($joinEventAndTeam->achievements_id))
+                                            <tr class="st">
+                                                <td class="colorless-col px-3">
+                                                    <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
+                                                        class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
+                                                        width="20" height="20" fill="currentColor"
+                                                        class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                                                        <path
+                                                            d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                                                    </svg>
+                                                </td>
+                                                <td class="coloured-cell text-center px-2">
+                                            
+                                                    {{ $joinEventAndTeam->achievements_title ? $joinEventAndTeam->achievements_title : '' }}
+                                                </td>
+                                                 <td class="coloured-cell px-3 text-start">
+                                                    {{ $joinEventAndTeam->achievements_description }}
+                                                </td>
+                                                <td class="coloured-cell px-3 text-start">
+                                                    {{ \Carbon\Carbon::parse($joinEventAndTeam->achievements_created_at)->format('Y') }}
+                                                </td>
+                                                <td class="coloured-cell px-3 text-start">
+                                                    {{ $joinEventAndTeam->teamName }}
+                                                </td>
+                                                <td class="coloured-cell px-3 text-start">
+                                                    {{ $joinEventAndTeam->teamDescription }}
+                                                </td>
+                                                <td class="coloured-cell px-3 text-start">
+                                                    {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
+                                                </td>
+                                                <td class="colorless-column px-1 ps-4 text-start">
+                                                    <svg onclick="deleteAchievement({{ $joinEventAndTeam->achievements_id }})"
+                                                        xmlns="http://www.w3.org/2000/svg" width="16"
+                                                        height="16" fill="currentColor" class="bi bi-trash"
+                                                        viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                                        <path
+                                                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                                    </svg>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                    <div class="modal fade" id='achievements-modal' tabindex="-1"
+                                        aria-labelledby={{ 'achievements-modal-label' }} aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form onsubmit="addAchievement(event);">
+                                                    <div class="modal-body modal-body-overflow scrollbarline pe-4">
+                                                        <div class="mx-auto text-center mt-3">
+                                                            <h5> Choose an achievement </h5>
+                                                            <br>
+                                                            <div>
+                                                                <label class="form-check-label fw-bold">
+                                                                    Choose team
+                                                                </label>
+                                                                <select class="form-select mx-auto" name="teamId"
+                                                                    aria-label="Select Team"
+                                                                    style="max-width: 200px !important;">
+                                                                    @foreach ($joinEventAndTeamList as $joinEventAndTeam)
+                                                                        <option
+                                                                            value="{{ $joinEventAndTeam->team_id }}">
+                                                                            {{ $joinEventAndTeam->teamName }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <br>
+                                                            <label class="form-check-label fw-bold">
+                                                                Achievement Title
+                                                            </label>
+                                                            <input type="text" class="form-control mx-auto" name="title" style="width: 250px;">
+                                                            <br>
+                                                            <label class="form-check-label fw-bold">
+                                                                Achievement Description
+                                                            </label>
+                                                            <input type="text" class="form-control" name="description">
+                                                            <br><br>
+                                                            <button type="submit"
+                                                                class="oceans-gaming-default-button">Submit
+                                                            </button>
+                                                            <button type="button"
+                                                                class="oceans-gaming-default-button oceans-gaming-gray-button"
+                                                                data-bs-dismiss="modal">Close
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                 </tbody>
                             </table>
                         </div>
@@ -305,8 +440,13 @@
     @include('CommonLayout.Toast')
     @include('CommonLayout.Dialog')
     <script>
-        let awardToDeleteId = null;
-
+        var awardToDeleteId = null;
+        var achievementToDeleteId = null;
+        var actionToTake = null;
+        const actionMap = {
+            'achievement': deleteAchievementsAction,
+            'award': deleteAwardAction
+        };
 
         function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
             const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
@@ -349,17 +489,17 @@
 
         loadToast();
 
-        function reloadUrl(currentUrl, message) {
+        function reloadUrl(currentUrl, message, tab) {
             if (currentUrl.includes('?')) {
                 currentUrl = currentUrl.split('?')[0];
             }
 
-            currentUrl += `?success=true&message=${encodeURIComponent(message)}`;
+            currentUrl += `?success=true&message=${encodeURIComponent(message)}&tab=${tab}`;
             window.location.replace(currentUrl);
         }
 
         function takeYesAction() {
-            const actionFunction = actionMap[dialogForMember.getActionName()];
+            const actionFunction = actionMap[actionToTake];
             if (actionFunction) {
                 actionFunction();
             } else {
@@ -372,11 +512,20 @@
 
         function takeNoAction() {
             awardToDeleteId = null;
+            achievementToDeleteId = null;
+            actionToTake = null;
         }
 
         function deleteAward(id) {
             awardToDeleteId = id;
-            dialogOpen('Are you sure you want to remove this award from this user?', deleteAwardAction, takeNoAction)
+            actionToTake = 'award';
+            dialogOpen('Are you sure you want to remove this award from this user?', takeYesAction, takeNoAction)
+        }
+
+        function deleteAchievement(id) {
+            achievementToDeleteId = id;
+            actionToTake = 'achievement';
+            dialogOpen('Are you sure you want to remove this achievement from this user?', takeYesAction, takeNoAction)
         }
 
         function editCreatePosition(event) {
@@ -385,11 +534,12 @@
             let joinEventId = formData.get('id');
             let joinEventPosition = formData.get('position');
             const url = "{{ route('event.results.store', ['event' => $event->id]) }}";
+            
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('event.results.index', ['event' => $event->id]) }}";
-                        reloadUrl(currentUrl, responseData.message);
+                        reloadUrl(currentUrl, responseData.message, 'PositionBtn');
                     } else {
                         toastError(responseData.message);
                     }
@@ -421,7 +571,7 @@
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('event.results.index', ['event' => $event->id]) }}";
-                        reloadUrl(currentUrl, responseData.message);
+                        reloadUrl(currentUrl, responseData.message, 'AwardsBtn');
                     } else {
                         toastError(responseData.message)
                     }
@@ -443,6 +593,41 @@
             );
         }
 
+        async function addAchievement(event) {
+            event.preventDefault();
+            let formData = new FormData(event.target);
+            let teamId = formData.get('teamId');
+            let title = formData.get('title');
+            let description = formData.get('description');
+            const url = "{{ route('event.achievements.store', ['id' => $event->id]) }}";
+
+            fetchData(url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('event.results.index', ['event' => $event->id]) }}";
+                        reloadUrl(currentUrl, responseData.message, 'AchievementsBtn');
+                    } else {
+                        toastError(responseData.message)
+                    }
+                },
+                function(error) {
+                    toastError('Error adding achievement.', error);
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'team_id': Number(teamId),
+                        title,
+                        description,
+                        'event_details_id': {{ $event->id }}
+                    })
+                }
+            );
+        }
+
         async function deleteAwardAction() {
 
             const url = "{{ route('event.awards.destroy', ['id' => $event->id, 'awardId' => ':id']) }}"
@@ -452,13 +637,40 @@
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('event.results.index', ['event' => $event->id]) }}";
-                        reloadUrl(currentUrl, responseData.message);
+                        reloadUrl(currentUrl, responseData.message, 'AwardsBtn');
                     } else {
                         toastError(responseData.message);
                     }
                 },
                 function(error) {
                     toastError('Error deleting award.', error);
+                }, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                }
+            );
+        }
+
+         async function deleteAchievementsAction() {
+            console.log({achievementToDeleteId})
+            const url = "{{ route('event.achievements.destroy', ['id' => $event->id, 'achievementId' => ':id']) }}"
+                .replace(':id', achievementToDeleteId)
+
+            fetchData(url,
+                function(responseData) {
+                    if (responseData.success) {
+                        let currentUrl = "{{ route('event.results.index', ['event' => $event->id]) }}";
+                        reloadUrl(currentUrl, responseData.message, 'AchievementsBtn');
+                    } else {
+                        toastError(responseData.message);
+                    }
+                },
+                function(error) {
+                    toastError('Error deleting achievement.', error);
                 }, {
                     method: 'DELETE',
                     headers: {

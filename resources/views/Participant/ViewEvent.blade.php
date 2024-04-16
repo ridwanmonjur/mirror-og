@@ -318,7 +318,6 @@
     
             try {
                 let user_id = formData.get('user_id');
-                console.log({user})
                 let response = await fetch(form.action, {
                     method: form.method,
                     body: formData
@@ -341,7 +340,7 @@
                 followButton.style.setProperty('pointer-events', 'auto');
             } catch (error) {
                 followButton.style.setProperty('pointer-events', 'auto');
-                toastError('Error unfollowing.', error);
+                toastError('Error occured.', error);
             }
         });
     </script>

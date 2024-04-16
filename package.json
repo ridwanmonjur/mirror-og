@@ -14,7 +14,6 @@
     },
     "dependencies": {
         "@popperjs/core": "^2.11.8",
-        "bootstrap": "^5.0.2",
-        "sweetalert2": "^11.7.32"
+        "bootstrap": "^5.0.2"
     }
 }

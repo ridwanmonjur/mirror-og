@@ -10,6 +10,7 @@ use App\Http\Controllers\Organizer\OrganizerCheckoutController;
 use App\Http\Controllers\Organizer\OrganizerEventResultsController;
 use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantRosterController;
+use App\Http\Controllers\Participant\ParticipantStripeController;
 use App\Models\Participant;
 
 /* THIS IS THE UNSIGNED VIEW */
@@ -95,6 +96,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/team/member/{id}/rejectInvite', [ParticipantTeamController::class, 'rejectInviteMember'])->name('participant.member.rejectInvite');
           
             // Event management
+            Route::post('/event/{id}/team/{teamId}/checkout', [ParticipantStripeController::class, 'checkout'])->name('participant.member.checkout');
             Route::get('/event/{id}/team/{teamId}/manage/roster', [ParticipantTeamController::class, 'rosterMemberManagement'])
                 ->middleware('prevent-back-history')->name('participant.roster.manage');
             Route::get('/event/{id}/team/{teamId}/manage/member', [ParticipantTeamController::class, 'teamMemberManagementRedirected'])
@@ -143,6 +145,8 @@ Route::group(['prefix' => 'organizer'], function () {
                 ->only(['index', 'store']);
             Route::post('/event/{id}/awards', [OrganizerEventResultsController::class, 'storeAward'])->name('event.awards.store');
             Route::delete('/event/{id}/awards/{awardId}', [OrganizerEventResultsController::class, 'destroyAward'])->name('event.awards.destroy');
+            Route::post('/event/{id}/achievements', [OrganizerEventResultsController::class, 'storeAchievements'])->name('event.achievements.store');
+            Route::delete('/event/{id}/achievements/{achievementId}', [OrganizerEventResultsController::class, 'destroyAchievements'])->name('event.achievements.destroy');
 
             // Event manage
             Route::resource('/event', OrganizerEventController::class, [
