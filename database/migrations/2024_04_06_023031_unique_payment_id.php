@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payment_transactions', function (Blueprint $table) {
-            $table->dropForeign('discount_id');
-            $table->dropColumn(['discount_id', 'discount_amount']);
-            $table->dropColumn('updated_at');
+            // $table->dropForeign('discount_id');
+            // $table->dropColumn(['discount_id', 'discount_amount']);
+            // $table->dropColumn('updated_at');
         });
     }
     
