@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('participant_payments', function (Blueprint $table) {
-            $table->dropForeign('payment_id');
+            // $table->dropForeign('payment_id');
             $table->dropColumn(['payment_request_id', 'payment_status']);
             $table->double('payment_amount')->nullable();
         });
