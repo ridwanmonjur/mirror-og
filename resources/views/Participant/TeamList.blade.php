@@ -13,12 +13,23 @@
 <body>
     @include('CommonLayout.NavbarGoToSearchPage')
     <br><br> 
-    <div class="d-flex justify-content-center"> 
-        <button onclick="goToScreen();" type="button" class="btn oceans-gaming-default-button position-relative">
-            Team Requests
-        </button>
-    </div>
     <main>
+        <div class="search-bar">
+            <svg onclick= "handleSearch();" xmlns="http://www.w3.org/2000/svg" width="24"
+                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-search search-bar2-adjust">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" name="search" id="searchInput"
+                placeholder="Search using title, description, or keywords">
+            <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button d-none"
+                style="background: #8CCD39 !important">
+                Reset
+            </button>
+        </div>
+         @include('Participant.TeamListPartial.FilterSort')
         <div class="grid-3-columns justify-content-center"> 
             @if ($count > 0)
                 @foreach ($teamList as $team)
@@ -39,6 +50,7 @@
                             <div class="text-center">
                                 <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
                                     <span> Region: South East Asia (SEA) </span>  <br>
+                                    <br>
                                     <span> Members:
                                         @if (isset($membersCount[$team->id]))
                                             {{ $membersCount[$team->id] }}
@@ -48,6 +60,8 @@
                                     @if ($team->creator_id == $user->id)
                                     <small><i>Created by you</i></small>
                                     @endif
+                                    <br>
+                                    <span> Status: {{$membersCount[$team->id] > 5 ? 'Public (Apply)' : 'Private' }} </p>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +90,7 @@
     </main>
 
     @include('CommonLayout.BootstrapV5Js')
-
+    @include('Participant.TeamListPartial.FilterScripts')
     <script>
         function goToScreen() {
             window.location.href = "{{route('participant.request.view')}}";

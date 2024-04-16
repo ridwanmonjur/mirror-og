@@ -21,40 +21,6 @@ main {
     background: none;
 }
 
-
-.navbar {
-    min-height: 5vh;
-    display: flex;
-    justify-content: space-between;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-}
-
-.navbar img,
-.navbar svg,
-nav img,
-nav svg {
-    cursor: pointer;
-}
-
-.navbar img:hover,
-nav img:hover,
-.navbar svg:hover,
-nav svg:hover {
-    transform: scale(1.1);
-}
-
-.navbar img:active,
-nav img:active,
-.navbar svg:active,
-nav svg:active {
-    transform: scale(1.1);
-}
-
-.navbar .nav-buttons {
-    display: none;
-}
-
 .menu-toggle {
     display: block;
 }
@@ -160,7 +126,7 @@ input[type="submit"],
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 20px 5px;
+    margin: 5px;
 }
 
 .team-logo-container {
@@ -239,7 +205,6 @@ input[type="submit"],
     border: 2px solid #676767;
     padding: 20px;
     max-width: 80vw;
-    height: 400px;
     background-color: #FFFBFB;
     width: min(90vw, 300px);
     margin-top: 20px;
