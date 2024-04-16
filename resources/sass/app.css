@@ -490,7 +490,7 @@ a:hover {
 
     .text-truncate-2-lines {
         -webkit-line-clamp: 2;
-        width: 180px !important;
+        width: 160px !important;
         height: 50px;
         overflow: hidden;
         display: block;

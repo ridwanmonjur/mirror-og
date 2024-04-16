@@ -68,7 +68,7 @@
                         <span>{{ $joinEvent->user->name }}</span>
                         <br>
                         <small 
-                            data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id]: 0 }} "
+                            data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? followCounts[$joinEvent->eventDetails->user_id]: 0 }} "
                             class="{{'followCounts' . $joinEvent->eventDetails?->user_id}}"
                         >
                             @if (isset($followCounts[$joinEvent->eventDetails->user_id]))
@@ -93,21 +93,21 @@
                     @guest
                         <button type="button"
                             onclick="reddirectToLoginWithIntened('{{route('public.team.view', ['id'=> $selectTeam->id])}}')"
-                            id="followButton"
+                            class="{{'followButton' . $joinEvent->eventDetails?->user_id}}"
                             style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                             Follow
                         </button>
                     @endguest
                     @auth
                         @if ($user->role == 'PARTICIPANT')
-                            <button type="submit" id="followButton"
+                            <button type="submit" class="{{'followButton' . $joinEvent->eventDetails?->user_id}}"
                                 style="background-color: {{ $joinEvent->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $joinEvent->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                                 {{ $joinEvent->isFollowing ? 'Following' : 'Follow' }}
                             </button>
                         @else
                             <button type="button"
                                 onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
-                                id="followButton"
+                                class="{{'followButton' . $joinEvent->eventDetails?->user_id}}"
                                 style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                                 Follow
                             </button>
