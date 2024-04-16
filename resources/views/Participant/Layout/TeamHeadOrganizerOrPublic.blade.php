@@ -4,7 +4,7 @@
             <label for="image-upload" class="upload-label">
                 <div class="circle-container">
                     <div id="uploaded-image" class="uploaded-image"
-                        style="background-image: url({{ '/storage' . '/'. $team->teamBanner }} );"
+                        style="background-image: url({{ '/storage' . '/'. $selectTeam->teamBanner }} );"
                     ></div>
                 </div>
             </label>
