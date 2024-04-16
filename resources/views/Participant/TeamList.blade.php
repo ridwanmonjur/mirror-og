@@ -5,10 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Teams</title>
+    <link rel="stylesheet" href="{{ asset('/assets/css/organizer/manageEvent.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamList.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
-    
 </head>
 
 <body>
@@ -20,51 +19,58 @@
         </button>
     </div>
     <main>
-        @if ($count > 0)
-            @foreach ($teamList as $team)
-                <a style="cursor:pointer;" href="/participant/team/{{ $team['id'] }}/manage">
-                    <div class="wrapper">
-                        <div class="team-section">
-                            <div class="upload-container">
-                                <div class="circle-container" style="cursor: pointer;">
-                                    <div id="uploaded-image" class="uploaded-image"
-                                        style="background-image: url({{ $team->teamBanner ? '/storage' . '/'. $team->teamBanner: '/assets/images/animations/empty-exclamation.gif' }} );"
-                                    ></div>
-                                    </label>
+        <div class="grid-3-columns justify-content-center"> 
+            @if ($count > 0)
+                @foreach ($teamList as $team)
+                    <a style="cursor:pointer;" class="mx-auto" href="/participant/team/{{ $team['id'] }}/manage">
+                        <div class="wrapper">
+                            <div class="team-section">
+                                <div class="upload-container text-center">
+                                    <div class="circle-container" style="cursor: pointer;">
+                                        <div id="uploaded-image" class="uploaded-image"
+                                            style="background-image: url({{ $team->teamBanner ? '/storage' . '/'. $team->teamBanner: '/assets/images/animations/empty-exclamation.gif' }} );"
+                                        ></div>
+                                        </label>
+                                    </div>
+                                    <div>
+                                   
                                 </div>
+                            </div>
+                            <div class="text-center">
                                 <h3 class="team-name" id="team-name">{{ $team->teamName }}</h3>
-                                <br>
-                                <p>Total Members:
-                                    @if (isset($membersCount[$team->id]))
-                                        {{ $membersCount[$team->id] }}
-                                    @else {{ 0 }}
+                                    <span> Region: South East Asia (SEA) </span>  <br>
+                                    <span> Members:
+                                        @if (isset($membersCount[$team->id]))
+                                            {{ $membersCount[$team->id] }}
+                                        @else {{ 0 }}
+                                        @endif
+                                    </span> <br>
+                                    @if ($team->creator_id == $user->id)
+                                    <small><i>Created by you</i></small>
                                     @endif
-                                </p>
-                                @if ($team->creator_id == $user->id)
-                                <small><i>Created by you</i></small>
-                                @endif
+                                </div>
                             </div>
                         </div>
+                    </a>
+                @endforeach
+            @else
+                <div class="wrapper mx-auto">
+                    <div class="team-section mx-auto">
+                        <div class="upload-container">
+                            <label for="image-upload" class="upload-label">
+                                <img                       
+                                    src="{{asset('assets/images/animation/empty-exclamation.gif') }}"
+                                    width="150"
+                                    height="150"
+                                >
+                            </label>
+                        </div>
+                        <h3 class="team-name text-center" id="team-name">No teams yet</h3>
+                        <br>
                     </div>
-                </a>
-            @endforeach
-        @else
-            <div class="wrapper">
-                <div class="team-section">
-                    <div class="upload-container">
-                        <label for="image-upload" class="upload-label">
-                            <img                       
-                                src="{{asset('assets/images/animation/empty-exclamation.gif') }}"
-                                width="150"
-                                height="150"
-                            >
-                        </label>
-                    </div>
-                    <h3 class="team-name" id="team-name">No teams yet</h3>
-                    <br>
                 </div>
-            </div>
-        @endif
+            @endif
+        </div>
         <br>
         <br>
     </main>

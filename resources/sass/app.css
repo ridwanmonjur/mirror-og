@@ -236,6 +236,13 @@ button#submit,
     justify-content: space-between;
 }
 
+.grid-2-columns,
+.grid-3-columns {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 1fr;
+}
+
 .grid-2 {
     gap: 10px;
 }
@@ -488,6 +495,13 @@ a:hover {
         overflow: hidden;
         display: block;
         text-overflow: ellipsis;
+    }
+
+    .grid-3-columns {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    .grid-2-columns {
+        grid-template-columns: 1fr 1fr;
     }
 }
 

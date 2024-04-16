@@ -90,7 +90,7 @@
                 </div>
             @endforeach
         @else
-            <div class="wrapper">
+            <div class="wrapper mx-auto">
                 <div class="team-section">
                     <br>
                     <img                       
@@ -98,7 +98,7 @@
                         width="150"
                         height="150"
                     >
-                    <h3 class="team-name" id="team-name">Not invited to any teams</h3>
+                    <h3 class="team-name text-center" id="team-name">Not invited to any teams</h3>
                     <br>
                 </div>
             </div>
