@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Event Results</title>
-    <link rel="stylesheet" href="{{ asset('/assets/css/organizer/viewEvent.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/eventResults.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -22,9 +22,9 @@
 <body>
     @include('CommonLayout.NavbarGoToSearchPage')
 
-    <main>
+    <main class="ps-5">
         <br>
-        <div>
+        <div class="ms-5">
             <u>
                 <h3>
                     Manage your event results
@@ -35,14 +35,25 @@
             <div>
                 <div>
                     <div>
-                        <div>
-                            <h5 class="card-text-2-lines">
+                        <div class="text-start">
+                            <h5 class="card-text-2-lines text-center">
                                 {{ $event->eventName ?? 'No name yet' }}
                             </h5>
-                            <p> {{ $event->eventDescription }} </p>
+                            <p class="text-center"> {{ $event->eventDescription }} </p>
                         </div>
-                        <h5> <u> Position </u> </h5>
-                        <table class="member-table text-start" style="margin-left: 5px;">
+                        <div class="tabs">
+                            <button id="PositionBtn" class="tab-button outer-tab tab-button-active"
+                                onclick="showTab(event, 'Position', 'outer-tab')">Position
+                            </button>
+                            <button id="AwardsBtn" class="tab-button outer-tab" onclick="showTab(event, 'Awards', 'outer-tab')">
+                                Awards
+                            </button>
+                            <button id="AchievementsBtn" class="tab-button outer-tab" onclick="showTab(event, 'Achievements', 'outer-tab')">
+                                Achievements
+                            </button>
+                        </div>
+                        <div class="tab-content outer-tab mx-auto" id="Position">
+                        <table class="mx-auto member-table text-start" style="margin-left: 5px;">
                             <thead class="accepted-member-table text-start">
                                 <th></th>
                                 <th class="text-start">
@@ -135,12 +146,10 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <br><br>
-                        <h5>
-                            <u> Awards </u>
-                        </h5>
-                        <div class="mx-auto member-table ms-5">
-
+                        </div>
+                        <div class="tab-content outer-tab d-none mx-auto" id="Awards">
+                        
+                        <div class="mx-auto member-table d-flex justify-content-center">
                             <button data-bs-toggle="modal" data-bs-target="{{ '#award' . '-modal' }}"
                                 class="oceans-gaming-default-button">
                                 Add award
@@ -155,7 +164,7 @@
                                 </span>
                             </button>
                         </div>
-                        <table class="member-table text-start" style="margin-left: -5px;">
+                        <table class="member-table text-start mx-auto" style="margin-left: -5px;">
                             <thead class="accepted-member-table text-start">
                                 <th></th>
                                 <th class="text-start">
@@ -242,17 +251,15 @@
                                                     </div>
                                                     <br>
                                                     <label class="form-check-label fw-bold">
-                                                            Choose award
-                                                        </label>
+                                                        Choose award
+                                                    </label>
                                                     <div class="d-flex flex-row justify-content-start ps-2 pe-5 mt-0" >
                                                         @foreach($awardList as $award)
-                                                            <div class="form-check mx-auto text-center px-2" >
+                                                            <div class="form-check mx-auto justify-content-start px-2" >
                                                                 <input class="form-check-input text-center mx-auto" type="radio" name="awardId" value="{{$award->id}}">
+                                                                <span> {{$award->title}} </span>
                                                                 <label class="form-check-label" for="awardId">
-                                                                    <span> {{$award->title}} </span>
-                                                                    <br>
                                                                     <img src="{{ '/storage' . '/' . $award->image}}" width="150" style="object-fit: cover;"> </span>
-                                                                    <br>
                                                                 </label>
                                                             </div>
                                                         @endforeach
@@ -271,7 +278,7 @@
                                     </div>
                             </tbody>
                         </table>
-
+                        </div>
                     </div>
                 </div>
             </div>
@@ -287,15 +294,42 @@
     <script>
         let awardToDeleteId = null;
 
+        
+        function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
+            const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
+            tabContents.forEach(content => {
+                content.classList.add("d-none");
+            });
+
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.classList.remove('d-none');
+                selectedTab.classList.add('tab-button-active');
+            }
+
+            const tabButtons = document.querySelectorAll(`.tab-button-active.${extraClassNameToFilter}`);
+            tabButtons.forEach(button => {
+                button.classList.remove("tab-button-active");
+            });
+
+            let target = event.currentTarget;
+            target.classList.add('tab-button-active');
+        }
+
         function loadToast() {
             let currentUrl = window.location.href;
             let urlParams = new URLSearchParams(window.location.search);
             let successValue = urlParams.get('success');
             let message = urlParams.get('message');
+            let tabValue = urlParams.get('tab');
+
+            if (tabValue) {
+                document.getElementById(tabValue).click();
+            }
             if (successValue == 'true') {
                 Toast.fire({
                     icon: 'success',
-                    text: message 
+                    text: decodeURIComponent(message) 
                 })
             }
         }
@@ -307,7 +341,7 @@
                 currentUrl = currentUrl.split('?')[0];
             }
 
-            currentUrl += `?success=true&message=${message}`;
+            currentUrl += `?success=true&message=${encodeURIComponent(message)}`;
             window.location.replace(currentUrl);
         }     
 
