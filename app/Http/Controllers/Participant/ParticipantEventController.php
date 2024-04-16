@@ -152,13 +152,12 @@ class ParticipantEventController extends Controller
     {
         $user_id = $request->attributes->get('user')->id;
         $selectTeam = Team::where('id', $id)->where(function ($q) use ($user_id) {
-            $q->where('creator_id', $user_id)
-                ->orWhere(function ($query) use ($user_id) {
-                    $query->whereHas('members', function ($query) use ($user_id) {
-                        $query->where('user_id', $user_id)->where('status', 'accepted');
-                    });
+            $q->where(function ($query) use ($user_id) {
+                $query->whereHas('members', function ($query) use ($user_id) {
+                    $query->where('user_id', $user_id)->where('status', 'accepted');
                 });
-            })->with(['members', 'awards', 'invitationList'])->first();
+            });
+        })->with(['members', 'awards', 'invitationList'])->first();
 
         if ($selectTeam) {
             $invitationListIds = $selectTeam->invitationList->pluck('event_id');
