@@ -128,7 +128,7 @@ class Team extends Model
     public function getAchievementListByTeam() {
         return DB::table('join_events')
             ->where('join_events.team_id', $this->id)
-            ->join('achievements', 'join_events.id', '=', 'awards_results.join_events_id')
+            ->join('achievements', 'join_events.id', '=', 'achievements.join_event_id')
             ->select(
                 'achievements.id as achievements_id',
                 'achievements.title',
