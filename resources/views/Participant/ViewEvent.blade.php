@@ -93,7 +93,7 @@
                                     <div class="card-organizer">
                                         <p style="display: inline;"><u>
                                                 {{ $event?->user?->organizer?->companyName ?? 'Add' }} </u> </p>
-                                        <p class="small-text"> <i> {{ $followersCount }} {{ $followersCount == 1  ? 'follower' : 'followers' }} </i> </p>
+                                        <p class="small-text" id="followCount" data-count="{{ $followersCount }}"> <i> {{ $followersCount }} {{ $followersCount == 1  ? 'follower' : 'followers' }} </i> </p>
                                     </div>
                                 </div>
 
@@ -310,8 +310,9 @@
 
         document.getElementById('followForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-
+            let followCount = document.getElementById('followCount');
             let followButton = document.getElementById('followButton');
+            let count = Number(followCount.dataset.count);
             let form = this;
             let formData = new FormData(form);
             followButton.style.setProperty('pointer-events', 'none');
@@ -328,16 +329,26 @@
                 followButton.style.setProperty('pointer-events', 'none')
 
                 if (data.isFollowing) {
+                    count++;
                     followButton.innerText = 'Following';
                     followButton.style.backgroundColor = '#8CCD39';
                     followButton.style.color = 'black';
                 } else {
+                    count--;
                     followButton.innerText = 'Follow';
                     followButton.style.backgroundColor = '#43A4D7';
                     followButton.style.color = 'white';
                 }
                 
                 followButton.style.setProperty('pointer-events', 'auto');
+                if (count == 1) {
+                    followCount.innerHTML = '<i> 1 follower </i>';
+                } else if (count == 0) {
+                    followCount.innerHTML = `<i> No followers </i>`;
+                } else {
+                    followCount.innerHTML = `<i> ${count} followers </i>`;
+                }
+                followCount.dataset.count = count;
             } catch (error) {
                 followButton.style.setProperty('pointer-events', 'auto');
                 toastError('Error occured.', error);
