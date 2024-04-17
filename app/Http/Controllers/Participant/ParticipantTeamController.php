@@ -63,6 +63,7 @@ class ParticipantTeamController extends Controller
             ->with(['members'])->first();        
         if ($selectTeam) {
             $awardList = $selectTeam->getAwardListByTeam();
+            $achievementList = $selectTeam->getAchievementListByTeam();
             $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
             $joinEvents = JoinEvent::getJoinEventsForTeam($selectTeam->id)
                 ->with(['eventDetails', 'results', 'roster' => function ($q) {
@@ -89,7 +90,7 @@ class ParticipantTeamController extends Controller
             return view('Participant.TeamManagement', 
                 compact('selectTeam', 'joinEvents', 'captain', 'teamMembers',
                     'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEvents',
-                    'wins', 'streak', 'awardList'
+                    'wins', 'streak', 'awardList', 'achievementList'
                 )
             );
         } else {
