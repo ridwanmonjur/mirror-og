@@ -25,8 +25,6 @@
                         @foreach ($joinEvents as $key => $joinEvent)
                             @include('Participant.Layout.RosterView', ['isRegistrationView' => false])
                             @include('Participant.Layout.PieChart', ['isInvited' => false])
-                              @include('Participant.Layout.RosterView', ['isRegistrationView' => false])
-                            @include('Participant.Layout.PieChart', ['isInvited' => false])
                         @endforeach
                     </div>
                 @endif
