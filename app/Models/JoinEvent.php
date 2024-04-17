@@ -138,6 +138,7 @@ class JoinEvent extends Model
         // dd($joinEvents);
 
         foreach ($joinEvents as $joinEvent) {
+            $joinEvent->status = $joinEvent->eventDetails->statusResolved();
             $joinEvent->tier = $joinEvent->eventDetails->tier;
             $joinEvent->game = $joinEvent->eventDetails->game;
         }
