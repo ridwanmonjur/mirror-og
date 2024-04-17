@@ -328,22 +328,19 @@ input[type="submit"],
 }
 
 .showcase-box {
-    display: flex;
     background-color: #ffffff;
     border: solid #1e3744;
     border-radius: 1px;
     padding: 15px;
 }
 
-.showcase-column {
-    flex: 1;
-}
+
 
 .trophy {
-    width: 50px;
+    width: 30px;
     /* Adjust the size as needed */
-    height: auto;
-    margin-top: 10px;
+    height: 30px;
+    object-fit: cover;
 }
 
 .achievement-list {
@@ -700,10 +697,25 @@ input[type="submit"],
     visibility: hidden;
 }
 
-.member-table:hover .invisible-until-hover, .showcase-column-2:hover .invisible-until-hover, .event:hover .invisible-until-hover {
+.member-table:hover .invisible-until-hover, .invisible-until-hover-parent:hover .invisible-until-hover, .event:hover .invisible-until-hover {
     visibility: visible;
 }
 
+.d-none-until-hover {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.d-none-until-hover-parent:hover{
+    cursor: pointer;
+}
+
+.d-none-until-hover-parent:hover .d-none-until-hover {
+    width: auto;
+    height: auto;
+    overflow: auto;
+}
 
 @media screen and (min-width: 600px) {
     .swiper-container {

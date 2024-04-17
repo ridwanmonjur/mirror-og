@@ -60,15 +60,21 @@
                 <div class="showcase">
                     <div><b>Showcase</b></div>
                     <br>
-                    <div class="showcase-box showcase-column-2">
-                        <div class="showcase-column ">
+                    <div @class(["showcase-box d-none-until-hover-parent" , 
+                            "d-flex justify-content-between flex-wrap" => !isset($awardList[2])
+                    ])>
+                        <div>
                             <p>Events Joined: {{ $totalEvents }}</p>
                             <p>Wins: {{ $wins }}</p>
                             <p>Win Streak: {{ $streak }}</p>
                         </div>
-                        <div class="showcase-column">
-                            <div class="invisible-until-hover">
-                                <img src="{{ asset('/assets/images/trophy.jpg') }}" alt="Trophy" class="trophy">
+                        <div class="d-none-until-hover">
+                            <div class="d-flex justify-content-between w-100 h-100">
+                                @foreach ($awardList as $award)
+                                    <div>
+                                        <img src="{{ '/' . 'storage/' . $award->awards_image }} " alt="Trophy" class="trophy me-2">
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>

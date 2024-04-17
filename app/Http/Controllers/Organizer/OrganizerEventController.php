@@ -79,9 +79,6 @@ class OrganizerEventController extends Controller
                 $event->acceptedMembersCount = 0;
             }
         }
-
-        // dd($eventList, $results, $joinEventDetailsMap);
-        // dd($acceptedMembersCount);
         
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 
             'mappingEventState', 'eventCategoryList', 'eventTierList', 'eventTypeList'
