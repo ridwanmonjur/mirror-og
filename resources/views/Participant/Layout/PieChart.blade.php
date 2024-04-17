@@ -16,7 +16,7 @@
     </div>
      <div class="popover__content">
         <p class="popover__message">Joseph Francis "Joey" Tribbiani, Jr.</p>
-        <img alt="Joseph Francis Joey Tribbiani, Jr." src="https://media.giphy.com/media/11SIBu3s72Co8w/giphy.gif">
+        <img alt="Joseph Francis Joey Tribbiani, Jr." src="https://media.giphy.com/media/11SIBu3s72Co8w/giphy.gif" width="20" heoigh="20">
     </div>
     <div class="mx-auto text-center">
         @if ($pedning != 0)
