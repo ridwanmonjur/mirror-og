@@ -1,5 +1,6 @@
 @php
     $random_int = rand(0, 999);
+      $joinEvent->status = $joinEvent->eventDetails->statusResolved();
 @endphp
 <div class="position-relative mb-5">
     <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
