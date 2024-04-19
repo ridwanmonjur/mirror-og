@@ -2,11 +2,10 @@
     const dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => Swal.fire({
         title,
         showDenyButton: true,
-        showCancelButton: true,
+        showCancelButton: false,
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
-        cancelButtonColor: "#8CCD39",
-        dangerButtonColor: "#DD6B55",
+        dangerButtonColor: "#8CCD39",
         confirmButtonColor: "#43A4D7",
         customClass: {
             actions: 'my-actions',

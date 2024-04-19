@@ -17,7 +17,7 @@
     </div>
 @endif
 
-<div>
+<main >
     <div class="tabs">
         <button id="InvitatedTeamBtn" class="tab-button inner-tab tab-button-active"
             onclick="showTab(event, 'InvitatedTeam', 'inner-tab')">
@@ -56,11 +56,10 @@
                                 @else {{ 0 }}
                                 @endif
                             </p>
-                            <div class="d-flex justify-content-around">
-                                <div class="px-5">
-                                    <button class="btn btn-link gear-icon-btn"
+                            <div class="d-flex justify-content-between">
+                                <div class="">
+                                    <button class="btn btn-link"
                                         onclick="redirectToTeamPage({{ $teamAndMember->team_id }});"
-                                        style="cursor:pointer; padding: 0; color: black; text-decoration: none;"
                                         >
                                         <svg 
                                             xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -72,14 +71,14 @@
                                         View
                                     </button>
                                 </div>
-                                <div class="px-5">
-                                    <button id="add-{{ '$teamAndMember->id' }}" class="gear-icon-btn"
+                                <div class="">
+                                    <button id="add-{{ '$teamAndMember->id' }}" class="btn btn-link"
                                         onclick="approveTeam({{ $teamAndMember->id }})">
                                         ✔ Approve
                                     </button>
                                 </div>
-                                <div class="px-5">
-                                    <button id="remove-{{ $teamAndMember->id }}" class="gear-icon-btn"
+                                <div class="">
+                                    <button id="remove-{{ $teamAndMember->id }}" class="btn btn-link"
                                         onclick="disapproveTeam({{ $teamAndMember->id }})">
                                         ✘ Reject
                                     </button>
@@ -191,4 +190,4 @@
             @endif
         </div>
     </div>
-</div>
+</main>

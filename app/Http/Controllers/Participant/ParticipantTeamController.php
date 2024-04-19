@@ -138,7 +138,7 @@ class ParticipantTeamController extends Controller
         $selectTeam = Team::where('id', $id)
             ->where('creator_id', $user_id)->with('members')->first();
         if ($selectTeam) {
-            return view('Participant.Notify', compact('selectTeam', 'id'));
+            return $this->handleTeamManagement($selectTeam, $id, $request, $page, false);
         } else {
             return $this->show404Participant('This event is missing or you need to be a member to view events!');
         }

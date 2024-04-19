@@ -41,7 +41,7 @@
 
                 <p>You can check the registration status on your <a href=""> <u> team's </u> </a> page.</p>
 
-                <form action="{{ route('participant.notify.action', ['id' => $id, 'teamId' => $selectTeam->Id]) }}" method="POST">
+                <form action="{{ route('participant.notify.action', ['id' => $id, 'teamId' => $selectTeam->id]) }}" method="POST">
                 <div class="text-center">
                     <input type="submit" class="choose-payment-method" value="Done">
                 </div>
