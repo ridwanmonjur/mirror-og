@@ -274,19 +274,19 @@ class ParticipantTeamController extends Controller
 
     public function captainMember(Request $request, $id, $memberId)
     {
-        $existingCaptain = TeamCaptain::where('teams_id', $id)
-            ->first();
-        
-        if ($existingCaptain) {
-            $existingCaptain->delete();
-        } 
-        
-        TeamCaptain::insert([
-            'teams_id' => $id,
-            'team_member_id' => $memberId,
-        ]);
-        
-        return response()->json(['success' => 'true'], 200);
+        DB::transaction(function() use ($id, $memberId) {
+            $existingCaptain = TeamCaptain::where('teams_id', $id)->first();
+            if ($existingCaptain) {
+                $existingCaptain->delete();
+            } 
+            
+            TeamCaptain::insert([
+                'teams_id' => $id,
+                'team_member_id' => $memberId,
+            ]);
+
+            return response()->json(['success' => 'true'], 200);
+        });
     }
 
     public function deleteCaptain(Request $request, $id, $memberId)
@@ -379,8 +379,9 @@ class ParticipantTeamController extends Controller
             $request->validate([
                 'file' => 'required|file'
             ]);
+
             $team = Team::findOrFail($id);
-            Team::destroyTeanBanner($team->teamBanner);
+            $oldBanner = $team->teamBanner;
             $file = $request->file('file');
             $fileNameInitial = 'teamBanner-' . time() . '.' . $file->getClientOriginalExtension();
             $fileName = "images/team/$fileNameInitial";
@@ -388,6 +389,8 @@ class ParticipantTeamController extends Controller
             $team->teamBanner = $fileName;
             $fileName = asset('/storage'. '/'. $fileName);
             $team->save();
+            Team::destroyTeanBanner($oldBanner);
+
             return response()->json(['success' => true, 'message' => 'Succeeded', 'data' => compact('fileName')], 201);
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
