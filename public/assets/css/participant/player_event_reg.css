@@ -8,12 +8,13 @@
 
 main {
     width: 100%;
-    height: auto;
+    min-height: 100vh;
+    height: fit-content;
     display: flex;
-    padding: 20px 100px;
+    padding: 0 20px 0;
     align-items: center;
     justify-content: center;
-    background-image: url("images/Single_Screen.png");
+    background-image: url("/assets/images/event-creation-bg.png");
 }
 
 .wrapper {
@@ -21,28 +22,15 @@ main {
     border: 2px solid #676767;
     padding: 20px;
     margin-left: 30px;
-    margin-top: 15vh;
     margin-right: 30px;
-    width: 700px;
-    height: 500px;
-    background-color: #FFFBFB;
-}
-
-.wrapper_notify {
-    border-radius: 25px;
-    border: 2px solid #010101;
-    padding: 20px;
-    margin-left: 30px;
-    margin-top: 15vh;
-    margin-right: 30px;
-    width: 700px;
-    height: 350px;
+    width: min(95vw, 700px);
     background-color: #FFFBFB;
 }
 
 .first {
     width: 40%;
 }
+
 
 .first_notify {
     float: center;

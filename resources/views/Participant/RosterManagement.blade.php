@@ -18,13 +18,17 @@
     <main class="main2">
         <div class="mb-4 text-success mx-auto text-center">
             You have joined this event successfully!
-            
-            <form class="d-inline" method="GET"
-                action="{{ route('participant.event.view', ['id' => $id]) }}">
-                <button class="oceans-gaming-default-button oceans-gaming-default-button-link ms-2 me-2" type="submit" style="display: inline !important;">
+            <a
+                href="{{ route('participant.event.view', ['id' => $id]) }}">
+                <button class="oceans-gaming-default-button oceans-gaming-default-button-link ms-2 me-1" type="submit" style="display: inline !important;">
                     <u> View Event </u>
                 </button>
-            </form>
+            </a>
+            <a href={{ route('participant.home.view')}}>
+                <button class="btn btn-link ms-0 me-2 d-inline" type="submit" >
+                    Home Screen
+                </button>
+            </a>
         </div>
         <div>
             <p class="text-center mx-auto">Team {{ $selectTeam->teamName }} has

@@ -1,20 +1,33 @@
 @php
     use Carbon\Carbon;
+    $isRedirect = (isset($redirect) && $redirect);
 @endphp
-@if (isset($redirect) && $redirect)
+
     <div class="mb-2 text-success mx-auto text-center">
-        You have joined this event successfully!
-        @if ($selectTeam->creator_id == $user->id)
-            <form class="d-inline" method="GET"
-                action="{{ route('participant.roster.manage', ['id' => $id, 'teamId' => $selectTeam->id]) }}">
+        @if ($isRedirect)
+            <span>
+                You have joined this event successfully!
+            </span>
+            <a
+                href="{{ route('participant.roster.manage', ['id' => $id, 'teamId' => $selectTeam->id]) }}">
                 <button class="oceans-gaming-default-button oceans-gaming-default-button-link ms-2 me-2" type="submit"
                     style="display: inline !important;">
-                    <u> Manage Roster </u>
+                    <u> Manage Roster</u>
                 </button>
-            </form>
+            </a>
         @endif
+        <a
+            href="{{ route('participant.event.view', ['id' => $id]) }}">
+            <button class="oceans-gaming-default-button oceans-gaming-gray-button ms-2 me-2" type="submit" style="display: inline !important;">
+                View Event
+            </button>
+        </a>
+        <a href={{ route('participant.home.view')}}>
+            <button class="btn btn-link ms-0 me-2" type="submit" style="display: inline !important;">
+                Home Screen
+            </button>
+        </a>
     </div>
-@endif
 
 <div class="tabs">
     <button id="CurrentMembersBtn" class="tab-button inner-tab tab-button-active"

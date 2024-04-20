@@ -65,24 +65,18 @@ class ParticipantTeamController extends Controller
             $awardList = $selectTeam->getAwardListByTeam();
             $achievementList = $selectTeam->getAchievementListByTeam();
             $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
-            $joinEvents = JoinEvent::getJoinEventsForTeam($selectTeam->id)
-                ->with(['eventDetails', 'results', 'roster' => function ($q) {
-                    $q->with('user');
-                }, 'eventDetails.tier', 'eventDetails.game', 'eventDetails.user'
-                ])
-                ->get();
-            
+            $joinEvents = JoinEvent::getJoinEventsForTeamWithEventsRosterResults($selectTeam->id);
             $totalEvents = JoinEvent::getJoinEventsCountForTeam($selectTeam->id);
             ['wins' => $wins, 'streak' => $streak] = 
                 JoinEvent::getJoinEventsWinCountForTeam($selectTeam->id);
-            $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
+            
+                $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
             $followCounts = Follow::getFollowCounts($userIds);
             $isFollowing = Follow::getIsFollowing($user_id, $userIds);
-            $joinEventsHistory = [];
-            $joinEventsActive = [];
-            $values = []; 
-            ['joinEvents' => $joinEvents, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents] 
+            $joinEventsHistory = $joinEventsActive = $values = [];
+            ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory] 
                 = JoinEvent::processEvents($joinEvents, $isFollowing);
+            // dd($joinEvents, $activeEvents, $historyEvents);
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
             $teamMembers = $selectTeam->members->where('status', 'accepted');
@@ -98,7 +92,7 @@ class ParticipantTeamController extends Controller
             return view('Participant.TeamManagement', 
                 compact('selectTeam', 'joinEvents', 'captain', 'teamMembers', 'joinEventsHistory', 'joinEventsActive', 'followCounts')
             );
-            // return $this->show404Participant('This event is missing or you need to be a member to view events!');
+            // return $this->showErrorParticipant('This event is missing or you need to be a member to view events!');
         }
     }
 
@@ -111,7 +105,7 @@ class ParticipantTeamController extends Controller
         if ($selectTeam) {
             return $this->handleTeamManagement($selectTeam, $id, $request, $page, true);
         } else {
-            return redirect()->route('participant.event.view', ['id' => $id]);
+            return redirect()->route('participant.team.manage', ['id' => $id]);
         }
     }
 
@@ -140,7 +134,7 @@ class ParticipantTeamController extends Controller
         if ($selectTeam) {
             return $this->handleTeamManagement($selectTeam, $id, $request, $page, false);
         } else {
-            return $this->show404Participant('This event is missing or you need to be a member to view events!');
+            return $this->showErrorParticipant('This event is missing or you need to be a member to view events!');
         }
     }
     
@@ -178,7 +172,7 @@ class ParticipantTeamController extends Controller
                 compact('selectTeam', 'joinEvent', 'teamMembers', 'creator_id', 'rosterMembersKeyedByMemberId', 'rosterMembers', 'id', 'captain')
             );
         } else {
-            return $this->show404Participant('This event is missing or you need to be a member to view events!');
+            return $this->showErrorParticipant('This event is missing or you need to be a member to view events!');
         }
     }
 

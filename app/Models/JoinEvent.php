@@ -67,6 +67,16 @@ class JoinEvent extends Model
             ->with('user');
     }
 
+    public static function getJoinEventsForTeamWithEventsRosterResults($team_id)
+    {
+        return self::where('team_id', $team_id)
+            ->with(['eventDetails',  'user', 'results', 'roster' => function ($q) {
+                $q->with('user');
+            }, 'eventDetails.tier', 'eventDetails.game', 'eventDetails.user'
+            ])
+            ->get();
+    }
+
     public static function getJoinEventsCountForTeam($team_id)
     {
         return self::where('team_id', $team_id)
@@ -167,7 +177,20 @@ class JoinEvent extends Model
                 $historyEvents[] = $joinEvent;
             }
         }
+
+        // dd($events, $activeEvents, $historyEvents);
     
         return ['joinEvents'=> $events, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents];
+    }
+
+    public static function hasJoinedByOtherTeamsForSameEvent($eventId, $userId) {
+        return self::where('event_details_id', $eventId)
+            ->where(function ($query) use ($userId) {
+                $query->whereHas('members', function ($query) use ($userId) {
+                    $query->where('user_id', $userId)->whereIn('status', ['accepted', 'pending']);
+                });
+            })
+            ->exists();
+      
     }
 }

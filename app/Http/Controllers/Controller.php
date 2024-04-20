@@ -17,7 +17,7 @@ class Controller extends BaseController
         ]);
     }
 
-    public function show404Participant($error) {
+    public function showErrorParticipant($error) {
         return view('Participant.EventNotFound', compact('error'));
     }
 }
