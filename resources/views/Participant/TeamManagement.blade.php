@@ -134,6 +134,7 @@
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         @include('Participant.Layout.RosterView', ['isRegistrationView' => false])
+                        <br><br>
                     @endforeach
                 </div>
             @endif
@@ -149,6 +150,7 @@
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+                        <br><br>
                     @endforeach
                 </div>
             @endif
