@@ -48,11 +48,20 @@
                         onclick="carouselWork(2)">
                         &gt;
                     </button>
-                    <div class="event-carousel-styles event-carousel-works" style="{{isset($joinEvents[1]) ? '--grid-size:1fr 1fr;': '--grid-size:1fr;'}}">
-                        @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
-                        @endforeach
-                    </div>
+                    @if (!isset($joinEvents[1]))
+                        <div class="d-flex justify-content-center event-carousel-works">
+                            @foreach ($joinEvents as $key => $joinEvent)
+                                @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="event-carousel-styles event-carousel-works">
+                            @foreach ($joinEvents as $key => $joinEvent)
+                                @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+                            @endforeach
+                        </div>
+                    @endif
+                 
                 @endif
             </div>
 

@@ -74,7 +74,7 @@
                             <button class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button">Proceed to
                                 payment</button>
                             <br>
-                            <button data-bs-dismiss="modal"
+                            <button type="button" data-bs-dismiss="modal"
                                 class="mt-2 btn oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
                         </div>
                     </div>

@@ -256,7 +256,7 @@ input[type="submit"],
 .event-carousel-styles {
     display: grid; 
     justify-content: center;
-    gap: 40px 0;
+    gap: 40px 5%;
     align-items: center;
     grid-template-columns: 1fr;
 }
@@ -410,7 +410,8 @@ input[type="submit"],
     overflow: auto;
     max-width: 90vw;
     background: transparent;
-    border: 2px solid rgb(82, 159, 23);
+    border-width: 2px;
+    border-style: solid;
     border-radius: 40px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     align-content: center;

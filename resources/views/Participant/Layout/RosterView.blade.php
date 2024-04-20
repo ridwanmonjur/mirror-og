@@ -26,8 +26,17 @@
             </ul>
         @endif
     </div>
-    <div class="event mx-auto event-width cursor-pointer visible-until-hover-parent" style="margin-bottom : 0;">
-        <img class="visible-until-hover" style="object-fit: cover; border-radius: 40px; border-bottom: 2px solid rgb(82, 159, 23);" src="{{'/storage' . '/' . $joinEvent->eventDetails->eventBanner}}" width="100%" height="80%;">
+   
+    <div @class([
+            "event mx-auto event-width cursor-pointer visible-until-hover-parent",
+            'rounded-box-' . strtoLower($joinEvent->tier->eventTier)
+        ]) style="margin-bottom : 0;">
+        <img 
+            @class([
+                "visible-until-hover",
+                'rounded-box-' . strtoLower($joinEvent->tier->eventTier)
+            ])
+            style="object-fit: cover; border-radius: 40px; border-bottom-width: 2px; border-bottom-style: solid;" src="{{'/storage' . '/' . $joinEvent->eventDetails->eventBanner}}" width="100%" height="80%;">
         <div class="invisible-until-hover mt-4 ms-4 position-absolute" style="top: 20px;" style="width: 100%; background-color: red;">
             {{-- @if (isset($user) && $selectTeam->creator_id == $user->id && !$isRegistrationView)
                 <form method="GET"
