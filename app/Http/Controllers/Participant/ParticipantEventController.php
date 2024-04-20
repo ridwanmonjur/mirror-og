@@ -159,14 +159,12 @@ class ParticipantEventController extends Controller
             $invitationListIds = $selectTeam->invitationList->pluck('event_id');
             [$joinEventUserIds, $joinEvents] = JoinEvent::getJoinEventsAndIds($id, $invitationListIds, false);
             [$invitedEventUserIds, $invitedEvents] = JoinEvent::getJoinEventsAndIds($id, $invitationListIds, true);
-            // dd($invitationListIds, $joinEventUserIds, $invitedEventUserIds);
 
             $userIds = array_unique(array_merge($joinEventUserIds, $invitedEventUserIds));
             $followCounts = Follow::getFollowCounts($userIds);
             $isFollowing = Follow::getIsFollowing($user_id, $userIds);
             ['joinEvents' => $joinEvents, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents] 
                 = JoinEvent::processEvents($joinEvents, $isFollowing);
-            // dd($joinEvents, $activeEvents, $historyEvents);
 
             return view('Participant.RegistrationManagement', compact('selectTeam', 'invitedEvents', 'followCounts', 'joinEvents', 'isFollowing'));
         } else {
@@ -183,12 +181,10 @@ class ParticipantEventController extends Controller
         ] = Team::getUserTeamAndTeamMembersAndPluckIds($user_id);
         $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $user_id, 'accepted');
         if ($hasJoinedOtherTeams) {
-            $this->show404Error("One of your teams has joined this event already!");
+            return $this->showErrorParticipant("One of your teams has joined this event already!");
         }
 
         if ($selectTeam) {
-            
-
             $count = count($selectTeam);
             return view('Participant.SelectTeamToRegister', compact('selectTeam', 'count', 'id'));
           

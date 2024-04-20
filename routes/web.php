@@ -102,10 +102,14 @@ Route::group(['prefix' => 'participant'], function () {
             Route::get('/event/{id}/team/{teamId}/manage/member', [ParticipantTeamController::class, 'teamMemberManagementRedirected'])
                 ->middleware('prevent-back-history')->name('participant.memberManage.action');
        
-            Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.event.view')->middleware('prevent-back-history');
+            Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])
+                ->middleware('prevent-back-history')
+                ->name('participant.event.view');
             Route::post('/event/{id}/join/team/select', [ParticipantEventController::class, 'selectTeamToJoinEvent'])->name('participant.selectTeamToJoin.action');
             Route::post('/event/{id}/join/team/create', [ParticipantEventController::class, 'createTeamToJoinEvent'])->name('participant.createTeamToJoinEvent.action');
-            Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])->name('participant.event.selectOrCreateTeam.redirect');
+            Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])
+                ->middleware('prevent-back-history')
+                ->name('participant.event.selectOrCreateTeam.redirect');
             Route::post('/event/{id}/join/redirect/createTeamToJoinEvent', [ParticipantEventController::class, 'redirectToCreateTeamToJoinEvent'])->name('participant.event.createTeam.redirect');
 
             // Organizer management
