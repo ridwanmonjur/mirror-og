@@ -42,7 +42,7 @@ class OrganizerCheckoutController extends Controller
                     'isUser' => $isUserSameAsAuth,
                 ]);
             } else if (is_null($event->tier)) {
-                return $this->show404Organizer(
+                return $this->showErrorOrganizer(
                     "Event with id: $id has no event tier chosen",
                     ['edit' => true, 'id' => $id] 
                 );
@@ -71,9 +71,9 @@ class OrganizerCheckoutController extends Controller
                 ]);
             }
         }  catch (ModelNotFoundException | UnauthorizedException $e) {
-            return $this->show404Organizer($e->getMessage());
+            return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
-            return $this->show404Organizer(
+            return $this->showErrorOrganizer(
                 "Event not retrieved with id: $id"
             );
         }     
@@ -122,7 +122,7 @@ class OrganizerCheckoutController extends Controller
                 ->with('errorCheckout', 'Your payment has failed unfortunately!');
 
         } catch (ModelNotFoundException | UnauthorizedException $e) {
-            return $this->show404Organizer($e->getMessage());
+            return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             return redirect()
                 ->route('organizer.checkout.view', ['id' => $id] )

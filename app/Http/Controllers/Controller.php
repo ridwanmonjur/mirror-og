@@ -10,7 +10,7 @@ use Illuminate\View\View;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
-    public function show404Organizer($error, $args = []) {
+    public function showErrorOrganizer($error, $args = []) {
         return view('Organizer.EventNotFound', [
             'error' => $error,
             ...$args

@@ -189,9 +189,9 @@ class OrganizerEventController extends Controller
             
             return view('Organizer.ViewEvent', $outputArray);
         } catch (ModelNotFoundException | UnauthorizedException $e) {
-            return $this->show404Organizer($e->getMessage());
+            return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
-            return $this->show404Organizer("Event not found with id: $request->id");
+            return $this->showErrorOrganizer("Event not found with id: $request->id");
         }
     }
 
@@ -216,9 +216,9 @@ class OrganizerEventController extends Controller
 
             $isUserSameAsAuth = true;
         } catch (ModelNotFoundException | UnauthorizedException $e) {
-            return $this->show404Organizer($e->getMessage());
+            return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
-            return $this->show404Organizer("Event can't be retieved with id: $id");
+            return $this->showErrorOrganizer("Event can't be retieved with id: $id");
         }
 
         return view('Organizer.CreateEventSuccess', [
@@ -260,9 +260,9 @@ class OrganizerEventController extends Controller
             ]);
 
         } catch (ModelNotFoundException | UnauthorizedException $e) {
-            return $this->show404Organizer($e->getMessage());
+            return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
-            return $this->show404Organizer("Event not retrieved with id: $id");
+            return $this->showErrorOrganizer("Event not retrieved with id: $id");
         }
     }
 
@@ -299,9 +299,9 @@ class OrganizerEventController extends Controller
             $status = $event->statusResolved();
                 
             if ( $status == "ENDED" ) {
-                return $this->show404Organizer("Event has already ended id: $id");
+                return $this->showErrorOrganizer("Event has already ended id: $id");
             } else if ( !in_array($status, ['UPCOMING', 'DRAFT', 'SCHEDULED', 'PENDING' ] ) ) {
-                return $this->show404Organizer("Event has already gone live for id: $id");
+                return $this->showErrorOrganizer("Event has already gone live for id: $id");
             }
             
             $eventCategory = EventCategory::all();
@@ -319,9 +319,9 @@ class OrganizerEventController extends Controller
                 'editMode' => 1,
             ]);
         } catch (ModelNotFoundException | UnauthorizedException $e) {
-            return $this->show404Organizer($e->getMessage());
+            return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
-            return $this->show404Organizer("Event not found for id: $id");
+            return $this->showErrorOrganizer("Event not found for id: $id");
         }
     }
 
@@ -348,7 +348,7 @@ class OrganizerEventController extends Controller
                     return redirect('organizer/event/' . $eventDetail->id . '/success');
                 }
             } else {
-                return $this->show404Organizer("Event not found for id: $id");
+                return $this->showErrorOrganizer("Event not found for id: $id");
             }
         } catch (TimeGreaterException | EventChangeException $e ) {
             return back()->with('error', $e->getMessage());
@@ -365,9 +365,9 @@ class OrganizerEventController extends Controller
             $event->delete();
             return redirect('organizer/event');
         } catch (ModelNotFoundException | UnauthorizedException $e) {
-            return $this->show404Organizer($e->getMessage());
+            return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
-            return $this->show404Organizer("Failed to delete event!");
+            return $this->showErrorOrganizer("Failed to delete event!");
         }
     }
 }
