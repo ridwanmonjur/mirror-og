@@ -1,4 +1,4 @@
-@include('Organizer.Layout.ViewEventHeadTag')
+@include('Organizer.Partials.ViewEventHeadTag')
 
 @php
     $status = $event->statusResolved();

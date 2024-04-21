@@ -1,4 +1,4 @@
-@include('Organizer.Layout.CheckoutEventHeadTag')
+@include('Organizer.Partials.CheckoutEventHeadTag')
 
 <body>
     @include('CommonPartials.NavbarGoToSearchPage')

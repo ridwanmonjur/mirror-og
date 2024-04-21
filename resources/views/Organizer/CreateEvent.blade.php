@@ -1,4 +1,4 @@
-    @include('Organizer.Layout.CreateEventHeadTag')
+    @include('Organizer.Partials.CreateEventHeadTag')
 
     <body>
         @include('CommonPartials.NavbarGoToSearchPage')
