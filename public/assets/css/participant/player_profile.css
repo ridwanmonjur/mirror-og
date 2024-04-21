@@ -7,23 +7,6 @@
     font-family: "Poppins", sans-serif;
 }
 
-.d-none {
-    display: none;
-}
-
-.d-none-at-mobile {
-    display: none;
-    margin: auto;
-}
-
-.d-centered-at-mobile {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
 
 main {
     width: 100%;
@@ -35,92 +18,11 @@ main {
     margin: 0;
 }
 
-.navbar {
-    min-height: 5vh;
-    display: flex;
-    justify-content: space-between;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-}
-
-.navbar img,
-.navbar svg,
-nav img,
-nav svg {
-    cursor: pointer;
-}
-
-.navbar img:hover,
-nav img:hover,
-.navbar svg:hover,
-nav svg:hover {
-    transform: scale(1.1);
-}
-
-.navbar img:active,
-nav img:active,
-.navbar svg:active,
-nav svg:active {
-    transform: scale(1.1);
-}
-
-.navbar .nav-buttons {
-    display: none;
-}
 
 .menu-toggle {
     display: block;
 }
 
-.search-bar {
-    position: relative;
-}
-
-.search-bar input {
-    border-radius: 30px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 90px;
-    width: 450px;
-    max-width: 80vw;
-    /* caret-color: #43A4D7;
-    color: #43A4D7; */
-}
-
-.search-bar svg {
-    position: absolute;
-    top: 12px;
-}
-
-input[type="submit"],
-.oceans-gaming-default-button {
-    width: 200px;
-    padding-top: 12px;
-    padding-bottom: 13px;
-    font-size: normal;
-    margin-top: 0px;
-    color: #fff;
-    padding: 10px;
-    border-radius: 30px;
-    background: #43A4D7;
-    border: none;
-    /* border-bottom: 2px solid rgba(0, 0, 0, 0.1); */
-}
-
-.welcome {
-    margin-top: 40px;
-    margin-bottom: 80px;
-    font-weight: lighter;
-    color: #2E4B59 !important;
-}
-
-.welcome p {
-    width: 600px;
-    margin: auto;
-    font-weight: lighter;
-    text-overflow: clip;
-    font-size: larger;
-}
 
 @media screen and (min-width: 600px) {
     .swiper-container {
@@ -128,63 +30,7 @@ input[type="submit"],
     }
 }
 
-@media screen and (min-width: 992px) {
-    .time-line-box .status__left small {
-        left: 13%;
-    }
-    main {
-        padding: 20px 100px;
-    }
-    .payment-summary {
-        padding-left: 40px;
-        padding-right: 40px;
-    }
-    .flexbox {
-        display: flex;
-        justify-content: space-between;
-    }
-    .search-bar {
-        display: block;
-    }
-    .search-bar input {
-        padding-left: 60px;
-    }
-    .navbar .nav-buttons {
-        display: block;
-    }
-    .d-none-at-mobile {
-        display: block;
-    }
-    .menu-toggle {
-        display: none;
-    }
-    .d-centered-at-mobile {
-        display: none;
-    }
-    .search-bar svg {
-        left: 20px;
-    }
-    .swiper-slide {
-        text-indent: 0px;
-        font-size: 1rem;
-        width: var(--timeline-normal-width-desktop);
-    }
-    .swiper-slide__left {
-        width: var(--timeline-start-width-desktop) !important;
-    }
-    .time-line-box .status {
-        width: var(--timeline-normal-width-desktop) ! important;
-    }
-    .time-line-box .status__left {
-        width: var(--timeline-start-width-desktop) ! important;
-    }
-    .time-line-box .status__left span:before {
-        left: 12%;
-    }
-    .time-line-box .status__right {
-        width: var(--timeline-start-width-desktop) ! important;
-    }
-}
+
 
 .member-section {
     display: flex;
@@ -288,10 +134,6 @@ input[type="submit"],
     border-bottom: 2px solid #000;
 }
 
-.tab-content {
-    display: none;
-    padding: 20px;
-}
 
 .recent-events {
     display: flex;
