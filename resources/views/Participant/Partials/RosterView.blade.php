@@ -95,10 +95,17 @@
                 <form id="{{'followForm' . $joinEvent->id . $random_int }}" method="POST"
                     action="{{ route('participant.organizer.follow') }}">
                     @csrf
-                    <input type="hidden" name="user_id"
-                        value="{{ $user && $user->id ? $user->id : '' }}">
-                    <input type="hidden" name="organizer_id"
-                        value="{{ $joinEvent->eventDetails?->user_id }}">
+                    @guest
+                        <input type="hidden" name="user_id" value="">
+                        <input type="hidden" name="organizer_id" value="">
+                    @endguest
+                    @auth
+                        <input type="hidden" name="user_id"
+                            value="{{ $user && $user->id ? $user->id : '' }}">
+                        <input type="hidden" name="organizer_id"
+                            value="{{ $joinEvent->eventDetails?->user_id }}">
+                    @endauth
+                    
                     @guest
                         <button type="button"
                             onclick="reddirectToLoginWithIntened('{{route('public.team.view', ['id'=> $selectTeam->id])}}')"

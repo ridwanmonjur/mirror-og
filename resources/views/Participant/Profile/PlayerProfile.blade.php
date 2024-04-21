@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
+@auth
+    @php
+        if (!isset($user)) {
+            $user = auth()->user();
+        }
+    @endphp
+@endauth
 <body>
     @include('CommonPartials.NavbarGoToSearchPage')
     @include('CommonPartials.BootstrapV5Js')
@@ -29,7 +36,7 @@
                 </div>
                 <div class="member-details">
                     <h2>NickName <img src="css/images/edit-text.png" class="icons-game"></h2>
-                    <h5>Jack Wills, 24</h5>
+                    <h5>{{$userProfile->name}}, 24</h5>
                     <p>This is the player bio. The character limit should be up to 150 words. This field should accept
                         emojis.</p>
                     <img src="css/images/pin.png" class="icons"> USA&nbsp;&nbsp;&nbsp;&nbsp;

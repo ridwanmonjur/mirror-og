@@ -78,7 +78,7 @@ class ParticipantController extends Controller
         return $this->viewProfile($request, $id, $user);
     }
 
-    private function viewProfile(Request $request, $user_id, $user) {
+    private function viewProfile(Request $request, $user_id, $userProfile) {
    
         [
             'teamList' => $teamList,
@@ -102,7 +102,7 @@ class ParticipantController extends Controller
         $joinEventIds = $joinEvents->pluck('id')->toArray();
 
         return view('Participant.Profile.PlayerProfile', 
-            compact('joinEvents', 
+            compact('joinEvents', 'userProfile',
                 'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
                 'wins', 'streak', 'awardList', 'achievementList'
             )
