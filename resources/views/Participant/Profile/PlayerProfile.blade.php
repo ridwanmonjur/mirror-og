@@ -36,7 +36,7 @@
                 </div>
                 <div class="member-details">
                     @if ($userProfile->isEdited)
-                        <h2>{{$userProfile->nickname ?? }} <img src="css/images/edit-text.png" class="icons-game"></h2>
+                        <h2>{{$userProfile->nickname  }} <img src="css/images/edit-text.png" class="icons-game"></h2>
                         <h5>{{$userProfile->name}}, 24</h5>
                         <p>This is the player bio. The character limit should be up to 150 words. This field should accept
                             emojis.</p>
