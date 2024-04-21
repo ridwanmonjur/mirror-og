@@ -89,6 +89,9 @@ class Team extends Model
             ->with(['members' => function($query) {
                 $query->where('status', 'accepted');
             }])
+            ->withCount(['members' => function($query) {
+                $query->where('status', 'accepted');
+            }])
         ->get();
 
         $teamIdList = $teamList->pluck('id')->toArray();

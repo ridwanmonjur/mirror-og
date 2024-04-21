@@ -327,155 +327,36 @@
         </div>
 
         <div class="tab-content outer-tab d-none" id="Teams">
+            <div class="mx-auto" style="width: 80%;"><b>Current Teams</b></div>
+
             <table class="member-table">
-                <div id="table-like">
-                    <tr class="nf">
-                        <th>
-                            <div class="player-info">
-                                <div>Current Teams</div>
-                            </div>
-                        </th>
-                    </tr>
+                <thead>
                     <tr>
-                        <td></td>
-                    </tr>
-                    <tr>
+                        <th> </th>
                         <th>Team name</th>
                         <th>Region</th>
                         <th>Members</th>
                     </tr>
-                    <tr class="st">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                </div>
-                                <span>Team Name</span>
-                            </div>
-                        </td>
-                        <td>China</td>
-                        <td>5/5</td>
-                    </tr>
-
-
-                    <div>
-                        <tr class="nd">
-                            <td>
-                                <div class="player-info">
-                                    <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                    </div>
-                                    <span>Fnatic</span>
-                                </div>
-                            </td>
-                            <td>South Asia</td>
-                            <td>4/8</td>
-                        </tr>
-                    </div>
-
-                    <tr class="st">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                </div>
-                                <span>Awesome Team</span>
-                            </div>
-                        </td>
-                        <td>China</td>
-                        <td>5/5</td>
-                    </tr>
-
-
-                    <div>
-                        <tr class="nd">
-                            <td>
-                                <div class="player-info">
-                                    <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                    </div>
-                                    <span>Good Team</span>
-                                </div>
+                </thead>
+                <tbody>
+                    @foreach($teamList as $team)
+                        <tr class="st">
+                            <td> </td>
+                            <td class="d-flex align-items-center">
+                                <img
+                                    class="d-inline-block object-fit-cover me-3"
+                                    src="{{ '/storage' . '/'. $team->teamBanner }}"
+                                    {!! trustedBladeHandleImageFailure() !!} 
+                                    height="40"
+                                    width="40"
+                                > 
+                                <span>{{$team->teamName}}</span>
                             </td>
                             <td>China</td>
-                            <td>5/5</td>
+                            <td>{{$team->members_count}}/5</td>
                         </tr>
-                    </div>
-
-                </div>
-            </table>
-
-            <table class="member-table">
-                <div id="table-like">
-                    <tr>
-                        <td><br></td>
-                    </tr>
-                    <tr class="nf">
-                        <th>
-                            <div class="player-info">
-                                <div>Past Teams</div>
-                            </div>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>Team name</th>
-                        <th>Region</th>
-                        <th>Members</th>
-                    </tr>
-                    <tr class="st">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                </div>
-                                <span>Team Name</span>
-                            </div>
-                        </td>
-                        <td>China</td>
-                        <td>5/5</td>
-                    </tr>
-
-
-                    <div>
-                        <tr class="nd">
-                            <td>
-                                <div class="player-info">
-                                    <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                    </div>
-                                    <span>GG Team</span>
-                                </div>
-                            </td>
-                            <td>South Asia</td>
-                            <td>4/8</td>
-                        </tr>
-                    </div>
-
-                    <tr class="st">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                </div>
-                                <span>Nice</span>
-                            </div>
-                        </td>
-                        <td>China</td>
-                        <td>5/5</td>
-                    </tr>
-
-
-                    <div>
-                        <tr class="nd">
-                            <td>
-                                <div class="player-info">
-                                    <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                    </div>
-                                    <span>GG Boyz</span>
-                                </div>
-                            </td>
-                            <td>China</td>
-                            <td>5/5</td>
-                        </tr>
-                    </div>
-
-                </div>
+                    @endforeach
+                </tbody>
             </table>
         </div>
 

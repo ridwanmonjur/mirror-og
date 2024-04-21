@@ -101,7 +101,7 @@ class ParticipantController extends Controller
         $joinEventIds = $joinEvents->pluck('id')->toArray();
 
         return view('Participant.Profile.PlayerProfile', 
-            compact('joinEvents', 'userProfile',
+            compact('joinEvents', 'userProfile', 'teamList',
                 'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
                 'wins', 'streak', 'awardList', 'achievementList'
             )

@@ -74,7 +74,7 @@
                     <img style="object-fit: cover;" src="{{ bladeImageNull($joinEvent->user->userBanner) }}"
                         class="me-1 logo2">
                     <div class="text-start">
-                        <span>{{ $joinEvent->user->name }}</span>
+                        <span>{{ $joinEvent->eventDetails->user->name }}</span>
                         <br>
                         <small 
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id]: 0 }} "
