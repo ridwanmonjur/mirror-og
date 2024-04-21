@@ -23,11 +23,11 @@
                 </p>
 
                 <p>You can check the registration status on your <a href="{{ route('participant.register.manage', ['id' => $selectTeam->id]) }}"> <u> team </u> </a>'s page.</p>
-                <form action="{{ route('participant.memberManage.action', ['teamId' => $selectTeam->id, 'id' => $id]) }}" method="GET">
+                <a href="{{ route('participant.memberManage.action', ['teamId' => $selectTeam->id, 'id' => $id]) }}">
                     <div class="text-center">
                         <input type="submit" class="choose-payment-method" value="Done">
                     </div>
-                </form>
+                </a>
                 <div class="text-center">
                     <button onclick="goToRegistrationScreen()" class="oceans-gaming-default-button oceans-gaming-transparent-button"> See Registration Status </button>
                 </div>

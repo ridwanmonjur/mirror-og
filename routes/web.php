@@ -36,6 +36,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('participant.log
 Route::get('/event/search', [AuthController::class, 'showLandingPage'])->name('public.search.view');
 Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view');
 Route::get('/team/{id}/view', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
+Route::get('/participant/{id}/view', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view');
 
 /* THIS IS THE PARTICIPANT VIEW */
 Route::group(['prefix' => 'participant'], function () {
@@ -117,7 +118,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::delete('/organizer/unfollow', [ParticipantEventController::class, 'unfollowOrganizer'])->name('participant.organizer.unfollow');
 
             // Profile
-            Route::get('/{id}/profile', [ParticipantController::class, 'viewProfile'])->name('participant.profile.view');
+            Route::get('/profile', [ParticipantController::class, 'viewOwnProfile'])->name('participant.profile.view');
         });
     });
 });

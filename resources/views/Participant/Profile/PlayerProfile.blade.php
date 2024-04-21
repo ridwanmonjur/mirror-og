@@ -9,7 +9,13 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
-
+@auth
+    @php
+        if (!isset($user)) {
+            $user = auth()->user();
+        }
+    @endphp
+@endauth
 <body>
     @include('CommonPartials.NavbarGoToSearchPage')
     @include('CommonPartials.BootstrapV5Js')
@@ -535,7 +541,7 @@
 
 
     function redirectToProfilePage(userId) {
-        window.location.href = "{{ route('participant.profile.view', ['id' => ':id']) }}"
+        window.location.href = "{{ route('public.participant.view', ['id' => ':id']) }}"
             .replace(':id', userId);
     }
 </script>

@@ -246,7 +246,7 @@
         window.onbeforeunload = function(){window.location.reload();}
 
         function redirectToProfilePage(userId) {
-            window.location.href = "{{route('participant.profile.view', ['id' => ':id']) }}"
+            window.location.href = "{{route('public.participant.view', ['id' => ':id']) }}"
                 .replace(':id', userId);
         }
 

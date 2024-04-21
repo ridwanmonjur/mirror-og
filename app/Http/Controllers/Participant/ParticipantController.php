@@ -67,9 +67,19 @@ class ParticipantController extends Controller
         return view('Participant.ParticipantRequest', compact('membersCount', 'invitedTeamAndMemberList', 'pendingTeamAndMemberList', 'invitedEventsList'));
     }
 
-    public function viewProfile(Request $request, $id) {
+    public function viewOwnProfile(Request $request) {
         $user = $request->attributes->get('user');
         $user_id = $user?->id ?? null;
+        return $this->viewProfile($request, $user_id, $user);
+    }
+
+    public function viewProfileById(Request $request, $id) {
+        $user = User::findOrFail($id);
+        return $this->viewProfile($request, $id, $user);
+    }
+
+    private function viewProfile(Request $request, $user_id, $user) {
+   
         [
             'teamList' => $teamList,
             'teamIdList' => $teamIdList,
