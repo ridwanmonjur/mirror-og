@@ -71,7 +71,7 @@
                     <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventDetails->eventName }} </span>
                 </div>
                 <div class="d-flex justify-content-center mt-1">
-                    <img style="object-fit: cover;" src="{{ bladeImageNull($joinEvent->user->eventBanner) }}"
+                    <img style="object-fit: cover;" src="{{ bladeImageNull($joinEvent->user->userBanner) }}"
                         class="me-1 logo2">
                     <div class="text-start">
                         <span>{{ $joinEvent->user->name }}</span>
