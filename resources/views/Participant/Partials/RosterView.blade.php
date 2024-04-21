@@ -108,7 +108,7 @@
                     
                     @guest
                         <button type="button"
-                            onclick="reddirectToLoginWithIntened('{{route('public.team.view', ['id'=> $selectTeam->id])}}')"
+                            onclick="reddirectToLoginWithIntened('{{route('participant.team.manage', ['id'=> $selectTeam->id])}}')"
                             class="{{'followButton' . $joinEvent->eventDetails?->user_id}}"
                             style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                             Follow

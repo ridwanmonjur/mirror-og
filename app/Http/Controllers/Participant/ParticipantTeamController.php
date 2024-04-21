@@ -50,7 +50,11 @@ class ParticipantTeamController extends Controller
         $user = $request->attributes->get('user');
         $user_id = $user?->id ?? null;
         $selectTeam = Team::where('id', $id)
-            ->with(['members'])->first();        
+            ->with(['members' => function($query) {
+                $query->where('status', 'accepted')
+                    ->with('user');
+            }])->first();        
+        // dd($selectTeam);
         if ($selectTeam) {
             $awardList = $selectTeam->getAwardListByTeam();
             $achievementList = $selectTeam->getAchievementListByTeam();
@@ -69,7 +73,7 @@ class ParticipantTeamController extends Controller
             // dd($joinEvents, $activeEvents, $historyEvents);
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
-            $teamMembers = $selectTeam->members->where('status', 'accepted');
+            $teamMembers = $selectTeam->members;
 
             return view('Participant.TeamManagement', 
                 compact('selectTeam', 'joinEvents', 'captain', 'teamMembers',
@@ -79,6 +83,48 @@ class ParticipantTeamController extends Controller
             );
         } else {
             return $this->showErrorParticipant('This event is missing or cannot be retrieved!');
+        }
+    }
+
+    public function teamProfile(Request $request, $id)
+    {
+        $user = $request->attributes->get('user');
+        $user_id = $user?->id ?? null;
+        $selectTeam = Team::where('id', $id)
+            ->with(['members' => function($query) {
+                $query->where('status', 'accepted');
+            }])
+            ->withCount(['members' => function($query) {
+                $query->where('status', 'accepted');
+            }])
+            ->first();        
+        if ($selectTeam) {
+            $awardList = $selectTeam->getAwardListByTeam();
+            $achievementList = $selectTeam->getAchievementListByTeam();
+            $joinEvents = JoinEvent::getJoinEventsForTeamWithEventsRosterResults($selectTeam->id);
+            $totalEventsCount = $joinEvents->count();
+            ['wins' => $wins, 'streak' => $streak] = 
+                JoinEvent::getJoinEventsWinCountForTeam($selectTeam->id);
+            
+            $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
+            $followCounts = Follow::getFollowCounts($userIds);
+            $isFollowing = Follow::getIsFollowing($user_id, $userIds);
+            $joinEventsHistory = $joinEventsActive = $values = [];
+            ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory] 
+                = JoinEvent::processEvents($joinEvents, $isFollowing);
+            // dd($joinEvents, $activeEvents, $historyEvents);
+
+            $joinEventIds = $joinEvents->pluck('id')->toArray();
+            $teamMembers = $selectTeam->members->where('status', 'accepted');
+
+            return view('Participant.Profile.TeamProfile', 
+                compact('selectTeam', 'joinEvents', 'teamMembers',
+                    'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
+                    'wins', 'streak', 'awardList', 'achievementList'
+                )
+            );
+        } else {
+            return $this->showErrorParticipant('This team is missing or cannot be retrieved!');
         }
     }
 
@@ -95,21 +141,6 @@ class ParticipantTeamController extends Controller
         }
     }
 
-    public function eventNotifyRedirected(Request $request, $id, $teamId)
-    {
-        $page = 5;
-        $user = $request->attributes->get('user') ?? auth()->user();
-        $selectTeam = Team::where('id', $teamId)
-            ->where('creator_id', $user->id)->with('members')->first();
-        if ($selectTeam) {
-            return redirect()->route('participant.memberManage.action', ['id'=> $id, 'teamId' => $selectTeam->id])
-                ->with('successMessage', 'Successfully created and joined the event.')
-                ->with('redirectToMemberManage', true);
-        } else {
-            return redirect()->route('participant.event.view', ['id' => $id]);
-        }
-    }
-    
     public function teamMemberManagement(Request $request, $id)
     {
         $page = 5;
