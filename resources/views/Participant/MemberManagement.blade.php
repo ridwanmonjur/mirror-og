@@ -15,10 +15,10 @@
 
 <body>
     @include('CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.Layout.TeamHead')
+    @include('Participant.Partials.TeamHead')
 
     <main class="main2">
-        @include('Participant.MemberManagementLayout.MemberManagement')
+        @include('Participant.MemberManagementPartials.MemberManagement')
     </main>
 
     @include('CommonPartials.BootstrapV5Js')
@@ -27,7 +27,7 @@
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     @include('CommonPartials.Toast')
     @include('CommonPartials.Dialog')
-    @include('Participant.MemberManagementLayout.MemberManagementScripts')
+    @include('Participant.MemberManagementPartials.MemberManagementScripts')
     <script>
         let dialogForMember = new DialogForMember();
 

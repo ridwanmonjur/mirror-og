@@ -25,7 +25,7 @@ class ParticipantController extends Controller
         }
 
         $outputArray = compact('userList', 'selectTeam');
-        $view = view('Participant.MemberManagementLayout.MemberManagementScroll', $outputArray)->render();
+        $view = view('Participant.MemberManagementPartials.MemberManagementScroll', $outputArray)->render();
         return response()->json(['html' => $view]);
     }
 

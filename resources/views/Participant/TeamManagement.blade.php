@@ -17,7 +17,7 @@
 @endauth
 <body>
     @include('CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.Layout.TeamHead')
+    @include('Participant.Partials.TeamHead')
 
     <main class="main2">
         <div class="tabs">
@@ -51,13 +51,13 @@
                     @if (!isset($joinEvents[1]))
                         <div class="d-flex justify-content-center event-carousel-works">
                             @foreach ($joinEvents as $key => $joinEvent)
-                                @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+                                @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
                             @endforeach
                         </div>
                     @else
                         <div class="event-carousel-styles event-carousel-works">
                             @foreach ($joinEvents as $key => $joinEvent)
-                                @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+                                @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
                             @endforeach
                         </div>
                     @endif
@@ -119,7 +119,7 @@
         </div>
 
         <div class="tab-content outer-tab d-none" id="Members">
-            @include('Participant.Layout.MemberView')
+            @include('Participant.Partials.MemberView')
         </div>
 
         <div class="tab-content outer-tab d-none" id="Active Rosters">
@@ -133,7 +133,7 @@
                     <p class="text-center">Team {{ $selectTeam->teamName }} has {{ count($joinEventsActive) }} roster(s)</p>
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        @include('Participant.Layout.RosterView', ['isRegistrationView' => false])
+                        @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
                         <br><br>
                     @endforeach
                 </div>
@@ -149,7 +149,7 @@
                     <p class="text-center">Team {{ $selectTeam->teamName }} has {{ count($joinEventsHistory) }} roster(s)</p>
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
-                        @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+                        @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
                         <br><br>
                     @endforeach
                 </div>

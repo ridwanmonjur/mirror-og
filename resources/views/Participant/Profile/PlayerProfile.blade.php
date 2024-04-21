@@ -71,13 +71,13 @@
                     @if (!isset($joinEvents[1]))
                         <div class="d-flex justify-content-center event-carousel-works">
                             @foreach ($joinEvents as $key => $joinEvent)
-                                @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+                                @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
                             @endforeach
                         </div>
                     @else
                         <div class="event-carousel-styles event-carousel-works">
                             @foreach ($joinEvents as $key => $joinEvent)
-                                @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+                                @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
                             @endforeach
                         </div>
                     @endif
@@ -282,7 +282,7 @@
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        @include('Participant.Layout.RosterView', ['isRegistrationView' => false])
+                        @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
                         <br><br>
                     @endforeach
                 </div>
@@ -298,7 +298,7 @@
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
-                        @include('Participant.Layout.RosterView', ['isRegistrationView' => false])
+                        @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
                         <br><br>
                     @endforeach
                 </div>

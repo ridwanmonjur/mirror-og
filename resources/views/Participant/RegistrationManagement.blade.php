@@ -11,7 +11,7 @@
 </head>
 <body>
     @include('CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.Layout.TeamHead')
+    @include('Participant.Partials.TeamHead')
     <main class="main2">
         <div id="Overview">
             <br><br>
@@ -23,8 +23,8 @@
                 @else
                     <div class="event-carousel-styles">
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Participant.Layout.RosterView', ['isRegistrationView' => false])
-                            @include('Participant.Layout.PieChart', ['isInvited' => false])
+                            @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
+                            @include('Participant.Partials.PieChart', ['isInvited' => false])
                         @endforeach
                     </div>
                 @endif
@@ -40,8 +40,8 @@
                 @else
                     <div class="event-carousel-styles">
                         @foreach ($invitedEvents as $key => $joinEvent)
-                            @include('Participant.Layout.RosterView', ['isRegistrationView' => false])
-                            @include('Participant.Layout.PieChart', ['isInvited' => true])
+                            @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
+                            @include('Participant.Partials.PieChart', ['isInvited' => true])
                         @endforeach
                     </div>
                 @endif
