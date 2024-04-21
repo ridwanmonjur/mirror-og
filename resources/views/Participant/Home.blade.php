@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     <main>
         <section class="hero">
             <img src="{{ asset('/assets/images/ss.png') }}" alt="">
@@ -30,7 +30,7 @@
         <div class="no-more-data d-none"></div>
         <br><br><br>
     </main>
-    @include('CommonLayout.BootstrapV5Js')
+    @include('CommonPartials.BootstrapV5Js')
 
     <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
     <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>

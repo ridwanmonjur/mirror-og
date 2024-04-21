@@ -47,13 +47,13 @@
     </div>
     <div class="nav-buttons">
         @guest
-            @include('CommonLayout.Navbar.NavbarGuest')
+            @include('CommonPartials.Navbar.NavbarGuest')
         @endguest
         @auth
             @if (isset($user) && $user->role == 'PARTICIPANT')
-                @include('CommonLayout.Navbar.WhereIsMoop')
+                @include('CommonPartials.Navbar.WhereIsMoop')
             @endif
-            @include('CommonLayout.Navbar.NavbarAuth')
+            @include('CommonPartials.Navbar.NavbarAuth')
         @endauth
     </div>
 </nav>
@@ -117,9 +117,9 @@
 <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
 <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
 @if (isset($search))
-    @include('CommonLayout.Navbar.NavbarShowSearchResultsScript')
+    @include('CommonPartials.Navbar.NavbarShowSearchResultsScript')
 @else
-    @include('CommonLayout.Navbar.NavbarGoToSearchPageScript')
+    @include('CommonPartials.Navbar.NavbarGoToSearchPageScript')
 @endif
 <br>
 <br>

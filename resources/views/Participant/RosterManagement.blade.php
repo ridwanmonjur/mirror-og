@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     @include('Participant.Layout.TeamHead')
     @php
         use Carbon\Carbon;
@@ -109,11 +109,11 @@
     </main>
 
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
-    @include('CommonLayout.BootstrapV5Js')
+    @include('CommonPartials.BootstrapV5Js')
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
-    @include('CommonLayout.Toast')
-    @include('CommonLayout.Dialog')
+    @include('CommonPartials.Toast')
+    @include('CommonPartials.Dialog')
     <script>
         let dialogForMember = new DialogForMember();
         function loadToast() {

@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     <main>
         <div class="wrapper">
             <div class="first_notify">
@@ -34,7 +34,7 @@
                 <br><br>
             </div>
         </div>
-        @include('CommonLayout.BootstrapV5Js')
+        @include('CommonPartials.BootstrapV5Js')
     </main>
     <script>
         function goToRegistrationScreen() {

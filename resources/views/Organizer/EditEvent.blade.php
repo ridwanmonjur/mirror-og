@@ -2,7 +2,7 @@
     <!-- https://stackoverflow.com/questions/895171/prevent-users-from-submitting-a-form-by-hitting-enter -->
 
     <body>
-        @include('CommonLayout.NavbarGoToSearchPage')
+        @include('CommonPartials.NavbarGoToSearchPage')
         <main>
             <div>
                 <div>
@@ -28,7 +28,7 @@
             </div>
             <br><br>
         </main>
-        @include('CommonLayout.BootstrapV5Js')
+        @include('CommonPartials.BootstrapV5Js')
         @include('Organizer.CreateEditLayout.CreateEventScripts')
         <script>
 

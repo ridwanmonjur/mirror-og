@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     <br><br> 
     <main>
         <div class="search-bar">
@@ -89,7 +89,7 @@
         <br>
     </main>
 
-    @include('CommonLayout.BootstrapV5Js')
+    @include('CommonPartials.BootstrapV5Js')
     @include('Participant.TeamListPartial.FilterScripts')
     <script>
         function goToScreen() {

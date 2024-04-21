@@ -5,7 +5,7 @@ extract($dateArray);
 @endphp
 
 <body>
-        @include('CommonLayout.NavbarGoToSearchPage')
+        @include('CommonPartials.NavbarGoToSearchPage')
     <main>
         <div>
             @include('Organizer.CreateEditLayout.CreateEventTimelineBox')
@@ -94,7 +94,7 @@ extract($dateArray);
         <br><br>
     </main>
     @include('Organizer.CreateEditLayout.CreateEventScripts')
-    @include('CommonLayout.BootstrapV5Js')
+    @include('CommonPartials.BootstrapV5Js')
 
     <script>
         function getCookie(name) {

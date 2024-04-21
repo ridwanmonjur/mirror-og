@@ -1,6 +1,6 @@
 @include('Organizer.Layout.CreateEventHeadTag')
 <body style="margin-top: 0 !important;">
-@include('CommonLayout.NavbarGoToSearchPage')
+@include('CommonPartials.NavbarGoToSearchPage')
 
     <main>
         <br><br><br><br>
@@ -34,7 +34,7 @@
                 window.location.href = url;
             }
         </script>
-        @include('CommonLayout.BootstrapV5Js')
+        @include('CommonPartials.BootstrapV5Js')
 
     </main>
 </body>

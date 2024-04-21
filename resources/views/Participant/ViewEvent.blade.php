@@ -22,7 +22,7 @@
 @endphp
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     <main>
         <br class="d-none-at-desktop">
         <div class="pt-2">
@@ -289,7 +289,7 @@
     </main>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
     @stack('script')
-    @include('CommonLayout.Toast')
+    @include('CommonPartials.Toast')
     <script>
         function reddirectToLoginWithIntened(route) {
             route = encodeURIComponent(route);
@@ -355,7 +355,7 @@
             }
         });
     </script>
-    @include('CommonLayout.BootstrapV5Js')
+    @include('CommonPartials.BootstrapV5Js')
     <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
 
 </html>

@@ -1,7 +1,7 @@
 @include('Organizer.Layout.ManageEventHeadTag')
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
 
     <main>
         <br class="d-none-at-desktop">
@@ -114,7 +114,7 @@
             </div>
             <div class="no-more-data d-none mb-3" style="margin-top: 50px;" ></div>
 
-            @include('CommonLayout.BootstrapV5Js')
+            @include('CommonPartials.BootstrapV5Js')
             <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
             <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
             @include('Organizer.ManageEventLayout.ManageEventScripts')

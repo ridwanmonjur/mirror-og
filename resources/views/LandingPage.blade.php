@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage', ['search' => true ])
+    @include('CommonPartials.NavbarGoToSearchPage', ['search' => true ])
 
     <main>
         <section class="hero">
@@ -34,7 +34,7 @@
         </section>
         <div class="no-more-data d-none"></div>
         <br><br>
-        @include('CommonLayout.BootstrapV5Js')
+        @include('CommonPartials.BootstrapV5Js')
         <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
         <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
         <script>

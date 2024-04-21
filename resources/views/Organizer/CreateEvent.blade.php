@@ -1,7 +1,7 @@
     @include('Organizer.Layout.CreateEventHeadTag')
 
     <body>
-        @include('CommonLayout.NavbarGoToSearchPage')
+        @include('CommonPartials.NavbarGoToSearchPage')
         <main>
             <div>
                 <div>
@@ -18,7 +18,7 @@
                             @include('Organizer.CreateEditLayout.CreateEventTimelineWelcome')
                         @endif
                         @include('Organizer.CreateEditLayout.CreateEventStepOne')
-                        @include('CommonLayout.BootstrapV5Js')
+                        @include('CommonPartials.BootstrapV5Js')
                         @include('Organizer.CreateEditLayout.CreateEventForm')
                         @if (session()->has('success'))
                             @include('Organizer.CreateEditLayout.CreateEventSuccess')

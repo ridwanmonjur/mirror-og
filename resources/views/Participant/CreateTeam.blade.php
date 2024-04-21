@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     <main>
         <div class="text-center" id="step-0">
             <div class="welcome">
@@ -40,7 +40,7 @@
         </div>
     </main>
 
-    @include('CommonLayout.BootstrapV5Js')
+    @include('CommonPartials.BootstrapV5Js')
 
 </body>
 

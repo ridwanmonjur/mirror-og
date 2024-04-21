@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     <main>
         <section class="hero">
             <img src="{{ asset('/assets/images/events/ss.png') }}" alt="">
@@ -82,7 +82,7 @@
             </a>
             <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
             <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
-            @include('CommonLayout.BootstrapV5Js')
+            @include('CommonPartials.BootstrapV5Js')
             <script>
                 var ENDPOINT = "{{ route('landing.view') }}";
                 var page = 1;

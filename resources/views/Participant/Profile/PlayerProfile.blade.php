@@ -11,8 +11,8 @@
 </head>
 
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
-    @include('CommonLayout.BootstrapV5Js')
+    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('CommonPartials.BootstrapV5Js')
 
     <main>
         <div class="member-section">

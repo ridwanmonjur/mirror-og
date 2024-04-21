@@ -16,7 +16,7 @@
     @endphp
 @endauth
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     @include('Participant.Layout.TeamHead')
 
     <main class="main2">
@@ -157,8 +157,8 @@
         </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
-    @include('CommonLayout.Toast')
-    @include('CommonLayout.BootstrapV5Js')
+    @include('CommonPartials.Toast')
+    @include('CommonPartials.BootstrapV5Js')
 
     <script>
         function reddirectToLoginWithIntened(route) {

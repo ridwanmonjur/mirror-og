@@ -10,7 +10,7 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    @include('CommonLayout.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     @include('Participant.Layout.TeamHead')
     <main class="main2">
         <div id="Overview">
@@ -51,7 +51,7 @@
         
     </main>
 
-    @include('CommonLayout.BootstrapV5Js')
+    @include('CommonPartials.BootstrapV5Js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         let registrationPaymentModalMap = {}; 
