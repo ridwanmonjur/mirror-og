@@ -13,7 +13,6 @@ export default defineConfig({
         }),
         purge({
             templates: ['blade'],
-            paths: ['resources/views/*']
         })
     ],
     build: { minify: true },
