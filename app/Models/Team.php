@@ -54,7 +54,7 @@ class Team extends Model
         return Team::where('id', $teamId)->value('user_id');
     }
 
-    public static function getUserTeamAndTeamMembersAndPluckIds($user_id)
+    public static function getUserTeamListAndPluckIds($user_id)
     {
         $teamList = self::leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
             ->where(function ($query) use ($user_id) {
@@ -81,6 +81,23 @@ class Team extends Model
         }
     }
 
+    public static function getUserTeamList($user_id)
+    {
+        $teamList = self::whereHas('members', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id)->where('status', 'accepted');
+            })
+            ->with(['members' => function($query) {
+                $query->where('status', 'accepted');
+            }])
+        ->get();
+
+        $teamIdList = $teamList->pluck('id')->toArray();
+        return [
+            'teamList' => $teamList,
+            'teamIdList' => $teamIdList,
+        ];
+    }
+
     public static function getUserTeamListAndCount($user_id)
     {
         $teamList = self::where('teams.creator_id', $user_id)
@@ -88,9 +105,7 @@ class Team extends Model
                 $query->whereHas('members', function ($query) use ($user_id) {
                     $query->where('user_id', $user_id)->where('status', 'accepted');
                 });
-            })
-        ->groupBy('teams.id')
-        ->select('teams.*')
+            })->with('members')
         ->get();
 
         $count = count($teamList);
@@ -125,7 +140,24 @@ class Team extends Model
             ->get();
     }
 
-    public function getAchievementListByTeam() {
+    public static function getAwardListByTeamIdList($teamIdList) {
+        return DB::table('join_events')
+            ->whereIn('join_events.team_id', $teamIdList)
+            ->join('awards_results', 'join_events.id', '=', 'awards_results.join_events_id')
+            ->leftJoin('awards', 'awards_results.award_id', '=', 'awards.id')
+            ->groupBy('awards.id')
+            ->select(
+                'awards.id',
+                DB::raw('COUNT(awards.id) as awards_count'),
+                'awards_results.id as results_id',
+                'awards_results.award_id',
+                'awards.title as awards_title', 
+                'awards.image as awards_image'
+            )
+            ->get();
+    }
+
+    public  function getAchievementListByTeam() {
         return DB::table('join_events')
             ->where('join_events.team_id', $this->id)
             ->join('achievements', 'join_events.id', '=', 'achievements.join_event_id')
@@ -136,5 +168,31 @@ class Team extends Model
                 'achievements.created_at', 
             )
             ->get();
+    }
+
+    public static function getAchievementListByTeamIdList($teamIdList) {
+        return DB::table('join_events')
+            ->whereIn('join_events.team_id', $teamIdList)
+            ->join('achievements', 'join_events.id', '=', 'achievements.join_event_id')
+            ->select(
+                'achievements.id as achievements_id',
+                'achievements.title',
+                'achievements.description', 
+                'achievements.created_at', 
+            )
+            ->get();
+    }
+
+    public static function getTeamMembersCountForEachTeam($teamIdList) {
+        return DB::table('teams')
+            ->leftJoin('team_members', function($join) {
+                $join->on('teams.id', '=', 'team_members.team_id')
+                    ->where('team_members.status', '=', 'accepted');
+            })
+            ->whereIn('teams.id', $teamIdList)
+            ->groupBy('teams.id')
+            ->selectRaw('teams.id as team_id, COALESCE(COUNT(team_members.id), 0) as member_count')
+            ->pluck('member_count', 'team_id')
+            ->toArray();
     }
 }

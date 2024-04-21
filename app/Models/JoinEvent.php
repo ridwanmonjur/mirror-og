@@ -77,6 +77,16 @@ class JoinEvent extends Model
             ->get();
     }
 
+    public static function getJoinEventsForTeamListWithEventsRosterResults($teamIdList)
+    {
+        return self::whereIn('team_id', $teamIdList)
+            ->with(['eventDetails',  'user', 'results', 'roster' => function ($q) {
+                $q->with('user');
+            }, 'eventDetails.tier', 'eventDetails.game', 'eventDetails.user'
+            ])
+            ->get();
+    }
+
     public static function getJoinEventsCountForTeam($team_id)
     {
         return self::where('team_id', $team_id)
@@ -90,7 +100,36 @@ class JoinEvent extends Model
                 $q->select('id')
                     ->from('join_events')
                     ->where('team_id', $team_id);
-            })->get();
+            })
+            ->get();
+        
+        $sumPositionOne = 0;
+        $streak = 0;
+        $maxStreak = 0;
+        
+        foreach ($joins as $join) {
+            if ($join->position == 1) {
+                $sumPositionOne++;
+            } else {
+                $maxStreak = max($maxStreak, $streak);
+                $streak = 0;
+            }
+        
+            $streak++;
+        }
+            
+        return ['wins' => $sumPositionOne, 'streak' => $streak];
+    }
+
+    public static function getJoinEventsWinCountForTeamList($teamIdList)
+    {
+        $joins = DB::table('event_join_results')
+            ->whereIn('join_events_id', function($q) use ($teamIdList) {
+                $q->select('id')
+                    ->from('join_events')
+                    ->whereIn('team_id', $teamIdList);
+            })
+            ->get();
         
         $sumPositionOne = 0;
         $streak = 0;

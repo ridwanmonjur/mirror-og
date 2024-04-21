@@ -73,7 +73,7 @@
                             "d-flex justify-content-between flex-wrap" => !isset($awardList[2])
                     ])>
                         <div>
-                            <p>Events Joined: {{ $totalEvents }}</p>
+                            <p>Events Joined: {{ $totalEventsCount }}</p>
                             <p>Wins: {{ $wins }}</p>
                             <p>Win Streak: {{ $streak }}</p>
                         </div>

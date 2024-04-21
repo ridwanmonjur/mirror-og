@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Participant;
 use App\Http\Controllers\Controller;
 use App\Models\EventInvitation;
+use App\Models\Follow;
+use App\Models\JoinEvent;
 use App\Models\Team;
+use App\Models\TeamCaptain;
 use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,9 +19,7 @@ class ParticipantController extends Controller
         $teamId = $request->teamId;
         $selectTeam = Team::find($teamId);
         $page = 5;
-        $userList = User::getParticipants($request, $teamId)
-            ->paginate($page);
-
+        $userList = User::getParticipants($request, $teamId)->paginate($page);
         foreach ($userList as $user) {
             $user->is_in_team = $user->members->isNotEmpty() ? 'yes' : 'no';
         }
@@ -66,7 +67,36 @@ class ParticipantController extends Controller
         return view('Participant.ParticipantRequest', compact('membersCount', 'invitedTeamAndMemberList', 'pendingTeamAndMemberList', 'invitedEventsList'));
     }
 
-    public function viewProfile(Request $request) {
-        return view('Participant.PlayerProfile');
+    public function viewProfile(Request $request, $id) {
+        $user = $request->attributes->get('user');
+        $user_id = $user?->id ?? null;
+        [
+            'teamList' => $teamList,
+            'teamIdList' => $teamIdList,
+        ] = Team::getUserTeamList($user_id);   
+
+        $awardList = Team::getAwardListByTeamIdList($teamIdList);
+        $achievementList = Team::getAchievementListByTeamIdList($teamIdList);
+        $joinEvents = JoinEvent::getJoinEventsForTeamListWithEventsRosterResults($teamIdList);
+        $totalEventsCount = $joinEvents->count();
+        ['wins' => $wins, 'streak' => $streak] = 
+            JoinEvent::getJoinEventsWinCountForTeamList($teamIdList);
+        
+        $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
+        $followCounts = Follow::getFollowCounts($userIds);
+        $isFollowing = Follow::getIsFollowing($user_id, $userIds);
+        $joinEventsHistory = $joinEventsActive = $values = [];
+        ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory] 
+            = JoinEvent::processEvents($joinEvents, $isFollowing);
+
+        $joinEventIds = $joinEvents->pluck('id')->toArray();
+
+        return view('Participant.PlayerProfile', 
+            compact('joinEvents', 
+                'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
+                'wins', 'streak', 'awardList', 'achievementList'
+            )
+        );
+       
     }
 }

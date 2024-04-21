@@ -178,7 +178,7 @@ class ParticipantEventController extends Controller
         [
             'teamList' => $selectTeam,
             'teamIdList' => $teamIdList,
-        ] = Team::getUserTeamAndTeamMembersAndPluckIds($user_id);
+        ] = Team::getUserTeamListAndPluckIds($user_id);
         $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $user_id, 'accepted');
         if ($hasJoinedOtherTeams) {
             return $this->showErrorParticipant("One of your teams has joined this event already!");

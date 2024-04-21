@@ -53,37 +53,87 @@
             <button class="tab-button outer-tab" onclick="showTab(event, 'Teams', 'outer-tab')">Teams</button>
         </div>
         <div class="tab-content outer-tab" id="Overview">
-            <div style="padding-left: 200px;"><b>Recent Events</b></div>
-            <div class="recent-events">
-                <!-- Update the event-carousel section in the Overview tab content -->
+            <br><br>
+            <div class="d-flex justify-content-center"><b>Recent Events</b></div>
+            <br> <br>
+            <div class="position-relative d-flex justify-content-center">
+                @if (!isset($joinEvents[0]))
+                    <p>No events available!</p>
+                @else
+                    <button class="carousel-button position-absolute" style="top: 100px; left: 20px;"
+                        onclick="carouselWork(-2)">
+                        &lt;
+                    </button>
+                    <button class="carousel-button position-absolute" style="top: 100px; right: 20px;"
+                        onclick="carouselWork(2)">
+                        &gt;
+                    </button>
+                    @if (!isset($joinEvents[1]))
+                        <div class="d-flex justify-content-center event-carousel-works">
+                            @foreach ($joinEvents as $key => $joinEvent)
+                                @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="event-carousel-styles event-carousel-works">
+                            @foreach ($joinEvents as $key => $joinEvent)
+                                @include('Participant.Layout.RosterView',  ['isRegistrationView' => false])
+                            @endforeach
+                        </div>
+                    @endif
+                 
+                @endif
+            </div>
 
-                <div class="team-info">
-                    <div class="showcase">
-                        <div><b>Showcase</b></div>
-                        <br>
-                        <div class="showcase-box">
-                            <div class="showcase-column">
-                                <p>Events Joined: 10</p>
-                                <p>Wins: 5</p>
-                                <p>Win Streak: 3</p>
-                            </div>
-                            <div class="showcase-column">
-                                <!-- Trophy image in the second column -->
-                                <img src="css/images/fnatic.jpg" alt="Trophy" class="trophy">
+            <div class="team-info">
+                <div class="showcase">
+                    <div><b>Showcase</b></div>
+                    <br>
+                    <div @class(["showcase-box d-none-until-hover-parent" , 
+                            "d-flex justify-content-between flex-wrap" => !isset($awardList[2])
+                    ])>
+                        <div>
+                            <p>Events Joined: {{ $totalEventsCount }}</p>
+                            <p>Wins: {{ $wins }}</p>
+                            <p>Win Streak: {{ $streak }}</p>
+                        </div>
+                        <div class="d-none-until-hover">
+                            <div class="d-flex justify-content-between w-100 h-100">
+                                @foreach ($awardList as $award)
+                                    <div>
+                                        <img src="{{ '/' . 'storage/' . $award->awards_image }} " alt="Trophy" class="trophy me-2">
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="achievements">
-                        <div><b>Achievements</b></div>
-                        <br>
-                        <ul class="achievement-list">
-                            <li>First Place - Online Tournament (2023) <span class="achievement-complete">✔️</span></li>
-                            <li>Best Team Collaboration - LAN Event (2022) <span class="achievement-complete">✔️</span>
-                            </li>
-                            <!-- Add more achievements as needed -->
+                <div class="achievements">
+                    <div><b>Achievements</b></div>
+                    @if (!isset($achievementList[0]))
+                        <ul class="achievement-list mt-4">
+                            <p>No achievements available</p>
                         </ul>
-                    </div>
+                    @else
+                        <ul class="achievement-list">
+                            @foreach ($achievementList as $achievement)
+                                <li>
+                                    <span class="additional-text d-flex justify-content-between">
+                                        <span>
+                                        {{ $achievement->title }} ({{ \Carbon\Carbon::parse($achievement->created_at)->format('Y') }})
+                                        </span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+                                        </svg>
+                                    </span><br>
+                                    <span class="ps-2"> {{ $achievement->description }} </span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                    </ul>
                 </div>
             </div>
         </div>
@@ -222,83 +272,37 @@
 
         <div class="tab-content outer-tab d-none" id="Events">
 
-            <div style="padding-left: 200px;"><b>Active Events</b></div>
-
-            <div class="player_event">
-                <div class="event">
-                    <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
-                        <br>
-                        <div class="player-info">
-                            <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                            <span>John Doe</span>
-                        </div>
-                        <div class="player-info">
-                            <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                            <span>John Doe</span>
-                        </div>
-                        <div class="player-info">
-                            <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                            <span>John Doe</span>
-                        </div>
-                    </div>
-                    <div class="frame1">
-                        <div class="container">
-                            <div class="left-col">
-                                <p><img src="css/images/dota.png" class="logo2">
-                                <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota
-                                    Challenge League Season 1</p>
-                                </p>
-                            </div>
-                            <div class="right-col">
-                                <p><img src="css/images/dota.png" class="logo2">
-                                <p style="font-size: 12px; text-align: left;">Media Prima</p>
-                                <br>
-                                <p style="font-size: 12px; text-align: left;">1K Followers</p>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="mx-auto" style="width: 80%;"><b>Active Events</b></div>
+            
+            @if (!isset($joinEventsActive[0]))
+                <p class="text-center">
+                    This profile has no active events
+                </p>
+            @else
+                <div id="activeRostersForm" class="tex-center mx-auto">
+                    <br>
+                    @foreach ($joinEventsActive as $key => $joinEvent)
+                        @include('Participant.Layout.RosterView', ['isRegistrationView' => false])
+                        <br><br>
+                    @endforeach
                 </div>
-            </div>
+            @endif
 
-            <div style="padding-left: 200px;"><b>Past Events</b></div>
+            <div class="mx-auto" style="width: 80%;"><b>Past Events</b></div>
 
-            <div class="player_event">
-                <div class="event">
-                    <div style="background-color:rgb(185, 182, 182); text-align: left; height: 200px;">
-                        <br>
-                        <div class="player-info">
-                            <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                            <span>John Doe</span>
-                        </div>
-                        <div class="player-info">
-                            <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                            <span>John Doe</span>
-                        </div>
-                        <div class="player-info">
-                            <div class="player-image" style="background-image: url('css/images/dota.png')"></div>
-                            <span>John Doe</span>
-                        </div>
-                    </div>
-                    <div class="frame1">
-                        <div class="container">
-                            <div class="left-col">
-                                <p><img src="css/images/dota.png" class="logo2">
-                                <p style="font-size: 10px; text-align: left;">The Super Duper Extreme Dota
-                                    Challenge League Season 1</p>
-                                </p>
-                            </div>
-                            <div class="right-col">
-                                <p><img src="css/images/dota.png" class="logo2">
-                                <p style="font-size: 12px; text-align: left;">Media Prima</p>
-                                <br>
-                                <p style="font-size: 12px; text-align: left;">1K Followers</p>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+            @if (!isset($joinEventsHistory[0]))
+                <p class="text-center">
+                    This profile have no past events
+                </p>
+            @else
+                <div id="activeRostersForm" class="tex-center mx-auto">
+                    <br>
+                    @foreach ($joinEventsHistory as $key => $joinEvent)
+                        @include('Participant.Layout.RosterView', ['isRegistrationView' => false])
+                        <br><br>
+                    @endforeach
                 </div>
-            </div>
+            @endif
         </div>
 
         <div class="tab-content outer-tab d-none" id="Teams">
