@@ -6,7 +6,7 @@
         <main>
             <div>
                 <div class="pt-5">
-                    @include('Organizer.CheckoutLayout.CheckoutEventSuccess', ['event' => $event])
+                    @include('Organizer.CheckoutPartials.CheckoutEventSuccess', ['event' => $event])
                 </div>
             </div>
             <br><br>

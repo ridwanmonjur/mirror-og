@@ -8,26 +8,26 @@
                     <form enctype="multipart/form-data" onkeydown="return event.key != 'Enter';"
                         action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
                         @csrf
-                        @include('Organizer.CreateEditLayout.CreateEventHiddenForm')
-                        @include('Organizer.CreateEditLayout.CreateEventTimelineBox')
+                        @include('Organizer.CreateEditPartials.CreateEventHiddenForm')
+                        @include('Organizer.CreateEditPartials.CreateEventTimelineBox')
                         @if (session()->has('error'))
-                            @include('Organizer.CreateEditLayout.CreateEventTimelineWelcome', [
+                            @include('Organizer.CreateEditPartials.CreateEventTimelineWelcome', [
                                 'error' => session()->get('error'),
                             ])
                         @else
-                            @include('Organizer.CreateEditLayout.CreateEventTimelineWelcome')
+                            @include('Organizer.CreateEditPartials.CreateEventTimelineWelcome')
                         @endif
-                        @include('Organizer.CreateEditLayout.CreateEventStepOne')
+                        @include('Organizer.CreateEditPartials.CreateEventStepOne')
                         @include('CommonPartials.BootstrapV5Js')
-                        @include('Organizer.CreateEditLayout.CreateEventForm')
+                        @include('Organizer.CreateEditPartials.CreateEventForm')
                         @if (session()->has('success'))
-                            @include('Organizer.CreateEditLayout.CreateEventSuccess')
+                            @include('Organizer.CreateEditPartials.CreateEventSuccess')
                         @endif
                     </form>
                 </div>
             </div>
             <br><br>
         </main>
-        @include('Organizer.CreateEditLayout.CreateEventScripts')
+        @include('Organizer.CreateEditPartials.CreateEventScripts')
 
     </body>

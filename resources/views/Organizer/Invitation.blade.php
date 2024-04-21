@@ -8,7 +8,7 @@ extract($dateArray);
         @include('CommonPartials.NavbarGoToSearchPage')
     <main>
         <div>
-            @include('Organizer.CreateEditLayout.CreateEventTimelineBox')
+            @include('Organizer.CreateEditPartials.CreateEventTimelineBox')
             <br>
             <div class="text-center" style="margin:auto; border-color: black; background: white; max-width: 60vw; min-height: 60vh;display:flex;flex-direction:column; justify-content:space-between;">
                 <div>
@@ -93,7 +93,7 @@ extract($dateArray);
         </div>
         <br><br>
     </main>
-    @include('Organizer.CreateEditLayout.CreateEventScripts')
+    @include('Organizer.CreateEditPartials.CreateEventScripts')
     @include('CommonPartials.BootstrapV5Js')
 
     <script>
