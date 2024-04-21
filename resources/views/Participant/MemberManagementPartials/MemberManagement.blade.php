@@ -15,13 +15,14 @@
                     <u> Manage Roster</u>
                 </button>
             </a>
+            <a
+                href="{{ route('participant.event.view', ['id' => $id]) }}">
+                <button class="oceans-gaming-default-button oceans-gaming-gray-button ms-2 me-2" type="submit" style="display: inline !important;">
+                    View Event
+                </button>
+            </a>
         @endif
-        <a
-            href="{{ route('participant.event.view', ['id' => $id]) }}">
-            <button class="oceans-gaming-default-button oceans-gaming-gray-button ms-2 me-2" type="submit" style="display: inline !important;">
-                View Event
-            </button>
-        </a>
+     
         <a href={{ route('participant.home.view')}}>
             <button class="btn btn-link ms-0 me-2" type="submit" style="display: inline !important;">
                 Home Screen

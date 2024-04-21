@@ -28,7 +28,8 @@ return new class extends Migration
             $table->string('sub_action_public_time')->nullable();
             $table->string('sub_action_private')->nullable();
             $table->foreignId('user_id')->constrained(
-                table: 'users', indexName: 'event_details_user_id_foreign')->nullable();
+                table: 'users', indexName: 'event_details_user_id_foreign')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
