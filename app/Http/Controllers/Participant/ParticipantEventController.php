@@ -98,9 +98,7 @@ class ParticipantEventController extends Controller
                     }
                 }
 
-                $existingJoint = JoinEvent::where('joiner_id', $userId)
-                    ->where('event_details_id', $event->id)
-                    ->first();
+                $existingJoint = JoinEvent::getJoinedByTeamsForSameEvent($event->id, $userId);
             } else {
                 if ($event->sub_action_private == 'private') {
                     throw new UnauthorizedException('Login to access this event.');

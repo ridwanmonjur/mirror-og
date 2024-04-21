@@ -232,4 +232,16 @@ class JoinEvent extends Model
             ->exists();
       
     }
+
+     public static function getJoinedByTeamsForSameEvent($eventId, $userId) {
+        return self::where('event_details_id', $eventId)
+            ->where(function ($query) use ($userId) {
+                $query->whereHas('members', function ($query) use ($userId) {
+                    $query->where('user_id', $userId)->whereIn('status', ['accepted', 'pending']);
+                });
+            })
+            ->get()
+            ->first();
+      
+    }
 }
