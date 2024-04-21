@@ -83,11 +83,10 @@ class ParticipantEventController extends Controller
 
                 if ($event->sub_action_private == 'private') {
                     $checkIfUserIsOrganizerOfEvent = $event->user_id == $userId;
-                    $checkIfUserIsInvited = EventInvitation::where('participant_user_id', $userId)
-                        ->where('event_id', $event->id)->exists();
+                    $checkIfUserIsInvited = true;
                     $checkIfShouldDisallow = !($checkIfUserIsOrganizerOfEvent || $checkIfUserIsInvited);
                     if ($checkIfShouldDisallow) {
-                        throw new UnauthorizedException("You're neither organizer nor a participant of event");
+                        throw new UnauthorizedException("This is a provate event and you're neither organizer nor a participant of event");
                     }
                 }
 
