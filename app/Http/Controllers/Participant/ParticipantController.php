@@ -67,6 +67,6 @@ class ParticipantController extends Controller
     }
 
     public function viewProfile(Request $request) {
-        return view('Participant.Profile');
+        return view('Participant.PlayerProfile');
     }
 }

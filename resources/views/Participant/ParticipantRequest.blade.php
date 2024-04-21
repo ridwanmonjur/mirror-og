@@ -8,16 +8,11 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamList.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
 </head>
 
 <body>
     @include('CommonLayout.NavbarGoToSearchPage')
     @include('Participant.ParticipantRequestLayout.RequestManagement')
-
     @include('CommonLayout.BootstrapV5Js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
