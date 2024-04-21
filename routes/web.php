@@ -7,6 +7,7 @@ use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\OrganizerCheckoutController;
+use App\Http\Controllers\Organizer\OrganizerController;
 use App\Http\Controllers\Organizer\OrganizerEventResultsController;
 use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantRosterController;
@@ -37,8 +38,13 @@ Route::get('/event/search', [AuthController::class, 'showLandingPage'])->name('p
 Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view');
 Route::get('/team/{id}/view', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
 Route::get('/profile/participant/{id}/view', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view');
-Route::get('/profile/organizer/{id}/view', [ParticipantController::class, 'viewProfileById'])->name('public.organizer.view');
-Route::get('/profile/admin/{id}/view', [ParticipantController::class, 'viewProfileById'])->name('public.admin.view');
+Route::get('/profile/organizer/{id}/view', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view');
+
+Route::group(['prefix' => 'admin'], function () {
+    Route::group(['middleware' => 'auth'], function () {
+        Route::get('/profile', [OrganizerController::class, 'viewOwnProfile'])->name('admin.profile.view');
+    });
+});
 
 /* THIS IS THE PARTICIPANT VIEW */
 Route::group(['prefix' => 'participant'], function () {
@@ -181,6 +187,8 @@ Route::group(['prefix' => 'organizer'], function () {
                 ->middleware('prevent-back-button')
                 ->name('organizer.checkout.view');
             Route::get('event/{id}/checkout/transition', [OrganizerCheckoutController::class, 'showCheckoutTransition'])->name('organizer.checkout.transition');
+        
+            Route::get('/profile', [OrganizerController::class, 'viewOwnProfile'])->name('organizer.profile.view');
         });
     });
 });
