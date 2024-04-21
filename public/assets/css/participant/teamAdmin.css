@@ -45,6 +45,8 @@
     align-items: center;
     justify-content: center;
     background-image: url("/assets/images/event-creation-bg.png");
+    background-repeat: round;
+    background-size: cover;
     margin: 0;
 }
 
