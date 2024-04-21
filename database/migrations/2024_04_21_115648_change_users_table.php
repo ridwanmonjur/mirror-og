@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('age')->nullable();
             $table->string('region')->nullable();
             $table->dropColumn('updated_at');
+            $table->boolean('isEdited')->nullable();
         });
     }
 
@@ -27,6 +28,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('isEdited');
             $table->dropColumn('nickname');
             $table->dropColumn('backgroundBanner');
             $table->dropColumn('bio');

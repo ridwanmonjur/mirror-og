@@ -460,7 +460,6 @@ class AuthController extends Controller
 
             if (Auth::attempt($validatedData)) {
                 $user = User::where('email', $request->email)->first();
-        
                 if (!$user->email_verified_at) {
                     return redirect()
                         ->back()
@@ -475,7 +474,6 @@ class AuthController extends Controller
                 }
         
                 $request->session()->regenerate();
-
                 $token = $user->createToken('Personal Access Token')->plainTextToken;
 
                 return redirect()->intended(route($userRole . '.home.view'))

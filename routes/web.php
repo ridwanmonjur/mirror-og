@@ -37,6 +37,8 @@ Route::get('/event/search', [AuthController::class, 'showLandingPage'])->name('p
 Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view');
 Route::get('/team/{id}/view', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
 Route::get('/profile/participant/{id}/view', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view');
+Route::get('/profile/organizer/{id}/view', [ParticipantController::class, 'viewProfileById'])->name('public.organizer.view');
+Route::get('/profile/admin/{id}/view', [ParticipantController::class, 'viewProfileById'])->name('public.admin.view');
 
 /* THIS IS THE PARTICIPANT VIEW */
 Route::group(['prefix' => 'participant'], function () {
