@@ -22,7 +22,14 @@
                 </button>
             </a>
         @endif
-     
+        @if (!$isRedirect)
+            <a
+                href="{{ route('participant.team.manage', ['id' => $id]) }}">
+                <button class="oceans-gaming-default-button oceans-gaming-gray-button ms-2 me-2" type="submit" style="display: inline !important;">
+                    Manage Team
+                </button>
+            </a>
+        @endif
         <a href={{ route('participant.home.view')}}>
             <button class="btn btn-link ms-0 me-2" type="submit" style="display: inline !important;">
                 Home Screen
