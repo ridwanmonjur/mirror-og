@@ -36,6 +36,19 @@
                 </div>
                 <div class="member-details">
                     @if ($userProfile->isEdited)
+                        <h2>{{$userProfile->nickname}} <img src="css/images/edit-text.png" class="icons-game"></h2>
+                        <h5>{{$userProfile->name}}, {{$userProfile->age}}</h5>
+                        <p>{{$userProfile->bio}}</p>
+                        <img src="css/images/pin.png" class="icons"> USA&nbsp;&nbsp;&nbsp;&nbsp;
+                        <img src="css/images/link.png" class="icons"> <a href="www.driftwood.gg"
+                            style="text-decoration: none; color: black;">driftwood.gg</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <img src="css/images/user.png" class="icons"> Joined 5 January 2024<br>
+                        <br>
+                        <img src="css/images/dota.png" class="icons-game"> Dota 2&nbsp;&nbsp;&nbsp;&nbsp;
+                        <img src="css/images/lol.png" class="icons-game"> League Of Legends&nbsp;&nbsp;&nbsp;&nbsp;
+                        <img src="css/images/valo.jpg" class="icons-game"> Valorant<br>
+                        <br>
+                    @else
                         <h2>{{$userProfile->nickname  }} <img src="css/images/edit-text.png" class="icons-game"></h2>
                         <h5>{{$userProfile->name}}, 24</h5>
                         <p>This is the player bio. The character limit should be up to 150 words. This field should accept
@@ -49,8 +62,6 @@
                         <img src="css/images/lol.png" class="icons-game"> League Of Legends&nbsp;&nbsp;&nbsp;&nbsp;
                         <img src="css/images/valo.jpg" class="icons-game"> Valorant<br>
                         <br>
-                    @else
-                        {{$userProfile->name}}'s profile is not edited yet!
                     @endif
                 </div>
             </div>
