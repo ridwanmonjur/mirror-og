@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('nickname')->nullable();
+            $table->string('domain')->nullable();
             $table->string('backgroundBanner')->nullable();
             $table->text('bio')->nullable();
             $table->unsignedInteger('age')->nullable();
@@ -30,6 +31,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('isEdited');
             $table->dropColumn('nickname');
+            $table->dropColumn('domain');
             $table->dropColumn('backgroundBanner');
             $table->dropColumn('bio');
             $table->dropColumn('age');

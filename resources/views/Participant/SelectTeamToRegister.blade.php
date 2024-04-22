@@ -54,10 +54,14 @@
                                     <div>
                                         <br>
                                         <p>You have {{ $count }} teams. You can be part of maximum 5 teams!</p>
-                                        <p class="text-success"> You can still create {{ 5 - $count }} teams.</p>
-                                        <button class="btn btn-link text-secondary px-0" type="submit">
-                                            Create Another Team
-                                        </button>
+                                        @if ($count < 5)
+                                            <p class="text-success"> You can still create {{ 5 - $count }} teams.</p>
+                                            <button class="btn btn-link text-secondary px-0" type="submit">
+                                                Create Another Team
+                                            </button>
+                                        @else
+                                            <p class="text-red"> You cannot create more teams.</p>
+                                        @endif
                                     </div>
                                 </form>
                             @endif
