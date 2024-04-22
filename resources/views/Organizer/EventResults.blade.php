@@ -424,6 +424,7 @@
                                                 </form>
                                             </div>
                                         </div>
+                                    </div>
                                 </tbody>
                             </table>
                         </div>

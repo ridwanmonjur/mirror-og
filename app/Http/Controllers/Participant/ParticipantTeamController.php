@@ -48,6 +48,10 @@ class ParticipantTeamController extends Controller
     public function teamManagement(Request $request, $id)
     {
         $user = $request->attributes->get('user');
+        if (is_null($user)) {
+            $user = Auth::user(); 
+        } 
+
         $user_id = $user?->id ?? null;
         $selectTeam = Team::where('id', $id)
             ->with(['members' => function($query) {
@@ -66,7 +70,12 @@ class ParticipantTeamController extends Controller
             
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
             $followCounts = Follow::getFollowCounts($userIds);
-            $isFollowing = Follow::getIsFollowing($user_id, $userIds);
+            if ($user_id) {
+                $isFollowing = Follow::getIsFollowing($user_id, $userIds);
+            } else {
+                $isFollowing = [];
+            }
+
             $joinEventsHistory = $joinEventsActive = $values = [];
             ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory] 
                 = JoinEvent::processEvents($joinEvents, $isFollowing);
@@ -83,48 +92,6 @@ class ParticipantTeamController extends Controller
             );
         } else {
             return $this->showErrorParticipant('This event is missing or cannot be retrieved!');
-        }
-    }
-
-    public function teamProfile(Request $request, $id)
-    {
-        $user = $request->attributes->get('user');
-        $user_id = $user?->id ?? null;
-        $selectTeam = Team::where('id', $id)
-            ->with(['members' => function($query) {
-                $query->where('status', 'accepted');
-            }])
-            ->withCount(['members' => function($query) {
-                $query->where('status', 'accepted');
-            }])
-            ->first();        
-        if ($selectTeam) {
-            $awardList = $selectTeam->getAwardListByTeam();
-            $achievementList = $selectTeam->getAchievementListByTeam();
-            $joinEvents = JoinEvent::getJoinEventsForTeamWithEventsRosterResults($selectTeam->id);
-            $totalEventsCount = $joinEvents->count();
-            ['wins' => $wins, 'streak' => $streak] = 
-                JoinEvent::getJoinEventsWinCountForTeam($selectTeam->id);
-            
-            $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
-            $followCounts = Follow::getFollowCounts($userIds);
-            $isFollowing = Follow::getIsFollowing($user_id, $userIds);
-            $joinEventsHistory = $joinEventsActive = $values = [];
-            ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory] 
-                = JoinEvent::processEvents($joinEvents, $isFollowing);
-            // dd($joinEvents, $activeEvents, $historyEvents);
-
-            $joinEventIds = $joinEvents->pluck('id')->toArray();
-            $teamMembers = $selectTeam->members->where('status', 'accepted');
-
-            return view('Participant.Profile.TeamProfile', 
-                compact('selectTeam', 'joinEvents', 'teamMembers',
-                    'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
-                    'wins', 'streak', 'awardList', 'achievementList'
-                )
-            );
-        } else {
-            return $this->showErrorParticipant('This team is missing or cannot be retrieved!');
         }
     }
 

@@ -100,7 +100,7 @@
                     </tbody>
                 </table>
             @else
-                <p class="text-danger mx-auto">
+                <p class="text-red mx-auto">
                     You need accepted members to continue
                 </p>
             @endif

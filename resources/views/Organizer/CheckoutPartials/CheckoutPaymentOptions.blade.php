@@ -2,7 +2,7 @@
     <div class="mx-2">
         <h4>Payment Method</h4>
         @if (session('errorCheckout'))
-            <div class="text-danger my-2">
+            <div class="text-red my-2">
                 {{ session('errorCheckout') }}
             </div>
         @endif
@@ -167,7 +167,7 @@
                 </div>
             </form>
             @if (session('errorMessageCoupon'))
-                <div class="text-danger">
+                <div class="text-red">
                     {{ session('errorMessageCoupon') }}
                 </div>
             @endif

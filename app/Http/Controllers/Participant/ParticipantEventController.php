@@ -294,19 +294,20 @@ class ParticipantEventController extends Controller
                 DB::commit();
                 return view('Participant.EventNotify', compact('id', 'selectTeam'));
             } else {
-                return redirect()
-                    ->back()
-                    ->with('error', "You have $count teams, so cannot join.");
+                session()->flash('errorMessage', "You already have 5 teams!");
+                return view('Participant.CreateTeamToRegister', ['id' => $id]);
             }
         } catch (Exception $e) {
             DB::rollBack();
             if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
-                session()->flash('errorMessage', 'Please choose a unique name!');
+                $errorMessage = "Please choose a unique name!";
             } else {
-                session()->flash('errorMessage', $e->getMessage());
+                $errorMessage = $e->getMessage();
             }
-
+            
+            session()->flash('errorMessage', $errorMessage);
             return view('Participant.CreateTeamToRegister', ['id' => $id]);
+
         }
     }
 }

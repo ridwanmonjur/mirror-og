@@ -223,6 +223,9 @@ button#submit,
     color: white;
 }
 
+.text-red {
+    color: red;
+}
 
 .w-70s {
     width: 100%;
@@ -503,5 +506,7 @@ a:hover {
         grid-template-columns: 1fr 1fr;
     }
 }
+
+
 
 /*! purgecss end ignore */
