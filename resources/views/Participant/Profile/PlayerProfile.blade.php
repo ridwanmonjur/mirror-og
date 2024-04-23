@@ -122,6 +122,8 @@
                 </div>
             </div>
         </div>
+        @include('Participant.Profile.EditProfile')
+
         <div class="tabs">
             <button class="tab-button  outer-tab tab-button-active"
                 onclick="showTab(event, 'Overview', 'outer-tab')">Overview</button>
