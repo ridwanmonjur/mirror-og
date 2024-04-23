@@ -17,6 +17,7 @@
                         <label class="form-check-label fw-bold">
                             Description
                         </label>
+                        <p>First push after renaming repo </p>
                         <textarea  class="form-control" style="border-radius: 30px;" rows="4" name="description"> </textarea>
                         <br><br>
                         <button type="submit" class="oceans-gaming-default-button">Submit
