@@ -222,11 +222,11 @@ class JoinEvent extends Model
         return ['joinEvents'=> $events, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents];
     }
 
-    public static function hasJoinedByOtherTeamsForSameEvent($eventId, $userId) {
+    public static function hasJoinedByOtherTeamsForSameEvent($eventId, $userId, $status) {
         return self::where('event_details_id', $eventId)
-            ->where(function ($query) use ($userId) {
-                $query->whereHas('members', function ($query) use ($userId) {
-                    $query->where('user_id', $userId)->whereIn('status', ['accepted', 'pending']);
+            ->where(function ($query) use ($userId, $status) {
+                $query->whereHas('members', function ($query) use ($userId, $status) {
+                    $query->where('user_id', $userId)->where('status', $status);
                 });
             })
             ->exists();

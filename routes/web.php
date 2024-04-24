@@ -142,11 +142,9 @@ Route::group(['prefix' => 'organizer'], function () {
 
     // Google login
     Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('organizer.google.login');
-    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('organizer.google.callback');
 
     // Steam login
     Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name('organizer.steam.login');
-    Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'])->name('organizer.steam.callback');
 
     // General organizer functions
     Route::group(['middleware' => 'auth'], function () {

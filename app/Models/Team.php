@@ -51,8 +51,20 @@ class Team extends Model
 
     private static function getTeamByCreatorId($teamId)
     {
-        return Team::where('id', $teamId)->value('user_id');
+        return self::where('id', $teamId)->value('user_id');
     }
+
+    public static function getTeamAndMembersByTeamId($teamId)
+    {
+        return self::with(['members.user' => function ($query) {
+                $query->select(['name', 'id', 'email']);
+            }])
+            ->whereHas('members', function ($query) {
+                $query->where('status', 'accepted');
+            })
+            ->find($teamId);
+    }
+
 
     public static function getUserTeamListAndPluckIds($user_id)
     {
@@ -197,5 +209,72 @@ class Team extends Model
             ->selectRaw('teams.id as team_id, COALESCE(COUNT(team_members.id), 0) as member_count')
             ->pluck('member_count', 'team_id')
             ->toArray();
+    }
+
+    public function processTeamRegistration($user, $event, $isNewTeam)
+    {
+        $userId = $user->id;
+        $teamMembers = $this->members;
+        $participant = Participant::where('user_id', $userId)->firstOrFail();
+        $memberNotification = [
+            'links' =>  [
+                [
+                    'name' => 'Team',
+                    'url' => route('participant.team.manage', ['id' => $this->id])
+                ],
+                [
+                    'name' => 'Event',
+                    'url' => route('participant.team.manage', ['id' => $this->id])
+                ]
+            ]
+        ];
+
+        if ($isNewTeam) {
+            $memberList = $memberNotification = [];
+            $memberList = [$user];
+            $memberNotification['text'] = 'You have created a new team named ' . $this->teamName . ' and joined event ' . $event->eventName;
+            $rosterCaptain = $teamMembers[0];
+        } else {
+            $memberList = $memberNotification = [];
+            foreach ($teamMembers as $member) {
+                $memberList[] = $member->user;
+            }
+
+            $memberNotification['text'] = 'You have selected a team named ' . $this->teamName . ' to join event ' . $event->eventName;
+            $rosterCaptain = TeamMember::where('team_id', $this->id)
+                ->where('user_id', $user->id)->get()->first();
+        }
+
+        $organizerList = $organizerNotification = []; 
+        foreach ($teamMembers as $member) {
+            $memberList[] = $member->user;
+
+            $organizerNotification = [
+                'text' => ucfirst($this->name) . ' has joined your event ' . $event->name . '!',
+                'links' =>  [
+                    'name' => 'Visit team',
+                    'url' => route('event.index', ['id' => $event->id])
+                ]
+            ];
+
+            $organizerNotifications[] = $organizerNotification;
+        }
+
+        $joinEvent = JoinEvent::saveJoinEvent([
+            'team_id' => $this->id,
+            'joiner_id' => $userId,
+            'joiner_participant_id' => $participant->id,
+            'event_details_id' => $event->id,
+        ]);
+
+        RosterMember::bulkCreateRosterMembers($joinEvent->id, $teamMembers);
+        RosterCaptain::insert([
+            'team_member_id' => $rosterCaptain->id,
+            'join_events_id' => $joinEvent->id,
+            'teams_id' => $this->id
+        ]);
+
+        // $memberNotification, $organizerNotificatio => $text, $data, $links, $user
+        return [$memberList, $organizerList, $memberNotification, $organizerNotifications];
     }
 }

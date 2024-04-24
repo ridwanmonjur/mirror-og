@@ -77,7 +77,7 @@ class ParticipantController extends Controller
         return $this->viewProfile($request, $id, $user, false);
     }
 
-    private function viewProfile(Request $request, $user_id, $profile, $isOwnProfile = true) {
+    private function viewProfile(Request $request, $user_id, $userProfile, $isOwnProfile = true) {
    
         [
             'teamList' => $teamList,
