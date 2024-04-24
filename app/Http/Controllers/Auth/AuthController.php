@@ -19,6 +19,7 @@ use ErrorException;
 use Illuminate\Database\QueryException;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -29,7 +30,7 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    protected function _registerOrLoginUser($user, $type)
+    protected function _registerOrLoginUser($user, $type, $role)
     {
         if ($type == 'google') {
             $finduser = User::where('google_id', $user->id)->first();
@@ -37,9 +38,14 @@ class AuthController extends Controller
             $finduser = User::where('steam_id', $user->id)->first();
         }
 
+
         if ($finduser) {
+            // if (!$user->user['email_verified']) {
+            //     return ['finduser' => null, 'error' => 'Your Gmail is not verified'];
+            // }
+            
             Auth::login($finduser);
-            return $user;
+            return ['finduser' => $finduser, 'error' => null];
         } else {
             $finduser = User::where('email', $user->email)->first();
         
@@ -54,13 +60,14 @@ class AuthController extends Controller
                 $finduser->email_verified_at = now();
                 Auth::login($finduser);
                 $finduser->save();
-                return $finduser;
+                return ['finduser' => $finduser, 'error' => null];
             } else {
                 
                 $newUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,
                     'password' => bcrypt(Str::random(13)),
+                    'role' => strtoupper($role)
                 ]);
                 $newUser->email_verified_at = now();
                 
@@ -72,60 +79,76 @@ class AuthController extends Controller
                 
                 $newUser->save();
                 Auth::login($newUser);
-                return $newUser;
+                return ['finduser' => $newUser, 'error' => null];
             }
         }
     }
 
-    public function handleGoogleCallback()
+    public function handleGoogleCallback(Request $request)
     {
-        $user = Socialite::driver('google')->stateless()->user();
-        try {
-            $finduser = $this->_registerOrLoginUser($user, 'google');
-            dd($finduser);
-
+        // dd("hio");
+        $user = Socialite::driver('google')->user();
+        $role = Session::get('role');
+        ['finduser' => $finduser, 'error' => $error] 
+        = $this->_registerOrLoginUser($user, 'google', $role);
+        
+        Session::forget('role');
+        if ($error) {
+            return view("Participant.EventNotFound", ['error'=> $error]);
+        } else {
             if ($finduser->role == 'PARTICIPANT') {
                 return redirect()->route('participant.home.view');
             } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
                 return redirect()->route('organizer.home.view');
             }
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
     // Steam login
     public function redirectToSteam(Request $request)
     {
-        // $routeName = $request->route()->getName();
-        // if ($routeName == 'organizer.steam.login') {
-            
-        // } else {
+        $url = $request->url();
+        if (strpos($url, 'organizer') !== false) {
+            Session::put('role', 'organizer');
+        } elseif (strpos($url, 'participant') !== false) {
+            Session::put('role', 'participant');
+        }
 
-        // }
-        // dd($routeName);
         return Socialite::driver('steam')->redirect();
     }
 
     public function redirectToGoogle(Request $request)
     {
-        $routeName = $request->route()->getName();
-        dd($routeName);
-        // return Socialite::driver('google')->redirect();
+        $url = $request->url();
+        if (strpos($url, 'organizer') !== false) {
+            Session::put('role', 'organizer');
+        } elseif (strpos($url, 'participant') !== false) {
+            Session::put('role', 'participant');
+        }
+
+        return Socialite::driver('google')->redirect();
     }
 
 
     // Steam callback
     public function handleSteamCallback()
     {
-        $user = Socialite::driver('steam')->stateless()->user();
-        $finduser = $this->_registerOrLoginUser($user, 'steam');
-        
-        if ($finduser->role == 'PARTICIPANT') {
-            return redirect()->route('participant.home.view');
-        } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
-            return redirect()->route('organizer.home.view');
+        $user = Socialite::driver('steam')->user();
+        $role = Session::get('role');
+        ['finduser' => $finduser, 'error' => $error] 
+            = $this->_registerOrLoginUser($user, 'steam', $role);
+            
+        Session::forget('role');
+        if ($error) {
+            return view("Participant.EventNotFound", ['error'=> $error]);
+        } else {
+            if ($finduser->role == 'PARTICIPANT') {
+                return redirect()->route('participant.home.view');
+            } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
+                return redirect()->route('organizer.home.view');
+            }
         }
+        
     }
 
     public function showLandingPage(Request $request)

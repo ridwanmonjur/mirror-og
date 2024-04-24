@@ -12,6 +12,8 @@ class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public $timestamps = false;
+
     public function canAccessFilament(): bool
     {
         return $this->role == 'ADMIN';

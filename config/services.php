@@ -32,8 +32,8 @@ return [
     ],
 
     'google' => [
-        'client_id' => '646564419111-qrjhqfommnl1oakv14kigb5eqcjmeh4o.apps.googleusercontent.com',
-        'client_secret' => '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',
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URL'),
         'allowed_hosts' => [
             'driftwood.gg',

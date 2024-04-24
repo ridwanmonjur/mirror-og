@@ -46,6 +46,9 @@ Route::group(['prefix' => 'admin'], function () {
     });
 });
 
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback']);
+
 /* THIS IS THE PARTICIPANT VIEW */
 Route::group(['prefix' => 'participant'], function () {
     // Normal login
@@ -56,11 +59,9 @@ Route::group(['prefix' => 'participant'], function () {
 
     // Google login
     Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('participant.google.login');
-    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('participant.google.callback');
 
     // Steam login
     Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name('participant.steam.login');
-    Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'])->name('participant.steam.callback');
 
     // General participant functions
     Route::group(['middleware' => 'auth'], function () {
