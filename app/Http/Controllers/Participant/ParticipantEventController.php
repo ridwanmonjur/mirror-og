@@ -214,9 +214,9 @@ class ParticipantEventController extends Controller
 
             $selectTeam = Team::getTeamAndMembersByTeamId($teamId);
             $event = EventDetail::with(['user' => function ($query) {
-                    $query->select('id', 'eventName', 'email');
+                    $query->select('id', 'nane', 'email');
                 }])
-                ->select('id', 'user_id')
+                ->select('id', 'user_id', 'eventName' )
                 ->find($id);
 
             if ($selectTeam && $isAlreadyMember) {
@@ -260,8 +260,8 @@ class ParticipantEventController extends Controller
                 throw new Exception("One of your teams has joined this event already!");
             }
 
-            $event = EventDetail::select('id', 'user_id')->with(
-                ['user' => function ($q) { $q->select('id', 'eventName', 'email'); }]
+            $event = EventDetail::select('id', 'user_id', 'eventName')->with(
+                ['user' => function ($q) { $q->select('id', 'name', 'email'); }]
             )->find($id);
 
             if ($count < 5) {
