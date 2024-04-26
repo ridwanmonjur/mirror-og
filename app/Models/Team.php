@@ -245,7 +245,7 @@ class Team extends Model
 
         $organizerNotification = [
             'subject' => 'Team ' . $this->teamName . ' joining Event: ' . $event->eventName,
-            'text' => ucfirst($this->name) . ' has joined your event ' . $event->name . '!',
+            'text' => ucfirst($this->teamName) . ' has joined your event ' . $event->eventName . '!',
             'links' =>  [
                 [
                     'name' => 'Visit team',

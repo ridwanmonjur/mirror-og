@@ -32,7 +32,7 @@ extract($dateArray);
                 <div class="added-participant">
                     <br>
                     @forelse ($event->invitationList as $invitation)
-                    <p>{{ $invitation->team->name }}</p>
+                    <p>{{ $invitation->team->teamName }}</p>
                     @empty
                     <p class="hide-if-participant">No teams invited yet</p>
                     @endforelse
