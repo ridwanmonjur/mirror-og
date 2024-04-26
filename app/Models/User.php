@@ -79,6 +79,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Follow::class, 'user_id');
     }
 
+    public function activities()
+    {
+        return $this->morphMany(ActivityLogs::class, 'subject');
+    }
+
     public static function getParticipants($request, $teamId)
     {
         return self::query()

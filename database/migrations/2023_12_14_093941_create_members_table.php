@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('team_id');
+            // TODO: Change enum, route, add method etc
             $table->enum('status', ['pending', 'accepted', 'rejected', 'invited'])->default('pending');
             $table->timestamps();
 

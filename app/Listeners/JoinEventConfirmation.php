@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\JoinEventConfirmed;
-use App\Notifications\NewNotification;
+use App\Notifications\EventJoinNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
@@ -28,14 +28,21 @@ class JoinEventConfirmation
     public function handle(JoinEventConfirmed $event): void
     {
         // $user = $event->user;
-        Log::error('Join event ================>');
+        Log::info('Join event ================>');
         Log::error($event->memberList); 
-        Log::error($event->organizerList); 
-        Log::error($event->memberNotification); 
-        Log::error($event->organizerNotificatio); 
-        Notification::send($event->memberList, new NewNotification($event->memberNotification));
-        Notification::send($event->organizerList, new NewNotification($event->organizerNotificatio));
-        Log::error('Join event ================>');
+        Log::info($event->organizerList); 
+        Log::info($event->memberNotification); 
+        Log::info($event->organizerNotificatio); 
+        // TODO: CREATE ACTIVITY
+        /*
+        INSERT INTO `activity_logs` (`action`, `subject_id`, `subject_type`, `log`) 
+                VALUES (ACTION, NEW.user_id, `\App\Models\User`, USER_LOG);
+            INSERT INTO `activity_logs` (`action`, `subject_id`, `subject_type`, `log`) 
+                VALUES (ACTION, NEW.team_id, `\App\Models\Team`, TEAM_LOG); 
+        */
+        Notification::send($event->memberList, new EventJoinNotification($event->memberNotification));
+        Notification::send($event->organizerList, new EventJoinNotification($event->organizerNotificatio));
+        Log::info('Join event ================>');
 
         // Blade here
         //  {{ $notification->data['message'] }}

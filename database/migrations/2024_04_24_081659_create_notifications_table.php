@@ -14,19 +14,12 @@ return new class extends Migration
         
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('title');
             $table->text('data');
             $table->morphs('notifiable'); 
-            $table->string('link1_name')->nullable();
-            $table->string('link2_name')->nullable();
-            $table->string('link1_url')->nullable();
-            $table->string('link2_url')->nullable();
             $table->string('type');
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
-            
-            $table->index(['user_id', 'read_at']);
+            $table->index(['notifiable_id', 'notifiable_type', 'read_at']);
         });
     }
 

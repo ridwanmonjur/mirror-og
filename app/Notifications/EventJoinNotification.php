@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 
-class NewNotification extends Notification
+class EventJoinNotification extends Notification
 {
     use Queueable;
 
@@ -24,9 +24,9 @@ class NewNotification extends Notification
         $body 
     )
     {
-        Log::error('Notification join event ================>');
-        Log::error($body); 
-        Log::error('Notification join event ================>');
+        Log::info('Notification join event ================>');
+        Log::info($body); 
+        Log::info('Notification join event ================>');
         $this->body = $body;
     }
 
@@ -40,40 +40,36 @@ class NewNotification extends Notification
         // customize this notification
         // Mail::to($order->customer_email)->send(new OrderConfirmation($order));
         return (new MailMessage)
-            ->line($this->body['text'])
-            ->action('Notification Action', url('/'));
+            ->subject($this->body['subject'] ?? 'A subject')
+            ->action($this->body['links'][0]['name'], $this->body['links'][0]['url'])
+            ->line($this->body['text']);
     }
 
     public function toDatabase($notifiable)
     {
         // modify here
         return [
-            'title' => $this->body['title'] ?? 'Title',  
             'data' => $this->body['text'],
-            
+            'title' => $this->body['subject'],
+            'links' =>   $this->body['links']
             // Add any additional data you want to store in the database
         ];
     }
+
+    // public function toArray($notifiable)
+    // {
+    //     // modify here
+    //     return [
+    //         'data' => $this->body['text'],
+    //         'subject' => $this->body['subject'],
+    //         'links' =>   $this->body['links']
+    //         // Add any additional data you want to store in the database
+    //     ];
+    // }
 
 
     // public function markAsRead(){
     //     Auth::user()->unreadNotifications->markAsRead();
     //     return redirect()->back();
     // }
-    
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            'title' => $this->body['title'] ?? 'Title',  
-            'data' => $this->body['text'],
-            
-            // Add any additional data you want to store in the database
-        ];
-    }
 }

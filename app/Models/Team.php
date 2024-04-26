@@ -36,6 +36,11 @@ class Team extends Model
     {
         return $this->hasMany(EventInvitation::class, 'team_id');
     }
+
+    public function activities()
+    {
+        return $this->morphMany(ActivityLogs::class, 'subject');
+    }
    
     public static function destroyTeanBanner($fileName)
     {
@@ -217,6 +222,7 @@ class Team extends Model
         $teamMembers = $this->members;
         $participant = Participant::where('user_id', $userId)->firstOrFail();
         $memberNotification = [
+            'subject' => 'Team ' . $this->teamName . ' joining Event: ' . $event->eventName,
             'links' =>  [
                 [
                     'name' => 'Team',
@@ -230,9 +236,11 @@ class Team extends Model
         ];
 
         if ($isNewTeam) {
-            $memberList = $memberNotification = [];
-            $memberList = [$user];
+            $memberList = [];
             $memberNotification['text'] = 'You have created a new team named ' . $this->teamName . ' and joined event ' . $event->eventName;
+            foreach ($teamMembers as $member) {
+                $memberList[] = $member->user;
+            }
             $rosterCaptain = $teamMembers[0];
         } else {
             $memberList = $memberNotification = [];
@@ -245,20 +253,17 @@ class Team extends Model
                 ->where('user_id', $user->id)->get()->first();
         }
 
-        $organizerList = $organizerNotification = []; 
-        foreach ($teamMembers as $member) {
-            $memberList[] = $member->user;
+        $organizerList = [$event->user];
 
-            $organizerNotification = [
-                'text' => ucfirst($this->name) . ' has joined your event ' . $event->name . '!',
-                'links' =>  [
-                    'name' => 'Visit team',
-                    'url' => route('event.index', ['id' => $event->id])
-                ]
-            ];
+        $organizerNotification = [
+            'subject' => 'Team ' . $this->teamName . ' joining Event: ' . $event->eventName,
+            'text' => ucfirst($this->name) . ' has joined your event ' . $event->name . '!',
+            'links' =>  [
+                'name' => 'Visit team',
+                'url' => route('event.index', ['id' => $event->id])
+            ]
+        ];
 
-            $organizerNotifications[] = $organizerNotification;
-        }
 
         $joinEvent = JoinEvent::saveJoinEvent([
             'team_id' => $this->id,
@@ -275,6 +280,6 @@ class Team extends Model
         ]);
 
         // $memberNotification, $organizerNotificatio => $text, $data, $links, $user
-        return [$memberList, $organizerList, $memberNotification, $organizerNotifications];
+        return [$memberList, $organizerList, $memberNotification, $organizerNotification];
     }
 }
