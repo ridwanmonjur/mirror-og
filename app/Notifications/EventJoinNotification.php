@@ -40,7 +40,6 @@ class EventJoinNotification extends Notification
         // customize this notification
         // Mail::to($order->customer_email)->send(new OrderConfirmation($order));
         return (new MailMessage)
-            ->mailer("Ocean's Gaming")
             ->replyTo('oceansgamingmy@gmail.com')
             ->success()
             ->greeting("Hello, there from us, Ocean's Gaming!")
