@@ -214,7 +214,7 @@ class ParticipantEventController extends Controller
 
             $selectTeam = Team::getTeamAndMembersByTeamId($teamId);
             $event = EventDetail::with(['user' => function ($query) {
-                    $query->select('id', 'nane', 'email');
+                    $query->select('id', 'name', 'email');
                 }])
                 ->select('id', 'user_id', 'eventName' )
                 ->find($id);
