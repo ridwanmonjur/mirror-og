@@ -432,7 +432,45 @@
 
 </body>
 
+    
 <script>
+    const uploadButton = document.getElementById("upload-button");
+    const imageUpload = document.getElementById("image-upload");
+    const uploadedImage = document.getElementById("uploaded-image");
+
+    uploadButton?.addEventListener("click", function() {
+        imageUpload.click();
+    });
+
+    imageUpload?.addEventListener("change", async function(e) {
+        const file = e.target.files[0];
+
+        if (file) {
+            const url = "{{ route('participant.userBanner.action', ['id' => $userProfile->id] ) }}";
+            const formData = new FormData();
+            formData.append('file', file);
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: formData,
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    uploadedImage.style.backgroundImage = `url(${data.data.fileName})`;
+                } else {
+                    console.error('Error updating member status:', data.message);
+                }
+            } catch (error) {
+                console.error('Error approving member:', error);
+            }
+        }
+    });
+
     const fetchCountries = () => {
         return fetch('/countries')
             .then(response => response.json())

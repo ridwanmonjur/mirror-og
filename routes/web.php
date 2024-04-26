@@ -96,7 +96,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/team/roster/deleteCaptain', [ParticipantRosterController::class, 'deleteCaptainRosterMember'])->name('participant.roster.deleteCaptain');
             Route::post('/team/create', [ParticipantTeamController::class, 'teamStore'])->name('participant.team.store');
             Route::post('/team/{id}/editStore', [ParticipantTeamController::class, 'teamEditStore'])->name('participant.team.editStore');
-            Route::post('/team/{id}/banner', [ParticipantTeamController::class, 'replaceBanner'])->name('participant.banner.action');
+            Route::post('/team/{id}/banner', [ParticipantTeamController::class, 'replaceBanner'])->name('participant.teamBanner.action');
             Route::post('/team/{id}/user/{userId}/invite', [ParticipantTeamController::class, 'inviteMember'])->name('participant.member.invite');
             Route::post('/team/{id}/member/{memberId}/captain', [ParticipantTeamController::class, 'captainMember'])->name('participant.member.captain');
             Route::post('/team/{id}/member/{memberId}/deleteCaptain', [ParticipantTeamController::class, 'deleteCaptain'])->name('participant.member.deleteCaptain');
@@ -129,6 +129,7 @@ Route::group(['prefix' => 'participant'], function () {
 
             // Profile
             Route::get('/profile', [ParticipantController::class, 'viewOwnProfile'])->name('participant.profile.view');
+            Route::post('/profile/banner', [ParticipantTeamController::class, 'replaceBanner'])->name('participant.userBanner.action');
         });
     });
 });

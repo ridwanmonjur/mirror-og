@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use ErrorException;
+use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Log;
@@ -521,6 +522,23 @@ class AuthController extends Controller
             return redirect()
                 ->route($redirectRoute)
                 ->with('error', $th->getMessage());
+        }
+    }
+
+    public function replaceBanner(Request $request, $id) {
+        try {
+            $request->validate([
+                'file' => 'required|file'
+            ]);
+
+            $user = User::findOrFail($id);
+            $oldBanner = $user->userBanner;
+            $user->uploadUserBanner($request);
+            $user->destroyUserBanner($oldBanner);
+
+            return response()->json(['success' => true, 'message' => 'Succeeded', 'data' => compact('fileName')], 201);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
 }

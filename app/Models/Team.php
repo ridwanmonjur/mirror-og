@@ -41,18 +41,6 @@ class Team extends Model
     {
         return $this->morphMany(ActivityLogs::class, 'subject');
     }
-   
-    public static function destroyTeanBanner($fileName)
-    {
-        if ($fileName) {
-            $fileNameInitial = str_replace('images/team/', '', $fileName);
-            $fileNameFinal = "images/team/$fileNameInitial";
-
-            if (file_exists($fileNameFinal)) {
-                unlink($fileNameFinal);
-            }
-        }
-    }
 
     private static function getTeamByCreatorId($teamId)
     {
@@ -281,5 +269,29 @@ class Team extends Model
 
         // $memberNotification, $organizerNotificatio => $text, $data, $links, $user
         return [$memberList, $organizerList, $memberNotification, $organizerNotification];
+    }
+
+    public function uploadTeamBanner($request)
+    {
+        $file = $request->file('file');
+        $fileNameInitial = 'teamBanner-' . time() . '.' . $file->getClientOriginalExtension();
+        $fileName = "images/team/$fileNameInitial";
+        $file->storeAs('images/team/', $fileNameInitial);
+        $this->teamBanner = $fileName;
+        $fileName = asset('/storage'. '/'. $fileName);
+        $this->save();
+        return $fileName; 
+    }
+
+    public static function destroyTeanBanner($fileName)
+    {
+        if ($fileName) {
+            $fileNameInitial = str_replace('images/team/', '', $fileName);
+            $fileNameFinal = "images/team/$fileNameInitial";
+
+            if (file_exists($fileNameFinal)) {
+                unlink($fileNameFinal);
+            }
+        }
     }
 }

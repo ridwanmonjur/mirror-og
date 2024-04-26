@@ -366,13 +366,7 @@ class ParticipantTeamController extends Controller
 
             $team = Team::findOrFail($id);
             $oldBanner = $team->teamBanner;
-            $file = $request->file('file');
-            $fileNameInitial = 'teamBanner-' . time() . '.' . $file->getClientOriginalExtension();
-            $fileName = "images/team/$fileNameInitial";
-            $file->storeAs('images/team/', $fileNameInitial);
-            $team->teamBanner = $fileName;
-            $fileName = asset('/storage'. '/'. $fileName);
-            $team->save();
+            $team->uploadTeamBanner($request);
             Team::destroyTeanBanner($oldBanner);
 
             return response()->json(['success' => true, 'message' => 'Succeeded', 'data' => compact('fileName')], 201);

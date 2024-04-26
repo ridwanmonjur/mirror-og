@@ -102,4 +102,28 @@ class User extends Authenticatable implements FilamentUser
                 },
             ]);
     }
+
+    public function uploadUserBanner($request)
+    {
+        $file = $request->file('file');
+        $fileNameInitial = 'userBanner-' . time() . '.' . $file->getClientOriginalExtension();
+        $fileName = "images/user/$fileNameInitial";
+        $file->storeAs('images/user/', $fileNameInitial);
+        $this->userBanner = $fileName;
+        $fileName = asset('/storage'. '/'. $fileName);
+        $this->save();
+        return $fileName; 
+    }
+
+    public function destroyUserBanner($fileName)
+    {
+        if ($fileName) {
+            $fileNameInitial = str_replace('images/user/', '', $fileName);
+            $fileNameFinal = "images/user/$fileNameInitial";
+
+            if (file_exists($fileNameFinal)) {
+                unlink($fileNameFinal);
+            }
+        }
+    }
 }

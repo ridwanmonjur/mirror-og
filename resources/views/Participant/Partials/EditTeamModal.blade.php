@@ -23,7 +23,7 @@
                         </label>
                         <textarea  class="form-control" style="border-radius: 30px;" rows="4" name="description"> </textarea>
                         <br>
-                        <select value="{{$selectTeam->country}}" class="form-control">
+                        <select value="{{$selectTeam->country}}" class="form-control rounded-pill">
                             <template x-for="country in countries">
                                 <option x-bind:value="country.name.en">
                                 <span x-text="country.emoji_flag" class="mx-3"> </span>  
