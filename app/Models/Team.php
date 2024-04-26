@@ -247,8 +247,10 @@ class Team extends Model
             'subject' => 'Team ' . $this->teamName . ' joining Event: ' . $event->eventName,
             'text' => ucfirst($this->name) . ' has joined your event ' . $event->name . '!',
             'links' =>  [
-                'name' => 'Visit team',
-                'url' => route('event.index', ['id' => $event->id])
+                [
+                    'name' => 'Visit team',
+                    'url' => route('event.index', ['id' => $event->id])
+                ]
             ]
         ];
 
