@@ -23,7 +23,12 @@
     @include('CommonPartials.NavbarGoToSearchPage')
     @include('CommonPartials.BootstrapV5Js')
 
-    <main>
+    <main 
+        x-data="{ countries: [], errorMessage: '' }"
+        x-init="$nextTick(async () => { 
+            countries = await fetchCountries();
+        })"
+    >
         <div class="member-section">
             <div class="member-info d-flex justify-content-center align-items-center flex-wrap">
                 <div class="member-image">
@@ -41,17 +46,19 @@
                     @if ($userProfile->isEdited)
                         <h2>
                             {{$userProfile->nickname}}
-                            <button 
-                                class="gear-icon-btn me-2 position-relative" 
-                                style="top: 10px;" type="button" id="editProfileBtn" 
-                                data-bs-toggle="modal" data-bs-target="#editProfile" 
-                                aria-expanded="false"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                                </svg>
-                            </button>
+                            @if ($isOwnProfile)
+                                <button 
+                                    class="gear-icon-btn me-2 position-relative" 
+                                    style="top: 10px;" type="button" id="editProfileBtn" 
+                                    data-bs-toggle="modal" data-bs-target="#editProfile" 
+                                    aria-expanded="false"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                    </svg>
+                                </button>
+                            @endif
                         </h2>
                          <div class="d-flex justify-content-between flex-wrap">
                             <span>
@@ -81,17 +88,19 @@
                     @else
                         <h4>
                             {{$userProfile->name}}
-                            <button 
-                                class="gear-icon-btn ms-2 me-2" 
-                                 type="button" id="editProfileBtn" 
-                                data-bs-toggle="modal" data-bs-target="#editProfile" 
-                                aria-expanded="false"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                                </svg>
-                            </button>
+                            @if($isOwnProfile)
+                                <button 
+                                    class="gear-icon-btn ms-2 me-2" 
+                                    type="button" id="editProfileBtn" 
+                                    data-bs-toggle="modal" data-bs-target="#editProfile" 
+                                    aria-expanded="false"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                    </svg>
+                                </button>
+                            @endif
                         </h4>
                         <p>This is the player bio. The character limit should be up to 150 words. This field should accept
                             emojis.
@@ -424,6 +433,16 @@
 </body>
 
 <script>
+    const fetchCountries = () => {
+        return fetch('/countries')
+            .then(response => response.json())
+            .then(data => {
+                console.log({data})
+                return data?.data;
+            })
+            .catch(error => console.error('Error fetching countries:', error));
+    }
+
     function reddirectToLoginWithIntened(route) {
         route = encodeURIComponent(route);
         let url = "{{ route('participant.signin.view') }}";
@@ -463,7 +482,7 @@
 
     function carouselWork(increment = 0) {
         const eventBoxes = document.querySelectorAll('.event-carousel-works > div');
-        let boxLength = eventBoxes.length;
+        let boxLength = eventBoxes?.length || 0;
         let newSum = currentIndex + increment;
         if (newSum >= boxLength || newSum < 0) {
             return;
@@ -474,20 +493,22 @@
         // carousel top button working
         const button1 = document.querySelector('.carousel-button:nth-child(1)');
         const button2 = document.querySelector('.carousel-button:nth-child(2)');
-        button1.style.opacity = (currentIndex <= 2) ? '0.4' : '1';
-        button2.style.opacity = (currentIndex >= boxLength - 2) ? '0.4' : '1';
+        if (button1 && button2) {
+            button1.style.opacity = (currentIndex <= 2) ? '0.4' : '1';
+            button2.style.opacity = (currentIndex >= boxLength - 2) ? '0.4' : '1';
 
-        // carousel swing
-        for (let i = 0; i < currentIndex; i++) {
-            eventBoxes[i].classList.add('d-none');
-        }
+            // carousel swing
+            for (let i = 0; i < currentIndex; i++) {
+                eventBoxes[i]?.classList.add('d-none');
+            }
 
-        for (let i = currentIndex; i < currentIndex + 2; i++) {
-            eventBoxes[i].classList.remove('d-none');
-        }
+            for (let i = currentIndex; i < currentIndex + 2; i++) {
+                eventBoxes[i]?.classList.remove('d-none');
+            }
 
-        for (let i = currentIndex + 2; i < boxLength; i++) {
-            eventBoxes[i].classList.add('d-none');
+            for (let i = currentIndex + 2; i < boxLength; i++) {
+                eventBoxes[i]?.classList.add('d-none');
+            }
         }
     }
 
@@ -498,6 +519,8 @@
         window.location.href = "{{ route('public.participant.view', ['id' => ':id']) }}"
             .replace(':id', userId);
     }
+
+   
 </script>
 
 </html>

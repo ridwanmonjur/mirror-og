@@ -20,6 +20,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Io238\ISOCountries\Models\Country;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -28,6 +29,11 @@ class AuthController extends Controller
     {
         Auth::logout();
         return redirect('/');
+    }
+
+    public function countryList() {
+        $countries = Country::all(['name', 'emoji_flag', 'id']);
+        return response()->json(['success' =>true, 'data'=> $countries], 200);
     }
 
     protected function _registerOrLoginUser($user, $type, $role)
