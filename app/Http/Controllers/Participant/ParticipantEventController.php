@@ -261,7 +261,7 @@ class ParticipantEventController extends Controller
             }
 
             $event = EventDetail::select('id', 'user_id')->with(
-                ['user' => function ($q) { $q->select('id', 'name', 'email'); }]
+                ['user' => function ($q) { $q->select('id', 'eventName', 'email'); }]
             )->find($id);
 
             if ($count < 5) {
