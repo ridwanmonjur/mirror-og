@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <a href="{{$notification->data['links'][0]['url']}}" class="btn btn-link btn-sm">View {{$notification->data['links'][0]['name']}}</a>
+                        <a href="{{$notification->data['links'][0]['url']}}" class="btn btn-link btn-sm">{{$notification->data['links'][0]['name']}}</a>
                     </div>
                 </div>
                 @if (isset($notificationList[ $loop->index + 1 ]))
