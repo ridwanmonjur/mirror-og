@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\OrganizerInvitationController;
 use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Participant\ParticipantController;

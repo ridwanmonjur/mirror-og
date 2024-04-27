@@ -63,6 +63,7 @@
                 registrationPaymentModalMap[modalId] = 0;
             } 
 
+            let total = Number(input.dataset.totalAmount);
             let index = registrationPaymentModalMap[modalId];
             let totalLetters = 4;
             let newValue = input.value.replace(/[^\d]/g, '');
@@ -70,6 +71,7 @@
             let total = Number(input.dataset.totalAmount);
             let lettersToTake = index - totalLetters;
             let isMoreThanTotalLetters = lettersToTake >= 0;
+            console.log({numNewValue})
             if (numNewValue >= total) {
                 newValue = total.toFixed(2);
             } else {

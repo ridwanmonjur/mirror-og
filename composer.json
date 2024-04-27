@@ -19,7 +19,8 @@
         "sendgrid/sendgrid": "~7",
         "socialiteproviders/google": "^4.1",
         "socialiteproviders/steam": "^4.2",
-        "stripe/stripe-php": "^13.0"
+        "stripe/stripe-php": "^13.0",
+        "tymon/jwt-auth": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",

@@ -6,7 +6,15 @@
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
 <header><u>Sign in to your organizer account</u></header>
-<form autocomplete="off" readonly name="organizer-signin-form" id="organizer-signin-form" method="post" action="{{route('organizer.signin.action')}}">
+<form 
+    autocomplete="off" 
+    readonly 
+    name="organizer-signin-form" 
+    id="organizer-signin-form" 
+    method="post" 
+    action="{{route('organizer.signin.action')}}"
+    onsubmit="submitForm(event);"
+>
     @csrf
     <div class="flash-message">
     @include('Auth.Layout.Flash')
@@ -67,6 +75,35 @@
     <p>New to Splash? <a href="{{ route('organizer.signup.view') }}">Create an account</a></p>
 </div>
 <script>
+  function submitForm(event) {
+        event.preventDefault(); 
+        const formData = new FormData(event.target);
+        fetch( event.target.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json',
+            }
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                console.log({data})
+                window.storeToken(data.token);
+                window.location.href = data.route;
+            } else {
+                document.querySelector('.flash-message').innerHTML = `<div class="text-red">${data.message}</div>`;
+                console.error('Error:', data.message);
+            }
+        })
+        .catch(error => {
+            document.querySelector('.flash-message').innerHTML = `<div class="text-red">An error occurred during form submission. Please try again later</div>`;
+            console.error('Error during login:', error);
+        });
+    }
+
     function redirectToGoogle() {
         window.location.href = "{{ route('organizer.google.login') }}";
     }

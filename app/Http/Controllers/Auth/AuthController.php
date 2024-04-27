@@ -203,6 +203,7 @@ class AuthController extends Controller
 
     public function organizerSignIn(Request $request)
     {
+        session()->put('url.intended', $request->input('url'));
         return view('Auth.OrganizerSignIn');
     }
 
@@ -262,9 +263,7 @@ class AuthController extends Controller
         }
 
         $token = $this->generateToken();
-
         $email = $request->email;
-
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
@@ -477,11 +476,9 @@ class AuthController extends Controller
             $userRoleCapital = 'PARTICIPANT';
             $userRoleSentence = 'Participant';
         } else {
-            return redirect()->route('landing.view');
+            return response()->json(['success' => false, 'message' => "Wrong route!"], 422);
         }
 
-        $redirectRoute = $userRole . '.signin.view';
-        
         try {
             $validatedData = $request->validate([
                 'email' => 'bail|required|email',
@@ -491,12 +488,11 @@ class AuthController extends Controller
             if (Auth::attempt($validatedData)) {
                 $user = User::where('email', $request->email)->first();
                 if (!$user->email_verified_at) {
-                    return redirect()
-                        ->back()
-                        ->with([
-                            'errorEmail' => $request->email,
-                            'error' => 'Email not verified. Please verify email first!',
-                        ]);
+                    return response()->json([
+                        'success' => false, 
+                        'error' => 'Email not verified. Please verify email first!',
+                        'errorEmail' => $request->email,
+                    ]);
                 }
         
                 if ($user->role != $userRoleCapital && $user->role != 'ADMIN') {
@@ -506,22 +502,21 @@ class AuthController extends Controller
                 $request->session()->regenerate();
                 $token = $user->createToken('Personal Access Token')->plainTextToken;
 
-                return redirect()->intended(route($userRole . '.home.view'))
-                    ->with('success', "Account signed in successfully as $userRole!")
-                    ->with('token', $token);
+                return response()->json([
+                    'message' => "Account signed in successfully as $userRole!", 
+                    'route' => route($userRole . '.home.view'),
+                    'token' => $token,
+                    'success' => true
+                ], 200);
+
             } else {
                 throw new ErrorException('The email or password you entered is incorrect!');
             }
         } catch (QueryException $e) {
             Log::error($e->getMessage());
-
-            return redirect()
-                ->route($redirectRoute)
-                ->with('error', 'An error occurred while processing your request.');
+            return response()->json(['success' => false, 'message' => 'An error occurred while processing your request.'], 422);
         } catch (\Throwable $th) {
-            return redirect()
-                ->route($redirectRoute)
-                ->with('error', $th->getMessage());
+            return response()->json(['success' => false, 'message' => $th->getMessage()], 422);
         }
     }
 

@@ -11,5 +11,15 @@ import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 Alpine.start();
 
+window.storeToken = function(token) {
+    localStorage.setItem('jwtToken', token);
+};
+
+window.loadBearerHeader = function() {
+    return {
+        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+    };
+};
+
  // Added: Popper.js dependency for popover support in Bootstrap
 import '@popperjs/core';
