@@ -17,15 +17,15 @@ class OrganizerController extends Controller
     public function viewOwnProfile(Request $request) {
         $user = $request->attributes->get('user');
         $user_id = $user?->id ?? null;
-        return $this->viewProfile($request, $user_id, $user);
+        return $this->viewProfile($request, $user_id, $user, true);
     }
 
     public function viewProfileById(Request $request, $id) {
         $user = User::findOrFail($id);
-        return $this->viewProfile($request, $id, $user);
+        return $this->viewProfile($request, $id, $user, false);
     }
 
-    private function viewProfile(Request $request, $user_id, $userProfile) {
+    private function viewProfile(Request $request, $user_id, $userProfile, $isOwnProfile = true) {
    
         [
             'teamList' => $teamList,
@@ -49,7 +49,7 @@ class OrganizerController extends Controller
         $joinEventIds = $joinEvents->pluck('id')->toArray();
 
         return view('Participant.Profile.PlayerProfile', 
-            compact('joinEvents', 'userProfile',
+            compact('joinEvents', 'userProfile', 'isOwnProfile'
                 'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
                 'wins', 'streak', 'awardList', 'achievementList'
             )
