@@ -39,7 +39,7 @@ rm -rf public/storage
 php artisan storage:link
 php artisan migrate
 Raw sql data in database/migrations/data.sql
-Copy file from public/assets/images/storage to public/storage (new symlink folder)
+Copy ALL FILES AND FOLDERS from public/assets/images/storage to public/storage (new symlink folder)
 
 php vendor/bin/codecept bootstrap
 php vendor/bin/codecept generate:cest Acceptance Signin

@@ -533,7 +533,7 @@ class AuthController extends Controller
 
             $user = User::findOrFail($id);
             $oldBanner = $user->userBanner;
-            $user->uploadUserBanner($request);
+            $fileName = $user->uploadUserBanner($request);
             $user->destroyUserBanner($oldBanner);
 
             return response()->json(['success' => true, 'message' => 'Succeeded', 'data' => compact('fileName')], 201);

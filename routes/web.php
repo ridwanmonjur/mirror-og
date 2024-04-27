@@ -129,7 +129,7 @@ Route::group(['prefix' => 'participant'], function () {
 
             // Profile
             Route::get('/profile', [ParticipantController::class, 'viewOwnProfile'])->name('participant.profile.view');
-            Route::post('/profile/banner', [ParticipantTeamController::class, 'replaceBanner'])->name('participant.userBanner.action');
+            Route::post('/profile/{id}/banner', [AuthController::class, 'replaceBanner'])->name('participant.userBanner.action');
         });
     });
 });
