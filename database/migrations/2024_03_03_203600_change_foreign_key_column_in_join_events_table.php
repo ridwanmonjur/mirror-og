@@ -15,9 +15,9 @@ return new class extends Migration
             $table->dropForeign(['user_id']);
         
             $table->foreignId('team_id')
-                  ->constrained('teams')
-                  ->index('join_events_team_id_foreign')
-                  ->nullable();
+                ->constrained('teams')
+                ->cascadeOnDelete()
+                ->index('join_events_team_id_foreign');
         });
     }
 

@@ -1,8 +1,8 @@
-<div class="dropdown" data-reference="parent" data-bs-offset="-80,-80">
+<div class="ms-2 dropdown" data-reference="parent" data-bs-offset="-80,-80">
     <a href="#" role="button" class="btn position-relative" id="dropdownMenuLinkNotification" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt="">
-        <span style="top: -20px;" class="badge text-light bg-primary px-2">{{$user->unreadNotifications->count()}}</span>
+        <span style="top: -20px;" class="badge text-light bg-primary">{{$user->unreadNotifications->count()}}</span>
     </a>
 
     @if (isset($user->notifications[0]))

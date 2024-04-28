@@ -221,6 +221,7 @@ class ParticipantTeamController extends Controller
         }
     }
 
+    // change
     public function pendingTeamMember(Request $request, $id)
     {
         $user = $request->attributes->get('user');
@@ -232,7 +233,7 @@ class ParticipantTeamController extends Controller
                 'status' => 'pending'
             ]);
 
-            return redirect()->back()->with('successJoin', 'Your request to this team was successful!');
+            return redirect()->back()->with('successJoin', 'Your request to this team was se!');
         } else {
             return redirect()->back()->with('errorJoin', 'Your request to this team failed!');
         }
