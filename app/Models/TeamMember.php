@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
+use App\Events\TeamMemberUpdated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TeamMember extends Model
 {
     use HasFactory;
+    protected $dispatchesEvents = [
+        'updated' => TeamMemberUpdated::class,
+        'created' => TeamMemberUpdated::class,
+    ];
+    
     protected $table = 'team_members';
 
     public function user()

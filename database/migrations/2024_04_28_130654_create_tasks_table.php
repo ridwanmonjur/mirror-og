@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('event_id');
             $table->enum('task_name', ['live', 'ended', 'registration_over']);
-            $table->boolean('isExecuted');
+            $table->boolean('isExecuted')->default(false);
             $table->dateTime('action_time');
-            $table->timestamps('created_at');
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
+            $table->timestamps();
+            $table->foreign('event_id')->references('id')->on('event_details')->onDelete('cascade');
         });
     }
 
