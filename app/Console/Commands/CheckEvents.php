@@ -6,6 +6,7 @@ use App\Models\EventDetail;
 use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class CheckEvents extends Command
 {
@@ -30,12 +31,15 @@ class CheckEvents extends Command
     {
         $twoMonthsAgo = Carbon::now()->subMonths(2);
         Task::where('created_at', '<', $twoMonthsAgo)->delete();
+        DB::table('monitored_scheduled_task_log_items')->where('created_at', '<', $twoMonthsAgo)->delete();
 
         $today = Carbon::now();
+        $twoWeeksAgo = $today->subWeeks(2);
         $todayDate = $today->toDateString();
+        $todayTime = $today->toTimeString();
 
         $launchEvents = EventDetail::whereDate('launch_date', $todayDate)
-            ->whereTime('launch_time', '<=', $today->toTimeString())
+            ->whereTime('launch_time', '<=', $todayDate)
             ->select(['id'])
             ->get();
 
@@ -43,13 +47,12 @@ class CheckEvents extends Command
             ->select(['id'])
             ->get();
 
-        $twoWeeksAgo = $today->subWeeks(2);
         $registrationOverEvents = EventDetail::where('launch_date', '<=', $twoWeeksAgo)
             ->get();
         
-        $this->createTask($launchEvents, 'launch', $today->toTimeString(), $today->toDateString());
-        $this->createTask($endEvents, 'ended', $today->toTimeString(), $today->toDateString());
-        $this->createTask($registrationOverEvents, 'registration_over', $today->toTimeString(), $today->toDateString());
+        $this->createTask($launchEvents, 'launch', $todayTime, $todayDate);
+        $this->createTask($endEvents, 'ended', $todayTime, $todayDate);
+        $this->createTask($registrationOverEvents, 'registration_over', $todayTime, $todayDate);
     }
 
     private function createTask($eventList, $taskName, $actionTime, $actionDate)

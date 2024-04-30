@@ -10,7 +10,6 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    // TODO: CREATE FOR PENDING, REJECTED
     public function up()
     {
         Schema::table('team_members', function (Blueprint $table) {
@@ -18,7 +17,7 @@ return new class extends Migration
         });
 
         Schema::table('team_members', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'accepted', 'rejected', 'invited', 'left'])
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'left'])
                 ->default('pending');
         });
     }

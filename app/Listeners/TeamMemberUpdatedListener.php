@@ -4,9 +4,7 @@ namespace App\Events;
 use App\Models\ActivityLogs;
 use App\Models\Notifications;
 use App\Models\Team;
-use App\Models\TeamMember;
 use App\Models\User;
-use Illuminate\Queue\SerializesModels;
 
 class TeamMemberUpdatedListener
 {

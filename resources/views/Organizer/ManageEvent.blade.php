@@ -56,10 +56,7 @@
                 </svg>
                 <input type="text" name="search" id="searchInput"
                     placeholder="Search using title, description, or keywords">
-                <button type="button" onclick="resetUrl();" class="oceans-gaming-default-button d-none"
-                    style="background: #8CCD39 !important">
-                    Reset
-                </button>
+              
             </div>
 
             <br><br>
