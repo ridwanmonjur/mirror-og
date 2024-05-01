@@ -2,11 +2,8 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use ReflectionObject;
@@ -19,17 +16,18 @@ class JoinEventConfirmed
     public $organizerNotificatio; 
     public $memberList; 
     public $organizerList;
+    public $allEventLogs;
     /**
      * Create a new event instance.
      */
-    public function __construct($memberList, $organizerList, $memberNotification, $organizerNotificatio)
+    public function __construct($parameters)
     {
-        $this->memberNotification = $memberNotification;
-        $this->organizerNotificatio = $organizerNotificatio;
-        $this->memberList = $memberList;
-        $this->organizerList = $organizerList;
+        $this->memberList = $parameters['memberList'] ?? null;
+        $this->organizerList = $parameters['organizerList'] ?? null;
+        $this->memberNotification = $parameters['memberNotification'] ?? null;
+        $this->organizerNotificatio = $parameters['organizerNotification'] ?? null;
+        $this->allEventLogs = $parameters['allEventLogs'] ?? null;
     }
-
     /**
      * Get the channels the event should broadcast on.
      *

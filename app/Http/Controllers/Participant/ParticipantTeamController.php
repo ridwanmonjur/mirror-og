@@ -178,10 +178,11 @@ class ParticipantTeamController extends Controller
         TeamMember::insert([
             'user_id' => $userId,
             'team_id' => $id,
-            'status' => 'invited'
+            'status' => 'pending',
+            'actor' => 'team'
         ]);
         
-        return response()->json(['success' => true, 'message' => 'Team member created'], 201);
+        return response()->json(['success' => true, 'message' => 'Team member invited'], 201);
     }
 
     public function deleteInviteMember(Request $request, $id)
@@ -200,7 +201,7 @@ class ParticipantTeamController extends Controller
         $member = TeamMember::find($id);
         if ($member) {
             $member->status = 'rejected';
-            $member->rejector = 'invitee';
+            $member->actor = 'invitee';
             $member->save();
             return response()->json(['success' => true, 'message' => 'Team member invitation withdrawn']);
         } else {
@@ -211,11 +212,11 @@ class ParticipantTeamController extends Controller
     public function approveTeamMember(Request $request, $id)
     {
         $member = TeamMember::find($id);
-        if (!$member || $member->rejector == 'invitee') {
+        if (!$member || $member->status == 'rejected' && $member->actor == 'invitee') {
             return response()->json(['success' => false, 'message' => 'Invalid operation or team member not found'], 400);
         } else {
             $member->status = 'accepted';
-            $member->rejector = null;
+            $member->actor = $request->actor;
             $member->save();
             return response()->json(['success' => true, 'message' => 'Team member status updated to accepted']);
         }
@@ -230,10 +231,11 @@ class ParticipantTeamController extends Controller
             TeamMember::insert([
                 'user_id' => $user->id,
                 'team_id' => $id,
-                'status' => 'pending'
+                'status' => 'pending',
+                'actor' => 'invitee'
             ]);
 
-            return redirect()->back()->with('successJoin', 'Your request to this team was se!');
+            return redirect()->back()->with('successJoin', 'Your request to this team was sent!');
         } else {
             return redirect()->back()->with('errorJoin', 'Your request to this team failed!');
         }
@@ -249,7 +251,7 @@ class ParticipantTeamController extends Controller
             }
 
             $member->status = 'rejected';
-            $member->rejector = 'team';
+            $member->actor = $request->actor;
             $member->save();
             return response()->json(['success' => true, 'message' => 'Team member status updated to rejected']);
         } else {

@@ -318,10 +318,19 @@
             followButton.style.setProperty('pointer-events', 'none');
     
             try {
+                let jsonObject = {}
+                for (let [key, value] of formData.entries()) {
+                    jsonObject[key] = value;
+                }
+                let jsonString = JSON.stringify(jsonObject);
                 let user_id = formData.get('user_id');
                 let response = await fetch(form.action, {
                     method: form.method,
-                    body: formData
+                    body: jsonString,
+                    headers: {
+                        ...window.loadBearerHeader(),
+                        'Accept': 'application/json',
+                    }
                 });
 
                 let data = await response.json();

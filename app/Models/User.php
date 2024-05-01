@@ -8,7 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Panel;
-class User extends Authenticatable implements FilamentUser
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+
+class User extends Authenticatable implements FilamentUser, JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -42,6 +44,19 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+
+    public function getJWTCustomClaims()
+    {
+        return [
+            // 'role' => $this->role,
+        ];
+    }
 
     public function organizer()
     {

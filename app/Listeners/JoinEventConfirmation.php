@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\JoinEventConfirmed;
+use App\Models\ActivityLogs;
 use App\Notifications\EventJoinNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -34,12 +35,7 @@ class JoinEventConfirmation
         Log::info($event->memberNotification); 
         Log::info($event->organizerNotificatio); 
         // TODO: CREATE ACTIVITY
-        /*
-        INSERT INTO `activity_logs` (`action`, `subject_id`, `subject_type`, `log`) 
-                VALUES (ACTION, NEW.user_id, `\App\Models\User`, USER_LOG);
-            INSERT INTO `activity_logs` (`action`, `subject_id`, `subject_type`, `log`) 
-                VALUES (ACTION, NEW.team_id, `\App\Models\Team`, TEAM_LOG); 
-        */
+        ActivityLogs::insert($event->allEventLogs);
         Notification::send($event->memberList, new EventJoinNotification($event->memberNotification));
         Notification::send($event->organizerList, new EventJoinNotification($event->organizerNotificatio));
         Log::info('Join event ================>');

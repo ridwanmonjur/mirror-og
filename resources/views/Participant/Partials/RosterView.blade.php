@@ -149,7 +149,10 @@
             try {
                 let response = await fetch(form.action, {
                     method: form.method,
-                    body: formData
+                    body: formData,
+                    headers: {
+                        ...window.loadBearerHeader()
+                    }
                 });
 
                 let data = await response.json();

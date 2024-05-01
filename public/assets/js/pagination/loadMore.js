@@ -41,6 +41,7 @@ function infinteLoadMore(page, ENDPOINT) {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json',
+                ...window.loadBearerHeader()
               },
           })
             .then(response => {
@@ -80,6 +81,7 @@ function infinteLoadMoreByPost(ENDPOINT, body) {
             headers: {
                 'Accept': 'text/html',
                 "Content-Type": "application/json",
+                ...window.loadBearerHeader()
             },
             body: JSON.stringify(body)
         })
@@ -118,6 +120,7 @@ function loadByPost(ENDPOINT, body) {
         headers: {
             'Accept': 'text/html',
             "Content-Type": "application/json",
+            ...window.loadBearerHeader()
         },
         body: JSON.stringify(body)
     })

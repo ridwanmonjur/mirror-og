@@ -291,6 +291,10 @@ a:hover {
     }
 }
 
+.btn:focus {
+    box-shadow: none;
+}
+
 .btn-link {
     text-decoration: none !important;
     color: black !important;
@@ -508,6 +512,21 @@ a:hover {
     }
 }
 
+.notification-black {
+    color: black;
+}
+
+.notification-gray {
+    color: gray;
+}
+
+.notification-blue {
+    color: #43A4D7;
+}
+
+.notification-gold {
+    color: goldenrod;
+}
 
 
 /*! purgecss end ignore */

@@ -17,6 +17,7 @@ return new class extends Migration
                 $table->string('action'); 
                 $table->text('log');
                 $table->morphs('subject'); 
+                $table->nullableMorphs('object'); 
                 $table->timestamps();
             });
         }

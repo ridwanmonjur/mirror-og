@@ -16,7 +16,7 @@
                             {{ ($notification->data['title'] ?? 'N')[0]  }}
                         </div>
                         <div style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 15px;" class="text-start ms-2">
-                            {{ $notification->data['data'] }}
+                            {!! $notification->data['data'] !!}
                         </div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">

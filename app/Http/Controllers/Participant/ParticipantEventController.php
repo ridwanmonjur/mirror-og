@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Participant;
 
 use App\Events\JoinEventConfirmed;
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLogs;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
@@ -117,7 +118,9 @@ class ParticipantEventController extends Controller
 
     public function followOrganizer(Request $request)
     {
+        DB::beginTransaction();
         try {
+            dd($request->user);
             $userId = $request->input('user_id');
             $organizerId = $request->input('organizer_id');
             $existingFollow = Follow::where('participant_user_id', $userId)->where('organizer_user_id', $organizerId)->first();
@@ -134,12 +137,24 @@ class ParticipantEventController extends Controller
                     'organizer_user_id' => $organizerId,
                 ]);
 
+                ActivityLogs::create([
+                    'action' => 'follow',
+                    'subject_id' => $userId,
+                    'subject_type' => User::class,
+                    // 'log' => '<span class="notification-gray"> User' 
+                    // . ' <span class="notification-black">' . $this->teamName . '</span> and joined' 
+                    // . ' <span class="notification-black">' . $event->user->name . ' \'s </span> event' 
+                    // . ' <span class="notification-blue">' . $event->eventName . ' </span>.'
+                    // . '</span>',
+                ]);
+
                 return response()->json([
                     'message' => 'Successfully followed the organizer',
                     'isFollowing' => true
                 ], 201); 
             }
         } catch (QueryException $e) {
+            DB::rollBack();
             return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
         }
     }
@@ -213,6 +228,7 @@ class ParticipantEventController extends Controller
             }
 
             $selectTeam = Team::getTeamAndMembersByTeamId($teamId);
+            // dd($selectTeam);
             $event = EventDetail::with(['user' => function ($query) {
                     $query->select('id', 'name', 'email');
                 }])
@@ -220,8 +236,14 @@ class ParticipantEventController extends Controller
                 ->find($id);
 
             if ($selectTeam && $isAlreadyMember) {
-                [$memberList, $organizerList, $memberNotification, $organizerNotifications] = $selectTeam->processTeamRegistration($user, $event, true);
-                Event::dispatch(new JoinEventConfirmed($memberList, $organizerList, $memberNotification, $organizerNotifications));
+                [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs] 
+                    = $selectTeam->processTeamRegistration($user, $event, true);
+                Event::dispatch(new JoinEventConfirmed(
+                    compact(
+                        'memberList', 'organizerList', 'memberNotification',
+                        'organizerNotification', 'allEventLogs'
+                    )
+                ));
 
                 DB::commit();
                 return view('Participant.EventNotify', compact('id', 'selectTeam'));
@@ -283,9 +305,14 @@ class ParticipantEventController extends Controller
                 $teamMembers = $selectTeam->members->load(['user' => function ($q) {
                     $q->select(['name', 'id', 'email']);
                 }]);
-                [$memberList, $organizerList, $memberNotification, $organizerNotifications] 
+                [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs] 
                     = $selectTeam->processTeamRegistration($user, $event, true);
-                event(new JoinEventConfirmed($memberList, $organizerList, $memberNotification, $organizerNotifications));
+                event(new JoinEventConfirmed(
+                    compact(
+                        'memberList', 'organizerList', 'memberNotification',
+                        'organizerNotification', 'allEventLogs'
+                    )
+                ));
                 DB::commit();
                 return view('Participant.EventNotify', compact('id', 'selectTeam'));
             } else {

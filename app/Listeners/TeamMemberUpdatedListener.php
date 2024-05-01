@@ -18,7 +18,9 @@ class TeamMemberUpdatedListener
         $status = $event->teamMember->status;
 
         $teamNotification = $userNotification 
-            = $action = $userLog = $teamLog = null;
+            = $action = $userLog 
+            // = $teamLog 
+            = null;
         $links = [];
         $hostname = config('app.url');
         $routeName = "{$hostname}/participant/team/{$event->teamMember->team_id}/manage";
@@ -28,10 +30,10 @@ class TeamMemberUpdatedListener
 
         switch ($status) {
             case 'accepted':
-                if ($event->teamMember->rejector == 'team') {
+                if ($event->teamMember->actor == 'team') {
                     $action = 'accepted';
                     $userLog = "You have accepted to join this team $teamName!";
-                    $teamLog = "$userName has accepted to join this team!";
+                    // $teamLog = "$userName has accepted to join this team!";
                     $teamNotification = [
                         'text' => "$userName has accepted to join this team!",
                         'subject' => "Invited member joining this team",
@@ -46,7 +48,7 @@ class TeamMemberUpdatedListener
                 }
                 break;
             case 'invited':
-                if ($event->teamMember->rejector == 'team') {
+                if ($event->teamMember->actor == 'team') {
                     $action = 'invited';
                     $userNotification = [
                         'text' => "$teamName has invited you to join this team!",
@@ -64,14 +66,14 @@ class TeamMemberUpdatedListener
                 break;
             case 'left':
                 $action = 'left';
-                if ($event->teamMember->rejector == 'team') {
+                if ($event->teamMember->actor == 'team') {
                     $userNotification = [
                         'text' => "$teamName has accepted you to join this team!",
                         'subject' => "Successfully joined this team",
                     ];
 
                     $userLog = "The team, $teamName has decided to remove you!";
-                    $teamLog = "The team, $teamName has decided to remove this $userName!";
+                    // $teamLog = "The team, $teamName has decided to remove this $userName!";
 
                 } else {
                     $userLog = "You have left this team $teamName!";
@@ -85,14 +87,14 @@ class TeamMemberUpdatedListener
                 break;
             case 'rejected':
                 $action = 'rejected';
-                if ($event->teamMember->rejector == 'team') {
+                if ($event->teamMember->actor == 'team') {
                     $userNotification = [
                         'text' => "$teamName has rejected your request to join this team!",
                         'subject' => "Failed to join this team",
                     ];
                 } else {
                     $userLog = "You have decided to leave this team $teamName!";
-                    $teamLog = "$userName has decided to leave this team!";
+                    // $teamLog = "$userName has decided to leave this team!";
                 }
 
                 break;
@@ -102,14 +104,14 @@ class TeamMemberUpdatedListener
                 $action = null;
         }
 
-        if ($teamLog) { 
-            ActivityLogs::create([
-                'action' => $action,
-                'subject_id' => $event->teamMember->team_id,
-                'subject_type' => Team::class,
-                'log' => $teamLog,
-            ]);
-        }
+        // if ($teamLog) { 
+        //     ActivityLogs::create([
+        //         'action' => $action,
+        //         'subject_id' => $event->teamMember->team_id,
+        //         'subject_type' => Team::class,
+        //         'log' => $teamLog,
+        //     ]);
+        // }
 
         if ($userLog) { 
             ActivityLogs::create([

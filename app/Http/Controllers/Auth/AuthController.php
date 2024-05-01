@@ -236,7 +236,6 @@ class AuthController extends Controller
             $user->update([
                 'password' => Hash::make($request->password),
             ]);
-            // dd($user);
             DB::table('password_reset_tokens')
                 ->where('email', $tokenData->email)
                 ->delete();

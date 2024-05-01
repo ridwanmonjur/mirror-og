@@ -37,6 +37,7 @@ service apache2 restart
 
 rm -rf public/storage
 php artisan storage:link
+php artisan jwt:secret
 php artisan migrate
 Raw sql data in database/migrations/data.sql
 Copy ALL FILES AND FOLDERS from public/assets/images/storage to public/storage (new symlink folder)

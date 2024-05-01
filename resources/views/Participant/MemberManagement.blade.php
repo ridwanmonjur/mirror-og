@@ -7,7 +7,6 @@
     <title>Team Management</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
@@ -199,11 +198,14 @@
                     }
                 },
                 function(error) {
-                    toastError('Error making captain.', error);
+                    toastError('Error approving member.', error);
                 }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
+                    }, 
+                    body: JSON.stringify({
+                        'actor' : 'team'
+                    })
                 }
             );
         }
@@ -230,7 +232,10 @@
                 }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
+                    },
+                    body: JSON.stringify({
+                        'actor' : 'team'
+                    })
                 }
             );
         }
@@ -286,7 +291,7 @@
                     }
                 },
                 function(error) {
-                    toastError('Error making captain.', error);
+                    toastError('Error removing captain.', error);
                 }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -318,7 +323,10 @@
                 }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
+                    },
+                     body: JSON.stringify({
+                        'actor' : 'team'
+                    })
                 }
             );
         }
@@ -343,7 +351,10 @@
                 }, {
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
+                    },
+                    body: JSON.stringify({
+                        'actor' : 'team'
+                    })
                 }
             );
         }

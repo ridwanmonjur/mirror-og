@@ -8,6 +8,8 @@ class CreateScheduleMonitorTables extends Migration
 {
     public function up()
     {
+        Schema::dropIfExists('monitored_scheduled_task_log_items');
+        Schema::dropIfExists('monitored_scheduled_tasks');
         Schema::create('monitored_scheduled_tasks', function (Blueprint $table) {
             $table->bigIncrements('id');
 
@@ -46,5 +48,11 @@ class CreateScheduleMonitorTables extends Migration
 
             $table->timestamps();
         });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('monitored_scheduled_tasks');
+        Schema::dropIfExists('monitored_scheduled_task_log_items');
     }
 }

@@ -3,7 +3,7 @@
         ->where('user_id', $user->id)->get();
     if (isset($teamMember[0])) {
         $status = $teamMember[0]->status;
-        if ($status == 'rejected' && $teamMember->rejector == 'invitee') {
+        if ($status == 'rejected' && $teamMember->actor == 'invitee') {
             $status = 'rejected_me';
         }
     } else {

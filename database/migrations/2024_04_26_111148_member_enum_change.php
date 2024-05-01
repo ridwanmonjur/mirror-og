@@ -19,6 +19,7 @@ return new class extends Migration
         Schema::table('team_members', function (Blueprint $table) {
             $table->enum('status', ['pending', 'accepted', 'rejected', 'left'])
                 ->default('pending');
+            $table->renameColumn('rejector', 'actor');
         });
     }
 
@@ -36,6 +37,7 @@ return new class extends Migration
         Schema::table('team_members', function (Blueprint $table) {
             $table->enum('status', ['pending', 'accepted', 'rejected', 'invited'])
                 ->default('pending');
+            $table->renameColumn('actor', 'rejector');
         });
     }
 

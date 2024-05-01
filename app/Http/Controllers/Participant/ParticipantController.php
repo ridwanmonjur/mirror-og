@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Participant;
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLogs;
 use App\Models\EventInvitation;
 use App\Models\Follow;
 use App\Models\JoinEvent;
@@ -15,7 +16,9 @@ use Illuminate\Support\Facades\DB;
 class ParticipantController extends Controller
 {
     public function searchParticipant(Request $request)
-    {
+    {   
+        // TODO LIVEWIRE
+
         $teamId = $request->teamId;
         $selectTeam = Team::find($teamId);
         $page = 5;
@@ -83,6 +86,7 @@ class ParticipantController extends Controller
             'teamList' => $teamList,
             'teamIdList' => $teamIdList,
         ] = Team::getUserTeamList($user_id);   
+        $pastTeam = Team::getUserPastTeamList($user_id);
 
         $awardList = Team::getAwardListByTeamIdList($teamIdList);
         $achievementList = Team::getAchievementListByTeamIdList($teamIdList);
@@ -99,11 +103,12 @@ class ParticipantController extends Controller
             = JoinEvent::processEvents($joinEvents, $isFollowing);
 
         $joinEventIds = $joinEvents->pluck('id')->toArray();
+      
 
         return view('Participant.Profile.PlayerProfile', 
             compact('joinEvents', 'userProfile', 'teamList', 'isOwnProfile',
                 'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
-                'wins', 'streak', 'awardList', 'achievementList'
+                'wins', 'streak', 'awardList', 'achievementList', 'pastTeam'
             )
         );
        

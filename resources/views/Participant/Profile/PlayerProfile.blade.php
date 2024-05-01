@@ -227,141 +227,13 @@
         </div>
 
         <div class="tab-content outer-tab d-none" id="Activity">
-            <table class="member-table">
-                <tbody>
-                    <tr class="nf">
-                        <th>
-                            <div class="player-info">
-                                <div>New</div>
-                            </div>
-                        </th>
-                    </tr>
-                    <tr class="nf">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                </div>
-                                <span>Name won Prize in Media Prima's event. The Super Duper Extreme Dota Challenge
-                                    League Season 1.</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="nf">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                </div>
-                                <span>Name won Prize in Harmony's event. Competition Name.</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="nf">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/fnatic.jpg')">
-                                </div>
-                                <span>Name won Prize in Harmony's event. Competition Name.</span>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <table class="member-table">
-                <tbody>
-                    <tr class="nf">
-                        <th>
-                            <div class="player-info">
-                                <div>Recent</div>
-                            </div>
-                        </th>
-                    </tr>
-                    <tr class="nf">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                </div>
-                                <span>Name won Prize in Media Prima's event. The Super Duper Extreme Dota Challenge
-                                    League Season 1.</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="nf">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                </div>
-                                <span>Name won Prize in Harmony's event. Competition Name.</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="nf">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/fnatic.jpg')">
-                                </div>
-                                <span>Name won Prize in Harmony's event. Competition Name.</span>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <table class="member-table">
-                <tbody>
-                    <tr class="nf">
-                        <th>
-                            <div class="player-info">
-                                <div>Older</div>
-                            </div>
-                        </th>
-                    </tr>
-                    <tr class="nf">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                </div>
-                                <span>Name won Prize in Media Prima's event. The Super Duper Extreme Dota Challenge
-                                    League Season 1.</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="nf">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/dota.png')">
-                                </div>
-                                <span>Name won Prize in Harmony's event. Competition Name.</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="nf">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/fnatic.jpg')">
-                                </div>
-                                <span>Name has joined Team Name.</span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="nf">
-                        <td>
-                            <div class="player-info">
-                                <div class="player-image" style="background-image: url('css/images/fnatic.jpg')">
-                                </div>
-                                <span>Name has left Team Name.</span>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="mx-auto" style="width: 80%;"><b>Activity</b></div>
+            <livewire:participant.profile.show-activity-logs :userId="$user->id"> </livewire>
 
         </div>
 
         <div class="tab-content outer-tab d-none" id="Events">
-
             <div class="mx-auto" style="width: 80%;"><b>Active Events</b></div>
-            
             @if (!isset($joinEventsActive[0]))
                 <p class="text-center">
                     This profile has no active events
@@ -427,12 +299,47 @@
             </table>
         </div>
 
+        <div class="tab-content outer-tab d-none" id="Teams">
+            <div class="mx-auto" style="width: 80%;"><b>Past Teams</b></div>
+
+            <table class="member-table">
+                <thead>
+                    <tr>
+                        <th> </th>
+                        <th>Team name</th>
+                        <th>Region</th>
+                        <th>Members</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($pastTeam as $team)
+                        <tr class="st">
+                            <td> </td>
+                            <td class="d-flex align-items-center">
+                                <img
+                                    class="d-inline-block object-fit-cover me-3"
+                                    src="{{ '/storage' . '/'. $team->teamBanner }}"
+                                    {!! trustedBladeHandleImageFailure() !!} 
+                                    height="40"
+                                    width="40"
+                                > 
+                                <span>{{$team->teamName}}</span>
+                            </td>
+                            <td>China</td>
+                            <td>{{$team->members_count}}/5</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+
     </main>
 
 
 </body>
 
-    
+@livewireScripts
 <script>
     const uploadButton = document.getElementById("upload-button");
     const imageUpload = document.getElementById("image-upload");

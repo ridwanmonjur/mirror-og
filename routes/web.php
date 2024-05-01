@@ -123,10 +123,7 @@ Route::group(['prefix' => 'participant'], function () {
                 ->name('participant.event.selectOrCreateTeam.redirect');
             Route::post('/event/{id}/join/redirect/createTeamToJoinEvent', [ParticipantEventController::class, 'redirectToCreateTeamToJoinEvent'])->name('participant.event.createTeam.redirect');
 
-            // Organizer management
-            Route::post('/organizer/follow', [ParticipantEventController::class, 'followOrganizer'])->name('participant.organizer.follow');
-            Route::delete('/organizer/unfollow', [ParticipantEventController::class, 'unfollowOrganizer'])->name('participant.organizer.unfollow');
-
+         
             // Profile
             Route::get('/profile', [ParticipantController::class, 'viewOwnProfile'])->name('participant.profile.view');
             Route::post('/profile/{id}/banner', [AuthController::class, 'replaceBanner'])->name('participant.userBanner.action');
@@ -188,7 +185,7 @@ Route::group(['prefix' => 'organizer'], function () {
                 ->middleware('prevent-back-button')
                 ->name('organizer.checkout.view');
             Route::get('event/{id}/checkout/transition', [OrganizerCheckoutController::class, 'showCheckoutTransition'])->name('organizer.checkout.transition');
-        
+
             Route::get('/profile', [OrganizerController::class, 'viewOwnProfile'])->name('organizer.profile.view');
         });
     });

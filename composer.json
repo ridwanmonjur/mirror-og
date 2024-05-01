@@ -20,8 +20,7 @@
         "socialiteproviders/google": "^4.1",
         "socialiteproviders/steam": "^4.2",
         "spatie/laravel-schedule-monitor": "^3.7",
-        "stripe/stripe-php": "^13.0",
-        "tymon/jwt-auth": "*"
+        "stripe/stripe-php": "^13.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
