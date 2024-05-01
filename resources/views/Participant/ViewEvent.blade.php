@@ -289,7 +289,7 @@
         <br>
     </main>
     @stack('script')
-    @include('CommonPartials.Toast')
+    
     <script>
         function reddirectToLoginWithIntened(route) {
             route = encodeURIComponent(route);

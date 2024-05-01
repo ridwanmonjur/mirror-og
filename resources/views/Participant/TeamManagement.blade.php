@@ -156,7 +156,7 @@
             @endif
         </div>
     </main>
-    @include('CommonPartials.Toast')
+    
     @include('CommonPartials.BootstrapV5Js')
 
     <script>

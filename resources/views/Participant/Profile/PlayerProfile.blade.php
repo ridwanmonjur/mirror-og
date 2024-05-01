@@ -283,7 +283,7 @@
                             <td> </td>
                             <td class="d-flex align-items-center">
                                 <img
-                                    class="d-inline-block object-fit-cover me-3"
+                                    class="rounded-circle d-inline-block object-fit-cover me-3"
                                     src="{{ '/storage' . '/'. $team->teamBanner }}"
                                     {!! trustedBladeHandleImageFailure() !!} 
                                     height="40"
@@ -297,6 +297,7 @@
                     @endforeach
                 </tbody>
             </table>
+            <br> <br>
             <div class="mx-auto" style="width: 80%;"><b>Past Teams</b></div>
 
             <table class="member-table">

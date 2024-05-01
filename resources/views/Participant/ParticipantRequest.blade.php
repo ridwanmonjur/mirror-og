@@ -16,8 +16,8 @@
     @include('CommonPartials.BootstrapV5Js')
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
-    @include('CommonPartials.Toast')
-    @include('CommonPartials.Dialog')
+    
+    
     <script>
         let dialogForMember = new DialogForMember();
 

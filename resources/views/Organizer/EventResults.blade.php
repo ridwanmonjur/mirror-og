@@ -437,8 +437,8 @@
     @include('CommonPartials.BootstrapV5Js')
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     @include('CommonPartials.BootstrapV5Js')
-    @include('CommonPartials.Toast')
-    @include('CommonPartials.Dialog')
+    
+    
     <script>
         var awardToDeleteId = null;
         var achievementToDeleteId = null;
