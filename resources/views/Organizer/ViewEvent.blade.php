@@ -45,7 +45,7 @@
                             <img class="image-at-top" {!! trustedBladeHandleImageFailureResize() !!} src="{{ $eventTierLowerImg }}" width="75" height="65">
                         </div>
                         <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;"
-                            @class(['rounded-banner', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
+                            @class(['rounded-banner height-image ', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
                             alt="">
                         @if ($event->eventBanner)
                         @else
@@ -98,8 +98,8 @@
                                     @endif
                                 </div>
                                 <br>
-                                <h4> <u> {{ $combinedStr }} </u> </h4>
-                                <h4> <u> {{ strtoupper($timePart) }} </u> </h4>
+                                <h5> <u> {{ $combinedStr }} </u> </h5>
+                                <h5> <u> {{ strtoupper($timePart) }} </u> </h5>
                                 <br>
                                 <div>
                                     <div class="tab">
@@ -114,21 +114,21 @@
                                     </div>
                                     <br>
                                     <div id="Overview" class="tabcontent" style="display: block;">
-                                        <h3><u>About this event</u></h3>
+                                        <h5><u>About this event</u></h5>
                                         <p>{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                                     </div>
 
                                     <div id="Bracket" class="tabcontent">
-                                        <h3><u>Bracket</u></h3>
+                                        <h5><u>Bracket</u></h5>
                                         <p>Bracket is the capital of France.</p>
                                     </div>
 
                                     <div id="Teams" class="tabcontent">
-                                        <h3><u>Teams</u></h3>
+                                        <h5><u>Teams</u></h5>
                                         <p>Teams tab.</p>
                                     </div>
                                     <div id="Result" class="tabcontent">
-                                        <h3><u>Result</u></h3>
+                                        <h5><u>Result</u></h5>
                                         <p>Result tab.</p>
                                     </div>
                                 </div>

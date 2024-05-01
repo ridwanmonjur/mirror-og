@@ -28,9 +28,9 @@
         <div class="pt-2">
             <header class="flexbox-welcome">
                 <u>
-                    <h3>
+                    <h5>
                         View your events
-                    </h3>
+                    </h5>
                 </u>
             </header>
         </div>
@@ -54,7 +54,7 @@
                                 width="120" height="90">
                         </div>
                         <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;"
-                            @class(['rounded-banner', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
+                            @class(['rounded-banner height-image ', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
                             alt="">
                         @if ($event->eventBanner)
                         @else
@@ -69,12 +69,13 @@
                     <div class="card-text">
                         <div>
                             <br>
-                            <div class="flexbox-centered-space" style="align-items: center;">
-                                <p
-                                    style="height:60px;text-overflow:ellipsis; overflow:hidden;font-size:20px;margin-right:60px;margin-bottom:20px">
+                            <div class="d-flex justify-content-between flex-wrap align-items-center">
+                                <h5
+                                    class="text-truncated w-75"
+                                    style="height:60px;">
                                     <u>{{ $event->eventName ?? 'No name yet' }}</u>
-                                </p>
-                                <svg style="position: relative; top: -20px; margin-left: -60px;"
+                                </h5>
+                                <svg
                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="feather feather-share-2">
@@ -132,8 +133,8 @@
                                 </form>
                             </div>
                             <br>
-                            <h4> <u> {{ $combinedStr }} </u> </h4>
-                            <h4> <u> {{ strtoupper($timePart) }} </u> </h4>
+                            <h5> <u> {{ $combinedStr }} </u> </h5>
+                            <h5> <u> {{ strtoupper($timePart) }} </u> </h5>
                             <br>
                             <div>
                                 <div class="tab">
@@ -148,21 +149,21 @@
                                 </div>
                                 <br>
                                 <div id="Overview" class="tabcontent" style="display: block;">
-                                    <h3><u>About this event</u></h3>
+                                    <h5><u>About this event</u></h5>
                                     <p>{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                                 </div>
 
                                 <div id="Bracket" class="tabcontent">
-                                    <h3><u>Bracket</u></h3>
+                                    <h5><u>Bracket</u></h5>
                                     <p>Bracket is the capital of France.</p>
                                 </div>
 
                                 <div id="Teams" class="tabcontent">
-                                    <h3><u>Teams</u></h3>
+                                    <h5><u>Teams</u></h5>
                                     <p>Teams tab.</p>
                                 </div>
                                 <div id="Result" class="tabcontent">
-                                    <h3><u>Result</u></h3>
+                                    <h5><u>Result</u></h5>
                                     <p>Result tab.</p>
                                 </div>
                             </div>
