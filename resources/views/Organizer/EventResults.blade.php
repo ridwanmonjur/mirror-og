@@ -437,7 +437,6 @@
     @include('CommonPartials.BootstrapV5Js')
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     @include('CommonPartials.BootstrapV5Js')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
     @include('CommonPartials.Toast')
     @include('CommonPartials.Dialog')
     <script>
@@ -520,13 +519,13 @@
         function deleteAward(id) {
             awardToDeleteId = id;
             actionToTake = 'award';
-            dialogOpen('Are you sure you want to remove this award from this user?', takeYesAction, takeNoAction)
+            window.dialogOpen('Are you sure you want to remove this award from this user?', takeYesAction, takeNoAction)
         }
 
         function deleteAchievement(id) {
             achievementToDeleteId = id;
             actionToTake = 'achievement';
-            dialogOpen('Are you sure you want to remove this achievement from this user?', takeYesAction, takeNoAction)
+            window.dialogOpen('Are you sure you want to remove this achievement from this user?', takeYesAction, takeNoAction)
         }
 
         function editCreatePosition(event) {

@@ -14,7 +14,6 @@
     @include('CommonPartials.NavbarGoToSearchPage')
     @include('Participant.ParticipantRequestPartials.RequestManagement')
     @include('CommonPartials.BootstrapV5Js')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     @include('CommonPartials.Toast')
@@ -123,27 +122,27 @@
         function approveTeam(memberId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setActionName('approve')
-            dialogOpen('Continue with approval?', takeYesAction, takeNoAction)
+            window.dialogOpen('Continue with approval?', takeYesAction, takeNoAction)
         }
 
         function inviteMember(memberId, teamId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setTeamId(teamId);
             dialogForMember.setActionName('invite')
-            dialogOpen('Are you sure you want to send invite to this member?', takeYesAction, takeNoAction)
+            window.dialogOpen('Are you sure you want to send invite to this member?', takeYesAction, takeNoAction)
         }
 
         function deleteInviteMember(memberId, teamId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setTeamId(teamId);
             dialogForMember.setActionName('deleteInvite')
-            dialogOpen('Are you sure you want to delete your request to this team??', takeYesAction, takeNoAction)
+            window.dialogOpen('Are you sure you want to delete your request to this team??', takeYesAction, takeNoAction)
         }
 
         function disapproveTeam(memberId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setActionName('disapprove')
-            dialogOpen('Continue with reject?', takeYesAction, takeNoAction)
+            window.dialogOpen('Continue with reject?', takeYesAction, takeNoAction)
         }
 
         function approveTeamAction() {

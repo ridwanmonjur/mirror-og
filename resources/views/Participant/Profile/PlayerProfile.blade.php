@@ -297,9 +297,6 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
-
-        <div class="tab-content outer-tab d-none" id="Teams">
             <div class="mx-auto" style="width: 80%;"><b>Past Teams</b></div>
 
             <table class="member-table">

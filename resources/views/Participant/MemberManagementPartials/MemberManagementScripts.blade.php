@@ -42,7 +42,7 @@
 
         if (!params) params = {}
         params.page = 1;
-        ENDPOINT = "{{ route('participant.search', ['id' => $selectTeam->id] ) }}";
+        ENDPOINT = "";
 
         let body = {
             ...params,
@@ -222,7 +222,7 @@
         if (!params) params = {}
 
         params.page = 1;
-        ENDPOINT = "{{ route('participant.search', ['id' => $selectTeam->id] ) }}";
+        ENDPOINT = "";
         fetchVariables.setSearch(inputValue)
 
         let body = {

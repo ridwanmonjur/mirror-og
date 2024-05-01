@@ -111,7 +111,6 @@
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     @include('CommonPartials.BootstrapV5Js')
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
     @include('CommonPartials.Toast')
     @include('CommonPartials.Dialog')
     <script>
@@ -182,25 +181,25 @@
         function approveMember(memberId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setActionName('approve')
-            dialogOpen('Continue with approval?', takeYesAction, takeNoAction)
+            window.dialogOpen('Continue with approval?', takeYesAction, takeNoAction)
         }
 
            function disapproveMember(memberId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setActionName('disapprove')
-            dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
+            window.dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
         }
 
         function capatainMember(memberId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setActionName('captain')
-            dialogOpen('Are you sure you want to this user captain?', takeYesAction, takeNoAction)
+            window.dialogOpen('Are you sure you want to this user captain?', takeYesAction, takeNoAction)
         }
 
         function deleteCaptain(memberId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setActionName('deleteCaptain')
-            dialogOpen('Are you sure you want to remove this user from captain?', takeYesAction, takeNoAction)
+            window.dialogOpen('Are you sure you want to remove this user from captain?', takeYesAction, takeNoAction)
         }
 
         function approveMemberAction() {
