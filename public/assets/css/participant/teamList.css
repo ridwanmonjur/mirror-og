@@ -102,9 +102,7 @@ input[type="submit"],
     .search-bar input {
         padding-left: 60px;
     }
-    .navbar .nav-buttons {
-        display: block;
-    }
+   
     .d-none-at-mobile {
         display: block;
     }

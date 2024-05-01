@@ -37,7 +37,7 @@ class ParticipantTeamController extends Controller
             $count = $teamList->count();
             return view('Participant.TeamList', compact('teamList', 'count', 'membersCount' ));
         } else {
-            session()->flash('errorMessage', 'You have 0 teams! Create a team first.');
+            session()->flash('errorMessage', 'You have 0 teams! Create a team please.');
             $membersCount = 0;
             $count = 0;
             return view('Participant.TeamList', compact('teamList', 'count', 'membersCount' ));

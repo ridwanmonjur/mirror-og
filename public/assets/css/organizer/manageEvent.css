@@ -39,41 +39,10 @@ main {
     background-image: url("/assets/images/event-management-bg.png");
 }
 
-.navbar {
-    min-height: 5vh;
-    display: flex;
-    justify-content: space-between;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-}
-
-.navbar img,
-.navbar svg,
-.search-bar svg,
-nav button,
-nav img,
-nav svg,
-.icon2 svg,
-.icon2 span
-{
-    cursor: pointer;
-}
-
 
 img.larger-hover:hover{
     transform: scale(1.1);
     cursor: pointer;
-}
-.navbar img:hover,
-nav img:hover,
-.search-bar svg:hover,
-.navbar svg:hover,
-nav button:hover,
-nav svg:hover,
-.icon2 svg:hover,
-.icon2 span:hover
- {
-    transform: scale(1.1);
 }
 .rounded-box:hover{
     transform: scale(1.03, 1.05);
@@ -87,26 +56,6 @@ nav svg:hover,
 .search-bar2-adjust {
     margin-left: 30px;
 }
-
-.navbar img:active,
-nav img:active,
-nav button:active,
-.search-bar svg:active,
-.navbar svg:active,
-nav svg:active,
-.oceans-gaming-default-button:active {
-    transform: scale(1.1);
-}
-
-.navbar .nav-buttons {
-    display: none;
-}
-
-
-.menu-toggle {
-    display: block;
-}
-
 
 .search-bar {
     position: relative;
@@ -357,9 +306,7 @@ input[type="submit"]:active {
         padding-left: 60px;
     }
 
-    .navbar .nav-buttons {
-        display: block;
-    }
+   
 
     .d-none-at-mobile {
         display: block;

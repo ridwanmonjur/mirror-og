@@ -477,39 +477,6 @@ main {
     background-size: cover;
 }
 
-.navbar {
-    min-height: var(--navbar-height);
-    display: flex;
-    justify-content: space-between;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-}
-
-.navbar img,
-.navbar svg,
-nav img,
-nav svg {
-    cursor: pointer;
-}
-
-.navbar img:hover,
-nav img:hover,
-.navbar svg:hover,
-nav svg:hover {
-    transform: scale(1.1);
-}
-
-.navbar img:active,
-nav img:active,
-.navbar svg:active,
-nav svg:active {
-    transform: scale(1.1);
-}
-
-.navbar .nav-buttons {
-    display: none;
-}
-
 .menu-toggle {
     display: block;
 }
@@ -1033,9 +1000,6 @@ input[type="submit"]:active {
         padding-left: 60px;
     }
 
-    .navbar .nav-buttons {
-        display: block;
-    }
 
     .d-none-at-mobile {
         display: block;

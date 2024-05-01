@@ -1,4 +1,3 @@
-{{-- <div class="navbar-placeholder"> </div> --}}
 @auth
     @php
         if (!isset($user)) {
@@ -21,7 +20,7 @@
         $routeLogo = route('landing.view');
     }
 @endphp
-<nav class="navbar px-3">
+<nav class="navbar fixed-top px-3">
     <a href="{{ $routeLogo }}">
         <div class="logo">
             <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
@@ -101,9 +100,9 @@
                 </div>
             </div>
             @if ($user->role == 'PARTICIPANT' || $user->role == 'ADMIN')
-                <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Create a team N_EDIT</a>
-                <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Team list N_EDIT</a>
-                <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Team requeusts N_EDIT</a>
+                <a href="{{ url('/participant/team/create/' ) }}">Create a Team</a>
+                <a href="{{ url('/participant/team/list/' ) }}">Team List</a>
+                <a href="{{ url('/participant/request/' ) }}">Team Requests</a>
             @endif
             @if ($user->role == 'ORGANIZER' || $user->role == 'ADMIN')
                 <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Create an event N_EDIT</a>
