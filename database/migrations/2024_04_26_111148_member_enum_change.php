@@ -14,12 +14,15 @@ return new class extends Migration
     {
         Schema::table('team_members', function (Blueprint $table) {
             $table->dropColumn('status');
+            $table->dropColumn('rejector');
+
         });
 
         Schema::table('team_members', function (Blueprint $table) {
             $table->enum('status', ['pending', 'accepted', 'rejected', 'left'])
                 ->default('pending');
-            $table->renameColumn('rejector', 'actor');
+            $table->enum('actor', ['team', 'user'])
+                ->default('user');
         });
     }
 
@@ -31,13 +34,14 @@ return new class extends Migration
     public function down()
     {
         Schema::table('team_members', function (Blueprint $table) {
-            $table->dropColumn('status');
+            // $table->dropColumn('status');
+            // $table->dropColumn('actor');
         });
 
         Schema::table('team_members', function (Blueprint $table) {
             $table->enum('status', ['pending', 'accepted', 'rejected', 'invited'])
                 ->default('pending');
-            $table->renameColumn('actor', 'rejector');
+            $table->enum('rejector', ['team', 'invitee'])->nullable();
         });
     }
 

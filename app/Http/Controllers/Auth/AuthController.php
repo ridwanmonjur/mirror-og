@@ -94,10 +94,10 @@ class AuthController extends Controller
     public function handleGoogleCallback(Request $request)
     {
         // dd("hio");
-        $user = Socialite::driver('google')->user();
+        $user = Socialite::driver('google')->stateless()->user();
         $role = Session::get('role');
         ['finduser' => $finduser, 'error' => $error] 
-        = $this->_registerOrLoginUser($user, 'google', $role);
+            = $this->_registerOrLoginUser($user, 'google', $role);
         
         Session::forget('role');
         if ($error) {

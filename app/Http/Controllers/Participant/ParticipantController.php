@@ -39,7 +39,15 @@ class ParticipantController extends Controller
         // pending requests
         $invitedTeamAndMemberList = Team::join('team_members', 'teams.id', '=', 'team_members.team_id')
             ->where('team_members.user_id', $user_id)
-            ->where('team_members.status', 'invited')
+            ->where(function ($query) {
+                $query->where([
+                    ['team_members.status', 'pending'],
+                    ['team_members.actor', 'team'],
+                ])->orWhere([
+                    ['team_members.status', 'rejected'],
+                    ['team_members.actor', 'user'],
+                ]);
+            })
             ->select('teams.*', 'team_members.*')
             ->get();
 
@@ -47,15 +55,27 @@ class ParticipantController extends Controller
         $membersCount = DB::table('teams')
             ->leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
             ->whereIn('teams.id', $teamIdList)
-            ->where('team_members.status', 'accepted')
+            ->where(function ($query) {
+                $query->where([
+                    ['team_members.status', 'pending'],
+                    ['team_members.actor', 'team'],
+                ])->orWhere([
+                    ['team_members.status', 'rejected'],
+                    ['team_members.actor', 'user'],
+                ]);
+            })
             ->groupBy('teams.id')
             ->selectRaw('teams.id as team_id, COALESCE(COUNT(team_members.id), 0) as member_count')
             ->pluck('member_count', 'team_id')
             ->toArray();
+            
         // sentTeam
         $pendingTeamAndMemberList = Team::join('team_members', 'teams.id', '=', 'team_members.team_id')
             ->where('team_members.user_id', $user_id)
-            ->where('team_members.status', 'pending')
+            ->where([
+                ['team_members.status', 'pending'],
+                ['team_members.actor', 'user'],
+            ])
             ->select('teams.*', 'team_members.*')
             ->get();
 

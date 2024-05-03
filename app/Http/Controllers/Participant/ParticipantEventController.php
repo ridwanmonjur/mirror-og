@@ -11,21 +11,15 @@ use Illuminate\Database\QueryException;
 use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\EventDetail;
-use App\Models\EventInvitation;
 use App\Models\Follow;
 use App\Models\JoinEvent;
-use App\Models\Organizer;
 use App\Models\TeamMember;
-use App\Models\Participant;
-use App\Models\RosterCaptain;
-use App\Models\RosterMember;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Validation\UnauthorizedException;
-use Illuminate\Validation\ValidationException;
 
 class ParticipantEventController extends Controller
 {
@@ -118,14 +112,27 @@ class ParticipantEventController extends Controller
 
     public function followOrganizer(Request $request)
     {
+        // $user = $request->attributes->get('user');
+        // dd($request->attributes->get('user'));
         DB::beginTransaction();
         try {
-            dd($request->user);
-            $userId = $request->input('user_id');
-            $organizerId = $request->input('organizer_id');
+            $user = $request->attributes->get('user');
+            $userId = $user->id;
+            $organizerId = $request->organizer_id;
             $existingFollow = Follow::where('participant_user_id', $userId)->where('organizer_user_id', $organizerId)->first();
-
+            // $organizer = User::findOrFail($organizerId);
             if ($existingFollow) {
+                // $activity = ActivityLogs::where('subject_id', $userId)
+                //     ->where('subect_type', User::class)
+                //     ->where('object_type', User::class)
+                //     ->where('object_id', $organizerId)
+                //     ->where('action', 'follow')
+                //     ->get();
+
+                // if ($activity) {
+                //     $activity->delete();
+                // }
+
                 $existingFollow->delete();
                 return response()->json([
                     'message' => 'Successfully unfollowed the organizer',
@@ -141,11 +148,12 @@ class ParticipantEventController extends Controller
                     'action' => 'follow',
                     'subject_id' => $userId,
                     'subject_type' => User::class,
-                    // 'log' => '<span class="notification-gray"> User' 
-                    // . ' <span class="notification-black">' . $this->teamName . '</span> and joined' 
-                    // . ' <span class="notification-black">' . $event->user->name . ' \'s </span> event' 
-                    // . ' <span class="notification-blue">' . $event->eventName . ' </span>.'
-                    // . '</span>',
+                    // 'object_id' => $organizer,
+                    'object_type' => User::class,
+                    'log' => '<span class="notification-gray"> User' 
+                    . ' <span class="notification-black">' . $user->name . '</span> started following ' 
+                    // . ' <span class="notification-black">' . $organizer->name . '.</span> ' 
+                    . '</span>',
                 ]);
 
                 return response()->json([

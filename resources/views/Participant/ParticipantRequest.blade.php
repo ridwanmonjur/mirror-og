@@ -15,10 +15,17 @@
     @include('Participant.ParticipantRequestPartials.RequestManagement')
     @include('CommonPartials.BootstrapV5Js')
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
-    <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
-    
-    
+    <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>  
     <script>
+       function generateHeaders() {
+            return {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                ...window.loadBearerHeader(), 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            };
+        }
+  
         let dialogForMember = new DialogForMember();
 
         function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
@@ -73,12 +80,12 @@
             }
         }
 
-        loadTab();
+        window.onload = () => { loadTab(); }
 
          let actionMap = {
             'approve': approveTeamAction,
             'disapprove': disapproveTeamAction,
-            'deleteInvite': deleteInviteMemberAction
+            'deleteInvite': withdrawInviteMemberAction
         };
 
         function reloadUrl(currentUrl, buttonName, teamName) {
@@ -132,7 +139,7 @@
             window.dialogOpen('Are you sure you want to send invite to this member?', takeYesAction, takeNoAction)
         }
 
-        function deleteInviteMember(memberId, teamId) {
+        function withdrawInviteMember(memberId, teamId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setTeamId(teamId);
             dialogForMember.setActionName('deleteInvite')
@@ -147,7 +154,7 @@
 
         function approveTeamAction() {
             const memberId = dialogForMember.getMemberId();
-            const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
+            const url = "{{ route('participant.member.update', ['id' => ':id']) }}".replace(':id', memberId);
             console.log({
                 memberId: dialogForMember.getMemberId(),
                 action: dialogForMember.getActionName()
@@ -162,23 +169,19 @@
                         toastError(responseData.message);
                     }
                 },
-                function(error) {
-                    toastError('Error making captain.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
+                function(error) { toastError('Error accepting member.', error);},  
+                {
+                    headers: generateHeaders(), 
+                    body: JSON.stringify({
+                       'actor' : 'user', 'status' : 'accepted'
+                    })
                 }
             );
         }
 
         async function disapproveTeamAction() {
             const memberId = dialogForMember.getMemberId();
-            const url = "{{ route('participant.member.rejectInvite', ['id' => ':id']) }}".replace(':id', memberId);
-            console.log({
-                memberId: dialogForMember.getMemberId(),
-                action: dialogForMember.getActionName()
-            });
+            const url = "{{ route('participant.member.update', ['id' => ':id']) }}".replace(':id', memberId);
 
             fetchData(url,
                 function(responseData) {
@@ -189,17 +192,17 @@
                         toastError(responseData.message)
                     }
                 },
-                function(error) {
-                    toastError('Error disapproving member.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
+                function(error) { toastError('Error disapproving member.', error);}, 
+                {
+                    headers: generateHeaders(), 
+                    body: JSON.stringify({
+                       'actor' : 'user', 'status' : 'rejected'
+                    })
                 }
             );
         }
 
-        async function deleteInviteMemberAction() {
+        async function withdrawInviteMemberAction() {
             const memberId = dialogForMember.getMemberId();
             const url = "{{ route('participant.member.deleteInvite', ['id' => ':id']) }}"
                 .replace(':id', memberId);
@@ -214,13 +217,8 @@
                         toastError(responseData.message);
                     }
                 },
-                function(error) {
-                    toastError('Error deleteInvite members.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                }
+                function(error) { toastError('Error deleting member.', error);  }, 
+                {  headers: generateHeaders(), }
             );
         }
 

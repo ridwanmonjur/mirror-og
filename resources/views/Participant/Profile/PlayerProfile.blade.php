@@ -247,7 +247,7 @@
                     @endforeach
                 </div>
             @endif
-
+            <br>
             <div class="mx-auto" style="width: 80%;"><b>Past Events</b></div>
 
             @if (!isset($joinEventsHistory[0]))

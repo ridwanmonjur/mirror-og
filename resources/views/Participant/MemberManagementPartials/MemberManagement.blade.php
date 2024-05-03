@@ -53,6 +53,7 @@
 <div class="tab-content inner-tab" id="CurrentMembers">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
         {{ $teamMembersProcessed['accepted']['count'] }} accepted members
+        and {{ $teamMembersProcessed['left']['count'] }} removed members
     </p>
     <div class="cont mt-3 pt-3">
         <table class="member-table">
@@ -60,33 +61,7 @@
                 @if ($teamMembersProcessed['accepted']['count'] != 0)
                     @foreach ($teamMembersProcessed['accepted']['members'] as $member)
                         <tr class="st" id="tr-{{ $member->id }}">
-                            <td class="colorless-col">
-                                <svg    
-                                    onclick="redirectToProfilePage({{$member->user_id}});"
-                                    class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg" width="20"
-                                    height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                                    <path
-                                        d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                                </svg>
-                            <td>
-                            <td class="coloured-cell px-3">
-                                <div 
-                                    onclick="deleteCaptain({{ $member->id }}, {{ $selectTeam->id }})"
-                                    class="player-info cursor-pointer">
-                                    @if ($captain && $member->id == $captain->team_member_id)
-                                        <div class="player-image"> </div>
-                                    @endif
-                                    <span>{{ $member->user->name }}</span>
-                                </div>
-                            </td>
-                            <td class="flag-cell coloured-cell px-3">
-                                <span>{{ $member->user->email }}</span>
-                            </td>
-                            <td class="flag-cell coloured-cell px-3">
-                                <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
-                                    alt="User's flag">
-                            </td>
+                            @include('Participant.MemberManagementPartials.MemberManagementColumns', ['member' => $member])
                             <td class="coloured-cell px-3">
                                 Accepted {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
@@ -109,6 +84,22 @@
                             </td>
                         </tr>
                     @endforeach
+                    @foreach ($teamMembersProcessed['left']['members'] as $member)
+                        <tr class="st" id="tr-{{ $member->id }}">
+                            @include('Participant.MemberManagementPartials.MemberManagementColumns', ['member' => $member])
+                            <td class="coloured-cell px-3">
+                                {{ $member->actor == 'team' ? 'Removed' : 'Left' }} {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
+                            </td>
+                            <td>
+                                 @if ($user->id == $selectTeam->creator_id && $member->actor == 'team')
+                                    <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
+                                        onclick="approveMember({{ $member->id }})">
+                                        ✔
+                                    </button>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
                 @endif
             </tbody>
         </table>
@@ -116,122 +107,33 @@
 </div>
 <div class="tab-content inner-tab d-none" id="PendingMembers" data-type="member" style="text-align: center;">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
-        {{ $teamMembersProcessed['pending']['count'] }} pending,
-        {{ $teamMembersProcessed['invited']['count'] }} invited and
+        {{ $teamMembersProcessed['pending']['count'] }} invited and
         and {{ $teamMembersProcessed['rejected']['count'] }} rejected members
     </p>
     <div class="cont mt-3 pt-3">
         <table class="member-table">
             <tbody class="pending-member-table">
                 @if ($teamMembersProcessed['pending']['count'] != 0 || 
-                        $teamMembersProcessed['rejected']['count'] != 0 || 
-                        $teamMembersProcessed['invited']['count'] != 0
+                        $teamMembersProcessed['rejected']['count'] != 0 
                     )
                     @foreach ($teamMembersProcessed['pending']['members'] as $member)
                         <tr class="st" id="tr-{{ $member->id }}">
-                            <td class="colorless-col">
-                                <svg 
-                                    onclick="redirectToProfilePage({{$member->user_id}});"
-                                    class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg" width="20"
-                                    height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                                    <path
-                                        d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                                </svg>
-                            <td>
-                            <td class="coloured-cell px-3">
-                                <div class="player-info">
-                                    <span>{{ $member->user->name }}</span>
-                                </div>
-                            </td>
-                             <td class="flag-cell coloured-cell px-3">
-                                <span>{{ $member->user->email }}</span>
-                            </td>
-                            <td class="flag-cell coloured-cell px-3">
-                                <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
-                                    alt="User's flag">
-                            </td>
+                            @include('Participant.MemberManagementPartials.MemberManagementColumns', ['member' => $member])
                             <td class="coloured-cell px-3">
                                 Pending {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
                             <td>
-                                @if ($user->id == $selectTeam->creator_id)
+                                @if ($user->id == $selectTeam->creator_id && $member->actor == 'user')
                                     <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
                                         onclick="approveMember({{ $member->id }})">
                                         ✔
                                     </button>
                                 @endif
                             </td>
-                        </tr>
-                    @endforeach
-                    @foreach ($teamMembersProcessed['rejected']['members'] as $member)
-                        <tr class="st" id="tr-{{ $member->id }}">
-                            <td class="colorless-col">
-                                <svg 
-                                    onclick="redirectToProfilePage({{$member->user_id}});"
-                                    class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg" width="20"
-                                    height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                                    <path
-                                        d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                                </svg>
                             <td>
-                            <td class="coloured-cell px-3">
-                                <div class="player-info">
-                                    <span>{{ $member->user->name }}</span>
-                                </div>
-                            </td>
-                             <td class="flag-cell coloured-cell px-3">
-                                <span>{{ $member->user->email }}</span>
-                            </td>
-                            <td class="flag-cell coloured-cell px-3">
-                                <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
-                                    alt="User's flag">
-                            </td>
-                            <td class="coloured-cell px-3">
-                                Rejected {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
-                            </td>
-                            <td>
-                                @if ($user->id == $selectTeam->creator_id && $member->rejector!='invitee')
-                                    <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
-                                        onclick="approveMember({{ $member->id }})">
-                                        ✔
-                                    </button>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                    @foreach ($teamMembersProcessed['invited']['members'] as $member)
-                        <tr class="st" id="tr-{{ $member->id }}">
-                            <td class="colorless-col">
-                                <svg
-                                    onclick="redirectToProfilePage({{$member->user_id}});" 
-                                    class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg" width="20"
-                                    height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                                    <path
-                                        d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                                </svg>
-                            <td>
-                            <td class="coloured-cell px-3">
-                                <div class="player-info">
-                                    <span>{{ $member->user->name }}</span>
-                                </div>
-                            </td>
-                             <td class="flag-cell coloured-cell px-3">
-                                <span>{{ $member->user->email }}</span>
-                            </td>
-                            <td class="flag-cell coloured-cell px-3">
-                                <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
-                                    alt="User's flag">
-                            </td>
-                            <td class="coloured-cell px-3">
-                                Invited {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
-                            </td>
-                            <td>
-                                @if ($user->id == $selectTeam->creator_id)
-                                    <button id="deleteInviteMember-{{ '$member->user_id' }}" class="gear-icon-btn"
-                                        onclick="deleteInviteMember({{ $member->id }})">
+                                @if ($user->id == $selectTeam->creator_id && $member->actor == 'team' )
+                                    <button id="withdrawInviteMember-{{ '$member->user_id' }}" class="gear-icon-btn"
+                                        onclick="withdrawInviteMember({{ $member->id }})">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                             fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                             <path
@@ -244,6 +146,36 @@
                             </td>
                         </tr>
                     @endforeach
+                    @foreach ($teamMembersProcessed['rejected']['members'] as $member)
+                        <tr class="st" id="tr-{{ $member->id }}">
+                            @include('Participant.MemberManagementPartials.MemberManagementColumns', ['member' => $member])
+                            <td class="coloured-cell px-3">
+                                Rejected {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
+                            </td>
+                            <td>
+                                @if ($user->id == $selectTeam->creator_id && $member->actor != 'user' )
+                                    <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
+                                        onclick="approveMember({{ $member->id }})">
+                                        ✔
+                                    </button>
+                                @endif
+                            </td>
+                             <td>
+                                @if ($user->id == $selectTeam->creator_id)
+                                    <button id="withdrawInviteMember-{{ '$member->user_id' }}" class="gear-icon-btn"
+                                        onclick="withdrawInviteMember({{ $member->id }})">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                            <path
+                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                            <path
+                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                        </svg>
+                                    </button>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach                
                 @endif
             </tbody>
         </table>

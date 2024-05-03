@@ -27,6 +27,15 @@
     
     @include('Participant.MemberManagementPartials.MemberManagementScripts')
     <script>
+        let actionMap = {
+            'approve': approveMemberAction,
+            'disapprove': disapproveMemberAction,
+            'captain': capatainMemberAction,
+            'deleteCaptain': deleteCaptainAction,
+            'invite': inviteMemberAction,
+            'deleteInvite': withdrawInviteMemberAction
+        };
+
         let dialogForMember = new DialogForMember();
 
         function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
@@ -73,15 +82,18 @@
             }
         }
 
-        loadTab();
-        let actionMap = {
-            'approve': approveMemberAction,
-            'disapprove': disapproveMemberAction,
-            'captain': capatainMemberAction,
-            'deleteCaptain': deleteCaptainAction,
-            'invite': inviteMemberAction,
-            'deleteInvite': deleteInviteMemberAction
-        };
+        function generateHeaders() {
+            return {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                ...window.loadBearerHeader(), 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            };
+        }
+
+
+        window.onload = () => { loadTab(); }
+       
 
         function reloadUrl(currentUrl, buttonName) {
             if (currentUrl.includes('?')) {
@@ -148,7 +160,7 @@
             window.dialogOpen('Are you sure you want to remove this user from captain?', takeYesAction, takeNoAction)
         }
 
-        function deleteInviteMember(memberId, teamId) {
+        function withdrawInviteMember(memberId, teamId) {
             dialogForMember.setMemberId(memberId);
             dialogForMember.setTeamId(teamId);
             dialogForMember.setActionName('deleteInvite')
@@ -181,11 +193,7 @@
 
         function approveMemberAction() {
             const memberId = dialogForMember.getMemberId();
-            const url = "{{ route('participant.member.approve', ['id' => ':id']) }}".replace(':id', memberId);
-            console.log({
-                memberId: dialogForMember.getMemberId(),
-                action: dialogForMember.getActionName()
-            });
+            const url = "{{ route('participant.member.update', ['id' => ':id']) }}".replace(':id', memberId);
 
             fetchData(url,
                 function(responseData) {
@@ -196,14 +204,11 @@
                         toastError(responseData.message);
                     }
                 },
-                function(error) {
-                    toastError('Error approving member.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }, 
+                function(error) { toastError('Error accepting member.', error);},  
+                {
+                    headers: generateHeaders(), 
                     body: JSON.stringify({
-                        'actor' : 'team'
+                       'actor' : 'team', 'status' : 'accepted'
                     })
                 }
             );
@@ -211,29 +216,21 @@
 
         async function disapproveMemberAction() {
             const memberId = dialogForMember.getMemberId();
-            const url = "{{ route('participant.member.disapprove', ['id' => ':id']) }}".replace(':id', memberId);
-            console.log({
-                memberId: dialogForMember.getMemberId(),
-                action: dialogForMember.getActionName()
-            });
-
+            const url = "{{ route('participant.member.update', ['id' => ':id']) }}".replace(':id', memberId);
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
                         let currentUrl = "{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}";
-                        reloadUrl(currentUrl, 'PendingMembersBtn');
+                        reloadUrl(currentUrl, 'CurrentMembersBtn');
                     } else {
                         toastError(responseData.message)
                     }
                 },
-                function(error) {
-                    toastError('Error disapproving member.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
+                function(error) { toastError('Error disapproving member.', error);}, 
+                {
+                    headers: generateHeaders(), 
                     body: JSON.stringify({
-                        'actor' : 'team'
+                       'actor' : 'team', 'status' : 'left'
                     })
                 }
             );
@@ -259,13 +256,8 @@
                         toastError(responseData.message);
                     }
                 },
-                function(error) {
-                    toastError('Error making captain.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                }
+                function(error) { toastError('Error making captain.', error); }, 
+                {   headers: generateHeaders(), }
             );
         }
 
@@ -291,11 +283,7 @@
                 },
                 function(error) {
                     toastError('Error removing captain.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                }
+                }, { headers: generateHeaders(), }
             );
         }
 
@@ -303,9 +291,7 @@
             const memberId = dialogForMember.getMemberId();
             const teamId = dialogForMember.getTeamId();
             const url = "{{ route('participant.member.invite', ['id' => ':id', 'userId' => ':userId']) }}"
-                .replace(':userId', memberId)
-                .replace(':id', teamId);
-            console.log({ memberId: dialogForMember.getMemberId(), action: dialogForMember.getActionName() });
+                .replace(':userId', memberId).replace(':id', teamId);
 
             fetchData(
                 url,
@@ -317,20 +303,12 @@
                        toastError(responseData.message);
                     }
                 },
-                function(error) {
-                    toastError('Error inviting members.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                     body: JSON.stringify({
-                        'actor' : 'team'
-                    })
-                }
+                function(error) { toastError('Error inviting members.', error); }, 
+                {  headers: generateHeaders(),  }
             );
         }
 
-        async function deleteInviteMemberAction() {
+        async function withdrawInviteMemberAction() {
             const memberId = dialogForMember.getMemberId();
             const url = "{{ route('participant.member.deleteInvite', ['id' => ':id']) }}"
                 .replace(':id', memberId);
@@ -345,16 +323,8 @@
                         toastError(responseData.message);
                     }
                 },
-                function(error) {
-                    toastError('Error deleting invite members.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        'actor' : 'team'
-                    })
-                }
+                function(error) { toastError('Error deleting invite members.', error);}, 
+                {  headers: generateHeaders()  }
             );
         }
 
@@ -376,9 +346,7 @@
                 function(error) {
                     toastError('Error fetching participants.', error);
                 }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
+                    headers: generateHeaders(), 
                 }
             );
         }

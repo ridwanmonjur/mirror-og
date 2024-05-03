@@ -107,7 +107,6 @@ svg{
 }
 
 .navbar {
-    height: 9vh;
     display: flex;
     justify-content: space-between;
     padding-top: 0px !important;
@@ -121,7 +120,7 @@ svg{
 
 .mobile-navbar {
     position: fixed;
-    top: 8vh;
+    top: 0vh;
     width: 100vw;
     z-index: 999;
     background-color: white;

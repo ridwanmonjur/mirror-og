@@ -19,6 +19,12 @@ window.loadBearerHeader = function() {
     };
 };
 
+window.loadBearerCompleteHeader = function() {
+    return {
+        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+    };
+};
+
 window.Swal = Swal;
 
 const Toast = Swal.mixin({
@@ -30,6 +36,8 @@ const Toast = Swal.mixin({
     timer: 6000,
     timerProgressBar: true
 })
+
+window.Toast = Toast;
 
 window.toastError = function (message, error = null) {
     console.error(error)

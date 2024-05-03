@@ -47,7 +47,7 @@ class TeamMemberUpdatedListener
 
                 }
                 break;
-            case 'invited':
+            case 'pending':
                 if ($event->teamMember->actor == 'team') {
                     $action = 'invited';
                     $userNotification = [
@@ -56,10 +56,10 @@ class TeamMemberUpdatedListener
                     ];
                 } else {
                     $action = 'pending';
-                $teamNotification = [
-                    'text' => "$userName has requested to join this team!",
-                    'subject' => "Request from user to join this team",
-                ];
+                    $teamNotification = [
+                        'text' => "$userName has requested to join this team!",
+                        'subject' => "Request from user to join this team",
+                    ];
 
                 $userLog = "You have decided to join this team $teamName!";
                 }

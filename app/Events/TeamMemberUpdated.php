@@ -9,12 +9,10 @@ class TeamMemberUpdated implements ShouldQueue
 {
     use Dispatchable, SerializesModels;
 
-    public $oldTeamMember;
     public $teamMember;
 
-    public function __construct($oldAttributes, $newAttributes)
+    public function __construct($teamMember)
     {
-        $this->teamMember = $newAttributes;
-        $this->oldTeamMember = $oldAttributes;
+        $this->teamMember = $teamMember;
     }
 }

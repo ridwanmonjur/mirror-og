@@ -21,7 +21,7 @@
                 </td>
                 <td class="coloured-cell px-3">
                     @if ($user->is_in_team == 'yes')
-                        Team status ({{ strtoupper($user->members[0]->status) }})
+                        Team status ({{ ucfirst($user->members[0]->status) }})
                     @else
                         Not in team
                     @endif

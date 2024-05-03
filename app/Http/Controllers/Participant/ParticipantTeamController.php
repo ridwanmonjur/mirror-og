@@ -125,7 +125,7 @@ class ParticipantTeamController extends Controller
     protected function handleTeamManagement($selectTeam, $id, $request, $page, $redirect = false)
     {
         $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
-        $teamMembersProcessed = TeamMember::processStatus($selectTeam->members);
+        $teamMembersProcessed = TeamMember::getProcessedTeamMembers($selectTeam->id);
         $creator_id = $selectTeam->creator_id;
         $userList = User::getParticipants($request, $selectTeam->id)->paginate($page);
         foreach ($userList as $user) {
@@ -173,19 +173,48 @@ class ParticipantTeamController extends Controller
         ]);
     }
 
+
     public function inviteMember(Request $request, $id, $userId)
     {
-        TeamMember::insert([
-            'user_id' => $userId,
-            'team_id' => $id,
-            'status' => 'pending',
-            'actor' => 'team'
-        ]);
+        try{
+            TeamMember::insert([
+                'user_id' => $userId,
+                'team_id' => $id,
+                'status' => 'pending',
+                'actor' => 'team'
+            ]); 
+        } 
+        catch(Exception $e) {
+            $errorMessage = $e->getMessage();
+            return response()->json(['success' => false, 'message' => $errorMessage] , 403);
+        }
         
         return response()->json(['success' => true, 'message' => 'Team member invited'], 201);
     }
 
-    public function deleteInviteMember(Request $request, $id)
+    public function pendingTeamMember(Request $request, $id)
+    {
+        try{
+            $user = $request->attributes->get('user');
+            TeamMember::insert([
+                'user_id' => $user->id,
+                'team_id' => $id,
+                'status' => 'pending',
+                'actor' => 'user'
+            ]);
+
+            return redirect()->back()->with('successJoin', 'Your request to this team was sent!');
+        } catch(Exception $e) {
+            if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
+                $errorMessage = "You have requested before!";
+            } else {
+                $errorMessage = 'Your request to this team failed!';
+            }
+            return redirect()->back()->with('errorJoin', $errorMessage);
+        }
+    }
+
+    public function withdrawInviteMember(Request $request, $id)
     {
         $member = TeamMember::find($id);
         if ($member) {
@@ -201,7 +230,7 @@ class ParticipantTeamController extends Controller
         $member = TeamMember::find($id);
         if ($member) {
             $member->status = 'rejected';
-            $member->actor = 'invitee';
+            $member->actor = 'user';
             $member->save();
             return response()->json(['success' => true, 'message' => 'Team member invitation withdrawn']);
         } else {
@@ -209,59 +238,31 @@ class ParticipantTeamController extends Controller
         }
     }
 
-    public function approveTeamMember(Request $request, $id)
+   
+    public function updateTeamMember(Request $request, $id)
     {
         $member = TeamMember::find($id);
-        if (!$member || $member->status == 'rejected' && $member->actor == 'invitee') {
-            return response()->json(['success' => false, 'message' => 'Invalid operation or team member not found'], 400);
-        } else {
-            $member->status = 'accepted';
-            $member->actor = $request->actor;
-            $member->save();
-            return response()->json(['success' => true, 'message' => 'Team member status updated to accepted']);
-        }
-    }
-
-    // change
-    public function pendingTeamMember(Request $request, $id)
-    {
-        $user = $request->attributes->get('user');
-        $member = TeamMember::where('team_id', $id)->where('user_id', $user->id)->first();
+        $status = $request->status;
         if (!$member) {
-            TeamMember::insert([
-                'user_id' => $user->id,
-                'team_id' => $id,
-                'status' => 'pending',
-                'actor' => 'invitee'
-            ]);
-
-            return redirect()->back()->with('successJoin', 'Your request to this team was sent!');
-        } else {
-            return redirect()->back()->with('errorJoin', 'Your request to this team failed!');
+            return response()->json(['success' => false, 'message' => 'Team member not found'], 400);
         }
-    }
-
-    public function disapproveTeamMember(Request $request, $id)
-    {
-        $member = TeamMember::find($id);
         $team = Team::where('id', $member->team_id)->first();
-        if ($member && $team) {
-            if ($team->creator_id == $member->user_id) {
-                return response()->json(['success' => false, 'message' => "Can't remove creator from team."], 400);
-            }
 
-            $member->status = 'rejected';
-            $member->actor = $request->actor;
-            $member->save();
-            return response()->json(['success' => true, 'message' => 'Team member status updated to rejected']);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Invalid operation or team member not found'], 400);
+        if ($team->creator_id == $member->user_id) {
+            return response()->json(['success' => false, 'message' => "Can't modify creator of the team"], 4);
         }
+
+        $member->status = $status;
+        $member->actor = $request->actor; 
+        $member->save();
+
+        return response()->json(['success' => true, 'message' => "Team member status updated to $status"]);
+
     }
 
     public function captainMember(Request $request, $id, $memberId)
     {
-        DB::transaction(function() use ($id, $memberId) {
+        try {
             $existingCaptain = TeamCaptain::where('teams_id', $id)->first();
             if ($existingCaptain) {
                 $existingCaptain->delete();
@@ -272,8 +273,11 @@ class ParticipantTeamController extends Controller
                 'team_member_id' => $memberId,
             ]);
 
-            return response()->json(['success' => 'true'], 200);
-        });
+            return response()->json(['success' => true], 200);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+
     }
 
     public function deleteCaptain(Request $request, $id, $memberId)

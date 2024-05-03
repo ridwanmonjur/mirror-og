@@ -31,6 +31,7 @@ class CheckEvents extends Command
     {
         $twoMonthsAgo = Carbon::now()->subMonths(2);
         Task::where('created_at', '<', $twoMonthsAgo)->delete();
+        // TODO delete parent table too
         DB::table('monitored_scheduled_task_log_items')->where('created_at', '<', $twoMonthsAgo)->delete();
 
         $today = Carbon::now();

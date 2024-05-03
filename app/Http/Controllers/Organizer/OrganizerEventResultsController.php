@@ -133,7 +133,7 @@ class OrganizerEventResultsController extends Controller
             
                 return response()->json(['success' => true, 'message' => 'Award given successfully'], 200);
             } else {
-                return response()->json(['success' => false, 'message' => 'Join event, team or event details not found'], 404);
+                return response()->json(['success' => false, 'message' => 'Join event, team or event details not found'], 400);
             }
         } catch (QueryException $e) {
             if ($e->errorInfo[1] == 1062) { 
@@ -172,7 +172,7 @@ class OrganizerEventResultsController extends Controller
             
                 return response()->json(['success' => true, 'message' => 'Achievement given successfully'], 200);
             } else {
-                return response()->json(['success' => false, 'message' => 'Join event or team not found'], 404);
+                return response()->json(['success' => false, 'message' => 'Join event or team not found'], 400);
             }
         } catch (QueryException $e) {
             if ($e->errorInfo[1] == 1062) { 
@@ -193,7 +193,7 @@ class OrganizerEventResultsController extends Controller
             DB::table('awards_results')->where('id', $awardId)->delete();
             return response()->json(['success' => true, 'message' => 'Award deleted successfully'], 200);
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Award not found'], 404);
+            return response()->json(['success' => false, 'message' => 'Award not found'], 400);
         }
     }
 
@@ -203,7 +203,7 @@ class OrganizerEventResultsController extends Controller
             DB::table('achievements')->where('id', $achievementId)->delete();
             return response()->json(['success' => true, 'message' => 'Achievement deleted successfully'], 200);
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Achievement not found'], 404);
+            return response()->json(['success' => false, 'message' => 'Achievement not found'], 400);
         }
     }
 }

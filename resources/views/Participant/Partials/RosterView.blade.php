@@ -151,7 +151,9 @@
                     method: form.method,
                     body: formData,
                     headers: {
-                        ...window.loadBearerHeader()
+                        ...window.loadBearerHeader(),
+                        'Accept': 'application/json',
+                        'Content': 'application/json'
                     }
                 });
 

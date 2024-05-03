@@ -48,7 +48,7 @@
                                 </label>
                             </div>
                             <h3 class="team-name" id="team-name">{{ $teamAndMember->teamName }}</h3>
-                            <i> Requested {{ is_null($teamAndMember->updated_at) ? '' : Carbon::parse($teamAndMember->updated_at)->diffForHumans() }} </i>
+                            <i> {{ $teamAndMember->status == 'pending' ? 'Requested' : 'Rejected' }}  {{ is_null($teamAndMember->updated_at) ? '' : Carbon::parse($teamAndMember->updated_at)->diffForHumans() }} </i>
                             <br>
                             <p>Total Members:
                                 @if (isset($membersCount[$teamAndMember->id]))
@@ -77,12 +77,14 @@
                                         ✔ Approve
                                     </button>
                                 </div>
-                                <div class="">
-                                    <button id="remove-{{ $teamAndMember->id }}" class="btn btn-link"
-                                        onclick="disapproveTeam({{ $teamAndMember->id }})">
-                                        ✘ Reject
-                                    </button>
-                                </div>
+                                @if ($teamAndMember->status == 'pending')
+                                    <div class="">
+                                        <button id="remove-{{ $teamAndMember->id }}" class="btn btn-link"
+                                            onclick="disapproveTeam({{ $teamAndMember->id }})">
+                                            ✘ Reject
+                                        </button>
+                                    </div>
+                                    @endif
                             </div>
                         </div>
                     </div>
@@ -137,7 +139,7 @@
                                 </td>
                                 <td>
                                     <button id="add-{{ '$teamAndMember->id' }}" class="gear-icon-btn"
-                                        onclick="deleteInviteMember({{ $teamAndMember->id }})">
+                                        onclick="withdrawInviteMember({{ $teamAndMember->id }})">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                             fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                             <path

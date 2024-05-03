@@ -35,14 +35,13 @@ class TeamMember extends Model
             ->get();
     }
 
-    public static function processStatus($members)
+    public static function getProcessedTeamMembers($id)
     {
-        $acceptedMembers = $pendingMembers = $rejectedMembers = $invitedMembers = [];
-        $acceptedMembersCount = $pendingMembersCount = $rejectedMembersCount = $invitedMemberCount = 0;
-    
+        $acceptedMembers = $pendingMembers = $rejectedMembers = $invitedMembers = $leftMembers = [];
+        $acceptedMembersCount = $pendingMembersCount = $rejectedMembersCount = $invitedMemberCount = $leftMembersCount = 0;
+        $members = self::where('team_id', $id)->with('user')->get();
         foreach ($members as $member) {
             $status = $member->status;
-           
             if ($status == "accepted") {
                 $acceptedMembers[] = $member;
                 $acceptedMembersCount++;
@@ -52,6 +51,9 @@ class TeamMember extends Model
             } else if ($status == "rejected") {
                 $rejectedMembers[] = $member;
                 $rejectedMembersCount++;
+            } else if ($status == "left") {
+                $leftMembers[] = $member;
+                $leftMembersCount++;
             } else if ($status == "invited") {
                 $invitedMembers[] = $member;
                 $invitedMemberCount++;
@@ -71,10 +73,11 @@ class TeamMember extends Model
                 'count' => $rejectedMembersCount,
                 'members' => $rejectedMembers
             ],
-            'invited' => [
-                'count' => $invitedMemberCount,
-                'members' => $invitedMembers
-            ],
+
+            'left' => [
+                'count' => $leftMembersCount,
+                'members' => $leftMembers
+            ]
         ];
     }
 
