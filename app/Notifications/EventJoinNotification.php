@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
@@ -18,14 +17,10 @@ class EventJoinNotification extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        // decide parameters
-        // get table parameters
-        // get mail parameters
         $body 
     )
     {
         Log::info('Notification join event ================>');
-        Log::info($body); 
         Log::info('Notification join event ================>');
         $this->body = $body;
     }

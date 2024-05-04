@@ -130,6 +130,10 @@
                                                                         style="max-width: 100px !important;"
                                                                         type="number" name="position" min="1"
                                                                         max="{{ $event->tier->tierTeamSlot }}">
+                                                                    <input type="hidden" name="eventName"
+                                                                        value="{{ $event->eventName ?? 'No name yet' }}">
+                                                                    <input type="hidden" name="teamName"
+                                                                        value="{{ $joinEventAndTeam->teamName }}">
                                                                     <input type="hidden" name="id"
                                                                         value="{{ $joinEventAndTeam->id1 }}">
                                                                 </div>
@@ -239,6 +243,9 @@
                                                             <h5> Choose an award and team </h5>
                                                             <br>
                                                             <div>
+                                                                <input type="hidden" name="eventName"
+                                                                    value="{{ $event->eventName ?? 'No name yet' }}">
+                                                                
                                                                 <label class="form-check-label fw-bold">
                                                                     Choose team
                                                                 </label>
@@ -345,8 +352,7 @@
                                                             d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
                                                     </svg>
                                                 </td>
-                                                <td class="coloured-cell text-center px-2">
-                                            
+                                                <td class="coloured-cell text-center px-2"> 
                                                     {{ $joinEventAndTeam->achievements_title ? $joinEventAndTeam->achievements_title : '' }}
                                                 </td>
                                                  <td class="coloured-cell px-3 text-start">
@@ -402,6 +408,8 @@
                                                                 </select>
                                                             </div>
                                                             <br>
+                                                            <input type="hidden" name="eventName"
+                                                                value="{{ $event->eventName ?? 'No name yet' }}">
                                                             <label class="form-check-label fw-bold">
                                                                 Achievement Title
                                                             </label>
@@ -437,9 +445,15 @@
     @include('CommonPartials.BootstrapV5Js')
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     @include('CommonPartials.BootstrapV5Js')
-    
-    
     <script>
+        const generateHeader = () => {
+            return {
+                ...window.loadBearerHeader(),
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }
         var awardToDeleteId = null;
         var achievementToDeleteId = null;
         var actionToTake = null;
@@ -487,7 +501,7 @@
             }
         }
 
-        loadToast();
+        window.onload = () => { loadToast(); }
 
         function reloadUrl(currentUrl, message, tab) {
             if (currentUrl.includes('?')) {
@@ -533,25 +547,20 @@
             let formData = new FormData(event.target);
             let joinEventId = formData.get('id');
             let joinEventPosition = formData.get('position');
-            const url = "{{ route('event.results.store', ['event' => $event->id]) }}";
+            const url = "{{ route('event.results.store', ['id' => $event->id]) }}";
             
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('event.results.index', ['event' => $event->id]) }}";
+                        let currentUrl = "{{ route('event.results.index', ['id' => $event->id]) }}";
                         reloadUrl(currentUrl, responseData.message, 'PositionBtn');
                     } else {
                         toastError(responseData.message);
                     }
                 },
-                function(error) {
-                    toastError('Error changing position.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
+                function(error) { toastError('Error changing position.', error);  }, 
+                {
+                    headers: generateHeader(),                     
                     body: JSON.stringify({
                         'join_events_id': joinEventId,
                         'position': joinEventPosition
@@ -570,20 +579,15 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('event.results.index', ['event' => $event->id]) }}";
+                        let currentUrl = "{{ route('event.results.index', ['id' => $event->id]) }}";
                         reloadUrl(currentUrl, responseData.message, 'AwardsBtn');
                     } else {
                         toastError(responseData.message)
                     }
                 },
-                function(error) {
-                    toastError('Error adding award.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
+                function(error) { toastError('Error changing awards.', error);  }, 
+                {
+                    headers: generateHeader(),    
                     body: JSON.stringify({
                         'team_id': Number(teamId),
                         'award_id': Number(awardId),
@@ -604,20 +608,15 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('event.results.index', ['event' => $event->id]) }}";
+                        let currentUrl = "{{ route('event.results.index', ['id' => $event->id]) }}";
                         reloadUrl(currentUrl, responseData.message, 'AchievementsBtn');
                     } else {
                         toastError(responseData.message)
                     }
                 },
-                function(error) {
-                    toastError('Error adding achievement.', error);
-                }, {
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
+                function(error) { toastError('Error changing awards.', error);  }, 
+                {
+                    headers: generateHeader(),    
                     body: JSON.stringify({
                         'team_id': Number(teamId),
                         title,
@@ -636,48 +635,37 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('event.results.index', ['event' => $event->id]) }}";
+                        let currentUrl = "{{ route('event.results.index', ['id' => $event->id]) }}";
                         reloadUrl(currentUrl, responseData.message, 'AwardsBtn');
                     } else {
                         toastError(responseData.message);
                     }
                 },
-                function(error) {
-                    toastError('Error deleting award.', error);
-                }, {
+                function(error) { toastError('Error changing awards.', error);  }, 
+                {
                     method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
+                    headers: generateHeader(),  
                 }
             );
         }
 
          async function deleteAchievementsAction() {
-            console.log({achievementToDeleteId})
             const url = "{{ route('event.achievements.destroy', ['id' => $event->id, 'achievementId' => ':id']) }}"
                 .replace(':id', achievementToDeleteId)
 
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('event.results.index', ['event' => $event->id]) }}";
+                        let currentUrl = "{{ route('event.results.index', ['id' => $event->id]) }}";
                         reloadUrl(currentUrl, responseData.message, 'AchievementsBtn');
                     } else {
                         toastError(responseData.message);
                     }
                 },
-                function(error) {
-                    toastError('Error deleting achievement.', error);
-                }, {
+                function(error) { toastError('Error changing achievements.', error);  }, 
+                {
                     method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
+                    headers: generateHeader(),  
                 }
             );
         }

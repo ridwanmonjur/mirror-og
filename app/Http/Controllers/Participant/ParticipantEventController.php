@@ -124,17 +124,17 @@ class ParticipantEventController extends Controller
         $organizer = User::findOrFail($organizerId);
 
         if ($existingFollow) {
-            dispatch(new HandleFollows('unfollow', [
+            dispatch(new HandleFollows('Unfollow', [
                 'subject_type' => User::class,
                 'object_type' => User::class,
                 'subject_id' => $userId,
                 'object_id' => $organizerId,
-                'action' => 'follow',
+                'action' => 'Follow',
             ]));
 
             $existingFollow->delete();
             return response()->json([
-                'message' => 'Successfully unfollowed the organizer',
+                'message' => 'Successfully Unfollowed the organizer',
                 'isFollowing' => false
             ], 201);
         } else {
@@ -143,12 +143,12 @@ class ParticipantEventController extends Controller
                 'organizer_user_id' => $organizerId,
             ]);
 
-            dispatch(new HandleFollows('unfollow', [
+            dispatch(new HandleFollows('Unfollow', [
                 'subject_type' => User::class,
                 'object_type' => User::class,
                 'subject_id' => $userId,
                 'object_id' => $organizerId,
-                'action' => 'follow',
+                'action' => 'Follow',
                 'log' => '<span class="notification-gray"> User' 
                 . ' <span class="notification-black">' . $user->name . '</span> started following ' 
                 . ' <span class="notification-black">' . $organizer->name . '.</span> ' 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\OrganizerInvitationController;
 use App\Http\Controllers\Organizer\OrganizerEventController;
+use App\Http\Controllers\Organizer\OrganizerEventResultsController;
 use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\StripeController;
@@ -46,7 +47,12 @@ Route::group(['prefix' => 'organizer'], function () {
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::group(['middleware' => 'check-jwt-permission:organizer|admin'], function () {
             Route::post('events/search', [OrganizerEventController::class, 'search'])->name('event.search.view');
-            // Organizer management
+            Route::post('/event/{id}/results', [OrganizerEventResultsController::class, 'store'])->name('event.results.store');
+            Route::post('/event/{id}/awards', [OrganizerEventResultsController::class, 'storeAward'])->name('event.awards.store');
+            Route::delete('/event/{id}/awards/{awardId}', [OrganizerEventResultsController::class, 'destroyAward'])->name('event.awards.destroy');
+            Route::post('/event/{id}/achievements', [OrganizerEventResultsController::class, 'storeAchievements'])->name('event.achievements.store');
+            Route::delete('/event/{id}/achievements/{achievementId}', [OrganizerEventResultsController::class, 'destroyAchievements'])->name('event.achievements.destroy');
+
         });
     });
 });

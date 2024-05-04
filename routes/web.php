@@ -144,14 +144,7 @@ Route::group(['prefix' => 'organizer'], function () {
         Route::group(['middleware' => ['check-permission:organizer|admin', 'prevent-back-history']], function () {
             // Organizer home
             Route::get('/home', [OrganizerEventController::class, 'home'])->name('organizer.home.view');
-            Route::resource('event.results', OrganizerEventResultsController::class)
-                ->parameters(['results' => 'id'])
-                ->only(['index', 'store']);
-            Route::post('/event/{id}/awards', [OrganizerEventResultsController::class, 'storeAward'])->name('event.awards.store');
-            Route::delete('/event/{id}/awards/{awardId}', [OrganizerEventResultsController::class, 'destroyAward'])->name('event.awards.destroy');
-            Route::post('/event/{id}/achievements', [OrganizerEventResultsController::class, 'storeAchievements'])->name('event.achievements.store');
-            Route::delete('/event/{id}/achievements/{achievementId}', [OrganizerEventResultsController::class, 'destroyAchievements'])->name('event.achievements.destroy');
-
+            Route::get('/event/{id}/results', [OrganizerEventResultsController::class, 'index'])->name('event.results.index');
             // Event manage
             Route::resource('/event', OrganizerEventController::class, [
                 'index' => 'event.index',

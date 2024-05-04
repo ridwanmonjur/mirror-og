@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\TeamMemberCreated;
 use App\Events\TeamMemberUpdated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ class TeamMember extends Model
     protected $fillable = ['user_id', 'team_id', 'status', 'actor'];
     protected $dispatchesEvents = [
         'updating' => TeamMemberUpdated::class,
-        'creating' => TeamMemberUpdated::class,
+        'creating' => TeamMemberCreated::class,
     ];
     
     protected $table = 'team_members';

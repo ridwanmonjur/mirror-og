@@ -24,7 +24,7 @@ _ joined user's event. time
 notifications are for other party.
 1. friends -> requested u
 2, 3, 5. achievement, awards, position -> view positions
-4. follows -> followed u
+4. follows -> followed u done
 6. joined/left -> done
 7. status changed
 

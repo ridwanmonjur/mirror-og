@@ -143,3 +143,16 @@ function bladeEventTowerLowerClass($eventTier)
     $eventTierLower= $eventTier ? strtolower($eventTier) : 'no-tier';
     return $eventTierLower;
 }
+
+function bladeOrdinalPrefix($number) {
+    $locale = 'en_US';
+    $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
+    return $nf->format($number);
+}
+
+function bladePluralPrefix( $amount, $singular = '', $plural = 's' ) {
+    if ( $amount === 1 ) {
+        return $singular;
+    }
+    return $plural;
+}
