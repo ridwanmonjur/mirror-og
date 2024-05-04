@@ -34,8 +34,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('team_members', function (Blueprint $table) {
-            // $table->dropColumn('status');
-            // $table->dropColumn('actor');
+            $table->dropColumn('status');
+            $table->dropColumn('actor');
         });
 
         Schema::table('team_members', function (Blueprint $table) {

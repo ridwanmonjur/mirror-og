@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ActivityLogs extends Model
 {
-    protected $fillable = ['action', 'log'];
+    protected $fillable = ['action', 'subject_id', 'subject_type', 'object_id', 'object_type', 'log'];
 
     public function subject()
     {

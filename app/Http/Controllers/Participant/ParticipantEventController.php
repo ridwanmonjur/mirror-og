@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Participant;
 
 use App\Events\JoinEventConfirmed;
 use App\Http\Controllers\Controller;
+use App\Jobs\HandleFollows;
 use App\Models\ActivityLogs;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
@@ -112,59 +113,53 @@ class ParticipantEventController extends Controller
 
     public function followOrganizer(Request $request)
     {
-        // $user = $request->attributes->get('user');
-        // dd($request->attributes->get('user'));
-        DB::beginTransaction();
-        try {
-            $user = $request->attributes->get('user');
-            $userId = $user->id;
-            $organizerId = $request->organizer_id;
-            $existingFollow = Follow::where('participant_user_id', $userId)->where('organizer_user_id', $organizerId)->first();
-            // $organizer = User::findOrFail($organizerId);
-            if ($existingFollow) {
-                // $activity = ActivityLogs::where('subject_id', $userId)
-                //     ->where('subect_type', User::class)
-                //     ->where('object_type', User::class)
-                //     ->where('object_id', $organizerId)
-                //     ->where('action', 'follow')
-                //     ->get();
+       
+        $user = $request->attributes->get('user');
+        $userId = $user->id;
+        $organizerId = $request->organizer_id;
+        $existingFollow = Follow::where('participant_user_id', $userId)
+            ->where('organizer_user_id', $organizerId)
+            ->get()
+            ->first();
+        $organizer = User::findOrFail($organizerId);
 
-                // if ($activity) {
-                //     $activity->delete();
-                // }
+        if ($existingFollow) {
+            dispatch(new HandleFollows('unfollow', [
+                'subject_type' => User::class,
+                'object_type' => User::class,
+                'subject_id' => $userId,
+                'object_id' => $organizerId,
+                'action' => 'follow',
+            ]));
 
-                $existingFollow->delete();
-                return response()->json([
-                    'message' => 'Successfully unfollowed the organizer',
-                    'isFollowing' => false
-                ], 201);
-            } else {
-                Follow::create([
-                    'participant_user_id' => $userId,
-                    'organizer_user_id' => $organizerId,
-                ]);
+            $existingFollow->delete();
+            return response()->json([
+                'message' => 'Successfully unfollowed the organizer',
+                'isFollowing' => false
+            ], 201);
+        } else {
+            Follow::create([
+                'participant_user_id' => $userId,
+                'organizer_user_id' => $organizerId,
+            ]);
 
-                ActivityLogs::create([
-                    'action' => 'follow',
-                    'subject_id' => $userId,
-                    'subject_type' => User::class,
-                    // 'object_id' => $organizer,
-                    'object_type' => User::class,
-                    'log' => '<span class="notification-gray"> User' 
-                    . ' <span class="notification-black">' . $user->name . '</span> started following ' 
-                    // . ' <span class="notification-black">' . $organizer->name . '.</span> ' 
-                    . '</span>',
-                ]);
+            dispatch(new HandleFollows('unfollow', [
+                'subject_type' => User::class,
+                'object_type' => User::class,
+                'subject_id' => $userId,
+                'object_id' => $organizerId,
+                'action' => 'follow',
+                'log' => '<span class="notification-gray"> User' 
+                . ' <span class="notification-black">' . $user->name . '</span> started following ' 
+                . ' <span class="notification-black">' . $organizer->name . '.</span> ' 
+                . '</span>'
+            ]));
 
-                return response()->json([
-                    'message' => 'Successfully followed the organizer',
-                    'isFollowing' => true
-                ], 201); 
-            }
-        } catch (QueryException $e) {
-            DB::rollBack();
-            return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
-        }
+            return response()->json([
+                'message' => 'Successfully followed the organizer',
+                'isFollowing' => true
+            ], 201); 
+        } 
     }
 
     public function registrationManagement(Request $request, $id)
@@ -270,7 +265,7 @@ class ParticipantEventController extends Controller
             } else {
                 $errorMessage = $e->getMessage();
             }
-            return $this->showErrorParticipant($e);
+            return $this->showErrorParticipant($errorMessage);
         }
     }
 

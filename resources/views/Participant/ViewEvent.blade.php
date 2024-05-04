@@ -330,7 +330,7 @@
                     headers: {
                         ...window.loadBearerHeader(),
                         'Accept': 'application/json',
-                        'Content': 'application/json'
+                        "Content-Type": "application/json",
                     }
                 });
 

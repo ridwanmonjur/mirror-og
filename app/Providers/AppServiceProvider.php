@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Events\JoinEventConfirmed;
 use App\Listeners\JoinEventConfirmation;
+use App\Events\TeamMemberUpdated;
+use App\Listeners\TeamMemberUpdatedListener;
 use App\Models\EventDetail;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
@@ -29,6 +31,11 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(
             JoinEventConfirmed::class,
             JoinEventConfirmation::class,
+        );
+        
+        Event::listen(
+            TeamMemberUpdated::class,
+            TeamMemberUpdatedListener::class
         );
        // EventDetail::preventLazyLoading();
        Paginator::useBootstrapFive();

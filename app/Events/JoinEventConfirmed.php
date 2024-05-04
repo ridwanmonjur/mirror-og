@@ -22,11 +22,11 @@ class JoinEventConfirmed
      */
     public function __construct($parameters)
     {
-        $this->memberList = $parameters['memberList'] ?? null;
-        $this->organizerList = $parameters['organizerList'] ?? null;
-        $this->memberNotification = $parameters['memberNotification'] ?? null;
-        $this->organizerNotificatio = $parameters['organizerNotification'] ?? null;
-        $this->allEventLogs = $parameters['allEventLogs'] ?? null;
+        $this->memberList ??= $parameters['memberList'] ;
+        $this->organizerList ??= $parameters['organizerList'] ;
+        $this->memberNotification ??= $parameters['memberNotification'] ;
+        $this->organizerNotificatio ??= $parameters['organizerNotification'] ;
+        $this->allEventLogs ??= $parameters['allEventLogs'] ;
     }
     /**
      * Get the channels the event should broadcast on.

@@ -177,7 +177,7 @@ class ParticipantTeamController extends Controller
     public function inviteMember(Request $request, $id, $userId)
     {
         try{
-            TeamMember::insert([
+            TeamMember::create([
                 'user_id' => $userId,
                 'team_id' => $id,
                 'status' => 'pending',
@@ -196,7 +196,7 @@ class ParticipantTeamController extends Controller
     {
         try{
             $user = $request->attributes->get('user');
-            TeamMember::insert([
+            TeamMember::create([
                 'user_id' => $user->id,
                 'team_id' => $id,
                 'status' => 'pending',
@@ -249,7 +249,7 @@ class ParticipantTeamController extends Controller
         $team = Team::where('id', $member->team_id)->first();
 
         if ($team->creator_id == $member->user_id) {
-            return response()->json(['success' => false, 'message' => "Can't modify creator of the team"], 4);
+            return response()->json(['success' => false, 'message' => "Can't modify creator of the team"], 400);
         }
 
         $member->status = $status;

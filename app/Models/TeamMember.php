@@ -9,9 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 class TeamMember extends Model
 {
     use HasFactory;
+    protected $fillable = ['user_id', 'team_id', 'status', 'actor'];
     protected $dispatchesEvents = [
-        'updated' => TeamMemberUpdated::class,
-        'created' => TeamMemberUpdated::class,
+        'updating' => TeamMemberUpdated::class,
+        'creating' => TeamMemberUpdated::class,
     ];
     
     protected $table = 'team_members';
@@ -19,6 +20,12 @@ class TeamMember extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class, 'team_id', 'id');
     }
 
     public static function isAlreadyMember($teamId, $userId)

@@ -1,151 +1,141 @@
 <?php
-namespace App\Events;
+namespace App\Listeners;
 
+use App\Events\TeamMemberUpdated;
 use App\Models\ActivityLogs;
 use App\Models\Notifications;
 use App\Models\Team;
 use App\Models\User;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
-class TeamMemberUpdatedListener
+class TeamMemberUpdatedListener 
 {
 
     public $teamMember;
 
     public function handle(TeamMemberUpdated $event)
     {
-        $teamName = $event->teamMember->team->teamName;
-        $userName = $event->teamMember->user->name;
-        $status = $event->teamMember->status;
+        try{
+            Log::info("OF COURSE IT RAN!");
+            Log::info($event->teamMember->toArray);
+            $teamName = $event->teamMember->team->teamName;
+            $userName = $event->teamMember->user->name;
+            $status = $event->teamMember->status;
 
-        $teamNotification = $userNotification 
-            = $action = $userLog 
-            // = $teamLog 
-            = null;
-        $links = [];
-        $hostname = config('app.url');
-        $routeName = "{$hostname}/participant/team/{$event->teamMember->team_id}/manage";
-        $links = json_encode([
-            ['name' => 'View Team', 'url' => $routeName]
-        ]);
-
-        switch ($status) {
-            case 'accepted':
-                if ($event->teamMember->actor == 'team') {
-                    $action = 'accepted';
-                    $userLog = "You have accepted to join this team $teamName!";
-                    // $teamLog = "$userName has accepted to join this team!";
-                    $teamNotification = [
-                        'text' => "$userName has accepted to join this team!",
-                        'subject' => "Invited member joining this team",
-                    ];
-
-                    $userNotification = [
-                        'text' => "$teamName has accepted you to join this team!",
-                        'subject' => "Successfully joined this team",
-                    ];
-                } else {
-
-                }
-                break;
-            case 'pending':
-                if ($event->teamMember->actor == 'team') {
-                    $action = 'invited';
-                    $userNotification = [
-                        'text' => "$teamName has invited you to join this team!",
-                        'subject' => "Invitation to join a team",
-                    ];
-                } else {
-                    $action = 'pending';
-                    $teamNotification = [
-                        'text' => "$userName has requested to join this team!",
-                        'subject' => "Request from user to join this team",
-                    ];
-
-                $userLog = "You have decided to join this team $teamName!";
-                }
-                break;
-            case 'left':
-                $action = 'left';
-                if ($event->teamMember->actor == 'team') {
-                    $userNotification = [
-                        'text' => "$teamName has accepted you to join this team!",
-                        'subject' => "Successfully joined this team",
-                    ];
-
-                    $userLog = "The team, $teamName has decided to remove you!";
-                    // $teamLog = "The team, $teamName has decided to remove this $userName!";
-
-                } else {
-                    $userLog = "You have left this team $teamName!";
-                    $teamLog = "$userName has left this team!";
-                    $teamNotification = [
-                        'text' => "$userName has requested to join this team!",
-                        'subject' => "Request from user to join this team",
-                    ];
-
-                }
-                break;
-            case 'rejected':
-                $action = 'rejected';
-                if ($event->teamMember->actor == 'team') {
-                    $userNotification = [
-                        'text' => "$teamName has rejected your request to join this team!",
-                        'subject' => "Failed to join this team",
-                    ];
-                } else {
-                    $userLog = "You have decided to leave this team $teamName!";
-                    // $teamLog = "$userName has decided to leave this team!";
-                }
-
-                break;
-            default:
-                $userLog = "Unknown status: $status";
-                $teamLog = null;
-                $action = null;
-        }
-
-        // if ($teamLog) { 
-        //     ActivityLogs::create([
-        //         'action' => $action,
-        //         'subject_id' => $event->teamMember->team_id,
-        //         'subject_type' => Team::class,
-        //         'log' => $teamLog,
-        //     ]);
-        // }
-
-        if ($userLog) { 
-            ActivityLogs::create([
-                'action' => $action,
-                'subject_id' => $event->teamMember->team_id,
-                'subject_type' => Team::class,
-                'log' => $teamLog,
+            $teamCreatorNotification = $userNotification  = $action = $userLog = null;
+            $links = [];
+            $hostname = config('app.url');
+            $routeName = "{$hostname}/participant/team/{$event->teamMember->team_id}/manage";
+            $links = json_encode([
+                ['name' => 'View Team', 'url' => $routeName]
             ]);
-        }
 
-        if ($teamNotification) { 
-            Notifications::create([
-                'data' => json_encode([
-                    'text' => $teamNotification['text'],
-                    'subject' => $teamNotification['subject'], 
-                    'links' => $links
-                ]),
-                'type' => $routeName,
-                'notifiable_id' => $event->teamMember->user_id,
-                'notifiable_type' => User::class,
-            ]);
-        }
+            switch ($status) {
+                case 'accepted':
+                    if ($event->teamMember->actor == 'team') {
+                        $action = 'accepted';
+                        $userLog = "You join the team $teamName!";
+                        $userNotification = [
+                            'text' => "$teamName has accepted you to join this team!",
+                            'subject' => "Successfully joined this team",
+                        ];
+                    } else {
+                        $action = 'accepted';
+                        $userLog = "You join the team $teamName!";
+                        $teamCreatorNotification = [
+                            'text' => "The user $userName has joined your team $teamName!",
+                            'subject' => "Invited member joining this team",
+                        ];
+                    }
+                    break;
+                case 'pending':
+                    if ($event->teamMember->actor == 'team') {
+                        $action = 'invited';
+                        $userNotification = [
+                            'text' => "The team $teamName has invited you to join them!",
+                            'subject' => "Invitation to join a team",
+                        ];
+                    } else {
+                        $action = 'pending';
+                        $teamCreatorNotification = [
+                            'text' => "The user $userName has has asked to join your team $teamName!",
+                            'subject' => "Requesting to join this team",
+                        ];
+                    }
+                    break;
+                case 'left':
+                    $action = 'left';
+                    if ($event->teamMember->actor == 'team') {
+                        $userLog = "You have left this team $teamName!";
+                        $userNotification = [
+                            'text' => "You have been removed from this team $teamName!",
+                            'subject' => "Removal from team",
+                        ];
+                        $userLog = "You have left this team $teamName!";
+                    } else {
+                        $userLog = "You have left this team $teamName!";
+                        $teamCreatorNotification = [
+                            'text' => "The user $userName has has left your team $teamName!",
+                            'subject' => "Leaving the team",
+                        ];
+                    }
+                    break;
+                case 'rejected':
+                    $action = 'rejected';
+                    if ($event->teamMember->actor == 'team') {
+                        $userNotification = [
+                            'text' => "$teamName has rejected your request to join this team!",
+                            'subject' => "Failed to join this team",
+                        ];
+                    } else {
+                        $teamCreatorNotification = [
+                            'text' => "The user $userName has has rejected the joining request to your team $teamName!",
+                            'subject' => "Failed to recruit into your team",
+                        ];
+                    }
 
-        if ($userNotification) { 
-            Notifications::create([
-                'data' => json_encode([
-                    'text' => $userNotification['text'],
-                    'subject' => $userNotification['subject'], 
-                    'links' => $links
-                ]),
-                'type' => $routeName,
-                'notifiable_id' => $event->teamMember->user_id,
-                'notifiable_type' => User::class,
-            ]);
+                    break;
+                default:
+                    $userLog = "Unknown status: $status";
+            }
+
+            if ($userLog) { 
+                ActivityLogs::create([
+                    'action' => $action,
+                    'subject_id' => $event->teamMember->team_id,
+                    'subject_type' => Team::class,
+                    'log' => $userLog,
+                ]);
+            }
+
+            if ($teamCreatorNotification) { 
+                Notifications::create([
+                    'data' => [
+                        'data' => $teamCreatorNotification['text'],
+                        'subject' => $teamCreatorNotification['subject'], 
+                        'links' => $links
+                    ],
+                    'type' => Notifications::class,
+                    'notifiable_id' => $event->teamMember->team->creator_id,
+                    'notifiable_type' => User::class,
+                ]);
+            }
+
+            if ($userNotification) { 
+                Notifications::create([
+                    'data' => [
+                        'data' => $userNotification['text'],
+                        'subject' => $userNotification['subject'], 
+                        'links' => $links
+                    ],
+                    'type' => Notifications::class,                    
+                    'notifiable_id' => $event->teamMember->user_id,
+                    'notifiable_type' => User::class,
+                ]);
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
         }
     }
 }
