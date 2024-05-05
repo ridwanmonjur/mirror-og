@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Panel;
+use Illuminate\Support\Facades\Storage;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements FilamentUser, JWTSubject
@@ -153,12 +154,13 @@ class User extends Authenticatable implements FilamentUser, JWTSubject
     public function destroyUserBanner($fileName)
     {
         if ($fileName) {
-            $fileNameInitial = str_replace('images/user/', '', $fileName);
-            $fileNameFinal = "images/user/$fileNameInitial";
-
-            if (file_exists($fileNameFinal)) {
-                unlink($fileNameFinal);
+            if (Storage::disk('public')->exists($fileName)) {
+                Storage::disk('public')->delete($fileName);
+            } else {
+                dd("File does not exist");
             }
+        } else {
+            dd("No file name provided");
         }
     }
 }
