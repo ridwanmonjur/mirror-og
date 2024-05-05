@@ -672,7 +672,7 @@ input[type="submit"],
         left: 13%;
     }
     main {
-        padding: 20px 0px;
+        padding: 0px 0px;
     }
     .payment-summary {
         padding-left: 40px;

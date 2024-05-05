@@ -28,7 +28,7 @@
             countries = await fetchCountries();
         })"
     >
-        <div id="backgroundBanner" class="member-section"
+        <div id="backgroundBanner" class="member-section px-2 py-2"
             style="background-image: url({{ '/storage' . '/'. $userProfile->backgroundBanner }} );"
         >
             <div class="d-flex justify-content-end py-0 my-0">

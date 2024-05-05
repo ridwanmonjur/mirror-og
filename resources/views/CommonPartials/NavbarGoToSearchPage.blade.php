@@ -20,7 +20,7 @@
         $routeLogo = route('landing.view');
     }
 @endphp
-<nav class="navbar fixed-top px-3">
+<nav class="navbar px-3">
     <a href="{{ $routeLogo }}">
         <div class="logo">
             <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
@@ -133,5 +133,3 @@
 @else
     @include('CommonPartials.Navbar.NavbarGoToSearchPageScript')
 @endif
-<br>
-<br>
