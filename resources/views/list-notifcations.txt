@@ -5,6 +5,10 @@ event: blue
 gold: gold + emoji
 silver: silver + emoji
 
+notifications:
+1. invited
+2. status
+
 events:
 1. friends
 2. achievement
@@ -20,14 +24,11 @@ _ statrted following user. time
 _ won _ in users' event. time
 _ joined user's event. time
 
-
 notifications are for other party.
 1. friends -> requested u
 2, 3, 5. achievement, awards, position -> view positions
 4. follows -> followed u done
 6. joined/left -> done
-7. status changed
-
 
 Remaining Work:
 1. jwt security for apis (1 day)
@@ -53,3 +54,10 @@ Livewire:
 
 then someday:
 ===> change coming
+
+UI bugs:
+1. team head
+2. notification head
+3. circle on player and team
+4. banner upload (later)
+5. activity head

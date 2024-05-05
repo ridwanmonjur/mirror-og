@@ -48,7 +48,7 @@ class OrganizerController extends Controller
 
         $joinEventIds = $joinEvents->pluck('id')->toArray();
 
-        return view('Participant.Profile.PlayerProfile', 
+        return view('Organizer.PlayerProfile', 
             compact('joinEvents', 'userProfile', 'isOwnProfile',
                 'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
                 'wins', 'streak', 'awardList', 'achievementList'

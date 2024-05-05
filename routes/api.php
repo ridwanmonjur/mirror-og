@@ -42,6 +42,9 @@ Route::group(['prefix' => 'participant'], function () {
 });
 
 
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::post('/team/{id}/banner', [ParticipantTeamController::class, 'replaceBanner'])->name('participant.teamBanner.action');
+});
 
 Route::group(['prefix' => 'organizer'], function () {
     Route::group(['middleware' => 'auth:sanctum'], function () {

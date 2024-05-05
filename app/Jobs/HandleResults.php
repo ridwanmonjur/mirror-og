@@ -5,73 +5,14 @@ namespace App\Jobs;
 use App\Models\ActivityLogs;
 use App\Models\Notifications;
 use Illuminate\Bus\Queueable;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
 
-trait FindActivityNotificationTrait
-{
-    /**
-        * @return ActivityLogs
-    */
-    public function findActivityLog($parameters): ActivityLogs
-    
-    {
-        return ActivityLogs::where([
-            'subject_type' => $parameters['subject_type'],
-            'object_type' => $parameters['object_type'],
-            'subject_id' => $parameters['subject_id'],
-            'object_id' => $parameters['object_id'],
-            'action' => $parameters['action']
-        ]);
-    }
-
-    /**
-        * @return Notifications
-    */
-    public function findNotifications($parameters): Notifications
-    {
-        return Notifications::where([
-            'subject_type' => $parameters['subject_type'],
-            'object_type' => $parameters['object_type'],
-            'subject_id' => $parameters['subject_id'],
-            'object_id' => $parameters['object_id'],
-            'action' => $parameters['action']
-        ]);
-    }
-
-    public function createActivityLogs($parameters) {
-        ActivityLogs::create([
-            'subject_type' => $parameters['subject_type'],
-            'object_type' => $parameters['object_type'],
-            'subject_id' => $parameters['subject_id'],
-            'object_id' => $parameters['object_id'],
-            'action' => $parameters['action'],
-            'log' => $parameters['log']
-        ]);
-    }
-
-    public function createNotifications($parameters) {
-        Notifications::create([
-            'notifiable_type' => $parameters['notifiable_type'],
-            'notifiable_id' => $parameters['notifiable_id'],
-            'type' => Notifications::class,
-            'object_type' => $parameters['object_type'],
-            'object_id' => $parameters['object_id'],
-            'action' => $parameters['action'],
-            'data' => $parameters['data']
-        ]);
-    }
-}
-
 class ChangePositionStrategy
 {
-    use FindActivityNotificationTrait;
-
     public function handle($parameters)
     {
         // dispatch(new HandleResults('ChangePosition', [
@@ -83,8 +24,10 @@ class ChangePositionStrategy
         //     'teamName' => $request->teamName
         // ]));
         $emoji = [1 => '🥇', 2 => '🥈'];
-        $foundLogs = $this->findActivityLog($parameters);
-        $foundNotifications = $this->findNotifications($parameters)->get();
+        $activityLogX = new ActivityLogs;
+        $notificationX = new Notifications;
+        $foundLogs = $activityLogX->findActivityLog($parameters);
+        $foundNotifications = $notificationX->findNotifications($parameters)->get();
         $notificationLog = '<span class="notification-gray"> You achieved ' 
             . $emoji[$parameters['position']] ?? ''
             . $parameters['position'] . bladeOrdinalPrefix($parameters['position'])
@@ -98,7 +41,7 @@ class ChangePositionStrategy
         
         if (!$foundLogs) {
             $parameters['log'] = $activityLog;
-            $this->createActivityLogs($parameters);
+            $activityLogX->createActivityLogs($parameters);
         } else {
             $foundLogs->update([
                 'log' => $parameters['log']
@@ -115,7 +58,7 @@ class ChangePositionStrategy
         ];
 
         if (!$foundNotifications) {
-            $this->createNotifications($parameters);
+            $notificationX->createNotifications($parameters);
         } else {
             $foundNotifications->update([
                 'data' => $parameters['data']
@@ -126,7 +69,7 @@ class ChangePositionStrategy
 
 class AddAwardStrategy
 {
-    use FindActivityNotificationTrait;
+    
 
     public function handle($parameters)
     {
@@ -138,6 +81,8 @@ class AddAwardStrategy
         //     'action' => 'Position',
         //     'teamName' => $request->teamName
         // ]));
+        $notificationX = new Notifications;
+        $activityLogX = new ActivityLogs;
         $notificationLog = '<span class="notification-gray"> You achieved ' 
             . $parameters['award']
             . ' in the team, <span class="notification-black">' . $parameters['teamName'] 
@@ -149,7 +94,7 @@ class AddAwardStrategy
             . '</span>. </span>';
     
         $parameters['log'] = $activityLog;
-        $this->createActivityLogs($parameters);
+        $activityLogX->createActivityLogs($parameters);
         
         $parameters['data'] = [
             'subject' => 'Position updated',
@@ -160,13 +105,13 @@ class AddAwardStrategy
             ]
         ];
 
-        $this->createNotifications($parameters);
+        $notificationX->createNotifications($parameters);
     }
 }
 
 class AddAchievementStrategy
 {
-    use FindActivityNotificationTrait;
+    
 
     public function handle($parameters)
     {
@@ -176,6 +121,8 @@ class AddAchievementStrategy
         // 'object_id' => $rowId,
         // 'action' => 'Position',
         // 'teamName' => $request->teamName
+        $notificationX = new Notifications;
+        $activityLogX = new ActivityLogs;
         $notificationLog = '<span class="notification-gray"> You achieved ' 
             . $parameters['award']
             . ' in the team, <span class="notification-black">' . $parameters['teamName'] 
@@ -187,7 +134,7 @@ class AddAchievementStrategy
             . '</span>. </span>';
 
         $parameters['log'] = $activityLog;
-        $this->createActivityLogs($parameters);
+        $activityLogX->createActivityLogs($parameters);
         
         $parameters['data'] = [
             'subject' => 'Position updated',
@@ -198,14 +145,14 @@ class AddAchievementStrategy
             ]
         ];
 
-        $this->createNotifications($parameters);
+        $notificationX->createNotifications($parameters);
     }
 }
 
 
 class DeleteAwardStrategy
 {
-    use FindActivityNotificationTrait;
+    
 
     public function handle($parameters)
     {
@@ -217,14 +164,15 @@ class DeleteAwardStrategy
         //     'action' => 'Position',
         //     'teamName' => $request->teamName
         // ]));
-        $this->findActivityLog($parameters)->delete();
+        $activityLogX = new ActivityLogs;
+        $activityLogX->findActivityLog($parameters)->delete();
     }
 }
 
 
 class DeleteAchievementStrategy
 {
-    use FindActivityNotificationTrait;
+    
 
     public function handle($parameters)
     {
@@ -236,7 +184,8 @@ class DeleteAchievementStrategy
         //     'action' => 'Position',
         //     'teamName' => $request->teamName
         // ]));
-        $this->findNotifications($parameters);
+        $notificationX = new Notifications;
+        $notificationX->findNotifications($parameters);
     }
 }
 

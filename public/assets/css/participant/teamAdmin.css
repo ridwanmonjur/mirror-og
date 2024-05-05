@@ -40,7 +40,6 @@
 }
 
 .main2 {
-    min-height: 47vh;
     display: block !important;
     align-items: center;
     justify-content: center;
@@ -48,6 +47,7 @@
     background-repeat: round;
     background-size: cover;
     margin: 0;
+    padding: 20vh 0;
 }
 
 .menu-toggle {

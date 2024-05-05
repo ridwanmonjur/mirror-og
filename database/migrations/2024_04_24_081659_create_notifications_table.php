@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('data');
             $table->morphs('notifiable'); 
             $table->string('type');
+            $table->string('image')->nullable();
             $table->timestamp('read_at')->nullable();
             $table->nullableMorphs('object'); 
             $table->timestamps();
