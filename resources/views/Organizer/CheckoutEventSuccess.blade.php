@@ -11,6 +11,6 @@
             </div>
             <br><br>
         </main>
-        @include('CommonPartials.BootstrapV5Js')
+        
         <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
     </body>

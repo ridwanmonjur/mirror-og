@@ -21,7 +21,6 @@
 @endauth
 <body>
     @include('CommonPartials.NavbarGoToSearchPage')
-    @include('CommonPartials.BootstrapV5Js')
 
     <main 
         x-data="{ countries: [], errorMessage: '' }"

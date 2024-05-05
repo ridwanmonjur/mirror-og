@@ -442,9 +442,9 @@
             <br>
     </main>
     @stack('script')
-    @include('CommonPartials.BootstrapV5Js')
+    
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
-    @include('CommonPartials.BootstrapV5Js')
+    
     <script>
         const generateHeader = () => {
             return {

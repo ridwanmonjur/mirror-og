@@ -34,7 +34,7 @@
                 window.location.href = url;
             }
         </script>
-        @include('CommonPartials.BootstrapV5Js')
+        
 
     </main>
 </body>

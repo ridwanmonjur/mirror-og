@@ -26,7 +26,7 @@
                 window.location.href = "{{route('participant.home.view') }}";
             }
         </script>
-        @include('CommonPartials.BootstrapV5Js')
+        
 
     </main>
 </body>

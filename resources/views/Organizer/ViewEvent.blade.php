@@ -231,7 +231,7 @@
         <br>
     </main>
     @stack('script')
-    @include('CommonPartials.BootstrapV5Js')
+    
 
     <script>
         function goToCreateScreen() {

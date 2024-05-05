@@ -34,7 +34,7 @@
         </section>
         <div class="no-more-data d-none"></div>
         <br><br>
-        @include('CommonPartials.BootstrapV5Js')
+        
         <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
         <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
         <script>

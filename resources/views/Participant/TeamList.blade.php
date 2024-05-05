@@ -86,7 +86,7 @@
         <br>
     </main>
 
-    @include('CommonPartials.BootstrapV5Js')
+    
     @include('Participant.TeamListPartial.FilterScripts')
     <script>
         function goToScreen() {

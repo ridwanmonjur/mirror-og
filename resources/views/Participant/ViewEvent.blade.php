@@ -365,7 +365,7 @@
             }
         });
     </script>
-    @include('CommonPartials.BootstrapV5Js')
+    
     <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
 
 </html>

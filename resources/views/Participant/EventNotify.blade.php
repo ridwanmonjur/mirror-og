@@ -34,7 +34,7 @@
                 <br><br>
             </div>
         </div>
-        @include('CommonPartials.BootstrapV5Js')
+        
     </main>
     <script>
         function goToRegistrationScreen() {

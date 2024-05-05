@@ -39,7 +39,7 @@
         </div>
     </main>
 
-    @include('CommonPartials.BootstrapV5Js')
+    
 
 </body>
 

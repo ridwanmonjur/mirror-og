@@ -141,7 +141,7 @@
             dropdownContent.classList.remove('show');
         }
     </script>
-    @include('CommonPartials.BootstrapV5Js')
+    
 
 </body>
 

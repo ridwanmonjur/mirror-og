@@ -82,7 +82,7 @@
             </a>
             <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
             <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
-            @include('CommonPartials.BootstrapV5Js')
+            
             <script>
                 var ENDPOINT = "{{ route('landing.view') }}";
                 var page = 1;

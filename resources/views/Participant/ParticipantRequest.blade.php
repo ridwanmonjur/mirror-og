@@ -13,7 +13,7 @@
 <body>
     @include('CommonPartials.NavbarGoToSearchPage')
     @include('Participant.ParticipantRequestPartials.RequestManagement')
-    @include('CommonPartials.BootstrapV5Js')
+    
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>  
     <script>

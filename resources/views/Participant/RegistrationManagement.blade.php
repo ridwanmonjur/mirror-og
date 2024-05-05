@@ -51,7 +51,7 @@
         
     </main>
 
-    @include('CommonPartials.BootstrapV5Js')
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         let registrationPaymentModalMap = {}; 

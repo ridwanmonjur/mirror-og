@@ -157,7 +157,7 @@
         </div>
     </main>
     
-    @include('CommonPartials.BootstrapV5Js')
+    
 
     <script>
         function reddirectToLoginWithIntened(route) {

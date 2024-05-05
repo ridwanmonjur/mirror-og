@@ -7,7 +7,7 @@
         @include('Organizer.CheckoutPartials.CheckoutPaymentOptions', ['event' => $event])
         <br><br>
     </main>
-    @include('CommonPartials.BootstrapV5Js')
+    
     @include('Organizer.CheckoutPartials.CheckoutScripts', ['fee' => $fee, 'event' => $event])
     <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
 </body>
