@@ -43,7 +43,10 @@ Route::group(['prefix' => 'participant'], function () {
 
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::post('/team/{id}/banner', [ParticipantTeamController::class, 'replaceBanner'])->name('participant.teamBanner.action');
+    Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
+        Route::post('/profile/{id}/banner', [AuthController::class, 'replaceBanner'])->name('participant.userBanner.action');
+        Route::post('/profile/{id}/background', [AuthController::class, 'replaceBackground'])->name('participant.userBackground.action');
+    });
 });
 
 Route::group(['prefix' => 'organizer'], function () {

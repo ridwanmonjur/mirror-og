@@ -120,14 +120,34 @@ class User extends Authenticatable implements FilamentUser, JWTSubject
 
     public function uploadUserBanner($request)
     {
-        $file = $request->file('file');
-        $fileNameInitial = 'userBanner-' . time() . '.' . $file->getClientOriginalExtension();
+        $requestData = json_decode($request->getContent(), true);
+        $fileData = $requestData['file'];
+
+        $fileContent = base64_decode($fileData['content']);
+        $fileNameInitial = 'userBackground-' . time() . '.' . pathinfo($fileData['filename'], PATHINFO_EXTENSION);
         $fileName = "images/user/$fileNameInitial";
-        $file->storeAs('images/user/', $fileNameInitial);
+        $storagePath = storage_path('app/public/' . $fileName);
+        file_put_contents($storagePath, $fileContent);
+
         $this->userBanner = $fileName;
-        $fileName = asset('/storage'. '/'. $fileName);
         $this->save();
-        return $fileName; 
+        return asset('storage/' . $fileName);
+    }
+
+    public function uploadBackgroundBanner($request)
+    {
+        $requestData = json_decode($request->getContent(), true);
+        $fileData = $requestData['file'];
+
+        $fileContent = base64_decode($fileData['content']);
+        $fileNameInitial = 'userBanner-' . time() . '.' . pathinfo($fileData['filename'], PATHINFO_EXTENSION);
+        $fileName = "images/user/$fileNameInitial";
+        $storagePath = storage_path('app/public/' . $fileName);
+        file_put_contents($storagePath, $fileContent);
+
+        $this->backgroundBanner = $fileName;
+        $this->save();
+        return asset('storage/' . $fileName);
     }
 
     public function destroyUserBanner($fileName)

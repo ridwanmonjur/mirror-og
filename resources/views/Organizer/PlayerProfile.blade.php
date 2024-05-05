@@ -31,11 +31,21 @@
     >
         <div class="member-section">
             <div class="member-info d-flex justify-content-center align-items-center flex-wrap">
+                <div class="d-flex justify-content-end"> 
+                    <button class="btn btn-secondary"> 
+                        Change Background
+                    </button>
+                    <button class="oceans-gaming-default-button oceans-gaming-primary-button"> 
+                        Edit Profile
+                    </button>
+                </div>
                 <div class="member-image">
                     <div class="upload-container">
                         <label for="image-upload" class="upload-label">
                             <div class="circle-container">
-                                <div id="uploaded-image" class="uploaded-image"></div>
+                                <div id="uploaded-image" class="uploaded-image"
+                                        style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} );"
+                                    ></div>
                                 <button id="upload-button" class="upload-button" aria-hidden="true">Upload</button>
                             </div>
                         </label>
@@ -278,31 +288,60 @@
     imageUpload?.addEventListener("change", async function(e) {
         const file = e.target.files[0];
 
-        if (file) {
+        try {
+            const fileContent = await readFileAsBase64(file);
             const url = "{{ route('participant.userBanner.action', ['id' => $userProfile->id] ) }}";
-            const formData = new FormData();
-            formData.append('file', file);
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    },
-                    body: formData,
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-type': 'application/json',
+                    'Accept': 'application/json',
+                    ...window.loadBearerHeader()
+                },
+                body: JSON.stringify({
+                    file: {
+                        filename: file.name,
+                        type: file.type,
+                        size: file.size,
+                        content: fileContent
+                        }
+                    }),
                 });
-                
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
                 const data = await response.json();
-                
+                    
                 if (data.success) {
                     uploadedImage.style.backgroundImage = `url(${data.data.fileName})`;
                 } else {
                     console.error('Error updating member status:', data.message);
                 }
             } catch (error) {
-                console.error('Error approving member:', error);
-            }
+                console.error('There was a problem with the file upload:', error);
         }
     });
+
+    async function readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const base64Content = event.target.result.split(';base64,')[1];
+                resolve(base64Content);
+            };
+
+            reader.onerror = function(error) {
+                reject(error);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
 
     const fetchCountries = () => {
         return fetch('/countries')

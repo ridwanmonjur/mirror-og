@@ -29,13 +29,28 @@
             countries = await fetchCountries();
         })"
     >
-        <div class="member-section">
-            <div class="member-info d-flex justify-content-center align-items-center flex-wrap">
+        <div id="backgroundBanner" class="member-section"
+            style="background-image: url({{ '/storage' . '/'. $userProfile->backgroundBanner }} );"
+        >
+            <div class="d-flex justify-content-end py-0 my-0">
+                <input type="file" id="backgroundInput" class="d-none"> 
+                <button 
+                    onclick="document.getElementById('backgroundInput').click();"
+                    class="btn btn-secondary text-light rounded-pill py-2 me-3"> 
+                    <small> Change Background </small>
+                </button>
+                <button class="oceans-gaming-default-button oceans-gaming-primary-button px-3 py-2"> 
+                    <smaLl> Edit Profile </small>
+                </button>
+            </div>
+            <div class="d-flex justify-content-center align-items-center flex-wrap">
                 <div class="member-image">
                     <div class="upload-container">
                         <label for="image-upload" class="upload-label">
                             <div class="circle-container">
-                                <div id="uploaded-image" class="uploaded-image"></div>
+                                  <div id="uploaded-image" class="uploaded-image"
+                                        style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} );"
+                                    ></div>
                                 <button id="upload-button" class="upload-button" aria-hidden="true">Upload</button>
                             </div>
                         </label>
@@ -342,39 +357,109 @@
     const uploadButton = document.getElementById("upload-button");
     const imageUpload = document.getElementById("image-upload");
     const uploadedImage = document.getElementById("uploaded-image");
-
+    const backgroundInput = document.getElementById("backgroundInput");
+    const backgroundBanner = document.getElementById("backgroundBanner")
     uploadButton?.addEventListener("click", function() {
         imageUpload.click();
     });
 
-    imageUpload?.addEventListener("change", async function(e) {
+     backgroundInput?.addEventListener("change", async function(e) {
         const file = e.target.files[0];
 
-        if (file) {
-            const url = "{{ route('participant.userBanner.action', ['id' => $userProfile->id] ) }}";
-            const formData = new FormData();
-            formData.append('file', file);
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    },
-                    body: formData,
+        try {
+            const fileContent = await readFileAsBase64(file);
+            const url = "{{ route('participant.userBackground.action', ['id' => $userProfile->id] ) }}";
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-type': 'application/json',
+                    'Accept': 'application/json',
+                    ...window.loadBearerHeader()
+                },
+                body: JSON.stringify({
+                    file: {
+                        filename: file.name,
+                        type: file.type,
+                        size: file.size,
+                        content: fileContent
+                        }
+                    }),
                 });
-                
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
                 const data = await response.json();
-                
+                    
+                if (data.success) {
+                    backgroundBanner.style.backgroundImage = `url(${data.data.fileName})`;
+                } else {
+                    console.error('Error updating member status:', data.message);
+                }
+            } catch (error) {
+                console.error('There was a problem with the file upload:', error);
+        }
+    });
+
+     imageUpload?.addEventListener("change", async function(e) {
+        const file = e.target.files[0];
+
+        try {
+            const fileContent = await readFileAsBase64(file);
+            const url = "{{ route('participant.userBanner.action', ['id' => $userProfile->id] ) }}";
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-type': 'application/json',
+                    'Accept': 'application/json',
+                    ...window.loadBearerHeader()
+                },
+                body: JSON.stringify({
+                    file: {
+                        filename: file.name,
+                        type: file.type,
+                        size: file.size,
+                        content: fileContent
+                        }
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                    
                 if (data.success) {
                     uploadedImage.style.backgroundImage = `url(${data.data.fileName})`;
                 } else {
                     console.error('Error updating member status:', data.message);
                 }
             } catch (error) {
-                console.error('Error approving member:', error);
-            }
+                console.error('There was a problem with the file upload:', error);
         }
     });
+
+    async function readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const base64Content = event.target.result.split(';base64,')[1];
+                resolve(base64Content);
+            };
+
+            reader.onerror = function(error) {
+                reject(error);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
 
     const fetchCountries = () => {
         return fetch('/countries')
