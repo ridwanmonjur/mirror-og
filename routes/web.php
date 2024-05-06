@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\OrganizerCheckoutController;
 use App\Http\Controllers\Organizer\OrganizerController;
 use App\Http\Controllers\Organizer\OrganizerEventResultsController;
+use App\Http\Controllers\Participant\ParticipantCheckoutController;
 use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantRosterController;
 use App\Http\Controllers\Participant\ParticipantStripeController;
@@ -58,10 +59,8 @@ Route::group(['prefix' => 'participant'], function () {
     Route::post('/signin', [AuthController::class, 'accessUser'])->name('participant.signin.action');
     Route::post('/signup', [AuthController::class, 'storeUser'])->name('participant.signup.action');
 
-    // Google login
+    // Social login
     Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('participant.google.login');
-
-    // Steam login
     Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name('participant.steam.login');
 
     // General participant functions
@@ -98,15 +97,12 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/team/{id}/editStore', [ParticipantTeamController::class, 'teamEditStore'])->name('participant.team.editStore');
             Route::post('/team/{id}/banner', [ParticipantTeamController::class, 'replaceBanner'])->name('participant.teamBanner.action');
             Route::post('/team/member/{id}/pending', [ParticipantTeamController::class, 'pendingTeamMember'])->name('participant.member.pending');
-         
           
             // Event management
-            Route::post('/event/{id}/team/{teamId}/checkout', [ParticipantStripeController::class, 'checkout'])->name('participant.member.checkout');
             Route::get('/event/{id}/team/{teamId}/manage/roster', [ParticipantTeamController::class, 'rosterMemberManagement'])
                 ->middleware('prevent-back-history')->name('participant.roster.manage');
             Route::get('/event/{id}/team/{teamId}/manage/member', [ParticipantTeamController::class, 'teamMemberManagementRedirected'])
                 ->middleware('prevent-back-history')->name('participant.memberManage.action');
-       
             Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])
                 ->middleware('prevent-back-history')
                 ->name('participant.event.view');
@@ -115,8 +111,10 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])
                 ->middleware('prevent-back-history')
                 ->name('participant.event.selectOrCreateTeam.redirect');
-            Route::post('/event/{id}/join/redirect/createTeamToJoinEvent', [ParticipantEventController::class, 'redirectToCreateTeamToJoinEvent'])->name('participant.event.createTeam.redirect');
-
+            Route::post('/event/{id}/join/redirect/createTeamToJoinEvent', [ParticipantEventController::class, 'redirectToCreateTeamToJoinEvent'])
+                ->name('participant.event.createTeam.redirect');
+            Route::get('event/checkout/transition', [ParticipantCheckoutController::class, 'showCheckoutTransition'])->name('participant.checkout.transition');
+            Route::post('event/checkout', [ParticipantCheckoutController::class, 'showCheckout'])->name('participant.checkout.action');
          
             // Profile
             Route::get('/profile', [ParticipantController::class, 'viewOwnProfile'])->name('participant.profile.view');
@@ -132,10 +130,8 @@ Route::group(['prefix' => 'organizer'], function () {
     Route::post('/signin', [AuthController::class, 'accessUser'])->name('organizer.signin.action');
     Route::post('/signup', [AuthController::class, 'storeUser'])->name('organizer.signup.action');
 
-    // Google login
+    // Social login
     Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('organizer.google.login');
-
-    // Steam login
     Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name('organizer.steam.login');
 
     // General organizer functions
@@ -156,7 +152,6 @@ Route::group(['prefix' => 'organizer'], function () {
 
             // Invite page
             Route::get('/event/{id}/invitation', [OrganizerInvitationController::class, 'index'])->name('event.invitation.index');
-            // Update invite
             Route::post('event/{id}/updateForm', [OrganizerEventController::class, 'updateForm'])->name('event.updateForm');
             // Success page
             Route::get('event/{id}/success', [OrganizerEventController::class, 'showSuccess'])

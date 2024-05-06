@@ -171,7 +171,25 @@ class ParticipantEventController extends Controller
                     $query->where('user_id', $user_id)->where('status', 'accepted');
                 });
             });
-        })->with(['members', 'awards', 'invitationList'])->first();
+        })->with([
+            'invitationList', 'members.payments' => function($query) {
+                $query
+                    ->groupBy('team_members_id')
+                    ->select('team_members_id', DB::raw('SUM(payment_amount) as total_payment'));
+            }, 'members.user'
+        ])->first();
+
+        $paymentsByMemberId = [];
+        foreach ($selectTeam->members as $member) {
+            if ($member->payments->isNotEmpty()) {
+                $firstPayment = $member->payments->first();
+                $paymentsByMemberId[$member->id] = $firstPayment->total_payment;
+            } else {
+                $paymentsByMemberId[$member->id] = 0;
+            }
+        }
+        
+        $member = TeamMember::where('user_id', $user_id)->select('id')->get()->first();
 
         if ($selectTeam) {
             $invitationListIds = $selectTeam->invitationList->pluck('event_id');
@@ -184,7 +202,9 @@ class ParticipantEventController extends Controller
             ['joinEvents' => $joinEvents, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents] 
                 = JoinEvent::processEvents($joinEvents, $isFollowing);
 
-            return view('Participant.RegistrationManagement', compact('selectTeam', 'invitedEvents', 'followCounts', 'joinEvents', 'isFollowing'));
+            return view('Participant.RegistrationManagement',
+                compact('selectTeam', 'invitedEvents', 'followCounts', 'paymentsByMemberId', 'member', 'joinEvents', 'isFollowing')
+            );
         } else {
             return redirect()->back()->with('error', "Team not found/ You're not authorized.");
         }

@@ -380,7 +380,7 @@ a:hover {
     visibility: hidden;
     position: absolute;
     left: -10%;
-    top: -90%;
+    bottom: 100%;
     background-color: white;
     width: auto;
 }
@@ -395,6 +395,7 @@ a:hover {
 
 .popover__message {
     text-align: center;
+    padding: 20px 2vw 15vh;
 }
 
 .modal-content {

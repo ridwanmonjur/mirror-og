@@ -15,8 +15,16 @@
             <span>Pending: <u style="color: red;">RM {{ $pedning }} </u> <span></p>
     </div>
     <div class="popover__content">
-        <p class="popover__message">Joseph Francis "Joey" Tribbiani, Jr.</p>
-        <img alt="Joseph Francis Joey Tribbiani, Jr." src="https://media.giphy.com/media/11SIBu3s72Co8w/giphy.gif">
+        <p class="popover__message">
+            @foreach($selectTeam->members as $member)
+                <img
+                    class="object-cover rounded-circle me-2 border border-primary" 
+                    src="{{'/storage' . '/' . $member->user->userBanner}}" width="45" height="45">
+                <span class="me-2"> {{$member->user->name}} </span>
+                <span class="me-2"> RM {{$paymentsByMemberId[128] ?? 0}} </span>
+            @endforeach
+        </p>
+       
     </div>
     <div class="mx-auto text-center">
         @if ($pedning != 0)
@@ -27,7 +35,7 @@
         @endif
         <br>
         @if ($pedning < 0 && true)
-            <button class="mt-2 btn oceans-gaming-default-button oceans-gaming-green-button">Confirm
+            <button class="mt-2 btn btn-success py-2 rounded-pill">Confirm
                 Registration</button>
         @else
             <button class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button">Confirm
@@ -38,7 +46,14 @@
         aria-labelledby={{ '#payModal' . $random_int . 'Label' }} aria-hidden="true">
         <div class="modal-dialog">
             <form method="POST"
-                action="{{ route('participant.roster.manage', ['id' => $joinEvent->event_details_id, 'teamId' => $joinEvent->team_id]) }}">
+                action="{{ route('participant.checkout.action') }}"
+            >
+                @csrf
+                <input type="hidden" name="teamId" value="{{$selectTeam->id}}">
+                <input type="hidden" name="teamName" value="{{$selectTeam->teamName}}">
+                <input type="hidden" name="joinEventId" value="{{$joinEvent->id}}">
+                <input type="hidden" name="id" value="{{$joinEvent->event_details_id}}">
+                <input type="hidden" name="memberId" value="{{$member->id}}">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="mx-auto text-center">
@@ -71,7 +86,9 @@
                         </p>
                         <br>
                         <div class="mx-auto text-center">
-                            <button class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button">Proceed to
+                            <button 
+                                type="submit"
+                                class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button">Proceed to
                                 payment</button>
                             <br>
                             <button type="button" data-bs-dismiss="modal"

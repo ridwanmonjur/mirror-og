@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PaymentTransaction extends Model
 {
-    protected $fillable = ['payment_id', 'payment_status']; 
+    protected $fillable = ['payment_id', 'payment_status', 'payment_amount']; 
     protected $table = 'payment_transactions';
 
     const UPDATED_AT = null;

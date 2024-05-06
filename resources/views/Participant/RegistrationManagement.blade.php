@@ -47,10 +47,7 @@
                 @endif
             <br> <br>
         </div>
-            
-        
     </main>
-
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>

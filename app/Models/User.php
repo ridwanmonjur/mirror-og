@@ -157,10 +157,10 @@ class User extends Authenticatable implements FilamentUser, JWTSubject
             if (Storage::disk('public')->exists($fileName)) {
                 Storage::disk('public')->delete($fileName);
             } else {
-                dd("File does not exist");
+                // dd("File does not exist");
             }
         } else {
-            dd("No file name provided");
+            // dd("No file name provided");
         }
     }
 }
