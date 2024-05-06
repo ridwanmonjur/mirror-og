@@ -57,38 +57,36 @@
         let registrationPaymentModalMap = {}; 
 
         function updateInput(input) {
-            let modalId = input.dataset.modalId;
+            let total = Number(input.dataset.totalAmount);
+              let modalId = input.dataset.modalId;
 
             if (!(registrationPaymentModalMap.hasOwnProperty(modalId))) {
                 registrationPaymentModalMap[modalId] = 0;
             } 
 
-            let total = Number(input.dataset.totalAmount);
             let index = registrationPaymentModalMap[modalId];
             let totalLetters = 4;
             let newValue = input.value.replace(/[^\d]/g, '');
-            let numNewValue = newValue;
-            let total = Number(input.dataset.totalAmount);
             let lettersToTake = index - totalLetters;
             let isMoreThanTotalLetters = lettersToTake >= 0;
-            console.log({numNewValue})
-            if (numNewValue >= total) {
-                newValue = total.toFixed(2);
-            } else {
-                if (isMoreThanTotalLetters) {
-                    console.log("sss")
-                    let length = newValue.length;
-                    newValue = newValue.substr(0, lettersToTake + 3) + '.' + newValue.substr(lettersToTake + 3, 2);
-                } else { 
-                    console.log({total, newValue})
-                    newValue = newValue.substr(1, 2) + '.' + newValue.substr(3, 2);
-                }
+            if (isMoreThanTotalLetters) {
+                let length = newValue.length;
+                newValue = newValue.substr(0, lettersToTake + 3) + '.' + newValue.substr(lettersToTake + 3, 2);
+            } else { 
+                newValue = newValue.substr(1, 2) + '.' + newValue.substr(3, 2);
             }
-            
+            console.log({
+                plusValue: +newValue
+            })
+
+            if (+newValue > total) {
+                newValue = total.toFixed(2);
+            }
+
             registrationPaymentModalMap[modalId] ++;
             
             input.value = newValue;
-            putAmount(input.dataset.modalId, newValue, total, Number(input.dataset.existingAmount));
+            putAmount(input.dataset.modalId, newValue, Number(input.dataset.totalAmount), Number(input.dataset.existingAmount));
         }
 
         function keydown(input) {
@@ -113,7 +111,7 @@
             console.log({inputValue, existing, total})
             let percent = ((existing + inputValue) * 100) / total; 
             pieChart.style.setProperty('--p', percent);
-            pieChart.innerText = percent.toFixed(2) + "%" ;
+            pieChart.innerText = percent.toFixed(0) + "%" ;
             putAmountTextSpan.innerText = inputValue.toFixed(2);
         }
 

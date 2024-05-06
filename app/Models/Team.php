@@ -61,12 +61,12 @@ class Team extends Model
 
     public static function getUserTeamListAndPluckIds($user_id)
     {
-        $teamList = self::leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
-            ->whereHas('members', function ($query) {
+        $teamList = self::whereHas('members', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id)->where('status', 'accepted');
+        })
+            ->with(['members' => function($query) {
                 $query->where('status', 'accepted');
-            })
-            ->groupBy('teams.id')
-            ->select('teams.*')
+            }])
             ->get();
 
         $teamIdList = $teamList->pluck('id')->toArray();

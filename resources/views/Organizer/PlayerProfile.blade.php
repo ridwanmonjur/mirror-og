@@ -29,21 +29,14 @@
             countries = await fetchCountries();
         })"
     >
-        <div class="member-section">
-            <div class="member-info d-flex justify-content-center align-items-center flex-wrap">
-                <div class="d-flex justify-content-end"> 
-                    <button class="btn btn-secondary"> 
-                        Change Background
-                    </button>
-                    <button class="oceans-gaming-default-button oceans-gaming-primary-button"> 
-                        Edit Profile
-                    </button>
-                </div>
+        <div id="backgroundBanner" class="member-section px-2 py-2"
+        >
+            <div class="d-flex justify-content-center align-items-center flex-wrap">
                 <div class="member-image">
                     <div class="upload-container">
                         <label for="image-upload" class="upload-label">
                             <div class="circle-container">
-                                <div id="uploaded-image" class="uploaded-image"
+                                  <div id="uploaded-image" class="uploaded-image"
                                         style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} );"
                                     ></div>
                                 <button id="upload-button" class="upload-button" aria-hidden="true">Upload</button>

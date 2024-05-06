@@ -48,9 +48,9 @@
                     <div class="dropdown-menu" style="font-size: 14px;" aria-labelledby="dropdownMenuButton">
                         <div>
                             @if (is_null($status))
-                                <form class="d-inline text-left w-100 h-100" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
+                                <form class="dropdown-item" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
                                     @csrf()
-                                    <button style="font-size: 14px;" class="px-2 py-2 w-100 h-100 gear-icon-btn" type="submit">
+                                    <button style="font-size: 14px;" class="btn btn-link" type="submit">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                                         <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
                                         </svg>

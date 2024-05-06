@@ -13,7 +13,8 @@
                         <div style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
                             class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle"
                         >
-                            {{ $notification->object_type->getImage()  }}
+                        
+                            I {{-- {{ $notification->object_type->getImage()  }} --}}
                         </div>
                         <div style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 15px;" class="text-start ms-2">
                             {!! $notification->data['data'] !!}

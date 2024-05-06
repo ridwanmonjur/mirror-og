@@ -124,7 +124,7 @@ input[type="submit"],
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 5px;
+    margin: 0 5px;
 }
 
 .team-logo-container {
