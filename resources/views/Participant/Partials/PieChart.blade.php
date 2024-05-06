@@ -14,7 +14,7 @@
         <span>Paid: <u class="text-success">RM {{ $exisitngSum }}</u>
             <span>Pending: <u style="color: red;">RM {{ $pedning }} </u> <span></p>
     </div>
-    <div class="popover__content">
+    <div class="popover__content rounded-pill">
         <p class="popover__message">
             @foreach($selectTeam->members as $member)
                 <img
@@ -31,14 +31,14 @@
             <button class="btn oceans-gaming-default-button" data-bs-toggle="modal"
                 data-bs-target="{{ '#payModal' . $random_int }}">Contribute </button>
         @else
-            <button class="btn oceans-gaming-default-button oceans-gaming-gray-button">Contribution Full </button>
+            <button class="btn oceans-gaming-default-button oceans-gaming-gray-button px-3">Contribution Full </button>
         @endif
         <br>
         @if ($pedning < 0 && true)
             <button class="mt-2 btn btn-success py-2 rounded-pill">Confirm
                 Registration</button>
         @else
-            <button class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button">Confirm
+            <button class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button px-2">Confirm
                 Registration</button>
         @endif
     </div>

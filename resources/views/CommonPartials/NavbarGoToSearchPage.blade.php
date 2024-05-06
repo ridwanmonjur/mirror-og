@@ -89,11 +89,17 @@
         @endguest
         @auth
             <div class="text-center px-2">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div style="height: 45px; width: 50px;"
-                        class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle">
-                        {{ strtoupper(substr($user->name, 0, 1)) }}
-                    </div>
+                <div class="d-flex align-items-center">
+                    @if($user->userBanner) 
+                        <img
+                            class="object-cover rounded-circle me-2 border border-primary" 
+                            src="{{'/storage' . '/' . $user->userBanner}}" width="45" height="45">
+                    @else 
+                        <div style="height: 45px; width: 50px;"
+                            class="bg-dark text-light rounded-circle">
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        </div>
+                    @endif
                     <div style="text-overflow: ellipsis; overflow: hidden;" class="text-start ms-2">
                         Hi, {{ $user->name }}. Have a good day?
                     </div>

@@ -56,16 +56,23 @@
         aria-labelledby="dropdownMenuLinkSignedIn">
         <div class="border-dark border-2 border-bottom text-center px-2">
             <a class="py-0" href="{{ route( strtolower($user->role) .'.profile.view') }}">
-                <div class="d-flex justify-content-between align-items-center py-3">
-                        <div style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
+                <div class="py-3 d-flex justify-content-start">
+                    @if($user->userBanner)
+                        <img
+                            class="object-cover rounded-circle me-2 border border-primary" 
+                            src="{{'/storage' . '/' . $user->userBanner}}" width="45" height="45">
+                    @else 
+                        <span style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
                             class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle">
                             {{ strtoupper(substr($user->name, 0, 1)) }}
-                        </div>
-                        <div style="text-overflow: ellipsis; overflow: hidden;" class="text-start ms-2">
+                        </span>
+                    @endif
+                        <span style="text-overflow: ellipsis; overflow: hidden;" 
+                            class="text-start  align ms-2">
                             <small> {{ $user->name }}</small> <br>
                             <small> {{ $user->email }}</small>
                             {{-- <small> N__Edit put the profile link </small> --}}
-                        </div>
+                        </span>
                 </div>
             </a>
         </div>
