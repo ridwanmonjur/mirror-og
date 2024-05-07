@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\EventDetail;
+use App\Models\Notifications;
 use App\Models\Organizer;
 use App\Models\Participant;
 use App\Models\User;
@@ -559,5 +560,34 @@ class AuthController extends Controller
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function markAsRead(Request $request, $id)
+    {
+        $user = $request->user();
+
+        $notification = Notifications::where('id', $id)
+            ->where('notifiable_type', User::class)
+            ->where('notifiable_id', $user->id)
+            ->first();
+
+        if (!$notification) {
+            return response()->json(['success'=> false, 'error' => 'Notification not found or does not belong to the user'], 404);
+        }
+
+        $notification->update(['read_at' => now()]);
+        return response()->json(['success'=> true, 'message' => 'Notification marked as read'], 200);
+    }
+
+    public function markAllAsRead(Request $request)
+    {
+        $user = $request->user();
+
+        Notifications::where('notifiable_id', $user->id)
+            ->where('notifiable_type', User::class)
+            ->whereNull('read_at')
+            ->update(['read_at' => Carbon::now()]);
+
+        return response()->json(['success'=> true, 'message' => 'All user notifications marked as read'], 200);
     }
 }

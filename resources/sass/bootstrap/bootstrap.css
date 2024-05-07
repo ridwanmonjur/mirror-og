@@ -9151,10 +9151,10 @@ textarea.form-control-lg {
   width: 100%;
 }
 
-.tab-content > .tab-pane {
+.tab-content pb-4  > .tab-pane {
   display: none;
 }
-.tab-content > .active {
+.tab-content pb-4  > .active {
   display: block;
 }
 

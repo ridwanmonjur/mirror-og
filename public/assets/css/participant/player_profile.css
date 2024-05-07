@@ -67,7 +67,7 @@ main {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin: 20px;
+    margin: 0 20px 20px;
 }
 
 .circle-container {
@@ -114,12 +114,21 @@ main {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    width: min(90vw, 1000px);
+    margin: auto;
+}
+
+
+.tab-size {
+    width: min(90vw, 1000px);
+    margin: auto;
 }
 
 .tab-button {
     background-color: transparent;
     color: #000;
     padding: 15px 25px;
+    flex-grow: 1;
     /* Increased padding */
     border: none;
     border-bottom: 2px solid transparent;

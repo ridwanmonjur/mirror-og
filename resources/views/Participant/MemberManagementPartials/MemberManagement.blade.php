@@ -50,7 +50,7 @@
     </button>
 </div>
 <br>
-<div class="tab-content inner-tab" id="CurrentMembers">
+<div class="tab-content pb-4  inner-tab" id="CurrentMembers">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
         {{ $teamMembersProcessed['accepted']['count'] }} accepted members
         and {{ $teamMembersProcessed['left']['count'] }} removed members
@@ -105,7 +105,7 @@
         </table>
     </div>
 </div>
-<div class="tab-content inner-tab d-none" id="PendingMembers" data-type="member" style="text-align: center;">
+<div class="tab-content pb-4  inner-tab d-none" id="PendingMembers" data-type="member" style="text-align: center;">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
         {{ $teamMembersProcessed['pending']['count'] }} invited and
         and {{ $teamMembersProcessed['rejected']['count'] }} rejected members
@@ -181,7 +181,7 @@
         </table>
     </div>
 </div>
-<div class="tab-content inner-tab d-none" id="NewMembers">
+<div class="tab-content pb-4  inner-tab d-none" id="NewMembers">
 
     <div class="cont mt-3 pt-3">
         <div class="leftC">

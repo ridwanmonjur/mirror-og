@@ -139,3 +139,68 @@
 @else
     @include('CommonPartials.Navbar.NavbarGoToSearchPageScript')
 @endif
+@auth
+<script>
+    function setAllNotificationsRead() {
+        event.preventDefault();
+        event.stopPropagation();
+        var notificationId = event.target.dataset.notificationId;
+        console.log(notificationId);
+        var divElements = document.querySelectorAll('div.notification-container');
+        let url = "{{route(strtolower($user->role) . '.notifications.readAll')}}";
+        console.log({url})
+         fetch(url, {
+            method: 'put',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                ...window.loadBearerCompleteHeader()
+            },
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    divElements.forEach(function(div) {
+                        console.log({div})
+                        console.log({div})
+                        console.log({div})
+                        console.log({div})
+                        div.classList.remove('notification-container-not-read');
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.log('Server error occured');
+                throw new Error('Error occurred');
+            });
+    }
+
+    function setNotificationReadById() {
+        event.preventDefault();
+        event.stopPropagation();
+        var notificationId = event.target.dataset.notificationId;
+        var loopCount = event.target.dataset.loopCount;
+        var divElement = document.querySelector('div.notification-container[data-loop-count="' + loopCount + '"]');
+
+        let url = "{{route(strtolower($user->role) . '.notifications.read', ['id' => ':id'])}}"
+            .replace(':id', notificationId);
+         fetch(url, {
+            method: 'put',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                ...window.loadBearerCompleteHeader()
+            },
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    divElement.classList.remove('notification-container-not-read');
+                }
+            })
+            .catch(function (error) {
+
+                console.log('Server error occured');
+                throw new Error('Error occurred');
+            });
+    }
+</script>
+@endauth

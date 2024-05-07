@@ -31,7 +31,8 @@ class OrganizerController extends Controller
             'teamList' => $teamList,
             'teamIdList' => $teamIdList,
         ] = Team::getUserTeamList($user_id);   
-
+        
+        $followersCount = Follow::where('organizer_user_id', $user_id)->count();
         $awardList = Team::getAwardListByTeamIdList($teamIdList);
         $achievementList = Team::getAchievementListByTeamIdList($teamIdList);
         $joinEvents = JoinEvent::getJoinEventsForTeamListWithEventsRosterResults($teamIdList);
@@ -49,7 +50,7 @@ class OrganizerController extends Controller
         $joinEventIds = $joinEvents->pluck('id')->toArray();
 
         return view('Organizer.PlayerProfile', 
-            compact('joinEvents', 'userProfile', 'isOwnProfile',
+            compact('joinEvents', 'userProfile', 'isOwnProfile', 'followersCount',
                 'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
                 'wins', 'streak', 'awardList', 'achievementList'
             )

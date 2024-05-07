@@ -115,7 +115,7 @@ Route::group(['prefix' => 'participant'], function () {
                 ->name('participant.event.createTeam.redirect');
             Route::get('event/checkout/transition', [ParticipantCheckoutController::class, 'showCheckoutTransition'])->name('participant.checkout.transition');
             Route::post('event/checkout', [ParticipantCheckoutController::class, 'showCheckout'])->name('participant.checkout.action');
-         
+
             // Profile
             Route::get('/profile', [ParticipantController::class, 'viewOwnProfile'])->name('participant.profile.view');
         });

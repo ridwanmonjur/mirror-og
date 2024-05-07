@@ -32,7 +32,7 @@
             </button>
         </div>
 
-        <div class="tab-content outer-tab" id="Overview">
+        <div class="tab-content pb-4  outer-tab" id="Overview">
             <br><br>
             <div class="d-flex justify-content-center"><b>Recent Events</b></div>
             <br> <br>
@@ -118,11 +118,11 @@
             </div>
         </div>
 
-        <div class="tab-content outer-tab d-none" id="Members">
+        <div class="tab-content pb-4  outer-tab d-none" id="Members">
             @include('Participant.Partials.MemberView')
         </div>
 
-        <div class="tab-content outer-tab d-none" id="Active Rosters">
+        <div class="tab-content pb-4  outer-tab d-none" id="Active Rosters">
             <br><br>
             @if (!isset($joinEventsActive[0]))
                 <p class="text-center">
@@ -140,7 +140,7 @@
             @endif
         </div>
 
-        <div class="tab-content outer-tab d-none" id="Roster History">
+        <div class="tab-content pb-4  outer-tab d-none" id="Roster History">
             <br><br>
             @if (!isset($joinEventsHistory[0]))
                 <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history</p>

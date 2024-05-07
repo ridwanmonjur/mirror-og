@@ -15,7 +15,7 @@
     <main class="main2">
         <div id="Overview">
             <br><br>
-            <div class="mx-auto" style="width: 80%;"><b>Outstanding Registrations</b></div>
+            <div class="tab-size"><b>Outstanding Registrations</b></div>
             <br> <br>
             <div class="position-relative d-flex justify-content-center">
                 @if (!isset($joinEvents[0]))
@@ -32,7 +32,7 @@
         </div>
         <div id="Overview">
             <br><br>
-            <div class="mx-auto" style="width: 80%;"><b>Event Invitations</b></div>
+            <div class="tab-size"><b>Event Invitations</b></div>
              <br> <br>
             <div class="position-relative d-flex justify-content-center">
                 @if (!isset($invitedEvents[0]))

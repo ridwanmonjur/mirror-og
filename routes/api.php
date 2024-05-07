@@ -37,6 +37,8 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/team/member/{id}/update', [ParticipantTeamController::class, 'updateTeamMember'])->name('participant.member.update');
             Route::post('/team/member/{id}/deleteInvite', [ParticipantTeamController::class, 'withdrawInviteMember'])->name('participant.member.deleteInvite');
             Route::post('/team/member/{id}/rejectInvite', [ParticipantTeamController::class, 'rejectInviteMember'])->name('participant.member.rejectInvite');
+            Route::put('notifications/{id}/read', [AuthController::class, 'markAsRead'])->name('participant.notifications.read');
+            Route::put('notifications/read', [AuthController::class, 'markAllAsRead'])->name('participant.notifications.readAll');
         });
     });
 });
@@ -58,6 +60,8 @@ Route::group(['prefix' => 'organizer'], function () {
             Route::delete('/event/{id}/awards/{awardId}', [OrganizerEventResultsController::class, 'destroyAward'])->name('event.awards.destroy');
             Route::post('/event/{id}/achievements', [OrganizerEventResultsController::class, 'storeAchievements'])->name('event.achievements.store');
             Route::delete('/event/{id}/achievements/{achievementId}', [OrganizerEventResultsController::class, 'destroyAchievements'])->name('event.achievements.destroy');
+            Route::put('notifications/{id}/read', [AuthController::class, 'markAsRead'])->name('organizer.notifications.read');
+            Route::put('notifications/read', [AuthController::class, 'markAllAsRead'])->name('organizer.notifications.readAll');
 
         });
     });

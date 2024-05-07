@@ -54,7 +54,7 @@
                                 Achievements
                             </button>
                         </div>
-                        <div class="tab-content outer-tab mx-auto" id="Position">
+                        <div class="tab-content pb-4  outer-tab mx-auto" id="Position">
                             <table class="mx-auto member-table text-start" style="margin-left: 5px;">
                                 <thead class="accepted-member-table text-start">
                                     <th></th>
@@ -154,7 +154,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="tab-content outer-tab d-none mx-auto" id="Awards">
+                        <div class="tab-content pb-4  outer-tab d-none mx-auto" id="Awards">
                             <div class="mx-auto member-table d-flex justify-content-center">
                                 <button data-bs-toggle="modal" data-bs-target="{{ '#award' . '-modal' }}"
                                     class="oceans-gaming-default-button">
@@ -299,7 +299,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="tab-content outer-tab d-none mx-auto" id="Achievements">
+                        <div class="tab-content pb-4  outer-tab d-none mx-auto" id="Achievements">
                             <div class="mx-auto member-table d-flex justify-content-center">
                                 <button data-bs-toggle="modal" data-bs-target="{{ '#achievements-modal' }}"
                                     class="oceans-gaming-default-button">

@@ -1,26 +1,36 @@
+@php
+    $countUnread = $user->unreadNotifications->count();
+@endphp
+
 <div class="ms-2 dropdown" data-reference="parent" data-bs-offset="-80,-80">
     <a href="#" role="button" class="btn position-relative" id="dropdownMenuLinkNotification" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt="">
-        <span style="top: -20px;" class="badge text-light bg-primary">{{$user->unreadNotifications->count()}}</span>
+        @if ($countUnread!=0)
+            <span style="top: -20px;" class="badge text-light bg-primary">{{$countUnread}}</span>
+        @endif
     </a>
 
     @if (isset($user->notifications[0]))
         <div class="dropdown-menu custom-scrollbar" style="position: absolute; left: -200px; width: 300px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLinkNotification">
+            <button type="button" onclick="setAllNotificationsRead();" class="btn btn-link text-left"> Mark all as read </button> 
             @foreach($user->notifications as $notification)
-                <div class="text-center px-2 border-light border-0">
+                <div data-loop-count="{{ $loop->index }}" @class([
+                    "text-center px-2 border-light border-0 notification-container",
+                    "notification-container-not-read" =>  is_null ($notification->read_at)
+                ])>
                     <div class="d-flex justify-content-start align-items-center pt-2">
                         <div style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
                             class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle"
                         >
-                        
-                            I {{-- {{ $notification->object_type->getImage()  }} --}}
+                            {{-- Mark all as read --}}
+                            I{{-- {{ $notification->object_type->getImage()  }} --}}
                         </div>
                         <div style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 15px;" class="text-start ms-2">
                             {!! $notification->data['data'] !!}
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center mt-1">
+                    <div class="d-flex justify-content-around align-items-center mt-1">
                         <a href="{{$notification->data['links'][0]['url']}}" class="border-bottom-primary border-bottom btn btn-link btn-sm">
                             {{$notification->data['links'][0]['name']}}
                             <svg 
@@ -29,6 +39,7 @@
                                     fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
                             </svg>
                         </a>
+                        <button class="btn btn-link" data-loop-count="{{ $loop->index }}" data-notification-id="{{$notification->id}}" onclick="setNotificationReadById()"> Fell</button>
                     </div>
                 </div>
             @endforeach

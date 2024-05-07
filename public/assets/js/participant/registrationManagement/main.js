@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function showTab(tabName) {
     // Hide all tab contents
-    const tabContents = document.querySelectorAll('.tab-content');
+    const tabContents = document.querySelectorAll('.tab-content pb-4 ');
     tabContents.forEach(content => {
         content.style.display = 'none';
     });
@@ -67,7 +67,7 @@ function slideEvents(direction) {
 
 function showTab(tabName) {
     // Hide all tab contents
-    const tabContents = document.querySelectorAll('.tab-content');
+    const tabContents = document.querySelectorAll('.tab-content pb-4 ');
     tabContents.forEach(content => {
         content.style.display = 'none';
     });

@@ -22,8 +22,12 @@ window.loadBearerHeader = function() {
 window.loadBearerCompleteHeader = function() {
     return {
         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
     };
 };
+
+
 
 window.Swal = Swal;
 

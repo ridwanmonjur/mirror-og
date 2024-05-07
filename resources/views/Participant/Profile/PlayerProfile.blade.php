@@ -154,7 +154,7 @@
             <button class="tab-button outer-tab" onclick="showTab(event, 'Events', 'outer-tab')">Events</button>
             <button class="tab-button outer-tab" onclick="showTab(event, 'Teams', 'outer-tab')">Teams</button>
         </div>
-        <div class="tab-content outer-tab" id="Overview">
+        <div class="tab-content pb-4  outer-tab" id="Overview">
             <br><br>
             <div class="d-flex justify-content-center"><b>Recent Events</b></div>
             <br> <br>
@@ -240,14 +240,21 @@
             </div>
         </div>
 
-        <div class="tab-content outer-tab d-none" id="Activity">
-            <div class="mx-auto" style="width: 80%;"><b>Activity</b></div>
-            <livewire:participant.profile.show-activity-logs :userId="$user->id"> </livewire>
-
+        <div class="tab-content pb-4  outer-tab d-none" id="Activity">
+            <br>
+            <div class="tab-size"><b>New</b></div>
+            <livewire:participant.profile.show-activity-logs :userId="$user->id" :duration="'new'"> </livewire>
+            <div class="tab-size"><b>Recent</b></div>
+            <livewire:participant.profile.show-activity-logs :userId="$user->id" :duration="'recent'"> </livewire>
+            <div class="tab-size"><b>Older</b></div>
+            <livewire:participant.profile.show-activity-logs :userId="$user->id" :duration="'older'"> </livewire>
+            
         </div>
 
-        <div class="tab-content outer-tab d-none" id="Events">
-            <div class="mx-auto" style="width: 80%;"><b>Active Events</b></div>
+        <div class="tab-content pb-4  outer-tab d-none" id="Events">
+             <br>
+            <div class="tab-size"><b>Active Events</b></div>
+            <br>
             @if (!isset($joinEventsActive[0]))
                 <p class="text-center">
                     This profile has no active events
@@ -262,8 +269,8 @@
                 </div>
             @endif
             <br>
-            <div class="mx-auto" style="width: 80%;"><b>Past Events</b></div>
-
+            <div class="tab-size"><b>Past Events</b></div>
+            <br>
             @if (!isset($joinEventsHistory[0]))
                 <p class="text-center">
                     This profile have no past events
@@ -279,70 +286,78 @@
             @endif
         </div>
 
-        <div class="tab-content outer-tab d-none" id="Teams">
-            <div class="mx-auto" style="width: 80%;"><b>Current Teams</b></div>
-
-            <table class="member-table">
-                <thead>
-                    <tr>
-                        <th> </th>
-                        <th>Team name</th>
-                        <th>Region</th>
-                        <th>Members</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($teamList as $team)
-                        <tr class="st">
-                            <td> </td>
-                            <td class="d-flex align-items-center">
-                                <img
-                                    class="rounded-circle d-inline-block object-fit-cover me-3"
-                                    src="{{ '/storage' . '/'. $team->teamBanner }}"
-                                    {!! trustedBladeHandleImageFailure() !!} 
-                                    height="40"
-                                    width="40"
-                                > 
-                                <span>{{$team->teamName}}</span>
-                            </td>
-                            <td>China</td>
-                            <td>{{$team->members_count}}/5</td>
+        <div class="tab-content pb-4  outer-tab d-none" id="Teams">
+             <br>
+            <div class="tab-size"><b>Current Teams</b></div>
+            @if (isset($teamList[0]))
+                <table class="member-table">
+                    <thead>
+                        <tr>
+                            <th> </th>
+                            <th>Team name</th>
+                            <th>Region</th>
+                            <th>Members</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach($teamList as $team)
+                            <tr class="st">
+                                <td> </td>
+                                <td class="d-flex align-items-center">
+                                    <img
+                                        class="rounded-circle d-inline-block object-fit-cover me-3"
+                                        src="{{ '/storage' . '/'. $team->teamBanner }}"
+                                        {!! trustedBladeHandleImageFailure() !!} 
+                                        height="40"
+                                        width="40"
+                                    > 
+                                    <span>{{$team->teamName}}</span>
+                                </td>
+                                <td>China</td>
+                                <td>{{$team->members_count}}/5</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <div class="text-center pt-3">No current teams</div>
+            @endif
             <br> <br>
-            <div class="mx-auto" style="width: 80%;"><b>Past Teams</b></div>
+            <div class="tab-size"><b>Past Teams</b></div>
 
-            <table class="member-table">
-                <thead>
-                    <tr>
-                        <th> </th>
-                        <th>Team name</th>
-                        <th>Region</th>
-                        <th>Members</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($pastTeam as $team)
-                        <tr class="st">
-                            <td> </td>
-                            <td class="d-flex align-items-center">
-                                <img
-                                    class="d-inline-block object-fit-cover me-3"
-                                    src="{{ '/storage' . '/'. $team->teamBanner }}"
-                                    {!! trustedBladeHandleImageFailure() !!} 
-                                    height="40"
-                                    width="40"
-                                > 
-                                <span>{{$team->teamName}}</span>
-                            </td>
-                            <td>China</td>
-                            <td>{{$team->members_count}}/5</td>
+            @if (isset($pastTeam[0]))
+                <table class="member-table">
+                    <thead>
+                        <tr>
+                            <th> </th>
+                            <th>Team name</th>
+                            <th>Region</th>
+                            <th>Members</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach($pastTeam as $team)
+                            <tr class="st">
+                                <td> </td>
+                                <td class="d-flex align-items-center">
+                                    <img
+                                        class="d-inline-block object-fit-cover me-3"
+                                        src="{{ '/storage' . '/'. $team->teamBanner }}"
+                                        {!! trustedBladeHandleImageFailure() !!} 
+                                        height="40"
+                                        width="40"
+                                    > 
+                                    <span>{{$team->teamName}}</span>
+                                </td>
+                                <td>China</td>
+                                <td>{{$team->members_count}}/5</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <div class="text-center pt-3">No past teams</div>
+            @endif
         </div>
 
 
