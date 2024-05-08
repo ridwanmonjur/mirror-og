@@ -27,17 +27,20 @@ class ShowActivityLogs extends Component
     public function loadActivityLogs()
     {
         $perPage = 10; 
-        $activityLogs = ActivityLogs::where('subject_id', $this->userId)
-            ->where('subject_type', '\App\Models\User');
+        $activityLogsQuery = ActivityLogs::where('subject_id', $this->userId)
+            ->where('subject_type', User::class);
         if ($this->duration == 'new') {
-            $activityLogs->whereDate('created_at', Carbon::today());
+            $activityLogsQuery->whereDate('created_at', Carbon::today());
         } elseif ($this->duration == 'recent') {
-            $activityLogs->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::today()]);
+            $activityLogsQuery->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::today()]);
         } elseif ($this->duration == 'older') {
-            $activityLogs->where('created_at', '<', Carbon::now()->subWeek()->startOfWeek());
+            $activityLogsQuery->where('created_at', '<', Carbon::now()->subWeek()->startOfWeek());
         }
+
     
-        $activityLogs = $activityLogs->paginate($perPage, ['*'], 'page', $this->page);
+        $activityLogs = $activityLogsQuery->paginate($perPage, ['*'], 'page', $this->page);
+        Log::info($activityLogs);
+
         $this->hasMore = $activityLogs->hasMorePages();
         $this->totalItems = $activityLogs->items();
         $this->loadedItems += $perPage; 

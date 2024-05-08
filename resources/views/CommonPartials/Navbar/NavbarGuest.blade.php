@@ -4,7 +4,7 @@
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
         Sign In
     </a>
-    <div class="dropdown-menu" style="position: absolute; left: -60px; width: 200px;" aria-labelledby="dropdownMenuGuest">
+    <div class="dropdown-menu py-0" style="position: absolute; left: -60px; width: 200px;" aria-labelledby="dropdownMenuGuest">
         <div class="border-dark border-2 border-bottom text-start ps-4">
             <p class="d-block w-100 m-0 pt-2 pb-3">Hi there N__Edit!
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"

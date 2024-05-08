@@ -10,6 +10,7 @@ use App\Models\AwardResults;
 use App\Models\EventDetail;
 use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
+use App\Models\Team;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -43,9 +44,24 @@ class OrganizerEventResultsController extends Controller
      */
     public function store(Request $request)
     {
+        $memberUserIds = Team::where('teamName', $request->teamName)
+            ->select('id', 'teamName')
+            ->with(['members' => function ($q) {
+                $q
+                    ->where('status', 'accepted')
+                    ->select('id', 'user_id', 'team_id', 'status')
+                    ->with(['user' => function ($q) {
+                        $q->select('id');
+                    }
+                ]);
+            }])
+            ->first()
+            ->members
+                ->pluck('user.id')
+                ->toArray();
+        
         $joinEventsId = $request->join_events_id;
         $joinEvent = JoinEvent::where('id', $request->join_events_id)->first();
-        $user = $request->attributes->get('user');
         $existingRow = DB::table('event_join_results')
                 ->where('join_events_id', $joinEventsId)
                 ->first();
@@ -64,11 +80,12 @@ class OrganizerEventResultsController extends Controller
         dispatch(new HandleResults('ChangePosition', [
             'subject_type' => User::class,
             'object_type' => EventJoinResults::class,
-            'subject_id' => $user->id,
+            'subject_id' => $memberUserIds,
             'object_id' => $joinEventsId,
             'action' => 'Position',
             'eventId' => $joinEvent->event_details_id,
             'teamName' => $request->teamName,
+            'image' => $request->teamBanner,
             'position' => intval($request->position)
         ]));
 
@@ -81,7 +98,8 @@ class OrganizerEventResultsController extends Controller
     public function storeAward(Request $request)
     {
         try {
-            $user = $request->attributes->get('user');
+            [$team, $memberUserIds] = Team::getResultsTeamMemberIds($request->team_id);
+
             $joinEvent = DB::table('join_events')
                 ->where('team_id', $request->team_id)
                 ->where('event_details_id', $request->input('event_details_id'))
@@ -99,12 +117,13 @@ class OrganizerEventResultsController extends Controller
                 dispatch(new HandleResults('AddAward', [
                     'subject_type' => User::class,
                     'object_type' => AwardResults::class,
-                    'subject_id' => $user->id,
+                    'subject_id' => $memberUserIds,
                     'object_id' => $rowId,
                     'action' => 'Award',
                     'eventId' => $request->input('event_details_id'),
                     'award' => $request->award,
-                    'teamName' => $request->teamName
+                    'teamName' => $team->teamName,
+                    'image' => $team->teamBanner
                 ]));
             
                 return response()->json(['success' => true, 'message' => 'Award given successfully'], 200);
@@ -126,7 +145,8 @@ class OrganizerEventResultsController extends Controller
     public function storeAchievements(Request $request)
     {
         try {
-            $user = $request->attributes->get('user');
+            [$team, $memberUserIds] = Team::getResultsTeamMemberIds($request->team_id);
+
             $joinEvent = DB::table('join_events')
                 ->select('id', 'team_id')
                 ->where('team_id', $request->team_id)
@@ -144,12 +164,13 @@ class OrganizerEventResultsController extends Controller
                 dispatch(new HandleResults('AddAchievement', [
                     'subject_type' => User::class,
                     'object_type' => Achievements::class,
-                    'subject_id' => $user->id,
+                    'subject_id' => $memberUserIds,
                     'object_id' => $rowId,
                     'action' => 'Achievement',
                     'achievement' => $request->title,
                     'eventId' => $request->input('event_details_id'),
-                    'teamName' => $request->teamName
+                    'teamName' => $team->teamName,
+                    'image' => $team->teamBanner
                 ]));
             
                 return response()->json(['success' => true, 'message' => 'Achievement given successfully'], 200);
@@ -172,42 +193,47 @@ class OrganizerEventResultsController extends Controller
     public function destroyAward(Request $request, $id, $awardId)
     {
         try {
-            $user = $request->attributes->get('user');
-            $row = DB::table('awards_results')->where('id', $awardId)->get()->first();
+            $row = DB::table('awards_results')->where('id', $awardId)->first();
+            [, $memberUserIds] = Team::getResultsTeamMemberIds($row->team_id);
+
+            
             if ($row) DB::table('awards_results')->where('id', $awardId)->delete();
+            
             dispatch(new HandleResults('DeleteAward', [
                 'subject_type' => User::class,
                 'object_type' => AwardResults::class,
-                'subject_id' => $user->id,
-                'object_id' => $row->join_events_id,
-                'action' => 'Position',
+                'subject_id' => $memberUserIds,
+                'object_id' => $row->id,
+                'action' => 'Award',
                 'teamName' => $request->teamName
             ]));
 
             return response()->json(['success' => true, 'message' => 'Award deleted successfully'], 200);
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Award not found'], 400);
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
         }
     }
 
     public function destroyAchievements(Request $request, $id, $achievementId)
     {
         try {
-            $user = $request->attributes->get('user');
             $row = DB::table('achievements')->where('id', $achievementId)->first();
+            $join = JoinEvent::where('id', $row->join_event_id)->select(['id', 'team_id'])->first();
+            [, $memberUserIds] = Team::getResultsTeamMemberIds($join->team_id);
+            
             if ($row) DB::table('achievements')->where('id', $achievementId)->delete();
             dispatch(new HandleResults('DeleteAchievement', [
                 'subject_type' => User::class,
-                'object_type' => AwardResults::class,
-                'subject_id' => $user->id,
+                'object_type' => Achievements::class,
+                'subject_id' => $memberUserIds,
                 'object_id' => $row->id,
-                'action' => 'Position',
+                'action' => 'Achievement',
                 'teamName' => $request->teamName
             ]));
 
             return response()->json(['success' => true, 'message' => 'Achievement deleted successfully'], 200);
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Achievement not found'], 400);
+            return response()->json(['success' => false, 'message' =>  $e->getMessage()], 400);
         }
     }
 }

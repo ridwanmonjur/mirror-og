@@ -134,6 +134,10 @@
                                                                         value="{{ $event->eventName ?? 'No name yet' }}">
                                                                     <input type="hidden" name="teamName"
                                                                         value="{{ $joinEventAndTeam->teamName }}">
+                                                                    <input type="hidden" name="creator_id"
+                                                                        value="{{ $joinEventAndTeam->creator_id }}">
+                                                                    <input type="hidden" name="teamBanner"
+                                                                        value="{{ $joinEventAndTeam->teamBanner }}">
                                                                     <input type="hidden" name="id"
                                                                         value="{{ $joinEventAndTeam->id1 }}">
                                                                 </div>
@@ -559,7 +563,11 @@
                     },                     
                     body: JSON.stringify({
                         'join_events_id': joinEventId,
-                        'position': joinEventPosition
+                        'position': joinEventPosition,
+                        'teamName': formData.get('teamName'),
+                        'eventName': formData.get('eventName'),
+                        'teamBanner': formData.get('teamBanner'),
+                        'creator_id': formData.get('creator_id')
                     })
                 }
             );

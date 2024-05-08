@@ -12,7 +12,7 @@
     </a>
 
     @if (isset($user->notifications[0]))
-        <div class="dropdown-menu custom-scrollbar" style="position: absolute; left: -200px; width: 300px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLinkNotification">
+        <div class="dropdown-menu py-0 custom-scrollbar" style="position: absolute; left: -200px; width: 300px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLinkNotification">
             <button type="button" onclick="setAllNotificationsRead();" class="btn btn-link text-left"> Mark all as read </button> 
             @foreach($user->notifications as $notification)
                 <div data-loop-count="{{ $loop->index }}" @class([
@@ -45,7 +45,7 @@
             @endforeach
         </div>
     @else
-        <div class="dropdown-menu" style="position: absolute; left: -200px; width: 300px;" aria-labelledby="dropdownMenuLinkNotification">
+        <div class="dropdown-menu py-0" style="position: absolute; left: -200px; width: 300px;" aria-labelledby="dropdownMenuLinkNotification">
             <a class="dropdown-item py-3" >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                 class="bi bi-person-fill-gear" viewBox="0 0 16 16">
@@ -63,7 +63,7 @@
         aria-haspopup="true" aria-expanded="true">
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
     </a>
-    <div class="dropdown-menu" style="position: absolute; left: -180px; width: 250px;"
+    <div class="dropdown-menu py-0" style="position: absolute; left: -180px; width: 250px;"
         aria-labelledby="dropdownMenuLinkSignedIn">
         <div class="border-dark border-2 border-bottom text-center px-2">
             <a class="py-0" href="{{ route( strtolower($user->role) .'.profile.view') }}">

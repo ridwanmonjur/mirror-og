@@ -4,7 +4,6 @@ namespace App\Listeners;
 use App\Events\TeamMemberUpdated;
 use App\Models\ActivityLogs;
 use App\Models\Notifications;
-use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
 use Exception;
@@ -21,6 +20,7 @@ class TeamMemberUpdatedListener
             $teamName = $event->teamMember->team->teamName;
             $user = $event->teamMember->user;
             $userName = $user->name;
+            $photo = $user->userBanner;
             $userId = $user->id;
             $status = $event->teamMember->status;
             $teamCreatorNotification = $userNotification  = $action = $userLog = null;

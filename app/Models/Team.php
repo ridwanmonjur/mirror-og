@@ -214,6 +214,28 @@ class Team extends Model
             ->toArray();
     }
 
+    public static function getResultsTeamMemberIds ($teamId) {
+        $team = Team::where('id', $teamId)
+        ->select(['id', 'teamName', 'teamBanner', 'creator_id'])
+            ->with(['members' => function ($q) {
+                $q->where('status', 'accepted')
+                    ->select('id', 'user_id', 'team_id', 'status')
+                    ->with(['user' => function ($q) {
+                        $q->select('id');
+                    }
+                ]);
+            }]
+        )->first();
+
+        $memberUserIds = $team
+            ->members
+            ->pluck('user.id')
+            ->toArray();
+    
+        return [$team, $memberUserIds];
+    }
+        
+
     public function processTeamRegistration($user, $event, $isNewTeam)
     {
         $userId = $user->id;

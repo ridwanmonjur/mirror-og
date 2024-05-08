@@ -237,7 +237,7 @@ class JoinEvent extends Model
         return self::where('event_details_id', $eventId)
             ->where(function ($query) use ($userId) {
                 $query->whereHas('members', function ($query) use ($userId) {
-                    $query->where('user_id', $userId)->whereIn('status', ['accepted', 'pending']);
+                    $query->where('user_id', $userId)->where('status', 'accepted');
                 });
             })
             ->get()
