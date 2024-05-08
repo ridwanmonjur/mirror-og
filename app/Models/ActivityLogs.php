@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,7 +19,7 @@ class ActivityLogs extends Model
 
     protected $table = 'activity_logs';
 
-    public function findActivityLog($parameters): ActivityLogs
+    public function findActivityLog($parameters)
     {
         return ActivityLogs::where([
             'subject_type' => $parameters['subject_type'],

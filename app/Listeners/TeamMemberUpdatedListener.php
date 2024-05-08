@@ -52,7 +52,8 @@ class TeamMemberUpdatedListener
                         $teamCreatorNotification = [
                             'text' => '<span class="notification-gray">' 
                                 . ' <span class="notification-black">' . $userName 
-                                . '</span> has joined your team $teamName.  </span>' , 
+                                . '</span> has joined your team' 
+                                . '<span class="notification-black">' . $teamName .  '</span></span>' , 
                             'subject' => "Invited member joining this team",
                         ];
                     }
@@ -119,6 +120,7 @@ class TeamMemberUpdatedListener
             }
             if ($teamCreatorNotification) { 
                 Notifications::create([
+                    'id' => uuid_create(),
                     'data' => json_encode([
                         'data' => $teamCreatorNotification['text'],
                         'subject' => $teamCreatorNotification['subject'], 
@@ -138,6 +140,7 @@ class TeamMemberUpdatedListener
                         'subject' => $userNotification['subject'], 
                         'links' => $links
                     ]),
+                    'id' => uuid_create(),
                     'type' => Notifications::class,                    
                     'notifiable_id' => $userId,
                     'notifiable_type' => User::class,

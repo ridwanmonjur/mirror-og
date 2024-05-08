@@ -18,7 +18,8 @@
         "pending" => "You've requested to join this team."
     ];
 @endphp
-<main class="main1">
+<main class="main1">    
+    <br>
     <div class="team-section">
         <div class="upload-container">
             <label for="image-upload" class="upload-label">

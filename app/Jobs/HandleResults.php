@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-
+use Illuminate\Support\Facades\Log;
 
 class ChangePositionStrategy
 {
@@ -23,19 +23,21 @@ class ChangePositionStrategy
         //     'action' => 'Position',
         //     'teamName' => $request->teamName
         // ]));
+        Log::info($parameters);
         $emoji = [1 => '🥇', 2 => '🥈'];
         $activityLogX = new ActivityLogs;
         $notificationX = new Notifications;
-        $foundLogs = $activityLogX->findActivityLog($parameters);
+        $foundLogs = $activityLogX->findActivityLog($parameters)->get();
         $foundNotifications = $notificationX->findNotifications($parameters)->get();
         $notificationLog = '<span class="notification-gray"> You achieved ' 
-            . $emoji[$parameters['position']] ?? ''
+            // . isset($emoji[$parameters['position']]) ? $emoji[$parameters['position']] : ''
             . $parameters['position'] . bladeOrdinalPrefix($parameters['position'])
             . ' position the team, <span class="notification-black">' . $parameters['teamName'] 
             . '</span>. </span>';
 
-        $activityLog = '<span class="notification-gray"> You achieved ' . $emoji[$parameters['position']] ?? ''
-            . $parameters['position']
+        $activityLog = '<span class="notification-gray"> You achieved ' 
+            // . $emoji[$parameters['position']] ?? ''
+            . $parameters['position'] . bladeOrdinalPrefix($parameters['position'])
             . ' position the team, <span class="notification-black">' . $parameters['teamName'] 
             . '</span>. </span>';
         
@@ -43,26 +45,30 @@ class ChangePositionStrategy
             $parameters['log'] = $activityLog;
             $activityLogX->createActivityLogs($parameters);
         } else {
-            $foundLogs->update([
-                'log' => $parameters['log']
-            ]);
+            foreach ($foundLogs as $foundLog) {
+                $foundLog->update([
+                    'log' => $activityLog
+                ]);
+            }
         }
 
         $parameters['data'] = [
             'subject' => 'Position updated',
             'data' => $notificationLog,
-            'links' => [
-                'name' => 'Results page public?',
-                'url' => ''
-            ]
+            'links' => [[
+                'url' => route('public.event.view' , ['id' => $parameters['eventId']] ),
+                'name' => 'View event'
+            ]]
         ];
 
         if (!$foundNotifications) {
             $notificationX->createNotifications($parameters);
         } else {
-            $foundNotifications->update([
-                'data' => $parameters['data']
-            ]);
+            foreach ($foundNotifications as $foundNotification) {
+                $foundNotification->update([
+                    'data' => $parameters['data']
+                ]);
+            }
         }
     }
 }
@@ -70,7 +76,6 @@ class ChangePositionStrategy
 class AddAwardStrategy
 {
     
-
     public function handle($parameters)
     {
         // dispatch(new HandleResults('AddAward', [
@@ -97,12 +102,12 @@ class AddAwardStrategy
         $activityLogX->createActivityLogs($parameters);
         
         $parameters['data'] = [
-            'subject' => 'Position updated',
+            'subject' => 'Award added',
             'data' => $notificationLog,
-            'links' => [
-                'name' => 'Results page public?',
-                'url' => ''
-            ]
+            'links' => [[
+                'url' => route('public.event.view' , ['id' => $parameters['eventId']] ),
+                'name' => 'View event'
+            ]]
         ];
 
         $notificationX->createNotifications($parameters);
@@ -112,7 +117,6 @@ class AddAwardStrategy
 class AddAchievementStrategy
 {
     
-
     public function handle($parameters)
     {
         // 'subject_type' => User::class,
@@ -124,12 +128,12 @@ class AddAchievementStrategy
         $notificationX = new Notifications;
         $activityLogX = new ActivityLogs;
         $notificationLog = '<span class="notification-gray"> You achieved ' 
-            . $parameters['award']
+            . $parameters['achievement']
             . ' in the team, <span class="notification-black">' . $parameters['teamName'] 
             . '</span>. </span>';
 
         $activityLog = '<span class="notification-gray"> You achieved '
-            . $parameters['award']
+            . $parameters['achievement']
             . ' in the team, <span class="notification-black">' . $parameters['teamName'] 
             . '</span>. </span>';
 
@@ -137,12 +141,12 @@ class AddAchievementStrategy
         $activityLogX->createActivityLogs($parameters);
         
         $parameters['data'] = [
-            'subject' => 'Position updated',
+            'subject' => 'Achievement added',
             'data' => $notificationLog,
-            'links' => [
-                'name' => 'Results page public?',
-                'url' => ''
-            ]
+            'links' => [[
+                'url' => route('public.event.view' , ['id' => $parameters['eventId']] ),
+                'name' => 'View event'
+            ]]
         ];
 
         $notificationX->createNotifications($parameters);
@@ -172,8 +176,6 @@ class DeleteAwardStrategy
 
 class DeleteAchievementStrategy
 {
-    
-
     public function handle($parameters)
     {
         // dispatch(new HandleResults('DeleteAchievement', [
@@ -185,7 +187,7 @@ class DeleteAchievementStrategy
         //     'teamName' => $request->teamName
         // ]));
         $notificationX = new Notifications;
-        $notificationX->findNotifications($parameters);
+        $notificationX->findNotifications($parameters)->delete();
     }
 }
 

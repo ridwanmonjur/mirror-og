@@ -141,7 +141,7 @@
             <div class="tab-size"><b>Active Events</b></div>
             <br>
             @if (!isset($joinEventsActive[0]))
-                <p class="text-center">
+                <p class="tab-size">
                     This profile has no active events
                 </p>
             @else
@@ -157,7 +157,7 @@
             <div class="tab-size"><b>Past Events</b></div>
             <br>
             @if (!isset($joinEventsHistory[0]))
-                <p class="text-center">
+                <p class="tab-size">
                     This profile have no past events
                 </p>
             @else

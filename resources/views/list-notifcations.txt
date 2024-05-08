@@ -61,3 +61,5 @@ UI bugs:
 3. circle on player and team
 4. banner upload (later)
 5. activity head
+
+https://litepicker.com/

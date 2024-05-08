@@ -11,31 +11,30 @@ class Notifications extends Model
 
     protected $table = 'notifications';
     protected $fillable = ['type', 'notifiable_id', 'notifiable_type', 
-        'object_id', 'object_type', 
+        'object_id', 'object_type', 'image', 'id',
         'read_at', 'data'
     ];
 
-    public function findNotifications($parameters): Notifications
+    public function findNotifications($parameters)
     {
         return Notifications::where([
-            'subject_type' => $parameters['subject_type'],
+            'notifiable_type' => User::class,
+            'notifiable_id' => $parameters['subject_id'],
             'object_type' => $parameters['object_type'],
-            'subject_id' => $parameters['subject_id'],
             'object_id' => $parameters['object_id'],
-            'action' => $parameters['action']
         ]);
     }
 
    
     public function createNotifications($parameters) {
         Notifications::create([
-            'notifiable_type' => $parameters['notifiable_type'],
-            'notifiable_id' => $parameters['notifiable_id'],
+            'id' => uuid_create(),
+            'notifiable_type' => User::class,
+            'notifiable_id' => $parameters['subject_id'],
             'type' => Notifications::class,
             'object_type' => $parameters['object_type'],
             'object_id' => $parameters['object_id'],
-            'action' => $parameters['action'],
-            'data' => $parameters['data']
+            'data' => json_encode($parameters['data'])
         ]);
     }
 

@@ -117,7 +117,7 @@
                                                         <form onsubmit="editCreatePosition(event);">
                                                             <div class="mx-auto text-center mt-3">
                                                                 <h5> Choose a position for team:
-                                                                    '{{ $joinEventAndTeam->teamName }}'. </h5>
+                                                                    {{ $joinEventAndTeam->teamName }}. </h5>
                                                                 <br>
                                                                 <p> Choose between 1 and
                                                                     {{ $event->tier->tierTeamSlot }}</p>
@@ -272,6 +272,8 @@
                                                                             class="form-check-input text-center mx-auto"
                                                                             type="radio" name="awardId"
                                                                             value="{{ $award->id }}">
+                                                                        <input type="hidden" name="awardName"
+                                                                            value="{{ $award->title }}">
                                                                         <span> {{ $award->title }} </span>
                                                                         <label class="form-check-label"
                                                                             for="awardId">
@@ -446,14 +448,6 @@
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     
     <script>
-        const generateHeader = () => {
-            return {
-                ...window.loadBearerHeader(),
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }
         var awardToDeleteId = null;
         var achievementToDeleteId = null;
         var actionToTake = null;
@@ -560,7 +554,9 @@
                 },
                 function(error) { toastError('Error changing position.', error);  }, 
                 {
-                    headers: generateHeader(),                     
+                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 
+                        ...window.loadBearerCompleteHeader() 
+                    },                     
                     body: JSON.stringify({
                         'join_events_id': joinEventId,
                         'position': joinEventPosition
@@ -587,11 +583,12 @@
                 },
                 function(error) { toastError('Error changing awards.', error);  }, 
                 {
-                    headers: generateHeader(),    
+                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', ...window.loadBearerCompleteHeader() },    
                     body: JSON.stringify({
                         'team_id': Number(teamId),
                         'award_id': Number(awardId),
-                        'event_details_id': {{ $event->id }}
+                        'event_details_id': {{ $event->id }},
+                        'award': formData.get('awardName')
                     })
                 }
             );
@@ -616,7 +613,7 @@
                 },
                 function(error) { toastError('Error changing awards.', error);  }, 
                 {
-                    headers: generateHeader(),    
+                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', ...window.loadBearerCompleteHeader() },    
                     body: JSON.stringify({
                         'team_id': Number(teamId),
                         title,
@@ -644,7 +641,7 @@
                 function(error) { toastError('Error changing awards.', error);  }, 
                 {
                     method: 'DELETE',
-                    headers: generateHeader(),  
+                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', ...window.loadBearerCompleteHeader() },  
                 }
             );
         }
@@ -665,7 +662,7 @@
                 function(error) { toastError('Error changing achievements.', error);  }, 
                 {
                     method: 'DELETE',
-                    headers: generateHeader(),  
+                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', ...window.loadBearerCompleteHeader() },  
                 }
             );
         }

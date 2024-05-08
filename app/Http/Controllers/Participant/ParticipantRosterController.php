@@ -28,8 +28,7 @@ class ParticipantRosterController extends Controller
     
             return response()->json(['success' => true, 'message' => 'Roster status updated to accepted']);
         } catch (DatabaseQueryException $e) {
-            $errorCode = $e->errorInfo[1];
-            if ($errorCode == 1062) { 
+            if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
                 return response()->json(['success' => false, 'message' => 'Failed to update data: Duplicate entry', 'error' => $e->getMessage()]);
             } else {
                 return response()->json(['success' => false, 'message' => 'Failed to update data', 'error' => $e->getMessage()]);
@@ -95,8 +94,7 @@ class ParticipantRosterController extends Controller
             return response()->json(['success' => true, 'message' => 'Roster captain created']);
         }
         catch (DatabaseQueryException $e) {
-            $errorCode = $e->errorInfo[1];
-            if ($errorCode == 1062) { 
+            if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
                 return response()->json(['success' => false, 'message' => 'Failed to update data: Duplicate entry', 'error' => $e->getMessage()]);
             } else {
                 return response()->json(['success' => false, 'message' => 'Failed to update data', 'error' => $e->getMessage()]);

@@ -8,6 +8,7 @@ use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
 class TeamMemberCreatedListener 
@@ -71,6 +72,7 @@ class TeamMemberCreatedListener
                         'subject' => $teamCreatorNotification['subject'], 
                         'links' => $links
                     ]),
+                    'id' => uuid_create(),
                     'type' => Notifications::class,
                     'notifiable_id' => $event->teamMember->team->creator_id,
                     'notifiable_type' => User::class,
@@ -85,6 +87,7 @@ class TeamMemberCreatedListener
                         'subject' => $userNotification['subject'], 
                         'links' => $links
                     ]),
+                    'id' => uuid_create(),
                     'type' => Notifications::class,                    
                     'notifiable_id' => $userId,
                     'notifiable_type' => User::class,

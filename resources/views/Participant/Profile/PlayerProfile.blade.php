@@ -256,7 +256,7 @@
             <div class="tab-size"><b>Active Events</b></div>
             <br>
             @if (!isset($joinEventsActive[0]))
-                <p class="text-center">
+                <p class="tab-size">
                     This profile has no active events
                 </p>
             @else
@@ -272,7 +272,7 @@
             <div class="tab-size"><b>Past Events</b></div>
             <br>
             @if (!isset($joinEventsHistory[0]))
-                <p class="text-center">
+                <p class="tab-size">
                     This profile have no past events
                 </p>
             @else
@@ -320,7 +320,7 @@
                     </tbody>
                 </table>
             @else
-                <div class="text-center pt-3">No current teams</div>
+                <div class="tab-size pt-3">No current teams</div>
             @endif
             <br> <br>
             <div class="tab-size"><b>Past Teams</b></div>
@@ -356,7 +356,7 @@
                     </tbody>
                 </table>
             @else
-                <div class="text-center pt-3">No past teams</div>
+                <div class="tab-size pt-3">No past teams</div>
             @endif
         </div>
 

@@ -224,12 +224,12 @@ class Team extends Model
             'subject' => 'Team ' . $this->teamName . ' joining Event: ' . $event->eventName,
             'links' =>  [
                 [
-                    'name' => 'Team',
-                    'url' => route('participant.team.manage', ['id' => $this->id])
+                    'name' => 'View Team',
+                    'url' => route('public.team.view', ['id' => $this->id])
                 ],
                 [
-                    'name' => 'Event',
-                    'url' => route('participant.team.manage', ['id' => $this->id])
+                    'name' => 'View Event',
+                    'url' => route('public.event.view', ['id' => $event->id])
                 ]
             ]
         ];

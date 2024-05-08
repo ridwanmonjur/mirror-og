@@ -44,14 +44,18 @@ class OrganizerEventResultsController extends Controller
     public function store(Request $request)
     {
         $joinEventsId = $request->join_events_id;
+        $joinEvent = JoinEvent::where('id', $request->join_events_id)->first();
         $user = $request->attributes->get('user');
-        $existingRow = DB::table('event_join_results')->where('join_events_id', $joinEventsId)->first();
+        $existingRow = DB::table('event_join_results')
+                ->where('join_events_id', $joinEventsId)
+                ->first();
+
         if ($existingRow) {
-            $existingRowId = $existingRow->id;
-            $existingRow->position = $request->position;
-            $existingRow->save();
-        } else {
-            $existingRowId = DB::table('event_join_results')->insertGetId([
+            DB::table('event_join_results')
+                ->where('join_events_id', $joinEventsId)
+                ->update(['position' => $request->position]);
+        }   else {
+            DB::table('event_join_results')->insert([
                 'join_events_id' => $joinEventsId,
                 'position' => $request->position,
             ]);
@@ -61,8 +65,9 @@ class OrganizerEventResultsController extends Controller
             'subject_type' => User::class,
             'object_type' => EventJoinResults::class,
             'subject_id' => $user->id,
-            'object_id' => $existingRowId,
+            'object_id' => $joinEventsId,
             'action' => 'Position',
+            'eventId' => $joinEvent->event_details_id,
             'teamName' => $request->teamName,
             'position' => intval($request->position)
         ]));
@@ -83,7 +88,7 @@ class OrganizerEventResultsController extends Controller
                 ->select('id', 'team_id')
                 ->get()->first();
             $awardExists = DB::table('awards')->where('id', $request->input('award_id'))->exists();
-            $teamExists = DB::table('teams')->where('id', $$request->team_id)->exists();
+            $teamExists = DB::table('teams')->where('id', $request->team_id)->exists();
             if ($joinEvent && $awardExists && $teamExists) {
                 $rowId = DB::table('awards_results')->insertGetId([
                     'team_id' => $request->team_id,
@@ -96,7 +101,9 @@ class OrganizerEventResultsController extends Controller
                     'object_type' => AwardResults::class,
                     'subject_id' => $user->id,
                     'object_id' => $rowId,
-                    'action' => 'Position',
+                    'action' => 'Award',
+                    'eventId' => $request->input('event_details_id'),
+                    'award' => $request->award,
                     'teamName' => $request->teamName
                 ]));
             
@@ -104,11 +111,11 @@ class OrganizerEventResultsController extends Controller
             } else {
                 return response()->json(['success' => false, 'message' => 'Join event, team or event details not found'], 400);
             }
-        } catch (QueryException $e) {
-            if ($e->errorInfo[1] == 1062) { 
+        } catch (Exception $e) {
+            if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
                 return response()->json(['success' => false, 'message' => 'Award already exists'], 422);
             } else {
-                return response()->json(['success' => false, 'message' => 'Database error'], 500);
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
             }
         }
     }
@@ -139,7 +146,9 @@ class OrganizerEventResultsController extends Controller
                     'object_type' => Achievements::class,
                     'subject_id' => $user->id,
                     'object_id' => $rowId,
-                    'action' => 'Position',
+                    'action' => 'Achievement',
+                    'achievement' => $request->title,
+                    'eventId' => $request->input('event_details_id'),
                     'teamName' => $request->teamName
                 ]));
             
@@ -148,7 +157,7 @@ class OrganizerEventResultsController extends Controller
                 return response()->json(['success' => false, 'message' => 'Join event or team not found'], 400);
             }
         } catch (QueryException $e) {
-            if ($e->errorInfo[1] == 1062) { 
+            if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
                 return response()->json(['success' => false, 'message' => 'Achievement already exists'], 422);
             } else {
                 return response()->json(['success' => false, 'message' => 'Database error'], 500);
@@ -165,12 +174,12 @@ class OrganizerEventResultsController extends Controller
         try {
             $user = $request->attributes->get('user');
             $row = DB::table('awards_results')->where('id', $awardId)->get()->first();
-            if ($row) $row->delete();
+            if ($row) DB::table('awards_results')->where('id', $awardId)->delete();
             dispatch(new HandleResults('DeleteAward', [
                 'subject_type' => User::class,
                 'object_type' => AwardResults::class,
                 'subject_id' => $user->id,
-                'object_id' => $row->id,
+                'object_id' => $row->join_events_id,
                 'action' => 'Position',
                 'teamName' => $request->teamName
             ]));
@@ -185,8 +194,8 @@ class OrganizerEventResultsController extends Controller
     {
         try {
             $user = $request->attributes->get('user');
-            $row = DB::table('awards_results')->where('id', $achievementId)->get()->first();
-            if ($row) $row->delete();
+            $row = DB::table('achievements')->where('id', $achievementId)->first();
+            if ($row) DB::table('achievements')->where('id', $achievementId)->delete();
             dispatch(new HandleResults('DeleteAchievement', [
                 'subject_type' => User::class,
                 'object_type' => AwardResults::class,
