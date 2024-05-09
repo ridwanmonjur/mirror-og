@@ -22,13 +22,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 Route::group(['prefix' => 'participant'], function () {
     
-    Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'check-jwt-permission:participant|admin'], function () {
             Route::post('events', [ParticipantEventController::class, 'index'])->name('events.index');
             Route::post('/organizer/follow', [ParticipantEventController::class, 'followOrganizer'])->name('participant.organizer.follow');
@@ -45,7 +45,7 @@ Route::group(['prefix' => 'participant'], function () {
 });
 
 
-Route::group(['middleware' => 'auth:sanctum'], function () {
+Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
         Route::post('/profile/{id}/banner', [AuthController::class, 'replaceBanner'])->name('participant.userBanner.action');
         Route::post('/profile/{id}/background', [AuthController::class, 'replaceBackground'])->name('participant.userBackground.action');
@@ -54,7 +54,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 Route::group(['prefix' => 'organizer'], function () {
 
-    Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'check-jwt-permission:organizer|admin'], function () {
             Route::post('events/search', [OrganizerEventController::class, 'search'])->name('event.search.view');
             Route::post('/event/{id}/results', [OrganizerEventResultsController::class, 'store'])->name('event.results.store');

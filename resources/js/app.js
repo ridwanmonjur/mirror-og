@@ -19,13 +19,13 @@ window.storeToken = function(token) {
 
 window.loadBearerHeader = function() {
     return {
-        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+        credentials: 'include'
     };
 };
 
 window.loadBearerCompleteHeader = function() {
     return {
-        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+        credentials: 'include',
         'Accept': 'application/json',
         'Content-Type': 'application/json',
     };

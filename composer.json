@@ -13,7 +13,6 @@
         "guzzlehttp/guzzle": "^7.2",
         "io238/laravel-iso-countries": "^1.2",
         "laravel/framework": "^10.10",
-        "laravel/sanctum": "^3.3",
         "laravel/socialite": "^5.9",
         "laravel/tinker": "^2.8",
         "sendgrid/sendgrid": "~7",

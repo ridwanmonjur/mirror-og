@@ -501,9 +501,7 @@ class AuthController extends Controller
                 }
         
                 $request->session()->regenerate();
-                $token = $user->createToken('Personal Access Token')->plainTextToken;
-                $cookie = Cookie::make('jwt_cookie', $token, 60, '/', '', false, false);
-
+                
                 $response = response()->json([
                     'message' => "Account signed in successfully as $userRole!",
                     'route' => route($userRole . '.home.view'),
@@ -511,7 +509,6 @@ class AuthController extends Controller
                     'success' => true
                 ], 200);
                 
-                $response->withCookie($cookie);
                 
                 return $response;
 
@@ -537,6 +534,7 @@ class AuthController extends Controller
             ]);
     
             $user = $request->attributes->get('user');
+            // dd($user);
             $oldBanner = $user->userBanner;
             $fileName = $user->uploadUserBanner($request);
             $user->destroyUserBanner($oldBanner);
