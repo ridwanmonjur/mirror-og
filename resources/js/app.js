@@ -6,7 +6,11 @@
  window.Popper = Popper
  import * as bootstrap from 'bootstrap'
  window.bootstrap = bootstrap
-import Alpine from 'alpinejs';
+ import cookie from 'cookiejs';
+window.cookie = cookie;
+// todo cookie package
+// https://www.npmjs.com/package/cookiejs
+ import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 Alpine.start();
 window.storeToken = function(token) {

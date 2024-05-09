@@ -96,6 +96,8 @@
         })
         .then(data => {
             if (data.success) {
+                  // TODO
+                // COOKIE TASK
                 console.log({data})
                 window.storeToken(data.token);
                 window.location.href = data.route;

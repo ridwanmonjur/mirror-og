@@ -91,6 +91,8 @@
         .then(data => {
             if (data.success) {
                 console.log({data})
+                // TODO
+                // COOKIE TASK
                 window.storeToken(data.token);
                 window.location.href = data.route;
             } else {
