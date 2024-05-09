@@ -42,18 +42,8 @@ php artisan migrate
 Raw sql data in database/migrations/data.sql
 Copy ALL FILES AND FOLDERS from public/assets/images/storage to public/storage (new symlink folder)
 
-php vendor/bin/codecept bootstrap
-php vendor/bin/codecept generate:cest Acceptance Signin
-php vendor/bin/codecept generate:scenarios Acceptance
-php vendor/bin/codecept run Acceptance CreateEventCest.php
-selenium-standalone start
 
-actor: AcceptanceTester
-modules:
-    enabled:
-        - PhpBrowser:
-            url: 'http://myappurl.local'
- php vendor/bin/codecept run
+No need of postman, use dd() to debg json request
 
 # Clear All Caches (Combined)
 

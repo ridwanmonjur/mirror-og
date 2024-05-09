@@ -12,7 +12,7 @@
     </a>
 
     @if (isset($user->notifications[0]))
-        <div class="dropdown-menu py-0 custom-scrollbar" style="position: absolute; left: -200px; width: 300px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLinkNotification">
+        <div class="dropdown-menu fs-7   py-0 custom-scrollbar" style="position: absolute; left: -200px; width: 300px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLinkNotification">
             <button type="button" onclick="setAllNotificationsRead();" class="btn btn-link text-left"> Mark all as read </button> 
             @foreach($user->notifications as $notification)
                 <div data-loop-count="{{ $loop->index }}" @class([
@@ -45,8 +45,8 @@
             @endforeach
         </div>
     @else
-        <div class="dropdown-menu py-0" style="position: absolute; left: -200px; width: 300px;" aria-labelledby="dropdownMenuLinkNotification">
-            <a class="dropdown-item py-3" >
+        <div class="dropdown-menu fs-7   py-0" style="position: absolute; left: -200px; width: 300px;" aria-labelledby="dropdownMenuLinkNotification">
+            <a class="dropdown-item py-3  ps-4 align-middle " >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                 class="bi bi-person-fill-gear" viewBox="0 0 16 16">
                 <path
@@ -63,7 +63,7 @@
         aria-haspopup="true" aria-expanded="true">
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
     </a>
-    <div class="dropdown-menu py-0" style="position: absolute; left: -180px; width: 250px;"
+    <div class="dropdown-menu fs-7   py-0" style="position: absolute; left: -180px; width: 250px;"
         aria-labelledby="dropdownMenuLinkSignedIn">
         <div class="border-dark border-2 border-bottom text-center px-2">
             <a class="py-0" href="{{ route( strtolower($user->role) .'.profile.view') }}">
@@ -88,7 +88,7 @@
             </a>
         </div>
         @if ($user->role == 'ORGANIZER' || $user->role == 'ADMIN')
-            <a class="dropdown-item py-3" href="{{ route('organizer.profile.view') }}">
+            <a class="dropdown-item py-3  ps-4 align-middle " href="{{ route('organizer.profile.view') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                     class="bi bi-person-fill-gear" viewBox="0 0 16 16">
                     <path
@@ -96,25 +96,25 @@
                 </svg>&nbsp;
                 Profile
             </a>
-            <a class="dropdown-item py-3" href="{{ route('logout.action') }}">
+            <a class="dropdown-item py-3  ps-4 align-middle " href="{{ route('event.create') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                     class="bi bi-person-fill-gear" viewBox="0 0 16 16">
                     <path
                         d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4m9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
                 </svg>&nbsp;
-                Create N__Edit
+                Create
             </a>
-            <a class="dropdown-item py-3" href="{{ route('logout.action') }}">
+            <a class="dropdown-item py-3  ps-4 align-middle " href="{{ route('event.index') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                     class="bi bi-person-fill-gear" viewBox="0 0 16 16">
                     <path
                         d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4m9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
                 </svg>&nbsp;
-                Manage N__Edit
+                Manage
             </a>
         @endif
         @if ($user->role == 'PARTICIPANT' || $user->role == 'ADMIN')
-            <a class="dropdown-item py-3" href="{{ route('participant.profile.view') }}">
+            <a class="dropdown-item py-3  ps-4 align-middle " href="{{ route('participant.profile.view') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                     class="bi bi-person-fill-gear" viewBox="0 0 16 16">
                     <path
@@ -122,7 +122,7 @@
                 </svg>&nbsp;
                 Profile 
             </a>
-            <a class="dropdown-item py-3" href="{{  url('/participant/team/create/') }}">
+            <a class="dropdown-item py-3  ps-4 align-middle " href="{{  url('/participant/team/create/') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                     class="bi bi-person-fill-gear" viewBox="0 0 16 16">
                     <path
@@ -130,7 +130,7 @@
                 </svg>&nbsp;
                 Create a Team
             </a>
-            <a class="dropdown-item py-3" href="{{  url('/participant/team/list/') }}">
+            <a class="dropdown-item py-3  ps-4 align-middle " href="{{  url('/participant/team/list/') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                     class="bi bi-person-fill-gear" viewBox="0 0 16 16">
                     <path
@@ -138,7 +138,7 @@
                 </svg>&nbsp;
                 Team List
             </a>
-            <a class="dropdown-item py-3" href="{{ url('/participant/request/') }}">
+            <a class="dropdown-item py-3  ps-4 align-middle " href="{{ url('/participant/request/') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                     class="bi bi-person-fill-gear" viewBox="0 0 16 16">
                     <path
@@ -147,7 +147,7 @@
                 Requests
             </a>
         @endif
-        <a class="dropdown-item py-3" href="{{ route('logout.action') }}">
+        <a class="dropdown-item py-3  ps-4 align-middle pb-3" href="{{ route('logout.action') }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                 class="bi bi-person-fill-gear" viewBox="0 0 16 16">
                 <path

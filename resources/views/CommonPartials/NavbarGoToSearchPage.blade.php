@@ -111,8 +111,8 @@
                 <a href="{{ url('/participant/request/' ) }}">Team Requests</a>
             @endif
             @if ($user->role == 'ORGANIZER' || $user->role == 'ADMIN')
-                <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Create an event N_EDIT</a>
-                <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Manage event N_EDIT</a>
+                <a class="{{ route('event.create') }}" style="text-decoration: none;" href="{{ route('logout.action') }}">Create an event</a>
+                <a class="{{ route('event.index') }}" style="text-decoration: none;" href="{{ route('logout.action') }}">Manage event</a>
             @endif
             <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
             <a class="" style="text-decoration: none;" href="{{ route('logout.action') }}">Logout</a>
