@@ -71,7 +71,7 @@ class Kernel extends HttpKernel
         'check-jwt-permission' => \App\Http\Middleware\CheckJWTPermission::class,
         'prevent-back-button' => \App\Http\Middleware\PreventBackButtonMiddleware::class,
         'prevent-back-history' => \App\Http\Middleware\PreventBackHistory::class,
-
+        'http-only-support' => \App\Http\Middleware\CopyCookieToAuthorizationHeader::class,
     ];
 
     protected $commands = [

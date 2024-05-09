@@ -27,6 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'participant'], function () {
+    
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::group(['middleware' => 'check-jwt-permission:participant|admin'], function () {
             Route::post('events', [ParticipantEventController::class, 'index'])->name('event.index');
@@ -52,6 +53,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 });
 
 Route::group(['prefix' => 'organizer'], function () {
+    Route::group(['middleware' => 'http-only-support'], function () {
+
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::group(['middleware' => 'check-jwt-permission:organizer|admin'], function () {
             Route::post('events/search', [OrganizerEventController::class, 'search'])->name('event.search.view');
@@ -62,6 +65,7 @@ Route::group(['prefix' => 'organizer'], function () {
             Route::delete('/event/{id}/achievements/{achievementId}', [OrganizerEventResultsController::class, 'destroyAchievements'])->name('event.achievements.destroy');
             Route::put('notifications/{id}/read', [AuthController::class, 'markAsRead'])->name('organizer.notifications.read');
             Route::put('notifications/read', [AuthController::class, 'markAllAsRead'])->name('organizer.notifications.readAll');
+        });
 
         });
     });

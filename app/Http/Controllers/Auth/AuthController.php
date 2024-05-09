@@ -502,12 +502,14 @@ class AuthController extends Controller
                 $request->session()->regenerate();
                 $token = $user->createToken('Personal Access Token')->plainTextToken;
 
-                return response()->json([
+                $response = response()->json([
                     'message' => "Account signed in successfully as $userRole!", 
                     'route' => route($userRole . '.home.view'),
                     'token' => $token,
                     'success' => true
                 ], 200);
+
+                return $response;
 
             } else {
                 throw new ErrorException('The email or password you entered is incorrect!');
