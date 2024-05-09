@@ -19,7 +19,8 @@ use Carbon\Carbon;
 use ErrorException;
 use Exception;
 use Illuminate\Database\QueryException;
-use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Cookie;
+
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Io238\ISOCountries\Models\Country;
@@ -501,14 +502,17 @@ class AuthController extends Controller
         
                 $request->session()->regenerate();
                 $token = $user->createToken('Personal Access Token')->plainTextToken;
+                $cookie = Cookie::make('jwt_cookie', $token, 60, '/', '', false, false);
 
                 $response = response()->json([
-                    'message' => "Account signed in successfully as $userRole!", 
+                    'message' => "Account signed in successfully as $userRole!",
                     'route' => route($userRole . '.home.view'),
-                    'token' => $token,
+                    'token' => null,
                     'success' => true
                 ], 200);
-
+                
+                $response->withCookie($cookie);
+                
                 return $response;
 
             } else {

@@ -30,7 +30,7 @@ Route::group(['prefix' => 'participant'], function () {
     
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::group(['middleware' => 'check-jwt-permission:participant|admin'], function () {
-            Route::post('events', [ParticipantEventController::class, 'index'])->name('event.index');
+            Route::post('events', [ParticipantEventController::class, 'index'])->name('events.index');
             Route::post('/organizer/follow', [ParticipantEventController::class, 'followOrganizer'])->name('participant.organizer.follow');
             Route::post('/team/{id}/user/{userId}/invite', [ParticipantTeamController::class, 'inviteMember'])->name('participant.member.invite');
             Route::post('/team/{id}/member/{memberId}/captain', [ParticipantTeamController::class, 'captainMember'])->name('participant.member.captain');
@@ -53,7 +53,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 });
 
 Route::group(['prefix' => 'organizer'], function () {
-    Route::group(['middleware' => 'http-only-support'], function () {
 
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::group(['middleware' => 'check-jwt-permission:organizer|admin'], function () {
@@ -69,7 +68,6 @@ Route::group(['prefix' => 'organizer'], function () {
 
         });
     });
-});
 
 Route::name('stripe.')
     ->controller(StripeController::class)

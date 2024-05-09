@@ -3,7 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class CopyCookieToAuthorizationHeader
@@ -15,14 +17,21 @@ class CopyCookieToAuthorizationHeader
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->header('Authorization')) {
-            $token = $request->cookie('jwt_cookie');
+        try{
+            Log::info('>>> jwt_cookie');
+            Log::info($request->cookie('jwt_cookie'));
+            
+            if (!$request->header('Authorization')) {
+                $token = $request->cookie('jwt_cookie');
 
-            if ($token) {
-                $request->headers->set('Authorization', 'Bearer ' . $token);
+                if ($token) {
+                    $request->headers->set('Authorization', 'Bearer ' . $token);
+                }
             }
-        }
 
-        return $next($request);
+            return $next($request);
+        } catch ( Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }
