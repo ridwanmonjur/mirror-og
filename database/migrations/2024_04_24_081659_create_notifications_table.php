@@ -21,7 +21,6 @@ return new class extends Migration
             $table->timestamp('read_at')->nullable();
             $table->nullableMorphs('object'); 
             $table->timestamps();
-            $table->index(['notifiable_id', 'notifiable_type', 'read_at']);
         });
     }
 

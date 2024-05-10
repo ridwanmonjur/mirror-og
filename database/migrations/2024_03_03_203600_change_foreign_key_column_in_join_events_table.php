@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('join_events', function (Blueprint $table) {
-            $table->dropConstrainedForeignId(['user_id']);
+            $table->dropConstrainedForeignId('user_id');
         
             $table->foreignId('team_id')
                 ->constrained('teams')
@@ -26,8 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('join_events', function (Blueprint $table) {
-            $table->dropConstrainedForeignId(['team_id']);
-            $table->dropColumn('team_id');
+            $table->dropConstrainedForeignId('team_id');
 
             $table->foreign('user_id')
                 ->references('id')->on('users');
