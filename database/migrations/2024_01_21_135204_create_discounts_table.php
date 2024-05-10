@@ -30,6 +30,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
+
         Schema::dropIfExists('organizer_create_event_discounts');
+        
+        Schema::enableForeignKeyConstraints();
+
     }
 };
