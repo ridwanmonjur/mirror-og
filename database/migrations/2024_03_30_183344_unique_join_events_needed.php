@@ -27,7 +27,7 @@ return new class extends Migration
     {
         Schema::table('join_events', function (Blueprint $table) {
             Schema::disableForeignKeyConstraints();
-            $table->dropUnique(['team_id', 'event_details_id']);
+            // $table->dropUnique(['team_id', 'event_details_id']);
             Schema::enableForeignKeyConstraints();
         });
     }
