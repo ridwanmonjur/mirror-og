@@ -735,3 +735,14 @@ input[type="submit"],
         grid-template-columns: 1fr 1fr
     }
 }
+
+
+input.form-control.edit-mode-player-profile-input, 
+input.form-control.edit-mode-player-profile-input:focus {
+    box-shadow: none !important;
+    border-width: 0px;
+    border-bottom-width: 2px !important; 
+    border-bottom-style: dotted !important;
+    background-color: transparent;
+    border-radius: 0px !important;
+}

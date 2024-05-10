@@ -24,10 +24,7 @@
     
 
     <main 
-        x-data="{ countries: [], errorMessage: '' }"
-        x-init="$nextTick(async () => { 
-            countries = await fetchCountries();
-        })"
+        x-data="alpineDataComponent"
     >
         <div id="backgroundBanner" class="member-section px-0 pt-0"
         >
@@ -47,32 +44,66 @@
                     </div>
                 </div>
                 <div class="member-details mx-auto text-center">
-                        <h3>
+                    <div x-show="isEditMode">
+                        <input 
+                            placeholder = "Enter your name..."
+                            class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                            value="{{$userProfile->name}}"
+                        >
+                        <input 
+                            placeholder = "Enter your company name..."
+                            class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                            value="{{$userProfile->organizer?->companyName}}"
+                        > 
+                        <button 
+                            x-on:click="isEditMode = false;"
+                            class="mt-4 oceans-gaming-default-button oceans-gaming-transparent-button px-5 py-1"> 
+                            Save
+                        </button>
+                    </div>
+                    <div x-show="!isEditMode">
+                        <h5>
                             {{$userProfile->name}}
-                        </h3>
+                        </h5>
                         <p> 
                             <span class="me-2"> </span>
                             <span class="me-3"> {{$userProfile->organizer?->companyName}} </span>
                             <span class="me-2"> </span>
                             <span class="me-3"> {{$followersCount}} followers </span>
                         </p>
-                        <div class="text-center">
-                            <button 
-                                class="oceans-gaming-default-button rounded-none bg-light text-dark px-5 rounded">
-                                Edit
-                            </button>
-                        </div>
+                        @if ($isOwnProfile)
+                            <div class="text-center">
+                                <button 
+                                    x-on:click="isEditMode = true; fetchCountries();"
+                                    class="oceans-gaming-default-button oceans-gaming-primary-button py-1 px-5"> 
+                                    Edit
+                                </button>
+                            </div>
+                        @else
+                            <div class="text-center">
+                                <button 
+                                    x-on:click="isEditMode = true; fetchCountries();"
+                                    class="me-4 oceans-gaming-default-button oceans-gaming-primary-button rounded px-3 py-2"> 
+                                    Follow
+                                </button>
+                                <button 
+                                    x-on:click="isEditMode = false;"
+                                    class="oceans-gaming-default-button oceans-gaming-transparent-button bg-light border-0 rounded px-3 py-2"> 
+                                    Message
+                                </button>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
-        <br>
-        <div class="tabs px-5">
+        <div class="tabs px-5" x-show="!isEditMode">
             <button class="tab-button  outer-tab tab-button-active"
                 onclick="showTab(event, 'Overview', 'outer-tab')">Overview</button>
             <button class="tab-button outer-tab" onclick="showTab(event, 'Events', 'outer-tab')">Events</button>
         </div>
-        <br> <br>
-        <div class="tab-content pb-4 outer-tab px-5" id="Overview">
+        <div x-show="!isEditMode" class="tab-content pb-4 outer-tab px-5" id="Overview">
+            <br> 
             <div class="showcase tab-size showcase-box showcase-column pt-4 grid-4-columns tab-size text-center">
                 <div> 
                     <h3> {{$lastYearEventsCount}} </h3>
@@ -124,7 +155,7 @@
             </div>
         </div>
 
-        <div class="tab-content pb-4  outer-tab d-none" id="Events">
+        <div  x-show="!isEditMode" class="tab-content pb-4  outer-tab d-none" id="Events">
             <div class="mx-auto tab-size"><b>Active Events</b></div>
             <br>
             @if (!isset($joinEventsActive[0]))
@@ -156,73 +187,149 @@
                     @endforeach
                 </div>
             @endif
+            <br><br>
+
         </div>
-        <br><br>
         <div class="grid-2-columns tab-size">
             <div class="">
                 <br>
                 <div> About </div>
                 <br>
-                <p> {{$userProfile->organizer?->companyDescription}} </p>
-                @if ($userProfile->organizer?->industry && $userProfile->organizer?->type))
+                <div x-show.important="isEditMode">
+                    <input 
+                        placeholder = "Enter your company description..."
+                        class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                        value="{{$userProfile->organizer?->companyDescription}}"
+                    > 
+
                     <br>
-                    <p> 
-                        <span>{{$userProfile->organizer?->industry}}</span>
-                        <span>{{$userProfile->organizer?->type}}</span>
-                    </p>
-                @endif
-                @if (isset($userProfile->address) && $userProfile->address?->addressLine1 && $userProfile->address?->city)
+                    <input 
+                        placeholder = "Enter your company industry..."
+                        class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                        value="{{$userProfile->organizer?->industry}}"
+                    > 
+                    <input 
+                        placeholder = "Enter your company type..."
+                        class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                        value="{{$userProfile->organizer?->type}}"
+                    > 
                     <br>
-                    <p> 
-                    <span>{{$userProfile->address?->addressLine1}}</span>
+                    <input 
+                        placeholder = "Enter your address..."
+                        class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                        value="{{$userProfile->address?->addressLine1}}"
+                    >
+                    {{-- <span>{{$userProfile->address?->addressLine1}}</span>
                     <span>{{$userProfile->address?->addressLine2}}</span>
                     <span>{{$userProfile->address?->city}}</span>
                     <span>{{$userProfile->address?->country}}</span>
-                    </p>
-                @endif
-                @if($userProfile->mobile_no)
-                    <br>
-                    <p>
-                        <span>{{$userProfile->mobile_no}}</span>
-                    </p>
-                @endif
+                        
+                    @if($userProfile->mobile_no)
+                        <br>
+                        <p>
+                            <span>{{$userProfile->mobile_no}}</span>
+                        </p>
+                    @endif --}}
+                </div>
+                <div x-show.important="!isEditMode">
+                    @if ($userProfile->organizer?->companyDescription)
+                        <p> 
+                            {{$userProfile->organizer?->companyDescription}}
+                        </p>
+                    @else
+                        <p>
+                            Add a description for your company...
+                        </p>
+                    @endif
+
+                    <p> {{$userProfile->organizer?->companyDescription}} </p>
+                    @if ($userProfile->organizer?->industry && $userProfile->organizer?->type))
+                        <br>
+                        <p> 
+                            <span>{{$userProfile->organizer?->industry}}</span>
+                            <span>{{$userProfile->organizer?->type}}</span>
+                        </p>
+                    @endif
+                    @if (isset($userProfile->address) && $userProfile->address?->addressLine1 && $userProfile->address?->city)
+                        <br>
+                        <p> 
+                        <span>{{$userProfile->address?->addressLine1}}</span>
+                        <span>{{$userProfile->address?->addressLine2}}</span>
+                        <span>{{$userProfile->address?->city}}</span>
+                        <span>{{$userProfile->address?->country}}</span>
+                        </p>
+                    @endif
+                    @if($userProfile->mobile_no)
+                        <br>
+                        <p>
+                            <span>{{$userProfile->mobile_no}}</span>
+                        </p>
+                    @endif
+                </div>
             </div>
             <div class="">
                 <br>
                 <div> Links </div>
                 <br>
-                <p> 
-                    <span> </span>
-                    <span>{{$userProfile->email}}</span> 
-                </p>
-                @if ($userProfile->website_link)
+                <div x-show.important="isEditMore">
+                    <input 
+                            placeholder = "Enter your company description..."
+                            class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                            value="{{$userProfile->organizer?->companyDescription}}"
+                    > 
                     <br>
-                    <p> 
-                        <span></span>
-                        <span>{{$userProfile->website_link}}</span>
-                    </p>
-                @endif
-                @if ($userProfile->facebook_link)
+                    <input 
+                        placeholder = "Enter your company industry..."
+                        class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                        value="{{$userProfile->organizer?->industry}}"
+                    > 
+                    <input 
+                        placeholder = "Enter your company type..."
+                        class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                        value="{{$userProfile->organizer?->type}}"
+                    > 
                     <br>
+                    <input 
+                        placeholder = "Enter your address..."
+                        class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                        value="{{$userProfile->address?->addressLine1}}"
+                    >
+                </div>
+                <div x-show.important="!isEditMore">
+
                     <p> 
-                        <span></span>
-                        <span>{{$userProfile->facebook_link}}</span>
+                        <span> </span>
+                        <span>{{$userProfile->email}}</span> 
                     </p>
-                @endif
-                @if ($userProfile->website_link)
-                    <br>
-                    <p> 
-                        <span></span>
-                        <span>{{$userProfile->website_link}}</span>
-                    </p>
-                @endif
-                @if ($userProfile->twitter_link)
-                    <br>
-                    <p> 
-                        <span></span>
-                        <span>{{$userProfile->twitter_link}}</span>
-                    </p>
-                @endif
+                    @if ($userProfile->website_link)
+                        <br>
+                        <p> 
+                            <span></span>
+                            <span>{{$userProfile->website_link}}</span>
+                        </p>
+                    @endif
+                    @if ($userProfile->facebook_link)
+                        <br>
+                        <p> 
+                            <span></span>
+                            <span>{{$userProfile->facebook_link}}</span>
+                        </p>
+                    @endif
+                    @if ($userProfile->website_link)
+                        <br>
+                        <p> 
+                            <span></span>
+                            <span>{{$userProfile->website_link}}</span>
+                        </p>
+                    @endif
+                    @if ($userProfile->twitter_link)
+                        <br>
+                        <p> 
+                            <span></span>
+                            <span>{{$userProfile->twitter_link}}</span>
+                        </p>
+                    @endif
+                </div>
                 
             </div>
         </div>
@@ -233,6 +340,35 @@
 
 @livewireScripts
 <script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('alpineDataComponent', () => ({
+            isEditMode: false, 
+            countries: [], 
+            errorMessage: '', 
+            isCountriesFetched: false ,
+            fetchCountries: () => {
+                return fetch('/countries')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data?.data) {
+                            this.isCountriesFetched = true;
+                            this.countries = data?.data;
+                        } else {
+                            this.errorMessage = "Failed to get data!"
+                            this.countries = [{
+                                 name: {
+                                    en: 'No country'
+                                },
+                                emoji_flag: '🇦🇫'
+                            }];
+                        }
+                    })
+                    .catch(error => console.error('Error fetching countries:', error));
+                }
+            })
+        )
+    })
+
     const uploadButton = document.getElementById("upload-button");
     const imageUpload = document.getElementById("image-upload");
     const uploadedImage = document.getElementById("uploaded-image");

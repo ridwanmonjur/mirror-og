@@ -123,7 +123,6 @@ class ParticipantController extends Controller
             = JoinEvent::processEvents($joinEvents, $isFollowing);
 
         $joinEventIds = $joinEvents->pluck('id')->toArray();
-      
 
         return view('Participant.Profile.PlayerProfile', 
             compact('joinEvents', 'userProfile', 'teamList', 'isOwnProfile',

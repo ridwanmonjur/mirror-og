@@ -538,3 +538,6 @@ a:hover {
     font-size: 15px;
 }
 /*! purgecss end ignore */
+[x-cloak] {
+    display: none !important;
+}

@@ -22,26 +22,32 @@
 <body>
     @include('CommonPartials.NavbarGoToSearchPage')
 
-    <main 
-        x-data="{ countries: [], errorMessage: '' }"
-        x-init="$nextTick(async () => { 
-            countries = await fetchCountries();
-        })"
-    >
-        <div id="backgroundBanner" class="member-section px-2 py-2"
+    <main x-data="alpineDataComponent">
+        <div id="backgroundBanner" class="member-section px-2 py-4"
             style="background-image: url({{ '/storage' . '/'. $userProfile->participant->backgroundBanner }} );"
         >
-            <div class="d-flex justify-content-end py-0 my-0">
-                <input type="file" id="backgroundInput" class="d-none"> 
-                <button 
-                    onclick="document.getElementById('backgroundInput').click();"
-                    class="btn btn-secondary text-light rounded-pill py-2 me-3"> 
-                    <small> Change Background </small>
-                </button>
-                <button class="oceans-gaming-default-button oceans-gaming-primary-button px-3 py-2"> 
-                    <smaLl> Edit Profile </small>
-                </button>
-            </div>
+            @if($isOwnProfile)
+                <div class="d-flex justify-content-end py-0 my-0">
+                    <input type="file" id="backgroundInput" class="d-none"> 
+                    <button 
+                        onclick="document.getElementById('backgroundInput').click();"
+                        class="btn btn-secondary text-light rounded-pill py-2 me-3"> 
+                        Change Background
+                    </button>
+                    <button 
+                        x-show="!isEditMode"
+                        x-on:click="isEditMode = true; fetchCountries();"
+                        class="oceans-gaming-default-button oceans-gaming-primary-button px-3 py-2"> 
+                        Edit Profile
+                    </button>
+                    <button 
+                        x-show="isEditMode"
+                        x-on:click="isEditMode = false;"
+                        class="oceans-gaming-default-button oceans-gaming-transparent-button px-3 py-2"> 
+                        Save
+                    </button>
+                </div>
+             @endif
             <div class="d-flex justify-content-center align-items-center flex-wrap">
                 <div class="member-image">
                     <div class="upload-container">
@@ -57,64 +63,77 @@
                     </div>
                 </div>
                 <div class="member-details">
-                    @if ($userProfile->isEdited)
-                        <h2>
-                            {{$userProfile->nickname}}
-                            @if ($isOwnProfile)
-                                <button 
-                                    class="gear-icon-btn me-2 position-relative" 
-                                    style="top: 10px;" type="button" id="editProfileBtn" 
-                                    data-bs-toggle="modal" data-bs-target="#editProfile" 
-                                    aria-expanded="false"
+                    <form x-on:submit.prevent="editForm(event)" >
+                        <div x-cloak x-show="isEditMode" style="font-size: 14px;">
+                            <input 
+                                placeholder = "Enter your nickname..."
+                                class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                                value="{{$userProfile?->participant->nickname}}"
+                            > 
+                            <br>
+                            <span class="d-inline-flex justify-content-between align-items-center">
+                                <input
+                                    placeholder = "Your bio..."
+                                    style="width: 250px;"
+                                    class="form-control border-primary edit-mode-player-profile-input d-inline me-3" 
+                                    value="{{$userProfile?->participant->bio}}"
+                                > 
+                                <input 
+                                    placeholder="Age"
+                                    style="width: 80px;"
+                                    class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                                    value="{{$userProfile?->participant->age}}"
                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </span> 
+                            <br> <br>
+                            <div class="w-100 d-flex justify-content-start align-items-center">
+                                <span class="me-3">
+                                    <svg
+                                        class="me-2 align-middle" 
+                                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
-                                </button>
-                            @endif
-                        </h2>
-                         <div class="d-flex justify-content-between flex-wrap">
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
-                                </svg>
-                                <span> USA </span>
-                            </span>
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
-                                <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
-                                <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
-                                </svg>
-                                <span>{{$userProfile->domain}}</span>
-                            </span>
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
-                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
-                                </svg>
-                                <span>Joined {{Carbon::parse($userProfile->created_at)->isoFormat('Do MMMM YYYY')}}</span>
-                            </span>
+                                    <select value="{{$userProfile->country}} ?? 'Afghanistan'" 
+                                        style="width: 200px;"    
+                                        class="form-control d-inline rounded-pill"
+                                    >
+                                        <template x-for="country in countries">
+                                            <option x-bind:value="country.name.en">
+                                            <span x-text="country.emoji_flag" class="mx-3"> </span>  
+                                            <span x-text="country.name.en"> </span>
+                                            </option>
+                                        </template>
+                                    </select> 
+                                </span>
+                                <span>
+
+                                    <svg 
+                                        class="align-middle"
+                                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+                                        <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+                                        <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
+                                    </svg>
+                                    <input 
+                                        style="width: 150px;"
+                                        placeholder = "Enter your link..."
+                                        class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                                        value="{{$userProfile?->participant->nickname}}"
+                                    > 
+                                </span>
+                            </div>
+                                
+                            <br><br>
+                          
+
+                            {{-- <img src="css/images/dota.png" class="icons-game"> Dota 2&nbsp;&nbsp;&nbsp;&nbsp; --}}
+                            {{-- <img src="css/images/lol.png" class="icons-game"> League Of Legends&nbsp;&nbsp;&nbsp;&nbsp; --}}
+                            {{-- <img src="css/images/valo.jpg" class="icons-game"> Valorant<br> --}}
+                            <br>
                         </div>
-                        <img src="css/images/dota.png" class="icons-game"> Dota 2&nbsp;&nbsp;&nbsp;&nbsp;
-                        <img src="css/images/lol.png" class="icons-game"> League Of Legends&nbsp;&nbsp;&nbsp;&nbsp;
-                        <img src="css/images/valo.jpg" class="icons-game"> Valorant<br>
-                        <br>
-                    @else
+                    </form>
+                    <div x-cloak x-show="!isEditMode">
                         <h4>
                             {{$userProfile->name}}
-                            @if($isOwnProfile)
-                                <button 
-                                    class="gear-icon-btn ms-2 me-2" 
-                                    type="button" id="editProfileBtn" 
-                                    data-bs-toggle="modal" data-bs-target="#editProfile" 
-                                    aria-expanded="false"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                                    </svg>
-                                </button>
-                            @endif
                         </h4>
                         <p>This is the player bio. The character limit should be up to 150 words. This field should accept
                             emojis.
@@ -141,7 +160,7 @@
                             </span>
                         </div>
                         <br>
-                    @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -368,6 +387,43 @@
 
 @livewireScripts
 <script>
+
+    function editForm(event) {
+        event.preventDefault();
+        
+        console.log('Form submitted');
+        
+    }
+
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('alpineDataComponent', () => ({
+            isEditMode: true, 
+            countries: [], 
+            errorMessage: '', 
+            isCountriesFetched: false ,
+            fetchCountries: () => {
+                return fetch('/countries')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data?.data) {
+                            this.isCountriesFetched = true;
+                            this.countries = data?.data;
+                        } else {
+                            this.errorMessage = "Failed to get data!"
+                            this.countries = [{
+                                 name: {
+                                    en: 'No country'
+                                },
+                                emoji_flag: '🇦🇫'
+                            }];
+                        }
+                    })
+                    .catch(error => console.error('Error fetching countries:', error));
+                }
+            })
+        )
+    })
+
     const uploadButton = document.getElementById("upload-button");
     const imageUpload = document.getElementById("image-upload");
     const uploadedImage = document.getElementById("uploaded-image");
@@ -472,17 +528,6 @@
 
             reader.readAsDataURL(file);
         });
-    }
-
-
-    const fetchCountries = () => {
-        return fetch('/countries')
-            .then(response => response.json())
-            .then(data => {
-                console.log({data})
-                return data?.data;
-            })
-            .catch(error => console.error('Error fetching countries:', error));
     }
 
     function reddirectToLoginWithIntened(route) {
