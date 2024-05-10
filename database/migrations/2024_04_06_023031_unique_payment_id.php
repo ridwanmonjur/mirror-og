@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payment_transactions', function (Blueprint $table) {
-            $table->dropForeign('discount_id');
-            $table->dropColumn(['discount_id', 'discount_amount']);
+            $table->dropColumn(['discount_amount']);
             $table->dropColumn('updated_at');
         });
     }
@@ -26,8 +25,7 @@ return new class extends Migration
         Schema::table('payment_transactions', function (Blueprint $table) {
             $table->unsignedBigInteger('discount_id')->nullable();
             $table->double('discount_amount')->nullable();
-            $table->foreign('discount_id')->references('id')->on('discounts');
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 
