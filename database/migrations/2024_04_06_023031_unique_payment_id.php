@@ -23,10 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('payment_transactions', function (Blueprint $table) {
-            $table->unsignedBigInteger('discount_id')->nullable();
             $table->double('discount_amount')->nullable();
-            $table->foreign('discount_id')->references('id')->on('discounts');
-            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 

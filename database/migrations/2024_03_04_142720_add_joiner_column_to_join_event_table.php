@@ -14,12 +14,10 @@ return new class extends Migration
         Schema::table('join_events', function (Blueprint $table) {        
             $table->foreignId('joiner_id')
                 ->constrained('users')
-                ->index('join_events_users_id_foreign')
                 ->nullable();
             
             $table->foreignId('joiner_participant_id')
                 ->constrained('participants')
-                ->index('join_events_participants_id_foreign')
                 ->nullable();
         });
     }
@@ -30,9 +28,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('join_events', function (Blueprint $table) {
-            $table->dropForeign(['joiner_id', 'joiner_participant_id']);
-            $table->dropColumn('joiner_id');
-            $table->dropColumn('joiner_participant_id');
+            $table->dropConstrainedForeignId('joiner_id');
+            $table->dropConstrainedForeignId('joiner_participant_id');
         });
     }
 };

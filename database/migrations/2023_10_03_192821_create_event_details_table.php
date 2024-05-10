@@ -27,8 +27,7 @@ return new class extends Migration
             $table->string('sub_action_public_date')->nullable();
             $table->string('sub_action_public_time')->nullable();
             $table->string('sub_action_private')->nullable();
-            $table->foreignId('user_id')->constrained(
-                table: 'users', indexName: 'event_details_user_id_foreign')
+            $table->foreignId('user_id')->constrained('users')
                 ->onDelete('cascade');
             $table->timestamps();
         });
@@ -40,7 +39,7 @@ return new class extends Migration
     public function down(): void
     {
         // Schema::table('event_details', function (Blueprint $table) {
-        //     $table->dropForeign(['event_id']);
+            // $table->dropConstrainedForeignId('event_id');
         // });
         Schema::dropIfExists('event_details');
     }

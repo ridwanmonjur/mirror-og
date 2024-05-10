@@ -22,9 +22,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('participant_payments', function (Blueprint $table) {
-            $table->string('payment_request_id')->unsigned();
-            $table->double('payment_amount')->nullable();
-            $table->foreign('payment_id')->references('id')->on('payments');
+            $table->string('payment_request_id')->nullable();
+            $table->string('payment_status')->nullable();
         });
     }
 };

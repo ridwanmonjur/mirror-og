@@ -27,7 +27,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('event_details', function (Blueprint $table) {
-            $table->dropForeign(['event_type_id', 'event_tier_id']);
+            $table->dropConstrainedForeignId('event_type_id');
+            $table->dropConstrainedForeignId('event_tier_id');
+            $table->dropConstrainedForeignId('event_category_id');
+
         });
     }
 };
