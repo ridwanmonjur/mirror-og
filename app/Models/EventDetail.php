@@ -83,6 +83,23 @@ class EventDetail extends Model
         }
     }
 
+    public static function processEvents($events, $isFollowing) {
+        $activeEvents = [];
+        $historyEvents = [];
+    
+        foreach ($events as $joinEvent) {
+            $joinEvent->status = $joinEvent->statusResolved();
+            $joinEvent->isFollowing = array_key_exists($joinEvent->user_id, $isFollowing);
+            
+            if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
+                $activeEvents[] = $joinEvent;
+            } else if ($joinEvent->status == 'ENDED') {
+                $historyEvents[] = $joinEvent;
+            }
+        }
+
+        return ['joinEvents'=> $events, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents];
+    }
     public function isCompleteEvent() {
         $isComplete = true;
         if (

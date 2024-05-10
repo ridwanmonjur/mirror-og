@@ -56,27 +56,45 @@
                             <span class="me-2"> </span>
                             <span class="me-3"> {{$followersCount}} followers </span>
                         </p>
-                        
+                        <div class="text-center">
+                            <button 
+                                class="oceans-gaming-default-button rounded-none bg-light text-dark px-5 rounded">
+                                Edit
+                            </button>
+                        </div>
                 </div>
             </div>
         </div>
-
+        <br>
         <div class="tabs px-5">
             <button class="tab-button  outer-tab tab-button-active"
                 onclick="showTab(event, 'Overview', 'outer-tab')">Overview</button>
             <button class="tab-button outer-tab" onclick="showTab(event, 'Events', 'outer-tab')">Events</button>
         </div>
         <br> <br>
-        <div class="tab-content pb-4  tab-size outer-tab px-5" id="Overview">
-            <div class="showcase showcase-box showcase-column grid-3-columns w-100">
-                <div> sss</div>
-                <div> sss</div>
-                <div> sss</div>
+        <div class="tab-content pb-4 outer-tab px-5" id="Overview">
+            <div class="showcase tab-size showcase-box showcase-column pt-4 grid-4-columns tab-size text-center">
+                <div> 
+                    <h3> {{$lastYearEventsCount}} </h3>
+                    <p> Events Organized in Last Year </p>
+                </div>
+                 <div> 
+                    <h3> {{$allTimeEventsCount}} </h3>
+                    <p> Events Organized Across All Time </p>
+                </div>
+                 <div> 
+                    <h3> {{$teamsCount}} </h3>
+                    <p> Teams Registered Across All Time </p>
+                </div>
+                 <div> 
+                    <h3> {{$tierPrizeCount}} </h3>
+                    <p> Total Prize Pool Across All Time </p>
+                </div>
             </div>
             <br><br>
-            <div class="d-flex justify-content-center"><b>Recent Events</b></div>
+            <div class="tab-size"><b>Recent Events</b></div>
             <br> <br>
-            <div class="position-relative d-flex justify-content-center">
+            <div class="position-relative d-flex justify-content-center carousel-works">
                 @if (!isset($joinEvents[0]))
                     <p>No events available!</p>
                 @else
@@ -91,54 +109,23 @@
                     @if (!isset($joinEvents[1]))
                         <div class="d-flex justify-content-center event-carousel-works">
                             @foreach ($joinEvents as $key => $joinEvent)
-                                @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
+                                @include('Organizer.Partials.RosterView',  ['isRegistrationView' => false])
                             @endforeach
                         </div>
                     @else
                         <div class="event-carousel-styles event-carousel-works">
                             @foreach ($joinEvents as $key => $joinEvent)
-                                @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
+                                @include('Organizer.Partials.RosterView',  ['isRegistrationView' => false])
                             @endforeach
                         </div>
                     @endif
                  
                 @endif
             </div>
-
-            <div class="team-info">
-                
-
-                <div class="achievements">
-                    <div><b>Achievements</b></div>
-                    @if (!isset($achievementList[0]))
-                        <ul class="achievement-list mt-4">
-                            <p>No achievements available</p>
-                        </ul>
-                    @else
-                        <ul class="achievement-list">
-                            @foreach ($achievementList as $achievement)
-                                <li>
-                                    <span class="additional-text d-flex justify-content-between">
-                                        <span>
-                                        {{ $achievement->title }} ({{ \Carbon\Carbon::parse($achievement->created_at)->format('Y') }})
-                                        </span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                        <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
-                                        </svg>
-                                    </span><br>
-                                    <span class="ps-2"> {{ $achievement->description }} </span>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-                    </ul>
-                </div>
-            </div>
         </div>
 
         <div class="tab-content pb-4  outer-tab d-none" id="Events">
-            <div class="tab-size"><b>Active Events</b></div>
+            <div class="mx-auto tab-size"><b>Active Events</b></div>
             <br>
             @if (!isset($joinEventsActive[0]))
                 <p class="tab-size">
@@ -148,7 +135,7 @@
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
+                        @include('Organizer.Partials.RosterView', ['isRegistrationView' => false])
                         <br><br>
                     @endforeach
                 </div>
@@ -164,17 +151,83 @@
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
-                        @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
+                        @include('Organizer.Partials.RosterView', ['isRegistrationView' => false])
                         <br><br>
                     @endforeach
                 </div>
             @endif
         </div>
-
+        <br><br>
+        <div class="grid-2-columns tab-size">
+            <div class="">
+                <br>
+                <div> About </div>
+                <br>
+                <p> {{$userProfile->organizer?->companyDescription}} </p>
+                @if ($userProfile->organizer?->industry && $userProfile->organizer?->type))
+                    <br>
+                    <p> 
+                        <span>{{$userProfile->organizer?->industry}}</span>
+                        <span>{{$userProfile->organizer?->type}}</span>
+                    </p>
+                @endif
+                @if (isset($userProfile->address) && $userProfile->address?->addressLine1 && $userProfile->address?->city)
+                    <br>
+                    <p> 
+                    <span>{{$userProfile->address?->addressLine1}}</span>
+                    <span>{{$userProfile->address?->addressLine2}}</span>
+                    <span>{{$userProfile->address?->city}}</span>
+                    <span>{{$userProfile->address?->country}}</span>
+                    </p>
+                @endif
+                @if($userProfile->mobile_no)
+                    <br>
+                    <p>
+                        <span>{{$userProfile->mobile_no}}</span>
+                    </p>
+                @endif
+            </div>
+            <div class="">
+                <br>
+                <div> Links </div>
+                <br>
+                <p> 
+                    <span> </span>
+                    <span>{{$userProfile->email}}</span> 
+                </p>
+                @if ($userProfile->website_link)
+                    <br>
+                    <p> 
+                        <span></span>
+                        <span>{{$userProfile->website_link}}</span>
+                    </p>
+                @endif
+                @if ($userProfile->facebook_link)
+                    <br>
+                    <p> 
+                        <span></span>
+                        <span>{{$userProfile->facebook_link}}</span>
+                    </p>
+                @endif
+                @if ($userProfile->website_link)
+                    <br>
+                    <p> 
+                        <span></span>
+                        <span>{{$userProfile->website_link}}</span>
+                    </p>
+                @endif
+                @if ($userProfile->twitter_link)
+                    <br>
+                    <p> 
+                        <span></span>
+                        <span>{{$userProfile->twitter_link}}</span>
+                    </p>
+                @endif
+                
+            </div>
         </div>
         <br> <br>
     </main>
-
 
 </body>
 

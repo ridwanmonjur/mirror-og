@@ -44,17 +44,9 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-
-    public function getJWTCustomClaims()
-    {
-        return [
-            // 'role' => $this->role,
-        ];
+    
+    public function address() {
+        return $this->hasOne(Address::class, 'user_id', 'id');
     }
 
     public function organizer()

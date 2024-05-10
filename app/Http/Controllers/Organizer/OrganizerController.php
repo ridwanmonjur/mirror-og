@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Organizer;
 use App\Http\Controllers\Controller;
+use App\Models\EventDetail;
 use App\Models\EventInvitation;
+use App\Models\EventTier;
 use App\Models\Follow;
 use App\Models\JoinEvent;
 use App\Models\Team;
@@ -33,26 +35,44 @@ class OrganizerController extends Controller
         ] = Team::getUserTeamList($user_id);   
         
         $followersCount = Follow::where('organizer_user_id', $user_id)->count();
-        $awardList = Team::getAwardListByTeamIdList($teamIdList);
-        $achievementList = Team::getAchievementListByTeamIdList($teamIdList);
-        $joinEvents = JoinEvent::getJoinEventsForTeamListWithEventsRosterResults($teamIdList);
-        $totalEventsCount = $joinEvents->count();
-        ['wins' => $wins, 'streak' => $streak] = 
-            JoinEvent::getJoinEventsWinCountForTeamList($teamIdList);
-        
-        $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
+        $joinEvents = EventDetail::where('user_id', $user_id)
+            ->with( ['tier',  'game'])->get();
+        $lastYearEventsCount = EventDetail::whereYear('created_at', now()->year)
+            ->whereNotIn('status', ['DRAFT', 'ENDED', 'PENDING'])
+            ->count();
+        $allTimeEventsCount = EventDetail::whereYear('created_at', '<=', now()->year - 1)
+            ->whereNotIn('status', ['DRAFT', 'ENDED', 'PENDING'])
+            ->count();
+
+        $teamsCount = JoinEvent::whereIn('event_details_id', function ($query) use ($user_id) {
+                $query->select('id')
+                    ->from('event_details')
+                    ->whereNotIn('status', ['DRAFT', 'ENDED', 'PENDING'])
+                    ->where('user_id', $user_id);
+            })
+            ->count();
+
+        $tierPrizeCount = DB::table('event_details')
+                ->whereNotIn('status', ['DRAFT', 'ENDED', 'PENDING'])
+                ->leftJoin('event_tier', 'event_details.event_tier_id', '=', 'event_tier.id')
+                ->select(['event_details.id as event_id', 
+                    'event_details.event_tier_id',
+                    'event_tier.tierPrizePool'
+                ])
+                ->sum('tierPrizePool');
+
+        $userIds = $joinEvents->pluck('user_id')->flatten()->toArray();
         $followCounts = Follow::getFollowCounts($userIds);
         $isFollowing = Follow::getIsFollowing($user_id, $userIds);
         $joinEventsHistory = $joinEventsActive = $values = [];
         ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory] 
-            = JoinEvent::processEvents($joinEvents, $isFollowing);
+            = EventDetail::processEvents($joinEvents, $isFollowing);
 
-        $joinEventIds = $joinEvents->pluck('id')->toArray();
 
         return view('Organizer.PlayerProfile', 
             compact('joinEvents', 'userProfile', 'isOwnProfile', 'followersCount',
-                'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
-                'wins', 'streak', 'awardList', 'achievementList'
+                'joinEventsHistory', 'joinEventsActive', 'followCounts', 'lastYearEventsCount',
+                'allTimeEventsCount', 'teamsCount', 'tierPrizeCount'
             )
         );
        
