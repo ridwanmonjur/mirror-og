@@ -16,8 +16,7 @@ return new class extends Migration
         
             $table->foreignId('team_id')
                 ->constrained('teams')
-                ->cascadeOnDelete()
-                ->index('join_events_team_id_foreign');
+                ->cascadeOnDelete();
         });
     }
 
