@@ -125,7 +125,7 @@ class User extends Authenticatable implements FilamentUser
         return asset('storage/' . $fileName);
     }
 
-    public function uploadBackgroundBanner($request)
+    public function uploadBackgroundBanner($request, $participant)
     {
         $requestData = json_decode($request->getContent(), true);
         $fileData = $requestData['file'];
@@ -135,9 +135,8 @@ class User extends Authenticatable implements FilamentUser
         $fileName = "images/user/$fileNameInitial";
         $storagePath = storage_path('app/public/' . $fileName);
         file_put_contents($storagePath, $fileContent);
-
-        $this->backgroundBanner = $fileName;
-        $this->save();
+        $participant->backgroundBanner = $fileName;
+        $participant->save();
         return asset('storage/' . $fileName);
     }
 

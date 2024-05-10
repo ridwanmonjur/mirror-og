@@ -29,7 +29,7 @@
         })"
     >
         <div id="backgroundBanner" class="member-section px-2 py-2"
-            style="background-image: url({{ '/storage' . '/'. $userProfile->backgroundBanner }} );"
+            style="background-image: url({{ '/storage' . '/'. $userProfile->participant->backgroundBanner }} );"
         >
             <div class="d-flex justify-content-end py-0 my-0">
                 <input type="file" id="backgroundInput" class="d-none"> 

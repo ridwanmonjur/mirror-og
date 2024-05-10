@@ -46,8 +46,6 @@ class AuthController extends Controller
         } elseif ($type == 'steam') {
             $finduser = User::where('steam_id', $user->id)->first();
         }
-
-
         if ($finduser) {
             // if (!$user->user['email_verified']) {
             //     return ['finduser' => null, 'error' => 'Your Gmail is not verified'];
@@ -78,6 +76,23 @@ class AuthController extends Controller
                     'password' => bcrypt(Str::random(13)),
                     'role' => strtoupper($role)
                 ]);
+
+                if ($newUser->role == 'ORGANIZER') {
+                
+                    $organizer = new Organizer([
+                        'user_id' => $newUser->id,
+                    ]);
+    
+                    $organizer->save();
+                } elseif ($newUser->role == 'PARTICIPANT') {
+                    
+                    $participant = new Participant([
+                        'user_id' => $newUser->id,
+                    ]);
+                    
+                    $participant->save();
+                }
+
                 $newUser->email_verified_at = now();
                 
                 if ($type == 'google') {
@@ -556,8 +571,10 @@ class AuthController extends Controller
             ]);
     
             $user = $request->attributes->get('user');
-            $oldBanner = $user->backgroundBanner;
-            $fileName = $user->uploadBackgroundBanner($request);
+            $participant = Participant::where('user_id', $user->id)
+                ->select(['id', 'user_id', 'backgroundBanner'])->first();
+            $oldBanner = $participant->backgroundBanner;
+            $fileName = $user->uploadBackgroundBanner($request, $participant);
             $user->destroyUserBanner($oldBanner);
 
             return response()->json(['success' => true, 'message' => 'Succeeded', 'data' => compact('fileName')], 201);
