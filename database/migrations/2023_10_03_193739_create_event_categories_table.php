@@ -28,7 +28,7 @@ return new class extends Migration
     public function down(): void
     {
         // Schema::table('event_categories', function (Blueprint $table) {
-        //     $table->dropForeign(['event_id']);
+        //     $table->dropConstrainedForeignId(['event_id']);
         // });
         Schema::dropIfExists('event_categories');
     }
