@@ -31,7 +31,7 @@ class StripeController extends Controller
 
             $paymentIntent = $this->stripeClient->createPaymentIntent([
                 'customer'=> $customer->id,
-                'amount' =>  $request->paymentAmount,
+                'amount' =>  $request->paymentAmount * 100,
                 'payment_method_types' => ['card'],
                 'metadata' => $request->metadata
             ]);
