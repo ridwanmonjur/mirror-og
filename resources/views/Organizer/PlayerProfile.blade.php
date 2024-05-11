@@ -457,7 +457,7 @@
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('alpineDataComponent', () => ({
-            isEditMode: true, 
+            isEditMode: false, 
             userProfile: {
                 name: '{{$userProfile->name}}',
                 mobile_no: '{{$userProfile->mobile_no}}',
