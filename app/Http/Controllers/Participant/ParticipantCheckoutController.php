@@ -84,7 +84,7 @@ class ParticipantCheckoutController extends Controller
                         'team_members_id' => $paymentIntent["metadata"]["memberId"],
                         'user_id' => $userId,
                         'join_events_id' => $paymentIntent["metadata"]["joinEventId"],
-                        'payment_amount' => $paymentIntent["amount"],
+                        'payment_amount' => $paymentIntent["amount"]/100,
                         'payment_id' => $transaction->id
                     ]);
     
