@@ -88,7 +88,7 @@
                                             <p style="display: inline;"><u>
                                                 {{ $event->user->organizer->companyName ?? 'Add' }} </u> </p>
                                             
-                                            <p class="small-text"> <i> {{ $followersCount }} {{ $followersCount == 1  ? 'follower' : 'followers' }} </i> </p>
+                                            <p class="small-text"> <i> {{ $followersCount }} follower{{ bladePluralPrefix(followersCount) }} </i> </p>
                                         </div>
                                     </div>
                                     @if ($livePreview)

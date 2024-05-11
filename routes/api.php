@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Organizer\OrganizerController;
 use App\Http\Controllers\Organizer\OrganizerInvitationController;
 use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Organizer\OrganizerEventResultsController;
@@ -32,6 +33,8 @@ Route::group(['prefix' => 'participant'], function () {
         Route::group(['middleware' => 'check-jwt-permission:participant|admin'], function () {
             Route::post('events', [ParticipantEventController::class, 'index'])->name('events.index');
             Route::post('/organizer/follow', [ParticipantEventController::class, 'followOrganizer'])->name('participant.organizer.follow');
+            Route::post('/profile', [ParticipantController::class, 'editProfile'])->name('participant.profile.update');
+            Route::post('/team', [ParticipantTeamController::class, 'editTeam'])->name('participant.team.update');
             Route::post('/team/{id}/user/{userId}/invite', [ParticipantTeamController::class, 'inviteMember'])->name('participant.member.invite');
             Route::post('/team/{id}/member/{memberId}/captain', [ParticipantTeamController::class, 'captainMember'])->name('participant.member.captain');
             Route::post('/team/{id}/member/{memberId}/deleteCaptain', [ParticipantTeamController::class, 'deleteCaptain'])->name('participant.member.deleteCaptain');
@@ -53,7 +56,6 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::group(['prefix' => 'organizer'], function () {
-
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'check-jwt-permission:organizer|admin'], function () {
             Route::post('events/search', [OrganizerEventController::class, 'search'])->name('event.search.view');
@@ -64,10 +66,10 @@ Route::group(['prefix' => 'organizer'], function () {
             Route::delete('/event/{id}/achievements/{achievementId}', [OrganizerEventResultsController::class, 'destroyAchievements'])->name('event.achievements.destroy');
             Route::put('notifications/{id}/read', [AuthController::class, 'markAsRead'])->name('organizer.notifications.read');
             Route::put('notifications/read', [AuthController::class, 'markAllAsRead'])->name('organizer.notifications.readAll');
-        });
-
+            Route::post('/profile', [OrganizerController::class, 'editProfile'])->name('organizer.profile.update');
         });
     });
+});
 
 Route::name('stripe.')
     ->controller(StripeController::class)

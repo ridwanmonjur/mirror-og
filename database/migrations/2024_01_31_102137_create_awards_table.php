@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('awards', function (Blueprint $table) {
-            $table->id();
-            $table->string('title')->nullable();
-            $table->string('image')->nullable();
-            $table->string('description')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('awards', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('title')->nullable();
+        //     $table->string('image')->nullable();
+        //     $table->string('description')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**

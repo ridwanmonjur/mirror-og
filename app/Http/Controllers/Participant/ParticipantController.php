@@ -6,6 +6,7 @@ use App\Models\ActivityLogs;
 use App\Models\EventInvitation;
 use App\Models\Follow;
 use App\Models\JoinEvent;
+use App\Models\Organizer;
 use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\TeamMember;
@@ -131,5 +132,13 @@ class ParticipantController extends Controller
             )
         );
        
+    }
+
+    public function editProfile(Request $request) {
+        dd($request->all());
+        $user = $request->attributes->get('user');
+        $organizer = Organizer::where('user_id', $user->id)->first();
+        $organizer->update($request->validated());
+
     }
 }

@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
-    <link rel="stylesheet" href="{{ asset('/assets/css/participant/player_profile.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
+
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
@@ -23,11 +24,11 @@
     @include('CommonPartials.NavbarGoToSearchPage')
 
     <main x-data="alpineDataComponent">
-        <div id="backgroundBanner" class="member-section px-2 py-4"
+        <div id="backgroundBanner" class="member-section px-2 pt-2 pb-4"
             style="background-image: url({{ '/storage' . '/'. $userProfile->participant->backgroundBanner }} );"
         >
             @if($isOwnProfile)
-                <div class="d-flex justify-content-end py-0 my-0">
+                <div class="d-flex justify-content-end py-0 my-0 mb-2">
                     <input type="file" id="backgroundInput" class="d-none"> 
                     <button 
                         onclick="document.getElementById('backgroundInput').click();"
@@ -35,12 +36,14 @@
                         Change Background
                     </button>
                     <button 
+                        x-cloak
                         x-show="!isEditMode"
                         x-on:click="isEditMode = true; fetchCountries();"
                         class="oceans-gaming-default-button oceans-gaming-primary-button px-3 py-2"> 
                         Edit Profile
                     </button>
                     <button 
+                        x-cloak
                         x-show="isEditMode"
                         x-on:click="isEditMode = false;"
                         class="oceans-gaming-default-button oceans-gaming-transparent-button px-3 py-2"> 
@@ -63,30 +66,31 @@
                     </div>
                 </div>
                 <div class="member-details">
-                    <form x-on:submit.prevent="editForm(event)" >
-                        <div x-cloak x-show="isEditMode" style="font-size: 14px;">
+                    <form action="" onsubmit="editForm(event)" >
+                        <div x-cloak x-show="isEditMode">
                             <input 
                                 placeholder = "Enter your nickname..."
-                                class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                                style="width: 250px;"
+                                class="form-control border-primary player-profile__input d-inline" 
                                 value="{{$userProfile?->participant->nickname}}"
                             > 
                             <br>
                             <span class="d-inline-flex justify-content-between align-items-center">
                                 <input
                                     placeholder = "Your bio..."
-                                    style="width: 250px;"
-                                    class="form-control border-primary edit-mode-player-profile-input d-inline me-3" 
+                                    style="width: 200px;"
+                                    class="form-control border-primary player-profile__input d-inline me-3" 
                                     value="{{$userProfile?->participant->bio}}"
                                 > 
                                 <input 
                                     placeholder="Age"
-                                    style="width: 80px;"
-                                    class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                                    style="width: 60px;"
+                                    class="form-control border-primary player-profile__input d-inline" 
                                     value="{{$userProfile?->participant->age}}"
                                 >
                             </span> 
                             <br> <br>
-                            <div class="w-100 d-flex justify-content-start align-items-center">
+                            <div class="w-100 d-flex justify-content-start align-items-center flex-wrap">
                                 <span class="me-3">
                                     <svg
                                         class="me-2 align-middle" 
@@ -94,7 +98,7 @@
                                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
                                     <select value="{{$userProfile->country}} ?? 'Afghanistan'" 
-                                        style="width: 200px;"    
+                                        style="width: 150px;"    
                                         class="form-control d-inline rounded-pill"
                                     >
                                         <template x-for="country in countries">
@@ -104,9 +108,9 @@
                                             </option>
                                         </template>
                                     </select> 
+
                                 </span>
                                 <span>
-
                                     <svg 
                                         class="align-middle"
                                         xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
@@ -116,9 +120,17 @@
                                     <input 
                                         style="width: 150px;"
                                         placeholder = "Enter your link..."
-                                        class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                                        class="form-control border-primary player-profile__input d-inline" 
                                         value="{{$userProfile?->participant->nickname}}"
                                     > 
+                                </span>
+                                <span>
+                                    <svg
+                                        class="align-middle"
+                                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                                    </svg>
+                                    <span>Joined {{Carbon::parse($userProfile->created_at)->isoFormat('Do MMMM YYYY')}}</span>
                                 </span>
                             </div>
                                 
@@ -138,7 +150,7 @@
                         <p>This is the player bio. The character limit should be up to 150 words. This field should accept
                             emojis.
                         </p>
-                        <div class="d-flex justify-content-between flex-wrap">
+                        <div class="d-flex justify-content-between flex-wrap w-75">
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                                 <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
@@ -397,11 +409,12 @@
 
     document.addEventListener('alpine:init', () => {
         Alpine.data('alpineDataComponent', () => ({
-            isEditMode: true, 
+            isEditMode: false, 
+            isAddGamesMode: false,
             countries: [], 
-            errorMessage: '', 
+            errorMessage: null, 
             isCountriesFetched: false ,
-            fetchCountries: () => {
+            async fetchCountries () {
                 return fetch('/countries')
                     .then(response => response.json())
                     .then(data => {

@@ -49,7 +49,7 @@
                     x-cloak
                     x-show.important="isEditMode"
                     placeholder="Enter your team name..."
-                    class="form-control border-primary edit-mode-player-profile-input d-inline" 
+                    class="form-control border-primary player-profile__input d-inline" 
                     value="{{$selectTeam->teamName}}"
                 >
                 <span
@@ -143,7 +143,7 @@
                 >
                     <input 
                         placeholder="Enter your team description..."
-                        class="form-control border-primary edit-mode-player-profile-input d-inline py-2 me-5" 
+                        class="form-control border-primary player-profile__input d-inline py-2 me-5" 
                         value="{{$selectTeam->teamDescription}}"
                     >
                     <button 

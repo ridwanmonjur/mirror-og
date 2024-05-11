@@ -221,6 +221,7 @@ input[type="submit"],
     /* Increased padding */
     border: none;
     flex-grow: 1;
+    max-width: 25vw;
     border-bottom: 2px solid transparent;
     margin: 0 10px;
     cursor: pointer;
@@ -737,12 +738,13 @@ input[type="submit"],
 }
 
 
-input.form-control.edit-mode-player-profile-input, 
-input.form-control.edit-mode-player-profile-input:focus {
+.form-control.player-profile__input, 
+.form-control.player-profile__input:focus {
     box-shadow: none !important;
     border-width: 0px;
     border-bottom-width: 2px !important; 
     border-bottom-style: dotted !important;
     background-color: transparent;
     border-radius: 0px !important;
+    color: gray;
 }

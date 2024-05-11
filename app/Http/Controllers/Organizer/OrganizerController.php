@@ -40,7 +40,7 @@ class OrganizerController extends Controller
         $lastYearEventsCount = EventDetail::whereYear('created_at', now()->year)
             ->whereNotIn('status', ['DRAFT', 'ENDED', 'PENDING'])
             ->count();
-        $allTimeEventsCount = EventDetail::whereYear('created_at', '<=', now()->year - 1)
+        $beforeLastYearEventsCount = EventDetail::whereYear('created_at', '<=', now()->year - 1)
             ->whereNotIn('status', ['DRAFT', 'ENDED', 'PENDING'])
             ->count();
 
@@ -72,9 +72,14 @@ class OrganizerController extends Controller
         return view('Organizer.PlayerProfile', 
             compact('joinEvents', 'userProfile', 'isOwnProfile', 'followersCount',
                 'joinEventsHistory', 'joinEventsActive', 'followCounts', 'lastYearEventsCount',
-                'allTimeEventsCount', 'teamsCount', 'tierPrizeCount'
+                'beforeLastYearEventsCount', 'teamsCount', 'tierPrizeCount'
             )
         );
        
+    }
+
+    public function editProfile(Request $request) {
+        dd("hi", $request->all());
+        return "hello";
     }
 }
