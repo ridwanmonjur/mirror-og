@@ -77,7 +77,7 @@ class ParticipantCheckoutController extends Controller
                     $paymentIntent["amount_received"] == $paymentIntent["amount"] 
                 ) {
                     $transaction = PaymentTransaction::createTransaction(
-                        $intentId, "SUCCESS", $paymentIntent["amount"]
+                        $intentId, "SUCCESS", $paymentIntent["amount"]/100
                     );
 
                     ParticipantPayment::create([
