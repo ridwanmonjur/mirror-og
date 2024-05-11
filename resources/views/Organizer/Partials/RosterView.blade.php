@@ -1,7 +1,7 @@
 @php
     $random_int = rand(0, 999);
 @endphp
-<div class="position-relative m">
+<div class="position-relative">
     <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
         @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
             <ul class="achievement-list px-4">

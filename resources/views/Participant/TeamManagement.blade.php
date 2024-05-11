@@ -207,15 +207,15 @@
             
             // carousel swing
             for (let i = 0; i < currentIndex; i++) {
-                eventBoxes[i].classList.add('d-none');
+                eventBoxes[i]?.classList.add('d-none');
             }
 
             for (let i = currentIndex; i < currentIndex + 2; i++) {
-                eventBoxes[i].classList.remove('d-none');
+                eventBoxes[i]?.classList.remove('d-none');
             }
 
             for (let i = currentIndex + 2; i < boxLength; i++) {
-                eventBoxes[i].classList.add('d-none');
+                eventBoxes[i]?.classList.add('d-none');
             }
         }
 

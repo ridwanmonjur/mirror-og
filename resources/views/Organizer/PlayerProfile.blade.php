@@ -25,7 +25,7 @@
     <main 
         x-data="alpineDataComponent"
     >
-        <form action="{{route('organizer.profile.update')}}" method="POST" onsubmit="submitEditProfile(event)"> 
+        {{-- <form action="{{route('organizer.profile.update')}}" method="POST">  --}}
         <div id="backgroundBanner" class="member-section px-0 pt-0"
         >   
             <div style="background-color: #DFE1E2;" class="pb-4">
@@ -50,19 +50,18 @@
                             style="width: 250px;"
                             name="name"
                             class="form-control border-primary player-profile__input d-inline" 
-                            value="{{$userProfile->name}}"
+                            x-model="userProfile.name"
                         >
                         <br>
                         <input 
                             placeholder = "Enter your company name..."
-                            name="organizer[companyName]"
                             style="width: 300px;"
                             class="form-control border-primary player-profile__input d-inline me-3" 
-                            value="{{$userProfile->organizer?->companyName}}"
+                            x-model="organizer.companyName"
                         > 
                         <button 
                             type="submit"
-                            x-on:click="isEditMode = false;"
+                            x-on:click="submitEditProfile(event);"
                             class="mt-4 oceans-gaming-default-button oceans-gaming-transparent-button px-5 py-1"> 
                             Save
                         </button>
@@ -204,18 +203,16 @@
                 <br>
                 <div class="pe-5" x-cloak x-show.important="isEditMode">
                     <textarea 
-                        name="organizer[companyDescription]"
+                        x-model="organizer.companyDescription"
                         class="form-control border-primary player-profile__input d-inline" 
-                    >{{empty($userProfile->organizer?->companyDescription) ?'Enter your company description...' : $userProfile->organizer?->companyDescription
-                    }}
+                    >{{empty($userProfile->organizer?->companyDescription) ?'Enter your company description...' : $userProfile->organizer?->companyDescription}}
                     </textarea>
                     <br>
                     <select 
-                        name="organizer[industry]"
+                        x-model="organizer.industry"
                         style="width: 220px;"
                         placeholder = "Enter your company industry..."
                         class="form-control border-primary player-profile__input d-inline" 
-                        value="{{$userProfile->organizer?->industry}}"
                     >
                         @foreach([
                             "💻 Technology",
@@ -254,32 +251,28 @@
                     <br>
                     <input 
                         id="phone"
-                        name="mobile_no"
+                        x-model="userProfile.mobile_no"
                         style="width: 250px;"
                         placeholder = "Mobile"
                         class="form-control border-primary player-profile__input d-inline" 
-                        value="{{$userProfile->mobile_no}}"
                     >
                     <br><br>
                     <input
-                        name="organizer[type]"
                         placeholder = "Enter your company type..."
                         class="form-control border-primary player-profile__input d-inline" 
                         style="width: 300px;"
-                        value="{{$userProfile->organizer?->type}}"
+                        x-model="organizer.type"
                     > 
                     <br> <br>
                     <input
-                        name="address[addressLine1]" 
                         placeholder = "Address Line 1"
                         class="form-control border-primary player-profile__input d-inline" 
-                        value="{{$userProfile->address?->addressLine1}}"
+                        x-model="address.addressLine1"
                     >
                     <input 
                         placeholder = "Address Line 2"
-                        name="address[addressLine2]" 
                         class="form-control border-primary player-profile__input d-inline me-4" 
-                        value="{{$userProfile->address?->addressLine2}}"
+                        x-model="address.addressLine2"
                     >
                     <input 
                         placeholder = "City"
@@ -374,10 +367,9 @@
                         <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m7.5-6.923c-.67.204-1.335.82-1.887 1.855A8 8 0 0 0 5.145 4H7.5zM4.09 4a9.3 9.3 0 0 1 .64-1.539 7 7 0 0 1 .597-.933A7.03 7.03 0 0 0 2.255 4zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a7 7 0 0 0-.656 2.5zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5zM8.5 5v2.5h2.99a12.5 12.5 0 0 0-.337-2.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5zM5.145 12q.208.58.468 1.068c.552 1.035 1.218 1.65 1.887 1.855V12zm.182 2.472a7 7 0 0 1-.597-.933A9.3 9.3 0 0 1 4.09 12H2.255a7 7 0 0 0 3.072 2.472M3.82 11a13.7 13.7 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5zm6.853 3.472A7 7 0 0 0 13.745 12H11.91a9.3 9.3 0 0 1-.64 1.539 7 7 0 0 1-.597.933M8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855q.26-.487.468-1.068zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.7 13.7 0 0 1-.312 2.5m2.802-3.5a7 7 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7 7 0 0 0-3.072-2.472c.218.284.418.598.597.933M10.855 4a8 8 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4z"/>
                     </svg>
                     <input 
-                        name="organizer[website_link]"
                         placeholder = "Website Link"
                         class="form-control w-75 border-primary player-profile__input d-inline" 
-                        value="{{$userProfile->organizer?->website_link}}"
+                        x-model="organizer.website_link"
                     > 
                     <br><br>
                     <svg class="me-3" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
@@ -449,7 +441,7 @@
             </div>
         </div>
         <br> <br>
-        </form>
+        {{-- </form> --}}
     </main>
 
 </body>
@@ -466,12 +458,38 @@
     document.addEventListener('alpine:init', () => {
         Alpine.data('alpineDataComponent', () => ({
             isEditMode: true, 
+            userProfile: {
+                name: '{{$userProfile->name}}',
+                mobile_no: '{{$userProfile->mobile_no}}',
+            },
+            organizer: {
+                industry: '{{$userProfile->organizer?->industry}}',
+                type: '{{$userProfile->organizer?->type}}',
+                companyName: '{{$userProfile->organizer?->companyName}}',
+                companyDescription: '{{$userProfile->organizer?->companyDescription}}',
+                website_link: '{{$userProfile->organizer?->website_link}}',
+                instagram_link: '{{$userProfile->organizer?->instagram_link}}',
+                facebook_link: '{{$userProfile->organizer?->facebook_link}}',
+                twitter_link: '{{$userProfile->organizer?->twitter_link}}'
+            },
+            address: { 
+                addressLine1: '{{$userProfile->address?->addressLine1}}',
+                addressLine2: '{{$userProfile->address?->addressLine2}}',
+                city: '{{$userProfile->address?->city}}',
+                country: '{{$userProfile->address?->country}}'
+            },
             countries: [], 
             errorMessage: null, 
             async submitEditProfile (event) {
                 try {
                     event.preventDefault(); 
-                    const form = event.target.form;
+                    console.log({
+                        address: Alpine.raw(this.address),
+                        userProfile: Alpine.raw(this.userProfile),
+                        organizer: Alpine.raw(this.organizer)
+                    })
+                    /*
+                    const form = event.target.form; --}}
                     const url = form.action;
         
                     const formData = new FormData(form);
@@ -500,6 +518,7 @@
                     } else {
                         console.error('Error updating member status:', data.message);
                     } 
+                    */
                 } catch (error) {
                     console.error('There was a problem with the file upload:', error);
                 } 

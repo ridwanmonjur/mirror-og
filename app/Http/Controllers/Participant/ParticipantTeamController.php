@@ -165,12 +165,9 @@ class ParticipantTeamController extends Controller
         return view('Participant.CreateTeam');
     }
 
-    public function editTeamView($id)
+    public function editTeam(Request $request)
     {
-        $team = Team::findOrFail($id);
-        return view('Participant.EditTeam', [
-            'team'=> $team
-        ]);
+        dd($request->all());
     }
 
 

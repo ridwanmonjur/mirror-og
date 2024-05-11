@@ -23,7 +23,9 @@
 <main class="main1">    
     <br>
     {{-- @if ($isCreator) --}}
-        <div class="team-section" x-data="alpineDataComponent">
+        <div class="team-section" 
+            x-data="alpineDataComponent"
+        >
     {{-- @else --}}
         {{-- <div class="team-section"> --}}
     {{-- @endif --}}
@@ -45,13 +47,31 @@
         <div class="team-names">
             <div class="team-info">
                 @if ($isCreator)
-                <input 
-                    x-cloak
-                    x-show.important="isEditMode"
-                    placeholder="Enter your team name..."
-                    class="form-control border-primary player-profile__input d-inline" 
-                    value="{{$selectTeam->teamName}}"
-                >
+                <div x-cloak x-show.important="isEditMode">
+                    <input 
+                        placeholder="Enter your team name..."
+                        style="width: 200px;"
+                        class="form-control border-primary player-profile__input d-inline" 
+                        x-model="teamName"
+                    >
+                    <svg
+                        class="me-2 align-middle" 
+                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                    </svg>
+                    <select 
+                        x-model="country"
+                        style="width: 200px;"    
+                        class="form-control d-inline rounded-pill"
+                    >
+                        <template x-for="country in countries">
+                            <option>
+                                <span x-text="country.emoji_flag" class="mx-3"> </span>  
+                                <span x-text="country.name.en"> </span>
+                            </option>
+                        </template>
+                    </select> 
+                </div>
                 <span
                     x-cloak 
                     x-show.important="!isEditMode">
@@ -119,8 +139,9 @@
                     </div>
                     @if ($isCreator)
                         <button 
+                            x-cloak
                             x-show="!isEditMode"
-                            x-on:click="isEditMode = true;"
+                            x-on:click="isEditMode = true; fetchCountries()"
                             class="gear-icon-btn me-2 position-relative" 
                             style="top: 10px;" type="button" id="editModalBtn" 
                             aria-expanded="false"
@@ -144,15 +165,16 @@
                     <input 
                         placeholder="Enter your team description..."
                         class="form-control border-primary player-profile__input d-inline py-2 me-5" 
-                        value="{{$selectTeam->teamDescription}}"
+                        x-model="teamDescription"
                     >
                     <button 
-                        x-on:click="isEditMode = false;"
+                        x-on:click="submitEditProfile(event);"
+                        data-url="{{route('participant.team.update')}}"
                         class="mt-4 oceans-gaming-default-button oceans-gaming-transparent-button px-5 py-1 rounded mx-auto"> 
                         Save
                     </button>
                 </div>
-                <span x-show="!isEditMode">
+                <span x-cloak x-show="!isEditMode">
                     {{ $selectTeam->teamDescription ? $selectTeam->teamDescription : 'Please add a description by editing your team...' }}
                 </span>
             @else
@@ -178,11 +200,48 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('alpineDataComponent', () => ({
+                id: '{{$selectTeam->id}}',
+                teamName: '{{$selectTeam->teamName}}', 
+                teamDescription: '{{$selectTeam->teamDescription}}', 
+                country: '{{$selectTeam->country}}',
                 isEditMode: false, 
                 countries: [], 
                 errorMessage: '', 
                 isCountriesFetched: false ,
-                fetchCountries: () => {
+                async submitEditProfile (event) {
+                    try {
+                        event.preventDefault(); 
+                        const url = event.target.dataset.url;
+                        console.log({
+                                id: this.id, teamName: this.teamName, teamDescription: this.teamDescription
+                            })
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-type': 'application/json',
+                                // 'Accept': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                id: this.id, teamName: this.teamName, teamDescription: this.teamDescription
+                            }),
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+
+                        const data = await response.json();
+                            
+                        if (data.success) {
+                        } else {
+                            console.error('Error updating member status:', data.message);
+                        } 
+                    } catch (error) {
+                        console.error('There was a problem with the file upload:', error);
+                    } 
+                },
+                fetchCountries () {
                     return fetch('/countries')
                         .then(response => response.json())
                         .then(data => {
