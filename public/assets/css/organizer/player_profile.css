@@ -468,7 +468,8 @@ main {
 
 
 .player-profile__input, 
-.form-control.player-profile__input:focus {
+.form-control.player-profile__input:focus,
+.form-control.player-profile__input::placeholder {
     box-shadow: none !important;
     border-width: 0px !important;
     border-bottom-width: 2px !important; 
