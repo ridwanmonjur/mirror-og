@@ -737,15 +737,17 @@ input[type="submit"],
     }
 }
 
-
-.form-control.player-profile__input, 
-.form-control.player-profile__input:focus,
-.form-control.player-profile__input::placeholder {
+.player-profile__input, 
+.form-control.player-profile__input:focus {
     box-shadow: none !important;
-    border-width: 0px;
+    border-width: 0px !important;
     border-bottom-width: 2px !important; 
     border-bottom-style: dotted !important;
-    background-color: transparent;
+    background-color: transparent !important;
     border-radius: 0px !important;
+    color: black;
+}
+
+.form-control.player-profile__input::placeholder {
     color: black;
 }
