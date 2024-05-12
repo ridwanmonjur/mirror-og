@@ -44,7 +44,7 @@
                 <input type="file" id="image-upload" accept="image/*" style="display: none;">
             @endif
         </div>
-        <div class="team-names">
+        <div class="team-names flex-wrap">
             <div class="team-info">
                 @if ($isCreator)
                 <div x-cloak x-show.important="isEditMode">
@@ -62,7 +62,7 @@
                     <select 
                         x-model="country"
                         style="width: 200px;"    
-                        class="form-control d-inline rounded-pill"
+                        class="form-control mt-2 d-inline rounded-pill"
                     >
                         <template x-for="country in countries">
                             <option>
@@ -179,6 +179,7 @@
                 </span>
             @else
                 {{ $selectTeam->teamDescription ? $selectTeam->teamDescription : 'Please add a description by editing your team...' }}
+                {{ bladeExtractEmojis($selectTeam->region)[0] }}
             @endif
         <div class="mx-auto text-center mt-1">
             @if (session('successJoin'))
@@ -212,9 +213,6 @@
                     try {
                         event.preventDefault(); 
                         const url = event.target.dataset.url;
-                        console.log({
-                                id: this.id, teamName: this.teamName, teamDescription: this.teamDescription
-                            })
                         const response = await fetch(url, {
                             method: 'POST',
                             headers: {
@@ -223,7 +221,10 @@
                                 // 'Accept': 'application/json',
                             },
                             body: JSON.stringify({
-                                id: this.id, teamName: this.teamName, teamDescription: this.teamDescription
+                                id: this.id, 
+                                teamName: this.teamName, 
+                                teamDescription: this.teamDescription,
+                                country: this.country
                             }),
                         });
 
@@ -234,9 +235,17 @@
                         const data = await response.json();
                             
                         if (data.success) {
-                        } else {
-                            console.error('Error updating member status:', data.message);
-                        } 
+                            let currentUrl = window.location.href;
+                            if (currentUrl.includes('?')) {
+                                currentUrl = currentUrl.split('?')[0];
+                            } 
+
+                            localStorage.setItem('success', true);
+                            localStorage.setItem('message', data.message);
+                            window.location.replace(currentUrl);
+                    } else {
+                        this.errorMessage = data.message;
+                    }
                     } catch (error) {
                         console.error('There was a problem with the request:', error);
                     } 

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Participant;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateParticipantsRequest;
 use App\Models\ActivityLogs;
 use App\Models\EventInvitation;
 use App\Models\Follow;
 use App\Models\JoinEvent;
 use App\Models\Organizer;
+use App\Models\Participant;
 use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\TeamMember;
@@ -125,7 +127,7 @@ class ParticipantController extends Controller
 
         $joinEventIds = $joinEvents->pluck('id')->toArray();
 
-        return view('Participant.Profile.PlayerProfile', 
+        return view('Participant.PlayerProfile', 
             compact('joinEvents', 'userProfile', 'teamList', 'isOwnProfile',
                 'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
                 'wins', 'streak', 'awardList', 'achievementList', 'pastTeam'
@@ -134,11 +136,12 @@ class ParticipantController extends Controller
        
     }
 
-    public function editProfile(Request $request) {
-        dd($request->all());
-        $user = $request->attributes->get('user');
-        $organizer = Organizer::where('user_id', $user->id)->first();
-        $organizer->update($request->validated());
-
+    public function editProfile(UpdateParticipantsRequest $request) {
+        $participant = Participant::findOrFail($request->validated()['id']);
+        $participant->update($request->validated());
+        return response()->json([
+            'message' => 'Participant updated successfully', 
+            'success' => true
+        ], 200);
     }
 }

@@ -10,7 +10,7 @@ class Team extends Model
 {
     use HasFactory;
     protected $table = 'teams';
-    protected $fillable = ['teamName'];
+    protected $fillable = ['teamName', 'teamDescription', 'country'];
 
     public function user()
     {

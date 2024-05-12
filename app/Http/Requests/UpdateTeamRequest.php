@@ -11,7 +11,7 @@ class UpdateTeamRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class UpdateTeamRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'id' => 'required|numeric',
+            'teamName' => 'required|string',
+            'teamDescription' => 'required|string',
+            'country' => 'required|string',
         ];
     }
 }

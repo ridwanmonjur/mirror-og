@@ -9,7 +9,7 @@ class Participant extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id',
+        'user_id', 'domain', 'age', 'bio', 'nickname', 'region'
     ];
 
     public function user()

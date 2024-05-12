@@ -22,7 +22,12 @@ class UpdateParticipantsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'id' => 'required',
+            'bio' => 'nullable|string',
+            'age' => 'nullable|integer|min:0|max:150',
+            'nickname' => 'nullable|string|max:255',
+            'region' => 'nullable|string',
+            'domain' => 'nullable|url',
         ];
     }
 }

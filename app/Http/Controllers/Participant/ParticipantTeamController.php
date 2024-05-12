@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Participant;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateTeamRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
@@ -165,9 +166,14 @@ class ParticipantTeamController extends Controller
         return view('Participant.CreateTeam');
     }
 
-    public function editTeam(Request $request)
+    public function editTeam(UpdateTeamRequest $request)
     {
-        dd($request->all());
+        $team = Team::findOrFail($request['id']);
+        $team->update($request->validated());
+        return response()->json([
+            'message' => 'Team updated successfully', 
+            'success' => true
+        ], 200);
     }
 
 
