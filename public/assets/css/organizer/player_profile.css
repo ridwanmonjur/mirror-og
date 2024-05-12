@@ -274,7 +274,6 @@ main {
 }
 
 .player_event {
-    height: 100%;
     margin: 0;
     display: flex;
     justify-content: center;
@@ -287,7 +286,6 @@ main {
     margin-bottom: 3rem;
     overflow: auto;
     width: 500px;
-    height: 270px;
     background: transparent;
     border: 2px solid rgb(82, 159, 23);
     border-radius: 40px;
@@ -299,7 +297,6 @@ main {
     margin-bottom: 3rem;
     overflow: auto;
     width: 350px;
-    height: 430px;
     background: transparent;
     border: 2px solid rgb(90, 150, 230);
     border-radius: 40px;
@@ -478,9 +475,7 @@ main {
     color: black;
 }
 
-.form-control.player-profile__input::placeholder {
-    color: black;
-}
+
 
 .iti, .iti--allow-dropdown, .iti--show-flags, .iti--inline-dropdown {
     background-color: transparent !important;

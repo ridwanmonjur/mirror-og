@@ -238,7 +238,7 @@
                             console.error('Error updating member status:', data.message);
                         } 
                     } catch (error) {
-                        console.error('There was a problem with the file upload:', error);
+                        console.error('There was a problem with the request:', error);
                     } 
                 },
                 fetchCountries () {

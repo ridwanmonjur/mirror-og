@@ -11,8 +11,15 @@ class Organizer extends Model
     protected $fillable = [
         'user_id',
         'companyName',
-        'companyDescription'
+        'companyDescription', 
+        'industry', 
+        'type', 
+        'website_link', 
+        'instagram_link', 
+        'facebook_link', 
+        'twitter_link'
     ];
+
 
     public function user()
     {

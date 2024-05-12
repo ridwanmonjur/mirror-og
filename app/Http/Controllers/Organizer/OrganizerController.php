@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Organizer;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateOrganizersRequest;
+use App\Models\Address;
 use App\Models\EventDetail;
 use App\Models\EventInvitation;
 use App\Models\EventTier;
 use App\Models\Follow;
 use App\Models\JoinEvent;
+use App\Models\Organizer;
 use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\TeamMember;
@@ -78,8 +81,25 @@ class OrganizerController extends Controller
        
     }
 
-    public function editProfile(Request $request) {
-        dd("hi", $request->all());
-        return "hello";
+    public function editProfile(UpdateOrganizersRequest $request) {
+        $user = $request->attributes->get('user');
+
+        $validatedData = $request->validated();
+
+        $address = $validatedData['address']['id']
+            ? Address::findOrFail($validatedData['address']['id'])
+            : new Address();
+        $address->fill($validatedData['address'])->save();
+        
+        User::where('id', $user->id)
+            ->first()
+            ->fill($validatedData['userProfile'])->save();
+
+        $organizer = $validatedData['organizer']['id']
+            ? Organizer::findOrFail($validatedData['organizer']['id'])
+            : new Organizer();
+        $organizer->fill($validatedData['organizer'])->save();
+
+        return response()->json(['success' => true, 'message' => 'Data saved successfully']);
     }
 }

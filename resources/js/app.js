@@ -10,8 +10,10 @@
 window.cookie = cookie;
 // todo cookie package
 // https://www.npmjs.com/package/cookiejs
- import Alpine from 'alpinejs';
+import Alpine from 'alpinejs';
+import persist from '@alpinejs/persist';
 window.Alpine = Alpine;
+Alpine.plugin(persist);
 Alpine.start();
 window.storeToken = function(token) {
     localStorage.setItem('jwtToken', token);
@@ -25,9 +27,11 @@ window.loadBearerHeader = function() {
 
 window.loadBearerCompleteHeader = function() {
     return {
+        // credentials: 'include',
         credentials: 'include',
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+
     };
 };
 

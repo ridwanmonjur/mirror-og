@@ -30,7 +30,7 @@
 }
 
 .main1 {
-    height: 60vh;
+    min-height: 60vh;
     display: block !important;
     padding: 0px 10px;
     align-items: center;
@@ -675,7 +675,7 @@ input[type="submit"],
 @media screen and (min-width: 992px) {
 
     .main1 { 
-        height: 50vh;
+        min-height: 50vh;
     }
     .time-line-box .status__left small {
         left: 13%;
@@ -748,6 +748,3 @@ input[type="submit"],
     color: black;
 }
 
-.form-control.player-profile__input::placeholder {
-    color: black;
-}

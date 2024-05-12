@@ -24,7 +24,7 @@
     @include('CommonPartials.NavbarGoToSearchPage')
 
     <main x-data="alpineDataComponent">
-        <div id="backgroundBanner" class="member-section px-2 pt-2 pb-4"
+        <div id="backgroundBanner" class="member-section px-2 pt-2"
             style="background-image: url({{ '/storage' . '/'. $userProfile->participant->backgroundBanner }} );"
         >
             @if($isOwnProfile)
@@ -57,7 +57,7 @@
                         <label for="image-upload" class="upload-label">
                             <div class="circle-container">
                                   <div id="uploaded-image" class="uploaded-image"
-                                        style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} );"
+                                        style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover;"
                                     ></div>
                                 <button id="upload-button" class="upload-button" aria-hidden="true">Upload</button>
                             </div>
@@ -170,13 +170,13 @@
                                 </svg>
                                 <span>Joined {{Carbon::parse($userProfile->created_at)->isoFormat('Do MMMM YYYY')}}</span>
                             </span>
+                        <br><br><br>
+
                         </div>
-                        <br>
                     </div>
                 </div>
             </div>
         </div>
-        @include('Participant.Profile.EditProfile')
 
         <div class="tabs">
             <button class="tab-button  outer-tab tab-button-active"
@@ -482,7 +482,7 @@
                     console.error('Error updating member status:', data.message);
                 }
             } catch (error) {
-                console.error('There was a problem with the file upload:', error);
+                console.error('There was a problem with the request:', error);
         }
     });
 

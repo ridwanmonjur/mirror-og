@@ -94,7 +94,7 @@ class OrganizerCheckoutController extends Controller
                     $paymentIntent["metadata"]["eventId"] == $id
                 ) {
                     $transaction = PaymentTransaction::createTransaction(
-                        $intentId, "SUCCESS", $paymentIntent["amount"]
+                        $intentId, "SUCCESS", $paymentIntent["amount"]/100
                     );
     
                     $event = EventDetail::findEventWithRelationsAndThrowError(
