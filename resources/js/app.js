@@ -6,8 +6,6 @@
  window.Popper = Popper
  import * as bootstrap from 'bootstrap'
  window.bootstrap = bootstrap
- import cookie from 'cookiejs';
-window.cookie = cookie;
 // todo cookie package
 // https://www.npmjs.com/package/cookiejs
 import Alpine from 'alpinejs';
@@ -90,4 +88,24 @@ window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => {
     })
 }
 
+window.loadMessage = () => {
+    let success = localStorage.getItem('success');
+    let tab = localStorage.getItem('tab');
+    let message = localStorage.getItem('message');
+
+    if (tab) {
+        document.getElementById(tab).click();
+    }
+
+    if (success === 'true') {
+        Toast.fire({
+            icon: 'success',
+            text: message || (tab ? `Successfully switched to ${tab} tab.` : 'Operation successful.')
+        });
+    }
+
+    localStorage.removeItem('success');
+    localStorage.removeItem('message');
+    localStorage.removeItem('tab');
+}
 

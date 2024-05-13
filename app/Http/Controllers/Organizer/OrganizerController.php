@@ -98,6 +98,7 @@ class OrganizerController extends Controller
         $organizer = $validatedData['organizer']['id']
             ? Organizer::findOrFail($validatedData['organizer']['id'])
             : new Organizer();
+        // dd($validatedData['organizer']);
         $organizer->fill($validatedData['organizer'])->save();
 
         return response()->json(['success' => true, 'message' => 'Data saved successfully']);

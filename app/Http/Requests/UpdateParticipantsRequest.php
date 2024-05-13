@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Carbon\Carbon;
 
 class UpdateParticipantsRequest extends FormRequest
 {
@@ -23,11 +24,30 @@ class UpdateParticipantsRequest extends FormRequest
     {
         return [
             'id' => 'required',
-            'bio' => 'nullable|string',
-            'age' => 'nullable|integer|min:0|max:150',
-            'nickname' => 'nullable|string|max:255',
-            'region' => 'nullable|string',
-            'domain' => 'nullable|url',
+            'bio' => 'required|string',
+            'birthday' => 'required|date', 
+            'nickname' => 'required|string|max:255',
+            'region' => 'required|string',
+            'domain' => ['required', 'regex:/^(?:[-A-Za-z0-9]+\.)+[A-Za-z]{2,6}$/'],
         ];
     }
+
+    protected function prepareForValidation()
+    {
+        $attributes = $this->request->all();
+
+        if (isset($attributes['birthday'])) {
+            $attributes['birthday'] = Carbon::parse($attributes['birthday']);
+            $attributes['age'] = Carbon::now()->diffInYears($attributes['birthday']);
+        }
+
+        if (isset($attributes['domain']) && filter_var($attributes['domain'], FILTER_VALIDATE_URL) !== false) {
+            $parsed = parse_url($attributes['domain']);
+            $attributes['domain'] = $parsed['host'];
+        }
+
+        $this->request->replace($attributes);
+    }
+
+    
 }

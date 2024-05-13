@@ -47,13 +47,22 @@
                         x-show="isEditMode"
                         x-on:click="submitEditProfile(event)"
                         data-url="{{route('participant.profile.update')}}"
-                        class="oceans-gaming-default-button oceans-gaming-transparent-button px-3 py-2"> 
+                        class="oceans-gaming-default-button oceans-gaming-transparent-button px-3 py-2 me-3"> 
                         Save
                     </button>
+                    {{-- Close icon --}}
+                    <svg 
+                        style="top: 10px;"
+                        x-show="isEditMode"
+                        x-on:click="isEditMode = false;"
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle cursor-pointer align-middle position-relative" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                    </svg>
                 </div>
              @endif
-            <div class="d-flex justify-content-center align-items-center flex-wrap">
-                <div class="member-image">
+            <div class="d-flex justify-content-center align-items-start flex-wrap">
+                <div class="member-image align-middle">
                     <div class="upload-container">
                         <label for="image-upload" class="upload-label">
                             <div class="circle-container">
@@ -67,11 +76,12 @@
                     </div>
                 </div>
                 <div class="member-details">
+                        <div x-show="errorMessage != null" class="text-red" x-text="errorMessage"> </div>
                         <div x-cloak x-show="isEditMode">
                             <input 
                                 placeholder = "Enter your nickname..."
                                 style="width: 250px;"
-                                class="form-control border-primary player-profile__input d-inline" 
+                                class="form-control border-secondary player-profile__input d-inline" 
                                 x-model="participant.nickname" 
                             > 
                             <br>
@@ -79,14 +89,15 @@
                                 <input
                                     placeholder = "Your bio..."
                                     style="width: 200px;"
-                                    class="form-control border-primary player-profile__input d-inline me-3" 
+                                    class="form-control border-secondary player-profile__input d-inline me-3" 
                                     x-model="participant.bio" 
                                 > 
                                 <input 
-                                    placeholder="Age"
-                                    style="width: 60px;"
-                                    class="form-control border-primary player-profile__input d-inline" 
-                                    x-model="participant.age" 
+                                    placeholder="Birthday"
+                                    type="date"
+                                    style="width: 150px;"
+                                    class="form-control border-secondary player-profile__input d-inline" 
+                                    x-model="participant.birthday" 
                                 >
                             </span> 
                             <br> <br>
@@ -103,7 +114,7 @@
                                         class="form-control d-inline rounded-pill"
                                     >
                                         <template x-for="country in countries">
-                                            <option x-bind:value="country.name.en">
+                                            <option x-bind:value="country.emoji_flag+ ' ' + country.name.en">
                                             <span x-text="country.emoji_flag" class="mx-3"> </span>  
                                             <span x-text="country.name.en"> </span>
                                             </option>
@@ -120,8 +131,8 @@
                                     </svg>
                                     <input 
                                         style="width: 150px;"
-                                        placeholder = "Enter your link..."
-                                        class="form-control border-primary player-profile__input d-inline" 
+                                        placeholder = "Enter your domain..."
+                                        class="form-control border-secondary player-profile__input d-inline" 
                                         x-model="participant.domain"
                                     > 
                                 </span>
@@ -145,9 +156,19 @@
                         </div>
                     <div x-cloak x-show="!isEditMode">
                         <h4>
-                            {{$userProfile->name}}
+                            {{$userProfile->participant->nickname}}
                         </h4>
-                        <p>{{$userProfile->participant->nickname}}, {{$userProfile->participant->age}}<p>
+                        <p>
+                            <span> {{$userProfile->name}}, {{$userProfile->participant->age}} </span>
+                            @if (isset($userProfile->participant->birthday))
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-date ms-3 me-2" viewBox="0 0 16 16">
+                                <path d="M6.445 11.688V6.354h-.633A13 13 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23"/>
+                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                                </svg>
+                                <span>{{$userProfile->participant->birthday}}</span>
+                            @endif
+                        </p>
+                        
                         <p>
                             {{$userProfile->participant->bio}}
                         </p>
@@ -171,9 +192,19 @@
                                 </svg>
                                 <span>Joined {{Carbon::parse($userProfile->participant->created_at)->isoFormat('Do MMMM YYYY')}}</span>
                             </span>
+                        </div>
+                        <br>
+                        <div>
+                            <span class="me-3 border px-2 rounded-pill py-1 border-secondary cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="cursor-pointer bi bi-plus-circle me-2" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                </svg>
+                                Add a game
+                            </span> 
+                        </div>
                         <br><br><br>
 
-                        </div>
                     </div>
                 </div>
             </div>
@@ -400,6 +431,8 @@
 
 @livewireScripts
 <script>
+    window.onload = () => { loadMessage(); }
+
     document.addEventListener('alpine:init', () => {
         Alpine.data('alpineDataComponent', () => ({
             isEditMode: false, 
@@ -409,7 +442,7 @@
                 id: {{ $userProfile->participant->id }},
                 nickname : '{{$userProfile->participant->nickname}}',
                 bio: '{{$userProfile->participant->bio}}',
-                age: '{{$userProfile->participant->age}}',
+                birthday: '{{$userProfile->participant->birthday}}',
                 domain: '{{$userProfile->participant->domain}}',
                 region: '{{$userProfile->participant->region}}',
             },
@@ -445,12 +478,7 @@
                         body: JSON.stringify({
                             ...Alpine.raw(this.participant),
                         }),
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-
+                    });             
                     const data = await response.json();
                         
                     if (data.success) {
@@ -466,8 +494,8 @@
                         this.errorMessage = data.message;
                     }
                 } catch (error) {
-                    this.errorMessage = "Could not make the request";
-                    console.error('There was a problem with the request:', error);
+                    this.errorMessage = error.message;
+                    console.error({error});
                 } 
             },
         }))
@@ -506,10 +534,7 @@
                     }),
                 });
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
+               
                 const data = await response.json();
                     
                 if (data.success) {
@@ -546,10 +571,7 @@
                     }),
                 });
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
+                
                 const data = await response.json();
                     
                 if (data.success) {

@@ -9,7 +9,10 @@ class Participant extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id', 'domain', 'age', 'bio', 'nickname', 'region'
+        'birthday', 'user_id', 'domain', 'age', 'bio', 'nickname', 'region', 'games_data'
+    ];
+    protected $casts = [
+        'games_data' => 'array'
     ];
 
     public function user()

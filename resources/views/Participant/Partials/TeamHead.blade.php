@@ -48,10 +48,11 @@
             <div class="team-info">
                 @if ($isCreator)
                 <div x-cloak x-show.important="isEditMode">
+                    <div x-show="errorMessage != null" class="text-red" x-text="errorMessage"> </div>
                     <input 
                         placeholder="Enter your team name..."
                         style="width: 200px;"
-                        class="form-control border-primary player-profile__input d-inline" 
+                        class="form-control border-secondary player-profile__input d-inline" 
                         x-model="teamName"
                     >
                     <svg
@@ -83,6 +84,7 @@
                 @if ($user->role == "PARTICIPANT")
                 <div class="dropdown">
                     <button
+                        x-cloak
                         x-show.important="!isEditMode"
                         class="gear-icon-btn me-2 position-relative" style="top: 10px;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
@@ -164,15 +166,23 @@
                 >
                     <input 
                         placeholder="Enter your team description..."
-                        class="form-control border-primary player-profile__input d-inline py-2 me-5" 
+                        class="form-control border-secondary player-profile__input d-inline py-2 me-5" 
                         x-model="teamDescription"
                     >
                     <button 
                         x-on:click="submitEditProfile(event);"
                         data-url="{{route('participant.team.update')}}"
-                        class="mt-4 oceans-gaming-default-button oceans-gaming-transparent-button px-5 py-1 rounded mx-auto"> 
+                        class="mt-4 oceans-gaming-default-button oceans-gaming-transparent-button px-3 py-1 rounded mx-auto me-3"> 
                         Save
                     </button>
+                    {{-- Close icon --}}
+                    <svg 
+                        style="top: 10px;"
+                        x-on:click="isEditMode = false;"
+                        xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-x-circle cursor-pointer text-red position-relative" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                    </svg>
                 </div>
                 <span x-cloak x-show="!isEditMode">
                     {{ $selectTeam->teamDescription ? $selectTeam->teamDescription : 'Please add a description by editing your team...' }}
@@ -199,6 +209,8 @@
     @livewireScripts
 
     <script>
+        window.onload = () => { loadMessage(); }
+
         document.addEventListener('alpine:init', () => {
             Alpine.data('alpineDataComponent', () => ({
                 id: '{{$selectTeam->id}}',
@@ -228,10 +240,6 @@
                             }),
                         });
 
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-
                         const data = await response.json();
                             
                         if (data.success) {
@@ -247,7 +255,8 @@
                         this.errorMessage = data.message;
                     }
                     } catch (error) {
-                        console.error('There was a problem with the request:', error);
+                        this.errorMessage = error.message;
+                    console.error({error});
                     } 
                 },
                 fetchCountries () {
