@@ -11,9 +11,7 @@ window.cookie = cookie;
 // todo cookie package
 // https://www.npmjs.com/package/cookiejs
 import Alpine from 'alpinejs';
-import persist from '@alpinejs/persist';
 window.Alpine = Alpine;
-Alpine.plugin(persist);
 Alpine.start();
 window.storeToken = function(token) {
     localStorage.setItem('jwtToken', token);

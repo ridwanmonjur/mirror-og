@@ -462,7 +462,7 @@
             userProfile: {
                 id: '{{$userProfile->id}}',
                 name: '{{$userProfile->name}}',
-                mobile_no: this.$persist('{{$userProfile->mobile_no}}').as('alpine_mobile_no'),
+                mobile_no: '{{$userProfile->mobile_no}}',
             },
             organizer: {
                 id: '{{$userProfile->organizer?->id}}',
