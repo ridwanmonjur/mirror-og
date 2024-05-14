@@ -32,6 +32,29 @@ class UpdateParticipantsRequest extends FormRequest
         ];
     }
 
+    /**
+     * Get custom error messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return [
+            'id.required' => 'The ID field is required.',
+            'bio.required' => 'The bio field is required.',
+            'bio.string' => 'The bio must be a string.',
+            'birthday.required' => 'The birthday field is required.',
+            'birthday.date' => 'The birthday must be a valid date.',
+            'nickname.required' => 'The nickname field is required.',
+            'nickname.string' => 'The nickname must be a string.',
+            'nickname.max' => 'The nickname may not be greater than 255 characters.',
+            'region.required' => 'The region field is required.',
+            'region.string' => 'The region must be a string.',
+            'domain.required' => 'The domain field is required.',
+            'domain.regex' => 'The domain format is invalid. It must be a valid domain name.',
+        ];
+    }
+
     protected function prepareForValidation()
     {
         $attributes = $this->request->all();

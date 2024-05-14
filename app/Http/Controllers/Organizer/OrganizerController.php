@@ -41,9 +41,11 @@ class OrganizerController extends Controller
         $joinEvents = EventDetail::where('user_id', $user_id)
             ->with( ['tier',  'game'])->get();
         $lastYearEventsCount = EventDetail::whereYear('created_at', now()->year)
+            ->where('user_id', $user_id)
             ->whereNotIn('status', ['DRAFT', 'ENDED', 'PENDING'])
             ->count();
         $beforeLastYearEventsCount = EventDetail::whereYear('created_at', '<=', now()->year - 1)
+            ->where('user_id', $user_id)    
             ->whereNotIn('status', ['DRAFT', 'ENDED', 'PENDING'])
             ->count();
 

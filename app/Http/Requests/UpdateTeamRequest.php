@@ -28,4 +28,25 @@ class UpdateTeamRequest extends FormRequest
             'country' => 'required|string',
         ];
     }
+
+      /**
+     * Get custom error messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return [
+            'id.required' => 'The ID field is required.',
+            'id.numeric' => 'The ID must be a number.',
+            'teamName.required' => 'The team name is required.',
+            'teamName.string' => 'The team name must be a string.',
+            'teamDescription.required' => 'The team description is required.',
+            'teamDescription.string' => 'The team description must be a string.',
+            'country.required' => 'The country field is required.',
+            'country.string' => 'The country must be a string.',
+        ];
+    }
+
+    
 }
