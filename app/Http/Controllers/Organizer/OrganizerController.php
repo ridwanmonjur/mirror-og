@@ -39,6 +39,7 @@ class OrganizerController extends Controller
         
         $followersCount = Follow::where('organizer_user_id', $user_id)->count();
         $joinEvents = EventDetail::where('user_id', $user_id)
+            ->whereNotIn('status', ['DRAFT', 'PENDING'])
             ->with( ['tier',  'game'])->get();
         $lastYearEventsCount = EventDetail::whereYear('created_at', now()->year)
             ->where('user_id', $user_id)
