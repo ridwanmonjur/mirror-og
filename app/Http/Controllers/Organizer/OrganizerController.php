@@ -58,7 +58,7 @@ class OrganizerController extends Controller
             ->count();
 
         $tierPrizeCount = DB::table('event_details')
-                ->where('user_id', $user_id) 
+                ->where('event_details.user_id', $user_id) 
                 ->whereNotIn('status', ['DRAFT', 'PENDING'])
                 ->leftJoin('event_tier', 'event_details.event_tier_id', '=', 'event_tier.id')
                 ->select(['event_details.id as event_id', 
