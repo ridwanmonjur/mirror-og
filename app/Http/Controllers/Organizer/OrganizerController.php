@@ -42,11 +42,11 @@ class OrganizerController extends Controller
             ->with( ['tier',  'game'])->get();
         $lastYearEventsCount = EventDetail::whereYear('created_at', now()->year)
             ->where('user_id', $user_id)
-            ->whereNotIn('status', ['DRAFT', 'ENDED', 'PENDING'])
+            ->whereNotIn('status', ['DRAFT', 'PENDING'])
             ->count();
         $beforeLastYearEventsCount = EventDetail::whereYear('created_at', '<=', now()->year - 1)
             ->where('user_id', $user_id)    
-            ->whereNotIn('status', ['DRAFT', 'ENDED', 'PENDING'])
+            ->whereNotIn('status', ['DRAFT'. 'PENDING'])
             ->count();
 
         $teamsCount = JoinEvent::whereIn('event_details_id', function ($query) use ($user_id) {
@@ -58,7 +58,8 @@ class OrganizerController extends Controller
             ->count();
 
         $tierPrizeCount = DB::table('event_details')
-                ->whereNotIn('status', ['DRAFT', 'ENDED', 'PENDING'])
+                ->where('user_id', $user_id) 
+                ->whereNotIn('status', ['DRAFT', 'PENDING'])
                 ->leftJoin('event_tier', 'event_details.event_tier_id', '=', 'event_tier.id')
                 ->select(['event_details.id as event_id', 
                     'event_details.event_tier_id',
