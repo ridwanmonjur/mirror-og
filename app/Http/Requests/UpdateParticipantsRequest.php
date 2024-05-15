@@ -28,6 +28,7 @@ class UpdateParticipantsRequest extends FormRequest
             'birthday' => 'required|date', 
             'nickname' => 'required|string|max:255',
             'region' => 'required|string',
+            'games_data' => 'required|string',
             'domain' => ['required', 'regex:/^(?:[-A-Za-z0-9]+\.)+[A-Za-z]{2,6}$/'],
         ];
     }

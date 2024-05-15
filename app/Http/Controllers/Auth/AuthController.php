@@ -39,6 +39,13 @@ class AuthController extends Controller
         return response()->json(['success' =>true, 'data'=> $countries], 200);
     }
 
+    public function gameList() {
+        $games = DB::table('games')->get();
+        return response()->json(['success' =>true, 'data'=> $games], 200);
+    }
+
+    
+
     protected function _registerOrLoginUser($user, $type, $role)
     {
         if ($type == 'google') {

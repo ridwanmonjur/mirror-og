@@ -29,7 +29,10 @@ Route::post('/forget-password', [AuthController::class, 'storeForget'])->name('u
 Route::get('/account/verify-resend/{email}', [AuthController::class, 'verifyResend'])->name('user.verify.resend');
 Route::get('/account/verify/{token}', [AuthController::class, 'verifyAccount'])->name('user.verify.action');
 Route::get('/account/verify-success/', [AuthController::class, 'verifySuccess'])->name('user.verify.success');
+
+// Countries and games
 Route::get('/countries', [AuthController::class, 'countryList'])->name('country.view');
+Route::get('/games', [AuthController::class, 'gameList'])->name('game.view');
 
 // Logout
 Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');

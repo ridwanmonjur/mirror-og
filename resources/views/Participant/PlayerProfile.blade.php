@@ -9,6 +9,8 @@
 
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
 </head>
 @php
     use Carbon\Carbon;
@@ -25,8 +27,10 @@
 
     <main x-data="alpineDataComponent">
         <div id="backgroundBanner" class="member-section px-2 pt-2"
-            style="background-image: url({{ '/storage' . '/'. $userProfile->participant->backgroundBanner }} );"
+            style="background-image: url({{ '/storage' . '/'. $userProfile->participant->backgroundBanner }} );
+                background-size: cover; background-repeat: no-repeat;"
         >
+            <input type="hidden" id="games_data_input" value="{{ $userProfile->participant->games_data ?? json_encode([]) }}">
             @if($isOwnProfile)
                 <div class="d-flex justify-content-end py-0 my-0 mb-2">
                     <input type="file" id="backgroundInput" class="d-none"> 
@@ -38,7 +42,7 @@
                     <button 
                         x-cloak
                         x-show="!isEditMode"
-                        x-on:click="isEditMode = true; fetchCountries();"
+                        x-on:click="isEditMode = true; fetchCountries(); fetchGames();"
                         class="oceans-gaming-default-button oceans-gaming-primary-button px-3 py-2"> 
                         Edit Profile
                     </button>
@@ -67,7 +71,8 @@
                         <label for="image-upload" class="upload-label">
                             <div class="circle-container">
                                   <div id="uploaded-image" class="uploaded-image"
-                                        style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover;"
+                                        style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
+                                        background-repeat: no-repeat; background-position: center;"
                                     ></div>
                                 <button id="upload-button" class="upload-button" aria-hidden="true">Upload</button>
                             </div>
@@ -120,9 +125,8 @@
                                             </option>
                                         </template>
                                     </select> 
-
                                 </span>
-                                <span>
+                                <span class="me-3">
                                     <svg 
                                         class="align-middle"
                                         xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
@@ -144,14 +148,46 @@
                                     </svg>
                                     <span>Joined {{Carbon::parse($userProfile->created_at)->isoFormat('Do MMMM YYYY')}}</span>
                                 </span>
-                            </div>
                                 
+                            </div>
+                            <br>
+                            <div class="d-flex justify-content-start align-items-center flex-wrap">
+                                <small class="d-flex justify-content-start flex-wrap">
+                                    <template x-for="game in games_data">
+                                        <span
+                                            class="me-3 border px-3 mb-2 rounded-pill py-2 border-secondary cursor-pointer me-2"
+                                        >
+                                            <img
+                                                width="25"
+                                                height="25"
+                                                :src="'/storage/' + game.image"
+                                                class="object-fit-cover"
+                                            > 
+                                            <span x-text="game.name"> </span>                                        </span>
+                                    </template>
+                                </small>
+                                <select
+                                    x-cloak
+                                    x-ref="select" 
+                                    x-show.important="isAddGamesMode"
+                                    style="width: 200px;"    
+                                    data-trigger="true"
+                                    class="selectpicker form-control d-inline rounded-pill mb-2"
+                                >
+                                </select> 
+                                <span
+                                    x-cloak
+                                    x-show.important="!isAddGamesMode"
+                                    x-on:click="isAddGamesMode = true;"
+                                    class="ms-2 border px-2 rounded-pill py-2 border-secondary cursor-pointer mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="cursor-pointer bi bi-plus-circle me-2" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                    </svg>
+                                    Add a game
+                                </span> 
+                            </div>
                             <br><br>
-                          
-
-                            {{-- <img src="css/images/dota.png" class="icons-game"> Dota 2&nbsp;&nbsp;&nbsp;&nbsp; --}}
-                            {{-- <img src="css/images/lol.png" class="icons-game"> League Of Legends&nbsp;&nbsp;&nbsp;&nbsp; --}}
-                            {{-- <img src="css/images/valo.jpg" class="icons-game"> Valorant<br> --}}
                             <br>
                         </div>
                     <div x-cloak x-show="!isEditMode">
@@ -172,37 +208,46 @@
                         <p>
                             {{$userProfile->participant->bio}}
                         </p>
-                        <div class="d-flex justify-content-between flex-wrap w-75">
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
-                                </svg>
-                                <span>{{$userProfile->participant->region}}</span>
-                            </span>
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+                        <div class="d-flex justify-content-between flex-wrap w-100">
+                            @if (isset($userProfile->participant->region))
+                                <span class="me-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill me-2" viewBox="0 0 16 16">
+                                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                                    </svg>
+                                    <span>{{$userProfile->participant->region}}</span>
+                                </span>
+                            @endif
+                            @if (isset($userProfile->participant->domain))
+                            <span class="me-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg me-2" viewBox="0 0 16 16">
                                 <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
                                 <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
                                 </svg>
                                 <span>{{$userProfile->participant->domain}}</span>
                             </span>
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                            @endif
+                            <span class="me-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person me-2" viewBox="0 0 16 16">
                                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
                                 </svg>
                                 <span>Joined {{Carbon::parse($userProfile->participant->created_at)->isoFormat('Do MMMM YYYY')}}</span>
                             </span>
                         </div>
                         <br>
-                        <div>
-                            <span class="me-3 border px-2 rounded-pill py-1 border-secondary cursor-pointer">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="cursor-pointer bi bi-plus-circle me-2" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                                </svg>
-                                Add a game
-                            </span> 
-                        </div>
+                        <small class="d-flex justify-content-start flex-wrap">
+                            <template x-for="game in games_data_already_saved">
+                                <span
+                                    class="me-3 border px-3 mb-2 rounded-pill py-2 border-secondary cursor-pointer me-2"
+                                >
+                                    <img
+                                        width="25"
+                                        height="25"
+                                        :src="'/storage/' + game.image"
+                                        class="object-fit-cover"
+                                    > 
+                                    <span x-text="game.name"> </span>                                        </span>
+                            </template>
+                        </small>
                         <br><br><br>
 
                     </div>
@@ -428,16 +473,41 @@
 
 
 </body>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 @livewireScripts
 <script>
-    window.onload = () => { loadMessage(); }
 
+    // const games_data = {{ $userProfile->participant->games_data }};
+    window.onload = () => { loadMessage(); }
     document.addEventListener('alpine:init', () => {
-        Alpine.data('alpineDataComponent', () => ({
-            isEditMode: false, 
-            isAddGamesMode: false,
-            countries: [], 
+        let gamesDataInput = document.getElementById('games_data_input');
+        let gamesData = JSON.parse(gamesDataInput.value.trim()); 
+        console.log({gamesData})
+        Alpine.data('alpineDataComponent', () => {
+        return  {
+            isEditMode: true, 
+            selectedGame: null,
+            isAddGamesMode: true,
+            games_data: gamesData,
+            games_data_already_saved: gamesData,
+            countries: 
+            [
+                {
+                    name: { en: 'No country' },
+                    emoji_flag: '𓆝'
+                }
+            ], 
+            games: [
+                {
+                    id: null,
+                    name: 'No game',
+                    image: null
+                }
+            ],
             participant: {
                 id: {{ $userProfile->participant->id }},
                 nickname : '{{$userProfile->participant->nickname}}',
@@ -449,6 +519,7 @@
             errorMessage: null, 
             isCountriesFetched: false ,
             async fetchCountries () {
+                if (this.isCountriesFetched) return;
                 return fetch('/countries')
                     .then(response => response.json())
                     .then(data => {
@@ -458,15 +529,77 @@
                         } else {
                             this.errorMessage = "Failed to get data!"
                             this.countries = [{
-                                 name: {
+                                name: {
                                     en: 'No country'
                                 },
-                                emoji_flag: '🇦🇫'
+                                emoji_flag: ' 𓆝 𓆟 𓆞 𓆝 𓆟 '
                             }];
                         }
                     })
                     .catch(error => console.error('Error fetching countries:', error));
             },
+            async fetchGames () {
+                if (this.isCountriesFetched) return;
+                return fetch('/games')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data?.data) {
+                            this.isCountriesFetched = true;
+                            this.games = data?.data;
+                            this.select2 = $(this.$refs.select).select2({
+                                minimumResultsForSearch: Infinity,
+                                data: data.data,
+                                templateResult: function (_game) {
+                                    return $("<span><img class='object-fit-cover' width='25' height='25' src='/storage/" + _game.image +"'/> " + _game.name + "</span>");
+                                },
+                                templateSelection: function (_game) {
+                                    return $("<span><img class='object-fit-cover' width='25' height='25' src='/storage/" + _game.image +"'/> " + _game.name + "</span>");
+                                },
+                                theme: "bootstrap-5",
+                            }); 
+
+                            console.log({select2: this.select2[0] })
+                            console.log({select2: this.select2[0] })
+                            console.log({select2: this.select2[0] })
+                            console.log({select2: this.select2[0] })
+                            console.log({select2: this.select2[0] })
+                            this.select2[0].classList.add('mb-2');
+                            
+                            this.select2.on('select2:select', (event) => {
+                                this.selectedGame = event.target.value;
+                                console.log({
+                                    games_data: this.games_data, 
+                                    games: this.games,
+                                    value: event.target.value, 
+                                    selectedGame: this.selectedGame
+                                })
+                                const gameIndex = this.games.findIndex(game => game.id == this.selectedGame);
+
+                                if (gameIndex !== -1) {
+                                    this.games_data = [...this.games_data, this.games[gameIndex]];
+                                    console.log(`Game "${data.name}" added successfully.`);
+                                } else {
+                                    console.log(`Game "${data.name}" already exists.`);
+                                }
+
+                                this.isAddGamesMode = false;
+                                this.select2[0].classList.add('d-none');
+                            });
+                             this.$watch("isAddGamesMode", (value) => {
+                                console.log({value})
+                            });
+                            this.$watch("selectedGame", (value) => {
+                                this.select2.val(value).trigger("change");
+                            });
+                        } else {
+                            this.errorMessage = "Failed to get data!"
+                        }
+                    })
+                    .catch(error => console.error('Error fetching countries:', error));
+            },
+            // select2Alpine() {
+            // },
+
             async submitEditProfile (event) {
                 try {
                     event.preventDefault(); 
@@ -477,6 +610,7 @@
                         headers: window.loadBearerCompleteHeader(),
                         body: JSON.stringify({
                             ...Alpine.raw(this.participant),
+                            games_data: JSON.stringify(this.games_data),
                         }),
                     });             
                     const data = await response.json();
@@ -489,7 +623,7 @@
 
                         localStorage.setItem('success', true);
                         localStorage.setItem('message', data.message);
-                        window.location.replace(currentUrl);
+                        // window.location.replace(currentUrl);
                     } else {
                         this.errorMessage = data.message;
                     }
@@ -498,7 +632,15 @@
                     console.error({error});
                 } 
             },
-        }))
+            deleteGames (event) {
+                
+                console.log({participant: this.participant, _games_data: this.games_data})
+                /*
+               
+                */
+                
+            }
+        }})
     })
 
     const uploadButton = document.getElementById("upload-button");

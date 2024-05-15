@@ -1,5 +1,4 @@
  // Default Laravel bootstrapper, installs axios
- import './bootstrap';
  import Swal from 'sweetalert2'
  // Added: Actual Bootstrap JavaScript dependency
  import * as Popper from '@popperjs/core'

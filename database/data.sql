@@ -60,3 +60,20 @@ INSERT INTO `organizer_create_event_discounts` (`name`,`coupon`,`type`,`amount`,
 	 ('JAN_EXPIRED','JAN_EXPIRED','sum',1000.0,'2024-01-13','2024-01-15','20:57:00','20:57:00',1),
 	 ('JAN_NOT_ENFORCED','JAN_NOT_ENFORCED','sum',1000.0,'2024-01-13','2027-01-13','20:57:00','20:57:00',0),
 	 ('JAN_NOT_STARTED','JAN_NOT_STARTED','sum',1000.0,'2026-01-13','2027-01-13','20:57:00','20:57:00',0);
+
+
+INSERT INTO `awards` (`title`,`image`,`description`,`created_at`,`updated_at`) VALUES
+	 ('Championship','images/awards/trophy1.png','This is an amazing tropy','2023-11-05 14:39:09','2023-11-05 14:39:09'),
+	 ('Trophy','images/awards/trophy2.png','This is an amazing tropy','2023-11-05 14:39:09','2023-11-05 14:39:09'),
+	 ('Award','images/awards/trophy3.png','This is an amazing tropy','2023-11-05 14:39:09','2023-11-05 14:39:09'),
+	 ('Prize','images/awards/trophy4.png','This is an amazing tropy','2023-11-05 14:39:09','2023-11-05 14:39:09'),
+	 ('Crest','images/awards/trophy5.png','This is an amazing tropy','2023-11-05 14:39:09','2023-11-05 14:39:09');
+
+
+INSERT INTO `games` (`name`,`image`) VALUES
+	 ('Dota ','images/games/dota.png'),
+	 ('Dota 2','images/games/dota2.png'),
+	 ('CS Go','images/games/csgo.jpg'),
+	 ('Apex','images/games/apex.png'),
+	 ('League of Legends','images/games/lol.jpeg'),
+	 ('Valorant','images/games/valorant.jpeg');
