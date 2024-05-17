@@ -245,22 +245,33 @@ class ParticipantTeamController extends Controller
     public function updateTeamMember(Request $request, $id)
     {
         $member = TeamMember::find($id);
-        $status = $request->status;
         if (!$member) {
             return response()->json(['success' => false, 'message' => 'Team member not found'], 400);
         }
+
+        $status = $request->status;
+        $isPermitted = $status == 'left';
+        if (!$isPermitted) {
+            if ($status == 'accepted' || $status == 'rejected') {
+                $isPermitted = $member->status == 'pending' && $request->actor != $member->actor;
+            } 
+        }
+
+        if (!$isPermitted) {
+            return response()->json(['success' => false, 'message' => 'This request is not allowed.'], 400);
+        }
+
         $team = Team::where('id', $member->team_id)->first();
 
         if ($team->creator_id == $member->user_id) {
             return response()->json(['success' => false, 'message' => "Can't modify creator of the team"], 400);
         }
-
+            
         $member->status = $status;
         $member->actor = $request->actor; 
         $member->save();
 
         return response()->json(['success' => true, 'message' => "Team member status updated to $status"]);
-
     }
 
     public function captainMember(Request $request, $id, $memberId)

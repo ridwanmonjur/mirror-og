@@ -354,7 +354,7 @@
                 if (count == 1) {
                     followCount.innerHTML = '<i> 1 follower </i>';
                 } else if (count == 0) {
-                    followCount.innerHTML = `<i> No followers </i>`;
+                    followCount.innerHTML = `<i> 0 followers </i>`;
                 } else {
                     followCount.innerHTML = `<i> ${count} followers </i>`;
                 }

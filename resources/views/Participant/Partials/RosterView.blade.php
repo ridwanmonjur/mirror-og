@@ -87,7 +87,7 @@
                                     {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
                                 @endif    
                             @else
-                                No followers
+                                0 followers
                             @endif    
                         </small>
                     </div>
@@ -108,7 +108,7 @@
                     
                     @guest
                         <button type="button"
-                            onclick="reddirectToLoginWithIntened('{{route('participant.team.manage', ['id'=> $selectTeam->id])}}')"
+                            onclick="reddirectToLoginWithIntened('{{route('public.organizer.view', ['id'=> $joinEvent->eventDetails?->user_id ])}}')"
                             class="{{'followButton' . $joinEvent->eventDetails?->user_id}}"
                             style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                             Follow
@@ -147,9 +147,14 @@
             });    
 
             try {
+                let jsonObject = {}
+                for (let [key, value] of formData.entries()) {
+                    jsonObject[key] = value;
+                }
+
                 let response = await fetch(form.action, {
                     method: form.method,
-                    body: formData,
+                    body: JSON.stringify(jsonObject),
                     headers: {
                         ...window.loadBearerHeader(),
                         'Accept': 'application/json',
@@ -186,7 +191,7 @@
                     if (count == 1) {
                         followCount.innerHTML = '1 follower';
                     } else if (count == 0) {
-                        followCount.innerHTML = `No followers`;
+                        followCount.innerHTML = `0 followers`;
                     } else {
                         followCount.innerHTML = `${followCount.dataset.count} followers`;
                     }

@@ -15,6 +15,7 @@ use App\Models\TeamCaptain;
 use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OrganizerController extends Controller
@@ -22,44 +23,58 @@ class OrganizerController extends Controller
     public function viewOwnProfile(Request $request) {
         $user = $request->attributes->get('user');
         $user_id = $user?->id ?? null;
+        $user->isFollowing = null;
         return $this->viewProfile($request, $user_id, $user, true);
     }
 
     public function viewProfileById(Request $request, $id) {
+        $loggedInUser = Auth::user();
         $user = User::findOrFail($id);
-        return $this->viewProfile($request, $id, $user, false);
+        if ($user->role != 'ORGANIZER') {
+            return redirect()->route('public.participant.view', ['id' => $id]);
+        }
+
+        if ($loggedInUser) {
+            $user->isFollowing = Follow::where('participant_user_id', $loggedInUser->id)
+                ->where('organizer_user_id', $user->id)
+                ->first();
+        } else {
+            $user->isFollowing = null;
+        }
+
+        return $this->viewProfile($request, $loggedInUser ? $loggedInUser->id : null, $user, false);
     }
 
-    private function viewProfile(Request $request, $user_id, $userProfile, $isOwnProfile = true) {
+    private function viewProfile(Request $request, $logged_user_id, $userProfile, $isOwnProfile = true) {
    
         [
             'teamList' => $teamList,
             'teamIdList' => $teamIdList,
-        ] = Team::getUserTeamList($user_id);   
+        ] = Team::getUserTeamList($userProfile->id);   
         
-        $followersCount = Follow::where('organizer_user_id', $user_id)->count();
-        $joinEvents = EventDetail::where('user_id', $user_id)
+        $followersCount = Follow::where('organizer_user_id', $userProfile->id)->count();
+        $joinEvents = EventDetail::where('user_id', $userProfile->id)
             ->whereNotIn('status', ['DRAFT', 'PENDING'])
             ->with( ['tier',  'game'])->get();
         $lastYearEventsCount = EventDetail::whereYear('created_at', now()->year)
-            ->where('user_id', $user_id)
+            ->where('user_id', $userProfile->id)
             ->whereNotIn('status', ['DRAFT', 'PENDING'])
             ->count();
         $beforeLastYearEventsCount = EventDetail::whereYear('created_at', '<=', now()->year - 1)
-            ->where('user_id', $user_id)    
+            ->where('user_id', $userProfile->id)    
             ->whereNotIn('status', ['DRAFT'. 'PENDING'])
             ->count();
 
-        $teamsCount = JoinEvent::whereIn('event_details_id', function ($query) use ($user_id) {
+        $teamsCount = JoinEvent::whereIn('event_details_id', function ($query) use ($userProfile) {
                 $query->select('id')
                     ->from('event_details')
                     ->whereNotIn('status', ['DRAFT', 'ENDED', 'PENDING'])
-                    ->where('user_id', $user_id);
+                    ->where('user_id', $userProfile->id);
             })
             ->count();
 
         $tierPrizeCount = DB::table('event_details')
-                ->where('event_details.user_id', $user_id) 
+                ->where('event_details.user_id', $userProfile->id) 
                 ->whereNotIn('status', ['DRAFT', 'PENDING'])
                 ->leftJoin('event_tier', 'event_details.event_tier_id', '=', 'event_tier.id')
                 ->select(['event_details.id as event_id', 
@@ -70,7 +85,7 @@ class OrganizerController extends Controller
 
         $userIds = $joinEvents->pluck('user_id')->flatten()->toArray();
         $followCounts = Follow::getFollowCounts($userIds);
-        $isFollowing = Follow::getIsFollowing($user_id, $userIds);
+        $isFollowing = Follow::getIsFollowing($logged_user_id, $userIds);
         $joinEventsHistory = $joinEventsActive = $values = [];
         ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory] 
             = EventDetail::processEvents($joinEvents, $isFollowing);

@@ -65,10 +65,10 @@
                         style="width: 200px;"    
                         class="form-control mt-2 d-inline rounded-pill"
                     >
-                        <template x-for="country in countries">
-                            <option>
-                                <span x-text="country.emoji_flag" class="mx-3"> </span>  
-                                <span x-text="country.name.en"> </span>
+                        <template x-for="region in countries">
+                            <option x-bind:value="region.emoji_flag+ ' ' + region.name.en">
+                                <span x-text="region.emoji_flag" class="mx-3"> </span>  
+                                <span x-text="region.name.en"> </span>
                             </option>
                         </template>
                     </select> 
@@ -76,10 +76,10 @@
                 <span
                     x-cloak 
                     x-show.important="!isEditMode">
-                    <h3 class="team-name" id="team-name">{{ $selectTeam->teamName }}zzzz</h3>
+                    <h3 class="team-name" id="team-name" x-text="teamName"></h3>
                 </span>
                 @else
-                    <h3 class="team-name" id="team-name">{{ $selectTeam->teamName }}</h3>
+                    <h3 class="team-name" id="team-name" x-text="teamName"></h3>
                 @endif
                 @if ($user->role == "PARTICIPANT")
                 <div class="dropdown">
@@ -184,12 +184,13 @@
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                     </svg>
                 </div>
-                <span x-cloak x-show="!isEditMode">
-                    {{ $selectTeam->teamDescription ? $selectTeam->teamDescription : 'Please add a description by editing your team...' }}
-                </span>
+                <div>
+                    <span class="ms-2" x-cloak x-show="!isEditMode" x-text="teamDescription"> </span>
+                    <span class="ms-2"x-show="!isEditMode" x-html="country"> </span>
+                </div>
             @else
-                {{ $selectTeam->teamDescription ? $selectTeam->teamDescription : 'Please add a description by editing your team...' }}
-                {{ bladeExtractEmojis($selectTeam->region)[0] }}
+                <span x-text="teamDescription"> </span>
+                <span class="ms-2" x-html="country"> </span>
             @endif
         <div class="mx-auto text-center mt-1">
             @if (session('successJoin'))
@@ -205,7 +206,6 @@
     </div>
 </main>
 
-@if ($isCreator)
     @livewireScripts
 
     <script>
@@ -281,6 +281,9 @@
                 })
             )
         })
+</script>
+@if ($isCreator)
+    <script>
 
         const uploadButton = document.getElementById("upload-button");
         const imageUpload = document.getElementById("image-upload");

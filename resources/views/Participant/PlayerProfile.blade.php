@@ -191,41 +191,55 @@
                             <br>
                         </div>
                     <div x-cloak x-show="!isEditMode">
-                        <h4>
-                            {{$userProfile->participant->nickname}}
-                        </h4>
+                        <template x-if="participant.nickname">
+                             <h4 x-text="participant.nickname">
+                            </h4>
+                        </template>
+                        <template x-if="!participant.nickname">
+                            <h4>
+                                {{$userProfile->name}}
+                            </h4>
+                        </template>
                         <p>
-                            <span> {{$userProfile->name}}, {{$userProfile->participant->age}} </span>
-                            @if (isset($userProfile->participant->birthday))
+                            <template x-if="participant.nickname">
+                                <span> {{$userProfile->name}}</span>
+                            </template> 
+                            <template x-if="participant.nickname && participant.age">
+                                <span>, </span>
+                            </template> 
+                            <template x-if="participant.age">
+                                <span x-text="participant.age"></span>
+                            </template>
+                            <template x-if="participant.birthday">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-date ms-3 me-2" viewBox="0 0 16 16">
                                 <path d="M6.445 11.688V6.354h-.633A13 13 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23"/>
                                 <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
                                 </svg>
-                                <span>{{$userProfile->participant->birthday}}</span>
-                            @endif
+                                <span x-text="new Date(birthday).toLocaleDateString()"></span>
+                            </template>
                         </p>
                         
-                        <p>
-                            {{$userProfile->participant->bio}}
-                        </p>
+                        <template x-if="participant.bio">
+                            <p x-text="participant.bio"> </p>
+                        </template>
                         <div class="d-flex justify-content-between flex-wrap w-100">
-                            @if (isset($userProfile->participant->region))
+                            <template x-if="participant.region">
                                 <span class="me-3">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill me-2" viewBox="0 0 16 16">
                                     <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
-                                    <span>{{$userProfile->participant->region}}</span>
+                                    <span x-text="participant.region"></span>
                                 </span>
-                            @endif
-                            @if (isset($userProfile->participant->domain))
-                            <span class="me-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg me-2" viewBox="0 0 16 16">
-                                <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
-                                <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
-                                </svg>
-                                <span>{{$userProfile->participant->domain}}</span>
-                            </span>
-                            @endif
+                            </template>
+                            <template x-if="participant.domain">
+                                <span class="me-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg me-2" viewBox="0 0 16 16">
+                                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+                                    <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
+                                    </svg>
+                                    <span x-text="participant.domain"></span>
+                                </span>
+                            </template>
                             <span class="me-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person me-2" viewBox="0 0 16 16">
                                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
@@ -235,7 +249,7 @@
                         </div>
                         <br>
                         <small class="d-flex justify-content-start flex-wrap">
-                            <template x-for="game in games_data_already_saved">
+                            <template x-for="game in games_data">
                                 <span
                                     class="me-3 border px-3 mb-2 rounded-pill py-2 border-secondary cursor-pointer me-2"
                                 >
@@ -245,7 +259,8 @@
                                         :src="'/storage/' + game.image"
                                         class="object-fit-cover"
                                     > 
-                                    <span x-text="game.name"> </span>                                        </span>
+                                    <span x-text="game.name"> </span>                                        
+                                </span>
                             </template>
                         </small>
                         <br><br><br>
@@ -351,11 +366,11 @@
         <div class="tab-content pb-4  outer-tab d-none" id="Activity">
             <br>
             <div class="tab-size"><b>New</b></div>
-            <livewire:participant.profile.show-activity-logs :userId="$user->id" :duration="'new'"> </livewire>
+            <livewire:participant.profile.show-activity-logs :userId="$userProfile->id" :duration="'new'"> </livewire>
             <div class="tab-size"><b>Recent</b></div>
-            <livewire:participant.profile.show-activity-logs :userId="$user->id" :duration="'recent'"> </livewire>
+            <livewire:participant.profile.show-activity-logs :userId="$userProfile->id" :duration="'recent'"> </livewire>
             <div class="tab-size"><b>Older</b></div>
-            <livewire:participant.profile.show-activity-logs :userId="$user->id" :duration="'older'"> </livewire>
+            <livewire:participant.profile.show-activity-logs :userId="$userProfile->id" :duration="'older'"> </livewire>
             
         </div>
 
@@ -489,11 +504,10 @@
         console.log({gamesData})
         Alpine.data('alpineDataComponent', () => {
         return  {
-            isEditMode: true, 
+            isEditMode: false, 
             selectedGame: null,
             isAddGamesMode: true,
             games_data: gamesData,
-            games_data_already_saved: gamesData,
             countries: 
             [
                 {
@@ -547,7 +561,7 @@
                             this.isCountriesFetched = true;
                             this.games = data?.data;
                             this.select2 = $(this.$refs.select).select2({
-                                minimumResultsForSearch: Infinity,
+                                // minimumResultsForSearch: Infinity,
                                 data: data.data,
                                 templateResult: function (_game) {
                                     return $("<span><img class='object-fit-cover' width='25' height='25' src='/storage/" + _game.image +"'/> " + _game.name + "</span>");
@@ -616,14 +630,11 @@
                     const data = await response.json();
                         
                     if (data.success) {
-                        let currentUrl = window.location.href;
-                        if (currentUrl.includes('?')) {
-                            currentUrl = currentUrl.split('?')[0];
-                        } 
-
-                        localStorage.setItem('success', true);
-                        localStorage.setItem('message', data.message);
-                        // window.location.replace(currentUrl);
+                        Toast.fire({
+                            icon: 'success',
+                            text: 'Updated the player successfully!'
+                        })
+                        this.isEditMode = false;
                     } else {
                         this.errorMessage = data.message;
                     }

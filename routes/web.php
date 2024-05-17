@@ -41,9 +41,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('participant.log
 // Search bar
 Route::get('/event/search', [AuthController::class, 'showLandingPage'])->name('public.search.view');
 Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view');
-Route::get('/team/{id}/view', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
-Route::get('/profile/participant/{id}/view', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view');
-Route::get('/profile/organizer/{id}/view', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view');
+Route::get('/public/team/{id}/view', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
+Route::get('/public/participant/{id}', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view');
+Route::get('/public/organizer/{id}', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view');
 
 Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => 'auth'], function () {

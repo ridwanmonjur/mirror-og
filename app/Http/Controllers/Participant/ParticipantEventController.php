@@ -20,12 +20,18 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\UnauthorizedException;
 
 class ParticipantEventController extends Controller
 {
     public function home(Request $request)
     {
+       
+        if (Session::has('intended')) {
+            return redirect(Session::get('intended'));
+        } 
+
         $userId = Auth::id();
         $count = 6;
         $events = EventDetail::generateParticipantFullQueryForFilter($request)->with('tier', 'type', 'game', 'joinEvents')->paginate($count);
@@ -124,13 +130,13 @@ class ParticipantEventController extends Controller
         $organizer = User::findOrFail($organizerId);
 
         if ($existingFollow) {
-            dispatch(new HandleFollows('Unfollow', [
-                'subject_type' => User::class,
-                'object_type' => User::class,
-                'subject_id' => $userId,
-                'object_id' => $organizerId,
-                'action' => 'Follow',
-            ]));
+            // dispatch(new HandleFollows('Unfollow', [
+            //     'subject_type' => User::class,
+            //     'object_type' => User::class,
+            //     'subject_id' => $userId,
+            //     'object_id' => $organizerId,
+            //     'action' => 'Follow',
+            // ]));
 
             $existingFollow->delete();
             return response()->json([
@@ -143,17 +149,17 @@ class ParticipantEventController extends Controller
                 'organizer_user_id' => $organizerId,
             ]);
 
-            dispatch(new HandleFollows('Unfollow', [
-                'subject_type' => User::class,
-                'object_type' => User::class,
-                'subject_id' => $userId,
-                'object_id' => $organizerId,
-                'action' => 'Follow',
-                'log' => '<span class="notification-gray"> User' 
-                . ' <span class="notification-black">' . $user->name . '</span> started following ' 
-                . ' <span class="notification-black">' . $organizer->name . '.</span> ' 
-                . '</span>'
-            ]));
+            // dispatch(new HandleFollows('Unfollow', [
+            //     'subject_type' => User::class,
+            //     'object_type' => User::class,
+            //     'subject_id' => $userId,
+            //     'object_id' => $organizerId,
+            //     'action' => 'Follow',
+            //     'log' => '<span class="notification-gray"> User' 
+            //     . ' <span class="notification-black">' . $user->name . '</span> started following ' 
+            //     . ' <span class="notification-black">' . $organizer->name . '.</span> ' 
+            //     . '</span>'
+            // ]));
 
             return response()->json([
                 'message' => 'Successfully followed the organizer',

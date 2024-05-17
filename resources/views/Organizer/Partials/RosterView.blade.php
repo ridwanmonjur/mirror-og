@@ -78,7 +78,7 @@
                         <br>
                         <small 
                             data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id]: 0 }} "
-                            class="{{'followCounts' . $joinEvent->eventDetails?->user_id}}"
+                            class="{{'followCounts' . $joinEvent->user_id}}"
                         >
                             @if (isset($followCounts[$joinEvent->user_id]))
                                 @if ($followCounts[$joinEvent->user_id] == 1)
@@ -87,7 +87,7 @@
                                     {{ $followCounts[$joinEvent->user_id] }} followers
                                 @endif    
                             @else
-                                No followers
+                                0 followers
                             @endif    
                         </small>
                     </div>
@@ -103,27 +103,27 @@
                         <input type="hidden" name="user_id"
                             value="{{ $user && $user->id ? $user->id : '' }}">
                         <input type="hidden" name="organizer_id"
-                            value="{{ $joinEvent->eventDetails?->user_id }}">
+                            value="{{ $joinEvent->user_id }}">
                     @endauth
                     
                     @guest
                         <button type="button"
-                            onclick="reddirectToLoginWithIntened('{{route('participant.team.manage', ['id'=> $selectTeam->id])}}')"
-                            class="{{'followButton' . $joinEvent->eventDetails?->user_id}}"
+                            onclick="reddirectToLoginWithIntened('{{route('public.organizer.view', ['id'=> $joinEvent->user_id ])}}')"
+                            class="{{'followButton' . $joinEvent->user_id}}"
                             style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                             Follow
                         </button>
                     @endguest
                     @auth
                         @if ($user->role == 'PARTICIPANT')
-                            <button type="submit" class="{{'followButton' . $joinEvent->eventDetails?->user_id}}"
+                            <button type="submit" class="{{'followButton' . $joinEvent->user_id}}"
                                 style="background-color: {{ $joinEvent->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $joinEvent->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                                 {{ $joinEvent->isFollowing ? 'Following' : 'Follow' }}
                             </button>
                         @else
                             <button type="button"
                                 onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
-                                class="{{'followButton' . $joinEvent->eventDetails?->user_id}}"
+                                class="{{'followButton' . $joinEvent->user_id}}"
                                 style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                                 Follow
                             </button>
@@ -137,8 +137,8 @@
         document.getElementById("{{'followForm' . $joinEvent->id . $random_int }}").addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            let followButtons = document.getElementsByClassName("{{'followButton' . $joinEvent->eventDetails?->user_id}}");
-            let followCounts = document.getElementsByClassName("{{'followCounts' . $joinEvent->eventDetails?->user_id}}");
+            let followButtons = document.getElementsByClassName("{{'followButton' . $joinEvent->user_id}}");
+            let followCounts = document.getElementsByClassName("{{'followCounts' . $joinEvent->user_id}}");
             console.log({followButtons});
             let form = this;
             let formData = new FormData(form);
@@ -147,9 +147,13 @@
             });    
 
             try {
+                let jsonObject = {}
+                for (let [key, value] of formData.entries()) {
+                    jsonObject[key] = value;
+                }
                 let response = await fetch(form.action, {
                     method: form.method,
-                    body: formData,
+                    body: JSON.stringify(jsonObject),
                     headers: {
                         ...window.loadBearerHeader(),
                         'Accept': 'application/json',
@@ -186,7 +190,7 @@
                     if (count == 1) {
                         followCount.innerHTML = '1 follower';
                     } else if (count == 0) {
-                        followCount.innerHTML = `No followers`;
+                        followCount.innerHTML = `0 followers`;
                     } else {
                         followCount.innerHTML = `${followCount.dataset.count} followers`;
                     }

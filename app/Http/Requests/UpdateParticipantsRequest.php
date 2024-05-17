@@ -24,12 +24,12 @@ class UpdateParticipantsRequest extends FormRequest
     {
         return [
             'id' => 'required',
-            'bio' => 'required|string',
-            'birthday' => 'required|date', 
-            'nickname' => 'required|string|max:255',
-            'region' => 'required|string',
-            'games_data' => 'required|string',
-            'domain' => ['required', 'regex:/^(?:[-A-Za-z0-9]+\.)+[A-Za-z]{2,6}$/'],
+            'bio' => 'nullable|string',
+            'birthday' => 'nullable|date', 
+            'nickname' => 'nullable|string|max:255',
+            'region' => 'nullable|string',
+            'games_data' => 'nullable|string',
+            'domain' => ['nullable', 'regex:/^(?:[-A-Za-z0-9]+\.)+[A-Za-z]{2,6}$/'],
         ];
     }
 
@@ -42,16 +42,11 @@ class UpdateParticipantsRequest extends FormRequest
     {
         return [
             'id.required' => 'The ID field is required.',
-            'bio.required' => 'The bio field is required.',
             'bio.string' => 'The bio must be a string.',
-            'birthday.required' => 'The birthday field is required.',
             'birthday.date' => 'The birthday must be a valid date.',
-            'nickname.required' => 'The nickname field is required.',
             'nickname.string' => 'The nickname must be a string.',
             'nickname.max' => 'The nickname may not be greater than 255 characters.',
-            'region.required' => 'The region field is required.',
             'region.string' => 'The region must be a string.',
-            'domain.required' => 'The domain field is required.',
             'domain.regex' => 'The domain format is invalid. It must be a valid domain name.',
         ];
     }

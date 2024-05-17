@@ -20,13 +20,18 @@ use App\Exceptions\EventChangeException;
 use App\Exceptions\TimeGreaterException;
 use App\Models\TeamMember;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\UnauthorizedException;
 
 class OrganizerEventController extends Controller
 {
-    public function home(): View
+    public function home(Request $request)
     {
-        return view('Organizer.Home');
+        if (Session::has('intended')) {
+            return redirect(Session::get('intended'));
+        } else {
+            return view('Organizer.Home');
+        }
     }
 
     function combineParams($queryParams)

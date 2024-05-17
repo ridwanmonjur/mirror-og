@@ -32,6 +32,8 @@ Route::group(['prefix' => 'participant'], function () {
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'check-jwt-permission:participant|admin'], function () {
             Route::post('events', [ParticipantEventController::class, 'index'])->name('events.index');
+            Route::post('events/likes', [ParticipantController::class, 'likeEvent'])->name('participant.events.like');
+            Route::post('friends', [ParticipantController::class, 'updateFriend'])->name('participant.friends.update');
             Route::post('/organizer/follow', [ParticipantEventController::class, 'followOrganizer'])->name('participant.organizer.follow');
             Route::post('/profile', [ParticipantController::class, 'editProfile'])->name('participant.profile.update');
             Route::post('/team', [ParticipantTeamController::class, 'editTeam'])->name('participant.team.update');
