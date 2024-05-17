@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use App\Events\JoinEventConfirmed;
 use App\Events\TeamMemberCreated;
-use App\Listeners\JoinEventConfirmation;
 use App\Events\TeamMemberUpdated;
+use App\Listeners\JoinEventConfirmation;
 use App\Listeners\TeamMemberCreatedListener;
 use App\Listeners\TeamMemberUpdatedListener;
 use App\Models\EventDetail;
@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
             JoinEventConfirmed::class,
             JoinEventConfirmation::class,
         );
-        
+
         Event::listen(
             TeamMemberUpdated::class,
             TeamMemberUpdatedListener::class
@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
             TeamMemberCreated::class,
             TeamMemberCreatedListener::class
         );
-       // EventDetail::preventLazyLoading();
-       Paginator::useBootstrapFive();
+        // EventDetail::preventLazyLoading();
+        Paginator::useBootstrapFive();
     }
 }

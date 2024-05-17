@@ -37,17 +37,16 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URL'),
         'allowed_hosts' => [
             'driftwood.gg',
-          ]
+        ],
     ],
-
 
     'steam' => [
         'client_id' => null,
         'client_secret' => '8AE02B51B52FA9BD6BB683EB4585A651',
         'redirect' => env('STEAM_REDIRECT_URL'),
         'allowed_hosts' => [
-          'driftwood.gg',
-        ]
-      ],
+            'driftwood.gg',
+        ],
+    ],
 
 ];

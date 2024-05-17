@@ -2,17 +2,9 @@
 
 namespace App\Models;
 
-
-use App\Models\EventDetail;
-use App\Models\PaymentTransaction;
-use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Stripe\StripeClient;
-use Illuminate\Http\Request;
-use Illuminate\Validation\UnauthorizedException;
-use Stripe\Exception\CardException;
 
-class StripePayment 
+class StripePayment
 {
     private $stripeClient;
 
@@ -25,7 +17,7 @@ class StripePayment
     {
         return $this->stripeClient->customers->create([
             'email' => $email,
-            'name' => $name
+            'name' => $name,
         ]);
     }
 
@@ -52,16 +44,16 @@ class StripePayment
         return $this->stripeClient->customers->retrieve($customerId, []);
     }
 
-    public function retrieveAllStripePaymentsByCustomer($arr) 
+    public function retrieveAllStripePaymentsByCustomer($arr)
     {
-        if (array_key_exists('customer', $arr) && !empty($arr['customer'])) {
+        if (array_key_exists('customer', $arr) && ! empty($arr['customer'])) {
             return $this->stripeClient->paymentMethods->all($arr);
         } else {
             return [];
         }
     }
 
-    public function retrieveStripePaymentByPaymentId($paymentId) 
+    public function retrieveStripePaymentByPaymentId($paymentId)
     {
         return $this->stripeClient->paymentIntents->retrieve($paymentId, []);
     }

@@ -2,26 +2,23 @@
 
 namespace App\Http\Controllers\Organizer;
 
-use App\Exceptions\DiscountNotFountException;
+use App\Exceptions\EventChangeException;
+use App\Exceptions\TimeGreaterException;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\EventDetail;
 use App\Models\EventCategory;
-use App\Models\Discount;
+use App\Models\EventDetail;
 use App\Models\EventTier;
 use App\Models\EventType;
-use Illuminate\View\View;
 use App\Models\Organizer;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Exceptions\EventChangeException;
-use App\Exceptions\TimeGreaterException;
-use App\Models\TeamMember;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\UnauthorizedException;
+use Illuminate\View\View;
 
 class OrganizerEventController extends Controller
 {
@@ -34,7 +31,7 @@ class OrganizerEventController extends Controller
         }
     }
 
-    function combineParams($queryParams)
+    public function combineParams($queryParams)
     {
         $combinedParams = [];
 
@@ -60,14 +57,14 @@ class OrganizerEventController extends Controller
         $organizer = Organizer::where('user_id', $userId)->first();
         $eventListQuery = EventDetail::generateOrganizerPartialQueryForFilter($request);
         $mappingEventState = EventDetail::mappingEventStateResolve();
-                
+
         $eventList = $eventListQuery
             ->with(['tier', 'type', 'game'])
             ->where('user_id', $user->id)
             ->paginate($count);
 
         $joinTeamIds = [];
-     
+
         $acceptedMembersCount = [];
         $results = DB::table('join_events')
             ->select('join_events.event_details_id', DB::raw('COUNT(team_members.id) as accepted_members_count'))
@@ -84,8 +81,8 @@ class OrganizerEventController extends Controller
                 $event->acceptedMembersCount = 0;
             }
         }
-        
-        $outputArray = compact('eventList', 'count', 'user', 'organizer', 
+
+        $outputArray = compact('eventList', 'count', 'user', 'organizer',
             'mappingEventState', 'eventCategoryList', 'eventTierList', 'eventTypeList'
         );
 
@@ -121,7 +118,7 @@ class OrganizerEventController extends Controller
                 $event->acceptedMembersCount = 0;
             }
         }
-        
+
         $mappingEventState = EventDetail::mappingEventStateResolve();
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
         $view = view('Organizer.ManageEventPartials.ManageEventScroll', $outputArray)->render();
@@ -134,7 +131,7 @@ class OrganizerEventController extends Controller
         $eventCategory = EventCategory::all();
         $eventTierList = EventTier::all();
         $eventTypeList = EventType::all();
-        
+
         return view('Organizer.CreateEvent', [
             'eventCategory' => $eventCategory,
             'event' => null,
@@ -145,13 +142,14 @@ class OrganizerEventController extends Controller
             'eventTierList' => $eventTierList,
             'eventTypeList' => $eventTypeList,
         ]);
-    } 
+    }
 
     public function storeEventBanner($file)
     {
-        $fileNameInitial = 'eventBanner-' . time() . '.' . $file->getClientOriginalExtension();
+        $fileNameInitial = 'eventBanner-'.time().'.'.$file->getClientOriginalExtension();
         $fileNameFinal = "images/events/$fileNameInitial";
         $file->storeAs('images/events/', $fileNameInitial);
+
         return $fileNameFinal;
     }
 
@@ -159,7 +157,7 @@ class OrganizerEventController extends Controller
     {
         $fileNameInitial = str_replace('images/events/', '', $file);
         $fileNameFinal = "images/events/$fileNameInitial";
-        
+
         if (file_exists($fileNameFinal)) {
             unlink($fileNameFinal);
         }
@@ -170,7 +168,7 @@ class OrganizerEventController extends Controller
         try {
             $user = $request->get('user');
             $userId = $user->id;
-            $isUserSameAsAuth = true;                       
+            $isUserSameAsAuth = true;
             $mappingEventState = EventDetail::mappingEventStateResolve();
             $livePreview = true;
 
@@ -178,22 +176,22 @@ class OrganizerEventController extends Controller
                 $userId, $request->id, ['joinEvents' => function ($query) {
                     $query->with(['members' => function ($query) {
                         $query->where('status', 'accepted');
-                        }]);
-                    }
+                    }]);
+                },
                 ], null
-            ); 
+            );
 
             $event->acceptedMembersCount = 0;
             foreach ($event->joinEvents as $joinEvent) {
                 $event->acceptedMembersCount += $joinEvent->members->count();
             }
-          
-            $outputArray = compact( 'event',  'user', 
+
+            $outputArray = compact('event', 'user',
                 'livePreview', 'mappingEventState'
             );
-            
+
             return view('Organizer.ViewEvent', $outputArray);
-        } catch (ModelNotFoundException | UnauthorizedException $e) {
+        } catch (ModelNotFoundException|UnauthorizedException $e) {
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             return $this->showErrorOrganizer("Event not found with id: $request->id");
@@ -209,10 +207,10 @@ class OrganizerEventController extends Controller
                 $userId, $id, ['joinEvents' => function ($query) {
                     $query->with(['members' => function ($query) {
                         $query->where('status', 'accepted');
-                        }]);
-                    }
+                    }]);
+                },
                 ], null
-            ); 
+            );
 
             $event->acceptedMembersCount = 0;
             foreach ($event->joinEvents as $joinEvent) {
@@ -220,7 +218,7 @@ class OrganizerEventController extends Controller
             }
 
             $isUserSameAsAuth = true;
-        } catch (ModelNotFoundException | UnauthorizedException $e) {
+        } catch (ModelNotFoundException|UnauthorizedException $e) {
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             return $this->showErrorOrganizer("Event can't be retieved with id: $id");
@@ -243,10 +241,10 @@ class OrganizerEventController extends Controller
                 $userId, $id, ['joinEvents' => function ($query) {
                     $query->with(['members' => function ($query) {
                         $query->where('status', 'accepted');
-                        }]);
-                    }
+                    }]);
+                },
                 ], null
-            ); 
+            );
 
             // dd($event);
 
@@ -256,7 +254,7 @@ class OrganizerEventController extends Controller
             }
 
             // dd($event);
-        
+
             return view('Organizer.ViewEvent', [
                 'event' => $event,
                 'mappingEventState' => EventDetail::mappingEventStateResolve(),
@@ -264,7 +262,7 @@ class OrganizerEventController extends Controller
                 'livePreview' => 0,
             ]);
 
-        } catch (ModelNotFoundException | UnauthorizedException $e) {
+        } catch (ModelNotFoundException|UnauthorizedException $e) {
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             return $this->showErrorOrganizer("Event not retrieved with id: $id");
@@ -278,17 +276,17 @@ class OrganizerEventController extends Controller
             $eventDetail = EventDetail::storeLogic($eventDetail, $request);
             $eventDetail->user_id = $request->get('user')->id;
             $eventDetail->save();
-            
+
             if ($request->livePreview == 'true') {
-                return redirect('organizer/event/' . $eventDetail->id . '/live');
-            } elseif ( $request->goToCheckoutPage == 'yes' ) {
-                return redirect('organizer/event/' . $eventDetail->id . '/checkout');
+                return redirect('organizer/event/'.$eventDetail->id.'/live');
+            } elseif ($request->goToCheckoutPage == 'yes') {
+                return redirect('organizer/event/'.$eventDetail->id.'/checkout');
             } else {
-                return redirect('organizer/event/' . $eventDetail->id . '/success');
+                return redirect('organizer/event/'.$eventDetail->id.'/success');
             }
-        } catch (TimeGreaterException | EventChangeException $e ) {
+        } catch (TimeGreaterException|EventChangeException $e) {
             return back()->with('error', $e->getMessage());
-        }  catch (Exception $e) {
+        } catch (Exception $e) {
             return back()->with('error', 'Something went wrong with saving data!');
         }
     }
@@ -299,16 +297,16 @@ class OrganizerEventController extends Controller
             $user = $request->get('user');
             $userId = $user->id;
             $event = EventDetail::findEventWithRelationsAndThrowError(
-                $userId, $id, null , null
-            );  
+                $userId, $id, null, null
+            );
             $status = $event->statusResolved();
-                
-            if ( $status == "ENDED" ) {
+
+            if ($status == 'ENDED') {
                 return $this->showErrorOrganizer("Event has already ended id: $id");
-            } else if ( !in_array($status, ['UPCOMING', 'DRAFT', 'SCHEDULED', 'PENDING' ] ) ) {
+            } elseif (! in_array($status, ['UPCOMING', 'DRAFT', 'SCHEDULED', 'PENDING'])) {
                 return $this->showErrorOrganizer("Event has already gone live for id: $id");
             }
-            
+
             $eventCategory = EventCategory::all();
             $eventTierList = EventTier::all();
             $eventTypeList = EventType::all();
@@ -323,7 +321,7 @@ class OrganizerEventController extends Controller
                 'eventTypeList' => $eventTypeList,
                 'editMode' => 1,
             ]);
-        } catch (ModelNotFoundException | UnauthorizedException $e) {
+        } catch (ModelNotFoundException|UnauthorizedException $e) {
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             return $this->showErrorOrganizer("Event not found for id: $id");
@@ -336,26 +334,26 @@ class OrganizerEventController extends Controller
             $eventId = $id;
             $user = $request->get('user');
             $userId = $user->id;
-            $eventDetail =  EventDetail::findEventAndThrowError(
+            $eventDetail = EventDetail::findEventAndThrowError(
                 $id, $userId
             );
-            
+
             if ($eventId) {
                 $eventDetail = EventDetail::storeLogic($eventDetail, $request);
                 $eventDetail->user_id = $request->get('user')->id;
                 $eventDetail->save();
 
                 if ($request->livePreview == 'true') {
-                    return redirect('organizer/event/' . $eventDetail->id . '/live');
-                } else if ( $request->goToCheckoutPage == 'yes' ) {
-                    return redirect('organizer/event/' . $eventDetail->id . '/checkout');
+                    return redirect('organizer/event/'.$eventDetail->id.'/live');
+                } elseif ($request->goToCheckoutPage == 'yes') {
+                    return redirect('organizer/event/'.$eventDetail->id.'/checkout');
                 } else {
-                    return redirect('organizer/event/' . $eventDetail->id . '/success');
+                    return redirect('organizer/event/'.$eventDetail->id.'/success');
                 }
             } else {
                 return $this->showErrorOrganizer("Event not found for id: $id");
             }
-        } catch (TimeGreaterException | EventChangeException $e ) {
+        } catch (TimeGreaterException|EventChangeException $e) {
             return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
             return back()->with('error', 'Something went wrong with saving data!');
@@ -364,15 +362,16 @@ class OrganizerEventController extends Controller
 
     public function destroy($id)
     {
-        try{
+        try {
             $event = EventDetail::find($id);
             EventDetail::destroyEventBanner($event->fileBanner);
             $event->delete();
+
             return redirect('organizer/event');
-        } catch (ModelNotFoundException | UnauthorizedException $e) {
+        } catch (ModelNotFoundException|UnauthorizedException $e) {
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
-            return $this->showErrorOrganizer("Failed to delete event!");
+            return $this->showErrorOrganizer('Failed to delete event!');
         }
     }
 }

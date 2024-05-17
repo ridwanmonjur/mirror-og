@@ -1,21 +1,18 @@
 <?php
 
 namespace App\Http\Controllers\Participant;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FriendRequest;
 use App\Http\Requests\LikeRequest;
 use App\Http\Requests\UpdateParticipantsRequest;
-use App\Models\ActivityLogs;
-use App\Models\EventDetail;
 use App\Models\EventInvitation;
 use App\Models\Follow;
 use App\Models\Friend;
 use App\Models\JoinEvent;
 use App\Models\Like;
-use App\Models\Organizer;
 use App\Models\Participant;
 use App\Models\Team;
-use App\Models\TeamCaptain;
 use App\Models\TeamMember;
 use App\Models\User;
 use Exception;
@@ -26,7 +23,7 @@ use Illuminate\Support\Facades\DB;
 class ParticipantController extends Controller
 {
     public function searchParticipant(Request $request)
-    {   
+    {
         // TODO LIVEWIRE
 
         $teamId = $request->teamId;
@@ -39,10 +36,12 @@ class ParticipantController extends Controller
 
         $outputArray = compact('userList', 'selectTeam');
         $view = view('Participant.MemberManagementPartials.MemberManagementScroll', $outputArray)->render();
+
         return response()->json(['html' => $view]);
     }
 
-    public function viewRequest(Request $request) {
+    public function viewRequest(Request $request)
+    {
         $user = $request->attributes->get('user');
         $user_id = $user->id;
 
@@ -78,7 +77,7 @@ class ParticipantController extends Controller
             ->selectRaw('teams.id as team_id, COALESCE(COUNT(team_members.id), 0) as member_count')
             ->pluck('member_count', 'team_id')
             ->toArray();
-            
+
         // sentTeam
         $pendingTeamAndMemberList = Team::join('team_members', 'teams.id', '=', 'team_members.team_id')
             ->where('team_members.user_id', $user_id)
@@ -91,7 +90,7 @@ class ParticipantController extends Controller
 
         // invitations
         $teamMembersList = TeamMember::where('user_id', $user_id)->pluck('team_id')->unique();
-        $invitedEventsList = EventInvitation::whereIn('team_id', $teamMembersList)  
+        $invitedEventsList = EventInvitation::whereIn('team_id', $teamMembersList)
             ->with('event', 'event.tier', 'event.game', 'event.user')
             ->get();
 
@@ -99,16 +98,19 @@ class ParticipantController extends Controller
         return view('Participant.ParticipantRequest', compact('membersCount', 'invitedTeamAndMemberList', 'pendingTeamAndMemberList', 'invitedEventsList'));
     }
 
-    public function viewOwnProfile(Request $request) {
+    public function viewOwnProfile(Request $request)
+    {
         $user = $request->attributes->get('user');
         $user_id = $user?->id ?? null;
+
         return $this->viewProfile($request, $user_id, $user, true);
     }
 
-    public function viewProfileById(Request $request, $id) {
+    public function viewProfileById(Request $request, $id)
+    {
         $user = User::findOrFail($id);
         $loggedInUser = Auth::user();
-       
+
         if ($user->role != 'PARTICIPANT') {
             return redirect()->route('public.organizer.view', ['id' => $id]);
         }
@@ -116,49 +118,52 @@ class ParticipantController extends Controller
         return $this->viewProfile($request, $loggedInUser ? $loggedInUser->id : null, $user, false);
     }
 
-    private function viewProfile(Request $request, $logged_user_id, $userProfile, $isOwnProfile = true) {
-   
+    private function viewProfile(Request $request, $logged_user_id, $userProfile, $isOwnProfile = true)
+    {
+
         [
             'teamList' => $teamList,
             'teamIdList' => $teamIdList,
-        ] = Team::getUserTeamList($userProfile->id);   
+        ] = Team::getUserTeamList($userProfile->id);
         $pastTeam = Team::getUserPastTeamList($userProfile->id);
 
         $awardList = Team::getAwardListByTeamIdList($teamIdList);
         $achievementList = Team::getAchievementListByTeamIdList($teamIdList);
         $joinEvents = JoinEvent::getJoinEventsForTeamListWithEventsRosterResults($teamIdList);
         $totalEventsCount = $joinEvents->count();
-        ['wins' => $wins, 'streak' => $streak] = 
+        ['wins' => $wins, 'streak' => $streak] =
             JoinEvent::getJoinEventsWinCountForTeamList($teamIdList);
-        
+
         $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
         $followCounts = Follow::getFollowCounts($userIds);
         if ($logged_user_id) {
             $isFollowing = Follow::getIsFollowing($logged_user_id, $userIds);
         } else {
-            $isFollowing = []; 
+            $isFollowing = [];
         }
         $joinEventsHistory = $joinEventsActive = $values = [];
-        ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory] 
+        ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
             = JoinEvent::processEvents($joinEvents, $isFollowing);
 
         $joinEventIds = $joinEvents->pluck('id')->toArray();
 
-        return view('Participant.PlayerProfile', 
+        return view('Participant.PlayerProfile',
             compact('joinEvents', 'userProfile', 'teamList', 'isOwnProfile',
                 'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
                 'wins', 'streak', 'awardList', 'achievementList', 'pastTeam'
             )
         );
-       
+
     }
 
-    public function editProfile(UpdateParticipantsRequest $request) {
+    public function editProfile(UpdateParticipantsRequest $request)
+    {
         $participant = Participant::findOrFail($request->validated()['id']);
         $participant->update($request->validated());
+
         return response()->json([
-            'message' => 'Participant updated successfully', 
-            'success' => true
+            'message' => 'Participant updated successfully',
+            'success' => true,
         ], 200);
     }
 
@@ -180,10 +185,11 @@ class ParticipantController extends Controller
             // ]));
 
             $existingLike->delete();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Successfully unliked the event',
-                'isLiked' => false
+                'isLiked' => false,
             ], 201);
         } else {
             Like::create([
@@ -197,17 +203,17 @@ class ParticipantController extends Controller
             //     'subject_id' => $userId,
             //     'object_id' => $organizerId,
             //     'action' => 'Like',
-            //     'log' => '<span class="notification-gray"> User' 
-            //     . ' <span class="notification-black">' . $user->name . '</span> started following ' 
-            //     . ' <span class="notification-black">' . $organizer->name . '.</span> ' 
+            //     'log' => '<span class="notification-gray"> User'
+            //     . ' <span class="notification-black">' . $user->name . '</span> started following '
+            //     . ' <span class="notification-black">' . $organizer->name . '.</span> '
             //     . '</span>'
             // ]));
 
             return response()->json([
                 'success' => true,
                 'message' => 'Successfully liked the event',
-                'isLiked' => true
-            ], 201); 
+                'isLiked' => true,
+            ], 201);
         }
     }
 
@@ -217,23 +223,24 @@ class ParticipantController extends Controller
         $validatedData = $request->validated();
         if (array_key_exists('delete', $validatedData)) {
             Friend::where($validatedData['add.user1_id'])->delete();
+
             return response()->json(['success' => true, 'message' => 'Friend withdrawn']);
-        } else if (array_key_exists('add', $validatedData)) {
+        } elseif (array_key_exists('add', $validatedData)) {
             try {
                 Friend::create([
                     'user1_id' => $user->id,
                     'user2_id' => $validatedData['add.user1_id'],
                     'status' => 'pending',
-                    'actor_id' => $user->id
+                    'actor_id' => $user->id,
                 ]);
 
                 return response()->json([
                     'success' => true,
                     'message' => 'Successfully send a friend request',
                 ], 201);
-            } catch(Exception $e) {
-                if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
-                    $errorMessage = "You have had a previous friend request!";
+            } catch (Exception $e) {
+                if ($e->getCode() == '23000' || $e->getCode() == 1062) {
+                    $errorMessage = 'You have had a previous friend request!';
                 } else {
                     $errorMessage = 'Your request to this participant failed!';
                 }
@@ -249,27 +256,27 @@ class ParticipantController extends Controller
                 $friend = Friend::findOrFail($validatedData['update.id']);
                 $status = $validatedData['update.status'];
                 $isPermitted = $status == 'left';
-                if (!$isPermitted) {
+                if (! $isPermitted) {
                     if ($status == 'accepted' || $status == 'rejected') {
                         $isPermitted = $friend->status == 'pending' && $user->id != $friend->actor_id;
-                    } 
+                    }
                 }
-                
-                if (!$isPermitted) {
+
+                if (! $isPermitted) {
                     return response()->json(['success' => false, 'message' => 'This request is not allowed.'], 400);
                 }
 
                 $friend->update([
                     'actor_id' => $user->id,
-                    'status' => $status
+                    'status' => $status,
                 ]);
 
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 return response()->json([
                     'success' => false,
                     'message' => $e->getMessage(),
                 ], 400);
             }
         }
-    }   
+    }
 }

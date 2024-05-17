@@ -33,7 +33,7 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::dropIfExists('organizer_create_event_discounts');
-        
+
         Schema::enableForeignKeyConstraints();
 
     }

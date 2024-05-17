@@ -2,18 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Organizer;
 use App\Models\User;
 use Exception;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Illuminate\Support\DateFactory;
-use Illuminate\Support\Timebox;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 use function PHPUnit\Framework\isNull;
 
@@ -25,13 +18,13 @@ class EventSeeder extends Seeder
     public function run(): void
     {
         $userId = null;
-        if (isNull($userId)){
+        if (isNull($userId)) {
             $user = User::where('email', 'ridwanmonjur@gmail.com')->first();
-            if (!$user){
-                throw new Exception("User not found! Seed user class first");
+            if (! $user) {
+                throw new Exception('User not found! Seed user class first');
             }
             $userId = $user->id;
-        } 
+        }
 
         $faker = Faker::create();
 
@@ -67,7 +60,7 @@ class EventSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
                 'user_id' => $userId,
-            ])
+            ]),
         ];
 
         DB::table('event_details')->insert([
@@ -81,9 +74,9 @@ class EventSeeder extends Seeder
         DB::table('event_categories')->insert([
             'gameTitle' => $faker->sentence(),
             'gameIcon' => now()->addDays(2)->toDateTime(),
-            'eventType' => "Type A",
+            'eventType' => 'Type A',
             'tierIcon' => 'gaming,esports,dota2',
-            'eventTier' => "Turtle",
+            'eventTier' => 'Turtle',
             'event_id' => $eventsArray[0],
         ]);
 
@@ -98,9 +91,9 @@ class EventSeeder extends Seeder
         DB::table('event_categories')->insert([
             'gameTitle' => $faker->sentence(),
             'gameIcon' => now()->addDays(2)->toDateTime(),
-            'eventType' => "Type A",
+            'eventType' => 'Type A',
             'tierIcon' => 'gaming,esports,dota2',
-            'eventTier' => "Mermaid",
+            'eventTier' => 'Mermaid',
             'event_id' => $eventsArray[1],
         ]);
 
@@ -115,9 +108,9 @@ class EventSeeder extends Seeder
         DB::table('event_categories')->insert([
             'gameTitle' => $faker->sentence(),
             'gameIcon' => now()->addDays(2)->addHours(3)->toDateTime(),
-            'eventType' => "Type C",
+            'eventType' => 'Type C',
             'tierIcon' => 'gaming,esports,dota2',
-            'eventTier' => "Dolphin",
+            'eventTier' => 'Dolphin',
             'event_id' => $eventsArray[2],
         ]);
 
@@ -132,12 +125,11 @@ class EventSeeder extends Seeder
         DB::table('event_categories')->insert([
             'gameTitle' => $faker->sentence(),
             'gameIcon' => now()->addDays(2)->toDateTime(),
-            'eventType' => "Type C",
+            'eventType' => 'Type C',
             'tierIcon' => 'gaming,esports,dota2',
-            'eventTier' => "Starfish",
+            'eventTier' => 'Starfish',
             'event_id' => $eventsArray[3],
         ]);
-
 
         // Seed event category and establish the one-to-one relationship
         // DB::table('event_categories')->insert([
@@ -150,8 +142,8 @@ class EventSeeder extends Seeder
         //     'organizerName' => "Ocean's Gaming",
         //     'fee' => 0,
         //     'eventGroupStructure' => 'ROUND ROBIN',
-        //     'totalParticipants' => 16, 
-        //     'registeredParticipants' => 16, 
+        //     'totalParticipants' => 16,
+        //     'registeredParticipants' => 16,
         //     'prize' => "Exclusive prize",
         // ]);
 

@@ -2,21 +2,24 @@
 
 namespace App\Http\Livewire\Participant\Profile;
 
-use Livewire\Component;
 use App\Models\ActivityLogs;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
+use Livewire\Component;
 
 class ShowActivityLogs extends Component
 {
     public $userId = null;
+
     public $duration = 'new';
 
     public $page = 1;
+
     public $totalItems = [];
+
     public $loadedItems = 0;
+
     public $hasMore = true;
 
     public function mount()
@@ -26,7 +29,7 @@ class ShowActivityLogs extends Component
 
     public function loadActivityLogs()
     {
-        $perPage = 10; 
+        $perPage = 10;
         $activityLogsQuery = ActivityLogs::where('subject_id', $this->userId)
             ->where('subject_type', User::class);
         if ($this->duration == 'new') {
@@ -37,18 +40,17 @@ class ShowActivityLogs extends Component
             $activityLogsQuery->where('created_at', '<', Carbon::now()->subWeek()->startOfWeek());
         }
 
-    
         $activityLogs = $activityLogsQuery->paginate($perPage, ['*'], 'page', $this->page);
         Log::info($activityLogs);
 
         $this->hasMore = $activityLogs->hasMorePages();
         $this->totalItems = $activityLogs->items();
-        $this->loadedItems += $perPage; 
+        $this->loadedItems += $perPage;
     }
 
     public function loadMore()
     {
-        $perPage = 10; 
+        $perPage = 10;
         $this->page++;
         $newItemsQuery = ActivityLogs::where('subject_id', $this->userId)
             ->where('subject_type', User::class);
@@ -63,13 +65,12 @@ class ShowActivityLogs extends Component
         $newItems = $newItemsQuery->paginate($perPage, ['*'], 'page', $this->page)->items();
         $this->totalItems = [
             ...$this->totalItems,
-            ...$newItems
+            ...$newItems,
         ];
-            
-        $this->loadedItems += $perPage; 
+
+        $this->loadedItems += $perPage;
     }
 
-   
     public function render()
     {
         return view('livewire.participant.profile.show-activity-logs');

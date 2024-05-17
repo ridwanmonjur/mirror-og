@@ -3,21 +3,19 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EventDetailResource\Pages;
-use App\Filament\Resources\EventDetailResource\RelationManagers;
 use App\Models\EventDetail;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class EventDetailResource extends Resource
 {
     protected static ?string $model = EventDetail::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
+
     public static ?string $navigationGroup = 'Manage Event';
 
     public static function form(Form $form): Form
@@ -49,32 +47,31 @@ class EventDetailResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-
-        ->columns([
-            Tables\Columns\TextColumn::make('eventName')->searchable()->sortable(),
-            Tables\Columns\TextColumn::make('startDate')
-                ->date(),
-            Tables\Columns\TextColumn::make('endDate')
-                ->date(),
-            Tables\Columns\TextColumn::make('startTime'),
-            Tables\Columns\TextColumn::make('endTime'),
-            Tables\Columns\TextColumn::make('eventDescription')->limit(30)->toggleable(),
-            Tables\Columns\ImageColumn::make('eventBanner'),
-            Tables\Columns\TextColumn::make('eventTags'),
-            Tables\Columns\TextColumn::make('created_at')
-            ->toggleable()->dateTime(),
-            Tables\Columns\TextColumn::make('updated_at')
-            ->toggleable()->dateTime(),
-        ])
-        ->filters([
-            //
-        ])
-        ->actions([
-            Tables\Actions\EditAction::make(),
-        ])
-        ->bulkActions([
-            Tables\Actions\DeleteBulkAction::make(),
-        ]);
+            ->columns([
+                Tables\Columns\TextColumn::make('eventName')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('startDate')
+                    ->date(),
+                Tables\Columns\TextColumn::make('endDate')
+                    ->date(),
+                Tables\Columns\TextColumn::make('startTime'),
+                Tables\Columns\TextColumn::make('endTime'),
+                Tables\Columns\TextColumn::make('eventDescription')->limit(30)->toggleable(),
+                Tables\Columns\ImageColumn::make('eventBanner'),
+                Tables\Columns\TextColumn::make('eventTags'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->toggleable()->dateTime(),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->toggleable()->dateTime(),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make(),
+            ]);
     }
 
     public static function getRelations(): array

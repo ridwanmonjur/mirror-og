@@ -5,19 +5,17 @@ namespace App\Http\Controllers\Participant;
 use App\Events\JoinEventConfirmed;
 use App\Http\Controllers\Controller;
 use App\Jobs\HandleFollows;
-use App\Models\ActivityLogs;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\QueryException;
-use App\Models\Team;
-use App\Models\TeamCaptain;
 use App\Models\EventDetail;
 use App\Models\Follow;
 use App\Models\JoinEvent;
+use App\Models\Team;
+use App\Models\TeamCaptain;
 use App\Models\TeamMember;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Session;
@@ -27,10 +25,10 @@ class ParticipantEventController extends Controller
 {
     public function home(Request $request)
     {
-       
+
         if (Session::has('intended')) {
             return redirect(Session::get('intended'));
-        } 
+        }
 
         $userId = Auth::id();
         $count = 6;
@@ -44,32 +42,31 @@ class ParticipantEventController extends Controller
 
         if ($request->ajax()) {
             $view = view('Participant.HomeScroll', $output)->render();
+
             return response()->json(['html' => $view]);
         } else {
             return view('Participant.Home', $output);
         }
     }
 
-   
-
     public function viewEvent(Request $request, $id)
     {
         try {
             $user = Auth::user();
             $userId = $user && $user->id ? $user->id : null;
-            $event = EventDetail::with([ 'game', 'type', 'joinEvents' => function ($query) {
-                    $query->with(['members' => function ($query) {
-                        $query->where('status', 'accepted');
-                        }]);
-                    }
-                ], null
-            )->find($id); 
+            $event = EventDetail::with(['game', 'type', 'joinEvents' => function ($query) {
+                $query->with(['members' => function ($query) {
+                    $query->where('status', 'accepted');
+                }]);
+            },
+            ], null
+            )->find($id);
 
             $event->acceptedMembersCount = 0;
             foreach ($event->joinEvents as $joinEvent) {
                 $event->acceptedMembersCount += $joinEvent->members->count();
             }
-            if (!$event) {
+            if (! $event) {
                 throw new ModelNotFoundException("Event not found by id: $id");
             }
 
@@ -89,7 +86,7 @@ class ParticipantEventController extends Controller
                 if ($event->sub_action_private == 'private') {
                     $checkIfUserIsOrganizerOfEvent = $event->user_id == $userId;
                     $checkIfUserIsInvited = true;
-                    $checkIfShouldDisallow = !($checkIfUserIsOrganizerOfEvent || $checkIfUserIsInvited);
+                    $checkIfShouldDisallow = ! ($checkIfUserIsOrganizerOfEvent || $checkIfUserIsInvited);
                     if ($checkIfShouldDisallow) {
                         throw new UnauthorizedException("This is a provate event and you're neither organizer nor a participant of event");
                     }
@@ -97,7 +94,7 @@ class ParticipantEventController extends Controller
 
                 if ($status == 'SCHEDULED') {
                     $checkIfUserIsOrganizerOfEvent = $event->user_id == $userId;
-                    if (!$checkIfUserIsOrganizerOfEvent) {
+                    if (! $checkIfUserIsOrganizerOfEvent) {
                         throw new UnauthorizedException('You cannot view a scheduled event');
                     }
                 }
@@ -119,7 +116,7 @@ class ParticipantEventController extends Controller
 
     public function followOrganizer(Request $request)
     {
-       
+
         $user = $request->attributes->get('user');
         $userId = $user->id;
         $organizerId = $request->organizer_id;
@@ -139,9 +136,10 @@ class ParticipantEventController extends Controller
             // ]));
 
             $existingFollow->delete();
+
             return response()->json([
                 'message' => 'Successfully Unfollowed the organizer',
-                'isFollowing' => false
+                'isFollowing' => false,
             ], 201);
         } else {
             Follow::create([
@@ -155,17 +153,17 @@ class ParticipantEventController extends Controller
             //     'subject_id' => $userId,
             //     'object_id' => $organizerId,
             //     'action' => 'Follow',
-            //     'log' => '<span class="notification-gray"> User' 
-            //     . ' <span class="notification-black">' . $user->name . '</span> started following ' 
-            //     . ' <span class="notification-black">' . $organizer->name . '.</span> ' 
+            //     'log' => '<span class="notification-gray"> User'
+            //     . ' <span class="notification-black">' . $user->name . '</span> started following '
+            //     . ' <span class="notification-black">' . $organizer->name . '.</span> '
             //     . '</span>'
             // ]));
 
             return response()->json([
                 'message' => 'Successfully followed the organizer',
-                'isFollowing' => true
-            ], 201); 
-        } 
+                'isFollowing' => true,
+            ], 201);
+        }
     }
 
     public function registrationManagement(Request $request, $id)
@@ -178,11 +176,11 @@ class ParticipantEventController extends Controller
                 });
             });
         })->with([
-            'invitationList', 'members.payments' => function($query) {
+            'invitationList', 'members.payments' => function ($query) {
                 $query
                     ->groupBy('team_members_id')
                     ->select('team_members_id', DB::raw('SUM(payment_amount) as total_payment'));
-            }, 'members.user'
+            }, 'members.user',
         ])->first();
 
         $paymentsByMemberId = [];
@@ -194,7 +192,7 @@ class ParticipantEventController extends Controller
                 $paymentsByMemberId[$member->id] = 0;
             }
         }
-        
+
         $member = TeamMember::where('user_id', $user_id)->select('id')->get()->first();
 
         if ($selectTeam) {
@@ -205,7 +203,7 @@ class ParticipantEventController extends Controller
             $userIds = array_unique(array_merge($joinEventUserIds, $invitedEventUserIds));
             $followCounts = Follow::getFollowCounts($userIds);
             $isFollowing = Follow::getIsFollowing($user_id, $userIds);
-            ['joinEvents' => $joinEvents, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents] 
+            ['joinEvents' => $joinEvents, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents]
                 = JoinEvent::processEvents($joinEvents, $isFollowing);
 
             return view('Participant.RegistrationManagement',
@@ -225,15 +223,17 @@ class ParticipantEventController extends Controller
         ] = Team::getUserTeamListAndPluckIds($user_id);
         $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $user_id, 'accepted');
         if ($hasJoinedOtherTeams) {
-            return $this->showErrorParticipant("One of your teams has joined this event already!");
+            return $this->showErrorParticipant('One of your teams has joined this event already!');
         }
 
         if ($selectTeam) {
             $count = count($selectTeam);
+
             return view('Participant.SelectTeamToRegister', compact('selectTeam', 'count', 'id'));
-          
+
         } else {
             $errorMessage = 'You have no team. Create a team.';
+
             return view('Participant.CreateTeamToRegister', ['id' => $id])->with('errorMessage', $errorMessage);
         }
     }
@@ -253,19 +253,19 @@ class ParticipantEventController extends Controller
             $isAlreadyMember = TeamMember::isAlreadyMember($teamId, $userId);
             $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $userId, 'accepted');
             if ($hasJoinedOtherTeams) {
-                throw new Exception("One of your teams has joined this event already!");
+                throw new Exception('One of your teams has joined this event already!');
             }
 
             $selectTeam = Team::getTeamAndMembersByTeamId($teamId);
             // dd($selectTeam);
             $event = EventDetail::with(['user' => function ($query) {
-                    $query->select('id', 'name', 'email');
-                }])
-                ->select('id', 'user_id', 'eventName' )
+                $query->select('id', 'name', 'email');
+            }])
+                ->select('id', 'user_id', 'eventName')
                 ->find($id);
 
             if ($selectTeam && $isAlreadyMember) {
-                [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs] 
+                [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs]
                     = $selectTeam->processTeamRegistration($user, $event, true);
                 Event::dispatch(new JoinEventConfirmed(
                     compact(
@@ -275,8 +275,9 @@ class ParticipantEventController extends Controller
                 ));
 
                 DB::commit();
+
                 return view('Participant.EventNotify', compact('id', 'selectTeam'));
-               
+
             } else {
                 if (is_null($selectTeam)) {
                     throw new ModelNotFoundException("Can't find team with the id!");
@@ -286,11 +287,12 @@ class ParticipantEventController extends Controller
             }
         } catch (Exception $e) {
             DB::rollBack();
-            if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
+            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
                 $errorMessage = "Please choose a team that hasn't joined this event!";
             } else {
                 $errorMessage = $e->getMessage();
             }
+
             return $this->showErrorParticipant($errorMessage);
         }
     }
@@ -298,7 +300,7 @@ class ParticipantEventController extends Controller
     public function createTeamToJoinEvent(Request $request, $id)
     {
         DB::beginTransaction();
-        try{
+        try {
             $user = $request->attributes->get('user');
             $user_id = $request->attributes->get('user')->id;
             [
@@ -308,17 +310,19 @@ class ParticipantEventController extends Controller
 
             $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $user_id, 'accepted');
             if ($hasJoinedOtherTeams) {
-                throw new Exception("One of your teams has joined this event already!");
+                throw new Exception('One of your teams has joined this event already!');
             }
 
             $event = EventDetail::select('id', 'user_id', 'eventName')->with(
-                ['user' => function ($q) { $q->select('id', 'name', 'email'); }]
+                ['user' => function ($q) {
+                    $q->select('id', 'name', 'email');
+                }]
             )->find($id);
 
             if ($count < 5) {
                 $request->validate([
                     'teamName' => 'required|string|max:25',
-                    'teamDescription' => 'required'
+                    'teamDescription' => 'required',
                 ]);
 
                 $teamName = $request->input('teamName');
@@ -334,7 +338,7 @@ class ParticipantEventController extends Controller
                 $teamMembers = $selectTeam->members->load(['user' => function ($q) {
                     $q->select(['name', 'id', 'email']);
                 }]);
-                [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs] 
+                [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs]
                     = $selectTeam->processTeamRegistration($user, $event, true);
                 event(new JoinEventConfirmed(
                     compact(
@@ -343,20 +347,23 @@ class ParticipantEventController extends Controller
                     )
                 ));
                 DB::commit();
+
                 return view('Participant.EventNotify', compact('id', 'selectTeam'));
             } else {
-                session()->flash('errorMessage', "You already have 5 teams!");
+                session()->flash('errorMessage', 'You already have 5 teams!');
+
                 return view('Participant.CreateTeamToRegister', ['id' => $id]);
             }
         } catch (Exception $e) {
             DB::rollBack();
-            if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
-                $errorMessage = "Please choose a unique name!";
+            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
+                $errorMessage = 'Please choose a unique name!';
             } else {
                 $errorMessage = $e->getMessage();
             }
-            
+
             session()->flash('errorMessage', $errorMessage);
+
             return view('Participant.CreateTeamToRegister', ['id' => $id]);
 
         }

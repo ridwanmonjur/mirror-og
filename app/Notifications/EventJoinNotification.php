@@ -17,9 +17,8 @@ class EventJoinNotification extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        $body 
-    )
-    {
+        $body
+    ) {
         Log::info('Notification join event ================>');
         Log::info('Notification join event ================>');
         $this->body = $body;
@@ -50,7 +49,7 @@ class EventJoinNotification extends Notification
         return [
             'data' => $this->body['text'],
             'title' => $this->body['subject'],
-            'links' =>   $this->body['links']
+            'links' => $this->body['links'],
             // Add any additional data you want to store in the database
         ];
     }
@@ -65,7 +64,6 @@ class EventJoinNotification extends Notification
     //         // Add any additional data you want to store in the database
     //     ];
     // }
-
 
     // public function markAsRead(){
     //     Auth::user()->unreadNotifications->markAsRead();

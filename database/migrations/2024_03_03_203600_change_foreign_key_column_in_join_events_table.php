@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('join_events', function (Blueprint $table) {
             $table->dropConstrainedForeignId('user_id');
-        
+
             $table->foreignId('team_id')
                 ->constrained('teams')
                 ->cascadeOnDelete();

@@ -3,18 +3,14 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
@@ -27,34 +23,32 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-            TextInput::make('name')
-                ->required()
-                ->maxLength(255),
-            TextInput::make('email')
-                ->email()
-                ->required()
-                ->maxLength(255),
-            TextInput::make('password')
-                ->password()
-                ->required()
-                ->hiddenOn('edit')
-                ->maxLength(255)
-                ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
-            Forms\Components\DatePicker::make('email_verified_at'),
-            Forms\Components\Select::make('role')
-                ->options([
-                    'organizer' => 'Organizer',
-                    'participant' => 'Participant',
-                    'admin' => 'Admin',
-                ])
-                ,
-            Forms\Components\Select::make('status')
-                ->options([
-                    'draft' => 'DRAFT',
-                    'reviewing' => 'Reviewing',
-                    'published' => 'Published',
-                ])
-                ,
+                TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                TextInput::make('email')
+                    ->email()
+                    ->required()
+                    ->maxLength(255),
+                TextInput::make('password')
+                    ->password()
+                    ->required()
+                    ->hiddenOn('edit')
+                    ->maxLength(255)
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
+                Forms\Components\DatePicker::make('email_verified_at'),
+                Forms\Components\Select::make('role')
+                    ->options([
+                        'organizer' => 'Organizer',
+                        'participant' => 'Participant',
+                        'admin' => 'Admin',
+                    ]),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'draft' => 'DRAFT',
+                        'reviewing' => 'Reviewing',
+                        'published' => 'Published',
+                    ]),
             ]);
     }
 
@@ -75,13 +69,13 @@ class UserResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime('M j, Y')
-                    ->sortable()
-                ])
+                    ->sortable(),
+            ])
             ->filters([
                 Tables\Filters\Filter::make('verified')
-                ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')),
-               Tables\Filters\Filter::make('unverified')
-                ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
+                    ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')),
+                Tables\Filters\Filter::make('unverified')
+                    ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

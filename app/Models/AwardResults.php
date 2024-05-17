@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class AwardResults extends Model {
+class AwardResults extends Model
+{
     protected $table = 'awards_results';
 
-    public static function getTeamAwardResults ($id) {
+    public static function getTeamAwardResults($id)
+    {
         return DB::table('join_events')
             ->where('join_events.event_details_id', '=', $id)
             ->leftJoin('teams', 'join_events.team_id', '=', 'teams.id')
@@ -16,16 +18,16 @@ class AwardResults extends Model {
             ->leftJoin('awards', 'awards_results.award_id', '=', 'awards.id')
             // ->leftJoin('achievements', 'join_events.id', '=', 'achievements.join_event_id')
             ->select(
-                'join_events.id as id1', 
-                'join_events.event_details_id', 
+                'join_events.id as id1',
+                'join_events.event_details_id',
                 'join_events.team_id',
                 'teams.*',
                 'awards_results.id as results_id',
                 'awards_results.award_id',
-                'awards.title as awards_title', 
+                'awards.title as awards_title',
                 'awards.image as awards_image',
-                // 'achievements.id as achievements_id', 
-                // 'achievements.title as achievements_title', 
+                // 'achievements.id as achievements_id',
+                // 'achievements.title as achievements_title',
                 // 'achievements.description as achievements_description',
                 // 'achievements.created_at as achievements_created_at',
             )

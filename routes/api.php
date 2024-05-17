@@ -2,13 +2,13 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\OrganizerController;
-use App\Http\Controllers\Organizer\OrganizerInvitationController;
 use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Organizer\OrganizerEventResultsController;
+use App\Http\Controllers\Organizer\OrganizerInvitationController;
 use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
-use App\Http\Controllers\StripeController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
+use App\Http\Controllers\StripeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +28,7 @@ Route::middleware('auth')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'participant'], function () {
-    
+
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'check-jwt-permission:participant|admin'], function () {
             Route::post('events', [ParticipantEventController::class, 'index'])->name('events.index');
@@ -48,7 +48,6 @@ Route::group(['prefix' => 'participant'], function () {
         });
     });
 });
-
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {

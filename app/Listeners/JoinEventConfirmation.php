@@ -5,12 +5,8 @@ namespace App\Listeners;
 use App\Events\JoinEventConfirmed;
 use App\Models\ActivityLogs;
 use App\Notifications\EventJoinNotification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
-use ReflectionObject;
-use ReflectionProperty;
 use Throwable;
 
 class JoinEventConfirmation
@@ -30,10 +26,10 @@ class JoinEventConfirmation
     {
         // $user = $event->user;
         Log::info('Join event ================>');
-        Log::error($event->memberList); 
-        Log::info($event->organizerList); 
-        Log::info($event->memberNotification); 
-        Log::info($event->organizerNotificatio); 
+        Log::error($event->memberList);
+        Log::info($event->organizerList);
+        Log::info($event->memberNotification);
+        Log::info($event->organizerNotificatio);
         // TODO: CREATE ACTIVITY
         ActivityLogs::insert($event->allEventLogs);
         Notification::send($event->memberList, new EventJoinNotification($event->memberNotification));
@@ -49,6 +45,4 @@ class JoinEventConfirmation
         Log::error('User logged in');
         Log::error($exception);
     }
-
-   
 }

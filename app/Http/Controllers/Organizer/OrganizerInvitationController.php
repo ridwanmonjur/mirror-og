@@ -21,14 +21,14 @@ class OrganizerInvitationController extends Controller
         $user_id = $authUser->id;
         $teamList = Team::all();
         $tier = $type = $game = null;
-        
+
         $event = EventDetail::with('invitationList')
             ->where('user_id', $user_id)
             ->find($id);
-        
+
         $isUserSameAsAuth = true;
-        
-        if (!$event) {
+
+        if (! $event) {
             throw new ModelNotFoundException("Event not found with id: $id");
         } else {
             return view('Organizer.Invitation', compact('event', 'isUserSameAsAuth', 'teamList', 'user_id', 'game', 'tier', 'type'));
@@ -46,22 +46,22 @@ class OrganizerInvitationController extends Controller
         $invitation->event_id = $request->event_id;
         $invitation->team_id = $request->team_id;
         $invitation->save();
-        
+
         return response()->json([
             'status' => 'success',
             'message' => 'Payment successful',
             'data' => [
                 'invitation' => $invitation,
-                'team' => $team
+                'team' => $team,
             ],
         ]);
     }
 
-   
     public function destroy(string $id)
     {
         $invitation = EventInvitation::find($id);
         $invitation->delete();
+
         return response()->json(['success' => 'Invitation deleted successfully.']);
     }
 }

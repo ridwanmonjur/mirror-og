@@ -3,10 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class TestEmail extends Mailable
@@ -27,11 +24,11 @@ class TestEmail extends Mailable
         $name = 'Jane Doe';
 
         return $this->view('emails.test')
-                    ->from($address, $name)
-                    ->cc($address, $name)
-                    ->bcc($address, $name)
-                    ->replyTo($address, $name)
-                    ->subject($subject)
-                    ->with([ 'test_message' => $this->data['message'] ]);
+            ->from($address, $name)
+            ->cc($address, $name)
+            ->bcc($address, $name)
+            ->replyTo($address, $name)
+            ->subject($subject)
+            ->with(['test_message' => $this->data['message']]);
     }
 }

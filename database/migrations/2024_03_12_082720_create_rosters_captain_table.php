@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('team_member_id')->constrained('team_members')->onDelete('cascade');
             $table->foreignId('join_events_id')->constrained('join_events')->onDelete('cascade');
             $table->foreignId('teams_id')->constrained('teams')->references('id')->onDelete('cascade');
-            $table->unique(['teams_id', 'join_events_id', 'team_member_id']); 
+            $table->unique(['teams_id', 'join_events_id', 'team_member_id']);
         });
     }
 

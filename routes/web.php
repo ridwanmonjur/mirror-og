@@ -1,19 +1,18 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Organizer\OrganizerInvitationController;
-use App\Http\Controllers\Organizer\OrganizerEventController;
-use App\Http\Controllers\Participant\ParticipantEventController;
-use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Organizer\OrganizerCheckoutController;
 use App\Http\Controllers\Organizer\OrganizerController;
+use App\Http\Controllers\Organizer\OrganizerEventController;
 use App\Http\Controllers\Organizer\OrganizerEventResultsController;
+use App\Http\Controllers\Organizer\OrganizerInvitationController;
 use App\Http\Controllers\Participant\ParticipantCheckoutController;
 use App\Http\Controllers\Participant\ParticipantController;
+use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantRosterController;
-use App\Http\Controllers\Participant\ParticipantStripeController;
+use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Models\Participant;
+use Illuminate\Support\Facades\Route;
 
 /* THIS IS THE UNSIGNED VIEW */
 // Home
@@ -91,7 +90,7 @@ Route::group(['prefix' => 'participant'], function () {
                 ->middleware('prevent-back-history')
                 ->name('participant.team.manage');
             Route::get('/team/{id}/register', [ParticipantEventController::class, 'registrationManagement'])->name('participant.register.manage');
-            
+
             Route::post('/team/roster/approve', [ParticipantRosterController::class, 'approveRosterMember'])->name('participant.roster.approve');
             Route::post('/team/roster/disapprove', [ParticipantRosterController::class, 'disapproveRosterMember'])->name('participant.roster.disapprove');
             Route::post('/team/roster/captain', [ParticipantRosterController::class, 'captainRosterMember'])->name('participant.roster.captain');
@@ -100,7 +99,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/team/{id}/editStore', [ParticipantTeamController::class, 'teamEditStore'])->name('participant.team.editStore');
             Route::post('/team/{id}/banner', [ParticipantTeamController::class, 'replaceBanner'])->name('participant.teamBanner.action');
             Route::post('/team/member/{id}/pending', [ParticipantTeamController::class, 'pendingTeamMember'])->name('participant.member.pending');
-          
+
             // Event management
             Route::get('/event/{id}/team/{teamId}/manage/roster', [ParticipantTeamController::class, 'rosterMemberManagement'])
                 ->middleware('prevent-back-history')->name('participant.roster.manage');

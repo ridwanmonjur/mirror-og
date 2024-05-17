@@ -30,6 +30,7 @@ class HandleFollows implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $strategy;
+
     protected $parameters;
 
     public function __construct($strategy, $parameters)
@@ -41,9 +42,9 @@ class HandleFollows implements ShouldQueue
     // Simple Strategy
     public function handle()
     {
-        $strategyClass = __NAMESPACE__ . '\\' . $this->strategy . 'Strategy';
+        $strategyClass = __NAMESPACE__.'\\'.$this->strategy.'Strategy';
 
-        if (!class_exists($strategyClass)) {
+        if (! class_exists($strategyClass)) {
             throw new \InvalidArgumentException("Strategy class {$strategyClass} does not exist.");
         }
         $strategy = new $strategyClass;

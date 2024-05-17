@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Carbon\Carbon;
+use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateParticipantsRequest extends FormRequest
 {
@@ -25,7 +25,7 @@ class UpdateParticipantsRequest extends FormRequest
         return [
             'id' => 'required',
             'bio' => 'nullable|string',
-            'birthday' => 'nullable|date', 
+            'birthday' => 'nullable|date',
             'nickname' => 'nullable|string|max:255',
             'region' => 'nullable|string',
             'games_data' => 'nullable|string',
@@ -35,8 +35,6 @@ class UpdateParticipantsRequest extends FormRequest
 
     /**
      * Get custom error messages for validator errors.
-     *
-     * @return array
      */
     public function messages(): array
     {
@@ -67,6 +65,4 @@ class UpdateParticipantsRequest extends FormRequest
 
         $this->request->replace($attributes);
     }
-
-    
 }

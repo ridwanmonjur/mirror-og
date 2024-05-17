@@ -28,7 +28,7 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::dropIfExists('payment_transactions');
-        
+
         Schema::enableForeignKeyConstraints();
 
     }

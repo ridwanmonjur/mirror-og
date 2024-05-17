@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::table('roster_members', function (Blueprint $table) {
             $table->dropColumn('status');
-            $table->unique(['user_id', 'join_events_id']); 
-            $table->unique(['team_member_id', 'join_events_id']); 
+            $table->unique(['user_id', 'join_events_id']);
+            $table->unique(['team_member_id', 'join_events_id']);
         });
     }
 
@@ -19,8 +19,8 @@ return new class extends Migration
     {
         Schema::table('roster_members', function (Blueprint $table) {
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
-            // $table->dropUnique(['user_id', 'join_events_id']); 
-            // $table->dropUnique(['team_member_id', 'join_events_id']); 
+            // $table->dropUnique(['user_id', 'join_events_id']);
+            // $table->dropUnique(['team_member_id', 'join_events_id']);
         });
     }
 };

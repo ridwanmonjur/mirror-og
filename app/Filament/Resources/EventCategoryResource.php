@@ -3,22 +3,20 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EventCategoryResource\Pages;
-use App\Filament\Resources\EventCategoryResource\RelationManagers;
 use App\Models\EventCategory;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class EventCategoryResource extends Resource
 {
     protected static ?string $model = EventCategory::class;
-    public static ?string $navigationGroup = 'Manage Event';
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
 
+    public static ?string $navigationGroup = 'Manage Event';
+
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     public static function form(Form $form): Form
     {
@@ -40,7 +38,7 @@ class EventCategoryResource extends Resource
                 Forms\Components\TextInput::make('eventTier')
                     ->required()
                     ->maxLength(255),
-                    Forms\Components\FileUpload::make('tierIcon')
+                Forms\Components\FileUpload::make('tierIcon')
                     ->preserveFilenames()
                     ->required()->columnSpan($span = 1),
             ]);

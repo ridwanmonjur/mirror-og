@@ -22,6 +22,7 @@ class CheckEvents extends Command
      * @var string
      */
     protected $signature = 'events:check';
+
     protected $description = 'Check events in the database';
 
     /**
@@ -50,7 +51,7 @@ class CheckEvents extends Command
 
         $registrationOverEvents = EventDetail::where('launch_date', '<=', $twoWeeksAgo)
             ->get();
-        
+
         $this->createTask($launchEvents, 'launch', $todayTime, $todayDate);
         $this->createTask($endEvents, 'ended', $todayTime, $todayDate);
         $this->createTask($registrationOverEvents, 'registration_over', $todayTime, $todayDate);
@@ -59,7 +60,7 @@ class CheckEvents extends Command
     private function createTask($eventList, $taskName, $actionTime, $actionDate)
     {
         $eventIds = $eventList->pluck('id')->toArray();
-        $dateTime = date_create_from_format('Y-m-d H:i:s', $actionDate . ' ' . $actionTime);
+        $dateTime = date_create_from_format('Y-m-d H:i:s', $actionDate.' '.$actionTime);
         $tasksData = [];
         foreach ($eventIds as $eventId) {
             $tasksData[] = [

@@ -25,7 +25,7 @@ class ChangePositionStrategy
             //     'action' => 'Position',
             //     'teamName' => $request->teamName
             // ]));
-            Log::info("ChangePositions===========>");
+            Log::info('ChangePositions===========>');
             Log::info($parameters);
             $emoji = [1 => '🥇', 2 => '🥈'];
             $activityLogX = new ActivityLogs;
@@ -47,14 +47,14 @@ class ChangePositionStrategy
             HTML;
             Log::info($activityLog);
             Log::info($foundLogs);
-            
+
             if (isset($foundLogs[0])) {
                 foreach ($foundLogs as $foundLog) {
                     $foundLog->update([
-                        'log' => $activityLog
+                        'log' => $activityLog,
                     ]);
                 }
-                
+
             } else {
                 $parameters['log'] = $activityLog;
                 $activityLogX->createActivityLogs($parameters);
@@ -64,15 +64,15 @@ class ChangePositionStrategy
                 'subject' => 'Position updated',
                 'data' => $notificationLog,
                 'links' => [[
-                    'url' => route('public.event.view' , ['id' => $parameters['eventId']] ),
-                    'name' => 'View event'
-                ]]
+                    'url' => route('public.event.view', ['id' => $parameters['eventId']]),
+                    'name' => 'View event',
+                ]],
             ];
 
             if (isset($foundNotifications[0])) {
                 foreach ($foundNotifications as $foundNotification) {
                     $foundNotification->update([
-                        'data' => $parameters['data']
+                        'data' => $parameters['data'],
                     ]);
                 }
             } else {
@@ -86,11 +86,10 @@ class ChangePositionStrategy
 
 class AddAwardStrategy
 {
-    
     public function handle($parameters)
     {
-        try{
-            Log::info("AddAwardStrategy===========>");
+        try {
+            Log::info('AddAwardStrategy===========>');
             // dispatch(new HandleResults('AddAward', [
             //     'subject_type' => User::class,
             //     'object_type' => AwardResults::class,
@@ -112,17 +111,17 @@ class AddAwardStrategy
                     <span class="notification-black">{$parameters['teamName']}</span>.
                 </span>
             HTML;
-        
+
             $parameters['log'] = $activityLog;
             $activityLogX->createActivityLogs($parameters);
-            
+
             $parameters['data'] = [
                 'subject' => 'Award added',
                 'data' => $notificationLog,
                 'links' => [[
-                    'url' => route('public.event.view' , ['id' => $parameters['eventId']] ),
-                    'name' => 'View event'
-                ]]
+                    'url' => route('public.event.view', ['id' => $parameters['eventId']]),
+                    'name' => 'View event',
+                ]],
             ];
 
             $notificationX->createNotifications($parameters);
@@ -134,11 +133,10 @@ class AddAwardStrategy
 
 class AddAchievementStrategy
 {
-    
     public function handle($parameters)
     {
         try {
-            Log::info("AddAchievementStrategy===========>");
+            Log::info('AddAchievementStrategy===========>');
             // 'subject_type' => User::class,
             // 'object_type' => Achievements::class,
             // 'subject_id' => $user->id,
@@ -153,7 +151,7 @@ class AddAchievementStrategy
                 </span>
             HTML;
 
-            $activityLog =  <<<HTML
+            $activityLog = <<<HTML
                 <span class="notification-gray"> You achieved {$parameters['achievement']} in the team, 
                     <span class="notification-black">{$parameters['teamName']}</span>.
                 </span>
@@ -161,14 +159,14 @@ class AddAchievementStrategy
 
             $parameters['log'] = $activityLog;
             $activityLogX->createActivityLogs($parameters);
-            
+
             $parameters['data'] = [
                 'subject' => 'Achievement added',
                 'data' => $notificationLog,
                 'links' => [[
-                    'url' => route('public.event.view' , ['id' => $parameters['eventId']] ),
-                    'name' => 'View event'
-                ]]
+                    'url' => route('public.event.view', ['id' => $parameters['eventId']]),
+                    'name' => 'View event',
+                ]],
             ];
 
             $notificationX->createNotifications($parameters);
@@ -178,15 +176,12 @@ class AddAchievementStrategy
     }
 }
 
-
 class DeleteAwardStrategy
 {
-    
-
     public function handle($parameters)
     {
         try {
-            Log::info("DeleteAwardStrategy===========>");
+            Log::info('DeleteAwardStrategy===========>');
             // dispatch(new HandleResults('DeleteAward', [
             //     'subject_type' => User::class,
             //     'object_type' => AwardResults::class,
@@ -205,13 +200,12 @@ class DeleteAwardStrategy
     }
 }
 
-
 class DeleteAchievementStrategy
 {
     public function handle($parameters)
     {
         try {
-            Log::info("DeleteAchievementStrategy===========>");
+            Log::info('DeleteAchievementStrategy===========>');
             // dispatch(new HandleResults('DeleteAchievement', [
             //     'subject_type' => User::class,
             //     'object_type' => AwardResults::class,
@@ -235,6 +229,7 @@ class HandleResults implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $strategy;
+
     protected $parameters;
 
     public function __construct($strategy, $parameters)
@@ -247,9 +242,9 @@ class HandleResults implements ShouldQueue
     public function handle()
     {
         Log::info($this->parameters);
-        $strategyClass = __NAMESPACE__ . '\\' . $this->strategy . 'Strategy';
+        $strategyClass = __NAMESPACE__.'\\'.$this->strategy.'Strategy';
 
-        if (!class_exists($strategyClass)) {
+        if (! class_exists($strategyClass)) {
             throw new \InvalidArgumentException("Strategy class {$strategyClass} does not exist.");
         }
         $strategy = new $strategyClass;

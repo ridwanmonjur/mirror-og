@@ -24,15 +24,14 @@ class OrganizerEventResultsController extends Controller
      */
     public function index(Request $request, $id)
     {
-        $event = EventDetail
-            ::with(['tier'])
-            ->select(['id', 'eventBanner', 'eventName', 'eventDescription', 'event_tier_id' ])
+        $event = EventDetail::with(['tier'])
+            ->select(['id', 'eventBanner', 'eventName', 'eventDescription', 'event_tier_id'])
             ->findOrFail($id);
-    
+
         $awardList = Award::all();
-        $joinEventAndTeamList = EventJoinResults::getEventJoinResults($id); 
-        $awardAndTeamList = AwardResults::getTeamAwardResults($id); 
-        $achievementsAndTeamList = Achievements::getTeamAchievements($id);            
+        $joinEventAndTeamList = EventJoinResults::getEventJoinResults($id);
+        $awardAndTeamList = AwardResults::getTeamAwardResults($id);
+        $achievementsAndTeamList = Achievements::getTeamAchievements($id);
 
         return view('Organizer.EventResults', compact(
             'event', 'awardList', 'joinEventAndTeamList', 'awardAndTeamList', 'achievementsAndTeamList'
@@ -52,25 +51,25 @@ class OrganizerEventResultsController extends Controller
                     ->select('id', 'user_id', 'team_id', 'status')
                     ->with(['user' => function ($q) {
                         $q->select('id');
-                    }
-                ]);
+                    },
+                    ]);
             }])
             ->first()
             ->members
-                ->pluck('user.id')
-                ->toArray();
-        
+            ->pluck('user.id')
+            ->toArray();
+
         $joinEventsId = $request->join_events_id;
         $joinEvent = JoinEvent::where('id', $request->join_events_id)->first();
         $existingRow = DB::table('event_join_results')
-                ->where('join_events_id', $joinEventsId)
-                ->first();
+            ->where('join_events_id', $joinEventsId)
+            ->first();
 
         if ($existingRow) {
             DB::table('event_join_results')
                 ->where('join_events_id', $joinEventsId)
                 ->update(['position' => $request->position]);
-        }   else {
+        } else {
             DB::table('event_join_results')->insert([
                 'join_events_id' => $joinEventsId,
                 'position' => $request->position,
@@ -86,13 +85,13 @@ class OrganizerEventResultsController extends Controller
             'eventId' => $joinEvent->event_details_id,
             'teamName' => $request->teamName,
             'image' => $request->teamBanner,
-            'position' => intval($request->position)
+            'position' => intval($request->position),
         ]));
 
         return response()->json(['success' => true, 'message' => 'Position updated successfully'], 200);
     }
 
-     /**
+    /**
      * Store a newly created award in storage.
      */
     public function storeAward(Request $request)
@@ -123,15 +122,15 @@ class OrganizerEventResultsController extends Controller
                     'eventId' => $request->input('event_details_id'),
                     'award' => $request->award,
                     'teamName' => $team->teamName,
-                    'image' => $team->teamBanner
+                    'image' => $team->teamBanner,
                 ]));
-            
+
                 return response()->json(['success' => true, 'message' => 'Award given successfully'], 200);
             } else {
                 return response()->json(['success' => false, 'message' => 'Join event, team or event details not found'], 400);
             }
         } catch (Exception $e) {
-            if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
+            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
                 return response()->json(['success' => false, 'message' => 'Award already exists'], 422);
             } else {
                 return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
@@ -139,7 +138,7 @@ class OrganizerEventResultsController extends Controller
         }
     }
 
-     /**
+    /**
      * Store a newly created award in storage.
      */
     public function storeAchievements(Request $request)
@@ -152,7 +151,7 @@ class OrganizerEventResultsController extends Controller
                 ->where('team_id', $request->team_id)
                 ->where('event_details_id', $request->input('event_details_id'))
                 ->get()->first();
-                
+
             $teamExists = DB::table('teams')->where('id', $request->team_id)->exists();
             if ($joinEvent && $teamExists) {
                 $rowId = DB::table('achievements')->insertGetId([
@@ -170,22 +169,21 @@ class OrganizerEventResultsController extends Controller
                     'achievement' => $request->title,
                     'eventId' => $request->input('event_details_id'),
                     'teamName' => $team->teamName,
-                    'image' => $team->teamBanner
+                    'image' => $team->teamBanner,
                 ]));
-            
+
                 return response()->json(['success' => true, 'message' => 'Achievement given successfully'], 200);
             } else {
                 return response()->json(['success' => false, 'message' => 'Join event or team not found'], 400);
             }
         } catch (QueryException $e) {
-            if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
+            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
                 return response()->json(['success' => false, 'message' => 'Achievement already exists'], 422);
             } else {
                 return response()->json(['success' => false, 'message' => 'Database error'], 500);
             }
         }
     }
-
 
     /**
      * Remove the specified award from storage.
@@ -196,16 +194,17 @@ class OrganizerEventResultsController extends Controller
             $row = DB::table('awards_results')->where('id', $awardId)->first();
             [, $memberUserIds] = Team::getResultsTeamMemberIds($row->team_id);
 
-            
-            if ($row) DB::table('awards_results')->where('id', $awardId)->delete();
-            
+            if ($row) {
+                DB::table('awards_results')->where('id', $awardId)->delete();
+            }
+
             dispatch(new HandleResults('DeleteAward', [
                 'subject_type' => User::class,
                 'object_type' => AwardResults::class,
                 'subject_id' => $memberUserIds,
                 'object_id' => $row->id,
                 'action' => 'Award',
-                'teamName' => $request->teamName
+                'teamName' => $request->teamName,
             ]));
 
             return response()->json(['success' => true, 'message' => 'Award deleted successfully'], 200);
@@ -220,20 +219,22 @@ class OrganizerEventResultsController extends Controller
             $row = DB::table('achievements')->where('id', $achievementId)->first();
             $join = JoinEvent::where('id', $row->join_event_id)->select(['id', 'team_id'])->first();
             [, $memberUserIds] = Team::getResultsTeamMemberIds($join->team_id);
-            
-            if ($row) DB::table('achievements')->where('id', $achievementId)->delete();
+
+            if ($row) {
+                DB::table('achievements')->where('id', $achievementId)->delete();
+            }
             dispatch(new HandleResults('DeleteAchievement', [
                 'subject_type' => User::class,
                 'object_type' => Achievements::class,
                 'subject_id' => $memberUserIds,
                 'object_id' => $row->id,
                 'action' => 'Achievement',
-                'teamName' => $request->teamName
+                'teamName' => $request->teamName,
             ]));
 
             return response()->json(['success' => true, 'message' => 'Achievement deleted successfully'], 200);
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' =>  $e->getMessage()], 400);
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
         }
     }
 }

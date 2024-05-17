@@ -17,20 +17,20 @@ class CopyCookieToAuthorizationHeader
      */
     public function handle(Request $request, Closure $next): Response
     {
-        try{
+        try {
             Log::info('>>> jwt_cookie');
             Log::info($request->cookie('jwt_cookie'));
-            
-            if (!$request->header('Authorization')) {
+
+            if (! $request->header('Authorization')) {
                 $token = $request->cookie('jwt_cookie');
 
                 if ($token) {
-                    $request->headers->set('Authorization', 'Bearer ' . $token);
+                    $request->headers->set('Authorization', 'Bearer '.$token);
                 }
             }
 
             return $next($request);
-        } catch ( Exception $e) {
+        } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }

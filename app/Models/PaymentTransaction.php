@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PaymentTransaction extends Model
 {
-    protected $fillable = ['payment_id', 'payment_status', 'payment_amount']; 
+    protected $fillable = ['payment_id', 'payment_status', 'payment_amount'];
+
     protected $table = 'payment_transactions';
 
     const UPDATED_AT = null;
@@ -17,7 +18,7 @@ class PaymentTransaction extends Model
         return self::create([
             'payment_id' => $paymentId,
             'payment_status' => $paymentStatus,
-            'payment_amount' => $paymentAmount
+            'payment_amount' => $paymentAmount,
         ]);
     }
 }

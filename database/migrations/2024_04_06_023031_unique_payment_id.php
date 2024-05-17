@@ -16,7 +16,7 @@ return new class extends Migration
             $table->dropColumn('updated_at');
         });
     }
-    
+
     /**
      * Reverse the migrations.
      */
@@ -27,7 +27,4 @@ return new class extends Migration
             $table->timestamp('updated_at')->useCurrent();
         });
     }
-
-    
-    
 };

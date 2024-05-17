@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Tests\Acceptance;
 
 use Illuminate\Support\Facades\Auth;
@@ -17,8 +16,8 @@ class SigninCest
     {
         Auth::forgetUser();
         $I->amOnPage('http://localhost:8000/organizer/signin');
-        $I->fillField('email','ridwanmonjur@gmail.com');
-        $I->fillField('password','123456');
+        $I->fillField('email', 'ridwanmonjur@gmail.com');
+        $I->fillField('password', '123456');
         $I->click('Sign in');
         $I->see('Create an event');
     }
@@ -27,8 +26,8 @@ class SigninCest
     {
         Auth::forgetUser();
         $I->amOnPage('http://localhost:8000/participant/signin');
-        $I->fillField('email','participant1@gmail.com');
-        $I->fillField('password','123456');
+        $I->fillField('email', 'participant1@gmail.com');
+        $I->fillField('password', '123456');
         $I->click('Sign in');
         $I->see("What's happening?");
     }

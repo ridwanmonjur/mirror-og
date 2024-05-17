@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['nickname', 'domain', 'backgroundBanner', 'bio', 'age', 
-                'region'
+            $table->dropColumn(['nickname', 'domain', 'backgroundBanner', 'bio', 'age',
+                'region',
             ]);
         });
 
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->unsignedInteger('age')->nullable();
             $table->string('region')->nullable();
         });
-        
+
     }
 
     /**
@@ -43,8 +43,8 @@ return new class extends Migration
         });
 
         Schema::table('participants', function (Blueprint $table) {
-            $table->dropColumn(['nickname', 'domain', 'backgroundBanner', 
-                'bio', 'age', 'region'
+            $table->dropColumn(['nickname', 'domain', 'backgroundBanner',
+                'bio', 'age', 'region',
             ]);
         });
     }

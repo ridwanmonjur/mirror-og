@@ -1,30 +1,24 @@
 <?php
 
 namespace App\Http\Controllers\Participant;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateTeamRequest;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\QueryException;
-use App\Models\Team;
-use App\Models\TeamCaptain;
-use App\Models\EventDetail;
 use App\Models\Follow;
 use App\Models\JoinEvent;
-use App\Models\TeamMember;
-use App\Models\Participant;
 use App\Models\RosterCaptain;
 use App\Models\RosterMember;
+use App\Models\Team;
+use App\Models\TeamCaptain;
+use App\Models\TeamMember;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\UnauthorizedException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class ParticipantTeamController extends Controller
 {
-
     public function teamList(Request $request)
     {
         $user_id = $request->attributes->get('user')->id;
@@ -32,33 +26,34 @@ class ParticipantTeamController extends Controller
             'teamList' => $teamList,
             'teamIdList' => $teamIdList,
         ] = Team::getUserTeamListAndPluckIds($user_id);
-        
+
         if ($teamIdList) {
             $membersCount = Team::getTeamMembersCountForEachTeam($teamIdList);
             $count = $teamList->count();
-            return view('Participant.TeamList', compact('teamList', 'count', 'membersCount' ));
+
+            return view('Participant.TeamList', compact('teamList', 'count', 'membersCount'));
         } else {
             session()->flash('errorMessage', 'You have 0 teams! Create a team please.');
             $membersCount = 0;
             $count = 0;
-            return view('Participant.TeamList', compact('teamList', 'count', 'membersCount' ));
+
+            return view('Participant.TeamList', compact('teamList', 'count', 'membersCount'));
         }
     }
-    
 
     public function teamManagement(Request $request, $id)
     {
         $user = $request->attributes->get('user');
         if (is_null($user)) {
-            $user = Auth::user(); 
-        } 
+            $user = Auth::user();
+        }
 
         $user_id = $user?->id ?? null;
         $selectTeam = Team::where('id', $id)
-            ->with(['members' => function($query) {
+            ->with(['members' => function ($query) {
                 $query->where('status', 'accepted')
                     ->with('user');
-            }])->first();        
+            }])->first();
         // dd($selectTeam);
         if ($selectTeam) {
             $awardList = $selectTeam->getAwardListByTeam();
@@ -66,9 +61,9 @@ class ParticipantTeamController extends Controller
             $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
             $joinEvents = JoinEvent::getJoinEventsForTeamWithEventsRosterResults($selectTeam->id);
             $totalEventsCount = $joinEvents->count();
-            ['wins' => $wins, 'streak' => $streak] = 
+            ['wins' => $wins, 'streak' => $streak] =
                 JoinEvent::getJoinEventsWinCountForTeam($selectTeam->id);
-            
+
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
             $followCounts = Follow::getFollowCounts($userIds);
             if ($user_id) {
@@ -78,14 +73,14 @@ class ParticipantTeamController extends Controller
             }
 
             $joinEventsHistory = $joinEventsActive = $values = [];
-            ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory] 
+            ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
                 = JoinEvent::processEvents($joinEvents, $isFollowing);
             // dd($joinEvents, $activeEvents, $historyEvents);
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
             $teamMembers = $selectTeam->members;
 
-            return view('Participant.TeamManagement', 
+            return view('Participant.TeamManagement',
                 compact('selectTeam', 'joinEvents', 'captain', 'teamMembers',
                     'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
                     'wins', 'streak', 'awardList', 'achievementList'
@@ -122,7 +117,7 @@ class ParticipantTeamController extends Controller
             return $this->showErrorParticipant('This event is missing or you need to be a member to view events!');
         }
     }
-    
+
     protected function handleTeamManagement($selectTeam, $id, $request, $page, $redirect = false)
     {
         $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
@@ -153,7 +148,7 @@ class ParticipantTeamController extends Controller
 
             $rosterMembersKeyedByMemberId = RosterMember::keyByMemberId($rosterMembers);
 
-            return view('Participant.RosterManagement', 
+            return view('Participant.RosterManagement',
                 compact('selectTeam', 'joinEvent', 'teamMembers', 'creator_id', 'rosterMembersKeyedByMemberId', 'rosterMembers', 'id', 'captain')
             );
         } else {
@@ -170,49 +165,50 @@ class ParticipantTeamController extends Controller
     {
         $team = Team::findOrFail($request['id']);
         $team->update($request->validated());
+
         return response()->json([
-            'message' => 'Team updated successfully', 
-            'success' => true
+            'message' => 'Team updated successfully',
+            'success' => true,
         ], 200);
     }
 
-
     public function inviteMember(Request $request, $id, $userId)
     {
-        try{
+        try {
             TeamMember::create([
                 'user_id' => $userId,
                 'team_id' => $id,
                 'status' => 'pending',
-                'actor' => 'team'
-            ]); 
-        } 
-        catch(Exception $e) {
+                'actor' => 'team',
+            ]);
+        } catch (Exception $e) {
             $errorMessage = $e->getMessage();
-            return response()->json(['success' => false, 'message' => $errorMessage] , 403);
+
+            return response()->json(['success' => false, 'message' => $errorMessage], 403);
         }
-        
+
         return response()->json(['success' => true, 'message' => 'Team member invited'], 201);
     }
 
     public function pendingTeamMember(Request $request, $id)
     {
-        try{
+        try {
             $user = $request->attributes->get('user');
             TeamMember::create([
                 'user_id' => $user->id,
                 'team_id' => $id,
                 'status' => 'pending',
-                'actor' => 'user'
+                'actor' => 'user',
             ]);
 
             return redirect()->back()->with('successJoin', 'Your request to this team was sent!');
-        } catch(Exception $e) {
-            if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
-                $errorMessage = "You have requested before!";
+        } catch (Exception $e) {
+            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
+                $errorMessage = 'You have requested before!';
             } else {
                 $errorMessage = 'Your request to this team failed!';
             }
+
             return redirect()->back()->with('errorJoin', $errorMessage);
         }
     }
@@ -222,6 +218,7 @@ class ParticipantTeamController extends Controller
         $member = TeamMember::find($id);
         if ($member) {
             $member->delete();
+
             return response()->json(['success' => true, 'message' => 'Team member invitation withdrawn']);
         } else {
             return response()->json(['success' => false, 'message' => 'Invalid operation or team member not found'], 400);
@@ -235,29 +232,29 @@ class ParticipantTeamController extends Controller
             $member->status = 'rejected';
             $member->actor = 'user';
             $member->save();
+
             return response()->json(['success' => true, 'message' => 'Team member invitation withdrawn']);
         } else {
             return response()->json(['success' => false, 'message' => 'Invalid operation or team member not found'], 400);
         }
     }
 
-   
     public function updateTeamMember(Request $request, $id)
     {
         $member = TeamMember::find($id);
-        if (!$member) {
+        if (! $member) {
             return response()->json(['success' => false, 'message' => 'Team member not found'], 400);
         }
 
         $status = $request->status;
         $isPermitted = $status == 'left';
-        if (!$isPermitted) {
+        if (! $isPermitted) {
             if ($status == 'accepted' || $status == 'rejected') {
                 $isPermitted = $member->status == 'pending' && $request->actor != $member->actor;
-            } 
+            }
         }
 
-        if (!$isPermitted) {
+        if (! $isPermitted) {
             return response()->json(['success' => false, 'message' => 'This request is not allowed.'], 400);
         }
 
@@ -266,9 +263,9 @@ class ParticipantTeamController extends Controller
         if ($team->creator_id == $member->user_id) {
             return response()->json(['success' => false, 'message' => "Can't modify creator of the team"], 400);
         }
-            
+
         $member->status = $status;
-        $member->actor = $request->actor; 
+        $member->actor = $request->actor;
         $member->save();
 
         return response()->json(['success' => true, 'message' => "Team member status updated to $status"]);
@@ -280,8 +277,8 @@ class ParticipantTeamController extends Controller
             $existingCaptain = TeamCaptain::where('teams_id', $id)->first();
             if ($existingCaptain) {
                 $existingCaptain->delete();
-            } 
-            
+            }
+
             TeamCaptain::insert([
                 'teams_id' => $id,
                 'team_member_id' => $memberId,
@@ -302,8 +299,8 @@ class ParticipantTeamController extends Controller
 
         if ($existingCaptain) {
             $existingCaptain->delete();
-        } 
-        
+        }
+
         return response()->json(['success' => 'true'], 200);
     }
 
@@ -311,7 +308,7 @@ class ParticipantTeamController extends Controller
     {
         $request->validate([
             'teamName' => 'required|string|max:25',
-            'teamDescription' => 'required'
+            'teamDescription' => 'required',
         ]);
 
         $team->teamName = $request->input('teamName');
@@ -332,25 +329,25 @@ class ParticipantTeamController extends Controller
             ] = Team::getUserTeamListAndCount($user_id);
 
             if ($count < 5) {
-                $existingTeam = Team::where('teamName', $request->input('teamName'))->exists(); 
+                $existingTeam = Team::where('teamName', $request->input('teamName'))->exists();
                 if ($existingTeam) {
                     throw ValidationException::withMessages(['teamName' => 'Team name already exists. Please choose a different name.']);
                 }
-                
-                $team = $this->validateAndSaveTeam($request, $team, $user_id); 
+
+                $team = $this->validateAndSaveTeam($request, $team, $user_id);
                 TeamMember::bulkCreateTeanMembers($team->id, [$user_id], 'accepted');
                 $teamMembers = $team->members;
-            
+
                 TeamCaptain::insert([
                     'team_member_id' => $teamMembers[0]->id,
                     'teams_id' => $team->id,
                 ]);
-                
+
                 return redirect()->route('participant.team.view', ['id' => $user_id]);
-            } else  {
+            } else {
                 return back()->with('errorMessage', "You can't create more than 5 teams!");
             }
-            
+
         } catch (Exception $e) {
             return back()->with('errorMessage', $e->getMessage());
         }
@@ -361,28 +358,30 @@ class ParticipantTeamController extends Controller
         try {
             $team = Team::findOrFail($id);
             $user_id = $request->attributes->get('user')->id;
-            $existingTeam = Team::where('teamName', $request->input('teamName'))->first(); 
-            
+            $existingTeam = Team::where('teamName', $request->input('teamName'))->first();
+
             if (isset($existingTeam)) {
                 if ($existingTeam['id'] != $team->id) {
                     throw ValidationException::withMessages([
-                        'teamName' => 'Team name already exists. Please choose a different name.'
+                        'teamName' => 'Team name already exists. Please choose a different name.',
                     ]);
-                } 
+                }
             }
 
             $this->validateAndSaveTeam($request, $team, $user_id);
+
             return redirect()->route('participant.team.view', ['id' => $user_id]);
-            
+
         } catch (Exception $e) {
             return back()->with('errorMessage', $e->getMessage());
         }
     }
 
-    public function replaceBanner(Request $request, $id) {
+    public function replaceBanner(Request $request, $id)
+    {
         try {
             $request->validate([
-                'file' => 'required|file'
+                'file' => 'required|file',
             ]);
 
             $team = Team::findOrFail($id);

@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-
 namespace App\Http\Controllers;
 
 use App\Models\StripePayment;
@@ -14,13 +11,14 @@ use Illuminate\Http\Request;
 class StripeController extends Controller
 {
     private $stripeClient;
-    
+
     public function __construct(StripePayment $stripeClient)
     {
         $this->stripeClient = $stripeClient;
     }
 
-    public function stripeCardIntentCreate(Request $request){
+    public function stripeCardIntentCreate(Request $request)
+    {
         try {
             $customer = null;
             if (empty($request->stripeCustomerId)) {
@@ -30,10 +28,10 @@ class StripeController extends Controller
             }
 
             $paymentIntent = $this->stripeClient->createPaymentIntent([
-                'customer'=> $customer->id,
-                'amount' =>  $request->paymentAmount * 100,
+                'customer' => $customer->id,
+                'amount' => $request->paymentAmount * 100,
                 'payment_method_types' => ['card'],
-                'metadata' => $request->metadata
+                'metadata' => $request->metadata,
             ]);
 
             $responseData = [
@@ -43,17 +41,14 @@ class StripeController extends Controller
                     'client_secret' => $paymentIntent->client_secret,
                 ],
             ];
-        
+
             return response()->json($responseData);
         } catch (Exception $e) {
             return response()->json([
-                'status'=> 'error',
-                'message'=> $e->getMessage(),
-                'data'=> null
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => null,
             ]);
         }
     }
-
-
-   
 }

@@ -14,11 +14,11 @@ class Authenticate extends Middleware
     {
         if ($request->expectsJson()) {
             return response()->json(['error' => 'This is why we getting json error in fetch?'], 401);
-        } else if ($request->is('admin/*')) {
-            return "admin/login";
-        } else if ($request->is('participant/*')) {
+        } elseif ($request->is('admin/*')) {
+            return 'admin/login';
+        } elseif ($request->is('participant/*')) {
             return route('participant.signin.view');
-        } else if ($request->is('organizer/*')) {
+        } elseif ($request->is('organizer/*')) {
             return route('organizer.signin.view');
         } else {
             return route('participant.signin.view');

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 class JoinEvent extends Model
 {
     use HasFactory;
+
     protected $table = 'join_events';
 
     public function eventDetail()
@@ -72,7 +73,7 @@ class JoinEvent extends Model
         return self::where('team_id', $team_id)
             ->with(['eventDetails',  'user', 'results', 'roster' => function ($q) {
                 $q->with('user');
-            }, 'eventDetails.tier', 'eventDetails.game', 'eventDetails.user'
+            }, 'eventDetails.tier', 'eventDetails.game', 'eventDetails.user',
             ])
             ->get();
     }
@@ -82,7 +83,7 @@ class JoinEvent extends Model
         return self::whereIn('team_id', $teamIdList)
             ->with(['eventDetails',  'user', 'results', 'roster' => function ($q) {
                 $q->with('user');
-            }, 'eventDetails.tier', 'eventDetails.game', 'eventDetails.user'
+            }, 'eventDetails.tier', 'eventDetails.game', 'eventDetails.user',
             ])
             ->get();
     }
@@ -96,17 +97,17 @@ class JoinEvent extends Model
     public static function getJoinEventsWinCountForTeam($team_id)
     {
         $joins = DB::table('event_join_results')
-            ->whereIn('join_events_id', function($q) use ($team_id) {
+            ->whereIn('join_events_id', function ($q) use ($team_id) {
                 $q->select('id')
                     ->from('join_events')
                     ->where('team_id', $team_id);
             })
             ->get();
-        
+
         $sumPositionOne = 0;
         $streak = 0;
         $maxStreak = 0;
-        
+
         foreach ($joins as $join) {
             if ($join->position == 1) {
                 $sumPositionOne++;
@@ -114,27 +115,27 @@ class JoinEvent extends Model
                 $maxStreak = max($maxStreak, $streak);
                 $streak = 0;
             }
-        
+
             $streak++;
         }
-            
+
         return ['wins' => $sumPositionOne, 'streak' => $streak];
     }
 
     public static function getJoinEventsWinCountForTeamList($teamIdList)
     {
         $joins = DB::table('event_join_results')
-            ->whereIn('join_events_id', function($q) use ($teamIdList) {
+            ->whereIn('join_events_id', function ($q) use ($teamIdList) {
                 $q->select('id')
                     ->from('join_events')
                     ->whereIn('team_id', $teamIdList);
             })
             ->get();
-        
+
         $sumPositionOne = 0;
         $streak = 0;
         $maxStreak = 0;
-        
+
         foreach ($joins as $join) {
             if ($join->position == 1) {
                 $sumPositionOne++;
@@ -142,13 +143,12 @@ class JoinEvent extends Model
                 $maxStreak = max($maxStreak, $streak);
                 $streak = 0;
             }
-        
+
             $streak++;
         }
-            
+
         return ['wins' => $sumPositionOne, 'streak' => $streak];
     }
-
 
     public static function getJoinEventsByTeamIdList($teamIdList)
     {
@@ -164,6 +164,7 @@ class JoinEvent extends Model
         $joint->joiner_participant_id = $data['joiner_participant_id'];
         $joint->event_details_id = $data['event_details_id'];
         $joint->save();
+
         return $joint;
     }
 
@@ -178,8 +179,8 @@ class JoinEvent extends Model
         }
 
         $joinEvents = $query->with([
-                'eventDetails', 'eventDetails.tier', 'eventDetails.user', 'eventDetails.game', 'participantPayments', 'participantPayments.members.user'
-            ])
+            'eventDetails', 'eventDetails.tier', 'eventDetails.user', 'eventDetails.game', 'participantPayments', 'participantPayments.members.user',
+        ])
             ->withSum('participantPayments', 'payment_amount')
             ->groupBy('event_details_id')
             ->get();
@@ -200,29 +201,31 @@ class JoinEvent extends Model
         ];
     }
 
-    public static function processEvents($events, $isFollowing) {
+    public static function processEvents($events, $isFollowing)
+    {
         $activeEvents = [];
         $historyEvents = [];
-    
+
         foreach ($events as $joinEvent) {
             $joinEvent->status = $joinEvent->eventDetails->statusResolved();
             $joinEvent->tier = $joinEvent->eventDetails->tier;
             $joinEvent->game = $joinEvent->eventDetails->game;
             $joinEvent->isFollowing = array_key_exists($joinEvent->eventDetails->user_id, $isFollowing);
-            
+
             if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
                 $activeEvents[] = $joinEvent;
-            } else if ($joinEvent->status == 'ENDED') {
+            } elseif ($joinEvent->status == 'ENDED') {
                 $historyEvents[] = $joinEvent;
             }
         }
 
         // dd($events, $activeEvents, $historyEvents);
-    
-        return ['joinEvents'=> $events, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents];
+
+        return ['joinEvents' => $events, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents];
     }
 
-    public static function hasJoinedByOtherTeamsForSameEvent($eventId, $userId, $status) {
+    public static function hasJoinedByOtherTeamsForSameEvent($eventId, $userId, $status)
+    {
         return self::where('event_details_id', $eventId)
             ->where(function ($query) use ($userId, $status) {
                 $query->whereHas('members', function ($query) use ($userId, $status) {
@@ -230,10 +233,11 @@ class JoinEvent extends Model
                 });
             })
             ->exists();
-      
+
     }
 
-     public static function getJoinedByTeamsForSameEvent($eventId, $userId) {
+    public static function getJoinedByTeamsForSameEvent($eventId, $userId)
+    {
         return self::where('event_details_id', $eventId)
             ->where(function ($query) use ($userId) {
                 $query->whereHas('members', function ($query) use ($userId) {
@@ -242,6 +246,6 @@ class JoinEvent extends Model
             })
             ->get()
             ->first();
-      
+
     }
 }

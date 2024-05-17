@@ -8,18 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Organizer extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'user_id',
         'companyName',
-        'companyDescription', 
-        'industry', 
-        'type', 
-        'website_link', 
-        'instagram_link', 
-        'facebook_link', 
-        'twitter_link'
+        'companyDescription',
+        'industry',
+        'type',
+        'website_link',
+        'instagram_link',
+        'facebook_link',
+        'twitter_link',
     ];
-
 
     public function user()
     {

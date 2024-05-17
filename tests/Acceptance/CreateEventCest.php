@@ -1,9 +1,7 @@
 <?php
 
-
 namespace Tests\Acceptance;
 
-use Illuminate\Support\Facades\Auth;
 use Tests\Support\AcceptanceTester;
 
 class CreateEventCest
@@ -16,8 +14,8 @@ class CreateEventCest
     public function tryToTest(AcceptanceTester $I)
     {
         $I->amOnPage('/organizer/signin');
-        $I->fillField('email','ridwanmonjur@gmail.com');
-        $I->fillField('password','123456');
+        $I->fillField('email', 'ridwanmonjur@gmail.com');
+        $I->fillField('password', '123456');
         $I->click('Sign in');
         $I->see('Create an event');
     }

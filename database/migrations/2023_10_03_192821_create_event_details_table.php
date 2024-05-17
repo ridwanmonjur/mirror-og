@@ -39,7 +39,7 @@ return new class extends Migration
     public function down(): void
     {
         // Schema::table('event_details', function (Blueprint $table) {
-            // $table->dropConstrainedForeignId('event_id');
+        // $table->dropConstrainedForeignId('event_id');
         // });
         Schema::dropIfExists('event_details');
     }

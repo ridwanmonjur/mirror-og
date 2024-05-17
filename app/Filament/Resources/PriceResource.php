@@ -3,20 +3,18 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PriceResource\Pages;
-use App\Filament\Resources\PriceResource\RelationManagers;
 use App\Models\Price;
-use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PriceResource extends Resource
 {
     protected static ?string $model = Price::class;
+
     public static ?string $navigationGroup = 'Manage Event';
+
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
     public static function form(Form $form): Form

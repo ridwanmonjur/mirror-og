@@ -6,16 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-   /**
+    /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::table('join_events', function (Blueprint $table) {        
+        Schema::table('join_events', function (Blueprint $table) {
             $table->foreignId('joiner_id')
                 ->constrained('users')
                 ->nullable();
-            
+
             $table->foreignId('joiner_participant_id')
                 ->constrained('participants')
                 ->nullable();

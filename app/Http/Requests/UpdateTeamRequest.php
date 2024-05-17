@@ -29,10 +29,8 @@ class UpdateTeamRequest extends FormRequest
         ];
     }
 
-      /**
+    /**
      * Get custom error messages for validator errors.
-     *
-     * @return array
      */
     public function messages(): array
     {
@@ -47,6 +45,4 @@ class UpdateTeamRequest extends FormRequest
             'country.string' => 'The country must be a string.',
         ];
     }
-
-    
 }

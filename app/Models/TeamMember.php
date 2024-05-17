@@ -10,12 +10,14 @@ use Illuminate\Database\Eloquent\Model;
 class TeamMember extends Model
 {
     use HasFactory;
+
     protected $fillable = ['user_id', 'team_id', 'status', 'actor'];
+
     protected $dispatchesEvents = [
         'updating' => TeamMemberUpdated::class,
         'creating' => TeamMemberCreated::class,
     ];
-    
+
     protected $table = 'team_members';
 
     public function user()
@@ -54,19 +56,19 @@ class TeamMember extends Model
         $members = self::where('team_id', $id)->with('user')->get();
         foreach ($members as $member) {
             $status = $member->status;
-            if ($status == "accepted") {
+            if ($status == 'accepted') {
                 $acceptedMembers[] = $member;
                 $acceptedMembersCount++;
-            } else if ($status == "pending") {
+            } elseif ($status == 'pending') {
                 $pendingMembers[] = $member;
                 $pendingMembersCount++;
-            } else if ($status == "rejected") {
+            } elseif ($status == 'rejected') {
                 $rejectedMembers[] = $member;
                 $rejectedMembersCount++;
-            } else if ($status == "left") {
+            } elseif ($status == 'left') {
                 $leftMembers[] = $member;
                 $leftMembersCount++;
-            } else if ($status == "invited") {
+            } elseif ($status == 'invited') {
                 $invitedMembers[] = $member;
                 $invitedMemberCount++;
             }
@@ -75,32 +77,33 @@ class TeamMember extends Model
         return [
             'accepted' => [
                 'count' => $acceptedMembersCount,
-                'members' => $acceptedMembers
+                'members' => $acceptedMembers,
             ],
             'pending' => [
                 'count' => $pendingMembersCount,
-                'members' => $pendingMembers
+                'members' => $pendingMembers,
             ],
             'rejected' => [
                 'count' => $rejectedMembersCount,
-                'members' => $rejectedMembers
+                'members' => $rejectedMembers,
             ],
 
             'left' => [
                 'count' => $leftMembersCount,
-                'members' => $leftMembers
-            ]
+                'members' => $leftMembers,
+            ],
         ];
     }
 
-    public static function bulkCreateTeanMembers($teamId, $userIds, $status) {
+    public static function bulkCreateTeanMembers($teamId, $userIds, $status)
+    {
         $data = [];
 
         foreach ($userIds as $userId) {
             $data[] = [
                 'team_id' => $teamId,
                 'user_id' => $userId,
-                'status' => $status
+                'status' => $status,
             ];
         }
 

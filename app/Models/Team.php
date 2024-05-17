@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\DB;
 class Team extends Model
 {
     use HasFactory;
+
     protected $table = 'teams';
+
     protected $fillable = ['teamName', 'teamDescription', 'country'];
 
     public function user()
@@ -50,21 +52,20 @@ class Team extends Model
     public static function getTeamAndMembersByTeamId($teamId)
     {
         return self::with(['members.user' => function ($query) {
-                $query->select(['name', 'id', 'email']);
-            }])
+            $query->select(['name', 'id', 'email']);
+        }])
             ->whereHas('members', function ($query) {
                 $query->where('status', 'accepted');
             })
             ->find($teamId);
     }
 
-
     public static function getUserTeamListAndPluckIds($user_id)
     {
         $teamList = self::whereHas('members', function ($query) use ($user_id) {
             $query->where('user_id', $user_id)->where('status', 'accepted');
         })
-            ->with(['members' => function($query) {
+            ->with(['members' => function ($query) {
                 $query->where('status', 'accepted');
             }])
             ->get();
@@ -87,17 +88,18 @@ class Team extends Model
     public static function getUserTeamList($user_id)
     {
         $teamList = self::whereHas('members', function ($query) use ($user_id) {
-                $query->where('user_id', $user_id)->where('status', 'accepted');
-            })
-            ->with(['members' => function($query) {
+            $query->where('user_id', $user_id)->where('status', 'accepted');
+        })
+            ->with(['members' => function ($query) {
                 $query->where('status', 'accepted');
             }])
-            ->withCount(['members' => function($query) {
+            ->withCount(['members' => function ($query) {
                 $query->where('status', 'accepted');
             }])
-        ->get();
+            ->get();
 
         $teamIdList = $teamList->pluck('id')->toArray();
+
         return [
             'teamList' => $teamList,
             'teamIdList' => $teamIdList,
@@ -107,12 +109,12 @@ class Team extends Model
     public static function getUserPastTeamList($user_id)
     {
         $teamList = self::whereHas('members', function ($query) use ($user_id) {
-                $query->where('user_id', $user_id)->where('status', 'rejected');
-            })
-            ->withCount(['members' => function($query) {
+            $query->where('user_id', $user_id)->where('status', 'rejected');
+        })
+            ->withCount(['members' => function ($query) {
                 $query->where('status', 'accepted');
             }])
-        ->get();
+            ->get();
 
         return $teamList;
     }
@@ -120,11 +122,11 @@ class Team extends Model
     public static function getUserTeamListAndCount($user_id)
     {
         $teamList = self::where(function ($query) use ($user_id) {
-                $query->whereHas('members', function ($query) use ($user_id) {
-                    $query->where('user_id', $user_id)->where('status', 'accepted');
-                });
-            })->with('members')
-        ->get();
+            $query->whereHas('members', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id)->where('status', 'accepted');
+            });
+        })->with('members')
+            ->get();
 
         $count = count($teamList);
 
@@ -141,7 +143,8 @@ class Team extends Model
         }
     }
 
-    public function getAwardListByTeam() {
+    public function getAwardListByTeam()
+    {
         return DB::table('join_events')
             ->where('join_events.team_id', $this->id)
             ->join('awards_results', 'join_events.id', '=', 'awards_results.join_events_id')
@@ -152,13 +155,14 @@ class Team extends Model
                 DB::raw('COUNT(awards.id) as awards_count'),
                 'awards_results.id as results_id',
                 'awards_results.award_id',
-                'awards.title as awards_title', 
+                'awards.title as awards_title',
                 'awards.image as awards_image'
             )
             ->get();
     }
 
-    public static function getAwardListByTeamIdList($teamIdList) {
+    public static function getAwardListByTeamIdList($teamIdList)
+    {
         return DB::table('join_events')
             ->whereIn('join_events.team_id', $teamIdList)
             ->join('awards_results', 'join_events.id', '=', 'awards_results.join_events_id')
@@ -169,41 +173,44 @@ class Team extends Model
                 DB::raw('COUNT(awards.id) as awards_count'),
                 'awards_results.id as results_id',
                 'awards_results.award_id',
-                'awards.title as awards_title', 
+                'awards.title as awards_title',
                 'awards.image as awards_image'
             )
             ->get();
     }
 
-    public  function getAchievementListByTeam() {
+    public function getAchievementListByTeam()
+    {
         return DB::table('join_events')
             ->where('join_events.team_id', $this->id)
             ->join('achievements', 'join_events.id', '=', 'achievements.join_event_id')
             ->select(
                 'achievements.id as achievements_id',
                 'achievements.title',
-                'achievements.description', 
-                'achievements.created_at', 
+                'achievements.description',
+                'achievements.created_at',
             )
             ->get();
     }
 
-    public static function getAchievementListByTeamIdList($teamIdList) {
+    public static function getAchievementListByTeamIdList($teamIdList)
+    {
         return DB::table('join_events')
             ->whereIn('join_events.team_id', $teamIdList)
             ->join('achievements', 'join_events.id', '=', 'achievements.join_event_id')
             ->select(
                 'achievements.id as achievements_id',
                 'achievements.title',
-                'achievements.description', 
-                'achievements.created_at', 
+                'achievements.description',
+                'achievements.created_at',
             )
             ->get();
     }
 
-    public static function getTeamMembersCountForEachTeam($teamIdList) {
+    public static function getTeamMembersCountForEachTeam($teamIdList)
+    {
         return DB::table('teams')
-            ->leftJoin('team_members', function($join) {
+            ->leftJoin('team_members', function ($join) {
                 $join->on('teams.id', '=', 'team_members.team_id')
                     ->where('team_members.status', '=', 'accepted');
             })
@@ -214,27 +221,27 @@ class Team extends Model
             ->toArray();
     }
 
-    public static function getResultsTeamMemberIds ($teamId) {
+    public static function getResultsTeamMemberIds($teamId)
+    {
         $team = Team::where('id', $teamId)
-        ->select(['id', 'teamName', 'teamBanner', 'creator_id'])
+            ->select(['id', 'teamName', 'teamBanner', 'creator_id'])
             ->with(['members' => function ($q) {
                 $q->where('status', 'accepted')
                     ->select('id', 'user_id', 'team_id', 'status')
                     ->with(['user' => function ($q) {
                         $q->select('id');
-                    }
-                ]);
+                    },
+                    ]);
             }]
-        )->first();
+            )->first();
 
         $memberUserIds = $team
             ->members
             ->pluck('user.id')
             ->toArray();
-    
+
         return [$team, $memberUserIds];
     }
-        
 
     public function processTeamRegistration($user, $event, $isNewTeam)
     {
@@ -243,36 +250,36 @@ class Team extends Model
         $participant = Participant::where('user_id', $userId)->firstOrFail();
         $allEventLogs = [];
         $memberNotification = [
-            'subject' => 'Team ' . $this->teamName . ' joining Event: ' . $event->eventName,
-            'links' =>  [
+            'subject' => 'Team '.$this->teamName.' joining Event: '.$event->eventName,
+            'links' => [
                 [
                     'name' => 'View Team',
-                    'url' => route('public.team.view', ['id' => $this->id])
+                    'url' => route('public.team.view', ['id' => $this->id]),
                 ],
                 [
                     'name' => 'View Event',
-                    'url' => route('public.event.view', ['id' => $event->id])
-                ]
-            ]
+                    'url' => route('public.event.view', ['id' => $event->id]),
+                ],
+            ],
         ];
 
         if ($isNewTeam) {
             $memberList = [];
-            $memberNotification['text'] = '<span class="notification-gray"> You have created a new team named' 
-                . ' <span class="notification-black">' . $this->teamName . '</span> and joined' 
-                . ' <span class="notification-black">' . $event->user->name . ' \'s </span> event' 
-                . ' <span class="notification-blue">' . $event->eventName . ' </span>.'
-                . '</span>' ;
+            $memberNotification['text'] = '<span class="notification-gray"> You have created a new team named'
+                .' <span class="notification-black">'.$this->teamName.'</span> and joined'
+                .' <span class="notification-black">'.$event->user->name.' \'s </span> event'
+                .' <span class="notification-blue">'.$event->eventName.' </span>.'
+                .'</span>';
             foreach ($teamMembers as $member) {
                 $memberList[] = $member->user;
                 $allEventLogs[] = [
-                    'action' => 'join', 
-                    'subject_id' => $member->user->id, 
-                    'subject_type' => '\App\Models\User', 
-                    'log' => '<span class="notification-gray"> You have joined' 
-                    . ' <span class="notification-black">' . $event->user->name . ' \'s </span> event' 
-                    . ' <span class="notification-blue">' . $event->eventName . ' </span>.'
-                    . '</span>' 
+                    'action' => 'join',
+                    'subject_id' => $member->user->id,
+                    'subject_type' => '\App\Models\User',
+                    'log' => '<span class="notification-gray"> You have joined'
+                    .' <span class="notification-black">'.$event->user->name.' \'s </span> event'
+                    .' <span class="notification-blue">'.$event->eventName.' </span>.'
+                    .'</span>',
                 ];
             }
             $rosterCaptain = $teamMembers[0];
@@ -281,21 +288,21 @@ class Team extends Model
             foreach ($teamMembers as $member) {
                 $memberList[] = $member->user;
                 $allEventLogs[] = [
-                    'action' => 'join', 
-                    'subject_id' => $member->user->id, 
-                    'subject_type' => '\App\Models\User', 
-                    'log' => '<span class="notification-gray"> You have joined' 
-                    . ' <span class="notification-black">' . $event->user->name . ' \'s </span> event' 
-                    . ' <span class="notification-blue">' . $event->eventName . ' </span>.'
-                    . '</span>' 
+                    'action' => 'join',
+                    'subject_id' => $member->user->id,
+                    'subject_type' => '\App\Models\User',
+                    'log' => '<span class="notification-gray"> You have joined'
+                    .' <span class="notification-black">'.$event->user->name.' \'s </span> event'
+                    .' <span class="notification-blue">'.$event->eventName.' </span>.'
+                    .'</span>',
                 ];
             }
 
-            $memberNotification['text'] = '<span class="notification-gray">You have selected a team named' 
-                . ' <span class="notification-black">' . $this->teamName . '</span> and joined' 
-                . ' <span class="notification-black">' . $event->user->name . ' \'s </span> event' 
-                . ' <span class="notification-blue">' . $event->eventName . ' </span>.'
-                . '</span>' ;
+            $memberNotification['text'] = '<span class="notification-gray">You have selected a team named'
+                .' <span class="notification-black">'.$this->teamName.'</span> and joined'
+                .' <span class="notification-black">'.$event->user->name.' \'s </span> event'
+                .' <span class="notification-blue">'.$event->eventName.' </span>.'
+                .'</span>';
             $rosterCaptain = TeamMember::where('team_id', $this->id)
                 ->where('user_id', $user->id)->get()->first();
         }
@@ -303,16 +310,15 @@ class Team extends Model
         $organizerList = [$event->user];
 
         $organizerNotification = [
-            'subject' => 'Team ' . $this->teamName . ' joining Event: ' . $event->eventName,
-            'text' => ucfirst($this->teamName) . ' has joined your event ' . $event->eventName . '!',
-            'links' =>  [
+            'subject' => 'Team '.$this->teamName.' joining Event: '.$event->eventName,
+            'text' => ucfirst($this->teamName).' has joined your event '.$event->eventName.'!',
+            'links' => [
                 [
                     'name' => 'Visit team',
-                    'url' => route('event.index', ['id' => $event->id])
-                ]
-            ]
+                    'url' => route('event.index', ['id' => $event->id]),
+                ],
+            ],
         ];
-
 
         $joinEvent = JoinEvent::saveJoinEvent([
             'team_id' => $this->id,
@@ -325,7 +331,7 @@ class Team extends Model
         RosterCaptain::insert([
             'team_member_id' => $rosterCaptain->id,
             'join_events_id' => $joinEvent->id,
-            'teams_id' => $this->id
+            'teams_id' => $this->id,
         ]);
 
         // $memberNotification, $organizerNotificatio => $text, $data, $links, $user
@@ -335,13 +341,14 @@ class Team extends Model
     public function uploadTeamBanner($request)
     {
         $file = $request->file('file');
-        $fileNameInitial = 'teamBanner-' . time() . '.' . $file->getClientOriginalExtension();
+        $fileNameInitial = 'teamBanner-'.time().'.'.$file->getClientOriginalExtension();
         $fileName = "images/team/$fileNameInitial";
         $file->storeAs('images/team/', $fileNameInitial);
         $this->teamBanner = $fileName;
-        $fileName = asset('/storage'. '/'. $fileName);
+        $fileName = asset('/storage'.'/'.$fileName);
         $this->save();
-        return $fileName; 
+
+        return $fileName;
     }
 
     public static function destroyTeanBanner($fileName)

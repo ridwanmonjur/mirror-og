@@ -26,7 +26,7 @@ return new class extends Migration
             Schema::disableForeignKeyConstraints();
 
             $table->dropColumn('payment_transaction_id');
-            
+
             Schema::enableForeignKeyConstraints();
 
         });

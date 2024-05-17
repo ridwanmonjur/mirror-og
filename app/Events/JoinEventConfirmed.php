@@ -12,22 +12,29 @@ use ReflectionProperty;
 class JoinEventConfirmed
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $memberNotification; 
-    public $organizerNotificatio; 
-    public $memberList; 
+
+    public $memberNotification;
+
+    public $organizerNotificatio;
+
+    public $memberList;
+
     public $organizerList;
+
     public $allEventLogs;
+
     /**
      * Create a new event instance.
      */
     public function __construct($parameters)
     {
-        $this->memberList ??= $parameters['memberList'] ;
-        $this->organizerList ??= $parameters['organizerList'] ;
-        $this->memberNotification ??= $parameters['memberNotification'] ;
-        $this->organizerNotificatio ??= $parameters['organizerNotification'] ;
-        $this->allEventLogs ??= $parameters['allEventLogs'] ;
+        $this->memberList ??= $parameters['memberList'];
+        $this->organizerList ??= $parameters['organizerList'];
+        $this->memberNotification ??= $parameters['memberNotification'];
+        $this->organizerNotificatio ??= $parameters['organizerNotification'];
+        $this->allEventLogs ??= $parameters['allEventLogs'];
     }
+
     /**
      * Get the channels the event should broadcast on.
      *
@@ -43,6 +50,7 @@ class JoinEventConfirmed
     public function __toString()
     {
         $string = $this->getModelAsString();
+
         return $string;
     }
 
@@ -51,7 +59,7 @@ class JoinEventConfirmed
         $reflection = new ReflectionObject($this);
         $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE);
 
-        $string = get_class($this) . " {";
+        $string = get_class($this).' {';
         foreach ($properties as $property) {
             $property->setAccessible(true);
             $propertyName = $property->getName();
@@ -59,7 +67,8 @@ class JoinEventConfirmed
             $stringValue = is_object($propertyValue) ? $propertyValue->__toString() : var_export($propertyValue, true);
             $string .= "$propertyName: $stringValue, ";
         }
-        $string = rtrim($string, ', ') . "}";
+        $string = rtrim($string, ', ').'}';
+
         return $string;
     }
 }

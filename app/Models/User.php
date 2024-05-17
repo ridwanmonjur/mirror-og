@@ -6,13 +6,13 @@ use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Filament\Panel;
 use Illuminate\Support\Facades\Storage;
+
 // use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use  HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     public $timestamps = false;
 
@@ -20,7 +20,9 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->role == 'ADMIN';
     }
+
     public static $filamentUserColumn = 'is_filament_user';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -44,8 +46,9 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-    
-    public function address() {
+
+    public function address()
+    {
         return $this->hasOne(Address::class, 'user_id', 'id');
     }
 
@@ -74,7 +77,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(TeamMember::class, 'user_id');
     }
 
-    
     public function following()
     {
         return $this->belongsToMany(User::class, 'follows', 'user_id', 'organizer_id');
@@ -96,7 +98,7 @@ class User extends Authenticatable implements FilamentUser
             ->where('role', 'PARTICIPANT')
             ->when($request->has('search'), function ($query) use ($request) {
                 $search = trim($request->input('search'));
-                if (!empty($search)) {
+                if (! empty($search)) {
                     $query->where(function ($q) use ($search) {
                         $q->orWhere('name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%");
                     });
@@ -115,14 +117,15 @@ class User extends Authenticatable implements FilamentUser
         $fileData = $requestData['file'];
 
         $fileContent = base64_decode($fileData['content']);
-        $fileNameInitial = 'userBackground-' . time() . '.' . pathinfo($fileData['filename'], PATHINFO_EXTENSION);
+        $fileNameInitial = 'userBackground-'.time().'.'.pathinfo($fileData['filename'], PATHINFO_EXTENSION);
         $fileName = "images/user/$fileNameInitial";
-        $storagePath = storage_path('app/public/' . $fileName);
+        $storagePath = storage_path('app/public/'.$fileName);
         file_put_contents($storagePath, $fileContent);
 
         $this->userBanner = $fileName;
         $this->save();
-        return asset('storage/' . $fileName);
+
+        return asset('storage/'.$fileName);
     }
 
     public function uploadBackgroundBanner($request, $participant)
@@ -131,13 +134,14 @@ class User extends Authenticatable implements FilamentUser
         $fileData = $requestData['file'];
 
         $fileContent = base64_decode($fileData['content']);
-        $fileNameInitial = 'userBanner-' . time() . '.' . pathinfo($fileData['filename'], PATHINFO_EXTENSION);
+        $fileNameInitial = 'userBanner-'.time().'.'.pathinfo($fileData['filename'], PATHINFO_EXTENSION);
         $fileName = "images/user/$fileNameInitial";
-        $storagePath = storage_path('app/public/' . $fileName);
+        $storagePath = storage_path('app/public/'.$fileName);
         file_put_contents($storagePath, $fileContent);
         $participant->backgroundBanner = $fileName;
         $participant->save();
-        return asset('storage/' . $fileName);
+
+        return asset('storage/'.$fileName);
     }
 
     public function destroyUserBanner($fileName)

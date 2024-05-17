@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Participant extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'birthday', 'user_id', 'domain', 'age', 'bio', 'nickname', 'region', 'games_data'
+        'birthday', 'user_id', 'domain', 'age', 'bio', 'nickname', 'region', 'games_data',
     ];
+
     protected $casts = [
-        'games_data' => 'array'
+        'games_data' => 'array',
     ];
 
     public function user()

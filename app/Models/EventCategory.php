@@ -10,7 +10,9 @@ class EventCategory extends Model
     use HasFactory;
 
     protected $guarded = [];
+
     protected $table = 'event_categories';
+
     protected $casts = [
         'eventTags' => 'array',
     ];

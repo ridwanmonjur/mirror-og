@@ -28,7 +28,7 @@ class Follow extends Model
     public static function getFollowCounts($userIds)
     {
         return DB::table('users')
-            ->leftJoin('follows', function($q) {
+            ->leftJoin('follows', function ($q) {
                 $q->on('users.id', '=', 'follows.organizer_user_id');
             })
             ->whereIn('users.id', $userIds)

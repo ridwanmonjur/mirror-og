@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Event extends Model
 {
     protected $fillable = ['name', 'status', 'venue'];
+
     protected $table = 'events';
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
 }

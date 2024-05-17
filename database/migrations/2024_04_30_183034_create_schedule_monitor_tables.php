@@ -31,7 +31,6 @@ class CreateScheduleMonitorTables extends Migration
             $table->timestamps();
         });
 
-
         Schema::create('monitored_scheduled_task_log_items', function (Blueprint $table) {
             $table->bigIncrements('id');
 

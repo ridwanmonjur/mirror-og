@@ -8,21 +8,19 @@ use App\Models\Notifications;
 use App\Models\Organizer;
 use App\Models\Participant;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use ErrorException;
 use Exception;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Cookie;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Io238\ISOCountries\Models\Country;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -31,20 +29,23 @@ class AuthController extends Controller
     public function logoutAction()
     {
         Auth::logout();
+
         return redirect('/');
     }
 
-    public function countryList() {
+    public function countryList()
+    {
         $countries = Country::all(['name', 'emoji_flag', 'id']);
-        return response()->json(['success' =>true, 'data'=> $countries], 200);
+
+        return response()->json(['success' => true, 'data' => $countries], 200);
     }
 
-    public function gameList() {
+    public function gameList()
+    {
         $games = DB::table('games')->get();
-        return response()->json(['success' =>true, 'data'=> $games], 200);
-    }
 
-    
+        return response()->json(['success' => true, 'data' => $games], 200);
+    }
 
     protected function _registerOrLoginUser($user, $type, $role)
     {
@@ -57,59 +58,62 @@ class AuthController extends Controller
             // if (!$user->user['email_verified']) {
             //     return ['finduser' => null, 'error' => 'Your Gmail is not verified'];
             // }
-            
+
             Auth::login($finduser);
+
             return ['finduser' => $finduser, 'error' => null];
         } else {
             $finduser = User::where('email', $user->email)->first();
-        
+
             if ($finduser) {
-                
+
                 if ($type == 'google') {
                     $finduser->google_id = $user->id;
                 } elseif ($type == 'steam') {
                     $finduser->steam_id = $user->id;
                 }
-                
+
                 $finduser->email_verified_at = now();
                 Auth::login($finduser);
                 $finduser->save();
+
                 return ['finduser' => $finduser, 'error' => null];
             } else {
-                
+
                 $newUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,
                     'password' => bcrypt(Str::random(13)),
-                    'role' => strtoupper($role)
+                    'role' => strtoupper($role),
                 ]);
 
                 if ($newUser->role == 'ORGANIZER') {
-                
+
                     $organizer = new Organizer([
                         'user_id' => $newUser->id,
                     ]);
-    
+
                     $organizer->save();
                 } elseif ($newUser->role == 'PARTICIPANT') {
-                    
+
                     $participant = new Participant([
                         'user_id' => $newUser->id,
                     ]);
-                    
+
                     $participant->save();
                 }
 
                 $newUser->email_verified_at = now();
-                
+
                 if ($type == 'google') {
                     $newUser->google_id = $user->id;
                 } elseif ($type == 'steam') {
                     $newUser->steam_id = $user->id;
                 }
-                
+
                 $newUser->save();
                 Auth::login($newUser);
+
                 return ['finduser' => $newUser, 'error' => null];
             }
         }
@@ -120,12 +124,12 @@ class AuthController extends Controller
         // dd("hio");
         $user = Socialite::driver('google')->stateless()->user();
         $role = Session::get('role');
-        ['finduser' => $finduser, 'error' => $error] 
+        ['finduser' => $finduser, 'error' => $error]
             = $this->_registerOrLoginUser($user, 'google', $role);
-        
+
         Session::forget('role');
         if ($error) {
-            return view("Participant.EventNotFound", ['error'=> $error]);
+            return view('Participant.EventNotFound', ['error' => $error]);
         } else {
             if ($finduser->role == 'PARTICIPANT') {
                 return redirect()->route('participant.home.view');
@@ -160,18 +164,17 @@ class AuthController extends Controller
         return Socialite::driver('google')->redirect();
     }
 
-
     // Steam callback
     public function handleSteamCallback()
     {
         $user = Socialite::driver('steam')->user();
         $role = Session::get('role');
-        ['finduser' => $finduser, 'error' => $error] 
+        ['finduser' => $finduser, 'error' => $error]
             = $this->_registerOrLoginUser($user, 'steam', $role);
-            
+
         Session::forget('role');
         if ($error) {
-            return view("Participant.EventNotFound", ['error'=> $error]);
+            return view('Participant.EventNotFound', ['error' => $error]);
         } else {
             if ($finduser->role == 'PARTICIPANT') {
                 return redirect()->route('participant.home.view');
@@ -179,14 +182,14 @@ class AuthController extends Controller
                 return redirect()->route('organizer.home.view');
             }
         }
-        
+
     }
 
     public function showLandingPage(Request $request)
     {
         $count = 6;
         $currentDateTime = Carbon::now()->utc();
-        
+
         $events = EventDetail::whereNotIn('status', ['DRAFT', 'PENDING'])
             ->whereNotNull('payment_transaction_id')
             ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
@@ -202,32 +205,36 @@ class AuthController extends Controller
                 if (empty($search)) {
                     return $query;
                 }
+
                 return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
             })
             ->with('tier', 'type', 'game')
             ->paginate($count);
-        
+
         $mappingEventState = EventDetail::mappingEventStateResolve();
-        
+
         $output = compact('events', 'mappingEventState');
-        
+
         if ($request->ajax()) {
             $view = view('LandingPageScroll', $output)->render();
+
             return response()->json(['html' => $view]);
-        } 
+        }
 
         return view('LandingPage', $output);
     }
 
     public function signIn(Request $request)
     {
-        Session::put('intended',  $request->input('url'));
+        Session::put('intended', $request->input('url'));
+
         return view('Auth.ParticipantSignIn');
     }
 
     public function organizerSignIn(Request $request)
     {
-        Session::put('intended',  $request->input('url'));
+        Session::put('intended', $request->input('url'));
+
         return view('Auth.OrganizerSignIn');
     }
 
@@ -247,7 +254,7 @@ class AuthController extends Controller
             ->where('token', $request->token)
             ->first();
 
-        if (!$tokenData) {
+        if (! $tokenData) {
             return back()->with(['error' => 'Invalid token or email address.']);
         }
 
@@ -289,7 +296,7 @@ class AuthController extends Controller
         $email = $request->email;
         $user = User::where('email', $request->email)->first();
 
-        if (!$user) {
+        if (! $user) {
             return back()->with(['error' => 'User not found with this email.']);
         }
 
@@ -312,8 +319,8 @@ class AuthController extends Controller
     {
         $user = User::where('email_verified_token', $token)->first();
         $role = $user->role;
-        $route = strtolower($role) . '.signin.view';
-        if (!$user) {
+        $route = strtolower($role).'.signin.view';
+        if (! $user) {
             return redirect()
                 ->route($route)
                 ->with('error', 'Invalid verification token.');
@@ -338,7 +345,7 @@ class AuthController extends Controller
     {
         $user = User::where('email', $email)->first();
 
-        if (!$user) {
+        if (! $user) {
             return redirect()
                 ->back()
                 ->with('error', 'User not found with this email address.');
@@ -391,12 +398,12 @@ class AuthController extends Controller
         $userRole = '';
         $userRoleCapital = '';
         $validatedData = [];
-        
-        if ($request->is('organizer/*')) {          
+
+        if ($request->is('organizer/*')) {
             $userRole = 'organizer';
             $userRoleCapital = 'ORGANIZER';
             $userRoleFirstCapital = 'Organizer';
-            
+
             $validatedData = $request->validate([
                 'username' => 'baiL|required',
                 'email' => 'bail|required|email',
@@ -408,7 +415,7 @@ class AuthController extends Controller
             $userRole = 'participant';
             $userRoleCapital = 'PARTICIPANT';
             $userRoleFirstCapital = 'Participant';
-            
+
             $validatedData = $request->validate([
                 'username' => 'baiL|required',
                 'email' => 'bail|required|email',
@@ -418,9 +425,9 @@ class AuthController extends Controller
             return redirect()->route('landing.view');
         }
 
-        $redirectErrorRoute = $userRole . '.signup.view';
-        $redirectSuccessRoute = $userRole . '.signin.view';
-        
+        $redirectErrorRoute = $userRole.'.signup.view';
+        $redirectSuccessRoute = $userRole.'.signin.view';
+
         try {
             $user = new User([
                 'name' => $validatedData['username'],
@@ -434,7 +441,7 @@ class AuthController extends Controller
             $user->save();
 
             if ($userRole == 'organizer') {
-                
+
                 $organizer = new Organizer([
                     'user_id' => $user->id,
                     'companyDescription' => $validatedData['companyDescription'],
@@ -443,11 +450,11 @@ class AuthController extends Controller
 
                 $organizer->save();
             } elseif ($userRole == 'participant') {
-                
+
                 $participant = new Participant([
                     'user_id' => $user->id,
                 ]);
-                
+
                 $participant->save();
             }
 
@@ -460,14 +467,14 @@ class AuthController extends Controller
                 ->route($redirectSuccessRoute)
                 ->with(
                     [
-                        'success' => $userRoleFirstCapital . ' account created and verification email sent. Please verify email now!',
-                        'email' => $user->email
+                        'success' => $userRoleFirstCapital.' account created and verification email sent. Please verify email now!',
+                        'email' => $user->email,
                     ]
                 );
         } catch (QueryException $e) {
             Log::error($e->getMessage());
 
-            if ($e->getCode() == '23000' || 1062 == $e->getCode()) {
+            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
                 return redirect()
                     ->route($redirectErrorRoute)
                     ->with('error', 'The email already exists. Add another email!');
@@ -489,7 +496,7 @@ class AuthController extends Controller
         $userRole = '';
         $userRoleCapital = '';
         $validatedData = [];
-        
+
         if ($request->is('organizer/*')) {
             $userRole = 'organizer';
             $userRoleCapital = 'ORGANIZER';
@@ -499,7 +506,7 @@ class AuthController extends Controller
             $userRoleCapital = 'PARTICIPANT';
             $userRoleSentence = 'Participant';
         } else {
-            return response()->json(['success' => false, 'message' => "Wrong route!"], 422);
+            return response()->json(['success' => false, 'message' => 'Wrong route!'], 422);
         }
 
         try {
@@ -510,28 +517,27 @@ class AuthController extends Controller
 
             if (Auth::attempt($validatedData)) {
                 $user = User::where('email', $request->email)->first();
-                if (!$user->email_verified_at) {
+                if (! $user->email_verified_at) {
                     return response()->json([
-                        'success' => false, 
+                        'success' => false,
                         'error' => 'Email not verified. Please verify email first!',
                         'errorEmail' => $request->email,
                     ]);
                 }
-        
+
                 if ($user->role != $userRoleCapital && $user->role != 'ADMIN') {
                     throw new ErrorException("Invalid Role for $userRoleSentence");
                 }
-        
+
                 $request->session()->regenerate();
-                
+
                 $response = response()->json([
                     'message' => "Account signed in successfully as $userRole!",
-                    'route' => route($userRole . '.home.view'),
+                    'route' => route($userRole.'.home.view'),
                     'token' => null,
-                    'success' => true
+                    'success' => true,
                 ], 200);
-                
-                
+
                 return $response;
 
             } else {
@@ -539,13 +545,15 @@ class AuthController extends Controller
             }
         } catch (QueryException $e) {
             Log::error($e->getMessage());
+
             return response()->json(['success' => false, 'message' => 'An error occurred while processing your request.'], 422);
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => $th->getMessage()], 422);
         }
     }
 
-    public function replaceBanner(Request $request) {
+    public function replaceBanner(Request $request)
+    {
         try {
             $request->validate([
                 'file' => 'required|array',
@@ -554,7 +562,7 @@ class AuthController extends Controller
                 'file.size' => 'required|numeric',
                 'file.content' => 'required|string',
             ]);
-    
+
             $user = $request->attributes->get('user');
             // dd($user);
             $oldBanner = $user->userBanner;
@@ -567,7 +575,8 @@ class AuthController extends Controller
         }
     }
 
-    public function replaceBackground(Request $request) {
+    public function replaceBackground(Request $request)
+    {
         try {
             $request->validate([
                 'file' => 'required|array',
@@ -576,7 +585,7 @@ class AuthController extends Controller
                 'file.size' => 'required|numeric',
                 'file.content' => 'required|string',
             ]);
-    
+
             $user = $request->attributes->get('user');
             $participant = Participant::where('user_id', $user->id)
                 ->select(['id', 'user_id', 'backgroundBanner'])->first();
@@ -599,12 +608,13 @@ class AuthController extends Controller
             ->where('notifiable_id', $user->id)
             ->first();
 
-        if (!$notification) {
-            return response()->json(['success'=> false, 'error' => 'Notification not found or does not belong to the user'], 404);
+        if (! $notification) {
+            return response()->json(['success' => false, 'error' => 'Notification not found or does not belong to the user'], 404);
         }
 
         $notification->update(['read_at' => now()]);
-        return response()->json(['success'=> true, 'message' => 'Notification marked as read'], 200);
+
+        return response()->json(['success' => true, 'message' => 'Notification marked as read'], 200);
     }
 
     public function markAllAsRead(Request $request)
@@ -616,6 +626,6 @@ class AuthController extends Controller
             ->whereNull('read_at')
             ->update(['read_at' => Carbon::now()]);
 
-        return response()->json(['success'=> true, 'message' => 'All user notifications marked as read'], 200);
+        return response()->json(['success' => true, 'message' => 'All user notifications marked as read'], 200);
     }
 }

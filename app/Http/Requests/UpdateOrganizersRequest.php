@@ -34,8 +34,8 @@ class UpdateOrganizersRequest extends FormRequest
             'organizer.id' => 'nullable',
             'organizer.industry' => 'nullable|string',
             'organizer.type' => 'nullable|string',
-            'organizer.companyName' => 'nullable|string|max:255', 
-            'organizer.companyDescription' => 'nullable|string|max:1000', 
+            'organizer.companyName' => 'nullable|string|max:255',
+            'organizer.companyDescription' => 'nullable|string|max:1000',
             'organizer.website_link' => 'nullable|url',
             'organizer.instagram_link' => 'nullable|url',
             'organizer.facebook_link' => 'nullable|url',
@@ -43,11 +43,8 @@ class UpdateOrganizersRequest extends FormRequest
         ];
     }
 
-
     /**
      * Get custom error messages for validator errors.
-     *
-     * @return array
      */
     public function messages(): array
     {
