@@ -187,7 +187,10 @@
                                 <a href="{{route('participant.register.manage', ['id' => $existingJoint->team_id])}}"><u>Manage registration</u></a>
                             @else
                                 @guest
-                                    <button type="submit" class="oceans-gaming-default-button">
+                                    <button 
+                                        type="button"
+                                        onclick="reddirectToLoginWithIntened('{{route('public.event.view', ['id'=> $event->id])}}')"
+                                        class="oceans-gaming-default-button">
                                         <span>Join</span>
                                     </button>
                                 @endguest

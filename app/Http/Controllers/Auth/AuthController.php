@@ -226,15 +226,19 @@ class AuthController extends Controller
 
     public function signIn(Request $request)
     {
-        Session::put('intended', $request->input('url'));
-
+        if ($request->has('url')) {
+            Session::put('intended', $request->input('url'));
+        } 
+        
         return view('Auth.ParticipantSignIn');
     }
 
     public function organizerSignIn(Request $request)
     {
-        Session::put('intended', $request->input('url'));
-
+        if ($request->has('url')) {
+            Session::put('intended', $request->input('url'));
+        }
+        
         return view('Auth.OrganizerSignIn');
     }
 

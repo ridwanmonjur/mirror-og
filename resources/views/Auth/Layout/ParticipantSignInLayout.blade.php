@@ -16,21 +16,21 @@
     action="{{route('participant.signin.action', 
         [
             'intended' => request()->get('intended'),
-            'eventId' => request()->get('eventId')
         ]
     )}}"
 >
     @csrf
     <div class="flash-message">
         @if(session('errorEmail'))
-        Click
-        <a
-            style="font-weight: bold; text-decoration: underline;"
-            href="{{ route('user.verify.resend', ['email' => session('errorEmail')]) }}">
-            here
-        </a>
-        to resend verification email.
+            Click
+            <a
+                style="font-weight: bold; text-decoration: underline;"
+                href="{{ route('user.verify.resend', ['email' => session('errorEmail')]) }}">
+                here
+            </a>
+            to resend verification email.
         @endif
+        @include('Auth.Layout.Flash')
     </div>
     <br>
     <div class="field">

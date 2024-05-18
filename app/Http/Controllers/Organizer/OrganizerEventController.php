@@ -22,10 +22,13 @@ use Illuminate\View\View;
 
 class OrganizerEventController extends Controller
 {
-    public function home(Request $request)
+    public function home()
     {
         if (Session::has('intended')) {
-            return redirect(Session::get('intended'));
+            $intendedUrl = Session::get('intended');
+            
+            Session::forget('intended');
+            return redirect($intendedUrl);        
         } else {
             return view('Organizer.Home');
         }

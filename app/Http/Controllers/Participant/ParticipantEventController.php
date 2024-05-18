@@ -27,7 +27,10 @@ class ParticipantEventController extends Controller
     {
 
         if (Session::has('intended')) {
-            return redirect(Session::get('intended'));
+            $intendedUrl = Session::get('intended');
+            dd($intendedUrl);
+            Session::forget('intended');
+            return redirect($intendedUrl);        
         }
 
         $userId = Auth::id();
