@@ -25,7 +25,8 @@ class UpdateParticipantsRequest extends FormRequest
         return [
             'id' => 'required',
             'bio' => 'nullable|string',
-            'birthday' => 'nullable|date',
+            'age' => 'nullable|numeric',
+            'birthday' => 'nullable|date|before_or_equal:' . now()->format('Y-m-d'),
             'nickname' => 'nullable|string|max:255',
             'region' => 'nullable|string',
             'games_data' => 'nullable|string',
@@ -42,6 +43,7 @@ class UpdateParticipantsRequest extends FormRequest
             'id.required' => 'The ID field is required.',
             'bio.string' => 'The bio must be a string.',
             'birthday.date' => 'The birthday must be a valid date.',
+            'birthday.before_or_equal' => 'The birthday must be a date before the current year.',
             'nickname.string' => 'The nickname must be a string.',
             'nickname.max' => 'The nickname may not be greater than 255 characters.',
             'region.string' => 'The region must be a string.',
@@ -53,10 +55,7 @@ class UpdateParticipantsRequest extends FormRequest
     {
         $attributes = $this->request->all();
 
-        if (isset($attributes['birthday'])) {
-            $attributes['birthday'] = Carbon::parse($attributes['birthday']);
-            $attributes['age'] = Carbon::now()->diffInYears($attributes['birthday']);
-        }
+       
 
         if (isset($attributes['domain']) && filter_var($attributes['domain'], FILTER_VALIDATE_URL) !== false) {
             $parsed = parse_url($attributes['domain']);

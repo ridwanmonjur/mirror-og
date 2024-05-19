@@ -20,6 +20,6 @@
     <span>{{ $member->user->email }}</span>
 </td>
 <td class="flag-cell coloured-cell px-3">
-    <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
-        alt="User's flag">
+    <span>{{ bladeExtractEmojis($member->user->participant->region) }} </span>
+
 </td>

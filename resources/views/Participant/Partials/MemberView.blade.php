@@ -79,8 +79,7 @@
                             <span>{{ $member->status }} {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }} </span>
                         </td>
                         <td class="flag-cell coloured-cell px-3">
-                            <img class="nationality-flag" src="{{ asset('/assets/images/china.png') }}"
-                                alt="User's flag">
+                            <span>{{ bladeExtractEmojis($member->user->participant->region) }} </span>
                         </td>
                     </tr>
                 @endforeach

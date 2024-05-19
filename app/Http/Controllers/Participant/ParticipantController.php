@@ -164,6 +164,7 @@ class ParticipantController extends Controller
         return response()->json([
             'message' => 'Participant updated successfully',
             'success' => true,
+            'age' => $participant->age
         ], 200);
     }
 

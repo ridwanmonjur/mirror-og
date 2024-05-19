@@ -40,7 +40,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('participant.log
 // Search bar
 Route::get('/event/search', [AuthController::class, 'showLandingPage'])->name('public.search.view');
 Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view');
-Route::get('/public/team/{id}/view', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
+Route::get('/public/team/{id}', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
 Route::get('/public/participant/{id}', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view');
 Route::get('/public/organizer/{id}', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view');
 

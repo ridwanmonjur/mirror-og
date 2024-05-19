@@ -2,26 +2,29 @@
     $random_int = rand(0, 999);
     $total = $joinEvent->tier->tierEntryFee * $joinEvent->tier->tierTeamSlot;
     $exisitngSum = $joinEvent->participant_payments_sum_payment_amount ?? 0;
+    // dd($exisitngSum);
+
     $pedning = $total - $exisitngSum;
-    $percent = ($exisitngSum * 100) / $total;
+    $percent = round(($exisitngSum * 100) / $total);
+
     $styles = '--p:' . $percent . '; --c:' . ($isInvited ? 'purple' : 'orange');
 @endphp
 
-<div class="ms-3 d-flex flex-column justify-content-between position-relative popover__wrapper">
+<div class="ms-3 d-flex flex-column justify-content-between position-relative popover__wrapper rounded">
     <div class="mx-auto text-center popover__title">
         <div class="pie animate no-round" style="{{ $styles }}">{{ $percent }}%</div>
         <p> Total Entry Fee: <u>RM {{ $total }} </u></p>
         <span>Paid: <u class="text-success">RM {{ $exisitngSum }}</u>
             <span>Pending: <u style="color: red;">RM {{ $pedning }} </u> <span></p>
     </div>
-    <div class="popover__content rounded-pill">
+    <div class="popover__content ">
         <p class="popover__message">
             @foreach($selectTeam->members as $member)
                 <img
                     class="object-cover rounded-circle me-2 border border-primary" 
                     src="{{'/storage' . '/' . $member->user->userBanner}}" width="45" height="45">
                 <span class="me-2"> {{$member->user->name}} </span>
-                <span class="me-2"> RM {{$paymentsByMemberId[128] ?? 0}} </span>
+                <span class="me-2"> RM {{$paymentsByMemberId[$member->id] ?? 0}} </span>
             @endforeach
         </p>
        
@@ -64,12 +67,16 @@
                         </div>
                         <div class="text-center input-group w-75 mx-auto">
                             <span class="input-group-text bg-primary text-light" id="inputGroup-sizing-sm">RM </span>
-                            <input data-joinEventId="{{ $joinEvent->id }}" data-total-amount="{{ $total }}"
+                            <input data-joinEventId="{{ $joinEvent->totalid }}" 
+                                data-pending-amount="{{ $pedning }}"
+                                data-total-amount="{{ $total }}"
                                 data-existing-amount="{{ $exisitngSum }}" data-modal-id="{{ $random_int }}"
                                 name="amount" class="form-control" type="text" default="00.00" value="00.00"
                                 oninput="moveCursorToEnd(this); updateInput(this);"
                                 onkeydown="moveCursorToEnd(this); keydown(this); ">
-                            <span data-joinEventId="{{ $joinEvent->id }}" data-total-amount="{{ $total }}"
+                            <span data-joinEventId="{{ $joinEvent->id }}" 
+                                dota-pending-amount="{{ $pedning }}"
+                                data-total-amount="{{ $total }}"
                                 data-existing-amount="{{ $exisitngSum }}" data-modal-id="{{ $random_int }}"
                                 onclick="resetInput(this);" style="background-color: transparent;"
                                 class="input-group-text cursor-pointer border-0 button-close">

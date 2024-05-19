@@ -28,7 +28,6 @@ class ParticipantEventController extends Controller
 
         if (Session::has('intended')) {
             $intendedUrl = Session::get('intended');
-            dd($intendedUrl);
             Session::forget('intended');
             return redirect($intendedUrl);        
         }

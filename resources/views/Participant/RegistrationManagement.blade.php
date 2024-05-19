@@ -54,8 +54,10 @@
         let registrationPaymentModalMap = {}; 
 
         function updateInput(input) {
-            let total = Number(input.dataset.totalAmount);
-              let modalId = input.dataset.modalId;
+            let ogTotal = Number(input.dataset.totalAmount);
+            let total = ogTotal;
+            let pending = Number(input.dataset.pendingAmount);
+            let modalId = input.dataset.modalId;
 
             if (!(registrationPaymentModalMap.hasOwnProperty(modalId))) {
                 registrationPaymentModalMap[modalId] = 0;
@@ -77,13 +79,13 @@
             })
 
             if (+newValue > total) {
-                newValue = total.toFixed(2);
+                newValue = pending.toFixed(2);
             }
 
             registrationPaymentModalMap[modalId] ++;
             
             input.value = newValue;
-            putAmount(input.dataset.modalId, newValue, Number(input.dataset.totalAmount), Number(input.dataset.existingAmount));
+            putAmount(input.dataset.modalId, newValue, ogTotal, pending, Number(input.dataset.existingAmount));
         }
 
         function keydown(input) {
@@ -101,12 +103,13 @@
             input.setSelectionRange(input.value.length, input.value.length);
         }
 
-        function putAmount(modalId, inputValue, total, existing) {
+        function putAmount(modalId, inputValue, total, pending, existing) {
             let putAmountTextSpan = document.querySelector('#payModal' + modalId + ' .putAmountClass');
             let pieChart = document.querySelector('#payModal' + modalId + ' .pie');
             inputValue = Number(inputValue);
             console.log({inputValue, existing, total})
             let percent = ((existing + inputValue) * 100) / total; 
+            console.log({inputValue, existing, total, percent})
             pieChart.style.setProperty('--p', percent);
             pieChart.innerText = percent.toFixed(0) + "%" ;
             putAmountTextSpan.innerText = inputValue.toFixed(2);
@@ -116,7 +119,7 @@
             let input = document.querySelector('#payModal' + button.dataset.modalId + " input[name='amount']");
             registrationPaymentModalMap[button.dataset.modalId] = 0;
             input.value = input.defaultValue;
-            putAmount(button.dataset.modalId, 0.00, Number(button.dataset.totalAmount), Number(button.dataset.existingAmount));
+            putAmount(button.dataset.modalId, 0.00, Number(button.dataset.totalAmount), Number(button.dataset.pendingAmount), Number(button.dataset.existingAmount));
         }
     </script>
     <script>
