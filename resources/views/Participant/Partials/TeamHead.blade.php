@@ -198,12 +198,12 @@
                 </div>
                 <div>
                     <span class="ms-2" x-cloak x-show="!isEditMode" x-text="teamDescription"> </span>
-                    <span class="ms-2"x-show="!isEditMode" x-html="country"> </span>
+                    <span class="ms-2"x-show="!isEditMode" x-html="country.replace(/[0-9a-zA-Z]+/g, '')"> </span>
                 </div>
             @else
                 <p>
                     <span class="d-inline" x-text="teamDescription"> </span>
-                    <span class="d-inline ms-2" x-html="country"> </span>
+                    <span class="d-inline ms-2" x-html="country.replace(/[0-9a-zA-Z]+/g, '')"> </span>
                 </p>
             @endif
         <div class="mx-auto text-center mt-1">

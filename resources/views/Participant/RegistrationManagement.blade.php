@@ -15,6 +15,12 @@
     <main class="main2">
         <div id="Overview">
             <br><br>
+            @if (isset($successMessage))
+                <div class="text-success">{{$successMessage}}</div>
+            @endif
+            @if (isset($errorMessage))
+                    <div class="text-red">{{$errorMessage}}</div>
+            @endif
             <div class="tab-size"><b>Outstanding Registrations</b></div>
             <br> <br>
             <div class="position-relative d-flex justify-content-center">
@@ -51,6 +57,11 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        function submitConfirmCancelForm(text) {
+            window.dialogOpen(text, ()=> {
+                document.getElementById('confirmRegistration').submit();
+            }, null)
+        }
         let registrationPaymentModalMap = {}; 
 
         function updateInput(input) {

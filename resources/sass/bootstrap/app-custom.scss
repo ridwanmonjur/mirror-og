@@ -367,13 +367,11 @@ a:hover {
 .popover__title {
     text-decoration: none;
     text-align: center;
-    padding: 15px 0;
 }
 
 .popover__wrapper {
     cursor: pointer;
     position: relative;
-    margin-top: 1.5rem;
     display: inline-block;
 }
 
@@ -397,7 +395,7 @@ a:hover {
 
 .popover__message {
     text-align: center;
-    padding: 20px 2vw 15vh;
+    padding: 20px 2vw;
 }
 
 .modal-content {

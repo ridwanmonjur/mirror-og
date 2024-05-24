@@ -12,12 +12,15 @@
 </head>
 @php
     use Carbon\Carbon;
+    $isUserSame = false;
 @endphp
 @auth
     @php
         if (!isset($user)) {
             $user = auth()->user();
         }
+
+        $isUserSame = $user->id == $userProfile->id;
     @endphp
 @endauth
 <body>
@@ -26,21 +29,25 @@
         x-data="alpineDataComponent"
     >
         {{-- <form action="{{route('organizer.profile.update')}}" method="POST">  --}}
-        <div id="backgroundBanner" class="member-section px-0 pt-0"
+        <div id="backgroundBanner" class="member-section px-0"
         >   
             <div style="background-color: #DFE1E2;" class="pb-4">
                 <br>
                 <div class="member-image">
-                    <div class="upload-container">
+                    <div class="upload-container align-items-center">
                         <label for="image-upload" class="upload-label">
                             <div class="circle-container">
                                   <div id="uploaded-image" class="uploaded-image"
                                         style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} );"
                                     ></div>
-                                <button id="upload-button" class="upload-button" aria-hidden="true">Upload</button>
+                                @if ($isUserSame)
+                                    <button id="upload-button" class="upload-button" aria-hidden="true">Upload</button>
+                                @endif
                             </div>
                         </label>
-                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                        @if ($isUserSame)
+                            <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                        @endif
                     </div>
                 </div>
                 <div class="member-details mx-auto text-center">

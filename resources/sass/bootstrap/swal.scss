@@ -17,6 +17,15 @@
   .colored-toast.swal2-icon-question {
     background-color: #87adbd !important;
   }
+
+  .swal2-confirm:active, .swal2-deny:active {
+    border-color: transparent !important;
+    outline-color: transparent !important;
+  }
+
+  .swal2-title {
+    font-size: 1.75em !important;
+  }
   
   .colored-toast .swal2-title {
     color: white;

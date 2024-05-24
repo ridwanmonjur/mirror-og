@@ -17,32 +17,80 @@
         <span>Paid: <u class="text-success">RM {{ $exisitngSum }}</u>
             <span>Pending: <u style="color: red;">RM {{ $pedning }} </u> <span></p>
     </div>
-    <div class="popover__content ">
-        <p class="popover__message">
-            @foreach($selectTeam->members as $member)
-                <img
-                    class="object-cover rounded-circle me-2 border border-primary" 
-                    src="{{'/storage' . '/' . $member->user->userBanner}}" width="45" height="45">
-                <span class="me-2"> {{$member->user->name}} </span>
-                <span class="me-2"> RM {{$paymentsByMemberId[$member->id] ?? 0}} </span>
-            @endforeach
+    <div class="popover__content pt-0">
+        <p class="popover__message  pt-0">
+            <table class="align-start px-3 mx-3">
+                <thead>
+                    <tr>
+                        <th class="pe-3">Participant</th>
+                        <th class="pe-3">Payment</th>
+                        <th>%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($selectTeam->members as $member)
+                    <tr>
+                        <td class="pe-3">
+                            <img
+                                class="object-cover rounded-circle me-2 border border-primary" 
+                                src="{{'/storage' . '/' . $member->user->userBanner}}" width="45" height="45">
+                        
+                            {{$member->user->name}}
+                        </td>
+                        <td class="pe-3">
+                            RM {{$paymentsByMemberId[$member->id] ?? 0}}
+                        </td>
+                        <td class="pe-2">
+                            {{round($paymentsByMemberId[$member->id]*100/$total, 2) ?? 0}}%
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </p>
        
     </div>
     <div class="mx-auto text-center">
-        @if ($pedning != 0)
+        @if ($joinEvent->payment_status != "completed")
             <button class="btn oceans-gaming-default-button" data-bs-toggle="modal"
                 data-bs-target="{{ '#payModal' . $random_int }}">Contribute </button>
         @else
-            <button class="btn oceans-gaming-default-button oceans-gaming-gray-button px-3">Contribution Full </button>
+            <button style="pointer-events: none;" class="btn oceans-gaming-default-button oceans-gaming-gray-button px-3">Contribution Full </button>
         @endif
         <br>
-        @if ($pedning < 0 && true)
-            <button class="mt-2 btn btn-success py-2 rounded-pill">Confirm
-                Registration</button>
+        @if ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "pending")
+            <form action="{{route('participant.confirmOrCancel.action')}}" id="confirmRegistration" method="POST">
+                @csrf
+                <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
+                <input type="hidden" name="join_status" value="confirmed">
+                <button type="button" 
+                    onclick="submitConfirmCancelForm('Confirm registering this event?')" 
+                    class="mt-2 btn bg-success py-2 rounded-pill">
+                    Confirm Registration
+                </button>
+            </form>
+        @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "confirmed")
+            <form action="{{route('participant.confirmOrCancel.action')}}" id="confirmRegistration" method="POST">
+                @csrf
+                <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
+                <input type="hidden" name="join_status" value="canceled">
+                <button type="button" onclick="submitConfirmCancelForm('Confirm canceling this event?')" class="mt-2 btn bg-success py-2 rounded-pill">
+                    Cancel Registration
+                </button> 
+                <br>
+                <p class="text-success">Your registration is confirmed!</p>
+            </form>
+        @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "canceled")
+               <button
+                    style="cursor: not-allowed; pointer-events: none;"
+                    class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button px-2">
+                    Registration Canceled
+                </button>
+            </form>
         @else
             <button class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button px-2">Confirm
-                Registration</button>
+                Registration
+            </button>
         @endif
     </div>
     <div class="modal fade" id={{ 'payModal' . $random_int }} tabindex="-1"
@@ -108,3 +156,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    function approveTeam(memberId) {
+        window.dialogOpen('Continue with approval?', ()=>  {
+
+        }, null)
+    }
+</script>

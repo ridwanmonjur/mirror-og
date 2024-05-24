@@ -14,12 +14,15 @@
 </head>
 @php
     use Carbon\Carbon;
+    $isUserSame = false;
 @endphp
 @auth
     @php
         if (!isset($user)) {
             $user = auth()->user();
         }
+
+        $isUserSame = $user->id == $userProfile->id;
     @endphp
 @endauth
 <body>
@@ -30,6 +33,7 @@
             style="background-image: url({{ '/storage' . '/'. $userProfile->participant->backgroundBanner }} );
                 background-size: cover; background-repeat: no-repeat;"
         >
+            @if(!$isOwnProfile) <br> @endif
             <input type="hidden" id="games_data_input" value="{{ $userProfile->participant->games_data ?? json_encode([]) }}">
             @if($isOwnProfile)
                 <div class="d-flex justify-content-end py-0 my-0 mb-2">
@@ -73,11 +77,16 @@
                                   <div id="uploaded-image" class="uploaded-image"
                                         style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
                                         background-repeat: no-repeat; background-position: center;"
-                                    ></div>
-                                <button id="upload-button" class="upload-button" aria-hidden="true">Upload</button>
+                                    >
+                                    </div>
+                                @if ($isUserSame)
+                                    <button id="upload-button" class="upload-button" aria-hidden="true">Upload</button>
+                                @endif
                             </div>
                         </label>
-                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                        @if ($isUserSame)
+                            <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                        @endif
                     </div>
                 </div>
                 <div class="member-details">
@@ -244,6 +253,15 @@
                                     <span class="me-1" x-text="participant.domain"></span>
                                 </span>
                             </template>
+                            <template x-if="!participant.domain">
+                                <span class="me-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg me-2" viewBox="0 0 16 16">
+                                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+                                    <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
+                                    </svg>
+                                    <span class="me-1" x-text="'driftwood.gg'"></span>
+                                </span>
+                            </template>
                             <span class="me-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person me-2" viewBox="0 0 16 16">
                                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
@@ -272,7 +290,9 @@
                                 onclick="visibleElements()"
                                 class="show-more cursor-pointer"><u>Show more</u></span>
                         </div>
+                        <template x-if="games_data">
                         <br><br><br>
+                        </template>
 
                     </div>
                 </div>
@@ -454,7 +474,7 @@
             @else
                 <div class="tab-size pt-3">No current teams</div>
             @endif
-            <br> <br>
+            <br> 
             <div class="tab-size"><b>Past Teams</b></div>
 
             @if (isset($pastTeam[0]))
@@ -710,7 +730,9 @@
 
         }})
     })
-
+</script>
+@if ($isUserSame)
+<script>
     const uploadButton = document.getElementById("upload-button");
     const imageUpload = document.getElementById("image-upload");
     const uploadedImage = document.getElementById("uploaded-image");
@@ -810,6 +832,9 @@
             reader.readAsDataURL(file);
         });
     }
+</script>
+@endif
+<script>
 
     function reddirectToLoginWithIntened(route) {
         route = encodeURIComponent(route);

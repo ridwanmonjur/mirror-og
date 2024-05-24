@@ -8,6 +8,7 @@ use App\Jobs\HandleFollows;
 use App\Models\EventDetail;
 use App\Models\Follow;
 use App\Models\JoinEvent;
+use App\Models\Like;
 use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\TeamMember;
@@ -79,10 +80,14 @@ class ParticipantEventController extends Controller
             }
 
             $followersCount = Follow::where('organizer_user_id', $event->user_id)->count();
-
+            $likesCount = Like::where('event_id', $event->id)->count();
             if ($user && $userId) {
                 $user->isFollowing = Follow::where('participant_user_id', $userId)
                     ->where('organizer_user_id', $event->user_id)
+                    ->first();
+                
+                $user->isLiking = Like::where('user_id', $userId)
+                    ->where('event_id', $event->id)
                     ->first();
 
                 if ($event->sub_action_private == 'private') {
@@ -110,7 +115,7 @@ class ParticipantEventController extends Controller
                 }
             }
 
-            return view('Participant.ViewEvent', compact('event', 'followersCount', 'user', 'existingJoint'));
+            return view('Participant.ViewEvent', compact('event', 'likesCount', 'followersCount', 'user', 'existingJoint'));
         } catch (Exception $e) {
             return $this->showErrorParticipant($e->getMessage());
         }
@@ -368,6 +373,32 @@ class ParticipantEventController extends Controller
 
             return view('Participant.CreateTeamToRegister', ['id' => $id]);
 
+        }
+    }
+
+    public function confirmOrCancel(Request $request) {
+        try{
+            // dd($request);
+            $successMessage = $request->join_status == 'confirmed' ? 'Your registration is now successfully confirmed!' 
+                : 'Your registration is now successfully canceled.';
+            
+            $joinEvent = JoinEvent::where('id', $request->join_event_id)->select(['id', 'join_status', 'payment_status'])->firstOrFail();
+            
+            $isPermitted = $joinEvent->payment_status == "completed" && 
+                ($request->join_status == 'confirmed' || $request->join_status == 'canceled'); 
+
+            if ($isPermitted) {
+                $joinEvent->join_status = $request->join_status;
+                $joinEvent->save();
+                // dd($joinEvent, $request);
+            } else {
+                return back()->with('errorMessage', 'Error operation not permitted.');
+
+            }
+
+            return back()->with("successMessage", $successMessage);
+        } catch (Exception $e) {
+            return $this->showParticipantError($e->getMessage());
         }
     }
 }

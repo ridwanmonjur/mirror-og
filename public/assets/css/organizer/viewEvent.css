@@ -458,3 +458,8 @@ input[type="submit"]:active {
         bottom: 40vh;
     }
 }
+
+.svg-fix {
+    position: relative;
+    top: 5px;
+}

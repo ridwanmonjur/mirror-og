@@ -11,7 +11,6 @@ use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantRosterController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
-use App\Models\Participant;
 use Illuminate\Support\Facades\Route;
 
 /* THIS IS THE UNSIGNED VIEW */
@@ -72,8 +71,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::get('/home', [ParticipantEventController::class, 'home'])->name('participant.home.view');
 
             // Home page
-            Route::get('/request', [ParticipantController::class, 'viewRequest'])
-                ->middleware('prevent-back-button')
+            Route::get('/request', [ParticipantController::class, 'viewRequest'])->middleware('prevent-back-button')
                 ->name('participant.request.view');
 
             // Team management
@@ -105,18 +103,17 @@ Route::group(['prefix' => 'participant'], function () {
                 ->middleware('prevent-back-history')->name('participant.roster.manage');
             Route::get('/event/{id}/team/{teamId}/manage/member', [ParticipantTeamController::class, 'teamMemberManagementRedirected'])
                 ->middleware('prevent-back-history')->name('participant.memberManage.action');
-            Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])
-                ->middleware('prevent-back-history')
+            Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->middleware('prevent-back-history')
                 ->name('participant.event.view');
             Route::post('/event/{id}/join/team/select', [ParticipantEventController::class, 'selectTeamToJoinEvent'])->name('participant.selectTeamToJoin.action');
             Route::post('/event/{id}/join/team/create', [ParticipantEventController::class, 'createTeamToJoinEvent'])->name('participant.createTeamToJoinEvent.action');
-            Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])
-                ->middleware('prevent-back-history')
+            Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])->middleware('prevent-back-history')
                 ->name('participant.event.selectOrCreateTeam.redirect');
             Route::post('/event/{id}/join/redirect/createTeamToJoinEvent', [ParticipantEventController::class, 'redirectToCreateTeamToJoinEvent'])
                 ->name('participant.event.createTeam.redirect');
             Route::get('event/checkout/transition', [ParticipantCheckoutController::class, 'showCheckoutTransition'])->name('participant.checkout.transition');
             Route::post('event/checkout', [ParticipantCheckoutController::class, 'showCheckout'])->name('participant.checkout.action');
+            Route::post('event/confirmOrCancel', [ParticipantEventController::class, 'confirmOrCancel'])->name('participant.confirmOrCancel.action');
 
             // Profile
             Route::get('/profile', [ParticipantController::class, 'viewOwnProfile'])->name('participant.profile.view');
@@ -156,16 +153,13 @@ Route::group(['prefix' => 'organizer'], function () {
             Route::get('/event/{id}/invitation', [OrganizerInvitationController::class, 'index'])->name('event.invitation.index');
             Route::post('event/{id}/updateForm', [OrganizerEventController::class, 'updateForm'])->name('event.updateForm');
             // Success page
-            Route::get('event/{id}/success', [OrganizerEventController::class, 'showSuccess'])
-                ->middleware('prevent-back-button')
+            Route::get('event/{id}/success', [OrganizerEventController::class, 'showSuccess'])->middleware('prevent-back-button')
                 ->name('organizer.success.view');
             // Live page
-            Route::get('event/{id}/live', [OrganizerEventController::class, 'showLive'])
-                ->middleware('prevent-back-button')
+            Route::get('event/{id}/live', [OrganizerEventController::class, 'showLive'])->middleware('prevent-back-button')
                 ->name('organizer.live.view');
             // Checkout page
-            Route::get('event/{id}/checkout', [OrganizerCheckoutController::class, 'showCheckout'])
-                ->middleware('prevent-back-button')
+            Route::get('event/{id}/checkout', [OrganizerCheckoutController::class, 'showCheckout'])->middleware('prevent-back-button')
                 ->name('organizer.checkout.view');
             Route::get('event/{id}/checkout/transition', [OrganizerCheckoutController::class, 'showCheckoutTransition'])->name('organizer.checkout.transition');
 
