@@ -7,42 +7,75 @@
         aria-haspopup="true" aria-expanded="true">
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt="">
         @if ($countUnread!=0)
-            <span style="top: -20px;" class="badge text-light bg-primary">{{$countUnread}}</span>
+            <span style="top: -20px;" id="countUnread" data-notification-count="{{$countUnread}}" class="badge text-light bg-primary">{{$countUnread}}</span>
         @endif
     </a>
 
     @if (isset($user->notifications[0]))
-        <div class="dropdown-menu fs-7   py-0 custom-scrollbar" style="position: absolute; left: -200px; width: 300px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLinkNotification">
-            <button type="button" onclick="setAllNotificationsRead();" class="btn btn-link text-left"> Mark all as read </button> 
-            @foreach($user->notifications as $notification)
-                <div data-loop-count="{{ $loop->index }}" @class([
-                    "text-center px-2 border-light border-0 notification-container",
-                    "notification-container-not-read" =>  is_null ($notification->read_at)
-                ])>
-                    <div class="d-flex justify-content-start align-items-center pt-2">
-                        <div style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
-                            class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle"
-                        >
-                            {{-- Mark all as read --}}
-                            I{{-- {{ $notification->object_type->getImage()  }} --}}
-                        </div>
-                        <div style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 15px;" class="text-start ms-2">
-                            {!! $notification->data['data'] !!}
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-around align-items-center mt-1">
-                        <a href="{{$notification->data['links'][0]['url']}}" class="border-bottom-primary border-bottom btn btn-link btn-sm">
-                            {{$notification->data['links'][0]['name']}}
-                            <svg 
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                                <path 
-                                    fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+        <div class="dropdown-menu fs-7 py-0" style="position: absolute; left: -300px; width: 400px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLinkNotification">
+            <div class="position-relative">
+                <div class="pt-2 pb-1 d-flex justify-content-around">
+                    <a href="" class="btn btn-link"> <u> Notifications Page</u> </a>
+                    <button type="button" onclick="setAllNotificationsRead();" class="btn btn-link">
+                        <u>
+                            {{-- All checks --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check-all" viewBox="0 0 16 16">
+                            <path d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 1 0-1.091-1.028L9.477 9.417l-.485-.486z"/>
                             </svg>
-                        </a>
-                        <button class="btn btn-link" data-loop-count="{{ $loop->index }}" data-notification-id="{{$notification->id}}" onclick="setNotificationReadById()"> Mark Read</button>
-                    </div>
+                            <span> Mark all as read </span>
+                        </u>
+                    </button>
+                </div> 
+                <div>
+                    @foreach($user->notifications as $notification)
+                        <div data-loop-count="{{ $loop->index }}" 
+                            @class([
+                            "text-center px-2 border-light border-0 notification-container",
+                            "notification-container-not-read" =>  is_null ($notification->read_at),
+                            "notification-container-read" =>  !is_null ($notification->read_at)
+
+                            ])
+                        >
+                            <div class="d-flex justify-content-start align-items-center pt-2">
+                                <div style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
+                                    class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle"
+                                >
+                                    {{-- Mark all as read --}}
+                                    I{{-- {{ $notification->object_type->getImage()  }} --}}
+                                </div>
+                                <div style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 15px;" class="text-start ms-2">
+                                    {!! $notification->data['data'] !!}
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-around align-items-center mt-1 pb-2">
+                                <a role="button" href="{{$notification->data['links'][0]['url']}}" class="border-bottom-primary border-bottom btn btn-link btn-sm">
+                                    {{$notification->data['links'][0]['name']}}
+                                    <svg 
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                        <path 
+                                            fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                                    </svg>
+                                </a>
+                                @if ($notification->read_at)   
+                                    <button role="button" class="btn btn-link" style="cursor-events: none;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
+                                        </svg>
+                                        <span> Read </span>
+                                    </button>
+                                @else
+                                    <a role="button" class="border-bottom-primary border-bottom btn btn-link btn-sm mark-read" onclick="setNotificationReadById(event, '{{$notification->id}}', {{$loop->index}})">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                                            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
+                                            </svg>
+                                        <span>Mark Read</span>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
-            @endforeach
+            </div> 
         </div>
     @else
         <div class="dropdown-menu fs-7   py-0" style="position: absolute; left: -200px; width: 300px;" aria-labelledby="dropdownMenuLinkNotification">

@@ -606,13 +606,12 @@ class AuthController extends Controller
     public function markAsRead(Request $request, $id)
     {
         $user = $request->user();
-
         $notification = Notifications::where('id', $id)
-            ->where('notifiable_type', User::class)
+            ->where('notifiable_type', 'App\Models\User')
             ->where('notifiable_id', $user->id)
-            ->first();
+            ->firstOrFail();
 
-        if (! $notification) {
+        if (!$notification) {
             return response()->json(['success' => false, 'error' => 'Notification not found or does not belong to the user'], 404);
         }
 

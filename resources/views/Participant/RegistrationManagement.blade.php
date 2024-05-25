@@ -14,12 +14,15 @@
     @include('Participant.Partials.TeamHead')
     <main class="main2">
         <div id="Overview">
-            <br><br>
-            @if (isset($successMessage))
-                <div class="text-success">{{$successMessage}}</div>
-            @endif
-            @if (isset($errorMessage))
-                    <div class="text-red">{{$errorMessage}}</div>
+            <br>
+            @if (session('successMessage'))
+                <div class="text-success text-center">{{session('successMessage')}}</div>
+                <br>
+            @elseif (session('errorMessage'))
+                <div class="text-red text-center">{{session('errorMessage')}}</div>
+                <br>
+            @else
+                <br>
             @endif
             <div class="tab-size"><b>Outstanding Registrations</b></div>
             <br> <br>

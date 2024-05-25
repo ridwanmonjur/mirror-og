@@ -174,31 +174,44 @@
             });
     }
 
-    function setNotificationReadById() {
+    function setNotificationReadById(event, notificationId, loopCount) {
         event.preventDefault();
         event.stopPropagation();
-        var notificationId = event.target.dataset.notificationId;
-        var loopCount = event.target.dataset.loopCount;
-        var divElement = document.querySelector('div.notification-container[data-loop-count="' + loopCount + '"]');
 
+        var divElement = document.querySelector('div.notification-container[data-loop-count="' + loopCount + '"]');
+        var element = divElement.querySelector('a.mark-read');
+        console.log({element, notificationId, loopCount})
         let url = "{{route(strtolower($user->role) . '.notifications.read', ['id' => ':id'])}}"
             .replace(':id', notificationId);
          fetch(url, {
             method: 'put',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                ...window.loadBearerCompleteHeader()
-            },
+                'Content-type': 'application/json',            },
         })
             .then((response) => response.json())
             .then((response) => {
                 if (response.success) {
+                    const notificationCountElement = document.getElementById('countUnread');
+                    const notificationCount = notificationCountElement.dataset.notificationCount;
+                    const decreasedCount = parseInt(notificationCount, 0) - 1;
+                    if (decreasedCount >= 0) {
+                        notificationCountElement.dataset.notificationCount = decreasedCount;
+                        notificationCountElement.textContent = decreasedCount;
+                    }
                     divElement.classList.remove('notification-container-not-read');
+                    
+                    element.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
+                        </svg>
+                        <span> Read </span>
+                    `;
                 }
             })
             .catch(function (error) {
 
-                console.log('Server error occured');
+                console.error(error);
                 throw new Error('Error occurred');
             });
     }

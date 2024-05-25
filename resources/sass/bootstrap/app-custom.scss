@@ -530,7 +530,11 @@ a:hover {
 }
 
 .notification-container-not-read {
-    background-color: #f2efef;
+    font-weight: 500;
+}
+
+.notification-container-read {
+    font-weight: light !important;
 }
 
 .fs-7 {
