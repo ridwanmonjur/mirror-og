@@ -30,10 +30,14 @@
                 </button>
             </a>
         </div>
+        @php
+            $rosterMembersCount = $rosterMembers->count();
+            $teamMembersCount = $teamMembers->count();
+        @endphp
         <div>
             <p class="text-center mx-auto">Team {{ $selectTeam->teamName }} has
-                {{ $rosterMembers->count() }} accepted roster members 
-                from {{$teamMembers->count()}} available team member(s).
+                {{ $rosterMembersCount }} accepted roster member{{bladePluralPrefix($rosterMembersCount)}}
+                from {{teamMembersCount}} available team member{{bladePluralPrefix($teamMembersCount)}}.
             </p>
             @if (isset($teamMembers[0]))
                 <table class="member-table">

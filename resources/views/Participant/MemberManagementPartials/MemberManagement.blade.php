@@ -52,8 +52,8 @@
 <br>
 <div class="tab-content pb-4  inner-tab" id="CurrentMembers">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
-        {{ $teamMembersProcessed['accepted']['count'] }} accepted members
-        and {{ $teamMembersProcessed['left']['count'] }} removed members
+        {{ $teamMembersProcessed['accepted']['count'] }} accepted member{{bladePluralPrefix($teamMembersProcessed['accepted']['count'])}}
+        and {{ $teamMembersProcessed['left']['count'] }} removed members{{bladePluralPrefix($teamMembersProcessed['left']['count'])}}
     </p>
     <div class="cont mt-3 pt-3">
         <table class="member-table">

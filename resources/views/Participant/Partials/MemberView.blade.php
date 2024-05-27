@@ -6,7 +6,7 @@
 
 <div id="CurrentMembers">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
-        {{ $counTeamMembers }} accepted members &nbsp;&nbsp;
+        {{ $counTeamMembers }} accepted member{{bladePluralPrefix($counTeamMembers)}} &nbsp;&nbsp;
         @if (isset($user) && $selectTeam->creator_id == $user->id)
             <button class="oceans-gaming-default-button oceans-gaming-default-button-link" 
                 onclick="window.location.href='{{route('participant.member.manage', ['id'=> $selectTeam->id ])}}'">

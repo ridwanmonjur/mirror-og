@@ -122,6 +122,11 @@
             @include('Participant.Partials.MemberView')
         </div>
 
+        @php
+            $joinCount = count($joinEventsActive);
+            $historyCount = count($joinEventsHistory);
+        @endphp
+
         <div class="tab-content pb-4  outer-tab d-none" id="Active Rosters">
             <br><br>
             @if (!isset($joinEventsActive[0]))
@@ -130,7 +135,7 @@
                 </p>
             @else
                 <div id="activeRostersForm" class="tex-center mx-auto">
-                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ count($joinEventsActive) }} roster(s)</p>
+                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $joinCount }} roster{{ bladePluralPrefix($joinCount) }}</p>
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
@@ -146,7 +151,7 @@
                 <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history</p>
             @else
                 <div id="activeRostersForm" class="tex-center mx-auto">
-                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ count($joinEventsHistory) }} roster(s)</p>
+                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $historyCount }} roster{{ bladePluralPrefix($historyCount) }}</p>
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
