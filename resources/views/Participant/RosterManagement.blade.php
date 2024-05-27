@@ -37,7 +37,7 @@
         <div>
             <p class="text-center mx-auto">Team {{ $selectTeam->teamName }} has
                 {{ $rosterMembersCount }} accepted roster member{{bladePluralPrefix($rosterMembersCount)}}
-                from {{teamMembersCount}} available team member{{bladePluralPrefix($teamMembersCount)}}.
+                from {{$teamMembersCount}} available team member{{bladePluralPrefix($teamMembersCount)}}.
             </p>
             @if (isset($teamMembers[0]))
                 <table class="member-table">

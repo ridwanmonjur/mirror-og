@@ -1,7 +1,7 @@
 @php
     $random_int = rand(0, 999);
 @endphp
-<div class="position-relative m">
+<a href="{{route('public.event.view', ['id'=> $joinEvent->eventDetails->id])}}" class="position-relative opacity-parent-until-hover d-block">
     <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
         @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
             <ul class="achievement-list px-4">
@@ -38,15 +38,7 @@
             ])
             style="object-fit: cover; border-radius: 40px; border-bottom-width: 2px; border-bottom-style: solid;" src="{{'/storage' . '/' . $joinEvent->eventDetails->eventBanner}}" width="100%" height="80%;">
         <div class="invisible-until-hover mt-4 ms-4 position-absolute" style="top: 20px;" style="width: 100%; background-color: red;">
-            {{-- @if (isset($user) && $selectTeam->creator_id == $user->id && !$isRegistrationView)
-                <form method="GET"
-                    action="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">
-                    <button class="btn btn-link me-2" type="submit">
-                        <u> Manage Roster </u>
-                    </button>
-                </form>
-                <br>
-            @endif --}}
+           
             @if (!isset($joinEvent->roster[0]))
                 <span>Empty roster</span>
             @else
@@ -141,6 +133,8 @@
             </div>
         </div>
     </div>
+</a>
+
     <script>
         document.getElementById("{{'followForm' . $joinEvent->id . $random_int }}").addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -234,4 +228,3 @@
             return color;
         }
     </script>
-</div>

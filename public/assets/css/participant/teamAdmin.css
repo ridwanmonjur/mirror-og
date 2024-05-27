@@ -630,8 +630,9 @@ input[type="submit"],
     filter: grayscale(100%);
 }
 
-.opacity-until-hover:hover {
-    opacity: 0.15;
+
+.opacity-parent-until-hover:hover .opacity-until-hover{
+    opacity: 0.1;
     z-index: -1;
 }
 

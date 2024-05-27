@@ -16,7 +16,7 @@
                         <span>{{ $user->name }}</span>
                     </div>
                 </td>
-                <td class="flag-cell coloured-cell px-3">
+                <td class="flag-cell coloured-cell px-3 fs-4">
                     <span>{{ bladeExtractEmojis($member->user->participant->region) }} </span>
                 </td>
                 <td class="coloured-cell px-3">
