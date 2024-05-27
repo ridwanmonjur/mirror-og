@@ -33,7 +33,7 @@
         ]) style="margin-bottom : 0;">
         <img 
             @class([
-                "visible-until-hover",
+                "opacity-until-hover",
                 'rounded-box-' . strtoLower($joinEvent->tier->eventTier)
             ])
             style="object-fit: cover; border-radius: 40px; border-bottom-width: 2px; border-bottom-style: solid;" src="{{'/storage' . '/' . $joinEvent->eventDetails->eventBanner}}" width="100%" height="80%;">
@@ -50,13 +50,18 @@
             @if (!isset($joinEvent->roster[0]))
                 <span>Empty roster</span>
             @else
-                <ul class="d-flex flex-column flex-start">
+                <div>
                     @foreach ($joinEvent->roster as $roster)
-                        <li>
+                        <div class="d-flex justify-content-center align-items-center mb-1">
+                            <img 
+                                width="40" height="40" 
+                                src="{{ bladeImageNull($roster->user->userBanner) }}"
+                                class="me-1 random-color-circle object-fit-cover me-3"
+                            >
                             <span>{{ $roster->user->name }}</span>
-                        </li>
+                        </div>
                     @endforeach
-                </ul>
+                </div>
             @endif
         </div>
         <div class="frame1" style="margin-bottom: 0;">
@@ -71,8 +76,11 @@
                     <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventDetails->eventName }} </span>
                 </div>
                 <div class="d-flex justify-content-center mt-1">
-                    <img style="object-fit: cover;" src="{{ bladeImageNull($joinEvent->user->userBanner) }}"
-                        class="me-1 logo2">
+                    <img 
+                        width="45" height="45" 
+                        src="{{ bladeImageNull($joinEvent->user->userBanner) }}"
+                        class="me-1 random-color-circle object-fit-cover"
+                    >
                     <div class="text-start">
                         <span>{{ $joinEvent->eventDetails->user->name }}</span>
                         <br>
@@ -204,5 +212,26 @@
                 console.error('Error:', error);
             }
         });
+
+        (function applyRandomColorsAndShapes() {
+            const circles = document.querySelectorAll('.random-color-circle');
+            
+            circles.forEach(circle => {
+                const randomColor = getRandomColor();
+                circle.style.borderColor = randomColor;
+                circle.style.borderWidth = '2px';
+                circle.style.borderStyle = 'solid';
+                circle.style.borderRadius = '50%';
+            });
+        })();
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
     </script>
 </div>

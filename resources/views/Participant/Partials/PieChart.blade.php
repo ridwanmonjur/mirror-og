@@ -32,7 +32,7 @@
                     <tr>
                         <td class="pe-3">
                             <img
-                                class="object-cover rounded-circle me-2 border border-primary" 
+                                class="object-cover rounded-circle me-2 border border-primary random-color-circle" 
                                 src="{{'/storage' . '/' . $member->user->userBanner}}" width="45" height="45">
                         
                             {{$member->user->name}}
