@@ -23,9 +23,12 @@
     outline-color: transparent !important;
   }
 
-  .swal2-title {
-    font-size: 1.75em !important;
+  h2.swal2-title, .swal2-title, div:where(.swal2-container) h2:where(.swal2-title) {
+    font-size: 1.65em !important;
+
   }
+
+
   
   .colored-toast .swal2-title {
     color: white;

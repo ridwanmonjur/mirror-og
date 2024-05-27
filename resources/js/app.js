@@ -60,24 +60,16 @@ window.toastWarningAboutRole = function (button, message) {
 }
 
 window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => { 
-    console.log("fired")
-    console.log("fired")
-    console.log("fired")
-    console.log("fired")
     Swal.fire({
-        title,
+        icon: "warning",
+        title: title,
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
         dangerButtonColor: "#8CCD39",
         confirmButtonColor: "#43A4D7",
-        customClass: {
-            actions: 'my-actions',
-            cancelButton: 'order-1 right-gap',
-            confirmButton: 'order-2',
-            denyButton: 'order-3',
-        },
+        
     }).then((result) => {
         if (result.isConfirmed) {
             resultConfirmedCb()
@@ -89,6 +81,7 @@ window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => {
 
 window.loadMessage = () => {
     let success = localStorage.getItem('success');
+    let error = localStorage.getItem('error');
     let tab = localStorage.getItem('tab');
     let message = localStorage.getItem('message');
 
@@ -97,13 +90,28 @@ window.loadMessage = () => {
     }
 
     if (success === 'true') {
-        Toast.fire({
-            icon: 'success',
-            text: message || (tab ? `Successfully switched to ${tab} tab.` : 'Operation successful.')
-        });
+        Swal.fire({
+            icon: "success",
+            title: "Success...",
+            dangerButtonColor: "#8CCD39",
+            confirmButtonColor: "#43A4D7",
+            text: message || (tab ? `Successfully switched to ${tab} tab.` : 'Operation successful.'),
+            timer: 6000
+          });
+     
+    } else if (error === 'true') {
+            Swal.fire({
+                dangerButtonColor: "#8CCD39",
+                confirmButtonColor: "#43A4D7",
+                icon: "error",
+                title: "Oops...",
+                text: message ?? "Something went wrong...",
+                footer: 'Please try again following our feedback.'
+            });
     }
 
     localStorage.removeItem('success');
+    localStorage.removeItem('error');
     localStorage.removeItem('message');
     localStorage.removeItem('tab');
 }

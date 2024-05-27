@@ -74,6 +74,9 @@ Route::group(['prefix' => 'participant'], function () {
             Route::get('/request', [ParticipantController::class, 'viewRequest'])->middleware('prevent-back-button')
                 ->name('participant.request.view');
 
+            // Friends
+            Route::post('/friends', [ParticipantController::class, 'updateFriend'])->name('participant.friends.update');
+
             // Team management
             Route::get('/team/list', [ParticipantTeamController::class, 'teamList'])
                 ->middleware('prevent-back-history')

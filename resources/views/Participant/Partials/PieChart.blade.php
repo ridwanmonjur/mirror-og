@@ -115,7 +115,7 @@
                         </div>
                         <div class="text-center input-group w-75 mx-auto">
                             <span class="input-group-text bg-primary text-light" id="inputGroup-sizing-sm">RM </span>
-                            <input data-joinEventId="{{ $joinEvent->totalid }}" 
+                            <input data-joinEventId="{{ $joinEvent->id }}" 
                                 data-pending-amount="{{ $pedning }}"
                                 data-total-amount="{{ $total }}"
                                 data-existing-amount="{{ $exisitngSum }}" data-modal-id="{{ $random_int }}"

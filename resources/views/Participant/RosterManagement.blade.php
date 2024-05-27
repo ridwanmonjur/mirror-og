@@ -114,22 +114,16 @@
     
     <script>
         let dialogForMember = new DialogForMember();
-        function loadToast() {
-            let currentUrl = window.location.href;
-            let urlParams = new URLSearchParams(window.location.search);
-            let successValue = urlParams.get('success');
+        function scroll() {
+            let successValue = localStorage.getItem('success');
 
             if (successValue == 'true') {
-                Toast.fire({
-                    icon: 'success',
-                    text: "Successfully updated user."
-                })
-
+                
                 document.querySelector('.main2').scrollIntoView();
             }
         }
 
-        loadToast();
+        window.onload= ()=> { window.loadMessage(); scroll(); };
 
         let actionMap = {
             'approve': approveMemberAction,
@@ -143,8 +137,8 @@
                 currentUrl = currentUrl.split('?')[0];
             } 
 
-            currentUrl += `?tab=${buttonName}&success=true`;
-            console.log({currentUrl})
+            localStorage.setItem('success', 'true');
+            localStorage.setItem('tab', buttonName);
             window.location.replace(currentUrl);
         }
 

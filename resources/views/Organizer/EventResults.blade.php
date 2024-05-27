@@ -481,32 +481,16 @@
             target.classList.add('tab-button-active');
         }
 
-        function loadToast() {
-            let currentUrl = window.location.href;
-            let urlParams = new URLSearchParams(window.location.search);
-            let successValue = urlParams.get('success');
-            let message = urlParams.get('message');
-            let tabValue = urlParams.get('tab');
-
-            if (tabValue) {
-                document.getElementById(tabValue).click();
-            }
-            if (successValue == 'true') {
-                Toast.fire({
-                    icon: 'success',
-                    text: decodeURIComponent(message)
-                })
-            }
-        }
-
-        window.onload = () => { loadToast(); }
+        window.onload = () => { window.loadMessage(); }
 
         function reloadUrl(currentUrl, message, tab) {
             if (currentUrl.includes('?')) {
                 currentUrl = currentUrl.split('?')[0];
             }
 
-            currentUrl += `?success=true&message=${encodeURIComponent(message)}&tab=${tab}`;
+            localStorage.setItem('success', 'true');
+            localStorage.setItem('message', message);
+            localStorage.setItem('tab', tab);
             window.location.replace(currentUrl);
         }
 

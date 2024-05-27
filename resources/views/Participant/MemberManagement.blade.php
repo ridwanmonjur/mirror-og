@@ -60,25 +60,10 @@
         }
 
         function loadTab() {
-            let currentUrl = window.location.href;
-            let urlParams = new URLSearchParams(window.location.search);
-            let tabValue = urlParams.get('tab');
-            let successValue = urlParams.get('success');
-            let pageValue = urlParams.get('page');
-
-            if (tabValue) {
-                document.getElementById(tabValue).click();
-            }
+            let pageValue = localStorage.get('page');
 
             if (Number(pageValue)) {
                 document.getElementById('NewMembersBtn').click();
-            }
-
-            if (successValue == 'true') {
-                Toast.fire({
-                    icon: 'success',
-                    text: "Successfully updated user."
-                })
             }
         }
 
@@ -92,7 +77,7 @@
         }
 
 
-        window.onload = () => { loadTab(); }
+        window.onload = () => { window.loadMessage(); loadTab(); }
        
 
         function reloadUrl(currentUrl, buttonName) {
@@ -100,7 +85,9 @@
                 currentUrl = currentUrl.split('?')[0];
             } 
 
-            currentUrl += `?tab=${buttonName}&success=true`;
+            localStorage.setItem('success', 'true');
+            localStorage.setItem('message', 'Successfully updated user.');
+            localStorage.setItem('tab', buttonName);            
             window.location.replace(currentUrl);
         }
 

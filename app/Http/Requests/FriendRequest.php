@@ -22,26 +22,20 @@ class FriendRequest extends FormRequest
     public function rules()
     {
         return [
-            'add.user1_id' => 'required|exists:users,id',
-            'add.status' => 'nullable|in:pending,accepted,rejected,left',
-            'update.id' => 'required|exists:friends,id',
-            'update.status' => 'required|in:pending,accepted,rejected,left',
-            'delete.id' => 'required|exists:friends,id',
+            'addUserId' => 'nullable|exists:users,id',
+            'updateUserId' => 'nullable|exists:users,id',
+            'updateStatus' => 'nullable|in:pending,accepted,rejected,left',
+            'deleteUserId' => 'nullable|exists:users,id',
         ];
     }
 
     public function messages()
     {
         return [
-            'add.user1_id.required' => 'The user id, :value is required for adding a friend.',
-            'add.user1_id.exists' => 'The selected user id, :value is invalid.',
-            'add.status.in' => 'The selected status, :value is invalid for adding a friend.',
-            'update.id.required' => 'The id field, :value is required for updating a friend.',
-            'update.id.exists' => 'The selected id, :value is invalid for updating a friend.',
-            'update.status.required' => 'The status field, :value is required for updating a friend.',
+            'addUserId.exists' => 'The selected user id, :value is invalid.',
+            'updateUserId.exists' => 'The selected id, :value is invalid for updating a friend.',
             'update.status.in' => 'The selected status, :value is invalid for updating a friend.',
-            'delete.id.required' => 'The id field, :value is required for deleting a friend.',
-            'delete.id.exists' => 'The selected id, :value is invalid for deleting a friend.',
+            'deleteUserId.exists' => 'The selected id, :value is invalid for deleting a friend.',
         ];
     }
 }

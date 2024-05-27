@@ -187,14 +187,14 @@ function bladePluralPrefix($amount, $singular = '', $plural = 's')
 
 function bladeExtractEmojis($text)
 {
-    $pattern = '/[0-9a-zA-Z]+/';
-
-    return preg_replace($pattern, '', $text);
+    preg_match_all('/[\x{1F1E6}-\x{1F1FF}]{2}/u', $text, $matches);
+    $emojiFlags = implode('', $matches[0]);
+    return $emojiFlags; // Output: 🇨🇬
 }
 
 function bladeExtractAlphanumeric($text)
 {
-    $pattern = '/[^0-9a-zA-Z]+/';
+    $alphanumeric = preg_replace('/[^a-zA-Z0-9]/', '', $text);
+    return $alphanumeric;
 
-    return preg_replace($pattern, '', $text);
 }

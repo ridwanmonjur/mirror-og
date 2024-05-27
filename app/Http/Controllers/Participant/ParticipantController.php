@@ -138,8 +138,10 @@ class ParticipantController extends Controller
         $followCounts = Follow::getFollowCounts($userIds);
         if ($logged_user_id) {
             $isFollowing = Follow::getIsFollowing($logged_user_id, $userIds);
+            $friend = Friend::checkFriendship($logged_user_id, $userProfile->id);
         } else {
             $isFollowing = [];
+            $friend = null;
         }
         $joinEventsHistory = $joinEventsActive = $values = [];
         ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
@@ -147,10 +149,11 @@ class ParticipantController extends Controller
 
         $joinEventIds = $joinEvents->pluck('id')->toArray();
 
+        
         return view('Participant.PlayerProfile',
             compact('joinEvents', 'userProfile', 'teamList', 'isOwnProfile',
                 'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
-                'wins', 'streak', 'awardList', 'achievementList', 'pastTeam'
+                'wins', 'streak', 'awardList', 'achievementList', 'pastTeam', 'friend'
             )
         );
 
@@ -222,23 +225,27 @@ class ParticipantController extends Controller
     {
         $user = $request->attributes->get('user');
         $validatedData = $request->validated();
-        if (array_key_exists('delete', $validatedData)) {
-            Friend::where($validatedData['add.user1_id'])->delete();
+        if (array_key_exists('deleteUserId', $validatedData)) {
+            $friend = Friend::checkFriendship($validatedData['deleteUserId'], $user->id);
+            $friend?->deleteOrFail();
+            
+            session()->flash('successMessage', 'Your request has been deleted.');
+            return back();
 
-            return response()->json(['success' => true, 'message' => 'Friend withdrawn']);
-        } elseif (array_key_exists('add', $validatedData)) {
+        } elseif (array_key_exists('addUserId', $validatedData)) {
+
             try {
+
                 Friend::create([
                     'user1_id' => $user->id,
-                    'user2_id' => $validatedData['add.user1_id'],
+                    'user2_id' => intval( $validatedData['addUserId'] ),
                     'status' => 'pending',
                     'actor_id' => $user->id,
                 ]);
 
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Successfully send a friend request',
-                ], 201);
+                session()->flash('successMessage', 'Successfully created a friendship');
+                return back();
+
             } catch (Exception $e) {
                 if ($e->getCode() == '23000' || $e->getCode() == 1062) {
                     $errorMessage = 'You have had a previous friend request!';
@@ -246,25 +253,24 @@ class ParticipantController extends Controller
                     $errorMessage = 'Your request to this participant failed!';
                 }
 
-                return response()->json([
-                    'success' => false,
-                    'message' => $errorMessage,
-                ], 400);
-
+                session()->flash('errorMessage', $errorMessage);
+                return back();
             }
         } else {
             try {
-                $friend = Friend::findOrFail($validatedData['update.id']);
-                $status = $validatedData['update.status'];
+                $friend = Friend::checkFriendship($validatedData['updateUserId'], $user->id)->firstOrFail();
+                $status = $validatedData['updateStatus'];
                 $isPermitted = $status == 'left';
-                if (! $isPermitted) {
+                if (!$isPermitted) {
                     if ($status == 'accepted' || $status == 'rejected') {
-                        $isPermitted = $friend->status == 'pending' && $user->id != $friend->actor_id;
+                        $isPermitted = ($friend->status == 'pending' && $user->id != $friend->actor_id) ||
+                        ($friend->status == 'left' && $user->id == $friend->actor_id);
                     }
                 }
 
-                if (! $isPermitted) {
-                    return response()->json(['success' => false, 'message' => 'This request is not allowed.'], 400);
+                if (!$isPermitted) {
+                    session()->flash('errorMessage', 'This request is not allowed.');
+                    return back();
                 }
 
                 $friend->update([
@@ -272,11 +278,18 @@ class ParticipantController extends Controller
                     'status' => $status,
                 ]);
 
+                $message = [
+                    'left' => 'Successfully removed friendship.', 
+                    'accepted' => 'Successfully accepted friendship request.',
+                    'rejected' => 'Successfully rejected friendship request.'
+                ];
+
+                session()->flash('successMessage', $message[$status]);
+                return back();
             } catch (Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $e->getMessage(),
-                ], 400);
+                
+                return $this->showErrorParticipant($e->getMessage());
+                return back()->with('errorMessage', $e->getMessage());
             }
         }
     }
