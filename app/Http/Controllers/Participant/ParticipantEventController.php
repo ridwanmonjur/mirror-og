@@ -183,11 +183,14 @@ class ParticipantEventController extends Controller
                 });
             });
         })->with([
+            'members' => function ($query) {
+                    $query->where('status', 'accepted')->with('user');
+            },
             'invitationList', 'members.payments' => function ($query) {
                 $query
                     ->groupBy('team_members_id')
                     ->select('team_members_id', DB::raw('SUM(payment_amount) as total_payment'));
-            }, 'members.user',
+            }, 
         ])->first();
 
         $paymentsByMemberId = [];

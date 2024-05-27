@@ -22,28 +22,29 @@
             <table class="align-start px-3 mx-3">
                 <thead>
                     <tr>
-                        <th class="pe-3">Participant</th>
-                        <th class="pe-3">Payment</th>
-                        <th>%</th>
+                        <th class="pe-3 pb-2">Participant</th>
+                        <th class="pe-3 pb-2">Payment</th>
+                        <th class="pb-2">%</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($selectTeam->members as $member)
-                    <tr>
-                        <td class="pe-3">
-                            <img
-                                class="object-cover rounded-circle me-2 border border-primary random-color-circle" 
-                                src="{{'/storage' . '/' . $member->user->userBanner}}" width="45" height="45">
-                        
-                            {{$member->user->name}}
-                        </td>
-                        <td class="pe-3">
-                            RM {{$paymentsByMemberId[$member->id] ?? 0}}
-                        </td>
-                        <td class="pe-2">
-                            {{round($paymentsByMemberId[$member->id]*100/$total, 2) ?? 0}}%
-                        </td>
-                    </tr>
+                        <tr style="border-collapse: seperate !important; border-spacing: 0 1em !important;">
+                            <td class="pe-3 pb-2">
+                                <img
+                                    class="object-cover rounded-circle me-2 border border-primary random-color-circle" 
+                                    src="{{'/storage' . '/' . $member->user->userBanner}}" width="35" height="35"
+                                    {!! trustedBladeHandleImageFailureBanner() !!}
+                                >
+                                {{$member->user->name}}
+                            </td>
+                            <td class="pe-3 pb-2">
+                                RM {{$paymentsByMemberId[$member->id] ?? 0}}
+                            </td>
+                            <td class="pe-2 pb-2">
+                                {{round($paymentsByMemberId[$member->id]*100/$total, 2) ?? 0}}%
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
