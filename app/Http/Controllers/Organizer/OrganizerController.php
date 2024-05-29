@@ -20,30 +20,38 @@ class OrganizerController extends Controller
 {
     public function viewOwnProfile(Request $request)
     {
-        $user = $request->attributes->get('user');
-        $user_id = $user?->id ?? null;
-        $user->isFollowing = null;
+        try{
+            $user = $request->attributes->get('user');
+            $user_id = $user?->id ?? null;
+            $user->isFollowing = null;
 
-        return $this->viewProfile($request, $user_id, $user, true);
+            return $this->viewProfile($request, $user_id, $user, true);
+        } catch (Exception $e) {
+            return $this->showErrorParticipant($e->getMessage());
+        }
     }
 
     public function viewProfileById(Request $request, $id)
     {
-        $loggedInUser = Auth::user();
-        $user = User::findOrFail($id);
-        if ($user->role != 'ORGANIZER') {
-            return redirect()->route('public.participant.view', ['id' => $id]);
-        }
+        try{
+            $loggedInUser = Auth::user();
+            $user = User::findOrFail($id);
+            if ($user->role != 'ORGANIZER') {
+                return redirect()->route('public.participant.view', ['id' => $id]);
+            }
 
-        if ($loggedInUser) {
-            $user->isFollowing = Follow::where('participant_user_id', $loggedInUser->id)
-                ->where('organizer_user_id', $user->id)
-                ->first();
-        } else {
-            $user->isFollowing = null;
-        }
+            if ($loggedInUser) {
+                $user->isFollowing = Follow::where('participant_user_id', $loggedInUser->id)
+                    ->where('organizer_user_id', $user->id)
+                    ->first();
+            } else {
+                $user->isFollowing = null;
+            }
 
-        return $this->viewProfile($request, $loggedInUser ? $loggedInUser->id : null, $user, false);
+            return $this->viewProfile($request, $loggedInUser ? $loggedInUser->id : null, $user, false);
+        } catch (Exception $e) {
+            return $this->showErrorParticipant($e->getMessage());
+        }
     }
 
     private function viewProfile(Request $request, $logged_user_id, $userProfile, $isOwnProfile = true)

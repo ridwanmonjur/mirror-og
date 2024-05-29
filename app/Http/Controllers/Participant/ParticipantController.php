@@ -100,14 +100,19 @@ class ParticipantController extends Controller
 
     public function viewOwnProfile(Request $request)
     {
-        $user = $request->attributes->get('user');
-        $user_id = $user?->id ?? null;
+        try{
+            $user = $request->attributes->get('user');
+            $user_id = $user?->id ?? null;
 
-        return $this->viewProfile($request, $user_id, $user, true);
+            return $this->viewProfile($request, $user_id, $user, true);
+        } catch (Exception $e) {
+            return $this->showErrorParticipant($e->getMessage());
+        }
     }
 
     public function viewProfileById(Request $request, $id)
     {
+        try{
         $user = User::findOrFail($id);
         $loggedInUser = Auth::user();
 
@@ -116,6 +121,9 @@ class ParticipantController extends Controller
         }
 
         return $this->viewProfile($request, $loggedInUser ? $loggedInUser->id : null, $user, false);
+        } catch (Exception $e) {
+            return $this->showErrorParticipant($e->getMessage());
+        }
     }
 
     private function viewProfile(Request $request, $logged_user_id, $userProfile, $isOwnProfile = true)
