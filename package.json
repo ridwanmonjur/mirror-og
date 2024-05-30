@@ -15,8 +15,12 @@
     "dependencies": {
         "@popperjs/core": "^2.11.8",
         "alpinejs": "^3.13.10",
+        "aos": "^3.0.0-beta.6",
         "bootstrap": "^5.0.2",
+        "lightgallery": "^2.7.2",
         "sass-loader": "^14.2.1",
-        "sweetalert2": "^11.10.8"
+        "skeleton-elements": "^4.0.1",
+        "sweetalert2": "^11.10.8",
+        "webkul-micron": "^1.1.6"
     }
 }

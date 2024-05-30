@@ -76,7 +76,7 @@
                                     <u>{{ $event->eventName ?? 'No name yet' }}</u>
                                 </h5>
                                 <div>
-                                    <div>
+                                    <div data-aos="fade-in">
                                         <form class="d-inline" method="POST" action="{{route('participant.events.like')}}" id="likesForm">
                                             @auth
                                                 <input type="hidden" name="event_id" value="{{$event->id}}">
@@ -179,7 +179,7 @@
                             <h5> <u> {{ strtoupper($timePart) }} </u> </h5>
                             <br>
                             <div>
-                                <div class="tab">
+                                <div class="tab" data-aos="fade-in">
                                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active' }}"
                                         onclick="openTab(event, 'Overview')">Overview</button>
                                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks' }}"

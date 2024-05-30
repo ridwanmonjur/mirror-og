@@ -116,3 +116,8 @@ window.loadMessage = () => {
     localStorage.removeItem('tab');
 }
 
+import AOS from 'aos'
+window.AOS = AOS;
+AOS.init({
+    duration: 700
+});
