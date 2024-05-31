@@ -1,3 +1,4 @@
+@vite(['resources/js/lightgallery.js'])
 @guest
     @php
         $teamMember = null;
