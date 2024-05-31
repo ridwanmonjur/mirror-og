@@ -15,8 +15,8 @@
             <img src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover">
             <div class="frame1">
                 <img src="{{ $bladeEventGameImage }}" style="padding-left: 20px;" class="logo2 mt-2">
-                <span class="event_status_1" style="@php echo $stylesEventStatus; @endphp">{{ $event->statusResolved() }}
-                </span>
+                <button class="event_status_1 ripple" style="@php echo $stylesEventStatus; @endphp">{{ $event->statusResolved() }}
+                </button>
             </div>
             <div class="league_name mt-4">
                 <b>{{ $event->eventName }}</b> <br>

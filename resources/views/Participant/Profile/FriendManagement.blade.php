@@ -48,7 +48,7 @@
                     <span>Friends</span>
                 </button>
                 <div class="dropdown-menu py-0" aria-labelledby="dropdownMenuLink">
-                    <a class="dropdown-item cursor-pointer  py-2 px-4 fs-7"
+                    <a class="dropdown-item cursor-pointer  px-4 fs-7"
                         style="padding-top: 12px; padding-bottom: 12px;"
                         onclick="formRequestSubmitById('Are you sure you want to remove this person as your friend?' ,'leftFriendRequest')"
                     >
