@@ -659,8 +659,7 @@
                         Paid successfully!
                     </button>
                 @else
-                    <button onclick="setFormValues( {'goToCheckoutPage': 'yes'} ); saveEvent(false);" type="button" class="choose-payment-method" data-bs-toggle="modal"
-                        data-target="#payment-modal">
+                    <button onclick="setFormValues( {'goToCheckoutPage': 'yes'} ); saveEvent(false);" type="button" class="choose-payment-method">
                         Go to checkout page
                     </button>
                 @endif

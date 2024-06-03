@@ -39,7 +39,7 @@ return new class extends Migration
         });
 
         Schema::table('participants', function ($table) {
-            $table->string('avatar')->nullable(); // Assuming 'avatar' was a nullable string before
+            $table->string('avatar')->nullable(); 
             $table->dropColumn(['region_name', 'region_flag']);
         });
     
