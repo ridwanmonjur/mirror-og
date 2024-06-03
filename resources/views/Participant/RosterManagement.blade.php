@@ -71,7 +71,7 @@
                                     <span>{{ $member->user->email }}</span>
                                 </td>
                                 <td class="flag-cell coloured-cell">
-                                    <span>{{ bladeExtractEmojis($member->user->participant->region) }} </span>
+                                    <span>{{ $member->user->participant->region_emoji }} </span>
                                 </td>
                                 <td class="flag-cell coloured-cell">
                                     @if ($isRoster)

@@ -41,9 +41,11 @@
     }
     document.addEventListener('alpine:init', () => {
         let gamesDataInput = document.getElementById('games_data_input');
+        let regionDataInput = document.getElementById('region_details_input');
+        let regionSelectInput = document.getElementById('region_select_input');
+
         let gamesData = JSON.parse(gamesDataInput.value.trim()); 
-       
-        console.log({gamesData})
+        let regionData = JSON.parse(regionDataInput.value.trim()); 
         Alpine.data('alpineDataComponent', () => {
         return  {
             isEditMode: false, 
@@ -72,6 +74,8 @@
                 birthday,
                 domain: '{{$userProfile->participant->domain}}',
                 region: '{{$userProfile->participant->region}}',
+                region_name: regionData?.name.en,
+                region_flag: regionData?.emoji_flag
             },
             errorMessage: errorInput?.value, 
             isCountriesFetched: false ,
@@ -89,11 +93,16 @@
                                 name: {
                                     en: 'No country'
                                 },
-                                emoji_flag: ' 𓆝'
+                                emoji_flag: ''
                             }];
                         }
                     })
                     .catch(error => console.error('Error fetching countries:', error));
+            },
+            changeFlagEmoji() {
+                let countryX = this.countries.find(elem => elem.id == this.participant.region);
+                this.participant.region_name = countryX.name.en;
+                this.participant.region_flag = countryX.emoji_flag;
             },
             async fetchGames () {
                 if (this.isCountriesFetched) return;

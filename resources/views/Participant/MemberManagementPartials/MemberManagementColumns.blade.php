@@ -20,6 +20,6 @@
     <span>{{ $member->user->email }}</span>
 </td>
 <td class="flag-cell coloured-cell px-3 fs-4">
-    <span>{{ bladeExtractEmojis($member->user->participant->region) }} </span>
+    <span>{{ $member->user->participant->region_flag }} </span>
 
 </td>

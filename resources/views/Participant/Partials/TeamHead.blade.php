@@ -86,14 +86,17 @@
                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                     </svg>
                     <select 
+                        :change="changeFlagEmoji"
                         x-model="country"
                         style="width: 200px;"    
                         class="form-control mt-2 d-inline rounded-pill"
                     >
                         <template x-for="region in countries">
-                            <option x-bind:value="region.emoji_flag+ ' ' + region.name.en">
-                                <span x-text="region.emoji_flag" class="mx-3"> </span>  
-                                <span x-text="region.name.en"> </span>
+                            <option
+                                :selected="country==region.id"
+                                :value="region.id">
+                                <span x-html="region.emoji_flag" class="mx-3"> </span>  
+                                <span x-html="region.name.en"> </span>
                             </option>
                         </template>
                     </select> 
@@ -213,12 +216,12 @@
                 </div>
                 <div>
                     <span class="ms-2" x-cloak x-show="!isEditMode" x-text="teamDescription"> </span>
-                    <span class="ms-2"x-show="!isEditMode" x-html="country.replace(/[^\uD83C[\uDDE6-\uDDFF][\uD83C[\uDDE6-\uDDFF]]/g, '')"> </span>
+                    <span class="ms-2"x-show="!isEditMode" x-html="country_flag"> </span>
                 </div>
             @else
                 <p>
                     <span class="d-inline" x-text="teamDescription"> </span>
-                    <span class="d-inline ms-2" x-html="country.replace(/[^\uD83C[\uDDE6-\uDDFF][\uD83C[\uDDE6-\uDDFF]]/g, '')"> </span>
+                    <span class="d-inline ms-2" x-html="country_flag"> </span>
                 </p>
             @endif
         <div class="mx-auto text-center mt-1">
@@ -246,10 +249,17 @@
                 teamName: '{{$selectTeam->teamName}}', 
                 teamDescription: '{{$selectTeam->teamDescription}}', 
                 country: '{{$selectTeam->country}}',
+                country_name: '{{$selectTeam->country_name}}',
+                country_flag: '{{$selectTeam->country_flag}}',
                 isEditMode: false, 
                 countries: [], 
                 errorMessage: '', 
-                isCountriesFetched: false ,
+                isCountriesFetched: false,
+                changeFlagEmoji() {
+                    let countryX = this.countries.find(elem => elem.id == this.country);
+                    this.country_name = countryX.name.en;
+                    this.country_flag = countryX.emoji_flag;
+                },
                 async submitEditProfile (event) {
                     try {
                         event.preventDefault(); 
@@ -265,7 +275,9 @@
                                 id: this.id, 
                                 teamName: this.teamName, 
                                 teamDescription: this.teamDescription,
-                                country: this.country
+                                country: this.country,
+                                country_flag: this.country_flag,
+                                country_name: this.country_name
                             }),
                         });
 

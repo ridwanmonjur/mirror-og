@@ -15,6 +15,8 @@
 @php
     use Carbon\Carbon;
     $isUserSame = false;
+
+    // dd($userProfile->participant);
 @endphp
 @auth
     @php
@@ -36,6 +38,7 @@
         >
             @if(!$isOwnProfile) <br> @endif
             <input type="hidden" id="games_data_input" value="{{ $userProfile->participant->games_data ?? json_encode([]) }}">
+            <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant->getRegionDetails()) }}">
             @if($isOwnProfile)
                 <div class="d-flex justify-content-end py-0 my-0 mb-2">
                     <input type="file" id="backgroundInput" class="d-none"> 
@@ -139,18 +142,24 @@
                                         xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
-                                    <select
-                                        x-model="participant.region" 
-                                        style="width: 150px;"    
-                                        class="form-control d-inline rounded-pill"
-                                    >
-                                        <template x-for="country in countries">
-                                            <option x-bind:value="country.emoji_flag+ ' ' + country.name.en">
-                                            <span x-text="country.emoji_flag" class="mx-3"> </span>  
-                                            <span x-text="country.name.en"> </span>
-                                            </option>
-                                        </template>
-                                    </select> 
+                                    <template x-if="countries">
+                                        <select
+                                            id="region_select_input"
+                                            x-model="participant.region" 
+                                            x-on:change="changeFlagEmoji"
+                                            style="width: 150px;"    
+                                            class="form-control d-inline rounded-pill"
+                                        >
+                                            <template x-for="country in countries">
+                                                <option 
+                                                    :value="country.id" 
+                                                    :selected="country.id==participant.region">
+                                                <span x-text="country.emoji_flag" class="mx-3"> </span>  
+                                                <span x-text="country.name.en"> </span>
+                                                </option>
+                                            </template>
+                                        </select> 
+                                    </template>
                                 </span>
                                 <span class="me-3">
                                     <svg 
@@ -255,12 +264,12 @@
                             </p>
                         </template>
                         <div class="d-flex justify-content-start flex-wrap w-100">
-                            <template x-if="participant.region">
+                            <template x-if="participant.region_name">
                                 <span class="me-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill me-2" viewBox="0 0 16 16">
                                     <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
-                                    <span class="me-1" x-text="participant.region.substring(5)"></span>
+                                    <span class="me-1" x-html="participant.region_name"></span>
                                 </span>
                             </template>
                               <template x-if="!participant.region">
@@ -492,7 +501,7 @@
                                     > 
                                     <span>{{$team->teamName}}</span>
                                 </td>
-                                <td style="font-size: 25px;">{{bladeExtractEmojis($team->country)}}</td>
+                                <td style="font-size: 25px;">{{$team->country_flag}}</td>
                                 <td>{{$team->members_count}}/5</td>
                             </tr>
                         @endforeach
@@ -528,7 +537,7 @@
                                     > 
                                     <span>{{$team->teamName}}</span>
                                 </td>
-                                <td style="font-size: 25px;">{{bladeExtractEmojis($team->country)}}</td>
+                                <td style="font-size: 25px;">{{$team->country_flag}}</td>
                                 <td>{{$team->members_count}}/5</td>
                             </tr>
                         @endforeach

@@ -29,6 +29,8 @@ class UpdateParticipantsRequest extends FormRequest
             'birthday' => 'nullable|date|before_or_equal:' . now()->format('Y-m-d'),
             'nickname' => 'nullable|string|max:255',
             'region' => 'nullable|string',
+            'region_name' => 'nullable|string',
+            'region_flag' => 'nullable|string',
             'games_data' => 'nullable|string',
             'domain' => ['nullable', 'regex:/^(?:[-A-Za-z0-9]+\.)+[A-Za-z]{2,6}$/'],
         ];

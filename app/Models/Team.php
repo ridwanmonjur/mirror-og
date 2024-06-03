@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Io238\ISOCountries\Models\Country;
 
 class Team extends Model
 {
@@ -12,7 +13,7 @@ class Team extends Model
 
     protected $table = 'teams';
 
-    protected $fillable = ['teamName', 'teamDescription', 'country'];
+    protected $fillable = ['teamName', 'teamDescription', 'country', 'country_name', 'country_flag'];
 
     public function user()
     {
@@ -85,10 +86,10 @@ class Team extends Model
         }
     }
 
-    public static function getUserTeamList($user_id)
+    public static function getUserTeamList($user_id, $status = 'accepted')
     {
-        $teamList = self::whereHas('members', function ($query) use ($user_id) {
-            $query->where('user_id', $user_id)->where('status', 'accepted');
+        $teamList = self::whereHas('members', function ($query) use ($user_id, $status) {
+            $query->where('user_id', $user_id)->where('status', $status);
         })
             ->with(['members' => function ($query) {
                 $query->where('status', 'accepted');

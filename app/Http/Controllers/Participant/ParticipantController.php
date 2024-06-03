@@ -19,6 +19,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Io238\ISOCountries\Models\Country;
 
 class ParticipantController extends Controller
 {
@@ -176,11 +177,14 @@ class ParticipantController extends Controller
     {
         $participant = Participant::findOrFail($request->validated()['id']);
         $participant->update($request->validated());
+        $region = Country::select('emoji_flag', 'name', 'id')
+            ->findOrFail($participant->region);
 
         return response()->json([
             'message' => 'Participant updated successfully',
             'success' => true,
-            'age' => $participant->age
+            'age' => $participant->age,
+            'region' => $region,
         ], 200);
     }
 

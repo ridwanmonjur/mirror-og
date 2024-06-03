@@ -26,6 +26,8 @@ class UpdateTeamRequest extends FormRequest
             'teamName' => 'required|string',
             'teamDescription' => 'required|string',
             'country' => 'required|string',
+            'country_name' => 'required|string',
+            'country_flag' => 'required|string',
         ];
     }
 
