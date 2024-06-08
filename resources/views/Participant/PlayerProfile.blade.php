@@ -6,15 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
-
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/lightgallery.js'])
+    @vite([
+        'resources/sass/app.scss', 
+        'resources/js/app.js', 
+        'resources/js/lightgallery.js',
+        'resources/js/file-upload-preview.js',
+        'resources/sass/file-upload-preview.scss',
+        'resources/js/colorpicker.js',
+        'resources/sass/colorpicker.scss',
+    ])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 
 </head>
 @php
     use Carbon\Carbon;
     $isUserSame = false;
+
+    $backgroundStyles = '';
+    if (isset($userProfile->participant->backgroundBanner)) {
+        $backgroundStyles = "background-image: url(".  '/storage' . '/'. $userProfile->participant->backgroundBanner . ");";
+    } 
+    
+    if (isset($userProfile->participant->backgroundColor)) {
+        $backgroundStyles = "background-color: " . $userProfile->participant->backgroundColor . ";" ; 
+    }
 
     // dd($userProfile->participant);
 @endphp
@@ -34,8 +50,10 @@
     <main x-data="alpineDataComponent">
         @include('Participant.Profile.Forms')
         <div id="backgroundBanner" class="member-section px-2 pt-2"
-            style="background-image: url({{ '/storage' . '/'. $userProfile->participant->backgroundBanner }} );
-                background-size: cover; background-repeat: no-repeat;"
+            @style([
+                $backgroundStyles,
+                "background-size: cover; background-repeat: no-repeat;"
+            ])
         >
             @if(!$isOwnProfile) 
                 <br> 

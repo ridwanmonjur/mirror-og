@@ -479,3 +479,21 @@ main {
 .iti, .iti--allow-dropdown, .iti--show-flags, .iti--inline-dropdown {
     background-color: transparent !important;
 }
+
+.easylogic-colorpicker .color-list, .easylogic-colorpicker .menu{
+    display: none !important;
+}
+
+.color-pallete:hover {
+    outline: 4px solid white;
+    outline-offset: -5px;
+    border: 3px solid gray;
+    cursor: pointer;
+}
+
+.color-active {
+    outline: 4px solid white;
+    outline-offset: -5px;
+    border: 5px solid #43A4D7;
+    cursor: pointer;
+}

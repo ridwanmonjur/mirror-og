@@ -1,4 +1,28 @@
 <script>
+    let colorOrGradient = null; 
+    function applyBackground(event, colorOrGradient) {
+        document.querySelectorAll('.color-active').forEach(element => {
+            element.classList.remove('color-active');
+        });
+
+        event.target.classList.add('color-active');
+    }
+
+    function chooseColor(event, color) {
+        applyBackground(event, color);
+        localStorage.setItem('colorOrGradient', color);
+        document.getElementById('backgroundBanner').style.backgroundImage = 'none';
+        document.getElementById('backgroundBanner').style.background = color;
+    }
+
+    function chooseGradient(event, gradient) {
+        console.log({gradient});
+        applyBackground(event, gradient);
+        localStorage.setItem('colorOrGradient', gradient);
+        document.getElementById('backgroundBanner').style.backgroundImage = gradient;
+        document.getElementById('backgroundBanner').style.background = 'auto';
+    }
+
     let successInput = document.getElementById('successMessage');
     let errorInput = document.getElementById('errorMessage');
 
@@ -28,14 +52,71 @@
 
     // const games_data = {{ $userProfile->participant->games_data }};
     window.onload = () => { 
+        localStorage.setItem('isInited', false);
+        
         if (successInput) {
             localStorage.setItem('success', 'true');
             localStorage.setItem('message', successInput.value);
         } else if (errorInput) {
             localStorage.setItem('error', 'true');
             localStorage.setItem('message', errorInput.value);
-
         }
+
+        const bgUploadPreview = window.fileUploadPreviewById('file-upload-preview-1');
+
+        window.createGradientPicker(document.getElementById('div-gradient-picker'),
+            (gradient) => {
+                localStorage.setItem('colorOrGradient', gradient);
+                document.getElementById('backgroundBanner').style.background = 'auto';
+                document.getElementById('backgroundBanner').style.backgroundImage = gradient;
+            }
+        );
+        window.createColorPicker(document.getElementById('div-color-picker'), 
+            (color) => {
+                localStorage.setItem('colorOrGradient', gradient);
+                document.getElementById('backgroundBanner').style.backgroundImage = 'auto';
+                document.getElementById('backgroundBanner').style.background = color;
+            }
+        );
+
+        window.addEventListener(Events.IMAGE_ADDED, async (e) => {
+            const { detail } = e ;
+
+            console.log('detail', detail);
+            const file = detail.files[0];
+            try {
+            const fileContent = await readFileAsBase64(file);
+            const url = "{{ route('participant.userBackground.action', ['id' => $userProfile->id] ) }}";
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-type': 'application/json',
+                    'Accept': 'application/json',
+                    ...window.loadBearerHeader()
+                },
+                body: JSON.stringify({
+                    file: {
+                        filename: file.name,
+                        type: file.type,
+                        size: file.size,
+                        content: fileContent
+                        }
+                    }),
+                });
+
+               
+                const data = await response.json();
+                    
+                if (data.success) {
+                    backgroundBanner.style.backgroundImage = `url(${data.data.fileName})`;
+                } else {
+                    console.error('Error updating member status:', data.message);
+                }
+            } catch (error) {
+                console.error('There was a problem with the request:', error);
+            }
+        });
 
         window.loadMessage(); 
     }
@@ -221,48 +302,12 @@
     const uploadButton = document.getElementById("upload-button");
     const imageUpload = document.getElementById("image-upload");
     const uploadedImage = document.getElementById("uploaded-image");
-    const backgroundInput = document.getElementById("backgroundInput");
     const backgroundBanner = document.getElementById("backgroundBanner")
     uploadButton?.addEventListener("click", function() {
         imageUpload.click();
     });
 
-     backgroundInput?.addEventListener("change", async function(e) {
-        const file = e.target.files[0];
-
-        try {
-            const fileContent = await readFileAsBase64(file);
-            const url = "{{ route('participant.userBackground.action', ['id' => $userProfile->id] ) }}";
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-type': 'application/json',
-                    'Accept': 'application/json',
-                    ...window.loadBearerHeader()
-                },
-                body: JSON.stringify({
-                    file: {
-                        filename: file.name,
-                        type: file.type,
-                        size: file.size,
-                        content: fileContent
-                        }
-                    }),
-                });
-
-               
-                const data = await response.json();
-                    
-                if (data.success) {
-                    backgroundBanner.style.backgroundImage = `url(${data.data.fileName})`;
-                } else {
-                    console.error('Error updating member status:', data.message);
-                }
-            } catch (error) {
-                console.error('There was a problem with the request:', error);
-        }
-    });
+    
 
      imageUpload?.addEventListener("change", async function(e) {
         const file = e.target.files[0];

@@ -420,3 +420,7 @@ footer {
         display: none;
     }
 }
+
+.easylogic-colorpicker .color-list {
+    display: none !important;
+}

@@ -21,7 +21,7 @@ class Participant extends Model
     public function getRegionDetails()
     {
         return Country::select('emoji_flag', 'name', 'id')
-            ->findOrFail($this->region);
+            ->find($this->region);
     }
 
     public function getRegionDetailsFromRegionIdList($regionIdList)

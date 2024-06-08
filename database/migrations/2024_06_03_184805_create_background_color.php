@@ -11,7 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function ($table) {
+        Schema::table('organizers', function ($table) {
+            $table->string('backgroundBanner')->nullable();
+            $table->string('backgroundColor')->nullable();
+        });
+
+        Schema::table('participants', function ($table) {
             $table->string('backgroundColor')->nullable();
         });
 
@@ -25,7 +30,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function ($table) {
+        Schema::table('organizers', function ($table) {
+            $table->dropColumn(['backgroundColor', 'backgroundBanner']);
+        });
+
+        Schema::table('participants', function ($table) {
             $table->dropColumn('backgroundColor');
         });
 
