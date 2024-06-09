@@ -56,6 +56,10 @@
         }
     },
     "scripts": {
+        "post-install-cmd": [
+            "chgrp -R www-data storage bootstrap/cache",
+            "chmod -R ug+rwx storage bootstrap/cache"
+        ],
         "pint": "./vendor/bin/pint",
         "pint:test": "./vendor/bin/pint",
         "post-autoload-dump": [

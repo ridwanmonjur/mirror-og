@@ -41,10 +41,23 @@ services:
     ports:
       - 3307:3307
     environment:
-      MYSQL_DATABASE: blog
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: driftwood
+      MYSQL_ROOT_PASSWORD: Ridwan123D@.
       MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      MYSQL_PASSWORD: Ridwan123D@.
+    networks:
+      - app_network
+
+  phpmyadmin:
+    depends_on:
+      - blog_db
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "8090:90"
+    environment:
+      PMA_HOST: blog_db
+      MYSQL_ROOT_PASSWORD: Ridwan123D@.
     networks:
       - app_network
 
