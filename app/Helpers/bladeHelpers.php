@@ -184,5 +184,3 @@ function bladePluralPrefix($amount, $singular = '', $plural = 's')
 
     return $plural;
 }
-
-

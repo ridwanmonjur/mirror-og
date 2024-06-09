@@ -20,7 +20,7 @@ class OrganizerController extends Controller
 {
     public function viewOwnProfile(Request $request)
     {
-        try{
+        try {
             $user = $request->attributes->get('user');
             $user_id = $user?->id ?? null;
             $user->isFollowing = null;
@@ -33,14 +33,14 @@ class OrganizerController extends Controller
 
     public function viewProfileById(Request $request, $id)
     {
-        try{
+        try {
             $loggedInUser = Auth::user();
             $user = User::findOrFail($id);
             if ($user->role == 'PARTICIPANT') {
                 return redirect()->route('public.participant.view', ['id' => $id]);
-            } else  if ($user->role == 'ADMIN') {
+            } elseif ($user->role == 'ADMIN') {
                 return $this->showErrorParticipant('This is an admin view!');
-            }  
+            }
 
             if ($loggedInUser) {
                 $user->isFollowing = Follow::where('participant_user_id', $loggedInUser->id)
@@ -58,7 +58,7 @@ class OrganizerController extends Controller
 
     private function viewProfile(Request $request, $logged_user_id, $userProfile, $isOwnProfile = true)
     {
-        try{
+        try {
             [
                 'teamList' => $teamList,
                 'teamIdList' => $teamIdList,

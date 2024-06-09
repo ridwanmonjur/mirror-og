@@ -30,7 +30,8 @@ class ParticipantEventController extends Controller
         if (Session::has('intended')) {
             $intendedUrl = Session::get('intended');
             Session::forget('intended');
-            return redirect($intendedUrl);        
+
+            return redirect($intendedUrl);
         }
 
         $userId = Auth::id();
@@ -85,7 +86,7 @@ class ParticipantEventController extends Controller
                 $user->isFollowing = Follow::where('participant_user_id', $userId)
                     ->where('organizer_user_id', $event->user_id)
                     ->first();
-                
+
                 $user->isLiking = Like::where('user_id', $userId)
                     ->where('event_id', $event->id)
                     ->first();
@@ -184,13 +185,13 @@ class ParticipantEventController extends Controller
             });
         })->with([
             'members' => function ($query) {
-                    $query->where('status', 'accepted')->with('user');
+                $query->where('status', 'accepted')->with('user');
             },
             'invitationList', 'members.payments' => function ($query) {
                 $query
                     ->groupBy('team_members_id')
                     ->select('team_members_id', DB::raw('SUM(payment_amount) as total_payment'));
-            }, 
+            },
         ])->first();
 
         $paymentsByMemberId = [];
@@ -379,16 +380,17 @@ class ParticipantEventController extends Controller
         }
     }
 
-    public function confirmOrCancel(Request $request) {
-        try{
+    public function confirmOrCancel(Request $request)
+    {
+        try {
             // dd($request);
-            $successMessage = $request->join_status == 'confirmed' ? 'Your registration is now successfully confirmed!' 
+            $successMessage = $request->join_status == 'confirmed' ? 'Your registration is now successfully confirmed!'
                 : 'Your registration is now successfully canceled.';
-            
+
             $joinEvent = JoinEvent::where('id', $request->join_event_id)->select(['id', 'join_status', 'payment_status'])->firstOrFail();
-            
-            $isPermitted = $joinEvent->payment_status == "completed" && 
-                ($request->join_status == 'confirmed' || $request->join_status == 'canceled'); 
+
+            $isPermitted = $joinEvent->payment_status == 'completed' &&
+                ($request->join_status == 'confirmed' || $request->join_status == 'canceled');
 
             if ($isPermitted) {
                 $joinEvent->join_status = $request->join_status;
@@ -399,7 +401,7 @@ class ParticipantEventController extends Controller
 
             }
 
-            return back()->with("successMessage", $successMessage);
+            return back()->with('successMessage', $successMessage);
         } catch (Exception $e) {
             return $this->showParticipantError($e->getMessage());
         }

@@ -120,11 +120,13 @@ class ParticipantCheckoutController extends Controller
             // ERROR
             // TRASACTION ERROR OCCURRED
             DB::rollBack();
+
             return $this->showErrorParticipant($e->getMessage());
         } catch (Exception $e) {
             // ERROR
             // TRANSACTION ERROR OCCURRED
             DB::rollBack();
+
             return $this->showErrorParticipant($e->getMessage());
 
             // return redirect()
