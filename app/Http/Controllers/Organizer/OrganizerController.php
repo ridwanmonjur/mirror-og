@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrganizersRequest;
 use App\Models\Address;
 use App\Models\EventDetail;
-use App\Models\Follow;
+use App\Models\OrganizerFollow;
 use App\Models\JoinEvent;
 use App\Models\Organizer;
 use App\Models\Team;
@@ -43,7 +43,7 @@ class OrganizerController extends Controller
             }
 
             if ($loggedInUser) {
-                $user->isFollowing = Follow::where('participant_user_id', $loggedInUser->id)
+                $user->isFollowing = OrganizerFollow::where('participant_user_id', $loggedInUser->id)
                     ->where('organizer_user_id', $user->id)
                     ->first();
             } else {
@@ -64,7 +64,7 @@ class OrganizerController extends Controller
                 'teamIdList' => $teamIdList,
             ] = Team::getUserTeamList($userProfile->id);
 
-            $followersCount = Follow::where('organizer_user_id', $userProfile->id)->count();
+            $followersCount = OrganizerFollow::where('organizer_user_id', $userProfile->id)->count();
             $joinEvents = EventDetail::where('user_id', $userProfile->id)
                 ->whereNotIn('status', ['DRAFT', 'PENDING'])
                 ->with(['tier',  'game'])->get();
@@ -96,8 +96,8 @@ class OrganizerController extends Controller
                 ->sum('tierPrizePool');
 
             $userIds = $joinEvents->pluck('user_id')->flatten()->toArray();
-            $followCounts = Follow::getFollowCounts($userIds);
-            $isFollowing = Follow::getIsFollowing($logged_user_id, $userIds);
+            $followCounts = OrganizerFollow::getFollowCounts($userIds);
+            $isFollowing = OrganizerFollow::getIsFollowing($logged_user_id, $userIds);
             $joinEventsHistory = $joinEventsActive = $values = [];
             ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
                 = EventDetail::processEvents($joinEvents, $isFollowing);

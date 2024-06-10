@@ -27,6 +27,13 @@ Route::middleware('auth')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['middleware' => 'auth'], function () {
+    Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
+        Route::post('/profile/{id}/banner', [AuthController::class, 'replaceBanner'])->name('participant.userBanner.action');
+        Route::post('/profile/{id}/background', [AuthController::class, 'replaceBackground'])->name('participant.userBackground.action');
+    });
+});
+
 Route::group(['prefix' => 'participant'], function () {
 
     Route::group(['middleware' => 'auth'], function () {
@@ -48,12 +55,7 @@ Route::group(['prefix' => 'participant'], function () {
     });
 });
 
-Route::group(['middleware' => 'auth'], function () {
-    Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
-        Route::post('/profile/{id}/banner', [AuthController::class, 'replaceBanner'])->name('participant.userBanner.action');
-        Route::post('/profile/{id}/background', [AuthController::class, 'replaceBackground'])->name('participant.userBackground.action');
-    });
-});
+
 
 Route::group(['prefix' => 'organizer'], function () {
     Route::group(['middleware' => 'auth'], function () {

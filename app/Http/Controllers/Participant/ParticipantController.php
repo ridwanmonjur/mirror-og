@@ -7,11 +7,12 @@ use App\Http\Requests\FriendRequest;
 use App\Http\Requests\LikeRequest;
 use App\Http\Requests\UpdateParticipantsRequest;
 use App\Models\EventInvitation;
-use App\Models\Follow;
+use App\Models\OrganizerFollow;
 use App\Models\Friend;
 use App\Models\JoinEvent;
 use App\Models\Like;
 use App\Models\Participant;
+use App\Models\ParticipantFollow;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
@@ -146,9 +147,9 @@ class ParticipantController extends Controller
                 JoinEvent::getJoinEventsWinCountForTeamList($teamIdList);
 
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
-            $followCounts = Follow::getFollowCounts($userIds);
+            $followCounts = OrganizerFollow::getFollowCounts($userIds);
             if ($logged_user_id) {
-                $isFollowing = Follow::getIsFollowing($logged_user_id, $userIds);
+                $isFollowing = OrganizerFollow::getIsFollowing($logged_user_id, $userIds);
                 $friend = Friend::checkFriendship($logged_user_id, $userProfile->id);
             } else {
                 $isFollowing = [];
@@ -310,9 +311,56 @@ class ParticipantController extends Controller
             } catch (Exception $e) {
 
                 return $this->showErrorParticipant($e->getMessage());
-
-                return back()->with('errorMessage', $e->getMessage());
             }
+        }
+    }
+
+    public function followParticipant(Request $request)
+    {
+
+        $user = $request->attributes->get('user');
+        $userId = $user->id;
+        $participantId = $request->participant_id;
+        $existingFollow = ParticipantFollow::checkFollow($user->id, $participantId);
+        $organizer = User::findOrFail($participantId);
+
+        if ($existingFollow) {
+            // dispatch(new HandleFollows('Unfollow', [
+            //     'subject_type' => User::class,
+            //     'object_type' => User::class,
+            //     'subject_id' => $userId,
+            //     'object_id' => $organizerId,
+            //     'action' => 'Follow',
+            // ]));
+
+            $existingFollow->delete();
+
+            return response()->json([
+                'message' => 'Successfully Unfollowed the organizer',
+                'isFollowing' => false,
+            ], 201);
+        } else {
+            ParticipantFollow::create([
+                'participant1_user_id' => $userId,
+                'participant2_user_id' => $participantId,
+            ]);
+
+            // dispatch(new HandleFollows('Unfollow', [
+            //     'subject_type' => User::class,
+            //     'object_type' => User::class,
+            //     'subject_id' => $userId,
+            //     'object_id' => $organizerId,
+            //     'action' => 'Follow',
+            //     'log' => '<span class="notification-gray"> User'
+            //     . ' <span class="notification-black">' . $user->name . '</span> started following '
+            //     . ' <span class="notification-black">' . $organizer->name . '.</span> '
+            //     . '</span>'
+            // ]));
+
+            return response()->json([
+                'message' => 'Successfully followed the organizer',
+                'isFollowing' => true,
+            ], 201);
         }
     }
 }

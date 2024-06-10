@@ -76,6 +76,7 @@ Route::group(['prefix' => 'participant'], function () {
 
             // Friends
             Route::post('/friends', [ParticipantController::class, 'updateFriend'])->name('participant.friends.update');
+            Route::post('/follow', [ParticipantController::class, 'followParticipant'])->name('participant.participant.follow');
 
             // Team management
             Route::get('/team/list', [ParticipantTeamController::class, 'teamList'])

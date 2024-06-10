@@ -293,7 +293,7 @@ span.placeholder-moves-up {
 .field input:not(:-webkit-autofill):invalid {
     border: none !important;
     outline: none !important;
-    box-shadow: 0 0 0 1px red;
+    box-shadow: 0 0 0 1px rgb(186, 183, 183);
     z-index: -1;
 }
 
@@ -358,7 +358,6 @@ input:not(:-webkit-autofill):invalid + span.placeholder-moves-up {
     transform: scale(1) translateY(-60%) translateX(0px);
     opacity: 1;
     padding: 0;
-    color: red;
     background-color: white;
     z-index: 99 !important;
 }
