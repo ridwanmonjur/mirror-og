@@ -144,9 +144,6 @@
         Alpine.data('alpineDataComponent', () => {
         return  {
             isEditMode: false, 
-            selectedGame: null,
-            isAddGamesMode: true,
-            games_data: gamesData,
             countries: 
             [
                 {
@@ -154,13 +151,6 @@
                     emoji_flag: '𓆝'
                 }
             ], 
-            games: [
-                {
-                    id: null,
-                    name: 'No game',
-                    image: null
-                }
-            ],
             participant: {
                 id: {{ $userProfile->participant->id }},
                 nickname : '{{$userProfile->participant->nickname}}',

@@ -216,42 +216,6 @@
                                 
                             </div>
                             <br>
-                            <div class="d-flex justify-content-start align-items-center flex-wrap">
-                                <div class="d-flex justify-content-start flex-wrap">
-                                    <template x-for="game in games_data">
-                                        <span
-                                            x-on:click="deleteGames(game.id)"
-                                            class="me-3 border px-3 mb-2 rounded-pill py-2 border-secondary cursor-pointer me-2"
-                                        >
-                                            <img
-                                                width="25"
-                                                height="25"
-                                                :src="'/storage/' + game.image"
-                                                class="object-fit-cover"
-                                            > 
-                                            <span class="me-3" x-text="game.name"> </span> 
-                                             {{-- Close icon --}}
-                                            <span class="mt-2"> 
-                                                <svg 
-                                                    x-on:click="deleteGames(game.id)"
-                                                    xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-x-circle cursor-pointer align-middle position-relative" viewBox="0 0 16 16">
-                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                                                </svg>
-                                            </span>      
-                                        </span>
-                                    </template>
-                                    <select
-                                        x-cloak
-                                        x-ref="select" 
-                                        x-show.important="isAddGamesMode"
-                                        style="width: 200px;"    
-                                        data-trigger="true"
-                                        class="selectpicker form-control d-inline rounded-pill"
-                                    >
-                                    </select> 
-                                </div>
-                            </div>
                             <br><br>
                             <br>
                         </div>
@@ -336,29 +300,6 @@
                             </span>
                         </div>
                         <br>
-                        <div class="d-flex justify-content-start align-items-center flex-wrap">
-                            <template x-for="(game, idx) in games_data" :key="game.id">
-                                <span
-                                    :class="{ 'd-none': ( games_data[3] && idx >= 3 ) }"
-                                    class="me-3 border px-3 mb-2 rounded-pill py-2 border-secondary cursor-pointer me-2 show-first-few"
-                                >
-                                    <img
-                                        width="25"
-                                        height="25"
-                                        :src="'/storage/' + game.image"
-                                        class="object-fit-cover"
-                                    > 
-                                    <span x-text="game.name"> </span> 
-                                                                     
-                                </span>
-                            </template>
-                            <span :class="{ 'd-none': !games_data[3] }"
-                                onclick="visibleElements()"
-                                class="show-more cursor-pointer"><u>Show more</u></span>
-                        </div>
-                        <template x-if="games_data">
-                        <br><br><br>
-                        </template>
 
                     </div>
                 </div>

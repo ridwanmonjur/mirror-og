@@ -6,6 +6,20 @@ definitions:
     node: /root/.npm
 
   steps:
+    - step: &test-laravel
+        name: Test
+        script:
+          - composer install
+          -  ./vendor/bin/phpunit test
+        caches:
+          - composer
+    - step: &lint-laravel
+        name: Lint
+        script:
+          - composer install
+          - ./vendor/bin/phplint . --exclude=vendor
+        caches:
+          - composer
     - step: &prepare-environment
         name: Prepare Environment
         caches:
@@ -60,6 +74,8 @@ pipelines:
       - step: *laravel-pint-format
       - step: *composer-update
       - step: *npm-build
+      - step: *test-laravel
+      - step: *lint-laravel
 
     master:
       - step: *prepare-environment
@@ -67,10 +83,14 @@ pipelines:
       - step: *laravel-pint-format
       - step: *composer-update
       - step: *npm-build
+      - step: *test-laravel
+      - step: *lint-laravel
 
-    production:
+    main:
       - step: *prepare-environment
       - step: *php-code-smells
       - step: *laravel-pint-format
       - step: *composer-update
       - step: *npm-build
+      - step: *test-laravel
+      - step: *lint-laravel
