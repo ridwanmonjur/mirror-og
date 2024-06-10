@@ -52,7 +52,7 @@
 
     // const games_data = {{ $userProfile->participant->games_data }};
     window.onload = () => { 
-        localStorage.setItem('isInited', false);
+        localStorage.setItem('isInited', "false");
         
         if (successInput) {
             localStorage.setItem('success', 'true');
@@ -67,15 +67,31 @@
         window.createGradientPicker(document.getElementById('div-gradient-picker'),
             (gradient) => {
                 localStorage.setItem('colorOrGradient', gradient);
-                document.getElementById('backgroundBanner').style.background = 'auto';
                 document.getElementById('backgroundBanner').style.backgroundImage = gradient;
+                document.getElementById('backgroundBanner').style.background = 'auto';
             }
         );
+        
+
         window.createColorPicker(document.getElementById('div-color-picker'), 
             (color) => {
-                localStorage.setItem('colorOrGradient', gradient);
+                localStorage.setItem('colorOrGradient', color);
                 document.getElementById('backgroundBanner').style.backgroundImage = 'auto';
                 document.getElementById('backgroundBanner').style.background = color;
+            }
+        );
+
+        window.createColorPicker(document.getElementById('div-font-color-picker-with-bg'), 
+            (color) => {
+                document.getElementById('backgroundBanner').style.color = color;
+            }
+        );
+
+         window.createColorPicker(document.getElementById('div-font-color-picker-with-frame'), 
+            (color) => {
+                document.querySelectorAll('.uploaded-image').forEach((element)=> {
+                    element.style.borderColor = color;
+                }) 
             }
         );
 
@@ -130,9 +146,6 @@
         Alpine.data('alpineDataComponent', () => {
         return  {
             isEditMode: false, 
-            selectedGame: null,
-            isAddGamesMode: true,
-            games_data: gamesData,
             countries: 
             [
                 {
@@ -140,13 +153,6 @@
                     emoji_flag: '𓆝'
                 }
             ], 
-            games: [
-                {
-                    id: null,
-                    name: 'No game',
-                    image: null
-                }
-            ],
             participant: {
                 id: {{ $userProfile->participant->id }},
                 nickname : '{{$userProfile->participant->nickname}}',
@@ -306,8 +312,6 @@
     uploadButton?.addEventListener("click", function() {
         imageUpload.click();
     });
-
-    
 
      imageUpload?.addEventListener("change", async function(e) {
         const file = e.target.files[0];

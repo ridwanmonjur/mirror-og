@@ -17,6 +17,10 @@ body {
     background-image: url("./signinbg.png");
 }
 
+span {
+    font-size: 15px !important;
+}
+
 button {
     cursor: pointer;
 }
@@ -70,7 +74,7 @@ form .field {
     height: 100%;
     padding: 5px 25px;
     margin-top: 0;
-    margin-bottom: 0;
+    margin-bottom: 5px;
     font-size: 15px;
     caret-color: #43A4D7;
     border-radius: 30px;
@@ -117,11 +121,15 @@ input::selection {
     margin-right: 10px;
 }
 
-.field-error-message {
-    color: #ED1D24;
-    text-align: left;
-    margin-top: 5px;
+
+
+@keyframes slide {
+  0% {height: 5px; opacity: 0;  overflow-y: hidden;}
+  50% {height: 12px; opacity: 0.25; overflow-y: hidden;}
+  100% {height: 25px; opacity: 1; overflow-y: visible;}
 }
+
+
 
 .flash-message {
     text-align: left;
@@ -273,7 +281,6 @@ span.placeholder-moves-up {
     transition: 0.2s;
     transition-timing-function: ease;
     transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
-    opacity: 0.5;
 }
 
 .field input:focus,
@@ -281,22 +288,28 @@ span.placeholder-moves-up {
     border: none !important;
     outline: none !important;
     box-shadow: 0 0 0 1px #43A4D7;
-    /* Full freedom. (works also with border-radius) */
 }
 
-input:focus+span.placeholder-moves-up,
-input:not(:focus):valid+span.placeholder-moves-up {
-    opacity: 1 !important;
-    transform: scale(0.9) translateY(-60%) translateX(0px);
-    padding: 0px 0px;
-    z-index: 99 !important;
-    background-color: white;
-    color: #43A4D7;
+.field input:not(:-webkit-autofill):invalid {
+    border: none !important;
+    outline: none !important;
+    box-shadow: 0 0 0 1px rgb(186, 183, 183);
+    z-index: -1;
+}
+
+.field-error-message {
+    color: #ED1D24;
+    text-align: left;
+    margin-top: 5px;
+    opacity: 0;
+    animation: slide 0.5s ease forwards;
+    animation-iteration-count: 1;
+    -prefix-animation: slide 0.5s ease forwards;     
 }
 
 .placeholder__error {
     opacity: 1 !important;
-    transform: scale(0.9) translateY(-60%) translateX(0px);
+    transform: scale(1) translateY(-60%) translateX(0px);
     padding: 0px 0px;
     z-index: 99 !important;
     /* color: #dc3545; */
@@ -310,11 +323,7 @@ input:not(:focus):valid+span.placeholder-moves-up {
     margin-right: 10px;
 }
 
-.field-error-message {
-    color: #dc3545;
-    text-align: left;
-    margin-top: 5px;
-}
+
 
 .flash-message {
     text-align: left;
@@ -324,59 +333,33 @@ input:not(:focus):valid+span.placeholder-moves-up {
 
 /* Adding new CSS for placeholder animation */
 
-.field input:focus+label span.placeholder-moves-up,
-.field input:not(:focus):valid+label span.placeholder-moves-up,
-.field input:not(:focus)+label span.placeholder-moves-up,
-.field input:placeholder-shown+label span.placeholder-moves-up {
-    opacity: 1;
-    transform: translateY(-20px);
-}
-
-.field input:focus+label span.placeholder-moves-up,
-.field input:not(:focus):valid+label span.placeholder-moves-up,
-.field input:placeholder-shown+label span.placeholder-moves-up {
-    opacity: 1;
-    transform: translateY(-20px);
+input:focus+span.placeholder-moves-up,
+input:not(:focus):valid+span.placeholder-moves-up {
+    transform: scale(1) translateY(-60%) translateX(0px);
+    padding: 0px 0px;
     z-index: 99 !important;
     background-color: white;
     color: #43A4D7;
 }
 
-label.placeholder-moves-up-container {
-    margin: 0;
-    position: relative;
-    width: 100%;
-    display: inline-block;
+input:-webkit-autofill {
+    z-index: -1 !important;
 }
 
-span.placeholder-moves-up {
-    padding: 8px;
-    pointer-events: none;
-    position: absolute;
-    left: 15px;
-    top: 0;
-    transition: 0.2s;
-    transition-timing-function: ease;
-    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
-    opacity: 0.5;
-    transform: translateY(0);
-}
-
-.field input:focus,
-.field input:not(:focus):valid {
-    border: none !important;
-    outline: none !important;
-    box-shadow: 0 0 0 1px #43A4D7;
-    /* Full freedom. (works also with border-radius) */
-}
-
-input:focus+label span.placeholder-moves-up,
-input:not(:focus):valid+label span.placeholder-moves-up {
-    opacity: 1 !important;
-    transform: translateY(-20px);
+input:-webkit-autofill +span.placeholder-moves-up {
+    transform: scale(1) translateY(-50%) translateX(0px);
     z-index: 99 !important;
+    opacity: 1;
+    padding: 0;
     background-color: white;
-    color: #43A4D7;
+}
+
+input:not(:-webkit-autofill):invalid + span.placeholder-moves-up {
+    transform: scale(1) translateY(-60%) translateX(0px);
+    opacity: 1;
+    padding: 0;
+    background-color: white;
+    z-index: 99 !important;
 }
 
 
@@ -403,37 +386,4 @@ input:not(:focus):valid+label span.placeholder-moves-up {
         text-align: center;
         box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     }
-}
-
-.field input:not(:placeholder-shown)+label span.placeholder-moves-up {
-    opacity: 1;
-    transform: translateY(-20px);
-}
-
-label.placeholder-moves-up-container {
-    margin: 0;
-    position: relative;
-    width: 100%;
-    display: inline-block;
-}
-
-span.placeholder-moves-up {
-    padding: 8px;
-    pointer-events: none;
-    position: absolute;
-    left: 15px;
-    top: 0;
-    transition: 0.2s;
-    transition-timing-function: ease;
-    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
-    opacity: 0.5;
-    transform: translateY(0);
-}
-
-.field input:focus,
-.field input:not(:focus):valid {
-    border: none !important;
-    outline: none !important;
-    box-shadow: 0 0 0 1px #43A4D7;
-    /* Full freedom. (works also with border-radius) */
 }

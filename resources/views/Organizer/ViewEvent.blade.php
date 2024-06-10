@@ -11,7 +11,7 @@
     $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
     $bladeEventGameImage = bladeImageNull($event->game ? $event->game->gameIcon : null);
-    $followersCount = App\Models\Follow::where('organizer_user_id', $event->user_id)->count();
+    $followersCount = App\Models\OrganizerFollow::where('organizer_user_id', $event->user_id)->count();
 @endphp
 
 <body>

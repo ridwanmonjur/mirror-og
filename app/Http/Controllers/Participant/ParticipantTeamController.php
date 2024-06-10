@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateTeamRequest;
-use App\Models\Follow;
+use App\Models\OrganizerFollow;
 use App\Models\JoinEvent;
 use App\Models\RosterCaptain;
 use App\Models\RosterMember;
@@ -64,9 +64,9 @@ class ParticipantTeamController extends Controller
                 JoinEvent::getJoinEventsWinCountForTeam($selectTeam->id);
 
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
-            $followCounts = Follow::getFollowCounts($userIds);
+            $followCounts = OrganizerFollow::getFollowCounts($userIds);
             if ($user_id) {
-                $isFollowing = Follow::getIsFollowing($user_id, $userIds);
+                $isFollowing = OrganizerFollow::getIsFollowing($user_id, $userIds);
             } else {
                 $isFollowing = [];
             }

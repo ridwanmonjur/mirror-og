@@ -37,7 +37,7 @@
         <label for="email" class="placeholder-moves-up-container">
             <input type="email" name="email" id="email" required="true" class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Email</span>
-            <div class="field-error-message" id="email-error"></div>
+            <div class="field-error-message d-none" id="email-error"></div>
         </label>
     </div>
 
@@ -47,7 +47,7 @@
                 class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Password</span>
             <i class="fa fa-eye" id="togglePassword" onclick="togglePassword('password', 'togglePassword')" style="cursor: pointer; margin-top: 10px"></i>
-            <div class="field-error-message" id="password-error"></div>
+            <div class="field-error-message d-none" id="password-error"></div>
         </label>
     </div>
     <div class="pass-txt">

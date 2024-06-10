@@ -18,7 +18,7 @@ const createColorPicker = function (container, onLastUpdateCb = null, onHideCb =
         onLastUpdate: color => {
             console.log(color);
             if (onLastUpdateCb && localStorage.getItem('isInited')) { onLastUpdateCb(color); }
-            localStorage.setItem('isInited', true);
+            localStorage.setItem('isInited', "true");
         }
     }) 
 
@@ -41,8 +41,8 @@ const createGradientPicker = function (container, onLastUpdateCb, onHideCb = nul
             console.log('changed', color)
         },
         onLastUpdate: color => {
-            if (onLastUpdateCb && localStorage.getItem('isInited')== true) { onLastUpdateCb(color); }
-            localStorage.setItem('isInited', true);
+            if (onLastUpdateCb && localStorage.getItem('isInited')== "true") { onLastUpdateCb(color); }
+            localStorage.setItem('isInited', "true");
         }
     }) 
 

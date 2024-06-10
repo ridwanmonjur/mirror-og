@@ -7,11 +7,12 @@ use App\Http\Requests\FriendRequest;
 use App\Http\Requests\LikeRequest;
 use App\Http\Requests\UpdateParticipantsRequest;
 use App\Models\EventInvitation;
-use App\Models\Follow;
+use App\Models\OrganizerFollow;
 use App\Models\Friend;
 use App\Models\JoinEvent;
 use App\Models\Like;
 use App\Models\Participant;
+use App\Models\ParticipantFollow;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
@@ -101,7 +102,7 @@ class ParticipantController extends Controller
 
     public function viewOwnProfile(Request $request)
     {
-        try{
+        try {
             $user = $request->attributes->get('user');
             $user_id = $user?->id ?? null;
 
@@ -113,17 +114,17 @@ class ParticipantController extends Controller
 
     public function viewProfileById(Request $request, $id)
     {
-        try{
-        $user = User::findOrFail($id);
-        $loggedInUser = Auth::user();
+        try {
+            $user = User::findOrFail($id);
+            $loggedInUser = Auth::user();
 
-        if ($user->role == 'ORGANIZER') {
-            return redirect()->route('public.organizer.view', ['id' => $id]);
-        } else  if ($user->role == 'ADMIN') {
-            return $this->showErrorParticipant('This is an admin view!');
-        }  
+            if ($user->role == 'ORGANIZER') {
+                return redirect()->route('public.organizer.view', ['id' => $id]);
+            } elseif ($user->role == 'ADMIN') {
+                return $this->showErrorParticipant('This is an admin view!');
+            }
 
-        return $this->viewProfile($request, $loggedInUser ? $loggedInUser->id : null, $user, false);
+            return $this->viewProfile($request, $loggedInUser ? $loggedInUser->id : null, $user, false);
         } catch (Exception $e) {
             return $this->showErrorParticipant($e->getMessage());
         }
@@ -146,9 +147,9 @@ class ParticipantController extends Controller
                 JoinEvent::getJoinEventsWinCountForTeamList($teamIdList);
 
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
-            $followCounts = Follow::getFollowCounts($userIds);
+            $followCounts = OrganizerFollow::getFollowCounts($userIds);
             if ($logged_user_id) {
-                $isFollowing = Follow::getIsFollowing($logged_user_id, $userIds);
+                $isFollowing = OrganizerFollow::getIsFollowing($logged_user_id, $userIds);
                 $friend = Friend::checkFriendship($logged_user_id, $userProfile->id);
             } else {
                 $isFollowing = [];
@@ -160,7 +161,6 @@ class ParticipantController extends Controller
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
 
-            
             return view('Participant.PlayerProfile',
                 compact('joinEvents', 'userProfile', 'teamList', 'isOwnProfile',
                     'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
@@ -245,8 +245,9 @@ class ParticipantController extends Controller
         if (array_key_exists('deleteUserId', $validatedData)) {
             $friend = Friend::checkFriendship($validatedData['deleteUserId'], $user->id);
             $friend?->deleteOrFail();
-            
+
             session()->flash('successMessage', 'Your request has been deleted.');
+
             return back();
 
         } elseif (array_key_exists('addUserId', $validatedData)) {
@@ -255,12 +256,13 @@ class ParticipantController extends Controller
 
                 Friend::create([
                     'user1_id' => $user->id,
-                    'user2_id' => intval( $validatedData['addUserId'] ),
+                    'user2_id' => intval($validatedData['addUserId']),
                     'status' => 'pending',
                     'actor_id' => $user->id,
                 ]);
 
                 session()->flash('successMessage', 'Successfully created a friendship');
+
                 return back();
 
             } catch (Exception $e) {
@@ -271,6 +273,7 @@ class ParticipantController extends Controller
                 }
 
                 session()->flash('errorMessage', $errorMessage);
+
                 return back();
             }
         } else {
@@ -278,15 +281,16 @@ class ParticipantController extends Controller
                 $friend = Friend::checkFriendship($validatedData['updateUserId'], $user->id)->firstOrFail();
                 $status = $validatedData['updateStatus'];
                 $isPermitted = $status == 'left';
-                if (!$isPermitted) {
+                if (! $isPermitted) {
                     if ($status == 'accepted' || $status == 'rejected') {
                         $isPermitted = ($friend->status == 'pending' && $user->id != $friend->actor_id) ||
                         ($friend->status == 'left' && $user->id == $friend->actor_id);
                     }
                 }
 
-                if (!$isPermitted) {
+                if (! $isPermitted) {
                     session()->flash('errorMessage', 'This request is not allowed.');
+
                     return back();
                 }
 
@@ -296,18 +300,67 @@ class ParticipantController extends Controller
                 ]);
 
                 $message = [
-                    'left' => 'Successfully removed friendship.', 
+                    'left' => 'Successfully removed friendship.',
                     'accepted' => 'Successfully accepted friendship request.',
-                    'rejected' => 'Successfully rejected friendship request.'
+                    'rejected' => 'Successfully rejected friendship request.',
                 ];
 
                 session()->flash('successMessage', $message[$status]);
+
                 return back();
             } catch (Exception $e) {
-                
+
                 return $this->showErrorParticipant($e->getMessage());
-                return back()->with('errorMessage', $e->getMessage());
             }
+        }
+    }
+
+    public function followParticipant(Request $request)
+    {
+
+        $user = $request->attributes->get('user');
+        $userId = $user->id;
+        $participantId = $request->participant_id;
+        $existingFollow = ParticipantFollow::checkFollow($user->id, $participantId);
+        $organizer = User::findOrFail($participantId);
+
+        if ($existingFollow) {
+            // dispatch(new HandleFollows('Unfollow', [
+            //     'subject_type' => User::class,
+            //     'object_type' => User::class,
+            //     'subject_id' => $userId,
+            //     'object_id' => $organizerId,
+            //     'action' => 'Follow',
+            // ]));
+
+            $existingFollow->delete();
+
+            return response()->json([
+                'message' => 'Successfully Unfollowed the organizer',
+                'isFollowing' => false,
+            ], 201);
+        } else {
+            ParticipantFollow::create([
+                'participant1_user_id' => $userId,
+                'participant2_user_id' => $participantId,
+            ]);
+
+            // dispatch(new HandleFollows('Unfollow', [
+            //     'subject_type' => User::class,
+            //     'object_type' => User::class,
+            //     'subject_id' => $userId,
+            //     'object_id' => $organizerId,
+            //     'action' => 'Follow',
+            //     'log' => '<span class="notification-gray"> User'
+            //     . ' <span class="notification-black">' . $user->name . '</span> started following '
+            //     . ' <span class="notification-black">' . $organizer->name . '.</span> '
+            //     . '</span>'
+            // ]));
+
+            return response()->json([
+                'message' => 'Successfully followed the organizer',
+                'isFollowing' => true,
+            ], 201);
         }
     }
 }

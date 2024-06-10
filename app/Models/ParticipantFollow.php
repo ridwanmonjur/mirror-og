@@ -6,13 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Follow extends Model
+class ParticipantFollow extends Model
 {
     use HasFactory;
 
+    protected $table = "participant_follows";
+
     protected $fillable = [
-        'participant_user_id',
-        'organizer_user_id',
+        'participant1_user_id',
+        'participant2_user_id',
     ];
 
     public function user()

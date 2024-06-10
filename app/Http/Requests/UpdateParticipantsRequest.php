@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateParticipantsRequest extends FormRequest
@@ -26,7 +25,7 @@ class UpdateParticipantsRequest extends FormRequest
             'id' => 'required',
             'bio' => 'nullable|string',
             'age' => 'nullable|numeric',
-            'birthday' => 'nullable|date|before_or_equal:' . now()->format('Y-m-d'),
+            'birthday' => 'nullable|date|before_or_equal:'.now()->format('Y-m-d'),
             'nickname' => 'nullable|string|max:255',
             'region' => 'nullable|string',
             'region_name' => 'nullable|string',
@@ -56,8 +55,6 @@ class UpdateParticipantsRequest extends FormRequest
     protected function prepareForValidation()
     {
         $attributes = $this->request->all();
-
-       
 
         if (isset($attributes['domain']) && filter_var($attributes['domain'], FILTER_VALIDATE_URL) !== false) {
             $parsed = parse_url($attributes['domain']);

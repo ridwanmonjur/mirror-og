@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrganizersRequest;
 use App\Models\Address;
 use App\Models\EventDetail;
-use App\Models\Follow;
+use App\Models\OrganizerFollow;
 use App\Models\JoinEvent;
 use App\Models\Organizer;
 use App\Models\Team;
@@ -20,7 +20,7 @@ class OrganizerController extends Controller
 {
     public function viewOwnProfile(Request $request)
     {
-        try{
+        try {
             $user = $request->attributes->get('user');
             $user_id = $user?->id ?? null;
             $user->isFollowing = null;
@@ -33,17 +33,17 @@ class OrganizerController extends Controller
 
     public function viewProfileById(Request $request, $id)
     {
-        try{
+        try {
             $loggedInUser = Auth::user();
             $user = User::findOrFail($id);
             if ($user->role == 'PARTICIPANT') {
                 return redirect()->route('public.participant.view', ['id' => $id]);
-            } else  if ($user->role == 'ADMIN') {
+            } elseif ($user->role == 'ADMIN') {
                 return $this->showErrorParticipant('This is an admin view!');
-            }  
+            }
 
             if ($loggedInUser) {
-                $user->isFollowing = Follow::where('participant_user_id', $loggedInUser->id)
+                $user->isFollowing = OrganizerFollow::where('participant_user_id', $loggedInUser->id)
                     ->where('organizer_user_id', $user->id)
                     ->first();
             } else {
@@ -58,13 +58,13 @@ class OrganizerController extends Controller
 
     private function viewProfile(Request $request, $logged_user_id, $userProfile, $isOwnProfile = true)
     {
-        try{
+        try {
             [
                 'teamList' => $teamList,
                 'teamIdList' => $teamIdList,
             ] = Team::getUserTeamList($userProfile->id);
 
-            $followersCount = Follow::where('organizer_user_id', $userProfile->id)->count();
+            $followersCount = OrganizerFollow::where('organizer_user_id', $userProfile->id)->count();
             $joinEvents = EventDetail::where('user_id', $userProfile->id)
                 ->whereNotIn('status', ['DRAFT', 'PENDING'])
                 ->with(['tier',  'game'])->get();
@@ -96,8 +96,8 @@ class OrganizerController extends Controller
                 ->sum('tierPrizePool');
 
             $userIds = $joinEvents->pluck('user_id')->flatten()->toArray();
-            $followCounts = Follow::getFollowCounts($userIds);
-            $isFollowing = Follow::getIsFollowing($logged_user_id, $userIds);
+            $followCounts = OrganizerFollow::getFollowCounts($userIds);
+            $isFollowing = OrganizerFollow::getIsFollowing($logged_user_id, $userIds);
             $joinEventsHistory = $joinEventsActive = $values = [];
             ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
                 = EventDetail::processEvents($joinEvents, $isFollowing);

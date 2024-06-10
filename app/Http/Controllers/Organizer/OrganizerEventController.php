@@ -26,9 +26,10 @@ class OrganizerEventController extends Controller
     {
         if (Session::has('intended')) {
             $intendedUrl = Session::get('intended');
-            
+
             Session::forget('intended');
-            return redirect($intendedUrl);        
+
+            return redirect($intendedUrl);
         } else {
             return view('Organizer.Home');
         }
