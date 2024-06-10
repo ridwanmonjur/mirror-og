@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -39,13 +38,12 @@ return new class extends Migration
         });
 
         Schema::table('participants', function ($table) {
-            $table->string('avatar')->nullable(); 
+            $table->string('avatar')->nullable();
             $table->dropColumn(['region_name', 'region_flag']);
         });
-    
+
         Schema::table('teams', function ($table) {
             $table->dropColumn(['country_name', 'country_flag']);
         });
     }
-    
 };

@@ -228,8 +228,8 @@ class AuthController extends Controller
     {
         if ($request->has('url')) {
             Session::put('intended', $request->input('url'));
-        } 
-        
+        }
+
         return view('Auth.ParticipantSignIn');
     }
 
@@ -238,7 +238,7 @@ class AuthController extends Controller
         if ($request->has('url')) {
             Session::put('intended', $request->input('url'));
         }
-        
+
         return view('Auth.OrganizerSignIn');
     }
 
@@ -611,7 +611,7 @@ class AuthController extends Controller
             ->where('notifiable_id', $user->id)
             ->firstOrFail();
 
-        if (!$notification) {
+        if (! $notification) {
             return response()->json(['success' => false, 'error' => 'Notification not found or does not belong to the user'], 404);
         }
 

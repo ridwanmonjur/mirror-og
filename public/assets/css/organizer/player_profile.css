@@ -456,6 +456,13 @@ main {
     align-items: center;
 }
 
+@media screen and (min-width: 576px) {
+    .modal-dialog {
+        width: 80vw;
+    }
+}
+
+
 @media screen and (min-width: 990px) {
     .member-section {
         padding-top: 0px;
@@ -497,3 +504,7 @@ main {
     border: 5px solid #43A4D7;
     cursor: pointer;
 }
+.custom-file-container .label-container {
+    display: none !important;
+}
+

@@ -1,17 +1,21 @@
 <div class="modal fade" id="profileModal" tabindex="2" aria-labelledby="#profileModal" aria-hidden="true">
-    <div class="modal-dialog w-75">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="tabs mx-0 d-flex flex-row justify-content-around px-0" style="width: 100% !important;">
                     <button class="tab-button px-0 mx-0 me-3 modal-tab tab-button-active"
-                        style="padding-left: 0px; padding-right: 0px; min-width: 200px;"
-                        onclick="showTab(event, 'BackgroundPhoto', 'modal-tab')">Custom Background</button>
+                        style="padding-left: 0px; padding-right: 0px; min-width: 200px;max-width: 200px;"
+                        onclick="showTab(event, 'BackgroundPhoto', 'modal-tab')">Background Photo</button>
                     <button class="tab-button  mx-0 px-0 modal-tab"
                         onclick="showTab(event, 'BackgroundColor', 'modal-tab')"
-                        style="padding-left: 0px; padding-right: 0px; min-width: 200px;">Choose Your Color</button>
+                        style="padding-left: 0px; padding-right: 0px; min-width: 200px;max-width: 200px;">Background Color</button>
+                     <button class="tab-button  mx-0 px-0 modal-tab"
+                        onclick="showTab(event, 'ForeColor', 'modal-tab')"
+                        style="padding-left: 0px; padding-right: 0px; min-width: 200px;max-width: 200px;">Foreground Color</button>
                 </div>
                 <div class="tab-content pb-4 modal-tab" id="BackgroundPhoto">
                     <br>
+                        <h5> Choose a background banner</h5>
                         <div class="custom-file-container" data-upload-id="file-upload-preview-1"></div>
                     <br>
 
@@ -82,7 +86,7 @@
                             <div id="div-color-picker"> </div>
                         </div>
                         <br><br>
-                        <h5> Choose a gradient color</h5>
+                        <h5> Choose a gradient color for background</h5>
                         @php
                             $colors = [
                                 ['#000000', '#545454', '#737373'], // Black to Gray
@@ -120,9 +124,9 @@
                         <button 
                             data-bs-auto-close="outside"    
                             style="{{ 'background: linear-gradient(#4682b4, #b0c4de, #e0ffff);' . 'width: 60px; height: 30px;' }}"
-                            class="btn btn-link color-pallete" type="button" id="dropdownColorButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            class="btn btn-link color-pallete" type="button" id="dropdownGradientButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownColorButton">
+                        <div class="dropdown-menu" aria-labelledby="dropdownGradientButton">
                             <div id="div-gradient-picker"> </div>
                         </div>
                         <br>
@@ -131,8 +135,48 @@
                         <br>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button type="submit" class="oceans-gaming-default-button me-3">Submit
+                        <button type="Save" class="oceans-gaming-default-button me-3">Save
                         </button>
+                        <button type="button" class="oceans-gaming-default-button oceans-gaming-gray-button"
+                            data-bs-dismiss="modal">Close
+                        </button>
+                    </div>
+                </div>
+                <div class="tab-content pb-4 modal-tab d-none" id="ForeColor">
+                    <br>
+                    <h5> Choose a solid font color</h5>
+                    <button 
+                        data-bs-auto-close="outside"    
+                        style="{{ 'background-color: gray;' . 'width: 60px; height: 30px;' }}"
+                        class="btn btn-link color-pallete" type="button" id="dropdownFontColorBgButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownFontColorBgButton">
+                        <div id="div-font-color-picker-with-bg"> </div>
+                    </div>
+                    <br>  <br>
+                    <h5> Choose a solid color for your profile frame</h5>
+                    <button 
+                        data-bs-auto-close="outside"    
+                        style="{{ 'background-color: green;' . 'width: 60px; height: 30px;' }}"
+                        class="btn btn-link color-pallete" type="button" id="dropdownFrameColorBgButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownFrameColorBgButton">
+                        <div id="div-font-color-picker-with-frame"> </div>
+                    </div>
+                    <div class="upload-container">
+                        <label for="image-upload" class="upload-label">
+                            <div class="circle-container">
+                                <div id="uploaded-image" class="uploaded-image"
+                                    style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
+                                    background-repeat: no-repeat; background-position: center;"
+                                >
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <br> <br>
+                    <div class="d-flex justify-content-center">
+                        <button type="Save" class="oceans-gaming-default-button me-3">Save</button>
                         <button type="button" class="oceans-gaming-default-button oceans-gaming-gray-button"
                             data-bs-dismiss="modal">Close
                         </button>
