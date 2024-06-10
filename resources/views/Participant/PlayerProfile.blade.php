@@ -66,6 +66,7 @@
             @if($isOwnProfile)
                 <div class="d-flex justify-content-end py-0 my-0 mb-2">
                     <input type="file" id="backgroundInput" class="d-none"> 
+                    @include('Participant.Profile.FriendManagement')
                     <button 
                         x-show="!isEditMode"
                         data-bs-toggle="modal"
@@ -223,13 +224,11 @@
                         <template x-if="participant.nickname">
                             <div class="d-flex justify-content-start align-items-center flex-wrap">
                                 <h4 class="my-0 me-4" x-text="participant.nickname"></h4>
-                                @include('Participant.Profile.FriendManagement')
                             </div>
                         </template>
                         <template x-if="!participant.nickname">
                              <div class="d-flex justify-content-start align-items-center flex-wrap">
                                 <h4 class="my-0 me-4"> {{$userProfile->name}} </h4>
-                                @include('Participant.Profile.FriendManagement')
                             </div>
                         </template>
                         <div>

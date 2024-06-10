@@ -16,7 +16,7 @@
                 <div class="tab-content pb-4 modal-tab" id="BackgroundPhoto">
                     <br>
                         <h5> Choose a background banner</h5>
-                        <div class="custom-file-container w-75" data-upload-id="file-upload-preview-1"></div>
+                        <div class="custom-file-container" data-upload-id="file-upload-preview-1"></div>
                     <br>
 
                     <div class="d-flex justify-content-center">
@@ -124,9 +124,9 @@
                         <button 
                             data-bs-auto-close="outside"    
                             style="{{ 'background: linear-gradient(#4682b4, #b0c4de, #e0ffff);' . 'width: 60px; height: 30px;' }}"
-                            class="btn btn-link color-pallete" type="button" id="dropdownColorButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            class="btn btn-link color-pallete" type="button" id="dropdownGradientButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownColorButton">
+                        <div class="dropdown-menu" aria-labelledby="dropdownGradientButton">
                             <div id="div-gradient-picker"> </div>
                         </div>
                         <br>
@@ -135,7 +135,7 @@
                         <br>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button type="submit" class="oceans-gaming-default-button me-3">Submit
+                        <button type="Save" class="oceans-gaming-default-button me-3">Save
                         </button>
                         <button type="button" class="oceans-gaming-default-button oceans-gaming-gray-button"
                             data-bs-dismiss="modal">Close
@@ -144,7 +144,6 @@
                 </div>
                 <div class="tab-content pb-4 modal-tab d-none" id="ForeColor">
                     <br>
-
                     <h5> Choose a solid font color</h5>
                     <button 
                         data-bs-auto-close="outside"    
@@ -154,7 +153,34 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownFontColorBgButton">
                         <div id="div-font-color-picker-with-bg"> </div>
                     </div>
-                    <br>
+                    <br>  <br>
+                    <h5> Choose a solid color for your profile frame</h5>
+                    <button 
+                        data-bs-auto-close="outside"    
+                        style="{{ 'background-color: green;' . 'width: 60px; height: 30px;' }}"
+                        class="btn btn-link color-pallete" type="button" id="dropdownFrameColorBgButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownFrameColorBgButton">
+                        <div id="div-font-color-picker-with-frame"> </div>
+                    </div>
+                    <div class="upload-container">
+                        <label for="image-upload" class="upload-label">
+                            <div class="circle-container">
+                                <div id="uploaded-image" class="uploaded-image"
+                                    style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
+                                    background-repeat: no-repeat; background-position: center;"
+                                >
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <br> <br>
+                    <div class="d-flex justify-content-center">
+                        <button type="Save" class="oceans-gaming-default-button me-3">Save</button>
+                        <button type="button" class="oceans-gaming-default-button oceans-gaming-gray-button"
+                            data-bs-dismiss="modal">Close
+                        </button>
+                    </div>
                 </div>
 
             </div>
