@@ -71,11 +71,25 @@
                 document.getElementById('backgroundBanner').style.backgroundImage = gradient;
             }
         );
+        
+
         window.createColorPicker(document.getElementById('div-color-picker'), 
             (color) => {
-                localStorage.setItem('colorOrGradient', gradient);
+                localStorage.setItem('colorOrGradient', color);
                 document.getElementById('backgroundBanner').style.backgroundImage = 'auto';
                 document.getElementById('backgroundBanner').style.background = color;
+            }
+        );
+
+        window.createColorPicker(document.getElementById('div-font-color-picker-with-colors'), 
+            (color) => {
+                document.getElementById('backgroundBanner').style.color = color;
+            }
+        );
+
+        window.createColorPicker(document.getElementById('div-font-color-picker-with-bg'), 
+            (color) => {
+                document.getElementById('backgroundBanner').style.color = color;
             }
         );
 

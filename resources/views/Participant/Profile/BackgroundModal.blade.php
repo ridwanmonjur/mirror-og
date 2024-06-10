@@ -1,18 +1,22 @@
 <div class="modal fade" id="profileModal" tabindex="2" aria-labelledby="#profileModal" aria-hidden="true">
-    <div class="modal-dialog w-75">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="tabs mx-0 d-flex flex-row justify-content-around px-0" style="width: 100% !important;">
                     <button class="tab-button px-0 mx-0 me-3 modal-tab tab-button-active"
-                        style="padding-left: 0px; padding-right: 0px; min-width: 200px;"
-                        onclick="showTab(event, 'BackgroundPhoto', 'modal-tab')">Custom Background</button>
+                        style="padding-left: 0px; padding-right: 0px; min-width: 200px;max-width: 200px;"
+                        onclick="showTab(event, 'BackgroundPhoto', 'modal-tab')">Background Photo</button>
                     <button class="tab-button  mx-0 px-0 modal-tab"
                         onclick="showTab(event, 'BackgroundColor', 'modal-tab')"
-                        style="padding-left: 0px; padding-right: 0px; min-width: 200px;">Choose Your Color</button>
+                        style="padding-left: 0px; padding-right: 0px; min-width: 200px;max-width: 200px;">Background Color</button>
+                     <button class="tab-button  mx-0 px-0 modal-tab"
+                        onclick="showTab(event, 'ForeColor', 'modal-tab')"
+                        style="padding-left: 0px; padding-right: 0px; min-width: 200px;max-width: 200px;">Foreground Color</button>
                 </div>
                 <div class="tab-content pb-4 modal-tab" id="BackgroundPhoto">
                     <br>
-                        <div class="custom-file-container" data-upload-id="file-upload-preview-1"></div>
+                        <h5> Choose a background banner</h5>
+                        <div class="custom-file-container w-75" data-upload-id="file-upload-preview-1"></div>
                     <br>
 
                     <div class="d-flex justify-content-center">
@@ -82,7 +86,7 @@
                             <div id="div-color-picker"> </div>
                         </div>
                         <br><br>
-                        <h5> Choose a gradient color</h5>
+                        <h5> Choose a gradient color for background</h5>
                         @php
                             $colors = [
                                 ['#000000', '#545454', '#737373'], // Black to Gray
@@ -137,6 +141,20 @@
                             data-bs-dismiss="modal">Close
                         </button>
                     </div>
+                </div>
+                <div class="tab-content pb-4 modal-tab d-none" id="ForeColor">
+                    <br>
+
+                    <h5> Choose a solid font color</h5>
+                    <button 
+                        data-bs-auto-close="outside"    
+                        style="{{ 'background-color: gray;' . 'width: 60px; height: 30px;' }}"
+                        class="btn btn-link color-pallete" type="button" id="dropdownFontColorBgButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownFontColorBgButton">
+                        <div id="div-font-color-picker-with-bg"> </div>
+                    </div>
+                    <br>
                 </div>
 
             </div>
