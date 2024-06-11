@@ -152,10 +152,10 @@
                             <br>
                             <span class="d-inline-flex justify-content-between align-items-center">
                                 <input
-                                    placeholder = "Your bio..."
+                                    placeholder = "Your name"
                                     style="width: 200px;"
                                     class="form-control border-secondary player-profile__input d-inline me-3" 
-                                    x-model="participant.bio" 
+                                    x-model="user.name" 
                                 > 
                                 <input 
                                     placeholder="Birthday"
@@ -163,10 +163,35 @@
                                     style="width: 150px;"
                                     default="1999-05-05"
                                     id="birthdate"
-                                    class="form-control border-secondary player-profile__input d-inline" 
+                                    class="form-control border-secondary player-profile__input d-inline me-2" 
                                     x-model="participant.birthday" 
                                 >
+                                <template x-if="!participant.isAgeVisible">
+                                    {{-- Eye invisible icon --}}
+                                    <svg 
+                                        x-on:click="participant.isAgeVisible = true"
+                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-slash-fill cursor-pointer" viewBox="0 0 16 16">
+                                    <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
+                                    <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
+                                    </svg>
+                                </template>
+                                <template x-if="participant.isAgeVisible">
+                                    {{-- Eye visible --}}
+                                    <svg  
+                                        x-on:click="participant.isAgeVisible = false" 
+                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill cursor-pointer" viewBox="0 0 16 16">
+                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                    <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                                    </svg>
+                                </template>
                             </span> 
+                            <br>
+                                 <input
+                                    placeholder = "Write a description"
+                                    style="width: 370px;"
+                                    class="form-control border-secondary player-profile__input d-inline me-3" 
+                                    x-model="participant.bio" 
+                                > 
                             <br> <br>
                             <div class="w-100 d-flex justify-content-start align-items-center flex-wrap">
                                 <span class="me-3">
@@ -230,22 +255,44 @@
                         </template>
                         <template x-if="!participant.nickname">
                              <div class="d-flex justify-content-start align-items-center flex-wrap">
-                                <h4 class="my-0 me-4"> {{$userProfile->name}} </h4>
+                                <h4 class="my-0 me-4" x-text="user.name"> </h4>
                             </div>
                         </template>
                         <div>
                             <template x-if="participant.nickname">
-                                <span> {{$userProfile->name}},</span>
+                                <span x-text="user.name"> </span>
                             </template> 
+                            <template x-if="participant.birthday && participant.nickname && participant.isAgeVisible && participant.age">
+                                <span style="margin-left: -5px;">,</span>
+                            </template>
                           
                             <template x-if="participant.birthday">
                                 <span>
-                                    <span class="me-4" x-text="participant.age"></span>
+                                    <template x-if="participant.isAgeVisible">
+                                        <span x-text="participant.age"></span>
+                                    </template>
                                     {{-- Calendar --}}
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                                    <svg class="ms-4" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
                                     <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
                                     </svg>
-                                    <span x-text="participant.birthday"></span>
+                                    <span x-text="participant.birthday" class="me-2"></span>
+                                      @if ($isOwnProfile)                         
+                                        <template x-if="!participant.isAgeVisible">
+                                            {{-- Eye invisible icon --}}
+                                            <svg 
+                                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-slash-fill cursor-pointer" viewBox="0 0 16 16">
+                                            <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
+                                            <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
+                                            </svg>
+                                        </template>
+                                        <template x-if="participant.isAgeVisible">
+                                            {{-- Eye visible icon --}}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill cursor-pointer" viewBox="0 0 16 16">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                                            </svg>
+                                        </template>
+                                    @endif
                                 </span>
                             </template>
                         </div>
@@ -267,14 +314,14 @@
                                     <span class="me-1" x-html="participant.region_name"></span>
                                 </span>
                             </template>
-                              <template x-if="!participant.region">
+                              {{-- <template x-if="!participant.region">
                                 <span class="me-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill me-2" viewBox="0 0 16 16">
                                     <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
                                     <span class="me-1" x-text="'Add a country'"></span>
                                 </span>
-                            </template>
+                            </template> --}}
                             <template x-if="participant.domain">
                                 <span class="me-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg me-2" viewBox="0 0 16 16">
@@ -284,7 +331,7 @@
                                     <span class="me-1" x-text="participant.domain"></span>
                                 </span>
                             </template>
-                            <template x-if="!participant.domain">
+                            {{-- <template x-if="!participant.domain">
                                 <span class="me-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg me-2" viewBox="0 0 16 16">
                                     <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
@@ -292,7 +339,7 @@
                                     </svg>
                                     <span class="me-1" x-text="'Add a domain'"></span>
                                 </span>
-                            </template>
+                            </template> --}}
                             <span class="me-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person me-2" viewBox="0 0 16 16">
                                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>

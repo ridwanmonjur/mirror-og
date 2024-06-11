@@ -149,15 +149,18 @@ class ParticipantController extends Controller
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
             $followCounts = OrganizerFollow::getFollowCounts($userIds);
             if ($logged_user_id) {
-                $isFollowing = OrganizerFollow::getIsFollowing($logged_user_id, $userIds);
+                $isFollowingOrganizerList = OrganizerFollow::getIsFollowing($logged_user_id, $userIds);
                 $friend = Friend::checkFriendship($logged_user_id, $userProfile->id);
+                $isFollowingParticipant = ParticipantFollow::checkFollow($logged_user_id, $userIds);
+
             } else {
-                $isFollowing = [];
+                $isFollowingOrganizerList = [];
                 $friend = null;
+                $isFollowingParticipant = null;
             }
             $joinEventsHistory = $joinEventsActive = $values = [];
             ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
-                = JoinEvent::processEvents($joinEvents, $isFollowing);
+                = JoinEvent::processEvents($joinEvents, $isFollowingOrganizerList);
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
 
@@ -175,8 +178,11 @@ class ParticipantController extends Controller
 
     public function editProfile(UpdateParticipantsRequest $request)
     {
-        $participant = Participant::findOrFail($request->validated()['id']);
-        $participant->update($request->validated());
+        $validatedData = $request->validated();
+        $participant = Participant::findOrFail($validatedData['participant']['id']);
+        $participant->update($validatedData['participant']);
+        $user = User::findOrFail($validatedData['user']['id']);
+        $user->update($validatedData['user']);
         $region = Country::select('emoji_flag', 'name', 'id')
             ->findOrFail($participant->region);
 
@@ -341,8 +347,8 @@ class ParticipantController extends Controller
             ], 201);
         } else {
             ParticipantFollow::create([
-                'participant1_user_id' => $userId,
-                'participant2_user_id' => $participantId,
+                'participant1_user' => $userId,
+                'participant2_user' => $participantId,
             ]);
 
             // dispatch(new HandleFollows('Unfollow', [
