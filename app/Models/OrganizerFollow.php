@@ -30,7 +30,7 @@ class OrganizerFollow extends Model
     public static function getFollowCounts($userIds)
     {
         return DB::table('users')
-            ->leftJoin('follows', function ($q) {
+            ->leftJoin('organizer_follows', function ($q) {
                 $q->on('users.id', '=', 'follows.organizer_user_id');
             })
             ->whereIn('users.id', $userIds)
@@ -42,7 +42,7 @@ class OrganizerFollow extends Model
 
     public static function getIsFollowing($userId, $userIds)
     {
-        return DB::table('follows')
+        return DB::table('organizer_follows')
             ->where('participant_user_id', $userId)
             ->whereIn('organizer_user_id', $userIds)
             ->pluck('organizer_user_id', 'organizer_user_id')

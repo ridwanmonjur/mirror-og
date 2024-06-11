@@ -9,7 +9,7 @@ return new class extends Migration
     {
         // Rename follows table to organizer_follows if organizer_follows doesn't exist
         if (!Schema::hasTable('organizer_follows')) {
-            Schema::rename('follows', 'organizer_follows');
+            Schema::rename('organizer_follows', 'organizer_follows');
         }
 
         // Create participant_follows table if it doesn't exist
@@ -91,7 +91,7 @@ return new class extends Migration
     {
         // Rename organizer_follows table back to follows
         if (Schema::hasTable('organizer_follows')) {
-            Schema::rename('organizer_follows', 'follows');
+            Schema::rename('organizer_follows', 'organizer_follows');
         }
 
         // Add columns back to organizers table
