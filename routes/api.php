@@ -30,6 +30,7 @@ Route::middleware('auth')->get('/user', function (Request $request) {
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
         Route::post('/profile/{id}/banner', [AuthController::class, 'replaceBanner'])->name('participant.userBanner.action');
+        // ATTACK HERE
         Route::post('/profile/{id}/background', [AuthController::class, 'replaceBackground'])->name('participant.userBackground.action');
     });
 });
