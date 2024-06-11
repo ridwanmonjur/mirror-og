@@ -34,10 +34,10 @@ class ParticipantFollow extends Model
     {
         return DB::table('users')
             ->leftJoin('organizer_follows', function ($q) {
-                $q->on('users.id', '=', 'follows.organizer_user_id');
+                $q->on('users.id', '=', 'organizer_follows.organizer_user_id');
             })
             ->whereIn('users.id', $userIds)
-            ->selectRaw('users.id as organizer_user_id, COALESCE(COUNT(follows.organizer_user_id), 0) as count')
+            ->selectRaw('users.id as organizer_user_id, COALESCE(COUNT(organizer_follows.organizer_user_id), 0) as count')
             ->groupBy('users.id')
             ->pluck('count', 'organizer_user_id')
             ->toArray();
