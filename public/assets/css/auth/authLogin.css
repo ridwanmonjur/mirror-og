@@ -25,6 +25,10 @@ button {
     cursor: pointer;
 }
 
+.section-bottom a, .section-bottoms a{
+    color: #43A4D7 !important;
+}
+
 .wrapper {
     width: auto;
     padding-left: 0px;
@@ -99,13 +103,15 @@ input:-webkit-autofill:placeholder {
     font-size: 15px;
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:not(:focus),
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
+input:-webkit-autofill
+{
     transition: background-color 5000s ease-in-out 0s;
     box-shadow: inset 0 0 20px 20px #fffefe29;
+    font-size: 15px;
+}
+
+input:focus, input:-webkit-autofill:hover   {
+    transition: background-color 5000s ease-in-out 0s;
     font-size: 15px;
 }
 
@@ -290,7 +296,7 @@ span.placeholder-moves-up {
     box-shadow: 0 0 0 1px #43A4D7;
 }
 
-.field input:not(:-webkit-autofill):invalid {
+.field input:not(:-webkit-autofill):not(:focus)invalid {
     border: none !important;
     outline: none !important;
     box-shadow: 0 0 0 1px rgb(186, 183, 183);
@@ -305,14 +311,6 @@ span.placeholder-moves-up {
     animation: slide 0.5s ease forwards;
     animation-iteration-count: 1;
     -prefix-animation: slide 0.5s ease forwards;     
-}
-
-.placeholder__error {
-    opacity: 1 !important;
-    transform: scale(1) translateY(-60%) translateX(0px);
-    padding: 0px 0px;
-    z-index: 99 !important;
-    /* color: #dc3545; */
 }
 
 .input__error {
@@ -335,7 +333,7 @@ span.placeholder-moves-up {
 
 input:focus+span.placeholder-moves-up,
 input:not(:focus):valid+span.placeholder-moves-up {
-    transform: scale(1) translateY(-60%) translateX(0px);
+    transform: scale(1) translateY(-50%) translateX(0px);
     padding: 0px 0px;
     z-index: 99 !important;
     background-color: white;
@@ -355,7 +353,7 @@ input:-webkit-autofill +span.placeholder-moves-up {
 }
 
 input:not(:-webkit-autofill):invalid + span.placeholder-moves-up {
-    transform: scale(1) translateY(-60%) translateX(0px);
+    transform: scale(1) translateY(-50%) translateX(0px);
     opacity: 1;
     padding: 0;
     background-color: white;

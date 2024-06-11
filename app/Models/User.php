@@ -79,7 +79,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function following()
     {
-        return $this->belongsToMany(User::class, 'follows', 'user_id', 'organizer_id');
+        return $this->belongsToMany(User::class, 'organizer_follows', 'user_id', 'organizer_id');
     }
 
     public function follows()

@@ -153,10 +153,15 @@
                     emoji_flag: '𓆝'
                 }
             ], 
+            user: {
+                id: {{ $userProfile->id }},
+                name: '{{ $userProfile->name }}'
+            }, 
             participant: {
                 id: {{ $userProfile->participant->id }},
                 nickname : '{{$userProfile->participant->nickname}}',
                 bio: '{{$userProfile->participant->bio}}',
+                isAgeVisible: '{{$userProfile->participant->isAgeVisible}}',
                 age: '{{$userProfile->participant->age}}',
                 birthday,
                 domain: '{{$userProfile->participant->domain}}',
@@ -259,8 +264,8 @@
                         method: 'POST',
                         headers: window.loadBearerCompleteHeader(),
                         body: JSON.stringify({
-                            ...Alpine.raw(this.participant),
-                            games_data: JSON.stringify(this.games_data),
+                            participant: Alpine.raw(this.participant),
+                            user: Alpine.raw(this.user)
                         }),
                     });             
                     const data = await response.json();

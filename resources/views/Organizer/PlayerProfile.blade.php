@@ -24,6 +24,7 @@
     @endphp
 @endauth
 <body>
+    @include('Organizer.Profile.BackgroundModal')
     @include('CommonPartials.NavbarGoToSearchPage')
     <main 
         x-data="alpineDataComponent"
@@ -111,6 +112,14 @@
                                     x-on:click="isEditMode = true; fetchCountries();"
                                     class="oceans-gaming-default-button oceans-gaming-primary-button py-1 px-5"> 
                                     Edit
+                                </button>
+                                <button 
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#profileModal"
+                                    {{-- onclick="document.getElementById('backgroundInput').click();" --}}
+                                    class="btn btn-secondary text-light rounded-pill py-2 me-3 fs-7"
+                                > 
+                                    Change Background
                                 </button>
                             </div>
                         @else
@@ -368,7 +377,7 @@
                             <span class="me-5" x-text="organizer.industry"></span>
                         </template>
                         <template x-if="organizer.type">
-                            <span>ℹ  <span x-text="organizer.type"></span></span>\
+                            <span>ℹ  <span x-text="organizer.type"></span></span>
                         </template>
                     </p>
                     <template x-if="address.addressLine1 || address.addressLine2 || address.city || address.country">
@@ -505,9 +514,9 @@
         <br> <br>
         {{-- </form> --}}
     </main>
+    @include('Organizer.Profile.Scripts')
 
 </body>
-
 @livewireScripts
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/js/intlTelInput.min.js"></script>
 <script>

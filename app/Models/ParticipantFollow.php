@@ -13,24 +13,27 @@ class ParticipantFollow extends Model
     protected $table = "participant_follows";
 
     protected $fillable = [
-        'participant1_user_id',
-        'participant2_user_id',
+        'participant1_user',
+        'participant2_user',
     ];
 
-    public function user()
+    public static function checkFollow($userProfileId, $logged_user_id)
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function organizer()
-    {
-        return $this->belongsTo(Organizer::class);
+        return self::where(function ($query) use ($userProfileId, $logged_user_id) {
+            $query->where('participant1_user', $userProfileId)
+                ->where('participant2_user', $logged_user_id);
+        })
+            ->orWhere(function ($query) use ($userProfileId, $logged_user_id) {
+                $query->where('participant2_user', $userProfileId)
+                    ->where('participant1_user', $logged_user_id);
+            })
+            ->first();
     }
 
     public static function getFollowCounts($userIds)
     {
         return DB::table('users')
-            ->leftJoin('follows', function ($q) {
+            ->leftJoin('organizer_follows', function ($q) {
                 $q->on('users.id', '=', 'follows.organizer_user_id');
             })
             ->whereIn('users.id', $userIds)
@@ -42,7 +45,7 @@ class ParticipantFollow extends Model
 
     public static function getIsFollowing($userId, $userIds)
     {
-        return DB::table('follows')
+        return DB::table('organizer_follows')
             ->where('participant_user_id', $userId)
             ->whereIn('organizer_user_id', $userIds)
             ->pluck('organizer_user_id', 'organizer_user_id')

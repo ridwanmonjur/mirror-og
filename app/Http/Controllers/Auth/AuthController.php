@@ -581,22 +581,29 @@ class AuthController extends Controller
 
     public function replaceBackground(Request $request)
     {
+        // ATTACK HERE
         try {
             $request->validate([
-                'file' => 'required|array',
-                'file.filename' => 'required|string',
-                'file.type' => 'required|string',
-                'file.size' => 'required|numeric',
-                'file.content' => 'required|string',
+                'backgroundBanner' => 'nullable|array',
+                'backgroundBanner.filename' => 'nullable|string',
+                'backgroundBanner.type' => 'nullable|string',
+                'backgroundBanner.size' => 'nullable|numeric',
+                'backgroundBanner.content' => 'nullable|string',
+                'teamId' => 'nulable|exists:team,id',
+                'backgroundGradient' => 'nullable|string',
+                'backgroundColor' => 'nullable|string',
+                'fontColor' => 'nullable|string',
+                'frameColor' => 'nullable|string',
             ]);
-
-            $user = $request->attributes->get('user');
-            $participant = Participant::where('user_id', $user->id)
-                ->select(['id', 'user_id', 'backgroundBanner'])->first();
-            $oldBanner = $participant->backgroundBanner;
-            $fileName = $user->uploadBackgroundBanner($request, $participant);
-            $user->destroyUserBanner($oldBanner);
-
+            if ($request->teamId) {
+            } else {
+                $user = $request->attributes->get('user');
+                $participant = Participant::where('user_id', $user->id)
+                    ->select(['id', 'user_id', 'backgroundBanner'])->first();
+                $oldBanner = $participant->backgroundBanner;
+                $fileName = $user->uploadBackgroundBanner($request, $participant);
+                $user->destroyUserBanner($oldBanner);
+            }
             return response()->json(['success' => true, 'message' => 'Succeeded', 'data' => compact('fileName')], 201);
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
