@@ -300,11 +300,11 @@
                         <template x-if="participant.bio">
                             <p x-text="participant.bio"> </p>
                         </template>
-                        <template x-if="!participant.bio">
+                        {{-- <template x-if="!participant.bio">
                             <p> This is the player's bio. There will be a minimum of 150 characters. 
                                 This field will accept emojis.  
                             </p>
-                        </template>
+                        </template> --}}
                         <div class="d-flex justify-content-start flex-wrap w-100">
                             <template x-if="participant.region_name">
                                 <span class="me-2">
