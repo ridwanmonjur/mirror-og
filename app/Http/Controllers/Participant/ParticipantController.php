@@ -294,7 +294,8 @@ class ParticipantController extends Controller
                 if (! $isPermitted) {
                     if ($status == 'accepted' || $status == 'rejected') {
                         $isPermitted = ($friend->status == 'pending' && $user->id != $friend->actor_id) ||
-                        ($friend->status == 'left' && $user->id == $friend->actor_id);
+                        ($friend->status == 'left' && $user->id == $friend->actor_id) ||
+                        ($friend->status == 'rejected' && $user->id == $friend->actor_id);
                     }
                 }
 

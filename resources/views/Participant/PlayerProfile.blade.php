@@ -102,7 +102,7 @@
                     </svg>
                 </div>
             @else
-                <div class="d-flex justify-content-end py-0 my-0 mb-2" style="font-size: 12px;">
+                <div class="d-flex justify-content-end align-items-center flex-wrap py-0 my-0 mb-2" style="font-size: 12px;">
                     @include('Participant.Profile.FriendManagement')
                 </div>
              @endif
