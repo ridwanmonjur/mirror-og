@@ -151,8 +151,7 @@ class ParticipantController extends Controller
             if ($logged_user_id) {
                 $isFollowingOrganizerList = OrganizerFollow::getIsFollowing($logged_user_id, $userIds);
                 $friend = Friend::checkFriendship($logged_user_id, $userProfile->id);
-                $isFollowingParticipant = ParticipantFollow::checkFollow($logged_user_id, $userIds);
-
+                $isFollowingParticipant = ParticipantFollow::checkFollow($logged_user_id, $userProfile->id);
             } else {
                 $isFollowingOrganizerList = [];
                 $friend = null;
@@ -167,7 +166,8 @@ class ParticipantController extends Controller
             return view('Participant.PlayerProfile',
                 compact('joinEvents', 'userProfile', 'teamList', 'isOwnProfile',
                     'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
-                    'wins', 'streak', 'awardList', 'achievementList', 'pastTeam', 'friend'
+                    'wins', 'streak', 'awardList', 'achievementList', 'pastTeam', 'friend',
+                    'isFollowingParticipant'
                 )
             );
         } catch (Exception $e) {
@@ -183,8 +183,12 @@ class ParticipantController extends Controller
         $participant->update($validatedData['participant']);
         $user = User::findOrFail($validatedData['user']['id']);
         $user->update($validatedData['user']);
-        $region = Country::select('emoji_flag', 'name', 'id')
-            ->findOrFail($participant->region);
+        if (isset($participant->region)) {
+            $region = Country::select('emoji_flag', 'name', 'id')
+                ->findOrFail($participant->region);
+        } else {
+            $region = null;
+        }
 
         return response()->json([
             'message' => 'Participant updated successfully',
@@ -315,7 +319,6 @@ class ParticipantController extends Controller
 
                 return back();
             } catch (Exception $e) {
-
                 return $this->showErrorParticipant($e->getMessage());
             }
         }
@@ -328,7 +331,6 @@ class ParticipantController extends Controller
         $userId = $user->id;
         $participantId = $request->participant_id;
         $existingFollow = ParticipantFollow::checkFollow($user->id, $participantId);
-        $organizer = User::findOrFail($participantId);
 
         if ($existingFollow) {
             // dispatch(new HandleFollows('Unfollow', [
@@ -341,16 +343,14 @@ class ParticipantController extends Controller
 
             $existingFollow->delete();
 
-            return response()->json([
-                'message' => 'Successfully Unfollowed the organizer',
-                'isFollowing' => false,
-            ], 201);
+            $message = 'Successfully unfollowed the participant';
         } else {
             ParticipantFollow::create([
-                'participant1_user' => $userId,
-                'participant2_user' => $participantId,
+                'participant_follower' => $userId,
+                'participant_followee' => $participantId,
             ]);
-
+            
+            $message = 'Successfully followed the participant';
             // dispatch(new HandleFollows('Unfollow', [
             //     'subject_type' => User::class,
             //     'object_type' => User::class,
@@ -362,11 +362,9 @@ class ParticipantController extends Controller
             //     . ' <span class="notification-black">' . $organizer->name . '.</span> '
             //     . '</span>'
             // ]));
-
-            return response()->json([
-                'message' => 'Successfully followed the organizer',
-                'isFollowing' => true,
-            ], 201);
         }
+        
+        session()->flash('successMessage', $message);
+        return back();
     }
 }

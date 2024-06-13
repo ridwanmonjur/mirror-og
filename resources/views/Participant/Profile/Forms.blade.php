@@ -29,4 +29,9 @@
         @csrf
         <input type="hidden" name="deleteUserId" value="{{ $userProfile->id }}">
     </form>
+    </form>
+        <form id="sendFollowRequest" class="d-inline" method="POST" action="{{route('participant.participant.follow')}}"> 
+        @csrf
+        <input type="hidden" name="participant_id" value="{{ $userProfile->id }}">
+    </form>
 @endauth

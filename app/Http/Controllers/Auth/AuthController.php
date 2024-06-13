@@ -402,7 +402,6 @@ class AuthController extends Controller
         $userRole = '';
         $userRoleCapital = '';
         $validatedData = [];
-
         if ($request->is('organizer/*')) {
             $userRole = 'organizer';
             $userRoleCapital = 'ORGANIZER';
@@ -431,6 +430,7 @@ class AuthController extends Controller
 
         $redirectErrorRoute = $userRole.'.signup.view';
         $redirectSuccessRoute = $userRole.'.signin.view';
+        DB::beginTransaction();
 
         try {
             $user = new User([
@@ -467,6 +467,8 @@ class AuthController extends Controller
                 $message->subject('Email verification');
             });
 
+            DB::commit();
+
             return redirect()
                 ->route($redirectSuccessRoute)
                 ->with(
@@ -476,6 +478,7 @@ class AuthController extends Controller
                     ]
                 );
         } catch (QueryException $e) {
+            DB::rollBack();
             Log::error($e->getMessage());
 
             if ($e->getCode() == '23000' || $e->getCode() == 1062) {
@@ -489,6 +492,8 @@ class AuthController extends Controller
             }
 
         } catch (\Throwable $th) {
+            DB::rollBack();
+
             return redirect()
                 ->route($redirectErrorRoute)
                 ->with('error', $th->getMessage());

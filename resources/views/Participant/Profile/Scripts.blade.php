@@ -27,11 +27,16 @@
     let errorInput = document.getElementById('errorMessage');
 
     function formRequestSubmitById(message, id) {
-        window.dialogOpen(message, ()=> {
-            console.log({message, id})
-            const form = document.getElementById(id);
+        const form = document.getElementById(id);
+
+        if (message) {
+            window.dialogOpen(message, ()=> {
+                console.log({message, id})
+                form?.submit();
+            });
+        } else {
             form?.submit();
-        });
+        }
     }
 
     const currentDate = new Date();
