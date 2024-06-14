@@ -337,7 +337,7 @@ span.placeholder-moves-up {
 
 input:focus+span.placeholder-moves-up,
 input:not(:focus):valid+span.placeholder-moves-up {
-    transform: scale(1) translateY(-50%) translateX(0px);
+    transform:  translateY(-50%) translateX(0px);
     padding: 0px 0px;
     z-index: 99 !important;
     background-color: white;
@@ -349,7 +349,7 @@ input:-webkit-autofill {
 }
 
 input:-webkit-autofill +span.placeholder-moves-up {
-    transform: scale(1) translateY(-50%) translateX(0px);
+    transform:  translateY(-50%) translateX(0px);
     z-index: 99 !important;
     opacity: 1;
     padding: 0;
@@ -357,7 +357,7 @@ input:-webkit-autofill +span.placeholder-moves-up {
 }
 
 input:not(:-webkit-autofill):invalid + span.placeholder-moves-up {
-    transform: scale(1) translateY(-50%) translateX(0px);
+    transform:  translateY(-50%) translateX(0px);
     opacity: 1;
     padding: 0;
     background-color: white;

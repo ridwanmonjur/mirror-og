@@ -150,12 +150,13 @@
         let regionData = JSON.parse(regionDataInput.value.trim()); 
         Alpine.data('alpineDataComponent', () => {
         return  {
-            isEditMode: false, 
+            select2: null,
+            isEditMode: true, 
             countries: 
             [
                 {
                     name: { en: 'No country' },
-                    emoji_flag: '𓆝'
+                    emoji_flag: ''
                 }
             ], 
             user: {
@@ -172,93 +173,74 @@
                 domain: '{{$userProfile->participant->domain}}',
                 region: '{{$userProfile->participant->region}}',
                 region_name: regionData?.name.en,
-                region_flag: regionData?.emoji_flag
+                region_flag: regionData?.emoji_flag,
             },
             errorMessage: errorInput?.value, 
             isCountriesFetched: false ,
-            async fetchCountries () {
-                if (this.isCountriesFetched) return;
-                return fetch('/countries')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data?.data) {
-                            this.isCountriesFetched = true;
-                            this.countries = data?.data;
-                        } else {
-                            this.errorMessage = "Failed to get data!"
-                            this.countries = [{
-                                name: {
-                                    en: 'No country'
-                                },
-                                emoji_flag: ''
-                            }];
-                        }
-                    })
-                    .catch(error => console.error('Error fetching countries:', error));
-            },
+            
             changeFlagEmoji() {
                 let countryX = this.countries.find(elem => elem.id == this.participant.region);
                 this.participant.region_name = countryX.name.en;
                 this.participant.region_flag = countryX.emoji_flag;
             },
-            async fetchGames () {
+            async fetchCountries () {
                 if (this.isCountriesFetched) return;
-                return fetch('/games')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data?.data) {
+                try {
+                    const storedData = localStorage.getItem('countriesData');
+                    let data = null; 
+                    if (storedData) {
+                        data = JSON.parse(storedData);
+                        if (data[0] && data[1] && data[99] && data[100]) {
                             this.isCountriesFetched = true;
-                            this.games = data?.data;
-                            this.select2 = $(this.$refs.select).select2({
-                                // minimumResultsForSearch: Infinity,
-                                data: data.data,
-                                templateResult: function (_game) {
-                                    return $("<span><img class='object-fit-cover' width='25' height='25' src='/storage/" + _game.image +"'/> " + _game.name + "</span>");
-                                },
-                                templateSelection: function (_game) {
-                                    return $("<span><img class='object-fit-cover' width='25' height='25' src='/storage/" + _game.image +"'/> " + _game.name + "</span>");
-                                },
-                                theme: "bootstrap-5",
-                            }); 
-
-                            this.select2[0].classList.add('mb-2');
-                            
-                            this.select2.on('select2:select', (event) => {
-                                this.selectedGame = event.target.value;
-                                const gameIndex = this.games.findIndex(game => game.id == this.selectedGame);
-                                console.log({gameIndex, games: this.games, games_data: this.games_data})
-                                const existingIndex = this.games_data.findIndex(game => game.id == this.selectedGame);
-
-                                if (gameIndex !== -1) {
-                                    if (existingIndex !== -1) {
-                                        Toast.fire({
-                                            'icon': 'error',
-                                            'text': 'Game already exists!'
-                                        })
-                                        return;
-                                    }
-                                    this.games_data = [...this.games_data, this.games[gameIndex]];
-                                } else {
-                                    Toast.fire({
-                                        'icon': 'error',
-                                        'text': "Game doesn't exist!"
-                                    })
-                                }
-
-                                this.isAddGamesMode = false;
-                                this.select2[0].classList.add('d-none');
-                            });
-                             this.$watch("isAddGamesMode", (value) => {
-                                console.log({value})
-                            });
-                            this.$watch("selectedGame", (value) => {
-                                this.select2.val(value).trigger("change");
-                            });
+                            this.countries = data;
                         } else {
-                            this.errorMessage = "Failed to get data!"
+                            data = null;
                         }
-                    })
-                    .catch(error => console.error('Error fetching countries:', error));
+                    }
+
+                    if (!data) {
+                        const response = await fetch('/countries');
+                        data = await response.json();
+                        if (data?.data) {
+                            if (!(data?.data[0] && data?.data[99])) {
+                                throw Error("Didn't fetch all!");
+                            } 
+
+                            localStorage.setItem('countriesData', JSON.stringify(data?.data));
+                            this.isCountriesFetched = true;
+                            this.countries = data.data;
+                        }
+                    }
+
+                    console.log(Alpine.raw(this.countries))
+                    console.log(Alpine.raw(this.countries))
+                    console.log(Alpine.raw(this.countries))
+
+                    const choices2 = new Choices(document.getElementById('select2-country'), {
+                        itemSelectText: "",
+                        allowHTML: "",
+                        choices: Alpine.raw(this.countries).map((value) => {
+                            console.log({value})
+                            return {
+                                label: `${value.emoji_flag} ${value.name.en}`,
+                                value: value.id,
+                                disabled: false,
+                                selected: value.id === this.participant.region,
+                            }
+                        }),
+                    });
+
+                    const choicesContainer = document.querySelector('.choices');
+                    choicesContainer.style.width = "150px";
+                    choicesContainer.classList.add("mt-2");
+
+                    choices2.passedElement.element.addEventListener('change', (_value) => {
+                        this.participant.region = _value;
+                    });
+                }
+                catch (error) {
+                    console.error('Error fetching countries:', error);
+                }
             },
             async submitEditProfile (event) {
                 try {
@@ -298,6 +280,7 @@
                 }
             },
             init() {
+                this.fetchCountries()
                 this.$watch('participant.birthday', value => {
                     const today = new Date();
                     const birthDate = new Date(value);

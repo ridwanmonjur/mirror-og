@@ -29,7 +29,7 @@ class UpdateParticipantsRequest extends FormRequest
             'participant.age' => 'nullable|numeric',
             'participant.birthday' => 'nullable|date|before_or_equal:'.now()->format('Y-m-d'),
             'participant.nickname' => 'nullable|string|max:255',
-            'participant.region' => 'nullable|string',
+            'participant.region' => 'nullable|array',
             'participant.region_name' => 'nullable|string',
             'participant.region_flag' => 'nullable|string',
             'participant.isAgeVisible' => 'nullable|boolean',

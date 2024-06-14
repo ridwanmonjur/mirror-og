@@ -16,7 +16,7 @@
         'resources/js/colorpicker.js',
         'resources/sass/colorpicker.scss',
     ])
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
 
 </head>
 @php
@@ -78,7 +78,7 @@
                     <button 
                         x-cloak
                         x-show="!isEditMode"
-                        x-on:click="isEditMode = true; fetchCountries(); fetchGames();"
+                        x-on:click="isEditMode = true; fetchCountries(); "
                         class="oceans-gaming-default-button oceans-gaming-primary-button px-3 py-2 fs-7"> 
                         Edit Profile
                     </button>
@@ -194,29 +194,15 @@
                                 > 
                             <br> <br>
                             <div class="w-100 d-flex justify-content-start align-items-center flex-wrap">
-                                <span class="me-3">
+                                <span class="me-3 d-flex justify-content-center align-items-center">
                                     <svg
                                         class="me-2 align-middle" 
                                         xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
                                     <template x-if="countries">
-                                        <select
-                                            id="region_select_input"
-                                            x-model="participant.region" 
-                                            x-on:change="changeFlagEmoji"
-                                            style="width: 150px;"    
-                                            class="form-control d-inline rounded-pill"
-                                        >
-                                            <template x-for="country in countries">
-                                                <option 
-                                                    :value="country.id" 
-                                                    :selected="country.id==participant.region">
-                                                <span x-text="country.emoji_flag" class="mx-3"> </span>  
-                                                <span x-text="country.name.en"> </span>
-                                                </option>
-                                            </template>
-                                        </select> 
+                                        <select id="select2-country"  style="width: 150px;"  data-placeholder="Select a country" x-model="participant.region"> 
+                                        </select>
                                     </template>
                                 </span>
                                 <span class="me-3">
@@ -571,11 +557,7 @@
 
 
 </body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
 @livewireScripts
 @include('Participant.Profile.Scripts')
 </html>
