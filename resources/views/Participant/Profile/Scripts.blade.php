@@ -177,68 +177,62 @@
             },
             errorMessage: errorInput?.value, 
             isCountriesFetched: false ,
-            
             changeFlagEmoji() {
-                let countryX = this.countries.find(elem => elem.id == this.participant.region);
+                let region = this.participant.region.value ?? this.participant.region;
+                let countryX = this.countries.find(elem => elem.id == region);
                 this.participant.region_name = countryX.name.en;
                 this.participant.region_flag = countryX.emoji_flag;
             },
             async fetchCountries () {
-                if (this.isCountriesFetched) return;
-                try {
-                    const storedData = localStorage.getItem('countriesData');
-                    let data = null; 
-                    if (storedData) {
-                        data = JSON.parse(storedData);
-                        if (data[0] && data[1] && data[99] && data[100]) {
-                            this.isCountriesFetched = true;
-                            this.countries = data;
-                        } else {
-                            data = null;
-                        }
-                    }
+                async function storeDataInLocalStorage() {
+                    try {
+                        let isValid = false;
+                        let data = JSON.parse(localStorage.getItem('countriesData'));
+                        let innerData = data?.data;
+                        if (innerData) {
+                            isValid = innerData[0] && innerData[1] && innerData[99] && innerData[100];
+                        } 
 
-                    if (!data) {
+                        if (isValid) {
+                            return data;
+                        }
+
                         const response = await fetch('/countries');
                         data = await response.json();
-                        if (data?.data) {
-                            if (!(data?.data[0] && data?.data[99])) {
-                                throw Error("Didn't fetch all!");
-                            } 
-
-                            localStorage.setItem('countriesData', JSON.stringify(data?.data));
-                            this.isCountriesFetched = true;
-                            this.countries = data.data;
-                        }
+                        localStorage.setItem('countriesData', JSON.stringify(data));
+                        return data;
+                    } catch (error) {
+                        console.error('Error storing data in localStorage:', error);
                     }
+                }
 
-                    console.log(Alpine.raw(this.countries))
-                    console.log(Alpine.raw(this.countries))
-                    console.log(Alpine.raw(this.countries))
+                if (this.isCountriesFetched) return;
+                try {
+                    const data = await storeDataInLocalStorage();
 
-                    const choices2 = new Choices(document.getElementById('select2-country'), {
-                        itemSelectText: "",
-                        allowHTML: "",
-                        choices: Alpine.raw(this.countries).map((value) => {
-                            console.log({value})
-                            return {
+                    if (data?.data) {
+                        this.isCountriesFetched = true;
+                        this.countries = data.data;
+
+                        const choices2 = new Choices(document.getElementById('select2-country'), {
+                            itemSelectText: "",
+                            allowHTML: "",
+                            choices: data.data.map((value) => ({
                                 label: `${value.emoji_flag} ${value.name.en}`,
                                 value: value.id,
                                 disabled: false,
                                 selected: value.id === this.participant.region,
-                            }
-                        }),
-                    });
+                            })),
+                        });
 
-                    const choicesContainer = document.querySelector('.choices');
-                    choicesContainer.style.width = "150px";
-                    choicesContainer.classList.add("mt-2");
+                        const choicesContainer = document.querySelector('.choices');
+                        choicesContainer.style.width = "150px";
 
-                    choices2.passedElement.element.addEventListener('change', (_value) => {
-                        this.participant.region = _value;
-                    });
-                }
-                catch (error) {
+                        
+                    } else {
+                        this.errorMessage = "Failed to get data!";
+                    }
+                } catch (error) {
                     console.error('Error fetching countries:', error);
                 }
             },
@@ -272,13 +266,7 @@
                     console.error({error});
                 } 
             },
-            deleteGames (id) {
-                
-                const existingIndex = this.games_data.findIndex(game => game.id == id);
-                if (existingIndex !== -1) {
-                    this.games_data.splice(existingIndex, 1); // Remove 1 element at the found index
-                }
-            },
+         
             init() {
                 this.fetchCountries()
                 this.$watch('participant.birthday', value => {
