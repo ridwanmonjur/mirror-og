@@ -230,7 +230,6 @@
                                 
                             </div>
                             <br>
-                            <br><br>
                             <br>
                         </div>
                     <div x-cloak x-show="!isEditMode" class="ms-2">
@@ -333,7 +332,7 @@
                                 <span>Joined {{Carbon::parse($userProfile->participant->created_at)->isoFormat('Do MMMM YYYY')}}</span>
                             </span>
                         </div>
-                        <br>
+                        <br><br><br><br><br>
 
                     </div>
                 </div>
