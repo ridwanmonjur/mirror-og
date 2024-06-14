@@ -13,6 +13,11 @@
                         Color</button>
                 </div>
                 <div class="tab-content pb-4 modal-tab" id="BackgroundPhoto">
+                    <form id="updateBgColorRequest" class="d-inline" method="POST" action="{{ route('user.userBackground.action', ['id' => $userProfile->id] ) }}"> 
+                        @csrf
+                        <input type="hidden" name="backgroundColor" value="{{ $userProfile->profile->backgroundColor }}">
+                        <input type="hidden" name="backgroundGradient" value="{{ $userProfile->profile->backgroundGradient }}">
+                    </form>
                     <div class="mx-auto"  style="max-width: max(400px, 75%);">
                         <br>
                         <h5> Choose a background banner</h5>
@@ -139,7 +144,7 @@
                         <br>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button type="Save" class="oceans-gaming-default-button me-3">Save
+                        <button onclick="formRequestSubmitById(null, 'updateBgColorRequest')" type="button" class="oceans-gaming-default-button me-3">Save
                         </button>
                         <button type="button" class="oceans-gaming-default-button oceans-gaming-gray-button"
                             data-bs-dismiss="modal">Close
@@ -149,7 +154,12 @@
                 <div class="tab-content pb-4 modal-tab d-none" id="ForeColor">
                     <div class="mx-auto"  style="max-width: max(400px, 75%);">
                         <br>
-                        <h5> Choose a solid font color</h5>
+                        <h5> Choose a solid font color</h5>                    
+                        <form id="updateForegroundColorRequest" class="d-inline" method="POST" action="{{ route('user.userBackground.action', ['id' => $userProfile->id] ) }}"> 
+                            @csrf
+                            <input type="hidden" name="frameColor" value="{{ $userProfile->profile->frameColor }}">
+                            <input type="hidden" name="fontColor" value="{{ $userProfile->profile->fontColor }}">
+                        </form>
                         <button data-bs-auto-close="outside"
                             style="{{ 'background-color: gray;' . 'width: 60px; height: 30px;' }}"
                             class="btn btn-link color-pallete" type="button" id="dropdownFontColorBgButton"
@@ -172,15 +182,17 @@
                             <label for="image-upload" class="upload-label">
                                 <div class="circle-container">
                                     <div id="uploaded-image" class="uploaded-image"
-                                        style="background-image: url({{ '/storage' . '/' . $userProfile->userBanner }} ); background-size: cover; 
-                                    background-repeat: no-repeat; background-position: center;">
+                                         @style(["background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
+                                            background-repeat: no-repeat; background-position: center;",
+                                            $frameStyles
+                                    ])>
                                     </div>
                                 </div>
                             </label>
                         </div>
                         <br> <br>
                         <div class="d-flex justify-content-center">
-                            <button type="Save" class="oceans-gaming-default-button me-3">Save</button>
+                            <button onclick="formRequestSubmitById(null, 'updateForegroundColorRequest')" class="oceans-gaming-default-button me-3">Save</button>
                              <button type="button" class="oceans-gaming-default-button oceans-gaming-gray-button"
                                 data-bs-dismiss="modal">Close
                             </button>

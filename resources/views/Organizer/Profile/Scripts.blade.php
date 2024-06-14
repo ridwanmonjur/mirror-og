@@ -107,7 +107,8 @@
             const file = detail.files[0];
             try {
             const fileContent = await readFileAsBase64(file);
-            const url = "{{ route('participant.userBackground.action', ['id' => $userProfile->id] ) }}";
+
+            await changeBackgroundDesignRequest();
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -189,6 +190,33 @@
                 console.error('There was a problem with the file upload:', error);
         }
     });
+
+    async function changeBackgroundDesignRequest(body, successCallback, errorCallback) {
+        try {
+            const url = "{{ route('user.userBackgroundApi.action', ['id' => $userProfile->id] ) }}";
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-type': 'application/json',
+                    'Accept': 'application/json',
+                    ...window.loadBearerHeader()
+                },
+                body: JSON.stringify(body),
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                successCallback(data);
+            } else {
+                errorCallback(data.message);
+            }
+        } catch (error) {
+            errorCallback('There was a problem with the request: ' + error);
+        }
+    }
+
 
     async function readFileAsBase64(file) {
         return new Promise((resolve, reject) => {

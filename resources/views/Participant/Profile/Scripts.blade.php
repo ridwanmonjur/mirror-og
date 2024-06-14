@@ -9,7 +9,9 @@
     }
 
     function chooseColor(event, color) {
-        applyBackground(event, color);
+        if (event) applyBackground(event, color);
+        document.querySelector("input[name='backgroundColor']").value = color;
+        document.querySelector("input[name='backgroundGradient']").value = null;
         localStorage.setItem('colorOrGradient', color);
         document.getElementById('backgroundBanner').style.backgroundImage = 'none';
         document.getElementById('backgroundBanner').style.background = color;
@@ -17,7 +19,9 @@
 
     function chooseGradient(event, gradient) {
         console.log({gradient});
-        applyBackground(event, gradient);
+        if (event) applyBackground(event, gradient);
+        document.querySelector("input[name='backgroundColor']").value = null;
+        document.querySelector("input[name='backgroundGradient']").value = gradient;
         localStorage.setItem('colorOrGradient', gradient);
         document.getElementById('backgroundBanner').style.backgroundImage = gradient;
         document.getElementById('backgroundBanner').style.background = 'auto';
@@ -71,23 +75,20 @@
 
         window.createGradientPicker(document.getElementById('div-gradient-picker'),
             (gradient) => {
-                localStorage.setItem('colorOrGradient', gradient);
-                document.getElementById('backgroundBanner').style.backgroundImage = gradient;
-                document.getElementById('backgroundBanner').style.background = 'auto';
+                chooseGradient(null, gradient);
             }
         );
         
 
         window.createColorPicker(document.getElementById('div-color-picker'), 
             (color) => {
-                localStorage.setItem('colorOrGradient', color);
-                document.getElementById('backgroundBanner').style.backgroundImage = 'auto';
-                document.getElementById('backgroundBanner').style.background = color;
+                chooseColor(null, color);
             }
         );
 
         window.createColorPicker(document.getElementById('div-font-color-picker-with-bg'), 
             (color) => {
+                document.querySelector("input[name='fontColor']").value = color;
                 document.getElementById('backgroundBanner').style.color = color;
             }
         );
@@ -95,6 +96,7 @@
          window.createColorPicker(document.getElementById('div-font-color-picker-with-frame'), 
             (color) => {
                 document.querySelectorAll('.uploaded-image').forEach((element)=> {
+                    document.querySelector("input[name='frameColor']").value = color;
                     element.style.borderColor = color;
                 }) 
             }
@@ -105,9 +107,28 @@
 
             console.log('detail', detail);
             const file = detail.files[0];
-            try {
             const fileContent = await readFileAsBase64(file);
-            const url = "{{ route('participant.userBackground.action', ['id' => $userProfile->id] ) }}";
+            await changeBackgroundDesignRequest({
+                backgroundBanner: {
+                    filename: file.name,
+                    type: file.type,
+                    size: file.size,
+                    content: fileContent
+                }
+            }, (data)=> {
+                backgroundBanner.style.backgroundImage = `url(${data.data.profile.backgroundBanner})`;
+                backgroundBanner.style.background = 'auto';
+            }, (error)=> {
+                console.error(error);
+            })
+        });
+
+        window.loadMessage(); 
+    }
+
+    async function changeBackgroundDesignRequest(body, successCallback, errorCallback) {
+        try {
+            const url = "{{ route('user.userBackgroundApi.action', ['id' => $userProfile->id] ) }}";
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -116,31 +137,21 @@
                     'Accept': 'application/json',
                     ...window.loadBearerHeader()
                 },
-                body: JSON.stringify({
-                    file: {
-                        filename: file.name,
-                        type: file.type,
-                        size: file.size,
-                        content: fileContent
-                        }
-                    }),
-                });
+                body: JSON.stringify(body),
+            });
 
-               
-                const data = await response.json();
-                    
-                if (data.success) {
-                    backgroundBanner.style.backgroundImage = `url(${data.data.fileName})`;
-                } else {
-                    console.error('Error updating member status:', data.message);
-                }
-            } catch (error) {
-                console.error('There was a problem with the request:', error);
+            const data = await response.json();
+            
+            if (data.success) {
+                successCallback(data);
+            } else {
+                errorCallback(data.message);
             }
-        });
-
-        window.loadMessage(); 
+        } catch (error) {
+            errorCallback('There was a problem with the request: ' + error);
+        }
     }
+
     document.addEventListener('alpine:init', () => {
         let gamesDataInput = document.getElementById('games_data_input');
         let regionDataInput = document.getElementById('region_details_input');

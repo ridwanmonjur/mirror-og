@@ -23,13 +23,25 @@
     use Carbon\Carbon;
     $isUserSame = false;
 
-    $backgroundStyles = '';
-    if (isset($userProfile->participant->backgroundBanner)) {
-        $backgroundStyles = "background-image: url(".  '/storage' . '/'. $userProfile->participant->backgroundBanner . ");";
+    $backgroundStyles = $fontStyles = $frameStyles = '';
+    if (isset($userProfile->profile->backgroundBanner)) {
+        $backgroundStyles = "background-image: url(".  '/storage' . '/'. $userProfile->profile->backgroundBanner . ");";
     } 
     
-    if (isset($userProfile->participant->backgroundColor)) {
-        $backgroundStyles = "background-color: " . $userProfile->participant->backgroundColor . ";" ; 
+    if (isset($userProfile->profile->backgroundColor)) {
+        $backgroundStyles = "background-color: " . $userProfile->profile->backgroundColor . ";" ; 
+    }
+
+    if (isset($userProfile->profile->backgroundGradient)) {
+        $backgroundStyles = "background-image: " . $userProfile->profile->backgroundGradient . ";" ; 
+    }
+
+    if (isset($userProfile->profile->fontColor)) {
+        $fontStyles = "color: " . $userProfile->profile->fontColor . ";" ; 
+    }
+
+    if (isset($userProfile->profile->frameColor)) {
+        $frameStyles = "border-color: " . $userProfile->profile->frameColor . ";" ; 
     }
 
     // dd($userProfile->participant);
@@ -52,6 +64,7 @@
         <div id="backgroundBanner" class="member-section px-2 pt-2"
             @style([
                 $backgroundStyles,
+                $fontStyles,
                 "background-size: cover; background-repeat: no-repeat;"
             ])
         >
@@ -112,8 +125,10 @@
                         <label for="image-upload" class="upload-label">
                             <div class="circle-container">
                                 <div id="uploaded-image" class="uploaded-image"
-                                    style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
-                                    background-repeat: no-repeat; background-position: center;"
+                                    @style(["background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
+                                        background-repeat: no-repeat; background-position: center;",
+                                        $frameStyles
+                                    ])
                                 >
                                 </div>
                                 <div class="d-flex align-items-center justify-content-center upload-button pt-3">
