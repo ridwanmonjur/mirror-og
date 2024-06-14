@@ -458,7 +458,12 @@ main {
 
 @media screen and (min-width: 576px) {
     .modal-dialog {
-        width: 80vw;
+        max-width:100vw !important;
+        width: 70vw !important  ;
+    }
+
+    .modal-content {
+        width: 70vw !important  ;
     }
 }
 

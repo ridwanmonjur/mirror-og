@@ -151,7 +151,7 @@
         Alpine.data('alpineDataComponent', () => {
         return  {
             select2: null,
-            isEditMode: true, 
+            isEditMode: false, 
             countries: 
             [
                 {

@@ -1,7 +1,7 @@
 <div class="modal fade" id="profileModal" tabindex="2" aria-labelledby="#profileModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-body">
+            <div class="modal-body" style="margin: auto;">
                 <div class="tabs mx-0 d-flex flex-row justify-content-around px-0" style="width: 100% !important;">
                     <button class="tab-button px-0 mx-0 me-3 modal-tab tab-button-active"
                         style="padding-left: 0px; padding-right: 0px; min-width: 200px;max-width: 200px;"
@@ -14,17 +14,18 @@
                         style="padding-left: 0px; padding-right: 0px; min-width: 200px;max-width: 200px;">Foreground Color</button>
                 </div>
                 <div class="tab-content pb-4 modal-tab" id="BackgroundPhoto">
-                    <br>
-                        <h5> Choose a background banner</h5>
-                        <div class="custom-file-container" data-upload-id="file-upload-preview-1"></div>
-                    <br>
+                    <div>
+                        <br>
+                            <h5> Choose a background banner</h5>
+                            <div class="custom-file-container" data-upload-id="file-upload-preview-1"></div>
+                        <br>
 
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="oceans-gaming-default-button oceans-gaming-gray-button"
-                            data-bs-dismiss="modal">Close
-                        </button>
-                    </div>
-
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="oceans-gaming-default-button oceans-gaming-gray-button"
+                                data-bs-dismiss="modal">Close
+                            </button>
+                        </div>
+                     </div> 
                 </div>
                 <div class="tab-content pb-4 modal-tab d-none" id="BackgroundColor">
                     <div>
