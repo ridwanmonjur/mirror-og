@@ -17,7 +17,7 @@
                     <div>
                         <header><u>Select Team to Register</u></header>
                         <br>
-                        <div class="dropdown">
+                        <div class="dropdown" data-bs-auto-close="outside">
                             <button type="button" class="dropbtn" onclick="toggleDropdown()">
                                 <span id="selectedTeamLabel">Select Team</span>
                                 <span class="dropbtn-arrow">

@@ -29,7 +29,7 @@ class UpdateParticipantsRequest extends FormRequest
             'participant.age' => 'nullable|numeric',
             'participant.birthday' => 'nullable|date|before_or_equal:'.now()->format('Y-m-d'),
             'participant.nickname' => 'nullable|string|max:255',
-            'participant.region' => 'nullable|string',
+            'participant.region' => 'nullable|array',
             'participant.region_name' => 'nullable|string',
             'participant.region_flag' => 'nullable|string',
             'participant.isAgeVisible' => 'nullable|boolean',
@@ -53,7 +53,7 @@ class UpdateParticipantsRequest extends FormRequest
             'participant.birthday.before_or_equal' => 'The birthday must be a date before the current year.',
             'participant.nickname.string' => 'The nickname must be a string.',
             'participant.nickname.max' => 'The nickname may not be greater than 255 characters.',
-            'participant.region.string' => 'The region must be a string.',
+            'participant.region.array' => 'The region must be a json string.',
             'participant.domain.regex' => 'The domain format is invalid. It must be a valid domain name.',
         ];
     }

@@ -123,7 +123,12 @@ class OrganizerController extends Controller
         $address = $validatedData['address']['id']
             ? Address::findOrFail($validatedData['address']['id'])
             : new Address();
-        $address->fill($validatedData['address'])->save();
+
+        if (!empty($validatedData['address']['city']) && !empty($validatedData['address']['country']) && !empty($validatedData['address']['addressLine1'])) {
+            $address->fill($validatedData['address'])->save();
+        } else {
+            throw new Exception("Incomplete address!");
+        }
 
         User::where('id', $user->id)
             ->first()
@@ -132,6 +137,15 @@ class OrganizerController extends Controller
         $organizer = $validatedData['organizer']['id']
             ? Organizer::findOrFail($validatedData['organizer']['id'])
             : new Organizer();
+            $links = ['website_link', 'instagram_link', 'twitter_link', 'facebook_link'];
+
+        foreach ($links as $link) {
+            if (isset($validatedData['organizer'][$link])) {
+                if (substr($validatedData['organizer'][$link], -1) === '/') {
+                    $validatedData['organizer'][$link] = rtrim($validatedData['organizer'][$link], '/');
+                }
+            }
+        }
         // dd($validatedData['organizer']);
         $organizer->fill($validatedData['organizer'])->save();
 

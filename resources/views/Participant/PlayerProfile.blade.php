@@ -16,22 +16,19 @@
         'resources/js/colorpicker.js',
         'resources/sass/colorpicker.scss',
     ])
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
 
 </head>
 @php
     use Carbon\Carbon;
     $isUserSame = false;
 
-    $backgroundStyles = '';
-    if (isset($userProfile->participant->backgroundBanner)) {
-        $backgroundStyles = "background-image: url(".  '/storage' . '/'. $userProfile->participant->backgroundBanner . ");";
-    } 
+    [   
+        'backgroundStyles' => $backgroundStyles, 
+        'fontStyles' => $fontStyles, 
+        'frameStyles' => $frameStyles
+    ] = $userProfile->profile?->generateStyles();
     
-    if (isset($userProfile->participant->backgroundColor)) {
-        $backgroundStyles = "background-color: " . $userProfile->participant->backgroundColor . ";" ; 
-    }
-
     // dd($userProfile->participant);
 @endphp
 @auth
@@ -51,7 +48,6 @@
         @include('Participant.Profile.Forms')
         <div id="backgroundBanner" class="member-section px-2 pt-2"
             @style([
-                $backgroundStyles,
                 "background-size: cover; background-repeat: no-repeat;"
             ])
         >
@@ -78,7 +74,7 @@
                     <button 
                         x-cloak
                         x-show="!isEditMode"
-                        x-on:click="isEditMode = true; fetchCountries(); fetchGames();"
+                        x-on:click="isEditMode = true; fetchCountries(); "
                         class="oceans-gaming-default-button oceans-gaming-primary-button px-3 py-2 fs-7"> 
                         Edit Profile
                     </button>
@@ -93,7 +89,7 @@
                     {{-- Close icon --}}
                     <svg 
                         x-cloak
-                        style="top: 10px;"
+                        style="top: 10px; color: black;"
                         x-show="isEditMode"
                         x-on:click="isEditMode = false;"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle cursor-pointer align-middle position-relative" viewBox="0 0 16 16">
@@ -102,7 +98,7 @@
                     </svg>
                 </div>
             @else
-                <div class="d-flex justify-content-end py-0 my-0 mb-2" style="font-size: 12px;">
+                <div class="d-flex justify-content-end align-items-center flex-wrap py-0 my-0 mb-2" style="font-size: 12px;">
                     @include('Participant.Profile.FriendManagement')
                 </div>
              @endif
@@ -111,9 +107,9 @@
                     <div class="upload-container">
                         <label for="image-upload" class="upload-label">
                             <div class="circle-container">
-                                <div id="uploaded-image" class="uploaded-image"
+                                <div class="uploaded-image"
                                     style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
-                                    background-repeat: no-repeat; background-position: center;"
+                                        z-index: 99; background-repeat: no-repeat; background-position: center; {{$frameStyles}}"
                                 >
                                 </div>
                                 <div class="d-flex align-items-center justify-content-center upload-button pt-3">
@@ -142,7 +138,7 @@
                 </div>
                 <div class="member-details">
                         <div x-show="errorMessage != null" class="text-red" x-text="errorMessage"> </div>
-                        <div x-cloak x-show="isEditMode">
+                        <div x-cloak x-show="isEditMode" style="color: black;">
                             <input 
                                 placeholder = "Enter your nickname..."
                                 style="width: 250px;"
@@ -194,29 +190,15 @@
                                 > 
                             <br> <br>
                             <div class="w-100 d-flex justify-content-start align-items-center flex-wrap">
-                                <span class="me-3">
+                                <span class="me-3 d-flex justify-content-center align-items-center">
                                     <svg
                                         class="me-2 align-middle" 
-                                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
                                     <template x-if="countries">
-                                        <select
-                                            id="region_select_input"
-                                            x-model="participant.region" 
-                                            x-on:change="changeFlagEmoji"
-                                            style="width: 150px;"    
-                                            class="form-control d-inline rounded-pill"
-                                        >
-                                            <template x-for="country in countries">
-                                                <option 
-                                                    :value="country.id" 
-                                                    :selected="country.id==participant.region">
-                                                <span x-text="country.emoji_flag" class="mx-3"> </span>  
-                                                <span x-text="country.name.en"> </span>
-                                                </option>
-                                            </template>
-                                        </select> 
+                                        <select id="select2-country" :change="changeFlagEmoji" style="width: 150px;"  data-placeholder="Select a country" x-model="participant.region"> 
+                                        </select>
                                     </template>
                                 </span>
                                 <span class="me-3">
@@ -244,7 +226,6 @@
                                 
                             </div>
                             <br>
-                            <br><br>
                             <br>
                         </div>
                     <div x-cloak x-show="!isEditMode" class="ms-2">
@@ -258,7 +239,7 @@
                                 <h4 class="my-0 me-4" x-text="user.name"> </h4>
                             </div>
                         </template>
-                        <div>
+                        <div class="my-2">
                             <template x-if="participant.nickname">
                                 <span x-text="user.name"> </span>
                             </template> 
@@ -272,7 +253,7 @@
                                         <span x-text="participant.age"></span>
                                     </template>
                                     {{-- Calendar --}}
-                                    <svg class="ms-4" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                                    <svg :class="{'ms-4' : (participant.age >=0 && participant.isAgeVisible) || participant.nickname}" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
                                     <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
                                     </svg>
                                     <span x-text="participant.birthday" class="me-2"></span>
@@ -280,14 +261,14 @@
                                         <template x-if="!participant.isAgeVisible">
                                             {{-- Eye invisible icon --}}
                                             <svg 
-                                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-slash-fill cursor-pointer" viewBox="0 0 16 16">
+                                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
                                             <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
                                             <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
                                             </svg>
                                         </template>
                                         <template x-if="participant.isAgeVisible">
                                             {{-- Eye visible icon --}}
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill cursor-pointer" viewBox="0 0 16 16">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                                             <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
                                             <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
                                             </svg>
@@ -347,7 +328,7 @@
                                 <span>Joined {{Carbon::parse($userProfile->participant->created_at)->isoFormat('Do MMMM YYYY')}}</span>
                             </span>
                         </div>
-                        <br>
+                        <br><br><br><br><br>
 
                     </div>
                 </div>
@@ -571,11 +552,7 @@
 
 
 </body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
 @livewireScripts
 @include('Participant.Profile.Scripts')
 </html>

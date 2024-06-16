@@ -13,20 +13,17 @@ class ParticipantFollow extends Model
     protected $table = "participant_follows";
 
     protected $fillable = [
-        'participant1_user',
-        'participant2_user',
+        'participant_follower',
+        'participant_followee',
     ];
 
-    public static function checkFollow($userProfileId, $logged_user_id)
+    public static function checkFollow($follower, $followee)
     {
-        return self::where(function ($query) use ($userProfileId, $logged_user_id) {
-            $query->where('participant1_user', $userProfileId)
-                ->where('participant2_user', $logged_user_id);
+        return self::where(function ($query) use ($follower, $followee) {
+            $query->where('participant_follower', $follower)
+                ->where('participant_followee', $followee);
         })
-            ->orWhere(function ($query) use ($userProfileId, $logged_user_id) {
-                $query->where('participant2_user', $userProfileId)
-                    ->where('participant1_user', $logged_user_id);
-            })
+          
             ->first();
     }
 

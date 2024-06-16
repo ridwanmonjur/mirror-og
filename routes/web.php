@@ -52,6 +52,12 @@ Route::group(['prefix' => 'admin'], function () {
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback']);
 
+Route::group(['middleware' => 'auth'], function () {
+    Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
+        Route::post('/profile/{id}/background', [AuthController::class, 'replaceBackground'])->name('user.userBackground.action');
+    });
+});
+
 /* THIS IS THE PARTICIPANT VIEW */
 Route::group(['prefix' => 'participant'], function () {
     // Normal login
