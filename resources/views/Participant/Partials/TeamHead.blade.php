@@ -50,7 +50,7 @@
     @endphp
 @endauth
 <main class="main1" 
-        id="backgroundBanner" class="member-section px-2 pt-2"
+        id="backgroundBanner" class="member-section px-2 py-2"
         @style([
             "background-size: cover; background-repeat: no-repeat;"
         ])
@@ -62,9 +62,9 @@
             x-data="alpineDataComponent"
         >
         @if ($isCreator)
-            <div class="d-flex w-100 justify-content-end py-0 my-0 mb-2">
+            <div  class="d-flex w-100 justify-content-end py-0 my-0 mt-2">
                 <button 
-                    x-show="!isEditMode"
+                x-show="isEditMode"
                     data-bs-toggle="modal"
                     data-bs-target="#profileModal"
                     x-cloak
@@ -80,7 +80,7 @@
     {{-- @else --}}
         {{-- <div class="team-section"> --}}
     {{-- @endif --}}
-        <div :class="{'upload-container': true, 'pt-5': isEditMode}">
+        <div :class="{'upload-container': true, }">
             <label for="image-upload" class="upload-label">
                 <div class="circle-container">
                     <div class="uploaded-image"
@@ -234,14 +234,14 @@
                     <button 
                         x-on:click="submitEditProfile(event);"
                         data-url="{{route('participant.team.update')}}"
-                        class="mt-4 oceans-gaming-default-button oceans-gaming-transparent-button px-3 py-1 rounded mx-auto me-3"> 
+                        class="mt-4 oceans-gaming-default-button oceans-gaming-transparent-button px-3 py-1 rounded mx-auto me-3 mb-4"> 
                         Save
                     </button>
                     {{-- Close icon --}}
                     <svg 
                         style="top: 10px;"
                         x-on:click="isEditMode = false;"
-                        xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-x-circle cursor-pointer text-red position-relative" viewBox="0 0 16 16">
+                        xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-x-circle cursor-pointer text-red position-relative mb-4" viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                     </svg>
