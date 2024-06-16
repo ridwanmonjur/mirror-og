@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/css/intlTelInput.css">
-        <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
     @vite(['resources/sass/app.scss', 
         'resources/js/app.js', 
         'resources/js/lightgallery.js',   
