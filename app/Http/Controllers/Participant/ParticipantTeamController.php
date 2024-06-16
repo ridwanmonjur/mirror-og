@@ -165,7 +165,7 @@ class ParticipantTeamController extends Controller
     {
         try{
             $validatedData = $request->validated();
-            if (isset($validatedData['country'])) {
+            if (isset($validatedData['country']) &&  isset($validatedData['country']['value'])) {
                 $validatedData['country'] = $validatedData['country']['value'];
             }
 

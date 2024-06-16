@@ -350,7 +350,6 @@ class Team extends Model
         $fileName = "images/team/$fileNameInitial";
         $file->storeAs('images/team/', $fileNameInitial);
         $this->teamBanner = $fileName;
-        $fileName = asset('/storage'.'/'.$fileName);
         $this->save();
 
         return $fileName;

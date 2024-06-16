@@ -189,7 +189,7 @@
                     const data = await response.json();
                     
                     if (data.success) {
-                        uploadedImage.style.backgroundImage = `url(${data.fileName})`;
+                        uploadedImage.style.backgroundImage = `url(/storage/${data.fileName})`;
                     } else {
                         console.error('Error updating member status:', data.message);
                     }
@@ -244,9 +244,6 @@
         let target = event.currentTarget;
         target.classList.add('tab-button-active');
     }
-
-   
-
 
     function redirectToProfilePage(userId) {
         window.location.href = "{{ route('public.participant.view', ['id' => ':id']) }}"

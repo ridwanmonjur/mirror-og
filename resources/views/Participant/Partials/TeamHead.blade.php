@@ -143,7 +143,7 @@
                 @endif
                 @auth
                     @if ($user->role == "PARTICIPANT")
-                    <div class="dropdown">
+                    <div class="dropdown" data-bs-auto-close="outside">
                         <button
                             x-cloak
                             x-show.important="!isEditMode"
@@ -248,12 +248,12 @@
                 </div>
                 <div>
                     <span class="ms-2" x-cloak x-show="!isEditMode" x-text="teamDescription"> </span>
-                    <span class="ms-2"x-show="!isEditMode" x-html="country_flag"> </span>
+                    <span class="ms-2 fs-3"x-show="!isEditMode" x-html="country_flag"> </span>
                 </div>
             @else
                 <p>
                     <span class="d-inline" x-text="teamDescription"> </span>
-                    <span class="d-inline ms-2" x-html="country_flag"> </span>
+                    <span class="d-inline ms-2 fs-3" x-html="country_flag"> </span>
                 </p>
             @endif
         <div class="mx-auto text-center mt-1">

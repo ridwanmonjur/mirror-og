@@ -61,7 +61,7 @@
         }
 
         function loadTab() {
-            let pageValue = localStorage.get('page');
+            let pageValue = localStorage.getItem('page');
 
             if (Number(pageValue)) {
                 document.getElementById('NewMembersBtn').click();

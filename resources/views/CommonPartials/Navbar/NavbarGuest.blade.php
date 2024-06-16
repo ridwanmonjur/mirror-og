@@ -1,4 +1,4 @@
-<div class="dropdown" data-reference="parent" data-bs-offset="-80,-80">
+<div class="dropdown" data-reference="parent" data-bs-auto-close="outside" data-bs-offset="-80,-80">
     <a href="#" role="button" class="btn dropdown-toggle" id="dropdownMenuGuest" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
