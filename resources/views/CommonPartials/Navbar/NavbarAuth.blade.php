@@ -2,7 +2,7 @@
     $countUnread = $user->unreadNotifications->count();
 @endphp
 
-<div class="ms-2 dropdown" data-reference="parent" data-bs-offset="-80,-80">
+<div class="ms-2 dropdown" data-reference="parent" data-bs-auto-close="outside" data-bs-offset="-80,-80">
     <a href="#" role="button" class="btn position-relative" id="dropdownMenuLinkNotification" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt="">
@@ -78,7 +78,7 @@
             </div> 
         </div>
     @else
-        <div class="dropdown-menu  text-center py-2" style="position: absolute; left: -300px; width: 400px;" aria-labelledby="dropdownMenuLinkNotification">
+        <div class="dropdown-menu  text-center py-2" style="position: absolute; left: -300px; width: 300px;" aria-labelledby="dropdownMenuLinkNotification">
             <p class="pt-3 align-middle me-4" style="font-weight: 400;" >
             You have no notifications!
             </p>
@@ -86,7 +86,7 @@
     @endif
 </div>
 
-<div class="dropdown" data-reference="parent" data-bs-offset="-80,-80">
+<div class="dropdown" data-reference="parent" data-bs-auto-close="outside" data-bs-offset="-80,-80">
     <a href="#" role="button" class="btn" id="dropdownMenuLinkSignedIn" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">

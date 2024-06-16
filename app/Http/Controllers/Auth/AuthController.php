@@ -7,7 +7,9 @@ use App\Models\EventDetail;
 use App\Models\Notifications;
 use App\Models\Organizer;
 use App\Models\Participant;
+use App\Models\TeamProfile;
 use App\Models\User;
+use App\Models\UserProfile;
 use Carbon\Carbon;
 use ErrorException;
 use Exception;
@@ -402,7 +404,6 @@ class AuthController extends Controller
         $userRole = '';
         $userRoleCapital = '';
         $validatedData = [];
-
         if ($request->is('organizer/*')) {
             $userRole = 'organizer';
             $userRoleCapital = 'ORGANIZER';
@@ -431,6 +432,7 @@ class AuthController extends Controller
 
         $redirectErrorRoute = $userRole.'.signup.view';
         $redirectSuccessRoute = $userRole.'.signin.view';
+        DB::beginTransaction();
 
         try {
             $user = new User([
@@ -467,6 +469,8 @@ class AuthController extends Controller
                 $message->subject('Email verification');
             });
 
+            DB::commit();
+
             return redirect()
                 ->route($redirectSuccessRoute)
                 ->with(
@@ -476,6 +480,7 @@ class AuthController extends Controller
                     ]
                 );
         } catch (QueryException $e) {
+            DB::rollBack();
             Log::error($e->getMessage());
 
             if ($e->getCode() == '23000' || $e->getCode() == 1062) {
@@ -489,6 +494,8 @@ class AuthController extends Controller
             }
 
         } catch (\Throwable $th) {
+            DB::rollBack();
+
             return redirect()
                 ->route($redirectErrorRoute)
                 ->with('error', $th->getMessage());
@@ -581,32 +588,69 @@ class AuthController extends Controller
 
     public function replaceBackground(Request $request)
     {
-        // ATTACK HERE
+
         try {
-            $request->validate([
+            $validated = $request->validate([
                 'backgroundBanner' => 'nullable|array',
                 'backgroundBanner.filename' => 'nullable|string',
                 'backgroundBanner.type' => 'nullable|string',
                 'backgroundBanner.size' => 'nullable|numeric',
                 'backgroundBanner.content' => 'nullable|string',
-                'teamId' => 'nulable|exists:team,id',
+                'teamId' => 'nullable|exists:teams,id',
                 'backgroundGradient' => 'nullable|string',
                 'backgroundColor' => 'nullable|string',
                 'fontColor' => 'nullable|string',
                 'frameColor' => 'nullable|string',
             ]);
+            $user = $request->attributes->get('user');
+            
             if ($request->teamId) {
+
+                $profile = TeamProfile::where('team_id', $request->teamId)->firstOrNew();
+                $profile->team_id = $user->id;
+                $oldBanner = $profile->backgroundBanner;
+                if ($request->backgroundBanner) {
+                    $user->uploadBackgroundBanner($request, $profile);
+                } else {
+                    $profile->fill($validated);
+                    if ($profile->backgroundColor || $profile->backgroundGradient) {
+                        $profile->backgroundBanner = null;
+                    }
+
+                    $profile->save();
+                }
+
+                $user->destroyUserBanner($oldBanner);
             } else {
-                $user = $request->attributes->get('user');
-                $participant = Participant::where('user_id', $user->id)
-                    ->select(['id', 'user_id', 'backgroundBanner'])->first();
-                $oldBanner = $participant->backgroundBanner;
-                $fileName = $user->uploadBackgroundBanner($request, $participant);
+                $profile = UserProfile::where('user_id', $user->id)->firstOrNew();
+                $profile->user_id = $user->id;
+                $oldBanner = $profile->backgroundBanner;
+                if ($request->backgroundBanner) {
+                    $user->uploadBackgroundBanner($request, $profile);
+                } else {
+                    $profile->fill($validated);
+                    if ($profile->backgroundColor || $profile->backgroundGradient) {
+                        $profile->backgroundBanner = null;
+                    }
+
+                    $profile->save();
+                }
+
                 $user->destroyUserBanner($oldBanner);
             }
-            return response()->json(['success' => true, 'message' => 'Succeeded', 'data' => compact('fileName')], 201);
+            if ($request->expectsJson()) {
+                return response()->json(['success' => true, 'message' => 'Succeeded', 'data' => $profile], 201);
+            } else {
+                return back();
+            }
         } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            throw new Exception($e);
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            } else {
+                session()->flash('errorMessage', $e->getMessage());
+                return back();
+            }
         }
     }
 

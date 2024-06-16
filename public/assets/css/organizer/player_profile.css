@@ -458,7 +458,12 @@ main {
 
 @media screen and (min-width: 576px) {
     .modal-dialog {
-        width: 80vw;
+        max-width:100vw !important;
+        width: min(70vw, 100%) !important  ;
+    }
+
+    .modal-content {
+        width: max(70vw, 100%) !important  ;
     }
 }
 
@@ -506,5 +511,13 @@ main {
 }
 .custom-file-container .label-container {
     display: none !important;
+}
+
+.tab-button-override {
+    padding-left: 0px;
+     padding-right: 0px; 
+     max-width: 200px !important;
+     width: 200px !important;
+     margin-right: 20px !important;
 }
 

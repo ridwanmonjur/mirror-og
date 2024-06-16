@@ -1,4 +1,4 @@
-<div class="modal fade" id="profileModal" tabindex="2" aria-labelledby="#profileModal" aria-hidden="true">
+<div class="modal fade" id="profileModal" tabindex="2" aria-labelledby="#profileModal" aria-hidden="true" style="color: black;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body" style="margin: auto;">
@@ -13,10 +13,11 @@
                         Color</button>
                 </div>
                 <div class="tab-content pb-4 modal-tab" id="BackgroundPhoto">
-                    <form id="updateBgColorRequest" class="d-inline" method="POST" action="{{ route('user.userBackground.action', ['id' => $userProfile->id] ) }}"> 
+                    <form id="updateBgColorRequest" class="d-inline" method="POST" action="{{ route('user.userBackground.action', ['id' => $selectTeam->id] ) }}"> 
                         @csrf
-                        <input type="hidden" name="backgroundColor" value="{{ $userProfile->profile->backgroundColor }}">
-                        <input type="hidden" name="backgroundGradient" value="{{ $userProfile->profile->backgroundGradient }}">
+                        <input type="hidden" name="backgroundColor" value="{{ $selectTeam->profile?->backgroundColor }}">
+                        <input type="hidden" name="backgroundGradient" value="{{ $selectTeam->profile?->backgroundGradient }}">
+                        <input type="hidden" name="teamId" value="{{ $selectTeam->id }}">
                     </form>
                     <div class="mx-auto"  style="max-width: max(400px, 75%);">
                         <br>
@@ -155,10 +156,11 @@
                     <div class="mx-auto"  style="max-width: max(400px, 75%);">
                         <br>
                         <h5> Choose a solid font color</h5>                    
-                        <form id="updateForegroundColorRequest" class="d-inline" method="POST" action="{{ route('user.userBackground.action', ['id' => $userProfile->id] ) }}"> 
+                        <form id="updateForegroundColorRequest" class="d-inline" method="POST" action="{{ route('user.userBackground.action', ['id' => $selectTeam->id] ) }}"> 
                             @csrf
-                            <input type="hidden" name="frameColor" value="{{ $userProfile->profile->frameColor }}">
-                            <input type="hidden" name="fontColor" value="{{ $userProfile->profile->fontColor }}">
+                            <input type="hidden" name="frameColor" value="{{ $selectTeam->profile?->frameColor }}">
+                            <input type="hidden" name="fontColor" value="{{ $selectTeam->profile?->fontColor }}">
+                            <input type="hidden" name="teamId" value="{{ $selectTeam->id }}">
                         </form>
                         <button data-bs-auto-close="outside"
                             style="{{ 'background-color: gray;' . 'width: 60px; height: 30px;' }}"
@@ -181,9 +183,9 @@
                         <div class="upload-container">
                             <label for="image-upload" class="upload-label">
                                 <div class="circle-container">
-                                    <div id="uploaded-image" class="uploaded-image"
-                                         style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
-                                            background-repeat: no-repeat; background-position: center;{{$frameStyles}}"
+                                    <div class="uploaded-image"
+                                         style="background-image: url({{ '/storage' . '/'. $selectTeam->userBanner }} ); background-size: cover; 
+                                            background-repeat: no-repeat; background-position: center; {{$frameStyles}}"
                                     >
                                     </div>
                                 </div>

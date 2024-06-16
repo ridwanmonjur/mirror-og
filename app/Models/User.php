@@ -67,6 +67,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasOne(Team::class, 'creator_id');
     }
 
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class, 'user_id');
+    }
+
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'team_members');
@@ -128,18 +133,20 @@ class User extends Authenticatable implements FilamentUser
         return asset('storage/'.$fileName);
     }
 
-    public function uploadBackgroundBanner($request, $participant)
+    public function uploadBackgroundBanner($request, $profile)
     {
         $requestData = json_decode($request->getContent(), true);
-        $fileData = $requestData['file'];
+        $fileData = $requestData['backgroundBanner'];
 
         $fileContent = base64_decode($fileData['content']);
         $fileNameInitial = 'userBanner-'.time().'.'.pathinfo($fileData['filename'], PATHINFO_EXTENSION);
         $fileName = "images/user/$fileNameInitial";
         $storagePath = storage_path('app/public/'.$fileName);
         file_put_contents($storagePath, $fileContent);
-        $participant->backgroundBanner = $fileName;
-        $participant->save();
+        $profile->backgroundBanner = $fileName;
+        $profile->backgroundColor = null;
+        $profile->backgroundGradient = null;
+        $profile->save();
 
         return asset('storage/'.$fileName);
     }

@@ -39,6 +39,11 @@ class Team extends Model
         return $this->hasMany(EventInvitation::class, 'team_id');
     }
 
+    public function profile()
+    {
+        return $this->hasOne(TeamProfile::class, 'team_id');
+    }
+
     public function activities()
     {
         return $this->morphMany(ActivityLogs::class, 'subject');
@@ -345,7 +350,6 @@ class Team extends Model
         $fileName = "images/team/$fileNameInitial";
         $file->storeAs('images/team/', $fileNameInitial);
         $this->teamBanner = $fileName;
-        $fileName = asset('/storage'.'/'.$fileName);
         $this->save();
 
         return $fileName;

@@ -13,7 +13,7 @@
 <body>
     @include('CommonPartials.NavbarGoToSearchPage')
     @include('Participant.ParticipantRequestPartials.RequestManagement')
-    
+    <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>  
     <script>
@@ -80,7 +80,7 @@
             }
         }
 
-        window.onload = () => { loadTab(); }
+        addOnLoad( () => { window.loadTab(); } );
 
          let actionMap = {
             'approve': approveTeamAction,

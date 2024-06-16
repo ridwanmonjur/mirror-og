@@ -112,9 +112,8 @@
     </main>
 
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
-    
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
-    
+    <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
     
     <script>
         let dialogForMember = new DialogForMember();
@@ -127,7 +126,7 @@
             }
         }
 
-        window.onload= ()=> { window.loadMessage(); scroll(); };
+        addOnLoad( ()=> { window.loadMessage(); scroll(); }; )
 
         let actionMap = {
             'approve': approveMemberAction,

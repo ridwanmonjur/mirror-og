@@ -9,7 +9,9 @@
     }
 
     function chooseColor(event, color) {
-        applyBackground(event, color);
+        if (event) applyBackground(event, color);
+        document.querySelector("input[name='backgroundColor']").value = color;
+        document.querySelector("input[name='backgroundGradient']").value = null;
         localStorage.setItem('colorOrGradient', color);
         document.getElementById('backgroundBanner').style.backgroundImage = 'none';
         document.getElementById('backgroundBanner').style.background = color;
@@ -17,7 +19,9 @@
 
     function chooseGradient(event, gradient) {
         console.log({gradient});
-        applyBackground(event, gradient);
+        if (event) applyBackground(event, gradient);
+        document.querySelector("input[name='backgroundColor']").value = null;
+        document.querySelector("input[name='backgroundGradient']").value = gradient;
         localStorage.setItem('colorOrGradient', gradient);
         document.getElementById('backgroundBanner').style.backgroundImage = gradient;
         document.getElementById('backgroundBanner').style.background = 'auto';
@@ -27,11 +31,16 @@
     let errorInput = document.getElementById('errorMessage');
 
     function formRequestSubmitById(message, id) {
-        window.dialogOpen(message, ()=> {
-            console.log({message, id})
-            const form = document.getElementById(id);
+        const form = document.getElementById(id);
+
+        if (message) {
+            window.dialogOpen(message, ()=> {
+                console.log({message, id})
+                form?.submit();
+            });
+        } else {
             form?.submit();
-        });
+        }
     }
 
     const currentDate = new Date();
@@ -66,23 +75,20 @@
 
         window.createGradientPicker(document.getElementById('div-gradient-picker'),
             (gradient) => {
-                localStorage.setItem('colorOrGradient', gradient);
-                document.getElementById('backgroundBanner').style.backgroundImage = gradient;
-                document.getElementById('backgroundBanner').style.background = 'auto';
+                chooseGradient(null, gradient);
             }
         );
         
 
         window.createColorPicker(document.getElementById('div-color-picker'), 
             (color) => {
-                localStorage.setItem('colorOrGradient', color);
-                document.getElementById('backgroundBanner').style.backgroundImage = 'auto';
-                document.getElementById('backgroundBanner').style.background = color;
+                chooseColor(null, color);
             }
         );
 
         window.createColorPicker(document.getElementById('div-font-color-picker-with-bg'), 
             (color) => {
+                document.querySelector("input[name='fontColor']").value = color;
                 document.getElementById('backgroundBanner').style.color = color;
             }
         );
@@ -90,6 +96,7 @@
          window.createColorPicker(document.getElementById('div-font-color-picker-with-frame'), 
             (color) => {
                 document.querySelectorAll('.uploaded-image').forEach((element)=> {
+                    document.querySelector("input[name='frameColor']").value = color;
                     element.style.borderColor = color;
                 }) 
             }
@@ -100,9 +107,28 @@
 
             console.log('detail', detail);
             const file = detail.files[0];
-            try {
             const fileContent = await readFileAsBase64(file);
-            const url = "{{ route('participant.userBackground.action', ['id' => $userProfile->id] ) }}";
+            await changeBackgroundDesignRequest({
+                backgroundBanner: {
+                    filename: file.name,
+                    type: file.type,
+                    size: file.size,
+                    content: fileContent
+                }
+            }, (data)=> {
+                backgroundBanner.style.backgroundImage = `url(/storage/${data.data.backgroundBanner})`;
+                backgroundBanner.style.background = 'auto';
+            }, (error)=> {
+                console.error(error);
+            })
+        });
+
+        window.loadMessage(); 
+    }
+
+    async function changeBackgroundDesignRequest(body, successCallback, errorCallback) {
+        try {
+            const url = "{{ route('user.userBackgroundApi.action', ['id' => $userProfile->id] ) }}";
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -111,31 +137,21 @@
                     'Accept': 'application/json',
                     ...window.loadBearerHeader()
                 },
-                body: JSON.stringify({
-                    file: {
-                        filename: file.name,
-                        type: file.type,
-                        size: file.size,
-                        content: fileContent
-                        }
-                    }),
-                });
+                body: JSON.stringify(body),
+            });
 
-               
-                const data = await response.json();
-                    
-                if (data.success) {
-                    backgroundBanner.style.backgroundImage = `url(${data.data.fileName})`;
-                } else {
-                    console.error('Error updating member status:', data.message);
-                }
-            } catch (error) {
-                console.error('There was a problem with the request:', error);
+            const data = await response.json();
+            
+            if (data.success) {
+                successCallback(data);
+            } else {
+                errorCallback(data.message);
             }
-        });
-
-        window.loadMessage(); 
+        } catch (error) {
+            errorCallback('There was a problem with the request: ' + error);
+        }
     }
+
     document.addEventListener('alpine:init', () => {
         let gamesDataInput = document.getElementById('games_data_input');
         let regionDataInput = document.getElementById('region_details_input');
@@ -145,12 +161,13 @@
         let regionData = JSON.parse(regionDataInput.value.trim()); 
         Alpine.data('alpineDataComponent', () => {
         return  {
+            select2: null,
             isEditMode: false, 
             countries: 
             [
                 {
                     name: { en: 'No country' },
-                    emoji_flag: '𓆝'
+                    emoji_flag: ''
                 }
             ], 
             user: {
@@ -167,93 +184,70 @@
                 domain: '{{$userProfile->participant->domain}}',
                 region: '{{$userProfile->participant->region}}',
                 region_name: regionData?.name.en,
-                region_flag: regionData?.emoji_flag
+                region_flag: regionData?.emoji_flag,
             },
             errorMessage: errorInput?.value, 
             isCountriesFetched: false ,
-            async fetchCountries () {
-                if (this.isCountriesFetched) return;
-                return fetch('/countries')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data?.data) {
-                            this.isCountriesFetched = true;
-                            this.countries = data?.data;
-                        } else {
-                            this.errorMessage = "Failed to get data!"
-                            this.countries = [{
-                                name: {
-                                    en: 'No country'
-                                },
-                                emoji_flag: ''
-                            }];
-                        }
-                    })
-                    .catch(error => console.error('Error fetching countries:', error));
-            },
             changeFlagEmoji() {
-                let countryX = this.countries.find(elem => elem.id == this.participant.region);
-                this.participant.region_name = countryX.name.en;
-                this.participant.region_flag = countryX.emoji_flag;
+                let region = this.participant.region.value ?? this.participant.region;
+                if (region) {
+                    let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == region);
+                    this.participant.region_name = countryX?.name.en;
+                    this.participant.region_flag = countryX?.emoji_flag;
+                }
             },
-            async fetchGames () {
-                if (this.isCountriesFetched) return;
-                return fetch('/games')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data?.data) {
-                            this.isCountriesFetched = true;
-                            this.games = data?.data;
-                            this.select2 = $(this.$refs.select).select2({
-                                // minimumResultsForSearch: Infinity,
-                                data: data.data,
-                                templateResult: function (_game) {
-                                    return $("<span><img class='object-fit-cover' width='25' height='25' src='/storage/" + _game.image +"'/> " + _game.name + "</span>");
-                                },
-                                templateSelection: function (_game) {
-                                    return $("<span><img class='object-fit-cover' width='25' height='25' src='/storage/" + _game.image +"'/> " + _game.name + "</span>");
-                                },
-                                theme: "bootstrap-5",
-                            }); 
+            async fetchCountries () {
+                async function storeDataInLocalStorage() {
+                    try {
+                        let isValid = false;
+                        let data = JSON.parse(localStorage.getItem('countriesData'));
+                        let innerData = data?.data;
+                        if (innerData) {
+                            isValid = innerData[0] && innerData[1] && innerData[99] && innerData[100];
+                        } 
 
-                            this.select2[0].classList.add('mb-2');
-                            
-                            this.select2.on('select2:select', (event) => {
-                                this.selectedGame = event.target.value;
-                                const gameIndex = this.games.findIndex(game => game.id == this.selectedGame);
-                                console.log({gameIndex, games: this.games, games_data: this.games_data})
-                                const existingIndex = this.games_data.findIndex(game => game.id == this.selectedGame);
-
-                                if (gameIndex !== -1) {
-                                    if (existingIndex !== -1) {
-                                        Toast.fire({
-                                            'icon': 'error',
-                                            'text': 'Game already exists!'
-                                        })
-                                        return;
-                                    }
-                                    this.games_data = [...this.games_data, this.games[gameIndex]];
-                                } else {
-                                    Toast.fire({
-                                        'icon': 'error',
-                                        'text': "Game doesn't exist!"
-                                    })
-                                }
-
-                                this.isAddGamesMode = false;
-                                this.select2[0].classList.add('d-none');
-                            });
-                             this.$watch("isAddGamesMode", (value) => {
-                                console.log({value})
-                            });
-                            this.$watch("selectedGame", (value) => {
-                                this.select2.val(value).trigger("change");
-                            });
-                        } else {
-                            this.errorMessage = "Failed to get data!"
+                        if (isValid) {
+                            return data;
                         }
-                    })
-                    .catch(error => console.error('Error fetching countries:', error));
+
+                        const response = await fetch('/countries');
+                        data = await response.json();
+                        localStorage.setItem('countriesData', JSON.stringify(data));
+                        return data;
+                    } catch (error) {
+                        console.error('Error storing data in localStorage:', error);
+                    }
+                }
+
+                if (this.isCountriesFetched) return;
+                try {
+                    const data = await storeDataInLocalStorage();
+
+                    if (data?.data) {
+                        this.isCountriesFetched = true;
+                        this.countries = data.data;
+
+                        const choices2 = new Choices(document.getElementById('select2-country'), {
+                            itemSelectText: "",
+                            allowHTML: "",
+                            choices: data.data.map((value) => ({
+                                label: `${value.emoji_flag} ${value.name.en}`,
+                                value: value.id,
+                                disabled: false,
+                                selected: value.id === this.participant.region,
+                            })),
+                        });
+
+                        const choicesContainer = document.querySelector('.choices');
+                        choicesContainer.style.width = "150px";
+
+                        
+                    } else {
+                        this.errorMessage = "Failed to get data!";
+                    }
+                } catch (error) {
+                    console.error('Error fetching countries:', error);
+                }
             },
             async submitEditProfile (event) {
                 try {
@@ -285,14 +279,25 @@
                     console.error({error});
                 } 
             },
-            deleteGames (id) {
-                
-                const existingIndex = this.games_data.findIndex(game => game.id == id);
-                if (existingIndex !== -1) {
-                    this.games_data.splice(existingIndex, 1); // Remove 1 element at the found index
-                }
-            },
+         
             init() {
+                this.fetchCountries();
+                var backgroundStyles = "<?php echo $backgroundStyles; ?>";
+                var fontStyles = "<?php echo $fontStyles; ?>";
+                console.log({backgroundStyles, fontStyles})
+                var banner = document.getElementById('backgroundBanner');
+                banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
+                this.$watch('isEditMode', value => {
+                    if (value) {
+                        banner.style.color = 'black';
+                        banner.style.background = "auto";
+                        banner.style.backgroundImage = "auto";
+                        banner.style.backgroundColor = "#D3D3D3";
+                    } else {
+                        banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
+                    }
+                });
+                
                 this.$watch('participant.birthday', value => {
                     const today = new Date();
                     const birthDate = new Date(value);
@@ -312,7 +317,8 @@
 <script>
     const uploadButton = document.getElementById("upload-button");
     const imageUpload = document.getElementById("image-upload");
-    const uploadedImage = document.getElementById("uploaded-image");
+    const uploadedImageList = document.getElementsByClassName("uploaded-image");
+    const uploadedImage = uploadedImageList[0];    
     const backgroundBanner = document.getElementById("backgroundBanner")
     uploadButton?.addEventListener("click", function() {
         imageUpload.click();
@@ -346,7 +352,8 @@
                 const data = await response.json();
                     
                 if (data.success) {
-                    uploadedImage.style.backgroundImage = `url(${data.data.fileName})`;
+                    uploadedImageList[0].style.backgroundImage = `url(${data.data.fileName})`;
+                    uploadedImageList[1].style.backgroundImage = `url(${data.data.fileName})`;
                 } else {
                     console.error('Error updating member status:', data.message);
                 }
