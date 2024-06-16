@@ -15,8 +15,8 @@
                 <div class="tab-content pb-4 modal-tab" id="BackgroundPhoto">
                     <form id="updateBgColorRequest" class="d-inline" method="POST" action="{{ route('user.userBackground.action', ['id' => $userProfile->id] ) }}"> 
                         @csrf
-                        <input type="hidden" name="backgroundColor" value="{{ $userProfile->profile->backgroundColor }}">
-                        <input type="hidden" name="backgroundGradient" value="{{ $userProfile->profile->backgroundGradient }}">
+                        <input type="hidden" name="backgroundColor" value="{{ $userProfile->profile?->backgroundColor }}">
+                        <input type="hidden" name="backgroundGradient" value="{{ $userProfile->profile?->backgroundGradient }}">
                     </form>
                     <div class="mx-auto"  style="max-width: max(400px, 75%);">
                         <br>
@@ -157,8 +157,8 @@
                         <h5> Choose a solid font color</h5>                    
                         <form id="updateForegroundColorRequest" class="d-inline" method="POST" action="{{ route('user.userBackground.action', ['id' => $userProfile->id] ) }}"> 
                             @csrf
-                            <input type="hidden" name="frameColor" value="{{ $userProfile->profile->frameColor }}">
-                            <input type="hidden" name="fontColor" value="{{ $userProfile->profile->fontColor }}">
+                            <input type="hidden" name="frameColor" value="{{ $userProfile->profile?->frameColor }}">
+                            <input type="hidden" name="fontColor" value="{{ $userProfile->profile?->fontColor }}">
                         </form>
                         <button data-bs-auto-close="outside"
                             style="{{ 'background-color: gray;' . 'width: 60px; height: 30px;' }}"

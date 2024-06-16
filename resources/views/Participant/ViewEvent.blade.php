@@ -57,7 +57,7 @@
 
                         <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;"
                             @class(['rounded-banner height-image ', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
-                            alt="" data-aos="zoom-in" data-fslightbox>
+                            alt="" data-fslightbox>
                             </a>
                         @if ($event->eventBanner)
                         @else

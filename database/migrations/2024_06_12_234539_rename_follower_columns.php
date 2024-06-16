@@ -18,12 +18,10 @@ return new class extends Migration
                     Schema::hasColumn('participant_follows', 'participant2_user')) {
                     $table->renameColumn('participant1_user', 'participant_follower');
                     $table->renameColumn('participant2_user', 'participant_followee');
-                    $table->dropUnique(['participant1_user', 'participant2_user']);
                 }
             });
 
             Schema::table('participant_follows', function (Blueprint $table) {
-                $table->dropUnique(['participant1_user', 'participant2_user']);
             });
         }
     }
@@ -41,7 +39,6 @@ return new class extends Migration
                     Schema::hasColumn('participant_follows', 'participant_followee')) {
                     $table->renameColumn('participant_follower', 'participant1_user');
                     $table->renameColumn('participant_followee', 'participant2_user');
-                    $table->unique(['participant1_user', 'participant2_user']);
                 }
             });
         }
