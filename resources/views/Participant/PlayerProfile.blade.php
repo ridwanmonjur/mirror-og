@@ -62,7 +62,6 @@
                 <div class="d-flex justify-content-end py-0 my-0 mb-2">
                     <input type="file" id="backgroundInput" class="d-none"> 
                     <button 
-                        x-show="!isEditMode"
                         data-bs-toggle="modal"
                         data-bs-target="#profileModal"
                         x-cloak
