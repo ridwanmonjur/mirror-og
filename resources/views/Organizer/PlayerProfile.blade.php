@@ -8,7 +8,15 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/css/intlTelInput.css">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/lightgallery.js'])
+        <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
+    @vite(['resources/sass/app.scss', 
+        'resources/js/app.js', 
+        'resources/js/lightgallery.js',   
+        'resources/js/file-upload-preview.js',
+        'resources/sass/file-upload-preview.scss',
+        'resources/js/colorpicker.js',
+        'resources/sass/colorpicker.scss'
+    ])
 </head>
 @php
     use Carbon\Carbon;
@@ -21,6 +29,11 @@
         }
 
         $isUserSame = $user->id == $userProfile->id;
+        [   
+            'backgroundStyles' => $backgroundStyles, 
+            'fontStyles' => $fontStyles, 
+            'frameStyles' => $frameStyles
+        ] = $userProfile->profile->generateStyles();
     @endphp
 @endauth
 <body>
@@ -30,31 +43,39 @@
         x-data="alpineDataComponent"
     >
         {{-- <form action="{{route('organizer.profile.update')}}" method="POST">  --}}
-        <div id="backgroundBanner" class="member-section px-0"
-        >   
-            <div style="background-color: #DFE1E2;" class="pb-4">
+        <div>
+            <div id="backgroundBanner" class="member-section px-2 pt-2"
+                @style([
+                    "background-size: cover; background-repeat: no-repeat;"
+                ])
+            > 
                 <br>
                 <div class="member-image">
                     <div class="upload-container align-items-center">
                         <label for="image-upload" class="upload-label">
                             <div class="circle-container">
+                                <div id="uploaded-image" class="uploaded-image"
+                                    style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }}  ); background-size: cover; 
+                                        z-index: 99; background-repeat: no-repeat; background-position: center; {{$frameStyles}}"
+                                >
+                                </div>
                                 <div class="d-flex align-items-center justify-content-center upload-button pt-3">
                                     <a aria-hidden="true" data-fslightbox href="{{ '/' . 'storage/' . $userProfile->userBanner }}">
-                                        <button class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                        <button class="btn btn-sm p-0 me-2"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                                         <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
                                         <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
                                         </svg> 
                                         </button>
                                     </a>    
                                     @if ($isUserSame)
-                                        <button id="upload-button" class="btn btn-sm" aria-hidden="true">
+                                        <button id="upload-button" class="btn btn-sm p-0" aria-hidden="true">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                                             </svg>
                                         </button>
                                     @endif
-                                </div>
+                                </div>  
                             </div>
                         </label>
                         @if ($isUserSame)
@@ -63,9 +84,8 @@
                     </div>
                 </div>
                 <div class="member-details mx-auto text-center">
-                    <div x-cloak x-show="isEditMode">
+                    <div x-cloak x-show="isEditMode" class="pb-3">
                         <div x-show="errorMessage != null" class="text-red" x-text="errorMessage"> </div>
-
                         <input 
                             placeholder = "Enter your name..."
                             style="width: 250px;"
@@ -95,6 +115,7 @@
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                         </svg>
+                        <br>
                     </div>
                     <div x-cloak x-show="!isEditMode">
                         <h5>
@@ -109,15 +130,15 @@
                         @if ($isOwnProfile)
                             <div class="text-center">
                                 <button 
-                                    x-on:click="isEditMode = true; fetchCountries();"
-                                    class="oceans-gaming-default-button oceans-gaming-primary-button py-1 px-5"> 
+                                    x-on:click="isEditMode = true;"
+                                    class="oceans-gaming-default-button oceans-gaming-primary-button py-1 px-5 me-3"> 
                                     Edit
                                 </button>
                                 <button 
                                     data-bs-toggle="modal"
                                     data-bs-target="#profileModal"
                                     {{-- onclick="document.getElementById('backgroundInput').click();" --}}
-                                    class="btn btn-secondary text-light rounded-pill py-2 me-3 fs-7"
+                                    class="btn btn-secondary text-light rounded-pill py-1 me-3 px-3"
                                 > 
                                     Change Background
                                 </button>
@@ -170,6 +191,7 @@
                                 </button>
                             </div>
                         @endif
+                        <br>
                     </div>
                 </div>
             </div>
@@ -181,7 +203,7 @@
         </div>
         <div x-cloak x-show="!isEditMode" class="tab-content pb-4 outer-tab px-5" id="Overview">
             <br> 
-            <div class="showcase tab-size showcase-box showcase-column pt-4 grid-4-columns tab-size text-center">
+            <div class="showcase tab-size showcase-box showcase-column pt-4 grid-4-columns text-center" style="width: max(500px, 55vw);">
                 <div> 
                     <h3> {{$lastYearEventsCount}} </h3>
                     <p> Events Organized in Last Year </p>
@@ -514,10 +536,11 @@
         <br> <br>
         {{-- </form> --}}
     </main>
-    @include('Organizer.Profile.Scripts')
 
 </body>
 @livewireScripts
+<script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/js/intlTelInput.min.js"></script>
 <script>
     const input = document.querySelector("#phone");
@@ -598,6 +621,23 @@
                 } 
             },
             isCountriesFetched: false ,
+             init() {
+                this.fetchCountries();
+                var backgroundStyles = "<?php echo $backgroundStyles; ?>";
+                var fontStyles = "<?php echo $fontStyles; ?>";
+                var banner = document.getElementById('backgroundBanner');
+                banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
+                this.$watch('isEditMode', value => {
+                    if (value) {
+                        banner.style.color = 'black';
+                        banner.style.background = "auto";
+                        banner.style.backgroundImage = "auto";
+                        banner.style.backgroundColor = "rgb(211, 211, 211)";
+                    } else {
+                        banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
+                    }
+                });
+            },
             fetchCountries () {
                 return fetch('/countries')
                     .then(response => response.json())
@@ -621,80 +661,6 @@
         })
     })
 
-    const uploadButton = document.getElementById("upload-button");
-    const imageUpload = document.getElementById("image-upload");
-    const uploadedImage = document.getElementById("uploaded-image");
-
-    uploadButton?.addEventListener("click", function() {
-        imageUpload.click();
-    });
-
-    window.onload = () => { loadMessage(); }
-
-    imageUpload?.addEventListener("change", async function(e) {
-        const file = e.target.files[0];
-
-        try {
-            const fileContent = await readFileAsBase64(file);
-            const url = "{{ route('participant.userBanner.action', ['id' => $userProfile->id] ) }}";
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-type': 'application/json',
-                    'Accept': 'application/json',
-                    ...window.loadBearerHeader()
-                },
-                body: JSON.stringify({
-                    file: {
-                        filename: file.name,
-                        type: file.type,
-                        size: file.size,
-                        content: fileContent
-                        }
-                    }),
-                });
-
-            
-                const data = await response.json();
-                    
-                if (data.success) {
-                    uploadedImage.style.backgroundImage = `url(${data.data.fileName})`;
-                } else {
-                    console.error('Error updating member status:', data.message);
-                }
-            } catch (error) {
-                console.error('There was a problem with the file upload:', error);
-        }
-    });
-
-    async function readFileAsBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-
-            reader.onload = function(event) {
-                const base64Content = event.target.result.split(';base64,')[1];
-                resolve(base64Content);
-            };
-
-            reader.onerror = function(error) {
-                reject(error);
-            };
-
-            reader.readAsDataURL(file);
-        });
-    }
-
-
-    const fetchCountries = () => {
-        return fetch('/countries')
-            .then(response => response.json())
-            .then(data => {
-                console.log({data})
-                return data?.data;
-            })
-            .catch(error => console.error('Error fetching countries:', error));
-    }
 
     function reddirectToLoginWithIntened(route) {
         route = encodeURIComponent(route);
@@ -773,8 +739,8 @@
             .replace(':id', userId);
     }
 
-   
 </script>
+
 <script>
     function reddirectToLoginWithIntened(route) {
             route = encodeURIComponent(route);
@@ -784,7 +750,7 @@
         }
 
 
-        document.getElementById('followFormProfile').addEventListener('submit', async function(event) {
+        document.getElementById('followFormProfile')?.addEventListener('submit', async function(event) {
             event.preventDefault();
             let followButtons = document.getElementsByClassName("{{'followButton' . $userProfile->id}}");
             let followCounts = document.getElementsByClassName("{{'followCounts' . $userProfile->id}}");
@@ -850,5 +816,6 @@
             }
         });
 </script>
+@include('Organizer.Profile.Scripts')
 
 </html>

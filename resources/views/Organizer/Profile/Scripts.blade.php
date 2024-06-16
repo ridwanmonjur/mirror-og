@@ -1,4 +1,8 @@
 <script>
+    const backgroundBanner = document.getElementById("backgroundBanner")
+    console.log({backgroundBanner})
+console.log({backgroundBanner})
+console.log({backgroundBanner})
     let colorOrGradient = null; 
     function applyBackground(event, colorOrGradient) {
         document.querySelectorAll('.color-active').forEach(element => {
@@ -9,7 +13,9 @@
     }
 
     function chooseColor(event, color) {
-        applyBackground(event, color);
+        if (event) applyBackground(event, color);
+        document.querySelector("input[name='backgroundColor']").value = color;
+        document.querySelector("input[name='backgroundGradient']").value = null;
         localStorage.setItem('colorOrGradient', color);
         document.getElementById('backgroundBanner').style.backgroundImage = 'none';
         document.getElementById('backgroundBanner').style.background = color;
@@ -17,7 +23,9 @@
 
     function chooseGradient(event, gradient) {
         console.log({gradient});
-        applyBackground(event, gradient);
+        if (event) applyBackground(event, gradient);
+        document.querySelector("input[name='backgroundColor']").value = null;
+        document.querySelector("input[name='backgroundGradient']").value = gradient;
         localStorage.setItem('colorOrGradient', gradient);
         document.getElementById('backgroundBanner').style.backgroundImage = gradient;
         document.getElementById('backgroundBanner').style.background = 'auto';
@@ -39,14 +47,6 @@
         }
     }
 
-    const currentDate = new Date();
-    const formattedDate = currentDate.toISOString().split('T')[0];
-    document.getElementById('birthdate').setAttribute('max', formattedDate);
-    let birthday = '{{$userProfile->participant->birthday}}';
-    if (birthday) {
-        birthday = new Date(birthday).toISOString().split('T')[0]
-    }
-
     function visibleElements() {
         let elements = document.querySelectorAll('.show-first-few');
 
@@ -55,7 +55,6 @@
         element2.classList.add('d-none');
     }
 
-    // const games_data = {{ $userProfile->participant->games_data }};
     window.onload = () => { 
         localStorage.setItem('isInited', "false");
         
@@ -67,27 +66,24 @@
             localStorage.setItem('message', errorInput.value);
         }
 
-        const bgUploadPreview = window.fileUploadPreviewById('file-upload-preview-1');
+        window.fileUploadPreviewById('file-upload-preview-1');
 
-        window.createGradientPicker(document.getElementById('div-gradient-picker'),
+          window.createGradientPicker(document.getElementById('div-gradient-picker'),
             (gradient) => {
-                localStorage.setItem('colorOrGradient', gradient);
-                document.getElementById('backgroundBanner').style.backgroundImage = gradient;
-                document.getElementById('backgroundBanner').style.background = 'auto';
+                chooseGradient(null, gradient);
             }
         );
         
 
         window.createColorPicker(document.getElementById('div-color-picker'), 
             (color) => {
-                localStorage.setItem('colorOrGradient', color);
-                document.getElementById('backgroundBanner').style.backgroundImage = 'auto';
-                document.getElementById('backgroundBanner').style.background = color;
+                chooseColor(null, color);
             }
         );
 
         window.createColorPicker(document.getElementById('div-font-color-picker-with-bg'), 
             (color) => {
+                document.querySelector("input[name='fontColor']").value = color;
                 document.getElementById('backgroundBanner').style.color = color;
             }
         );
@@ -95,6 +91,7 @@
          window.createColorPicker(document.getElementById('div-font-color-picker-with-frame'), 
             (color) => {
                 document.querySelectorAll('.uploaded-image').forEach((element)=> {
+                    document.querySelector("input[name='frameColor']").value = color;
                     element.style.borderColor = color;
                 }) 
             }
@@ -105,51 +102,34 @@
 
             console.log('detail', detail);
             const file = detail.files[0];
-            try {
             const fileContent = await readFileAsBase64(file);
 
-            await changeBackgroundDesignRequest();
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-type': 'application/json',
-                    'Accept': 'application/json',
-                    ...window.loadBearerHeader()
-                },
-                body: JSON.stringify({
-                    file: {
-                        filename: file.name,
-                        type: file.type,
-                        size: file.size,
-                        content: fileContent
-                        }
-                    }),
-                });
-
-               
-                const data = await response.json();
-                    
-                if (data.success) {
-                    backgroundBanner.style.backgroundImage = `url(${data.data.fileName})`;
-                } else {
-                    console.error('Error updating member status:', data.message);
+             await changeBackgroundDesignRequest({
+                backgroundBanner: {
+                    filename: file.name,
+                    type: file.type,
+                    size: file.size,
+                    content: fileContent
                 }
-            } catch (error) {
-                console.error('There was a problem with the request:', error);
-            }
+            }, (data)=> {
+                if (backgroundBanner) {
+                    console.log({data: data.data})
+                    console.log({data: data.data})
+                    console.log({data: data.data})
+                    backgroundBanner.style.backgroundImage = `url(/storage/${data.data.backgroundBanner})`;
+                    backgroundBanner.style.background = 'auto';
+                }
+            }, (error)=> {
+                console.error(error);
+            });
         });
 
         window.loadMessage(); 
     }
    
-</script>
-@if ($isUserSame)
-<script>
     const uploadButton = document.getElementById("upload-button");
     const imageUpload = document.getElementById("image-upload");
     const uploadedImage = document.getElementById("uploaded-image");
-    const backgroundBanner = document.getElementById("backgroundBanner")
     uploadButton?.addEventListener("click", function() {
         imageUpload.click();
     });
@@ -177,12 +157,11 @@
                         }
                     }),
                 });
-
                 
                 const data = await response.json();
                     
                 if (data.success) {
-                    uploadedImage.style.backgroundImage = `url(${data.data.fileName})`;
+                    uploadedImage.style.backgroundImage = `url(/storage/${data.data.fileName})`;
                 } else {
                     console.error('Error updating member status:', data.message);
                 }
@@ -234,9 +213,7 @@
             reader.readAsDataURL(file);
         });
     }
-</script>
-@endif
-<script>
+
 
     function reddirectToLoginWithIntened(route) {
         route = encodeURIComponent(route);

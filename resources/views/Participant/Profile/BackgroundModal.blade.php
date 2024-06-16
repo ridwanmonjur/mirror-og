@@ -182,10 +182,9 @@
                             <label for="image-upload" class="upload-label">
                                 <div class="circle-container">
                                     <div id="uploaded-image" class="uploaded-image"
-                                         @style(["background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
-                                            background-repeat: no-repeat; background-position: center;",
-                                            $frameStyles
-                                    ])>
+                                         style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
+                                            background-repeat: no-repeat; background-position: center; {{$frameStyles}}"
+                                    >
                                     </div>
                                 </div>
                             </label>

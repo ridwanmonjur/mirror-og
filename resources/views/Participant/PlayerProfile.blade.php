@@ -23,27 +23,12 @@
     use Carbon\Carbon;
     $isUserSame = false;
 
-    $backgroundStyles = $fontStyles = $frameStyles = '';
-    if (isset($userProfile->profile->backgroundBanner)) {
-        $backgroundStyles = "background-image: url(".  '/storage' . '/'. $userProfile->profile->backgroundBanner . ");";
-    } 
+    [   
+        'backgroundStyles' => $backgroundStyles, 
+        'fontStyles' => $fontStyles, 
+        'frameStyles' => $frameStyles
+    ] = $userProfile->profile->generateStyles();
     
-    if (isset($userProfile->profile->backgroundColor)) {
-        $backgroundStyles = "background-color: " . $userProfile->profile->backgroundColor . ";" ; 
-    }
-
-    if (isset($userProfile->profile->backgroundGradient)) {
-        $backgroundStyles = "background-image: " . $userProfile->profile->backgroundGradient . ";" ; 
-    }
-
-    if (isset($userProfile->profile->fontColor)) {
-        $fontStyles = "color: " . $userProfile->profile->fontColor . ";" ; 
-    }
-
-    if (isset($userProfile->profile->frameColor)) {
-        $frameStyles = "border-color: " . $userProfile->profile->frameColor . ";" ; 
-    }
-
     // dd($userProfile->participant);
 @endphp
 @auth
@@ -63,8 +48,6 @@
         @include('Participant.Profile.Forms')
         <div id="backgroundBanner" class="member-section px-2 pt-2"
             @style([
-                $backgroundStyles,
-                $fontStyles,
                 "background-size: cover; background-repeat: no-repeat;"
             ])
         >
@@ -106,7 +89,7 @@
                     {{-- Close icon --}}
                     <svg 
                         x-cloak
-                        style="top: 10px;"
+                        style="top: 10px; color: black;"
                         x-show="isEditMode"
                         x-on:click="isEditMode = false;"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle cursor-pointer align-middle position-relative" viewBox="0 0 16 16">
@@ -125,10 +108,8 @@
                         <label for="image-upload" class="upload-label">
                             <div class="circle-container">
                                 <div id="uploaded-image" class="uploaded-image"
-                                    @style(["background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
-                                        background-repeat: no-repeat; background-position: center;",
-                                        $frameStyles
-                                    ])
+                                    style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
+                                        z-index: 99; background-repeat: no-repeat; background-position: center; {{$frameStyles}}"
                                 >
                                 </div>
                                 <div class="d-flex align-items-center justify-content-center upload-button pt-3">
@@ -157,7 +138,7 @@
                 </div>
                 <div class="member-details">
                         <div x-show="errorMessage != null" class="text-red" x-text="errorMessage"> </div>
-                        <div x-cloak x-show="isEditMode">
+                        <div x-cloak x-show="isEditMode" style="color: black;">
                             <input 
                                 placeholder = "Enter your nickname..."
                                 style="width: 250px;"

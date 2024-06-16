@@ -116,7 +116,7 @@
                     content: fileContent
                 }
             }, (data)=> {
-                backgroundBanner.style.backgroundImage = `url(${data.data.profile.backgroundBanner})`;
+                backgroundBanner.style.backgroundImage = `url(/storage/${data.data.backgroundBanner})`;
                 backgroundBanner.style.background = 'auto';
             }, (error)=> {
                 console.error(error);
@@ -190,9 +190,11 @@
             isCountriesFetched: false ,
             changeFlagEmoji() {
                 let region = this.participant.region.value ?? this.participant.region;
-                let countryX = Alpine.raw(this.countries).find(elem => elem.id == region);
-                this.participant.region_name = countryX.name.en;
-                this.participant.region_flag = countryX.emoji_flag;
+                if (region) {
+                    let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == region);
+                    this.participant.region_name = countryX?.name.en;
+                    this.participant.region_flag = countryX?.emoji_flag;
+                }
             },
             async fetchCountries () {
                 async function storeDataInLocalStorage() {
@@ -279,7 +281,23 @@
             },
          
             init() {
-                this.fetchCountries()
+                this.fetchCountries();
+                var backgroundStyles = "<?php echo $backgroundStyles; ?>";
+                var fontStyles = "<?php echo $fontStyles; ?>";
+                console.log({backgroundStyles, fontStyles})
+                var banner = document.getElementById('backgroundBanner');
+                banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
+                this.$watch('isEditMode', value => {
+                    if (value) {
+                        banner.style.color = 'black';
+                        banner.style.background = "auto";
+                        banner.style.backgroundImage = "auto";
+                        banner.style.backgroundColor = "#D3D3D3";
+                    } else {
+                        banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
+                    }
+                });
+                
                 this.$watch('participant.birthday', value => {
                     const today = new Date();
                     const birthDate = new Date(value);
