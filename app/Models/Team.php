@@ -39,6 +39,11 @@ class Team extends Model
         return $this->hasMany(EventInvitation::class, 'team_id');
     }
 
+    public function profile()
+    {
+        return $this->hasOne(TeamProfile::class, 'team_id');
+    }
+
     public function activities()
     {
         return $this->morphMany(ActivityLogs::class, 'subject');

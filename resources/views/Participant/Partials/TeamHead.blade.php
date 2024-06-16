@@ -1,4 +1,16 @@
-@vite(['resources/js/lightgallery.js'])
+<head>
+    @vite([
+        'resources/sass/app.scss', 
+        'resources/js/app.js', 
+        'resources/js/lightgallery.js',
+        'resources/js/file-upload-preview.js',
+        'resources/sass/file-upload-preview.scss',
+        'resources/js/colorpicker.js',
+        'resources/sass/colorpicker.scss',
+    ])
+    <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
+
+</head>
 @guest
     @php
         $teamMember = null;
@@ -9,6 +21,12 @@
 @endguest
 @auth
     @php
+        [   
+            'backgroundStyles' => $backgroundStyles, 
+            'fontStyles' => $fontStyles, 
+            'frameStyles' => $frameStyles
+        ] = $selectTeam->profile?->generateStyles();
+        
         $teamMember = App\Models\TeamMember::where('team_id', $selectTeam->id)
             ->where('user_id', $user->id)->get();
         if (isset($teamMember[0])) {
@@ -31,20 +49,42 @@
         $isCreator = $selectTeam->creator_id == $user->id;
     @endphp
 @endauth
-<main class="main1">    
-    <br>
+<main class="main1" 
+        id="backgroundBanner" class="member-section px-2 pt-2"
+        @style([
+            "background-size: cover; background-repeat: no-repeat;"
+        ])
+    >    
+    @include('Participant.TeamHeadPartials.BackgroundModal')
+    <input type="file" id="backgroundInput" class="d-none"> 
     {{-- @if ($isCreator) --}}
         <div class="team-section" 
             x-data="alpineDataComponent"
         >
+        @if ($isCreator)
+            <div class="d-flex w-100 justify-content-end py-0 my-0 mb-2">
+                <button 
+                    x-show="!isEditMode"
+                    data-bs-toggle="modal"
+                    data-bs-target="#profileModal"
+                    x-cloak
+                    {{-- onclick="document.getElementById('backgroundInput').click();" --}}
+                    class="btn btn-secondary text-light rounded-pill py-2 fs-7 mt-2"
+                > 
+                    Change Background
+                </button>
+            </div>
+        @else 
+            <br>
+        @endif
     {{-- @else --}}
         {{-- <div class="team-section"> --}}
     {{-- @endif --}}
-        <div class="upload-container">
+        <div :class="{'upload-container': true, 'pt-5': isEditMode}">
             <label for="image-upload" class="upload-label">
                 <div class="circle-container">
                     <div id="uploaded-image" class="uploaded-image"
-                        style="background-image: url({{ '/storage' . '/'. $selectTeam->teamBanner }} );"
+                        style="background-image: url({{ '/storage' . '/'. $selectTeam->teamBanner }} ); object-fit:cover; {{$frameStyles}}"
                     ></div>
                     <div class="d-flex align-items-center justify-content-center upload-button pt-3">
                         <a aria-hidden="true" data-fslightbox href="{{ '/' . 'storage/' . $selectTeam->teamBanner }}">
@@ -69,37 +109,29 @@
                 <input type="file" id="image-upload" accept="image/*" style="display: none;">
             @endif
         </div>
-        <div class="team-names flex-wrap">
-            <div class="team-info">
+        <div>
+            <div :class="{'team-info': !isEditMode}">
                 @if ($isCreator)
                 <div x-cloak x-show.important="isEditMode">
+                    <br>
                     <div x-show="errorMessage != null" class="text-red" x-text="errorMessage"> </div>
-                    <input 
-                        placeholder="Enter your team name..."
-                        style="width: 200px;"
-                        class="form-control border-secondary player-profile__input d-inline" 
-                        x-model="teamName"
-                    >
-                    <svg
-                        class="me-2 align-middle" 
-                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
-                    </svg>
-                    <select 
-                        :change="changeFlagEmoji"
-                        x-model="country"
-                        style="width: 200px;"    
-                        class="form-control mt-2 d-inline rounded-pill"
-                    >
-                        <template x-for="region in countries">
-                            <option
-                                :selected="country==region.id"
-                                :value="region.id">
-                                <span x-html="region.emoji_flag" class="mx-3"> </span>  
-                                <span x-html="region.name.en"> </span>
-                            </option>
-                        </template>
-                    </select> 
+                    <div>
+                        <input 
+                            placeholder="Enter your team name..."
+                            style="width: 200px;"
+                            class="form-control border-secondary player-profile__input d-inline me-4 d-inline" 
+                            x-model="teamName"
+                        >
+                        <span class="d-inline-flex justify-between">
+                            <svg
+                                class="me-2 mt-3" 
+                                xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                            </svg>
+                            <select id="select2-country" :change="changeFlagEmoji" style="width: 150px;" class="d-inline"  data-placeholder="Select a country" x-model="country"> 
+                            </select>
+                        </span>
+                    </div>
                 </div>
                 <span
                     x-cloak 
@@ -238,13 +270,13 @@
     </div>
 </main>
 
-    @livewireScripts
-
-    <script>
-        window.onload = () => { loadMessage(); }
-
+@livewireScripts
+<script>
         document.addEventListener('alpine:init', () => {
+
             Alpine.data('alpineDataComponent', () => ({
+                select2: null,
+                isEditMode: false, 
                 id: '{{$selectTeam->id}}',
                 teamName: '{{$selectTeam->teamName}}', 
                 teamDescription: '{{$selectTeam->teamDescription}}', 
@@ -252,13 +284,76 @@
                 country_name: '{{$selectTeam->country_name}}',
                 country_flag: '{{$selectTeam->country_flag}}',
                 isEditMode: false, 
-                countries: [], 
                 errorMessage: '', 
                 isCountriesFetched: false,
+                countries: 
+                [
+                    {
+                        name: { en: 'No country' },
+                        emoji_flag: ''
+                    }
+                ], 
+                errorMessage: errorInput?.value, 
                 changeFlagEmoji() {
-                    let countryX = this.countries.find(elem => elem.id == this.country);
-                    this.country_name = countryX.name.en;
-                    this.country_flag = countryX.emoji_flag;
+                    let country = this.country?.value ?? this.country;
+                    if (country) {
+                        let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == country);
+                        this.country_name = countryX?.name.en;
+                        this.country_flag = countryX?.emoji_flag;
+                    }
+                },
+                async fetchCountries () {
+                    async function storeDataInLocalStorage() {
+                        try {
+                            let isValid = false;
+                            let data = JSON.parse(localStorage.getItem('countriesData'));
+                            let innerData = data?.data;
+                            if (innerData) {
+                                isValid = innerData[0] && innerData[1] && innerData[99] && innerData[100];
+                            } 
+
+                            if (isValid) {
+                                return data;
+                            }
+
+                            const response = await fetch('/countries');
+                            data = await response.json();
+                            localStorage.setItem('countriesData', JSON.stringify(data));
+                            return data;
+                        } catch (error) {
+                            console.error('Error storing data in localStorage:', error);
+                        }
+                    }
+
+                    if (this.isCountriesFetched) return;
+                    try {
+                        const data = await storeDataInLocalStorage();
+
+                        if (data?.data) {
+                            this.isCountriesFetched = true;
+                            this.countries = data.data;
+
+                            const choices2 = new Choices(document.getElementById('select2-country'), {
+                                itemSelectText: "",
+                                allowHTML: "",
+                                choices: data.data.map((value) => ({
+                                    label: `${value.emoji_flag} ${value.name.en}`,
+                                    value: value.id,
+                                    disabled: false,
+                                    selected: value.id === this.country,
+                                })),
+                            });
+
+                            const choicesContainer = document.querySelector('.choices');
+                            choicesContainer.style.width = "150px";
+
+                            
+                        } else {
+                            this.errorMessage = "Failed to get data!";
+                        }
+                    } catch (error) {
+                        console.error('Error fetching countries:', error);
+                    }
                 },
                 async submitEditProfile (event) {
                     try {
@@ -269,7 +364,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                 'Content-type': 'application/json',
-                                // 'Accept': 'application/json',
+                                'Accept': 'application/json',
                             },
                             body: JSON.stringify({
                                 id: this.id, 
@@ -300,67 +395,32 @@
                     console.error({error});
                     } 
                 },
-                fetchCountries () {
-                    return fetch('/countries')
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data?.data) {
-                                this.isCountriesFetched = true;
-                                this.countries = data?.data;
-                            } else {
-                                this.errorMessage = "Failed to get data!"
-                                this.countries = [{
-                                    name: {
-                                        en: 'No country'
-                                    },
-                                    emoji_flag: '🇦🇫'
-                                }];
-                            }
-                        })
-                        .catch(error => console.error('Error fetching countries:', error));
-                    }
-                })
-            )
-        })
-</script>
-@if ($isCreator)
-    <script>
-
-        const uploadButton = document.getElementById("upload-button");
-        const imageUpload = document.getElementById("image-upload");
-        const uploadedImage = document.getElementById("uploaded-image");
-
-        uploadButton.addEventListener("click", function() {
-            imageUpload.click();
-        });
-
-        imageUpload.addEventListener("change", async function(e) {
-            const file = e.target.files[0];
-
-            if (file) {
-                const url = "{{ route('participant.teamBanner.action', ['id' => $selectTeam->id] ) }}";
-                const formData = new FormData();
-                formData.append('file', file);
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        },
-                        body: formData,
+            
+                init() {
+                    this.fetchCountries();
+                    var backgroundStyles = "<?php echo $backgroundStyles; ?>";
+                    var fontStyles = "<?php echo $fontStyles; ?>";
+                    console.log({backgroundStyles, fontStyles})
+                    var banner = document.getElementById('backgroundBanner');
+                    banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
+                    this.$watch('isEditMode', value => {
+                        if (value) {
+                            banner.style.color = 'black';
+                            banner.style.background = "auto";
+                            banner.style.backgroundImage = "auto";
+                            banner.style.backgroundColor = "#D3D3D3";
+                        } else {
+                            banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
+                        }
                     });
                     
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        uploadedImage.style.backgroundImage = `url(${data.data.fileName})`;
-                    } else {
-                        console.error('Error updating member status:', data.message);
-                    }
-                } catch (error) {
-                    console.error('Error approving member:', error);
                 }
-            }
-        });
-    </script>
+
+            })
+    )});
+</script>
+@if ($isCreator)
+  
+    <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
 @endif
+  @include('Participant.TeamHeadPartials.Scripts')

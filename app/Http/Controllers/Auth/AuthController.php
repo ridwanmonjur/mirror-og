@@ -7,6 +7,7 @@ use App\Models\EventDetail;
 use App\Models\Notifications;
 use App\Models\Organizer;
 use App\Models\Participant;
+use App\Models\TeamProfile;
 use App\Models\User;
 use App\Models\UserProfile;
 use Carbon\Carbon;
@@ -587,6 +588,7 @@ class AuthController extends Controller
 
     public function replaceBackground(Request $request)
     {
+
         try {
             $validated = $request->validate([
                 'backgroundBanner' => 'nullable|array',
@@ -594,14 +596,31 @@ class AuthController extends Controller
                 'backgroundBanner.type' => 'nullable|string',
                 'backgroundBanner.size' => 'nullable|numeric',
                 'backgroundBanner.content' => 'nullable|string',
-                'teamId' => 'nulable|exists:team,id',
+                'teamId' => 'nullable|exists:teams,id',
                 'backgroundGradient' => 'nullable|string',
                 'backgroundColor' => 'nullable|string',
                 'fontColor' => 'nullable|string',
                 'frameColor' => 'nullable|string',
             ]);
             $user = $request->attributes->get('user');
+            
             if ($request->teamId) {
+
+                $profile = TeamProfile::where('team_id', $request->teamId)->firstOrNew();
+                $profile->team_id = $user->id;
+                $oldBanner = $profile->backgroundBanner;
+                if ($request->backgroundBanner) {
+                    $user->uploadBackgroundBanner($request, $profile);
+                } else {
+                    $profile->fill($validated);
+                    if ($profile->backgroundColor || $profile->backgroundGradient) {
+                        $profile->backgroundBanner = null;
+                    }
+
+                    $profile->save();
+                }
+
+                $user->destroyUserBanner($oldBanner);
             } else {
                 $profile = UserProfile::where('user_id', $user->id)->firstOrNew();
                 $profile->user_id = $user->id;
@@ -625,6 +644,7 @@ class AuthController extends Controller
                 return back();
             }
         } catch (Exception $e) {
+            throw new Exception($e);
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
             } else {

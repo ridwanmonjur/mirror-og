@@ -672,6 +672,17 @@ input[type="submit"],
     overflow: auto;
 }
 
+@media screen and (min-width: 576px) {
+    .modal-dialog {
+        max-width:100vw !important;
+        width: min(70vw, 100%) !important  ;
+    }
+
+    .modal-content {
+        width: max(70vw, 100%) !important  ;
+    }
+}
+
 @media screen and (min-width: 600px) {
     .swiper-container {
         display: block;
@@ -753,4 +764,53 @@ input[type="submit"],
     border-radius: 0px !important;
     color: black;
 }
+
+
+.player-profile__input, 
+.form-control.player-profile__input:focus {
+    box-shadow: none !important;
+    border-width: 0px !important;
+    border-bottom-width: 2px !important; 
+    border-bottom-style: dotted !important;
+    background-color: transparent !important;
+    border-radius: 0px !important;
+    color: black;
+}
+
+
+
+.iti, .iti--allow-dropdown, .iti--show-flags, .iti--inline-dropdown {
+    background-color: transparent !important;
+}
+
+.easylogic-colorpicker .color-list, .easylogic-colorpicker .menu{
+    display: none !important;
+}
+
+.color-pallete:hover {
+    outline: 4px solid white;
+    outline-offset: -5px;
+    border: 3px solid gray;
+    cursor: pointer;
+}
+
+.color-active {
+    outline: 4px solid white;
+    outline-offset: -5px;
+    border: 5px solid #43A4D7;
+    cursor: pointer;
+}
+.custom-file-container .label-container {
+    display: none !important;
+}
+
+.tab-button-override {
+    padding-left: 0px;
+     padding-right: 0px; 
+     max-width: 200px !important;
+     width: 200px !important;
+     margin-right: 20px !important;
+}
+
+
 

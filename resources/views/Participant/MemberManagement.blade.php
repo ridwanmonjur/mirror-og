@@ -23,9 +23,10 @@
     
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
-    
-    
+    <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
     @include('Participant.MemberManagementPartials.MemberManagementScripts')
+    <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
+
     <script>
         let actionMap = {
             'approve': approveMemberAction,
@@ -77,7 +78,7 @@
         }
 
 
-        window.onload = () => { window.loadMessage(); loadTab(); }
+        addOnLoad( () => { window.loadMessage(); loadTab(); } )
        
 
         function reloadUrl(currentUrl, buttonName) {

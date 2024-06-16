@@ -1,5 +1,4 @@
 <script>
-    const backgroundBanner = document.getElementById("backgroundBanner")
     let colorOrGradient = null; 
     function applyBackground(event, colorOrGradient) {
         document.querySelectorAll('.color-active').forEach(element => {
@@ -13,14 +12,17 @@
         if (event) applyBackground(event, color);
         document.querySelector("input[name='backgroundColor']").value = color;
         document.querySelector("input[name='backgroundGradient']").value = null;
+        localStorage.setItem('colorOrGradient', color);
         document.getElementById('backgroundBanner').style.backgroundImage = 'none';
         document.getElementById('backgroundBanner').style.background = color;
     }
 
     function chooseGradient(event, gradient) {
+        console.log({gradient});
         if (event) applyBackground(event, gradient);
         document.querySelector("input[name='backgroundColor']").value = null;
         document.querySelector("input[name='backgroundGradient']").value = gradient;
+        localStorage.setItem('colorOrGradient', gradient);
         document.getElementById('backgroundBanner').style.backgroundImage = gradient;
         document.getElementById('backgroundBanner').style.background = 'auto';
     }
@@ -28,7 +30,7 @@
     let successInput = document.getElementById('successMessage');
     let errorInput = document.getElementById('errorMessage');
 
-      function formRequestSubmitById(message, id) {
+    function formRequestSubmitById(message, id) {
         const form = document.getElementById(id);
 
         if (message) {
@@ -49,7 +51,10 @@
         element2.classList.add('d-none');
     }
 
-    window.onload = () => { 
+    let newFunction = function() {
+        if (oldOnLoad) {
+            oldOnLoad();
+        }
         localStorage.setItem('isInited', "false");
         
         if (successInput) {
@@ -60,9 +65,9 @@
             localStorage.setItem('message', errorInput.value);
         }
 
-        window.fileUploadPreviewById('file-upload-preview-1');
+        const bgUploadPreview = window.fileUploadPreviewById('file-upload-preview-1');
 
-          window.createGradientPicker(document.getElementById('div-gradient-picker'),
+        window.createGradientPicker(document.getElementById('div-gradient-picker'),
             (gradient) => {
                 chooseGradient(null, gradient);
             }
@@ -82,7 +87,7 @@
             }
         );
 
-         window.createColorPicker(document.getElementById('div-font-color-picker-with-frame'), 
+        window.createColorPicker(document.getElementById('div-font-color-picker-with-frame'), 
             (color) => {
                 document.querySelectorAll('.uploaded-image').forEach((element)=> {
                     document.querySelector("input[name='frameColor']").value = color;
@@ -97,8 +102,7 @@
             console.log('detail', detail);
             const file = detail.files[0];
             const fileContent = await readFileAsBase64(file);
-
-             await changeBackgroundDesignRequest({
+            await changeBackgroundDesignRequest({
                 backgroundBanner: {
                     filename: file.name,
                     type: file.type,
@@ -106,67 +110,31 @@
                     content: fileContent
                 }
             }, (data)=> {
-                if (backgroundBanner) {
-                    console.log({data: data.data})
-                    console.log({data: data.data})
-                    console.log({data: data.data})
-                    backgroundBanner.style.backgroundImage = `url(/storage/${data.data.backgroundBanner})`;
-                    backgroundBanner.style.background = 'auto';
-                }
+                backgroundBanner.style.backgroundImage = `url(/storage/${data.data.backgroundBanner})`;
+                backgroundBanner.style.background = 'auto';
             }, (error)=> {
                 console.error(error);
-            });
+            })
         });
 
         window.loadMessage(); 
     }
-   
-    const uploadButton = document.getElementById("upload-button");
-    const imageUpload = document.getElementById("image-upload");
-    const uploadedImage = document.getElementById("uploaded-image");
-    uploadButton?.addEventListener("click", function() {
-        imageUpload.click();
-    });
 
-     imageUpload?.addEventListener("change", async function(e) {
-        const file = e.target.files[0];
-
-        try {
-            const fileContent = await readFileAsBase64(file);
-            const url = "{{ route('participant.userBanner.action', ['id' => $userProfile->id] ) }}";
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-type': 'application/json',
-                    'Accept': 'application/json',
-                    ...window.loadBearerHeader()
-                },
-                body: JSON.stringify({
-                    file: {
-                        filename: file.name,
-                        type: file.type,
-                        size: file.size,
-                        content: fileContent
-                        }
-                    }),
-                });
-                
-                const data = await response.json();
-                    
-                if (data.success) {
-                    uploadedImage.style.backgroundImage = `url(/storage/${data.data.fileName})`;
-                } else {
-                    console.error('Error updating member status:', data.message);
-                }
-            } catch (error) {
-                console.error('There was a problem with the file upload:', error);
-        }
-    });
+    const oldOnLoad = window.onload;
+    if (typeof window.onload !== 'function') {
+        window.onload = newFunction;
+    } else {
+        window.onload = function() {
+            if (oldOnLoad) {
+                oldOnLoad();
+            }
+            newFunction();
+        };
+    }
 
     async function changeBackgroundDesignRequest(body, successCallback, errorCallback) {
         try {
-            const url = "{{ route('user.userBackgroundApi.action', ['id' => $userProfile->id] ) }}";
+            const url = "{{ route('user.userBackgroundApi.action', ['id' => $selectTeam->id] ) }}";
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -190,6 +158,46 @@
         }
     }
 
+    
+</script>
+<script>
+    const uploadButton = document.getElementById("upload-button");
+    const imageUpload = document.getElementById("image-upload");
+    const uploadedImage = document.getElementById("uploaded-image");
+    const backgroundBanner = document.getElementById("backgroundBanner")
+   
+    uploadButton.addEventListener("click", function() {
+        imageUpload.click();
+    });
+
+    imageUpload.addEventListener("change", async function(e) {
+            const file = e.target.files[0];
+
+            if (file) {
+                const url = "{{ route('participant.teamBanner.action', ['id' => $selectTeam->id] ) }}";
+                const formData = new FormData();
+                formData.append('file', file);
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                        body: formData,
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        uploadedImage.style.backgroundImage = `url(${data.fileName})`;
+                    } else {
+                        console.error('Error updating member status:', data.message);
+                    }
+                } catch (error) {
+                    console.error('Error approving member:', error);
+                }
+            }
+        });
 
     async function readFileAsBase64(file) {
         return new Promise((resolve, reject) => {
@@ -207,7 +215,6 @@
             reader.readAsDataURL(file);
         });
     }
-
 
     function reddirectToLoginWithIntened(route) {
         route = encodeURIComponent(route);
@@ -238,6 +245,13 @@
         target.classList.add('tab-button-active');
     }
 
+   
+
+
+    function redirectToProfilePage(userId) {
+        window.location.href = "{{ route('public.participant.view', ['id' => ':id']) }}"
+            .replace(':id', userId);
+    }
 
    
 </script>

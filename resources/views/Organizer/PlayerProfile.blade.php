@@ -33,7 +33,7 @@
             'backgroundStyles' => $backgroundStyles, 
             'fontStyles' => $fontStyles, 
             'frameStyles' => $frameStyles
-        ] = $userProfile->profile->generateStyles();
+        ] = $userProfile->profile?->generateStyles();
     @endphp
 @endauth
 <body>

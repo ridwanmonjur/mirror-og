@@ -27,7 +27,7 @@
         'backgroundStyles' => $backgroundStyles, 
         'fontStyles' => $fontStyles, 
         'frameStyles' => $frameStyles
-    ] = $userProfile->profile->generateStyles();
+    ] = $userProfile->profile?->generateStyles();
     
     // dd($userProfile->participant);
 @endphp

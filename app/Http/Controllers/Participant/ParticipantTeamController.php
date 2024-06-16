@@ -16,6 +16,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Io238\ISOCountries\Models\Country;
 
 class ParticipantTeamController extends Controller
 {
@@ -162,13 +163,31 @@ class ParticipantTeamController extends Controller
 
     public function editTeam(UpdateTeamRequest $request)
     {
-        $team = Team::findOrFail($request['id']);
-        $team->update($request->validated());
+        try{
+            $validatedData = $request->validated();
+            if (isset($validatedData['country'])) {
+                $validatedData['country'] = $validatedData['country']['value'];
+            }
 
-        return response()->json([
-            'message' => 'Team updated successfully',
-            'success' => true,
-        ], 200);
+            $team = Team::findOrFail($request['id']);
+            $team->update($validatedData);
+            if (isset($team->country)) {
+                $country = Country::select('emoji_flag', 'name', 'id')
+                    ->findOrFail($team->country);
+            } else {
+                $country = null;
+            }
+
+            return response()->json([
+                'message' => 'Team updated successfully',
+                'success' => true,
+                'country' => $country,
+            ], 200);
+        } catch (Exception $e) {
+            $errorMessage = $e->getMessage();
+
+            return response()->json(['success' => false, 'message' => $errorMessage], 403);
+        }
     }
 
     public function inviteMember(Request $request, $id, $userId)
