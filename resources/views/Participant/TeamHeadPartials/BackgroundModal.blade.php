@@ -1,4 +1,4 @@
-<div class="modal fade" id="profileModal" tabindex="2" aria-labelledby="#profileModal" aria-hidden="true">
+<div class="modal fade" id="profileModal" tabindex="2" aria-labelledby="#profileModal" aria-hidden="true" style="color: black;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body" style="margin: auto;">
@@ -183,7 +183,7 @@
                         <div class="upload-container">
                             <label for="image-upload" class="upload-label">
                                 <div class="circle-container">
-                                    <div id="uploaded-image" class="uploaded-image"
+                                    <div class="uploaded-image"
                                          style="background-image: url({{ '/storage' . '/'. $selectTeam->userBanner }} ); background-size: cover; 
                                             background-repeat: no-repeat; background-position: center; {{$frameStyles}}"
                                     >

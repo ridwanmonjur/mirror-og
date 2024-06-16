@@ -107,7 +107,7 @@
                     <div class="upload-container">
                         <label for="image-upload" class="upload-label">
                             <div class="circle-container">
-                                <div id="uploaded-image" class="uploaded-image"
+                                <div class="uploaded-image"
                                     style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
                                         z-index: 99; background-repeat: no-repeat; background-position: center; {{$frameStyles}}"
                                 >

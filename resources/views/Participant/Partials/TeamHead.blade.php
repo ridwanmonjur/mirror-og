@@ -83,7 +83,7 @@
         <div :class="{'upload-container': true, 'pt-5': isEditMode}">
             <label for="image-upload" class="upload-label">
                 <div class="circle-container">
-                    <div id="uploaded-image" class="uploaded-image"
+                    <div class="uploaded-image"
                         style="background-image: url({{ '/storage' . '/'. $selectTeam->teamBanner }} ); object-fit:cover; {{$frameStyles}}"
                     ></div>
                     <div class="d-flex align-items-center justify-content-center upload-button pt-3">

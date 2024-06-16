@@ -317,7 +317,8 @@
 <script>
     const uploadButton = document.getElementById("upload-button");
     const imageUpload = document.getElementById("image-upload");
-    const uploadedImage = document.getElementById("uploaded-image");
+    const uploadedImageList = document.getElementsByClassName("uploaded-image");
+    const uploadedImage = uploadedImageList[0];    
     const backgroundBanner = document.getElementById("backgroundBanner")
     uploadButton?.addEventListener("click", function() {
         imageUpload.click();
@@ -351,7 +352,8 @@
                 const data = await response.json();
                     
                 if (data.success) {
-                    uploadedImage.style.backgroundImage = `url(${data.data.fileName})`;
+                    uploadedImageList[0].style.backgroundImage = `url(${data.data.fileName})`;
+                    uploadedImageList[1].style.backgroundImage = `url(${data.data.fileName})`;
                 } else {
                     console.error('Error updating member status:', data.message);
                 }

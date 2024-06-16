@@ -67,20 +67,4 @@ class UpdateOrganizersRequest extends FormRequest
             'organizer.twitter_link.url' => 'Twitter Link must be a valid URL.',
         ];
     }
-
-    protected function prepareForValidation()
-    {
-        $attributes = $this->request->all();
-        $links = ['website_link', 'instagram_link', 'twitter_link', 'facebook_link'];
-
-        foreach ($links as $link) {
-            if (isset($attributes[$link])) {
-                if (substr($attributes[$link], -1) === '/') {
-                    $attributes[$link] = rtrim($attributes[$link], '/');
-                }
-            }
-        }
-
-        $this->request->replace($attributes);
-    }
 }
