@@ -137,7 +137,7 @@
                                 <button 
                                     data-bs-toggle="modal"
                                     data-bs-target="#profileModal"
-                                    x-show="isEditMode"
+                                    x-show="!isEditMode"
                                     {{-- onclick="document.getElementById('backgroundInput').click();" --}}
                                     class="btn btn-secondary text-light rounded-pill py-1 me-3 px-3"
                                 > 

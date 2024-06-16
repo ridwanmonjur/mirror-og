@@ -607,7 +607,7 @@ class AuthController extends Controller
             if ($request->teamId) {
 
                 $profile = TeamProfile::where('team_id', $request->teamId)->firstOrNew();
-                $profile->team_id = $user->id;
+                $profile->team_id = $request->teamId;
                 $oldBanner = $profile->backgroundBanner;
                 if ($request->backgroundBanner) {
                     $user->uploadBackgroundBanner($request, $profile);
@@ -644,7 +644,6 @@ class AuthController extends Controller
                 return back();
             }
         } catch (Exception $e) {
-            throw new Exception($e);
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
             } else {
