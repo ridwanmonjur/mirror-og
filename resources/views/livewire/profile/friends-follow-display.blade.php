@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @php
     use Carbon\Carbon;
 @endphp
@@ -7,6 +8,19 @@
         <p> Name: {{ $userProfile->name }} </p>
         <p> Email: {{ $userProfile->email }} </p>
         <p> Joined: {{ is_null($userProfile->created_at) ? '-' : Carbon::parse($userProfile->created_at)->format('F j, Y') }}</p>
+=======
+<div>
+    <br>
+    <div class="showcase tab-size showcase-box showcase-column pt-4 grid-4-columns text-left" style="width: max(500px, 55vw);">
+        <div> 
+            <h3 class="pl-0 ml-0 text-left"> Name </h3>
+            <p> {{ $userProfile->name }} </p>
+        </div>
+        <div> 
+            <h3 class="pl-0 ml-0"> Email </h3>
+            <p> {{ $userProfile->email }} </p>
+        </div>
+>>>>>>> 8627f53 (completed feature without background)
     </div>
     <br>
     <div class="tabs">
