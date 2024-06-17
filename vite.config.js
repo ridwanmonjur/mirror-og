@@ -17,6 +17,7 @@ export default defineConfig({
             refresh: true,
         }),
         purge({
+            css: ['resources/sass/app-custom.scss'],
             templates: ['blade'],
         })
     ],

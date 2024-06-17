@@ -1,12 +1,12 @@
 // Fonts
 @import url('https://fonts.bunny.net/css?family=Nunito');
-@import './bootstrap/app-custom.scss';
 @import 'variables';
 @import './bootstrap/bootstrap.css';
 
 /*! purgecss start ignore */
 
 @import './bootstrap/swal.scss';
+@import './bootstrap/app-custom.scss';
 // Variables
 @import "aos/dist/aos.css";
 @import "css-ripple-effect/dist/ripple.min.css";

@@ -147,7 +147,7 @@
         var notificationId = event.target.dataset.notificationId;
         console.log(notificationId);
         var divElements = document.querySelectorAll('div.notification-container');
-        let url = "{{route(strtolower($user->role) . '.notifications.readAll')}}";
+        let url = "{{route('user.notifications.readAll')}}";
         console.log({url})
          fetch(url, {
             method: 'put',
@@ -160,10 +160,6 @@
             .then((response) => {
                 if (response.success) {
                     divElements.forEach(function(div) {
-                        console.log({div})
-                        console.log({div})
-                        console.log({div})
-                        console.log({div})
                         div.classList.remove('notification-container-not-read');
                     });
                 }
@@ -181,7 +177,7 @@
         var divElement = document.querySelector('div.notification-container[data-loop-count="' + loopCount + '"]');
         var element = divElement.querySelector('a.mark-read');
         console.log({element, notificationId, loopCount})
-        let url = "{{route(strtolower($user->role) . '.notifications.read', ['id' => ':id'])}}"
+        let url = "{{ route('user.notifications.read', ['id' => ':id']) }}"
             .replace(':id', notificationId);
          fetch(url, {
             method: 'put',

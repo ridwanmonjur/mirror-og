@@ -78,7 +78,7 @@
             </div> 
         </div>
     @else
-        <div class="dropdown-menu  text-center py-2" style="position: absolute; left: -300px; width: 300px;" aria-labelledby="dropdownMenuLinkNotification">
+        <div class="dropdown-menu  text-center py-2" style="position: absolute; left: -300px; width: 300px;" data-bs-auto-close="outside" aria-labelledby="dropdownMenuLinkNotification">
             <p class="pt-3 align-middle me-4" style="font-weight: 400;" >
             You have no notifications!
             </p>

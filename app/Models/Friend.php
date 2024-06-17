@@ -13,6 +13,16 @@ class Friend extends Model
 
     protected $fillable = ['user1_id', 'user2_id', 'status', 'actor_id'];
 
+    public function user1()
+    {
+        return $this->belongsTo(User::class, 'user1_id', 'id');
+    }
+
+    public function user2()
+    {
+        return $this->belongsTo(User::class, 'user2_id', 'id');
+    }
+
     public static function checkFriendship($userProfileId, $logged_user_id)
     {
         return self::where(function ($query) use ($userProfileId, $logged_user_id) {
