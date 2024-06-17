@@ -28,7 +28,6 @@
         'fontStyles' => $fontStyles, 
         'frameStyles' => $frameStyles
     ] = $userProfile->profile?->generateStyles();
-    
     // dd($userProfile->participant);
 @endphp
 @auth
@@ -328,7 +327,18 @@
                                 <span>Joined {{Carbon::parse($userProfile->participant->created_at)->isoFormat('Do MMMM YYYY')}}</span>
                             </span>
                         </div>
-                        <br><br><br><br><br>
+                        <div class="mt-4 my-2 text-wrap">
+                            @livewire('profile.participant-friends-follows-count', [
+                                'userId' => $userProfile->id, 'name' => 'follower' 
+                            ])
+                            @livewire('profile.participant-friends-follows-count', [
+                                'userId' => $userProfile->id, 'name' => 'followee' 
+                            ])
+                            @livewire('profile.participant-friends-follows-count', [
+                                'userId' => $userProfile->id, 'name' => 'friend' 
+                            ])
+                        </div>
+                        <br><br>
 
                     </div>
                 </div>

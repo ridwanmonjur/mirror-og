@@ -11,6 +11,7 @@ use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantRosterController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 /* THIS IS THE UNSIGNED VIEW */
@@ -54,7 +55,8 @@ Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
-        Route::post('/profile/{id}/background', [AuthController::class, 'replaceBackground'])->name('user.userBackground.action');
+        Route::get('user/{id}/stats', [UserController::class, 'showStats'])->name('user.stats');
+        Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackground.action');
     });
 });
 

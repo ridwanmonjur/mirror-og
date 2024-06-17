@@ -17,6 +17,16 @@ class ParticipantFollow extends Model
         'participant_followee',
     ];
 
+    public function followerUser()
+    {
+        return $this->belongsTo(User::class, 'participant_follower', 'id');
+    }
+
+    public function followeeUser()
+    {
+        return $this->belongsTo(User::class, 'participant_followee', 'id');
+    }
+
     public static function checkFollow($follower, $followee)
     {
         return self::where(function ($query) use ($follower, $followee) {
@@ -25,27 +35,5 @@ class ParticipantFollow extends Model
         })
           
             ->first();
-    }
-
-    public static function getFollowCounts($userIds)
-    {
-        return DB::table('users')
-            ->leftJoin('organizer_follows', function ($q) {
-                $q->on('users.id', '=', 'organizer_follows.organizer_user_id');
-            })
-            ->whereIn('users.id', $userIds)
-            ->selectRaw('users.id as organizer_user_id, COALESCE(COUNT(organizer_follows.organizer_user_id), 0) as count')
-            ->groupBy('users.id')
-            ->pluck('count', 'organizer_user_id')
-            ->toArray();
-    }
-
-    public static function getIsFollowing($userId, $userIds)
-    {
-        return DB::table('organizer_follows')
-            ->where('participant_user_id', $userId)
-            ->whereIn('organizer_user_id', $userIds)
-            ->pluck('organizer_user_id', 'organizer_user_id')
-            ->toArray();
     }
 }
