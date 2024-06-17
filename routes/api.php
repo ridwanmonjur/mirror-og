@@ -9,6 +9,8 @@ use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\User\NotificationController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,8 +31,10 @@ Route::middleware('auth')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
-        Route::post('/profile/{id}/banner', [AuthController::class, 'replaceBanner'])->name('participant.userBanner.action');
-        Route::post('/profile/{id}/background', [AuthController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
+        Route::put('user/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('user.notifications.read');
+        Route::put('user/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('user.notifications.readAll');
+        Route::post('user/{id}/banner', [UserController::class, 'replaceBanner'])->name('participant.userBanner.action');
+        Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
     });
 });
 
@@ -49,9 +53,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/team/member/{id}/update', [ParticipantTeamController::class, 'updateTeamMember'])->name('participant.member.update');
             Route::post('/team/member/{id}/deleteInvite', [ParticipantTeamController::class, 'withdrawInviteMember'])->name('participant.member.deleteInvite');
             Route::post('/team/member/{id}/rejectInvite', [ParticipantTeamController::class, 'rejectInviteMember'])->name('participant.member.rejectInvite');
-            Route::put('notifications/{id}/read', [AuthController::class, 'markAsRead'])->name('participant.notifications.read');
-            Route::put('notifications/read', [AuthController::class, 'markAllAsRead'])->name('participant.notifications.readAll');
-        });
+                    });
     });
 });
 

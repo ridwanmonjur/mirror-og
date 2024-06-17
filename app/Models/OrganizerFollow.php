@@ -22,6 +22,11 @@ class OrganizerFollow extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function participantUser()
+    {
+        return $this->belongsTo(User::class, 'participant_user_id', 'id');
+    }
+
     public function organizer()
     {
         return $this->belongsTo(Organizer::class);
