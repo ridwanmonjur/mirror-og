@@ -1,14 +1,9 @@
 <div>
     <br>
-    <div class="showcase tab-size showcase-box showcase-column pt-4 grid-4-columns text-left" style="width: max(500px, 55vw);">
-        <div> 
-            <h3 class="pl-0 ml-0 text-left"> Name </h3>
-            <p> {{ $userProfile->name }} </p>
-        </div>
-        <div> 
-            <h3 class="pl-0 ml-0"> Email </h3>
-            <p> {{ $userProfile->email }} </p>
-        </div>
+    <div class="showcase tab-size showcase-box showcase-column border-3 pt-4 ps-4 text-left" style="width: max(500px, 55vw);">
+        <p> Name: {{ $userProfile->name }} </p>
+        <p> Email: {{ $userProfile->email }} </p>
+        <p> Joined at: {{ $userProfile->created_at }} </p>
     </div>
     <br>
     <div class="tabs">
