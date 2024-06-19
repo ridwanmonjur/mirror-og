@@ -42,7 +42,10 @@
             @if (!isset($joinEvent->roster[0]))
                 <span>Empty roster</span>
             @else
-                <ul class="d-flex flex-column flex-start">
+                <ul  
+                    data-url="{{route('public.participant.view', ['id' => $roster->user->id])}}" 
+                    onclick="goToUrl(event, this)"
+                    class="d-flex flex-column flex-start">
                     @foreach ($joinEvent->roster as $roster)
                         <li>
                             <span>{{ $roster->user->name }}</span>
@@ -53,7 +56,8 @@
         </div>
         <div class="frame1" style="margin-bottom: 0;">
             <div class="container d-flex justify-content-between flex-wrap">
-                <div class="d-flex justify-content-start mt-1">
+                <div class="d-flex justify-content-start mt-1"
+                >
                     <img {!! trustedBladeHandleImageFailureBanner() !!}
                         style="max-width: 50px; "
                         src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
@@ -62,7 +66,10 @@
                     >
                     <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventName }} </span>
                 </div>
-                <div class="d-flex justify-content-center mt-1">
+                <div onclick="goToUrl(event, this)"                             
+                    data-url="{{route('public.organizer.view', ['id' => $joinEvent->user->id])}}"
+                    class="d-flex justify-content-center mt-1"
+                >
                     <img src="{{ bladeImageNull($joinEvent->user->userBanner) }}"
                         width="30" height="30" class="me-1 object-fit-cover random-color-circle">
                     <div class="text-start">
@@ -134,6 +141,14 @@
             if (route) {
                 window.location.href = route;
             }
+        }
+
+        function goToUrl(event, element) {
+            event.stopPropagation();
+            event.preventDefault();
+            const url = element.getAttribute('data-url');
+            window.location.href = url;
+
         }
 
         (function applyRandomColorsAndShapes() {

@@ -57,7 +57,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
         Route::get('user/{id}/stats', [UserController::class, 'showStats'])->name('user.stats');
         Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackground.action');
-        Route::get('/profile/{id}/message', [AuthController::class, 'message'])->name('user.userBackground.action');
+        Route::get('/profile/{id}/message', [AuthController::class, 'message'])->name('user.message.view');
     });
 });
 
