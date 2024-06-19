@@ -58,10 +58,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('user/{id}/stats', [UserController::class, 'showStats'])->name('user.stats');
         Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackground.action');
         Route::get('/profile/{id}/message', [AuthController::class, 'message'])->name('user.userBackground.action');
-<<<<<<< HEAD
-=======
-        
->>>>>>> 8627f53 (completed feature without background)
     });
 });
 
