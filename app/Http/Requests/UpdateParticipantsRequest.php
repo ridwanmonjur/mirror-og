@@ -45,8 +45,8 @@ class UpdateParticipantsRequest extends FormRequest
     {
         return [
             'user.id.required' => 'The ID field is required.',
-            'user.name.required' => 'The name must be a string.',
-            'user.name.string' => 'The name must be a string.',
+            'user.name.required' => 'The name is a required text field.',
+            'user.name.string' => 'The name is a required text field.',
             'participant.id.required' => 'The ID field is required.',
             'participant.bio.string' => 'The bio must be a string.',
             'participant.birthday.date' => 'The birthday must be a valid date.',

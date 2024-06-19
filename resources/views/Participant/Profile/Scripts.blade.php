@@ -283,6 +283,7 @@
                         })
                         this.isEditMode = false;
                         this.age = data.age;
+                        this.errorMessage = null;
                     } else {
                         this.errorMessage = data.message;
                     }
