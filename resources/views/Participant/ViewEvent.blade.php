@@ -53,11 +53,11 @@
                             <img class="image-at-top" src="{{ $eventTierLowerImg }}" {!! trustedBladeHandleImageFailureResize() !!}
                                 width="120" height="90">
                         </div>
-                        <a data-fslightbox="gallery" href="{{ $eventBannerImg }}">
+                        <a data-fslightbox="lightbox" href="{{ $eventBannerImg }}">
 
                         <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;"
                             @class(['rounded-banner height-image ', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
-                            alt="" data-fslightbox="gallery">
+                            alt="" data-fslightbox="lightbox">
                             </a>
                         @if ($event->eventBanner)
                         @else

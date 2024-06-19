@@ -44,7 +44,10 @@
             @else
                 <div>
                     @foreach ($joinEvent->roster as $roster)
-                        <div class="d-flex justify-content-center align-items-center mb-1">
+                        <div 
+                            data-url="{{route('public.participant.view', ['id' => $roster->user->id])}}" 
+                            onclick="goToUrl(event, this)"
+                            class="d-flex justify-content-center align-items-center mb-1">
                             <img 
                                 width="40" height="40" 
                                 src="{{ bladeImageNull($roster->user->userBanner) }}"
@@ -58,7 +61,11 @@
         </div>
         <div class="frame1" style="margin-bottom: 0;">
             <div class="container d-flex justify-content-between flex-wrap">
-                <div class="d-flex justify-content-start mt-1">
+                <div  
+                    onclick="goToUrl(event, this)"                             
+                    data-url="{{route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id])}}" 
+                    class="d-flex justify-content-start mt-1"
+                >
                     <img {!! trustedBladeHandleImageFailureBanner() !!}
                         style="max-width: 50px; "
                         src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
@@ -73,22 +80,22 @@
                         src="{{ bladeImageNull($joinEvent->user->userBanner) }}"
                         class="me-1 random-color-circle object-fit-cover"
                     >
-                    <div class="text-start">
-                        <span>{{ $joinEvent->eventDetails->user->name }}</span>
+                    <div
+                        onClick="goToUrl(event, this)"                             
+                        data-url="{{route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id])}}"  
+                        class="text-start"
+                    >
+                        <button 
+                            class="d-inline p-0 btn btn-link" 
+                            >{{ $joinEvent->eventDetails->user->name }}
+                        </button>
                         <br>
                         <small 
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id]: 0 }} "
-                            class="{{'followCounts' . $joinEvent->eventDetails?->user_id}}"
+                            class="d-inline p-0 {{'followCounts' . $joinEvent->eventDetails?->user_id}}"
                         >
-                            @if (isset($followCounts[$joinEvent->eventDetails->user_id]))
-                                @if ($followCounts[$joinEvent->eventDetails->user_id] == 1)
-                                    1 follower 
-                                @else
-                                    {{ $followCounts[$joinEvent->eventDetails->user_id] }} followers
-                                @endif    
-                            @else
-                                0 followers
-                            @endif    
+                                    {{ $followCounts[$joinEvent->eventDetails->user_id] }} follower{{bladePluralPrefix($followCounts[$joinEvent->eventDetails->user_id])}}
+                             
                         </small>
                     </div>
                 </div>
@@ -136,6 +143,15 @@
 </a>
 
     <script>
+
+        function goToUrl(event, element) {
+            event.stopPropagation();
+            event.preventDefault();
+            const url = element.getAttribute('data-url');
+            window.location.href = url;
+
+        }
+
         document.getElementById("{{'followForm' . $joinEvent->id . $random_int }}").addEventListener('submit', async function(event) {
             event.preventDefault();
 

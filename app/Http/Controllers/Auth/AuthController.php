@@ -565,14 +565,6 @@ class AuthController extends Controller
         }
     } 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-   
-=======
->>>>>>> 8627f53 (completed feature without background)
-
-=======
->>>>>>> fd67b76 (completed feature without background)
     public function message($id, Request $request) {
         $userProfile = User::findOrFail($id);
         return view('Participant.Message', ['userProfile' => $userProfile]);

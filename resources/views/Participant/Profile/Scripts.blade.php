@@ -283,6 +283,7 @@
                         })
                         this.isEditMode = false;
                         this.age = data.age;
+                        this.errorMessage = null;
                     } else {
                         this.errorMessage = data.message;
                     }
@@ -328,11 +329,13 @@
 @if ($isUserSame)
 <script>
     const uploadButton = document.getElementById("upload-button");
+    const uploadButton2 = document.getElementById("upload-button2");
+
     const imageUpload = document.getElementById("image-upload");
     const uploadedImageList = document.getElementsByClassName("uploaded-image");
     const uploadedImage = uploadedImageList[0];    
     const backgroundBanner = document.getElementById("backgroundBanner")
-    uploadButton?.addEventListener("click", function() {
+    uploadButton2?.addEventListener("click", function() {
         imageUpload.click();
     });
 

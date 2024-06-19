@@ -51,3 +51,6 @@ const createGradientPicker = function (container, onLastUpdateCb, onHideCb = nul
 
 window.createColorPicker = createColorPicker;
 window.createGradientPicker = createGradientPicker;
+
+// 1. revert
+// 3. lightbox  
