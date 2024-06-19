@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('organizers', function (Blueprint $table) {
             $table->id();
-            $table->string('companyName')->unique();
-            $table->string('companyDescription');
+            $table->string('companyName')->nullable()->unique();
+            $table->string('companyDescription')->nullable();
             $table->timestamps();
         });
     }
