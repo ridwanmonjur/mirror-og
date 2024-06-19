@@ -87,6 +87,7 @@ class AuthController extends Controller
                     'email' => $user->email,
                     'password' => bcrypt(Str::random(13)),
                     'role' => strtoupper($role),
+                    'created_at' =>now()
                 ]);
 
                 if ($newUser->role == 'ORGANIZER') {
@@ -440,6 +441,7 @@ class AuthController extends Controller
                 'email' => $validatedData['email'],
                 'password' => $validatedData['password'],
                 'role' => $userRoleCapital,
+                'created_at' => now()
             ]);
 
             $token = $this->generateToken();
