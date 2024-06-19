@@ -156,7 +156,7 @@
                 </button>
             @endif
         @endif
-        <button type="button" class="btn btn-light rounded-pill border-dark text-dark px-2 py-2 ms-2 mt-1">
+        <button x-on:click="startMessage" type="button" class="btn btn-light rounded-pill border-dark text-dark px-2 py-2 ms-2 mt-1">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
                 class="bi bi-person-plus me-1" viewBox="0 0 16 16">
                 <path

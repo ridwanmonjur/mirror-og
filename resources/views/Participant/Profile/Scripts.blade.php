@@ -163,6 +163,7 @@
         return  {
             select2: null,
             isEditMode: false, 
+            firstTimeMessage: false,
             countries: 
             [
                 {
@@ -248,6 +249,17 @@
                 } catch (error) {
                     console.error('Error fetching countries:', error);
                 }
+            },
+            startMessage(){
+                console.log("hit");
+
+                if (!this.firstTimeMessage) {
+                    console.log("chat not started");
+                    Livewire.emit('chatStarted');
+                    console.log("chat inited");
+                }
+
+                this.firstTimeMessage =  true;
             },
             async submitEditProfile (event) {
                 try {
