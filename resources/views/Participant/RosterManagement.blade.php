@@ -11,7 +11,7 @@
 
 <body>
     @include('CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.Partials.TeamHead')
+    @include('Participant.TeamHeadPartials.TeamHead')
     @php
         use Carbon\Carbon;
     @endphp

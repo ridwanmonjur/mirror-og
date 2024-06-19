@@ -14,7 +14,7 @@
 
 <body>
     @include('CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.Partials.TeamHead')
+    @include('Participant.TeamHeadPartials.TeamHead')
 
     <main class="main2">
         @include('Participant.MemberManagementPartials.MemberManagement')

@@ -53,7 +53,4 @@ window.createColorPicker = createColorPicker;
 window.createGradientPicker = createGradientPicker;
 
 // 1. revert
-// 2. hyperlinks
 // 3. lightbox  
-// 4. edit profile banner
-// 5. hyperlinks in card
