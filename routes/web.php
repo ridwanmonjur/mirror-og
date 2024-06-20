@@ -129,7 +129,8 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('event/confirmOrCancel', [ParticipantEventController::class, 'confirmOrCancel'])->name('participant.confirmOrCancel.action');
 
             // Profile
-            Route::get('/profile', [ParticipantController::class, 'viewOwnProfile'])->name('participant.profile.view');
+            Route::get('/profile', [ParticipantController::class, 'viewOwnProfile'])->name('participant.profile.view')
+                ->middleware('prevent-back-button');
         });
     });
 });

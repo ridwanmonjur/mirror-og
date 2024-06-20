@@ -179,7 +179,7 @@
                 id: {{ $userProfile->participant->id }},
                 nickname : '{{$userProfile->participant->nickname}}',
                 bio: '{{$userProfile->participant->bio}}',
-                isAgeVisible: '{{$userProfile->participant->isAgeVisible}}',
+                isAgeVisible: Boolean({{$userProfile->participant->isAgeVisible}}),
                 age: '{{$userProfile->participant->age}}',
                 birthday,
                 domain: '{{$userProfile->participant->domain}}',
