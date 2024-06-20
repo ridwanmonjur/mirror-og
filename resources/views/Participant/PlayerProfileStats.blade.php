@@ -7,7 +7,6 @@
     <title>Manage Event Results</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-<<<<<<< HEAD
     <style> 
         main {
             margin: 0;
@@ -33,9 +32,7 @@
         }
    
     </style>
-=======
 
->>>>>>> 8627f53 (completed feature without background)
 </head>
 @php
     use Carbon\Carbon;
