@@ -3,7 +3,6 @@
 @import 'variables';
 @import './bootstrap/bootstrap.css';
 
-/*! purgecss start ignore */
 
 @import './bootstrap/swal.scss';
 @import './bootstrap/app-custom.scss';
@@ -12,5 +11,4 @@
 // Variables
 @import "aos/dist/aos.css";
 @import "css-ripple-effect/dist/ripple.min.css";
-
-// Bootstrap
+/*! purgecss end ignore */
