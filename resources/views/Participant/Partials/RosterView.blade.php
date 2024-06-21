@@ -53,7 +53,7 @@
                                 src="{{ bladeImageNull($roster->user->userBanner) }}"
                                 class="me-1 random-color-circle object-fit-cover me-3"
                             >
-                            <span>{{ $roster->user->name }}</span>
+                            <span class="underline_animation">{{ $roster->user->name }}</span>
                         </div>
                     @endforeach
                 </div>
@@ -94,8 +94,7 @@
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id]: 0 }} "
                             class="d-inline p-0 {{'followCounts' . $joinEvent->eventDetails?->user_id}}"
                         >
-                                    {{ $followCounts[$joinEvent->eventDetails->user_id] }} follower{{bladePluralPrefix($followCounts[$joinEvent->eventDetails->user_id])}}
-                             
+                            {{ $followCounts[$joinEvent->eventDetails->user_id] }} follower{{bladePluralPrefix($followCounts[$joinEvent->eventDetails->user_id])}} 
                         </small>
                     </div>
                 </div>

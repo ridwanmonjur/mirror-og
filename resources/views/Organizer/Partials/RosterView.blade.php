@@ -45,7 +45,7 @@
                 <ul  
                     data-url="{{route('public.participant.view', ['id' => $roster->user->id])}}" 
                     onclick="goToUrl(event, this)"
-                    class="d-flex flex-column flex-start">
+                    class="d-flex flex-column flex-start underline_animation">
                     @foreach ($joinEvent->roster as $roster)
                         <li>
                             <span>{{ $roster->user->name }}</span>
@@ -79,15 +79,7 @@
                             data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id]: 0 }} "
                             class="{{'followCounts' . $joinEvent->user_id}}"
                         >
-                            @if (isset($followCounts[$joinEvent->user_id]))
-                                @if ($followCounts[$joinEvent->user_id] == 1)
-                                    1 follower 
-                                @else
-                                    {{ $followCounts[$joinEvent->user_id] }} followers
-                                @endif    
-                            @else
-                                0 followers
-                            @endif    
+                            {{ $followCounts[$joinEvent->eventDetails->user_id] }} follower{{bladePluralPrefix($followCounts[$joinEvent->eventDetails->user_id])}} 
                         </small>
                     </div>
                 </div>

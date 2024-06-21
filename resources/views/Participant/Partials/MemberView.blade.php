@@ -69,6 +69,11 @@
                                 @if ($captain && $member->id == $captain->team_member_id)
                                     <div class="player-image"> </div>
                                 @endif
+                                 <img 
+                                    width="45" height="45" 
+                                    src="{{ bladeImageNull($member->user->userBanner) }}"
+                                    class="mx-2 random-color-circle object-fit-cover"
+                                >
                                 <span>{{ $member->user->name }}</span>
                             </div>
                         </td>
@@ -79,7 +84,7 @@
                             <span>{{ $member->status }} {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }} </span>
                         </td>
                         <td class="flag-cell coloured-cell px-3 fs-4">
-                            <span>{{ $member->user->participant->region_emoji }} </span>
+                            <span>{{ $member->user->participant->region_flag }} </span>
                         </td>
                     </tr>
                 @endforeach

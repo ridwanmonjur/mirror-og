@@ -9,17 +9,22 @@
 <td>
 <td class="coloured-cell px-3">
     <div onclick="deleteCaptain({{ $member->id }}, {{ $selectTeam->id }})"
-        class="player-info cursor-pointer">
+        class="player-info cursor-pointer"
+    >
         @if ($captain && $member->id == $captain->team_member_id)
             <div class="player-image"> </div>
         @endif
+        <img 
+            width="45" height="45" 
+            src="{{ bladeImageNull($member->user->userBanner) }}"
+            class="mx-2 random-color-circle object-fit-cover"
+        >
         <span>{{ $member->user->name }}</span>
     </div>
 </td>
 <td class="flag-cell coloured-cell px-3">
     <span>{{ $member->user->email }}</span>
 </td>
-<td class="flag-cell coloured-cell px-3 fs-4">
-    <span>{{ $member->user->participant->region_flag }} </span>
-
-</td>
+    <td class="flag-cell coloured-cell px-3 fs-4">
+        <span>{{ $member->user->participant->region_flag ?? '-' }} </span>
+    </td>

@@ -92,7 +92,7 @@
                 <div class="d-flex align-items-center">
                     @if($user->userBanner) 
                         <img
-                            class="object-cover rounded-circle me-2 border border-primary" 
+                            class="object-fit-cover rounded-circle me-2 border border-primary" 
                             src="{{'/storage' . '/' . $user->userBanner}}" width="45" height="45">
                     @else 
                         <div style="height: 45px; width: 50px;"

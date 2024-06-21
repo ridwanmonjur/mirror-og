@@ -98,7 +98,7 @@
                 <div class="py-3 d-flex justify-content-start">
                     @if($user->userBanner)
                         <img
-                            class="object-cover rounded-circle me-2 border border-primary" 
+                            class="object-fit-cover rounded-circle me-2 border border-primary" 
                             src="{{'/storage' . '/' . $user->userBanner}}" width="45" height="45">
                     @else 
                         <span style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
