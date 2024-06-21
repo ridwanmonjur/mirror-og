@@ -11,6 +11,7 @@
         'resources/sass/app.scss', 
         'resources/js/app.js', 
         'resources/js/lightgallery.js',
+        'resources/sass/lightgallery.scss',   
         'resources/js/file-upload-preview.js',
         'resources/sass/file-upload-preview.scss',
         'resources/js/colorpicker.js',
@@ -41,9 +42,10 @@
 @endauth
 <body>
     @include('CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.Profile.BackgroundModal')
 
     <main x-data="alpineDataComponent">
+        @include('Participant.Profile.BackgroundModal')
+
         @include('Participant.Profile.Forms')
         <div id="backgroundBanner" class="member-section px-2 pt-2"
             @style([
@@ -57,7 +59,6 @@
             @endif
             <input type="hidden" id="games_data_input" value="{{ $userProfile->participant->games_data ?? json_encode([]) }}">
             <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant->getRegionDetails()) }}">
-            @if($isOwnProfile)
                 <div class="d-flex justify-content-end py-0 my-0 mb-2">
                     <input type="file" id="backgroundInput" class="d-none"> 
                     <button 
@@ -82,25 +83,25 @@
                         x-show="isEditMode"
                         x-on:click="submitEditProfile(event)"
                         data-url="{{route('participant.profile.update')}}"
-                        class="oceans-gaming-default-button oceans-gaming-transparent-button px-3 py-2 me-3 fs-7"> 
-                        Save
-                    </button>
-                    {{-- Close icon --}}
-                    <svg 
-                        x-cloak
-                        style="top: 10px; color: black;"
-                        x-show="isEditMode"
-                        x-on:click="isEditMode = false;"
-                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle cursor-pointer align-middle position-relative" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                    </svg>
-                </div>
-            @else
+                    class="oceans-gaming-default-button oceans-gaming-transparent-button px-3 py-2 me-3 fs-7"> 
+                    Save
+                </button>
+                {{-- Close icon --}}
+                <svg 
+                    x-cloak
+                    style="top: 10px; color: black;"
+                    x-show="isEditMode"
+                    x-on:click="isEditMode = false;"
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle cursor-pointer align-middle position-relative" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+            </div>
+            @if (!$isOwnProfile && !$isUserSame)
                 <div class="d-flex justify-content-end align-items-center flex-wrap py-0 my-0 mb-2" style="font-size: 12px;">
                     @include('Participant.Profile.FriendManagement')
                 </div>
-             @endif
+            @endif
             <div class="d-flex justify-content-center align-items-start flex-wrap">
                 <div class="member-image align-middle">
                     <div class="upload-container">
@@ -148,6 +149,7 @@
                                 <input
                                     placeholder = "Your name"
                                     style="width: 200px;"
+                                    type="text"
                                     class="form-control border-secondary player-profile__input d-inline me-3" 
                                     x-model="user.name" 
                                 > 
@@ -183,6 +185,8 @@
                                  <input
                                     placeholder = "Write a description"
                                     style="width: 370px;"
+                                    type="text"
+
                                     class="form-control border-secondary player-profile__input d-inline me-3" 
                                     x-model="participant.bio" 
                                 > 
@@ -195,7 +199,7 @@
                                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
                                     <template x-if="countries">
-                                        <select id="select2-country" :change="changeFlagEmHEADoji" style="width: 150px;"  data-placeholder="Select a country" x-model="participant.region"> 
+                                        <select id="select2-country" :change="changeFlagEmoji" style="width: 150px;"  data-placeholder="Select a country" x-model="participant.region"> 
                                         </select>
                                     </template>
                                 </span>
@@ -227,98 +231,80 @@
                             <br>
                         </div>
                     <div x-cloak x-show="!isEditMode" class="ms-2">
-                        <template x-if="participant.nickname">
+                        @if(isset($userProfile->participant->nickname))           
                             <div class="d-flex justify-content-start align-items-center flex-wrap">
-                                <h4 class="my-0 me-4" x-text="participant.nickname"></h4>
+                                <h4 class="my-0 me-4">{{$userProfile->participant->nickname}}</h4>
                             </div>
-                        </template>
-                        <template x-if="!participant.nickname">
-                             <div class="d-flex justify-content-start align-items-center flex-wrap">
-                                <h4 class="my-0 me-4" x-text="user.name"> </h4>
+                        @else
+                            <div class="d-flex justify-content-start align-items-center flex-wrap">
+                                <h4 class="my-0 me-4">{{$userProfile->name}}</h4>
                             </div>
-                        </template>
+                        @endif
                         <div class="my-2">
-                            <template x-if="participant.nickname">
-                                <span x-text="user.name"> </span>
-                            </template> 
-                            <template x-if="participant.birthday && participant.nickname && participant.isAgeVisible && participant.age">
+                            @if(isset($userProfile->participant->nickname))
+                                <span>{{ $userProfile->name }}</span>
+                            @endif
+                            @if(isset($userProfile->participant->birthday) && isset($userProfile->participant->nickname) && $userProfile->participant->isAgeVisible && isset($userProfile->participant->age))
                                 <span style="margin-left: -5px;">,</span>
-                            isAgeVis</template>
+                            @endif
                           
-                            <template x-if="participant.birthday">
+                            @if ($userProfile->participant->birthday)
                                 <span>
-                                    <template x-if="participant.isAgeVisible">
-                                        <span x-text="participant.age"></span>
-                                    </template>
+                                    @if($userProfile->participant->isAgeVisible && isset($userProfile->participant->isAgeVisible))
+                                        <span>{{$userProfile->participant->age}}</span>
+                                    @endif
                                     {{-- Calendar --}}
-                                    <svg :class="{'ms-4' : (participant.age >=0 && participant.isAgeVisible) || participant.nickname}" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                                    <svg 
+                                        @class(['ms-4' => $userProfile->participant->age && $userProfile->participant->isAgeVisible || $userProfile->participant->nickname]) 
+                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16"
+                                    >
                                     <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
                                     </svg>
-                                    <span x-text="participant.birthday" class="me-2"></span>
-                                      @if ($isOwnProfile)                         
-                                        <template x-if="!participant.isAgeVisible">
+                                    @if (isset($userProfile->participant->birthday))
+                                        <span class="me-2">{{$userProfile->participant->birthday}}</span>
+                                    @endif
+                                    @if ($isOwnProfile)                         
+                                        @if (isset($userProfile->participant->isAgeVisible) && $userProfile->participant->isAgeVisible)
+                                           {{-- Eye visible icon --}}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                                            </svg>
+                                        @else
                                             {{-- Eye invisible icon --}}
                                             <svg 
                                                 xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
                                             <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
                                             <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
                                             </svg>
-                                        </template>
-                                        <template x-if="participant.isAgeVisible">
-                                            {{-- Eye visible icon --}}
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-                                            </svg>
-                                        </template>
+                                         @endif
                                     @endif
                                 </span>
-                            </template>
+                            @endif
                         </div>
                         
-                        <template x-if="participant.bio">
-                            <p x-text="participant.bio"> </p>
-                        </template>
-                        {{-- <template x-if="!participant.bio">
-                            <p> This is the player's bio. There will be a minimum of 150 characters. 
-                                This field will accept emojis.  
-                            </p>
-                        </template> --}}
+                        @if(isset($userProfile->participant->bio))
+                            <p>{{ $userProfile->participant->bio }}</p>
+                        @endif
+
                         <div class="d-flex justify-content-start flex-wrap w-100">
-                            <template x-if="participant.region_name">
+                            @if(isset($userProfile->participant->region_name))
                                 <span class="me-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill me-2" viewBox="0 0 16 16">
                                     <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
-                                    <span class="me-1" x-html="participant.region_name"></span>
+                                    <span class="me-1">{{$userProfile->participant->region_name}}</span>
                                 </span>
-                            </template>
-                              {{-- <template x-if="!participant.region">
-                                <span class="me-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill me-2" viewBox="0 0 16 16">
-                                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
-                                    </svg>
-                                    <span class="me-1" x-text="'Add a country'"></span>
-                                </span>
-                            </template> --}}
-                            <template x-if="participant.domain">
+                            @endif
+                            @if(isset($userProfile->participant->domain))
                                 <span class="me-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg me-2" viewBox="0 0 16 16">
                                     <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
                                     <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
                                     </svg>
-                                    <span class="me-1" x-text="participant.domain"></span>
+                                    <span class="me-1">{{$userProfile->participant->domain}}</span>
                                 </span>
-                            </template>
-                            {{-- <template x-if="!participant.domain">
-                                <span class="me-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg me-2" viewBox="0 0 16 16">
-                                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
-                                    <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
-                                    </svg>
-                                    <span class="me-1" x-text="'Add a domain'"></span>
-                                </span>
-                            </template> --}}
+                            @endif
                             <span class="me-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person me-2" viewBox="0 0 16 16">
                                 <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>

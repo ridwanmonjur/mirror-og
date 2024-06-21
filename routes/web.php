@@ -41,12 +41,15 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('participant.log
 Route::get('/event/search', [AuthController::class, 'showLandingPage'])->name('public.search.view');
 Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view');
 Route::get('/view/team/{id}', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
-Route::get('/view/participant/{id}', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view');
-Route::get('/view/organizer/{id}', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view');
+Route::get('/view/participant/{id}', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view')
+    ->middleware('prevent-back-history');
+Route::get('/view/organizer/{id}', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view')
+    ->middleware('prevent-back-history');
 
 Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => 'auth'], function () {
-        Route::get('/profile', [OrganizerController::class, 'viewOwnProfile'])->name('admin.profile.view');
+        Route::get('/profile', [OrganizerController::class, 'viewOwnProfile'])->name('admin.profile.view')
+            ->middleware('prevent-back-history');
     });
 });
 
@@ -130,7 +133,7 @@ Route::group(['prefix' => 'participant'], function () {
 
             // Profile
             Route::get('/profile', [ParticipantController::class, 'viewOwnProfile'])->name('participant.profile.view')
-                ->middleware('prevent-back-button');
+                ->middleware('prevent-back-history');
         });
     });
 });
@@ -177,7 +180,8 @@ Route::group(['prefix' => 'organizer'], function () {
                 ->name('organizer.checkout.view');
             Route::get('event/{id}/checkout/transition', [OrganizerCheckoutController::class, 'showCheckoutTransition'])->name('organizer.checkout.transition');
 
-            Route::get('/profile', [OrganizerController::class, 'viewOwnProfile'])->name('organizer.profile.view');
+            Route::get('/profile', [OrganizerController::class, 'viewOwnProfile'])->name('organizer.profile.view')
+                ->middleware('prevent-back-history');
         });
     });
 });
