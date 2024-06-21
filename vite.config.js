@@ -20,6 +20,7 @@ export default defineConfig({
         purge({
             css: ['resources/sass/app-custom.scss'],
             templates: ['blade'],
+            safelist: ['data-aos', 'ripple']
         })
     ],
     build: { minify: true },
