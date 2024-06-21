@@ -3,7 +3,9 @@
         @foreach ($userList as $user)
             <tr class="st">
                 <td class="colorless-col">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                    <svg 
+                        onclick="redirectToProfilePage({{$user->id}});"
+                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                         class="bi bi-gear" viewBox="0 0 16 16">
                         <path
                             d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0" />
@@ -13,11 +15,16 @@
                 <td>
                 <td class="coloured-cell px-3">
                     <div class="player-info">
+                        <img 
+                            width="45" height="45" 
+                            src="{{ bladeImageNull($member->user->userBanner) }}"
+                            class="mx-2 random-color-circle object-fit-cover"
+                        >
                         <span>{{ $user->name }}</span>
                     </div>
                 </td>
                 <td class="flag-cell coloured-cell px-3 fs-4">
-                    <span>{{ $member->user->participant->region_emoji }} </span>
+                    <span>{{ $member->user->participant->region_flag }} </span>
                 </td>
                 <td class="coloured-cell px-3">
                     @if ($user->is_in_team == 'yes')
