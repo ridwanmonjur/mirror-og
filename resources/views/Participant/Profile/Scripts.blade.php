@@ -159,18 +159,7 @@
 
         let gamesData = JSON.parse(gamesDataInput.value.trim()); 
         let regionData = JSON.parse(regionDataInput.value.trim()); 
-        Alpine.data('alpineDataComponent', () => {
-        return  {
-            select2: null,
-            isEditMode: false, 
-            firstTimeMessage: false,
-            countries: 
-            [
-                {
-                    name: { en: 'No country' },
-                    emoji_flag: ''
-                }
-            ], 
+        let initialData = {
             user: {
                 id: {{ $userProfile->id }},
                 name: '{{ $userProfile->name }}'
@@ -186,6 +175,36 @@
                 region: '{{$userProfile->participant->region}}',
                 region_name: regionData?.name.en,
                 region_flag: regionData?.emoji_flag,
+            },
+        };
+        
+        Alpine.data('alpineDataComponent', () => {
+        return  {
+            select2: null,
+            isEditMode: false, 
+            firstTimeMessage: false,
+            countries: 
+            [
+                {
+                    name: { en: 'No country' },
+                    emoji_flag: ''
+                }
+            ], 
+            user: {
+                id: null,
+                name: null
+            }, 
+            participant: {
+                id: null,
+                nickname : null,
+                bio: null,
+                isAgeVisible: null,
+                age: null,
+                birthday: null,
+                domain: null,
+                region: null,
+                region_name: null,
+                region_flag: null,
             },
             errorMessage: errorInput?.value, 
             isCountriesFetched: false ,
@@ -294,6 +313,9 @@
             },
          
             init() {
+                console.log({
+                    participant: Alpine.raw(this.participant)
+                })
                 this.fetchCountries();
                 var backgroundStyles = "<?php echo $backgroundStyles; ?>";
                 var fontStyles = "<?php echo $fontStyles; ?>";
@@ -306,6 +328,9 @@
                         banner.style.background = "auto";
                         banner.style.backgroundImage = "auto";
                         banner.style.backgroundColor = "#D3D3D3";
+                        let {participant, user} = initialData;
+                        this.participant = participant;
+                        this.user = user;
                     } else {
                         banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
                     }
