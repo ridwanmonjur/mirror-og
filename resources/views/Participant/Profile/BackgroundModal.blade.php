@@ -1,42 +1,50 @@
-<div class="modal fade" id="profileModal" tabindex="2" aria-labelledby="#profileModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body" style="margin: auto;">
-                <div class="tabs mx-0 d-flex flex-row justify-content-center px-0" style="width: 100% !important;">
-                    <button class="tab-button  ms-0 px-0 modal-tab tab-button-override tab-button-active"
-                        onclick="showTab(event, 'BackgroundPhoto', 'modal-tab')">Background Photo</button>
-                    <button class="tab-button  ms-0 px-0 modal-tab tab-button-override"
-                        onclick="showTab(event, 'BackgroundColor', 'modal-tab')">Background
-                        Color</button>
-                    <button class="tab-button ms-0 px-0 modal-tab tab-button-override "
-                        onclick="showTab(event, 'ForeColor', 'modal-tab')">Foreground
-                        Color</button>
-                </div>
-                <div class="tab-content pb-4 modal-tab" id="BackgroundPhoto">
-                    <form id="updateBgColorRequest" class="d-inline" method="POST" action="{{ route('user.userBackground.action', ['id' => $userProfile->id] ) }}"> 
-                        @csrf
-                        <input type="hidden" name="backgroundColor" value="{{ $userProfile->profile?->backgroundColor }}">
-                        <input type="hidden" name="backgroundGradient" value="{{ $userProfile->profile?->backgroundGradient }}">
-                    </form>
-                    <div class="mx-auto"  style="max-width: max(400px, 75%);">
-                        <br>
-                        <h5> Choose a background banner</h5>
-                        <div class="custom-file-container" data-upload-id="file-upload-preview-1"></div>
-                        <br>
-
-                        <div class="d-flex justify-content-center" >
-                            <button type="button" class="oceans-gaming-default-button oceans-gaming-gray-button"
-                                data-bs-dismiss="modal">Close
-                            </button>
+<div class="offcanvas offcanvas-start  show fade" id="profileDrawer" tabindex="2" aria-labelledby="#profileDrawer"
+    aria-hidden="true">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Change your profile's look</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        
+        <form id="updateBgColorRequest" class="d-inline" method="POST" enctype="multipart/form-data"
+            action="{{ route('user.userBackground.action', ['id' => $userProfile->id]) }}">
+            @csrf
+            <div class="d-flex justify-content-between pb-2">
+                <span>Save these changes?</span>
+                <button type="submit" class="btn btn-primary text-light rounded-pill">Save</button>
+            </div>
+            <input type="hidden" name="backgroundColor" value="{{ $userProfile->profile?->backgroundColor }}">
+            <input type="hidden" name="backgroundGradient" value="{{ $userProfile->profile?->backgroundGradient }}">
+             <input type="hidden" name="frameColor" value="{{ $userProfile->profile?->frameColor }}">
+            <input type="hidden" name="fontColor" value="{{ $userProfile->profile?->fontColor }}">
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingOne">
+                        <button class="accordion-button ps-1 " type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseOne" aria-expanded="true" aria-controls="flush-collapseOne">
+                            Change background
+                        </button>
+                    </h2>
+                    <div id="flush-collapseOne" class="accordion-collapse collapse show py-2 px-2"
+                        aria-labelledby="flush-headingOne" data-bs-parent="#accordionExample">
+                        <p class="my-2"> Upload a background photo</p>
+                        <div class="input-group mb-4">
+                            <input type="file" class="form-control" name="backgroundBanner" 
+                                aria-describedby="inputGroupFileAddon03" aria-label="Upload"
+                                onchange="uploadImageToBanner(event)"
+                            >
                         </div>
-                    </div>
-                </div>
-                <div class="tab-content pb-4 modal-tab d-none" id="BackgroundColor">
-                    <div class="mx-auto"  style="max-width: max(400px, 75%);">
-                        <br>
-                        <h5> Choose a solid color</h5>
                         <div class="mx-auto">
-                            @foreach ([
+                            <p class="my-2">Or, choose a solid color</p>
+                            <div class="mx-auto">
+                                <div data-bs-auto-close="outside" class="d-inline-block rainbow-hue"
+                                    id="dropdownColorButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                </div>
+                                <div class="dropdown-menu" aria-labelledby="dropdownColorButton">
+                                    <div id="div-color-picker"> </div>
+                                </div>
+                                @foreach ([
         'black' => 'Black',
         '#545454' => '#545454',
         '#737373' => '#737373',
@@ -63,118 +71,90 @@
         'brown' => 'Brown',
         'maroon' => 'Maroon',
         'red' => 'Red',
-        '#ff4500' => 'Orange Red',
         'orange' => 'Orange',
-        'yellow' => 'Yellow',
-        'green' => 'Green',
-        'lime' => 'Lime',
-        'cyan' => 'Cyan',
-        'blue' => 'Blue',
-        'navy' => 'Navy',
-        'purple' => 'Purple',
-        'magenta' => 'Magenta',
-        'pink' => 'Pink',
-        '#ff00ff' => 'Fuchsia',
-        'lightgray' => 'Light gray',
     ] as $color => $name)
-                                <div onclick="chooseColor(event, '{{ $color }}')"
-                                    class="d-inline-block rounded color-pallete"
-                                    style="{{ 'background-color: ' . $color . ';' . 'width: 30px; height: 30px;' }}">
+                                    <div onclick="chooseColor(event, '{{ $color }}')"
+                                        class="d-inline-block rounded color-pallete"
+                                        style="{{ 'background-color: ' . $color . ';' }}">
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <p class="my-2"> Or, choose a gradient for background</p>
+                            <div class="mx-auto">
+
+                                <div data-bs-auto-close="outside" class="rainbow-hue d-inline-block" type="button"
+                                    id="dropdownGradientButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
                                 </div>
-                            @endforeach
-                        </div>
-                        <br>
-                        <p class="my-0"> Choose a custom color </p>
-                        <button data-bs-auto-close="outside"
-                            style="{{ 'background-color: #f6b73c;' . 'width: 60px; height: 30px;' }}"
-                            class="btn btn-link color-pallete" type="button" id="dropdownColorButton"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownColorButton">
-                            <div id="div-color-picker"> </div>
-                        </div>
-                        <br><br>
-                        <h5> Choose a gradient color for background</h5>
-                        <div class="mx-auto" >
-                            @php
-                                $colors = [
-                                    ['#000000', '#545454', '#737373'], // Black to Gray
-                                    ['#800080', '#4682b4', '#add8e6'], // Purple to Light Blue
-                                    ['#800080', '#ff00ff', '#dda0dd'], // Purple to Plum
-                                    ['#4682b4', '#b0c4de', '#e0ffff'], // Steel Blue to Light Cyan
-                                    ['#cd5c5c', '#e9967a', '#ffa07a'], // Indian Red to Light Salmon
-                                    ['#ff4500', '#ff7f50', '#ffe4b5'], // Orange Red to Moccasin
-                                    ['#ff6347', '#ffa07a', '#f08080'], // Tomato to Light Coral
-                                    ['#ff4500', '#ff7f50', '#ffe4b5'], // Orange Red to Moccasin
-                                    ['#ff00ff', '#dda0dd', '#e0ffff'], // Fuchsia to Light Cyan
-                                    ['#dda0dd', '#f08080', '#f0e68c'], // Plum to Khaki
-                                    ['#ff6347', '#ffa07a', '#ffe4b5'], // Tomato to Moccasin
-                                    ['#8fbc8f', '#00ff7f', '#ffffe0'], // Dark Sea Green to Light Yellow
-                                    ['#ff4500', '#ff7f50', '#ffe4b5'], // Orange Red to Moccasin
-                                    ['#4682b4', '#b0c4de', '#e0ffff'], // Steel Blue to Light Cyan
-                                    ['#f08080', '#ffa07a', '#ffe4b5'], // Light Coral to Moccasin
-                                    ['#ff00ff', '#dda0dd', '#f08080'], // Fuchsia to Light Coral
-                                    ['#e9967a', '#ffa07a', '#ffe4b5'], // Dark Salmon to Moccasin
-                                    ['#4682b4', '#b0c4de', '#e0ffff'], // Steel Blue to Light Cyan
-                                    ['#ff00ff', '#dda0dd', '#f0e68c'], // Fuchsia to Khaki
-                                    ['#ff4500', '#ff7f50', '#ffe4b5'], // Orange Red to Moccasin
-                                ];
-                            @endphp
-                            @foreach ($colors as $colorGroup)
+                                <div class="dropdown-menu" aria-labelledby="dropdownGradientButton">
+                                    <div id="div-gradient-picker"> </div>
+                                </div>
                                 @php
-                                    $gradient = 'linear-gradient(' . implode(', ', $colorGroup) . ')';
+                                    $colors = [
+                                        ['#000000', '#545454', '#737373'], // Black to Gray
+                                        ['#800080', '#4682b4', '#add8e6'], // Purple to Light Blue
+                                        ['#800080', '#ff00ff', '#dda0dd'], // Purple to Plum
+                                        ['#4682b4', '#b0c4de', '#e0ffff'], // Steel Blue to Light Cyan
+                                        ['#cd5c5c', '#e9967a', '#ffa07a'], // Indian Red to Light Salmon
+                                        ['#ff4500', '#ff7f50', '#ffe4b5'], // Orange Red to Moccasin
+                                        ['#ff6347', '#ffa07a', '#f08080'], // Tomato to Light Coral
+                                        ['#ff4500', '#ff7f50', '#ffe4b5'], // Orange Red to Moccasin
+                                        ['#ff00ff', '#dda0dd', '#e0ffff'], // Fuchsia to Light Cyan
+                                        ['#dda0dd', '#f08080', '#f0e68c'], // Plum to Khaki
+                                        ['#ff6347', '#ffa07a', '#ffe4b5'], // Tomato to Moccasin
+                                        ['#8fbc8f', '#00ff7f', '#ffffe0'], // Dark Sea Green to Light Yellow
+                                        ['#ff4500', '#ff7f50', '#ffe4b5'], // Orange Red to Moccasin
+                                        ['#4682b4', '#b0c4de', '#e0ffff'], // Steel Blue to Light Cyan
+                                        ['#f08080', '#ffa07a', '#ffe4b5'], // Light Coral to Moccasin
+                                        ['#ff00ff', '#dda0dd', '#f08080'], // Fuchsia to Light Coral
+                                        ['#e9967a', '#ffa07a', '#ffe4b5'], // Dark Salmon to Moccasin
+                                        ['#4682b4', '#b0c4de', '#e0ffff'], // Steel Blue to Light Cyan
+                                        ['#ff00ff', '#dda0dd', '#f0e68c'], // Fuchsia to Khaki
+                                        ['#ff4500', '#ff7f50', '#ffe4b5'], // Orange Red to Moccasin
+                                    ];
                                 @endphp
-                                <div onclick="chooseGradient(event, '{{ $gradient }}')"
-                                    class="d-inline-block rounded color-pallete"
-                                    style="{{ 'background: ' . $gradient . '; width: 30px; height: 30px;' }}"></div>
-                            @endforeach
+                                @foreach ($colors as $colorGroup)
+                                    @php
+                                        $gradient = 'linear-gradient(' . implode(', ', $colorGroup) . ')';
+                                    @endphp
+
+                                    <div onclick="chooseGradient(event, '{{ $gradient }}')"
+                                        class="d-inline-block rounded color-pallete"
+                                        style="{{ 'background: ' . $gradient . '; width: 30px; height: 30px;' }}">
+                                    </div>
+                                @endforeach
+                            </div>
+                            <br>
+
                         </div>
-                        <br>
-                        <p class="my-0"> Choose a custom gradient </p>
-                        <button data-bs-auto-close="outside"
-                            style="{{ 'background: linear-gradient(#4682b4, #b0c4de, #e0ffff);' . 'width: 60px; height: 30px;' }}"
-                            class="btn btn-link color-pallete" type="button" id="dropdownGradientButton"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownGradientButton">
-                            <div id="div-gradient-picker"> </div>
-                        </div>
-                        <br>
-                        <br>
-                        <br>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <button onclick="formRequestSubmitById(null, 'updateBgColorRequest')" type="button" class="oceans-gaming-default-button me-3">Save
-                        </button>
-                        <button type="button" class="oceans-gaming-default-button oceans-gaming-gray-button"
-                            data-bs-dismiss="modal">Close
-                        </button>
                     </div>
                 </div>
-                <div class="tab-content pb-4 modal-tab d-none" id="ForeColor">
-                    <div class="mx-auto"  style="max-width: max(400px, 75%);">
-                        <br>
-                        <h5> Choose a solid font color</h5>                    
-                        <form id="updateForegroundColorRequest" class="d-inline" method="POST" action="{{ route('user.userBackground.action', ['id' => $userProfile->id] ) }}"> 
-                            @csrf
-                            <input type="hidden" name="frameColor" value="{{ $userProfile->profile?->frameColor }}">
-                            <input type="hidden" name="fontColor" value="{{ $userProfile->profile?->fontColor }}">
-                        </form>
-                        <button data-bs-auto-close="outside"
-                            style="{{ 'background-color: gray;' . 'width: 60px; height: 30px;' }}"
-                            class="btn btn-link color-pallete" type="button" id="dropdownFontColorBgButton"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-heading3">
+                        <button class="accordion-button ps-1  collapsed ps-0" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapse3" aria-expanded="false" aria-controls="flush-collapse3">
+                            Change your font and frame
                         </button>
+                    </h2>
+                    <div id="flush-collapse3" class="accordion-collapse collapse py-2 px-2"
+                        aria-labelledby="flush-heading3" data-bs-parent="#accordionExample">
+                        <p class="my-2"> Change your font color</p>
+                        <div data-bs-auto-close="outside" class="rainbow-hue" type="button"
+                            id="dropdownFontColorBgButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                        </div>
                         <div class="dropdown-menu" aria-labelledby="dropdownFontColorBgButton">
                             <div id="div-font-color-picker-with-bg"> </div>
                         </div>
-                        <br> <br>
-                        <h5> Choose a solid color for your profile frame</h5>
-                        <button data-bs-auto-close="outside"
-                            style="{{ 'background-color: green;' . 'width: 60px; height: 30px;' }}"
-                            class="btn btn-link color-pallete" type="button" id="dropdownFrameColorBgButton"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        </button>
+                         <p class="my-2 fs-4 cursive-font" style="{{ 
+                            'color:' . $userProfile->profile->fontColor . ';' }}">Write in cursive
+                        </p>
+                        <p class="my-2">Modify frame</p>
+                        <div data-bs-auto-close="outside" class="rainbow-hue" type="button"
+                            id="dropdownFrameColorBgButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                        </div>
                         <div class="dropdown-menu" aria-labelledby="dropdownFrameColorBgButton">
                             <div id="div-font-color-picker-with-frame"> </div>
                         </div>
@@ -182,23 +162,27 @@
                             <label for="image-upload" class="upload-label">
                                 <div class="circle-container">
                                     <div class="uploaded-image"
-                                         style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }} ); background-size: cover; 
-                                            background-repeat: no-repeat; background-position: center; {{$frameStyles}}"
-                                    >
+                                        style="background-image: url({{ '/storage' . '/' . $userProfile->userBanner }} ); background-size: cover; 
+                                            background-repeat: no-repeat; background-position: center; {{ $frameStyles }}">
                                     </div>
                                 </div>
                             </label>
                         </div>
                         <br> <br>
-                        <div class="d-flex justify-content-center">
-                            <button onclick="formRequestSubmitById(null, 'updateForegroundColorRequest')" class="oceans-gaming-default-button me-3">Save</button>
-                             <button type="button" class="oceans-gaming-default-button oceans-gaming-gray-button"
-                                data-bs-dismiss="modal">Close
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
+
     </div>
 </div>
+
+<script>
+    function uploadImageToBanner(event) {
+        var file = event.target.files[0];
+        if (file) {
+            var cachedImage = URL.createObjectURL(file);
+            backgroundBanner.style.backgroundImage = `url(${cachedImage})`;
+        }
+    }
+</script>

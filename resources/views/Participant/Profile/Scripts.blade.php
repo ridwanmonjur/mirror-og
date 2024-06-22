@@ -1,4 +1,23 @@
 <script>
+    var backgroundBanner = document.getElementById("backgroundBanner")
+
+    var mediaQueryList = window.matchMedia("(min-width: 600px)");
+
+    function handleMediaChange(e) {
+        if (e.matches) {
+            var elementWidth = backgroundBanner.clientWidth;
+            var elementHeight = elementWidth / 3;
+            backgroundBanner.style.backgroundSize = `${elementWidth}px ${elementHeight}px`;
+            backgroundBanner.style.backgroundRepeat = 'no-repeat';
+            backgroundBanner.style.backgroundPosition = 'center';
+        } else {
+            backgroundBanner.style.backgroundSize = 'cover';
+        }
+    }
+
+    mediaQueryList.addListener(handleMediaChange);
+    handleMediaChange(mediaQueryList);
+    
     let colorOrGradient = null; 
     function applyBackground(event, colorOrGradient) {
         document.querySelectorAll('.color-active').forEach(element => {
@@ -71,7 +90,6 @@
             localStorage.setItem('message', errorInput.value);
         }
 
-        const bgUploadPreview = window.fileUploadPreviewById('file-upload-preview-1');
 
         window.createGradientPicker(document.getElementById('div-gradient-picker'),
             (gradient) => {
@@ -90,6 +108,9 @@
             (color) => {
                 document.querySelector("input[name='fontColor']").value = color;
                 document.getElementById('backgroundBanner').style.color = color;
+                document.querySelectorAll(".cursive-font").forEach((cursiveElement) => {
+                    cursiveElement.style.color = color;
+                });
             }
         );
 
@@ -101,27 +122,6 @@
                 }) 
             }
         );
-
-        window.addEventListener(Events.IMAGE_ADDED, async (e) => {
-            const { detail } = e ;
-
-            console.log('detail', detail);
-            const file = detail.files[0];
-            const fileContent = await readFileAsBase64(file);
-            await changeBackgroundDesignRequest({
-                backgroundBanner: {
-                    filename: file.name,
-                    type: file.type,
-                    size: file.size,
-                    content: fileContent
-                }
-            }, (data)=> {
-                backgroundBanner.style.backgroundImage = `url(/storage/${data.data.backgroundBanner})`;
-                backgroundBanner.style.background = 'auto';
-            }, (error)=> {
-                console.error(error);
-            })
-        });
 
         window.loadMessage(); 
     }
@@ -159,24 +159,9 @@
 
         let gamesData = JSON.parse(gamesDataInput.value.trim()); 
         let regionData = JSON.parse(regionDataInput.value.trim()); 
-        let initialData = {
-            user: {
-                id: {{ $userProfile->id }},
-                name: '{{ $userProfile->name }}'
-            }, 
-            participant: {
-                id: {{ $userProfile->participant->id }},
-                nickname : '{{$userProfile->participant->nickname}}',
-                bio: '{{$userProfile->participant->bio}}',
-                isAgeVisible: Boolean({{$userProfile->participant->isAgeVisible}}),
-                age: '{{$userProfile->participant->age}}',
-                birthday,
-                domain: '{{$userProfile->participant->domain}}',
-                region: '{{$userProfile->participant->region}}',
-                region_name: regionData?.name.en,
-                region_flag: regionData?.emoji_flag,
-            },
-        };
+        let userData = JSON.parse(document.getElementById('initialUserData').value);
+        let participantData = JSON.parse(document.getElementById('initialParticipantData').value);
+
         
         Alpine.data('alpineDataComponent', () => {
         return  {
@@ -190,22 +175,8 @@
                     emoji_flag: ''
                 }
             ], 
-            user: {
-                id: null,
-                name: null
-            }, 
-            participant: {
-                id: null,
-                nickname : null,
-                bio: null,
-                isAgeVisible: null,
-                age: null,
-                birthday: null,
-                domain: null,
-                region: null,
-                region_name: null,
-                region_flag: null,
-            },
+            user : { ...userData },
+            participant: { ...participantData },
             errorMessage: errorInput?.value, 
             isCountriesFetched: false ,
             changeFlagEmoji() {
@@ -215,6 +186,10 @@
                     this.participant.region_name = countryX?.name.en;
                     this.participant.region_flag = countryX?.emoji_flag;
                 }
+            },
+            reset() {
+                this.user = userData;
+                this.participant = participantData;
             },
             async fetchCountries () {
                 async function storeDataInLocalStorage() {
@@ -300,9 +275,15 @@
                             icon: 'success',
                             text: 'Updated the player successfully!'
                         })
-                        this.isEditMode = false;
-                        this.age = data.age;
-                        this.errorMessage = null;
+                        let currentUrl = window.location.href;
+                        if (currentUrl.includes('?')) {
+                            currentUrl = currentUrl.split('?')[0];
+                        } 
+
+                        localStorage.setItem('success', true);
+                        localStorage.setItem('message', data.message);
+                        window.location.replace(currentUrl);
+                   
                     } else {
                         this.errorMessage = data.message;
                     }
@@ -313,13 +294,9 @@
             },
          
             init() {
-                console.log({
-                    participant: Alpine.raw(this.participant)
-                })
                 this.fetchCountries();
                 var backgroundStyles = "<?php echo $backgroundStyles; ?>";
                 var fontStyles = "<?php echo $fontStyles; ?>";
-                console.log({backgroundStyles, fontStyles})
                 var banner = document.getElementById('backgroundBanner');
                 banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
                 this.$watch('isEditMode', value => {
@@ -328,9 +305,6 @@
                         banner.style.background = "auto";
                         banner.style.backgroundImage = "auto";
                         banner.style.backgroundColor = "#D3D3D3";
-                        let {participant, user} = initialData;
-                        this.participant = participant;
-                        this.user = user;
                     } else {
                         banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
                     }
@@ -359,7 +333,6 @@
     const imageUpload = document.getElementById("image-upload");
     const uploadedImageList = document.getElementsByClassName("uploaded-image");
     const uploadedImage = uploadedImageList[0];    
-    const backgroundBanner = document.getElementById("backgroundBanner")
     uploadButton2?.addEventListener("click", function() {
         imageUpload.click();
     });
@@ -388,12 +361,15 @@
                     }),
                 });
 
-                
                 const data = await response.json();
-                    
                 if (data.success) {
                     uploadedImageList[0].style.backgroundImage = `url(${data.data.fileName})`;
                     uploadedImageList[1].style.backgroundImage = `url(${data.data.fileName})`;
+                    document.querySelectorAll(".hyperlink-lightbox").forEach((hyperLinkElement) => {
+                        hyperLinkElement.setAttribute('href', data.data.fileName);
+                    });
+                    window.refreshFsLightbox();
+
                 } else {
                     console.error('Error updating member status:', data.message);
                 }

@@ -53,10 +53,11 @@
 <main class="main1" 
         id="backgroundBanner" class="member-section px-2 py-2"
         @style([
-            "background-size: cover; background-repeat: no-repeat;"
+            "background-size: cover; background-repeat: no-repeat; min-height: 35vh;" 
         ])
     >    
     @include('Participant.TeamHeadPartials.BackgroundModal')
+    <input type="hidden" id="teamData" value='@json($selectTeam)'>
     <input type="file" id="backgroundInput" class="d-none"> 
     {{-- @if ($isCreator) --}}
         <div class="team-section" 
@@ -120,6 +121,9 @@
                             style="width: 200px;"
                             class="form-control border-secondary player-profile__input d-inline me-4 d-inline" 
                             x-model="teamName"
+                            autocomplete="off"
+                            autocomplete="nope"
+                            type="text"
                         >
                         <span class="d-inline-flex justify-between">
                             <svg
@@ -134,11 +138,12 @@
                 </div>
                 <span
                     x-cloak 
-                    x-show.important="!isEditMode">
-                    <h3 class="team-name" id="team-name" x-text="teamName"></h3>
+                    x-show.important="!isEditMode"
+                >
+                    <h3 class="team-name" id="team-name">{{$selectTeam->teamName}}</h3>
                 </span>
                 @else
-                    <h3 class="team-name" id="team-name" x-text="teamName"></h3>
+                    <h3 class="team-name" id="team-name">{{$selectTeam->teamName}}</h3>
                 @endif
                 @auth
                     @if ($user->role == "PARTICIPANT")
@@ -203,7 +208,7 @@
                             <button 
                                 x-cloak
                                 x-show="!isEditMode"
-                                x-on:click="isEditMode = true; fetchCountries()"
+                                x-on:click="reset(); isEditMode = true;"
                                 class="gear-icon-btn me-2 position-relative" 
                                 style="top: 10px;" type="button" id="editModalBtn" 
                                 aria-expanded="false"
@@ -229,6 +234,8 @@
                         placeholder="Enter your team description..."
                         class="form-control border-secondary player-profile__input d-inline py-2 me-5" 
                         x-model="teamDescription"
+                        autocomplete="off"
+                        autocomplete="nope"
                     >
                     <button 
                         x-on:click="submitEditProfile(event);"
@@ -246,13 +253,13 @@
                     </svg>
                 </div>
                 <div>
-                    <span class="ms-2" x-cloak x-show="!isEditMode" x-text="teamDescription"> </span>
-                    <span class="ms-2 fs-3"x-show="!isEditMode" x-html="country_flag"> </span>
+                    <span class="ms-2" x-cloak x-show="!isEditMode">{{$selectTeam->teamDescription}}</span>
+                    <span class="ms-2 fs-3"x-show="!isEditMode">{{$selectTeam->country_flag}}</span>
                 </div>
             @else
                 <p>
-                    <span class="d-inline" x-text="teamDescription"> </span>
-                    <span class="d-inline ms-2 fs-3" x-html="country_flag"> </span>
+                    <span class="d-inline">{{$selectTeam->teamDescription}}</span>
+                    <span class="d-inline ms-2 fs-3">{{$selectTeam->country_flag}}</span>
                 </p>
             @endif
         <div class="mx-auto text-center mt-1">
@@ -271,17 +278,14 @@
 
 @livewireScripts
 <script>
+        let teamData = JSON.parse(document.getElementById('teamData').value);
+
         document.addEventListener('alpine:init', () => {
 
             Alpine.data('alpineDataComponent', () => ({
                 select2: null,
                 isEditMode: false, 
-                id: '{{$selectTeam->id}}',
-                teamName: '{{$selectTeam->teamName}}', 
-                teamDescription: '{{$selectTeam->teamDescription}}', 
-                country: '{{$selectTeam->country}}',
-                country_name: '{{$selectTeam->country_name}}',
-                country_flag: '{{$selectTeam->country_flag}}',
+                ...teamData,
                 isEditMode: false, 
                 errorMessage: '', 
                 isCountriesFetched: false,
@@ -386,15 +390,17 @@
                             localStorage.setItem('success', true);
                             localStorage.setItem('message', data.message);
                             window.location.replace(currentUrl);
-                    } else {
-                        this.errorMessage = data.message;
-                    }
+                        } else {
+                            this.errorMessage = data.message;
+                        }
                     } catch (error) {
                         this.errorMessage = error.message;
                     console.error({error});
                     } 
                 },
-            
+                reset() {
+                    Object.assign(this, teamData);
+                },
                 init() {
                     this.fetchCountries();
                     var backgroundStyles = "<?php echo $backgroundStyles; ?>";

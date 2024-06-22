@@ -38,11 +38,7 @@ class UserController extends Controller
 
         try {
             $validated = $request->validate([
-                'backgroundBanner' => 'nullable|array',
-                'backgroundBanner.filename' => 'nullable|string',
-                'backgroundBanner.type' => 'nullable|string',
-                'backgroundBanner.size' => 'nullable|numeric',
-                'backgroundBanner.content' => 'nullable|string',
+                'backgroundBanner' => 'nullable',
                 'teamId' => 'nullable|exists:teams,id',
                 'backgroundGradient' => 'nullable|string',
                 'backgroundColor' => 'nullable|string',
@@ -50,7 +46,6 @@ class UserController extends Controller
                 'frameColor' => 'nullable|string',
             ]);
             $user = $request->attributes->get('user');
-            
             if ($request->teamId) {
 
                 $profile = TeamProfile::where('team_id', $request->teamId)->firstOrNew();
