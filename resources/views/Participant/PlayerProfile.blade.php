@@ -65,8 +65,9 @@
                     @if ($isUserSame)
                     <input type="file" id="backgroundInput" class="d-none"> 
                     <button 
-                        data-bs-toggle="modal"
-                        data-bs-target="#profileModal"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#profileDrawer"
+                        x-on:click="isEditMode=false"
                         x-cloak
                         x-show="isEditMode"
                         {{-- onclick="document.getElementById('backgroundInput').click();" --}}

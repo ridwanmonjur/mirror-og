@@ -1,4 +1,23 @@
 <script>
+    var backgroundBanner = document.getElementById("backgroundBanner")
+
+    var mediaQueryList = window.matchMedia("(min-width: 600px)");
+
+    function handleMediaChange(e) {
+        if (e.matches) {
+            var elementWidth = backgroundBanner.clientWidth;
+            var elementHeight = elementWidth / 3;
+            backgroundBanner.style.backgroundSize = `${elementWidth}px ${elementHeight}px`;
+            backgroundBanner.style.backgroundRepeat = 'no-repeat';
+            backgroundBanner.style.backgroundPosition = 'center';
+        } else {
+            backgroundBanner.style.backgroundSize = 'cover';
+        }
+    }
+
+    mediaQueryList.addListener(handleMediaChange);
+    handleMediaChange(mediaQueryList);
+    
     let colorOrGradient = null; 
     function applyBackground(event, colorOrGradient) {
         document.querySelectorAll('.color-active').forEach(element => {
@@ -71,7 +90,6 @@
             localStorage.setItem('message', errorInput.value);
         }
 
-        const bgUploadPreview = window.fileUploadPreviewById('file-upload-preview-1');
 
         window.createGradientPicker(document.getElementById('div-gradient-picker'),
             (gradient) => {
@@ -101,27 +119,6 @@
                 }) 
             }
         );
-
-        window.addEventListener(Events.IMAGE_ADDED, async (e) => {
-            const { detail } = e ;
-
-            console.log('detail', detail);
-            const file = detail.files[0];
-            const fileContent = await readFileAsBase64(file);
-            await changeBackgroundDesignRequest({
-                backgroundBanner: {
-                    filename: file.name,
-                    type: file.type,
-                    size: file.size,
-                    content: fileContent
-                }
-            }, (data)=> {
-                backgroundBanner.style.backgroundImage = `url(/storage/${data.data.backgroundBanner})`;
-                backgroundBanner.style.background = 'auto';
-            }, (error)=> {
-                console.error(error);
-            })
-        });
 
         window.loadMessage(); 
     }
@@ -333,7 +330,6 @@
     const imageUpload = document.getElementById("image-upload");
     const uploadedImageList = document.getElementsByClassName("uploaded-image");
     const uploadedImage = uploadedImageList[0];    
-    const backgroundBanner = document.getElementById("backgroundBanner")
     uploadButton2?.addEventListener("click", function() {
         imageUpload.click();
     });
