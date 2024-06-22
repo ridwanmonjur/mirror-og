@@ -6,12 +6,12 @@
     </div>
     <div class="offcanvas-body">
         
-        <form id="updateBgColorRequest" class="d-inline" method="POST"
+        <form id="updateBgColorRequest" class="d-inline" method="POST" enctype="multipart/form-data"
             action="{{ route('user.userBackground.action', ['id' => $userProfile->id]) }}">
             @csrf
             <div class="d-flex justify-content-between pb-2">
                 <span>Save these changes?</span>
-                <button class="btn btn-primary text-light rounded-pill">Save</button>
+                <button type="submit" class="btn btn-primary text-light rounded-pill">Save</button>
             </div>
             <input type="hidden" name="backgroundColor" value="{{ $userProfile->profile?->backgroundColor }}">
             <input type="hidden" name="backgroundGradient" value="{{ $userProfile->profile?->backgroundGradient }}">

@@ -135,14 +135,10 @@ class User extends Authenticatable implements FilamentUser
 
     public function uploadBackgroundBanner($request, $profile)
     {
-        $requestData = json_decode($request->getContent(), true);
-        $fileData = $requestData['backgroundBanner'];
-
-        $fileContent = base64_decode($fileData['content']);
-        $fileNameInitial = 'userBanner-'.time().'.'.pathinfo($fileData['filename'], PATHINFO_EXTENSION);
+        $file = $request->file('backgroundBanner');
+        $fileNameInitial = 'userBanner-'.time().'.'.$file->getClientOriginalExtension();
         $fileName = "images/user/$fileNameInitial";
-        $storagePath = storage_path('app/public/'.$fileName);
-        file_put_contents($storagePath, $fileContent);
+        $file->storeAs('images/user/', $fileNameInitial);
         $profile->backgroundBanner = $fileName;
         $profile->backgroundColor = null;
         $profile->backgroundGradient = null;

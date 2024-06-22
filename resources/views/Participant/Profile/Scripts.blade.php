@@ -108,6 +108,9 @@
             (color) => {
                 document.querySelector("input[name='fontColor']").value = color;
                 document.getElementById('backgroundBanner').style.color = color;
+                document.querySelectorAll(".cursive-font").forEach((cursiveElement) => {
+                    cursiveElement.style.color = color;
+                });
             }
         );
 
@@ -358,12 +361,15 @@
                     }),
                 });
 
-                
                 const data = await response.json();
-                    
                 if (data.success) {
                     uploadedImageList[0].style.backgroundImage = `url(${data.data.fileName})`;
                     uploadedImageList[1].style.backgroundImage = `url(${data.data.fileName})`;
+                    document.querySelectorAll(".hyperlink-lightbox").forEach((hyperLinkElement) => {
+                        hyperLinkElement.setAttribute('href', data.data.fileName);
+                    });
+                    window.refreshFsLightbox();
+
                 } else {
                     console.error('Error updating member status:', data.message);
                 }
