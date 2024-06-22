@@ -29,7 +29,8 @@ definitions:
           - apt-get update && apt-get install -y git unzip libzip-dev
           - docker-php-ext-install zip
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-          - curl -sL https://deb.nodesource.com/setup_16.x | bash -
+          - curl -sL https://deb.nodesource.com/setup_20.x | bash -
+          - ln -s /usr/local/bin/composer /usr/bin/composer
           - apt-get install -y nodejs
 
     - step: &php-code-smells
