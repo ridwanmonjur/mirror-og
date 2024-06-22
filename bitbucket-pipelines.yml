@@ -31,7 +31,6 @@ definitions:
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           - curl -sL https://deb.nodesource.com/setup_16.x | bash -
           - apt-get install -y nodejs
-          - npm install -g npm
           - npm install -g laravel-pint
 
     - step: &php-code-smells
