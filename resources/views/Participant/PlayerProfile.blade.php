@@ -69,7 +69,7 @@
                         data-bs-target="#profileDrawer"
                         x-on:click="isEditMode=false"
                         x-cloak
-                        x-show="isEditMode"
+                        x-show="!isEditMode"
                         {{-- onclick="document.getElementById('backgroundInput').click();" --}}
                         class="btn btn-secondary text-light rounded-pill py-2 me-3 fs-7"
                     > 

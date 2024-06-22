@@ -1,4 +1,4 @@
-<div class="offcanvas offcanvas-start  show fade" id="profileDrawer" tabindex="2" aria-labelledby="#profileDrawer"
+<div class="offcanvas offcanvas-start fade" id="profileDrawer" tabindex="2" aria-labelledby="#profileDrawer"
     aria-hidden="true">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel">Change your profile's look</h5>
