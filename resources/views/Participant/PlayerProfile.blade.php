@@ -59,7 +59,10 @@
             @endif
             <input type="hidden" id="games_data_input" value="{{ $userProfile->participant->games_data ?? json_encode([]) }}">
             <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant->getRegionDetails()) }}">
+            <input type="hidden" id="initialUserData" value='@json($userProfile->only(["id", "name"]))'>
+            <input type="hidden" id="initialParticipantData" value='@json($userProfile->participant)'>
                 <div class="d-flex justify-content-end py-0 my-0 mb-2">
+                    @if ($isUserSame)
                     <input type="file" id="backgroundInput" class="d-none"> 
                     <button 
                         data-bs-toggle="modal"
@@ -74,7 +77,7 @@
                     <button 
                         x-cloak
                         x-show="!isEditMode"
-                        x-on:click="isEditMode = true; "
+                        x-on:click="reset(); isEditMode = true;"
                         class="oceans-gaming-default-button oceans-gaming-primary-button px-3 py-2 fs-7"> 
                         Edit Profile
                     </button>
@@ -84,24 +87,23 @@
                         x-on:click="submitEditProfile(event)"
                         data-url="{{route('participant.profile.update')}}"
                     class="oceans-gaming-default-button oceans-gaming-transparent-button px-3 py-2 me-3 fs-7"> 
-                    Save
-                </button>
-                {{-- Close icon --}}
-                <svg 
-                    x-cloak
-                    style="top: 10px; color: black;"
-                    x-show="isEditMode"
-                    x-on:click="isEditMode = false;"
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle cursor-pointer align-middle position-relative" viewBox="0 0 16 16">
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                </svg>
-            </div>
-            @if (!$isOwnProfile && !$isUserSame)
-                <div class="d-flex justify-content-end align-items-center flex-wrap py-0 my-0 mb-2" style="font-size: 12px;">
+                        Save
+                    </button>
+                    {{-- Close icon --}}
+                    <svg 
+                        x-cloak
+                        style="top: 10px; color: black;"
+                        x-show="isEditMode"
+                        x-on:click="isEditMode = false;"
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle cursor-pointer align-middle position-relative" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                    </svg>
+                    @endif
+                @if (!$isOwnProfile && !$isUserSame)
                     @include('Participant.Profile.FriendManagement')
-                </div>
-            @endif
+                @endif
+            </div>
             <div class="d-flex justify-content-center align-items-start flex-wrap">
                 <div class="member-image align-middle">
                     <div class="upload-container">
@@ -140,6 +142,8 @@
                             <input 
                                 placeholder = "Enter your nickname..."
                                 style="width: 250px;"
+                                autocomplete="off"
+                                autocomplete="nope"
                                 class="form-control border-secondary player-profile__input d-inline" 
                                 x-model="participant.nickname" 
                             > 
@@ -150,6 +154,8 @@
                                     placeholder = "Your name"
                                     style="width: 200px;"
                                     type="text"
+                                    autocomplete="off"
+                                    autocomplete="nope"
                                     class="form-control border-secondary player-profile__input d-inline me-3" 
                                     x-model="user.name" 
                                 > 
@@ -186,7 +192,8 @@
                                     placeholder = "Write a description"
                                     style="width: 370px;"
                                     type="text"
-
+                                    autocomplete="off"
+                                    autocomplete="nope"
                                     class="form-control border-secondary player-profile__input d-inline me-3" 
                                     x-model="participant.bio" 
                                 > 
@@ -213,6 +220,8 @@
                                     <input 
                                         style="width: 150px;"
                                         placeholder = "Enter your domain..."
+                                        autocomplete="off"
+                                        autocomplete="nope"
                                         class="form-control border-secondary player-profile__input d-inline" 
                                         x-model="participant.domain"
                                     > 

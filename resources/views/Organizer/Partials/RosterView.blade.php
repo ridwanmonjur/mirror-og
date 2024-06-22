@@ -71,7 +71,7 @@
                     class="d-flex justify-content-center mt-1"
                 >
                     <img src="{{ bladeImageNull($joinEvent->user->userBanner) }}"
-                        width="30" height="30" class="me-1 object-fit-cover random-color-circle">
+                        width="45" height="45" class="me-1 object-fit-cover random-color-circle">
                     <div class="text-start">
                         <span>{{ $joinEvent->user->name }}</span>
                         <br>
@@ -79,7 +79,7 @@
                             data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id]: 0 }} "
                             class="{{'followCounts' . $joinEvent->user_id}}"
                         >
-                            {{ $followCounts[$joinEvent->eventDetails->user_id] }} follower{{bladePluralPrefix($followCounts[$joinEvent->eventDetails->user_id])}} 
+                            {{ $followCounts[$joinEvent->user_id] }} follower{{bladePluralPrefix($followCounts[$joinEvent->user_id])}} 
                         </small>
                     </div>
                 </div>

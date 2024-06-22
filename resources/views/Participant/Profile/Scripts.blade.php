@@ -159,24 +159,9 @@
 
         let gamesData = JSON.parse(gamesDataInput.value.trim()); 
         let regionData = JSON.parse(regionDataInput.value.trim()); 
-        let initialData = {
-            user: {
-                id: {{ $userProfile->id }},
-                name: '{{ $userProfile->name }}'
-            }, 
-            participant: {
-                id: {{ $userProfile->participant->id }},
-                nickname : '{{$userProfile->participant->nickname}}',
-                bio: '{{$userProfile->participant->bio}}',
-                isAgeVisible: Boolean({{$userProfile->participant->isAgeVisible}}),
-                age: '{{$userProfile->participant->age}}',
-                birthday,
-                domain: '{{$userProfile->participant->domain}}',
-                region: '{{$userProfile->participant->region}}',
-                region_name: regionData?.name.en,
-                region_flag: regionData?.emoji_flag,
-            },
-        };
+        let userData = JSON.parse(document.getElementById('initialUserData').value);
+        let participantData = JSON.parse(document.getElementById('initialParticipantData').value);
+
         
         Alpine.data('alpineDataComponent', () => {
         return  {
@@ -190,22 +175,8 @@
                     emoji_flag: ''
                 }
             ], 
-            user: {
-                id: null,
-                name: null
-            }, 
-            participant: {
-                id: null,
-                nickname : null,
-                bio: null,
-                isAgeVisible: null,
-                age: null,
-                birthday: null,
-                domain: null,
-                region: null,
-                region_name: null,
-                region_flag: null,
-            },
+            user : { ...userData },
+            participant: { ...participantData },
             errorMessage: errorInput?.value, 
             isCountriesFetched: false ,
             changeFlagEmoji() {
@@ -215,6 +186,10 @@
                     this.participant.region_name = countryX?.name.en;
                     this.participant.region_flag = countryX?.emoji_flag;
                 }
+            },
+            reset() {
+                this.user = userData;
+                this.participant = participantData;
             },
             async fetchCountries () {
                 async function storeDataInLocalStorage() {
@@ -300,9 +275,15 @@
                             icon: 'success',
                             text: 'Updated the player successfully!'
                         })
-                        this.isEditMode = false;
-                        this.age = data.age;
-                        this.errorMessage = null;
+                        let currentUrl = window.location.href;
+                        if (currentUrl.includes('?')) {
+                            currentUrl = currentUrl.split('?')[0];
+                        } 
+
+                        localStorage.setItem('success', true);
+                        localStorage.setItem('message', data.message);
+                        window.location.replace(currentUrl);
+                   
                     } else {
                         this.errorMessage = data.message;
                     }
@@ -313,13 +294,9 @@
             },
          
             init() {
-                console.log({
-                    participant: Alpine.raw(this.participant)
-                })
                 this.fetchCountries();
                 var backgroundStyles = "<?php echo $backgroundStyles; ?>";
                 var fontStyles = "<?php echo $fontStyles; ?>";
-                console.log({backgroundStyles, fontStyles})
                 var banner = document.getElementById('backgroundBanner');
                 banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
                 this.$watch('isEditMode', value => {
@@ -328,9 +305,6 @@
                         banner.style.background = "auto";
                         banner.style.backgroundImage = "auto";
                         banner.style.backgroundColor = "#D3D3D3";
-                        let {participant, user} = initialData;
-                        this.participant = participant;
-                        this.user = user;
                     } else {
                         banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
                     }

@@ -43,6 +43,9 @@
     <main 
         x-data="alpineDataComponent"
     >
+        <input type="hidden" id="initialUserProfile" value='@json($userProfile->only(['id', 'name', 'mobile_no']))'>
+        <input type="hidden" id="initialOrganizer" value='@json($userProfile->organizer)'>
+        <input type="hidden" id="initialAddress" value='@json($userProfile->address)'>
         {{-- <form action="{{route('organizer.profile.update')}}" method="POST">  --}}
         <div>
             <div id="backgroundBanner" class="member-section px-2 pt-2"
@@ -103,6 +106,8 @@
                             placeholder = "Enter your name..."
                             style="width: 250px;"
                             name="name"
+                            autocomplete="off"
+                            autocomplete="nope"
                             class="form-control border-secondary player-profile__input d-inline" 
                             x-model="userProfile.name"
                         >
@@ -112,6 +117,8 @@
                             style="width: 300px;"
                             class="form-control border-secondary player-profile__input d-inline me-3" 
                             x-model="organizer.companyName"
+                            autocomplete="off"
+                            autocomplete="nope"
                         > 
                         <button 
                             type="submit"
@@ -149,7 +156,7 @@
                         @if ($isOwnProfile)
                             <div class="text-center">
                                 <button 
-                                    x-on:click="isEditMode = true;"
+                                    x-on:click="reset(); isEditMode = true;"
                                     class="oceans-gaming-default-button oceans-gaming-primary-button py-1 px-5 me-3"> 
                                     Edit
                                 </button>
@@ -162,11 +169,14 @@
                                     @csrf
                                     @auth
                                         <input type="hidden" name="role"
-                                            value="{{ $user && $user->id ? $user->role : '' }}">
+                                            value="{{ $user && $user->id ? $user->role : '' }}"
+                                        >
                                         <input type="hidden" name="user_id"
-                                            value="{{ $user && $user->id ? $user->id : '' }}">
+                                            value="{{ $user && $user->id ? $user->id : '' }}"
+                                        >
                                         <input type="hidden" name="organizer_id"
-                                            value="{{ $userProfile?->id }}">
+                                            value="{{ $userProfile?->id }}"
+                                        >
                                     @endauth
                                     @guest
                                         <button type="button"
@@ -196,7 +206,7 @@
                                     @endauth
                                 </form>
                                 <button 
-                                    x-on:click="isEditMode = false;"
+                                    x-on:click=""
                                     class="oceans-gaming-default-button oceans-gaming-transparent-button bg-light border-0 rounded px-3 py-2"> 
                                     Message
                                 </button>
@@ -310,6 +320,8 @@
                     <textarea 
                         x-model="organizer.companyDescription"
                         class="form-control border-secondary player-profile__input d-inline" 
+                        autocomplete="off"
+                        autocomplete="nope"
                     >{{empty($userProfile->organizer?->companyDescription) ?'Enter your company description...' : $userProfile->organizer?->companyDescription}}
                     </textarea>
                     <br>
@@ -358,7 +370,9 @@
                         id="phone"
                         style="width: 250px;"
                         placeholder = "Mobile"
-                        class="form-control border-secondary player-profile__input d-inline" 
+                        class="form-control border-secondary player-profile__input d-inline"
+                        autocomplete="off"
+                        autocomplete="nope" 
                     >
                     <br><br>
                     <input
@@ -366,29 +380,39 @@
                         class="form-control border-secondary player-profile__input d-inline" 
                         style="width: 300px;"
                         x-model="organizer.type"
+                        autocomplete="off"
+                        autocomplete="nope"
                     > 
                     <br> <br>
                     <input
                         placeholder = "Address Line 1"
                         class="form-control border-secondary player-profile__input d-inline" 
                         x-model="address.addressLine1"
+                        autocomplete="off"
+                        autocomplete="nope"
                     >
                     <input 
                         placeholder = "Address Line 2"
                         class="form-control border-secondary player-profile__input d-inline me-4" 
                         x-model="address.addressLine2"
+                        autocomplete="off"
+                        autocomplete="nope"
                     >
                     <input 
                         placeholder = "City"
                         style="width: 100px;"
                         class="form-control border-secondary player-profile__input d-inline me-4" 
                         x-model="address.city"
+                        autocomplete="off"
+                        autocomplete="nope"
                     >
                     <input 
                         style="width: 150px;"
                         placeholder = "Country"
                         class="form-control border-secondary player-profile__input d-inline" 
                         x-model="address.country"
+                        autocomplete="off"
+                        autocomplete="nope"
                     >
                     <br> <br>
                      
@@ -459,6 +483,8 @@
                         disabled name="email"
                         class="form-control w-75 border-secondary player-profile__input d-inline" 
                         value="{{$userProfile->email}}"
+                        autocomplete="off"
+                        autocomplete="nope"
                     > 
                     <br><br>
                     <svg 
@@ -470,6 +496,8 @@
                         placeholder = "Website Link"
                         class="form-control w-75 border-secondary player-profile__input d-inline" 
                         x-model="organizer.website_link"
+                        autocomplete="off"
+                        autocomplete="nope"
                     > 
                     <br><br>
                     <svg class="me-3" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="red" class="bi bi-instagram" viewBox="0 0 16 16">
@@ -479,6 +507,8 @@
                         placeholder = "Instagram Link"
                         class="form-control w-75 border-secondary player-profile__input d-inline" 
                         x-model="organizer.instagram_link"
+                        autocomplete="off"
+                        autocomplete="nope"
                     > 
                     <br><br>
                     <svg class="me-3" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#0866FF" class="bi bi-facebook" viewBox="0 0 16 16">
@@ -488,6 +518,8 @@
                         placeholder = "Facebook Link"
                         class="form-control w-75 border-secondary player-profile__input d-inline" 
                         x-model="organizer.facebook_link"
+                        autocomplete="off"
+                        autocomplete="nope"
                     >
                     <br><br>
                     <svg class="me-3" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#1D9BF0" class="bi bi-twitter" viewBox="0 0 16 16">
@@ -497,6 +529,8 @@
                         placeholder = "Twitter Link"
                         class="form-control w-75 border-secondary player-profile__input d-inline" 
                         x-model="organizer.twitter_link"
+                        autocomplete="off"
+                        autocomplete="nope"
                     >
                 </div>
                 <div x-cloak x-show.important="!isEditMode">
@@ -560,37 +594,24 @@
     });
     const iti = window.intlTelInput.getInstance(input);
     
+    let initialUserProfile = JSON.parse(document.getElementById('initialUserProfile').value);
+    let initialOrganizer = JSON.parse(document.getElementById('initialOrganizer').value);
+    let initialAddress = JSON.parse(document.getElementById('initialAddress').value);
 
     document.addEventListener('alpine:init', () => {
         iti.setNumber('{{$userProfile->mobile_no}}');
         Alpine.data('alpineDataComponent', function() { return ({
             isEditMode: false, 
-            userProfile: {
-                id: '{{$userProfile->id}}',
-                name: '{{$userProfile->name}}',
-                mobile_no: '{{$userProfile->mobile_no}}',
-            },
-            organizer: {
-                id: '{{$userProfile->organizer?->id}}',
-                industry: '{{$userProfile->organizer?->industry}}',
-                type: '{{$userProfile->organizer?->type}}',
-                companyName: '{{$userProfile->organizer?->companyName}}',
-                companyDescription: '{{$userProfile->organizer?->companyDescription}}',
-                website_link: '{{$userProfile->organizer?->website_link}}',
-                instagram_link: '{{$userProfile->organizer?->instagram_link}}',
-                facebook_link: '{{$userProfile->organizer?->facebook_link}}',
-                twitter_link: '{{$userProfile->organizer?->twitter_link}}'
-            },
-            address: { 
-                user_id: {{$userProfile->id}},
-                id: '{{$userProfile->address?->id}}',
-                addressLine1: '{{$userProfile->address?->addressLine1}}',
-                addressLine2: '{{$userProfile->address?->addressLine2}}',
-                city: '{{$userProfile->address?->city}}',
-                country: '{{$userProfile->address?->country}}'
-            },
+             userProfile: { ...initialUserProfile },
+            organizer: { ...initialOrganizer },
+            address: { ...initialAddress },
             countries: [], 
             errorMessage: null, 
+            reset() {
+                this.userProfile = { ...initialUserProfile };
+                this.organizer = { ...initialOrganizer };
+                this.address = { ...initialAddress };
+            },
             async submitEditProfile (event) {
                 try {
                     event.preventDefault(); 

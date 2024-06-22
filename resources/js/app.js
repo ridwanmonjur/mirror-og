@@ -86,16 +86,16 @@ window.loadMessage = () => {
     let message = localStorage.getItem('message');
 
     if (tab) {
-        document.getElementById(tab).click();
+        document.getElementById(tab)?.click();
     }
 
-    if (success === 'true') {
+    if (success === 'true' && message) {
         Swal.fire({
             icon: "success",
             title: "Success...",
             dangerButtonColor: "#8CCD39",
             confirmButtonColor: "#43A4D7",
-            text: message || (tab ? `Successfully switched to ${tab} tab.` : 'Operation successful.'),
+            text: message,
             timer: 6000
           });
      
