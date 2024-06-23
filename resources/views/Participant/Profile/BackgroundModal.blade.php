@@ -148,7 +148,7 @@
                             <div id="div-font-color-picker-with-bg"> </div>
                         </div>
                          <p class="my-2 fs-4 cursive-font" style="{{ 
-                            'color:' . $userProfile->profile->fontColor . ';' }}">Write in cursive
+                            'color:' . $userProfile->profile?->fontColor . ';' }}">Write in cursive
                         </p>
                         <p class="my-2">Modify frame</p>
                         <div data-bs-auto-close="outside" class="rainbow-hue" type="button"

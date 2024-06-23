@@ -1,91 +1,71 @@
 FROM php:8.1-fpm
 
-# Install dockerize so we can wait for containers to be ready
+# Install dockerize
 ENV DOCKERIZE_VERSION 0.6.1
-
 RUN curl -s -f -L -o /tmp/dockerize.tar.gz https://github.com/jwilder/dockerize/releases/download/v$DOCKERIZE_VERSION/dockerize-linux-amd64-v$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf /tmp/dockerize.tar.gz \
     && rm /tmp/dockerize.tar.gz
 
-# Install Composer
-ENV COMPOSER_VERSION 2.7.4
-
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=$COMPOSER_VERSION
-
-
-
-ENV PATH $NVM_DIR/versions/node/0.39.7/bin:$PATH
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
+# Install system dependencies and PHP extensions
+RUN apt-get update && apt-get install -y --no-install-recommends \
         libz-dev \
+        iputils-ping \
         libpq-dev \
+        libjpeg62-turbo-dev \
+        libfreetype-dev \
         libjpeg-dev \
         libpng-dev \
         libssl-dev \
+        zlib1g-dev \
         libzip-dev \
         unzip \
         zip \
-    && apt-get clean \
     && pecl install redis \
-    && docker-php-ext-configure gd \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure zip \
-    && docker-php-ext-install \
-        gd \
-        exif \
-        opcache \
-        pdo_mysql \
-        pdo_pgsql \
-        pgsql \
-        pcntl \
-        zip \
+    && docker-php-ext-install -j$(nproc) gd exif opcache pdo_mysql pdo_pgsql pgsql pcntl zip \
     && docker-php-ext-enable redis \
-    && rm -rf /var/lib/apt/lists/*;
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY ./docker/php/laravel.ini /usr/local/etc/php/conf.d/laravel.ini
-ENV COMPOSER_ALLOW_SUPERUSER=1
+# Install Composer
+COPY --from=composer:2.7.4 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /usr/src/app
+# Install Node.js
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
 
+# Create a group and user
+RUN groupadd -g 1000 www \
+    && useradd -u 1000 -ms /bin/bash -g www www
 
-COPY --from=composer /usr/bin/composer /usr/bin/composer
-COPY ./composer.json .
-COPY ./composer.lock .
-COPY ./package.json .
-COPY ./package-lock.json .
+# Set working directory
+WORKDIR /var/www/app
 
-# process project code
-# Install nvm, Node.js, and npm
+# Copy application code and set ownership to the www user
+COPY --chown=www:www . .
+# Install Composer dependencies
+RUN composer install --no-scripts --no-autoloader \
+    && composer dump-autoload --optimize \
+    && composer run-script post-install-cmd
 
-ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 20.14.0
+# Generate application key and create storage symlink
+RUN php artisan key:generate \
+    && php artisan storage:link
 
-RUN cd /usr/local && mkdir nvm
+# Set the correct permissions
+RUN chown -R www-data:www-data . \
+    && chmod -R 775 storage
 
-RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - 
-RUN apt-get install -y nodejs
-
-ENV PATH $NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH
-
-RUN echo "Node: " && node -v
-RUN echo "NPM: " && npm -v
-COPY . .
-RUN composer install --no-scripts --no-autoloader
-RUN composer dump-autoload --optimize &&\
-    composer run-script post-install-cmd &&\
-    php artisan key:generate &&\
-    php artisan storage:link
-RUN npm i -g vite
-RUN npm i
-RUN npm run build
-
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
-
-COPY . /var/www
-
-COPY --chown=www:www . /var/www
+# Install Vite and project dependencies
+RUN npm i -g vite \
+    && npm i \
+    && npm run build
 
 USER www
 
+# Expose port 8000 for PHP-FPM
 EXPOSE 9000
+
+# Start PHP-FPM
+CMD ["php-fpm"]
