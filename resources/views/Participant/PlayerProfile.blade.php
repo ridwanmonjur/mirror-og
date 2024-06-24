@@ -59,8 +59,8 @@
                 <input type="hidden" id="userBannerInput" value="{{ $userProfile->userBanner }}">
                 <input type="hidden" id="backgroundColorInput" value="{{ $userProfile->backgroundColor }}">
             @endif
-            <input type="hidden" id="games_data_input" value="{{ $userProfile->participant->games_data ?? json_encode([]) }}">
-            <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant->getRegionDetails()) }}">
+            <input type="hidden" id="games_data_input" value="{{ $userProfile->participant?->games_data ?? json_encode([]) }}">
+            <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant?->getRegionDetails()) }}">
             <input type="hidden" id="initialUserData" value='@json($userProfile->only(["id", "name"]))'>
             <input type="hidden" id="initialParticipantData" value='@json($userProfile->participant)'>
                 <div class="d-flex justify-content-end py-0 my-0 mb-2">
@@ -243,7 +243,7 @@
                             <br>
                         </div>
                     <div x-cloak x-show="!isEditMode" class="ms-2">
-                        @if(isset($userProfile->participant->nickname))           
+                        @if($userProfile->participant?->nickname)           
                             <div class="d-flex justify-content-start align-items-center flex-wrap">
                                 <h4 class="my-0 me-4">{{$userProfile->participant->nickname}}</h4>
                             </div>
@@ -253,16 +253,16 @@
                             </div>
                         @endif
                         <div class="my-2">
-                            @if(isset($userProfile->participant->nickname))
+                            @if($userProfile->participant?->nickname)
                                 <span>{{ $userProfile->name }}</span>
                             @endif
-                            @if(isset($userProfile->participant->birthday) && isset($userProfile->participant->nickname) && $userProfile->participant->isAgeVisible && isset($userProfile->participant->age))
+                            @if($userProfile->participant?->birthday && $userProfile->participant->nickname && $userProfile->participant?->isAgeVisible && $userProfile->participant->age)
                                 <span style="margin-left: -5px;">,</span>
                             @endif
                           
-                            @if ($userProfile->participant->birthday)
+                            @if ($userProfile->participant?->birthday)
                                 <span>
-                                    @if($userProfile->participant->isAgeVisible && isset($userProfile->participant->isAgeVisible))
+                                    @if($userProfile->participant?->isAgeVisible)
                                         <span>{{$userProfile->participant->age}}</span>
                                     @endif
                                     {{-- Calendar --}}
@@ -272,11 +272,11 @@
                                     >
                                     <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
                                     </svg>
-                                    @if (isset($userProfile->participant->birthday))
+                                    @if ($userProfile->participant?->birthday)
                                         <span class="me-2">{{$userProfile->participant->birthday}}</span>
                                     @endif
                                     @if ($isOwnProfile)                         
-                                        @if (isset($userProfile->participant->isAgeVisible) && $userProfile->participant->isAgeVisible)
+                                        @if ($userProfile->participant?->isAgeVisible)
                                            {{-- Eye visible icon --}}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                                             <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
@@ -295,12 +295,12 @@
                             @endif
                         </div>
                         
-                        @if(isset($userProfile->participant->bio))
+                        @if($userProfile->participant?->bio)
                             <p>{{ $userProfile->participant->bio }}</p>
                         @endif
 
                         <div class="d-flex justify-content-start flex-wrap w-100">
-                            @if(isset($userProfile->participant->region_name))
+                            @if($userProfile->participant?->region_name)
                                 <span class="me-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill me-2" viewBox="0 0 16 16">
                                     <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
@@ -308,7 +308,7 @@
                                     <span class="me-1">{{$userProfile->participant->region_name}}</span>
                                 </span>
                             @endif
-                            @if(isset($userProfile->participant->domain))
+                            @if($userProfile->participant?->domain)
                                 <span class="me-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg me-2" viewBox="0 0 16 16">
                                     <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
