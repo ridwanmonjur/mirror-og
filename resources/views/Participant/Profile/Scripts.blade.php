@@ -38,6 +38,7 @@
             cursiveElement.style.backgroundImage = 'none' ;
             cursiveElement.style.background = color ;
         });
+        document.getElementById('changeBackgroundBanner').value = null;
     }
 
     function chooseGradient(event, gradient) {
@@ -52,6 +53,7 @@
             cursiveElement.style.backgroundImage = gradient ;
             cursiveElement.style.background = 'auto' ;
         });
+        document.getElementById('changeBackgroundBanner').value = null;
     }
 
     let successInput = document.getElementById('successMessage');
@@ -96,6 +98,8 @@
                     cursiveElement.style.backgroundImage = `url(${cachedImage})` ;
                     cursiveElement.style.background = 'auto' ;
                 });
+                document.querySelector("input[name='backgroundColor']").value = null;
+                document.querySelector("input[name='backgroundGradient']").value = null;
             }
         });
 

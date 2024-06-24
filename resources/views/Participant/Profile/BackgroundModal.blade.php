@@ -11,17 +11,17 @@
             @csrf
             <div class="d-flex justify-content-between text-justify pb-2">
                 <div>
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#5fb2dd" class="bi bi-check2-circle" viewBox="0 0 16 16">
+                    <p class="m-0 px-0" > 
+                        <svg xmlns="http://www.w3.org/2000/svg" style="marin-left: -2px;" width="22" height="22" fill="#5fb2dd" class="bi bi-check2-circle me-2 " viewBox="0 0 16 16">
                         <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0"/>
                         <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
                         </svg>
                         Save these changes
                         
-                    </div>
+                    </p>
                     <small class="mt-2"> 
                         {{-- check fill --}}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-exclamation-octagon me-2" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-exclamation-octagon ms-1 me-2" viewBox="0 0 16 16">
   <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
   <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
 </svg>
@@ -103,7 +103,6 @@
         'brown' => 'Brown',
         'maroon' => 'Maroon',
         'red' => 'Red',
-        'orange' => 'Orange',
     ] as $color => $name)
                                     <div onclick="chooseColor(event, '{{ $color }}')"
                                         class="d-inline-block rounded color-pallete"
@@ -193,8 +192,11 @@
                         <div class="dropdown-menu" aria-labelledby="dropdownFrameColorBgButton">
                             <div id="div-font-color-picker-with-frame"> </div>
                         </div>
-                        <div class="upload-container">
-                            <label for="image-upload" class="upload-label">
+                        <div style="{{ 
+                            $backgroundStyles,
+                            $fontStyles
+                        }}" class="upload-container cursive-font px-0 mx-0 mt-2 py-2">
+                            <label class="upload-label">
                                 <div class="circle-container">
                                     <div class="uploaded-image"
                                         style="background-image: url({{ '/storage' . '/' . $userProfile->userBanner }} ); background-size: cover; 
