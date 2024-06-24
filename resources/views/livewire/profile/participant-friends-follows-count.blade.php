@@ -1,3 +1,3 @@
-<a href="{{$hyperlink}}" class="me-5 underline_animation">
+<a href="{{$hyperlink}}" class="me-5 " style="color: inherit !important; ">
     {{ $count }} {{ $text }}
 </a>

@@ -9,8 +9,6 @@
 body {
     width: 100%;
     height: auto;
-    display: flex;
-    padding: 20px 100px;
     align-items: center;
     justify-content: center;
     background-image: url("/assets/images/Single_Screen.png");

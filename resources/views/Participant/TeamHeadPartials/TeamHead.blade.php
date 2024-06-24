@@ -408,16 +408,7 @@
                     console.log({backgroundStyles, fontStyles})
                     var banner = document.getElementById('backgroundBanner');
                     banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-                    this.$watch('isEditMode', value => {
-                        if (value) {
-                            banner.style.color = 'black';
-                            banner.style.background = "auto";
-                            banner.style.backgroundImage = "auto";
-                            banner.style.backgroundColor = "#D3D3D3";
-                        } else {
-                            banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-                        }
-                    });
+                    
                     
                 }
 

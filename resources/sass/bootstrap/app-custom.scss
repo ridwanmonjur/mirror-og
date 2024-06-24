@@ -574,16 +574,18 @@ a:hover {
     width: 250px !important;
 }
 
+
 .underline_animation {
     display: inline-block;
 }
 
 .underline_animation:after {
+    
     content: '';
     width: 0px;
     height: 1.5px;
     display: block;
-    background: black;
+    background: var(--underline-color);
     transition: 300ms;
 }
 
