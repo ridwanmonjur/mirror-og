@@ -9,10 +9,32 @@
         <form id="updateBgColorRequest" class="d-inline" method="POST" enctype="multipart/form-data"
             action="{{ route('user.userBackground.action', ['id' => $userProfile->id]) }}">
             @csrf
-            <div class="d-flex justify-content-between pb-2">
-                <span>Save these changes?</span>
-                <button type="submit" class="btn btn-primary text-light rounded-pill">Save</button>
+            <div class="d-flex justify-content-between text-justify pb-2">
+                <div>
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#5fb2dd" class="bi bi-check2-circle" viewBox="0 0 16 16">
+                        <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0"/>
+                        <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
+                        </svg>
+                        Save these changes
+                        
+                    </div>
+                    <small class="mt-2"> 
+                        {{-- check fill --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-exclamation-octagon me-2" viewBox="0 0 16 16">
+  <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg>
+                    
+                        <span> Please save to persist changes in database. </span>
+                    </small>
+                </div>
+                <button type="submit" 
+                    style="flex-basis: 80px; height: 40px;"
+                    class="btn btn-primary text-light rounded-pill"
+                >Save</button>
             </div>
+            
             <br>
             <input type="hidden" name="backgroundColor" value="{{ $userProfile->profile?->backgroundColor }}">
             <input type="hidden" name="backgroundGradient" value="{{ $userProfile->profile?->backgroundGradient }}">
@@ -28,14 +50,22 @@
                     </h2>
                     <div id="flush-collapseOne" class="accordion-collapse collapse show py-2 px-2"
                         aria-labelledby="flush-headingOne" data-bs-parent="#accordionExample">
-                        <span class="mt-3 mb-2"> Upload an image</span>
-                        <div class="input-group mb-4">
+                        <span class="mt-3 mb-2"> Background upload</span>
+                       
+                        <div class="input-group">
                             <input type="file" class="form-control"
                                 id="changeBackgroundBanner" name="backgroundBanner" 
                                 aria-describedby="inputGroupFileAddon03" aria-label="Upload"
                                 style="font-size: 15px;"
                             >
                         </div>
+                         <small class="d-block mb-4 mt-2"> 
+                            {{-- check fill --}}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#5fb2dd" class="bi bi-check-circle-fill mt-1" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                            </svg>
+                            <span> Please chose a 3:1 to 4:1 ratio and adjust your image accordingly. </span>
+                        </small>
                         <div class="mx-auto">
                             <span class="my-2">Solid color</span>
                             <div class="mx-auto">
