@@ -659,16 +659,7 @@
                 var fontStyles = "<?php echo $fontStyles; ?>";
                 var banner = document.getElementById('backgroundBanner');
                 banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-                this.$watch('isEditMode', value => {
-                    if (value) {
-                        banner.style.color = 'black';
-                        banner.style.background = "auto";
-                        banner.style.backgroundImage = "auto";
-                        banner.style.backgroundColor = "rgb(211, 211, 211)";
-                    } else {
-                        banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-                    }
-                });
+               
             },
             fetchCountries () {
                 return fetch('/countries')

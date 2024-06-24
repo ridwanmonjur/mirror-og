@@ -14,6 +14,8 @@
         'resources/sass/lightgallery.scss',   
         'resources/js/file-upload-preview.js',
         'resources/sass/file-upload-preview.scss',
+        'resources/js/file-edit.js',
+        'resources/sass/file-edit.scss',
         'resources/js/colorpicker.js',
         'resources/sass/colorpicker.scss',
     ])

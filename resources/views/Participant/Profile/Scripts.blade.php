@@ -34,6 +34,10 @@
         localStorage.setItem('colorOrGradient', color);
         document.getElementById('backgroundBanner').style.backgroundImage = 'none';
         document.getElementById('backgroundBanner').style.background = color;
+        document.querySelectorAll(".cursive-font").forEach((cursiveElement) => {
+            cursiveElement.style.backgroundImage = 'none' ;
+            cursiveElement.style.background = color ;
+        });
     }
 
     function chooseGradient(event, gradient) {
@@ -44,6 +48,10 @@
         localStorage.setItem('colorOrGradient', gradient);
         document.getElementById('backgroundBanner').style.backgroundImage = gradient;
         document.getElementById('backgroundBanner').style.background = 'auto';
+         document.querySelectorAll(".cursive-font").forEach((cursiveElement) => {
+            cursiveElement.style.backgroundImage = gradient ;
+            cursiveElement.style.background = 'auto' ;
+        });
     }
 
     let successInput = document.getElementById('successMessage');
@@ -80,6 +88,17 @@
 
     // const games_data = {{ $userProfile->participant->games_data }};
     window.onload = () => { 
+        window.setupFileInputEditor('#changeBackgroundBanner', (file) => {
+            if (file) {
+                var cachedImage = URL.createObjectURL(file);
+                backgroundBanner.style.backgroundImage = `url(${cachedImage})`;
+                document.querySelectorAll(".cursive-font").forEach((cursiveElement) => {
+                    cursiveElement.style.backgroundImage = `url(${cachedImage})` ;
+                    cursiveElement.style.background = 'auto' ;
+                });
+            }
+        });
+
         localStorage.setItem('isInited', "false");
         
         if (successInput) {
@@ -299,16 +318,7 @@
                 var fontStyles = "<?php echo $fontStyles; ?>";
                 var banner = document.getElementById('backgroundBanner');
                 banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-                this.$watch('isEditMode', value => {
-                    if (value) {
-                        banner.style.color = 'black';
-                        banner.style.background = "auto";
-                        banner.style.backgroundImage = "auto";
-                        banner.style.backgroundColor = "#D3D3D3";
-                    } else {
-                        banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-                    }
-                });
+               
                 
                 this.$watch('participant.birthday', value => {
                     const today = new Date();

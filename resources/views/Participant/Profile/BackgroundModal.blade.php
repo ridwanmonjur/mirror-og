@@ -1,7 +1,7 @@
 <div class="offcanvas offcanvas-start fade" id="profileDrawer" tabindex="2" aria-labelledby="#profileDrawer"
     aria-hidden="true">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Change your profile's look</h5>
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Change your profile's background</h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
@@ -13,6 +13,7 @@
                 <span>Save these changes?</span>
                 <button type="submit" class="btn btn-primary text-light rounded-pill">Save</button>
             </div>
+            <br>
             <input type="hidden" name="backgroundColor" value="{{ $userProfile->profile?->backgroundColor }}">
             <input type="hidden" name="backgroundGradient" value="{{ $userProfile->profile?->backgroundGradient }}">
              <input type="hidden" name="frameColor" value="{{ $userProfile->profile?->frameColor }}">
@@ -27,15 +28,16 @@
                     </h2>
                     <div id="flush-collapseOne" class="accordion-collapse collapse show py-2 px-2"
                         aria-labelledby="flush-headingOne" data-bs-parent="#accordionExample">
-                        <p class="my-2"> Upload a background photo</p>
+                        <span class="mt-3 mb-2"> Upload an image</span>
                         <div class="input-group mb-4">
-                            <input type="file" class="form-control" name="backgroundBanner" 
+                            <input type="file" class="form-control"
+                                id="changeBackgroundBanner" name="backgroundBanner" 
                                 aria-describedby="inputGroupFileAddon03" aria-label="Upload"
-                                onchange="uploadImageToBanner(event)"
+                                style="font-size: 15px;"
                             >
                         </div>
                         <div class="mx-auto">
-                            <p class="my-2">Or, choose a solid color</p>
+                            <span class="my-2">Solid color</span>
                             <div class="mx-auto">
                                 <div data-bs-auto-close="outside" class="d-inline-block rainbow-hue"
                                     id="dropdownColorButton" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -79,8 +81,8 @@
                                     </div>
                                 @endforeach
                             </div>
-
-                            <p class="my-2"> Or, choose a gradient for background</p>
+                            <br>
+                            <span class="my-2"> Background gradient</span>
                             <div class="mx-auto">
 
                                 <div data-bs-auto-close="outside" class="rainbow-hue d-inline-block" type="button"
@@ -139,7 +141,7 @@
                     </h2>
                     <div id="flush-collapse3" class="accordion-collapse collapse py-2 px-2"
                         aria-labelledby="flush-heading3" data-bs-parent="#accordionExample">
-                        <p class="my-2"> Change your font color</p>
+                        <span class="mt-3 mb-2"> Font color</span>
                         <div data-bs-auto-close="outside" class="rainbow-hue" type="button"
                             id="dropdownFontColorBgButton" data-bs-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">
@@ -147,10 +149,13 @@
                         <div class="dropdown-menu" aria-labelledby="dropdownFontColorBgButton">
                             <div id="div-font-color-picker-with-bg"> </div>
                         </div>
-                         <p class="my-2 fs-4 cursive-font" style="{{ 
-                            'color:' . $userProfile->profile?->fontColor . ';' }}">Write in cursive
+                         <p class="my-2 py-2 fs-4 cursive-font" style="{{ 
+                            $backgroundStyles,
+                            $fontStyles
+                        }}"
+                        >Write in cursive
                         </p>
-                        <p class="my-2">Modify frame</p>
+                        <span class="my-2">Modify frame</span>
                         <div data-bs-auto-close="outside" class="rainbow-hue" type="button"
                             id="dropdownFrameColorBgButton" data-bs-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">
@@ -176,7 +181,8 @@
 
     </div>
 </div>
-
+<script src="{{ asset('js/pintura-iife.js') }}"></script>
+<script src="{{ asset('js/pinturainput-iife.js') }}"></script>
 <script>
     function uploadImageToBanner(event) {
         var file = event.target.files[0];
