@@ -287,7 +287,9 @@
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        @include('Organizer.Partials.RosterView', ['isRegistrationView' => false])
+                        <a href="{{route('public.participant.view', ['id'=> $joinEvent->id])}}" class="position-relative opacity-parent-until-hover d-block">
+                            @include('Organizer.Partials.RosterView', ['isRegistrationView' => false])
+                        </a>
                         <br><br>
                     @endforeach
                 </div>
@@ -302,8 +304,10 @@
             @else
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>
-                    @foreach ($joinEventsHistory as $key => $joinEvent)
-                        @include('Organizer.Partials.RosterView', ['isRegistrationView' => false])
+                    @foreach ($joinEventsHistory as $key => $joinEvent)                        
+                        <a href="{{route('public.participant.view', ['id'=> $joinEvent->id])}}" class="position-relative opacity-parent-until-hover d-block">
+                            @include('Organizer.Partials.RosterView', ['isRegistrationView' => false])
+                        </a>
                         <br><br>
                     @endforeach
                 </div>

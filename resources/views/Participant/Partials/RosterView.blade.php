@@ -61,9 +61,7 @@
         </div>
         <div class="frame1" style="margin-bottom: 0;">
             <div class="container d-flex justify-content-between flex-wrap">
-                <div  
-                    onclick="goToUrl(event, this)"                             
-                    data-url="{{route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id])}}" 
+                <div   
                     class="d-flex justify-content-start mt-1"
                 >
                     <img {!! trustedBladeHandleImageFailureBanner() !!}
@@ -74,15 +72,17 @@
                     >
                     <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventDetails->eventName }} </span>
                 </div>
-                <div class="d-flex justify-content-center mt-1">
+                <div 
+                    onclick="goToUrl(event, this)"                             
+                    data-url="{{route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id])}}"
+                    class="d-flex justify-content-center mt-1"
+                >
                     <img 
                         width="45" height="45" 
                         src="{{ bladeImageNull($joinEvent->user->userBanner) }}"
                         class="me-1 random-color-circle object-fit-cover"
                     >
                     <div
-                        onClick="goToUrl(event, this)"                             
-                        data-url="{{route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id])}}"  
                         class="text-start"
                     >
                         <button 

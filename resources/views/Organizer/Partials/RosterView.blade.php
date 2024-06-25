@@ -1,7 +1,7 @@
 @php
     $random_int = rand(0, 999);
 @endphp
-<a href="{{route('public.participant.view', ['id'=> $joinEvent->id])}}" class="position-relative opacity-parent-until-hover d-block">
+<a href="{{route('public.event.view', ['id'=> $joinEvent->id])}}" class="position-relative opacity-parent-until-hover d-block">
     <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
         @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
             <ul class="achievement-list px-4">
