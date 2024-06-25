@@ -213,8 +213,6 @@
 
     </div>
 </div>
-<script src="{{ asset('js/pintura-iife.js') }}"></script>
-<script src="{{ asset('js/pinturainput-iife.js') }}"></script>
 <script>
     function uploadImageToBanner(event) {
         var file = event.target.files[0];

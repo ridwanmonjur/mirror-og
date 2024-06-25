@@ -63,7 +63,7 @@
             <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant?->getRegionDetails()) }}">
             <input type="hidden" id="initialUserData" value='@json($userProfile->only(["id", "name"]))'>
             <input type="hidden" id="initialParticipantData" value='@json($userProfile->participant)'>
-                <div class="d-flex justify-content-end py-0 my-0 mb-2">
+                <div class="d-flex justify-content-end py-0 my-0 mb-2 flex-wrap">
                     @if ($isUserSame)
                     <input type="file" id="backgroundInput" class="d-none"> 
                     <button 
