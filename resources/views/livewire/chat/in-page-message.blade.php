@@ -1,104 +1,106 @@
-<div class="container bootstrap snippets bootdey">
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <div class="portlet portlet-default">
-                <div class="portlet-heading">
-                    <div class="portlet-title">
-                        <h4><i class="fa fa-circle text-green"></i> Jane Smith</h4>
-                    </div>
-                    <div class="portlet-widgets">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-white dropdown-toggle btn-xs" data-bs-toggle="dropdown">
-                                <i class="fa fa-circle text-green"></i> Status
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#"><i class="fa fa-circle text-green"></i> Online</a>
-                                </li>
-                                <li><a href="#"><i class="fa fa-circle text-orange"></i> Away</a>
-                                </li>
-                                <li><a href="#"><i class="fa fa-circle text-red"></i> Offline</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <span class="divider"></span>
-                        <a data-bs-toggle="collapse" data-bs-parent="#accordion" href="#chat"><i class="fa fa-chevron-down"></i></a>
-                    </div>
-                    <div class="clearfix"></div>
+<div class="page-content page-container" id="page-content">
+    <div class="padding">
+        <div class="row container d-flex justify-content-center">
+<div class="col-md-4">
+             
+              <div class="box box-warning direct-chat direct-chat-warning">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Chat Messages</h3>
+
+                  <div class="box-tools pull-right">
+                    <span data-toggle="tooltip" title="" class="badge bg-primary" data-original-title="3 New Messages">20</span>
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" data-widget="chat-pane-toggle" data-original-title="Contacts">
+                      <i class="fa fa-comments"></i></button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                    </button>
+                  </div>
                 </div>
-                <div id="chat" class="panel-collapse collapse in">
-                    <div>
-                    <div class="portlet-body chat-widget" style="overflow-y: auto; width: auto; height: 300px;">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <p class="text-center text-muted small">January 1, 2014 at 12:23 PM</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="media">
-                                    <a class="pull-left" href="#">
-                                        <img class="media-object img-circle img-chat" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
-                                    </a>
-                                    <div class="media-body">
-                                        <h4 class="media-heading">Jane Smith
-                                            <span class="small pull-right">12:23 PM</span>
-                                        </h4>
-                                        <p>Hi, I wanted to make sure you got the latest product report. Did Roddy get it to you?</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="media">
-                                    <a class="pull-left" href="#">
-                                        <img class="media-object img-circle img-chat" src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="">
-                                    </a>
-                                    <div class="media-body">
-                                        <h4 class="media-heading">John Smith
-                                            <span class="small pull-right">12:28 PM</span>
-                                        </h4>
-                                        <p>Yeah I did. Everything looks good.</p>
-                                        <p>Did you have an update on purchase order #302?</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="media">
-                                    <a class="pull-left" href="#">
-                                        <img class="media-object img-circle img-chat" src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="">
-                                    </a>
-                                    <div class="media-body">
-                                        <h4 class="media-heading">Jane Smith
-                                            <span class="small pull-right">12:39 PM</span>
-                                        </h4>
-                                        <p>No not yet, the transaction hasn't cleared yet. I will let you know as soon as everything goes through. Any idea where you want to get lunch today?</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
+              
+                <div class="box-body">
+                  
+                  <div class="direct-chat-messages">
+                
+                    <div class="direct-chat-msg">
+                      <div class="direct-chat-info clearfix">
+                        <span class="direct-chat-name pull-left">Timona Siera</span>
+                        <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
+                      </div>
+                     
+                      <img class="direct-chat-img" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="message user image">
+                   
+                      <div class="direct-chat-text">
+                        For what reason would it be advisable for me to think about business content?
+                      </div>
+        
                     </div>
+                    
+                    <div class="direct-chat-msg right">
+                      <div class="direct-chat-info clearfix">
+                        <span class="direct-chat-name pull-right">Sarah Bullock</span>
+                        <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
+                      </div>
+                     
+                      <img class="direct-chat-img" src="https://img.icons8.com/office/36/000000/person-female.png" alt="message user image">
+                      
+                      <div class="direct-chat-text">
+                        Thank you for your believe in our supports
+                      </div>
+                   
                     </div>
-                    <div class="portlet-footer">
-                        <form role="form">
-                            <div class="form-group">
-                                <textarea class="form-control" placeholder="Enter message..."></textarea>
-                            </div>
-                            <div class="form-group">
-                                <button type="button" class="btn btn-default pull-right">Send</button>
-                                <div class="clearfix"></div>
-                            </div>
-                        </form>
+                   
+
+                  
+                    <div class="direct-chat-msg">
+                      <div class="direct-chat-info clearfix">
+                        <span class="direct-chat-name pull-left">Timona Siera</span>
+                        <span class="direct-chat-timestamp pull-right">23 Jan 5:37 pm</span>
+                      </div>
+             
+                      <img class="direct-chat-img" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="message user image">
+                     
+                      <div class="direct-chat-text">
+                        For what reason would it be advisable for me to think about business content?
+                      </div>
+                    
                     </div>
+                   
+                    <div class="direct-chat-msg right">
+                      <div class="direct-chat-info clearfix">
+                        <span class="direct-chat-name pull-right">Sarah Bullock</span>
+                        <span class="direct-chat-timestamp pull-left">23 Jan 6:10 pm</span>
+                      </div>
+                     
+                      <img class="direct-chat-img" src="https://img.icons8.com/office/36/000000/person-female.png" alt="message user image">
+          
+                      <div class="direct-chat-text">
+                        I would love to.
+                      </div>
+                    
+                    </div>
+            
+
+                  </div>
+                 
                 </div>
+               
+                <div class="box-footer">
+                  <form action="#" method="post">
+                    <div class="input-group">
+                      <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                      <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary text-light btn-flat">Send</button>
+                          </span>
+                    </div>
+                  </form>
+                </div>
+             
+              </div>
+           
             </div>
-        </div>
-        <!-- /.col-md-4 -->
-    </div>
-</div>                
+             </div>
+            
+              </div>
+             
+            </div>  
