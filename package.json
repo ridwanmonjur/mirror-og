@@ -21,6 +21,8 @@
         "bootstrap": "^5.0.2",
         "css-ripple-effect": "^1.0.5",
         "file-upload-with-preview": "^6.0.2",
+        "laravel-echo": "^1.16.1",
+        "pusher-js": "^8.4.0-rc2",
         "sass-loader": "^14.2.1",
         "skeleton-elements": "^4.0.1",
         "sweetalert2": "^11.10.8",

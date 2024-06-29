@@ -43,9 +43,9 @@
                                     {{-- Mark all as read --}}
                                     I{{-- {{ $notification->object_type->getImage()  }} --}}
                                 </div>
-                                <div style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 15px;" class="text-start ms-2">
+                                <span style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 15px;" class="text-start ms-2 my-1">
                                     {!! $notification->data['data'] !!}
-                                </div>
+                                </span>
                             </div>
                             <div class="d-flex justify-content-around align-items-center mt-1 pb-2">
                                 <a role="button" href="{{$notification->data['links'][0]['url']}}" class="border-bottom-primary border-bottom btn btn-link btn-sm">

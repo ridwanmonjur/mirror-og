@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMessagesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -15,15 +15,13 @@ class CreateMessagesTable extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-
-            $table->unsignedBigInteger('sender_id');
-            $table->unsignedBigInteger('receiver_id');
-            $table->foreign('sender_id')->references('id')->on('users');
-            $table->foreign('receiver_id')->references('id')->on('users');
-            $table->text('body')->nullable();
-            $table->boolean('read')->default(0);
-            $table->string('type')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('conversation_id')->constrained('conversations')->onDelete('cascade');
+            $table->text('text');
+            $table->timestamp('expiry_date')->nullable();
             $table->timestamps();
+            $table->foreignId('reply_id')->nullable()->constrained('messages')->onDelete('set null');
+            $table->timestamp('read_at')->nullable(); 
         });
     }
 
@@ -36,4 +34,4 @@ class CreateMessagesTable extends Migration
     {
         Schema::dropIfExists('messages');
     }
-}
+};
