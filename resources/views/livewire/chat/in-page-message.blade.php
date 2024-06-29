@@ -1,106 +1,75 @@
-<div class="page-content page-container" id="page-content">
-    <div class="padding">
+@php
+    use Carbon\Carbon;
+@endphp
+<div @class(["chatbox-container",
+    'd-none' => $isChatClosed || $isChatNotInited
+  ])>
+    <div>
         <div class="row container d-flex justify-content-center">
-<div class="col-md-4">
-             
-              <div class="box box-warning direct-chat direct-chat-warning">
-                <div class="box-header with-border">
-                  <h3 class="box-title">Chat Messages</h3>
+            <div>
 
-                  <div class="box-tools pull-right">
-                    <span data-toggle="tooltip" title="" class="badge bg-primary" data-original-title="3 New Messages">20</span>
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" data-widget="chat-pane-toggle" data-original-title="Contacts">
-                      <i class="fa fa-comments"></i></button>
-                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
-                    </button>
-                  </div>
-                </div>
-              
-                <div class="box-body">
-                  
-                  <div class="direct-chat-messages">
-                
-                    <div class="direct-chat-msg">
-                      <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name pull-left">Timona Siera</span>
-                        <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
-                      </div>
-                     
-                      <img class="direct-chat-img" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="message user image">
-                   
-                      <div class="direct-chat-text">
-                        For what reason would it be advisable for me to think about business content?
-                      </div>
-        
-                    </div>
-                    
-                    <div class="direct-chat-msg right">
-                      <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name pull-right">Sarah Bullock</span>
-                        <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
-                      </div>
-                     
-                      <img class="direct-chat-img" src="https://img.icons8.com/office/36/000000/person-female.png" alt="message user image">
-                      
-                      <div class="direct-chat-text">
-                        Thank you for your believe in our supports
-                      </div>
-                   
-                    </div>
-                   
+                <div class="box box-warning direct-chat direct-chat-warning">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Chat Messages
+                            @if ($messageCount)
+                              <span data-bs-toggle="tooltip" title="{{$messageCount . ' New Messages'}}" class="badge bg-primary">
+                                  {{$messageCount}}
+                              </span>
+                            @endif
+                        </h3>
+                        <div class="box-tools float-end">
+                            <button type="button" class="btn btn-tool p-0" data-bs-toggle="collapse">
+                                {{-- minimise --}}
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                  wire:click="toggleChatVisibility()"
+                                  width="30" height="30"
+                                    fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                                    <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
+                                </svg>
+                            </button>
 
-                  
-                    <div class="direct-chat-msg">
-                      <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name pull-left">Timona Siera</span>
-                        <span class="direct-chat-timestamp pull-right">23 Jan 5:37 pm</span>
-                      </div>
-             
-                      <img class="direct-chat-img" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="message user image">
-                     
-                      <div class="direct-chat-text">
-                        For what reason would it be advisable for me to think about business content?
-                      </div>
-                    
+                            <button type="button" class="btn btn-tool p-0" data-widget="remove">
+                                {{-- close --}}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                                    fill="currentColor" class="bi bi-x" viewBox="0 0 16 16"
+                                    wire:click="closeChatAndLive()"  
+                                  >
+                                    <path
+                                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                   
-                    <div class="direct-chat-msg right">
-                      <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name pull-right">Sarah Bullock</span>
-                        <span class="direct-chat-timestamp pull-left">23 Jan 6:10 pm</span>
-                      </div>
-                     
-                      <img class="direct-chat-img" src="https://img.icons8.com/office/36/000000/person-female.png" alt="message user image">
-          
-                      <div class="direct-chat-text">
-                        I would love to.
-                      </div>
-                    
-                    </div>
-            
 
-                  </div>
-                 
-                </div>
-               
-                <div class="box-footer">
-                  <form action="#" method="post">
-                    <div class="input-group">
-                      <input type="text" name="message" placeholder="Type Message ..." class="form-control">
-                      <span class="input-group-btn">
-                            <button type="button" class="btn btn-primary text-light btn-flat">Send</button>
-                          </span>
+                    <div class="box-body">
+                        <div class="direct-chat-messages">
+                            @foreach ($conversations as $conversation)
+                                @livewire('chat.in-page-message-list', [
+                                    'messages' => $conversation->messages,
+                                    'user' => $user,
+                                    'userProfile' => $userProfile,
+                                    'conversationId' => $conversation->id
+                                ], key("conversation-" . $loop->index . $conversation->id ))
+                            @endforeach
+                        </div>
                     </div>
-                  </form>
+
+                    <div class="box-footer">
+                       <form wire:submit.prevent="sendMessage">
+                            <div class="input-group">
+                                <input type="text" name="currentMessage" wire:model="currentMessage" placeholder="Type Message ..." class="form-control" wire:model="message">
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary text-light btn-flat">Send</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
-             
-              </div>
-           
+
             </div>
-             </div>
-            
-              </div>
-             
-            </div>  
+        </div>
+
+    </div>
+
+</div>

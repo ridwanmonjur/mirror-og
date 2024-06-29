@@ -17,8 +17,10 @@
         'resources/js/file-edit.js',
         'resources/sass/file-edit.scss',
         'resources/js/colorpicker.js',
+        'resources/js/chat.js',
         'resources/sass/colorpicker.scss',
     ])
+    <link rel="stylesheet" href="{{ asset('/assets/css/chat/inpage-message.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
 
 </head>
@@ -349,6 +351,10 @@
             <button class="tab-button outer-tab" onclick="showTab(event, 'Events', 'outer-tab')">Events</button>
             <button class="tab-button outer-tab" onclick="showTab(event, 'Teams', 'outer-tab')">Teams</button>
         </div>
+        
+        @livewire('chat.in-page-message', ['user' => $user, 'userProfile' => $userProfile])
+
+
         <div class="tab-content pb-4  outer-tab" id="Overview">
             <br><br>
             <div class="d-flex justify-content-center"><b>Recent Events</b></div>

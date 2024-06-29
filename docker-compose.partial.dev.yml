@@ -1,7 +1,7 @@
 version: '3'
 services:
-
-    soketi:
+    blog_soketi:
+        container_name: blog_soketi
         image: 'quay.io/soketi/soketi:latest-16-alpine'
         environment:
             SOKETI_DEBUG: '1'

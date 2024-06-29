@@ -15,6 +15,8 @@ export default defineConfig({
                 'resources/sass/file-upload-preview.scss',
                 'resources/js/colorpicker.js',
                 'resources/sass/colorpicker.scss',
+                'resources/js/chat.js',
+                'resources/sass/colorpicker.scss',
             ],
             refresh: true,
         }),
