@@ -5,7 +5,7 @@
 
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
-<header><u>Sign in to your participant account</u></header>
+<header class="px-2"><u>Sign in to your participant account</u></header>
 <form 
     autocomplete="off" 
     readonly 

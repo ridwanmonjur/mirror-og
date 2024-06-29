@@ -179,7 +179,7 @@
                             <div id="div-font-color-picker-with-bg"> </div>
                         </div>
                          <p class="my-2 py-2 fs-4 cursive-font" style="{{ 
-                            $backgroundStyles,
+                            $backgroundStyles .
                             $fontStyles
                         }}"
                         >Write in cursive
