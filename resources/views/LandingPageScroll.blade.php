@@ -9,8 +9,8 @@
     <div class="event">
         <a class="d-block" href="/event/{{ $event['id'] }}">
             <div style="display: flex; justify-content: center;">
-                <img style="position: absolute !important; top: -35px !important; z-index: 111; border-radius: 60px !important; object-fit: cover;"
-                    width="100" height="100" src="{{ $eventTierLowerImg }}"
+                <img style="position: absolute !important; top: -35px !important; min-height: 200px !important; z-index: 111; border-radius: 60px !important; object-fit: cover;"
+                 src="{{ $eventTierLowerImg }}"
                 >
             </div>
             <img src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover">

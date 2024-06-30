@@ -77,7 +77,7 @@
                     <div class="card-text">
                         <div>
                             <br>
-                            <div data-aos="fade-in" class="d-flex justify-content-between flex-wrap align-items-start">
+                            <div data-aos="fade-in" class="d-flex justify-content-between flex-wrap align-items-start pb-3">
                                 <h5
                                     class="text-truncated w-75"
                                     style="height:60px;">
