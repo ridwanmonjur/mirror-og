@@ -80,7 +80,7 @@
                             <div data-aos="fade-in" class="d-flex justify-content-between flex-wrap align-items-start pb-3">
                                 <h5
                                     class="text-truncated w-75"
-                                    style="text-decoration: underline;">
+                                    >
                                     {{ $event->eventName ?? 'No name yet' }}
                                 </h5>
                                 <div>
@@ -190,11 +190,11 @@
                             </div>
                             <br>
                             <div class="d-none d-lg-block">
-                            <h5> <u> {{ $combinedStr }} </u> </h5>
+                                <h5> <u> {{ $combinedStr }} </u> </h5>
                                 <h5> <u> {{ strtoupper($timePart) }} </u> </h5>
                             </div>
                             <div class="d-block d-lg-none">
-                            <p> <u> {{ $combinedStr }} </p> </h5>
+                                <p> <u> {{ $combinedStr }} </u> </p> 
                                 <p> <u> {{ strtoupper($timePart) }} </u> </p>
 
                             </div>
