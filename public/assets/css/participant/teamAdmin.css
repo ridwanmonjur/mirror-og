@@ -242,9 +242,6 @@ input[type="submit"],
 
 .carousel-buttons {
     text-align: center;
-}
-
-.carousel-button {
     background-color: #43A4D7;
     color: #FFFFFF;
     padding: 5px 10px;
@@ -252,6 +249,21 @@ input[type="submit"],
     border-radius: 10px;
     cursor: pointer;
     margin-bottom: 10px;
+}
+
+.carousel-button {
+    text-align: center;
+    background-color: #1e3744;
+    color: #fff;
+    padding: 15px 15px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+.carousel-button-disabled {
+    opacity: 0.35;
+    cursor: not-allowed !important;
 }
 
 .event-link {
@@ -285,14 +297,6 @@ input[type="submit"],
     scroll-snap-align: start;
 }
 
-.carousel-button {
-    background-color: #1e3744;
-    color: #fff;
-    padding: 15px 15px;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-}
 
 .team-info {
     display: flex;

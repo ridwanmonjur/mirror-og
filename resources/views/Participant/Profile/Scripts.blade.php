@@ -1,3 +1,5 @@
+<script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
+
 <script>
     var backgroundBanner = document.getElementById("backgroundBanner")
 
@@ -432,42 +434,8 @@
         target.classList.add('tab-button-active');
     }
 
-    let currentIndex = 0;
-
-    function carouselWork(increment = 0) {
-        const eventBoxes = document.querySelectorAll('.event-carousel-works > div');
-        let boxLength = eventBoxes?.length || 0;
-        let newSum = currentIndex + increment;
-        if (newSum >= boxLength || newSum < 0) {
-            return;
-        } else {
-            currentIndex = newSum;
-        }
-
-        // carousel top button working
-        const button1 = document.querySelector('.carousel-button:nth-child(1)');
-        const button2 = document.querySelector('.carousel-button:nth-child(2)');
-        if (button1 && button2) {
-            button1.style.opacity = (currentIndex <= 2) ? '0.4' : '1';
-            button2.style.opacity = (currentIndex >= boxLength - 2) ? '0.4' : '1';
-
-            // carousel swing
-            for (let i = 0; i < currentIndex; i++) {
-                eventBoxes[i]?.classList.add('d-none');
-            }
-
-            for (let i = currentIndex; i < currentIndex + 2; i++) {
-                eventBoxes[i]?.classList.remove('d-none');
-            }
-
-            for (let i = currentIndex + 2; i < boxLength; i++) {
-                eventBoxes[i]?.classList.add('d-none');
-            }
-        }
-    }
 
     carouselWork();
-
 
     function redirectToProfilePage(userId) {
         window.location.href = "{{ route('public.participant.view', ['id' => ':id']) }}"
