@@ -17,7 +17,7 @@
         'backgroundStyles' => $backgroundStyles, 
         'fontStyles' => $fontStyles, 
         'frameStyles' => $frameStyles
-    ] = $userProfile->profile?->generateStyles();
+    ] = $selectTeam->profile?->generateStyles();
 @endphp
 @guest
     @php

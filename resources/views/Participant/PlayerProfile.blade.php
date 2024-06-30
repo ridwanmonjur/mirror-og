@@ -245,6 +245,7 @@
                             <br>
                         </div>
                     <div x-cloak x-show="!isEditMode" class="ms-2">
+                        <br>
                         @if($userProfile->participant?->nickname)           
                             <div class="d-flex justify-content-start align-items-center flex-wrap">
                                 <h4 class="my-0 me-4">{{$userProfile->participant->nickname}}</h4>

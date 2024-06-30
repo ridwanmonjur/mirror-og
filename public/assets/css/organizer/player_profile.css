@@ -177,6 +177,10 @@ main {
     cursor: pointer;
 }
 
+.carousel-button-disabled {
+    opacity: 0.35;
+    cursor: not-allowed !important;
+}
 
 
 .member-details {

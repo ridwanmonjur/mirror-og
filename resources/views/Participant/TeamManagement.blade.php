@@ -40,11 +40,15 @@
                 @if (!isset($joinEvents[0]))
                     <p>No events available!</p>
                 @else
-                    <button class="carousel-button position-absolute" style="top: 100px; left: 20px;"
+                    <button @class(["carousel-button position-absolute",
+                       "carousel-button-disabled"  => empty($joinEvents[2])
+                    ]) style="top: 100px; left: 20px;"
                         onclick="carouselWork(-2)">
                         &lt;
                     </button>
-                    <button class="carousel-button position-absolute" style="top: 100px; right: 20px;"
+                    <button @class(["carousel-button position-absolute",
+                       "carousel-button-disabled"  => empty($joinEvents[2])
+                    ]) style="top: 100px; right: 20px;"
                         onclick="carouselWork(2)">
                         &gt;
                     </button>
@@ -187,8 +191,7 @@
             @endif
         </div>
     </main>
-    
-    
+    <script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
 
     <script>
         function reddirectToLoginWithIntened(route) {
@@ -216,38 +219,6 @@
 
             let target = event.currentTarget;
             target.classList.add('tab-button-active');
-        }
-
-        let currentIndex = 0;
-
-        function carouselWork(increment = 0) {
-            const eventBoxes = document.querySelectorAll('.event-carousel-works > div');
-            let boxLength = eventBoxes.length;
-            let newSum = currentIndex + increment;
-            if (newSum >= boxLength || newSum < 0) {
-                return;
-            } else {
-                currentIndex = newSum;
-            }
-
-            // carousel top button working
-            const button1 = document.querySelector('.carousel-button:nth-child(1)');
-            const button2 = document.querySelector('.carousel-button:nth-child(2)');
-            button1.style.opacity = (currentIndex <= 2) ? '0.4' : '1';
-            button2.style.opacity = (currentIndex >= boxLength - 2) ? '0.4' : '1';
-            
-            // carousel swing
-            for (let i = 0; i < currentIndex; i++) {
-                eventBoxes[i]?.classList.add('d-none');
-            }
-
-            for (let i = currentIndex; i < currentIndex + 2; i++) {
-                eventBoxes[i]?.classList.remove('d-none');
-            }
-
-            for (let i = currentIndex + 2; i < boxLength; i++) {
-                eventBoxes[i]?.classList.add('d-none');
-            }
         }
 
         carouselWork();
