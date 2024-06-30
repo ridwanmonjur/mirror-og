@@ -34,7 +34,8 @@
         'rounded-box-' . strtoLower($joinEvent->tier->eventTier),
     ]) style="margin-bottom : 0;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
-            <img @class([
+            <img {!! trustedBladeHandleImageFailureBanner() !!}
+                @class([
                 'opacity-until-hover',
                 'rounded-box-' . strtoLower($joinEvent->tier->eventTier),
             ])
@@ -71,7 +72,8 @@
                 <div onclick="goToUrl(event, this)"
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id]) }}"
                     class="col-6 col-xl-4 d-flex justify-content-center mt-1 px-0">
-                    <img src="{{ bladeImageNull($joinEvent->eventDetails->user->userBanner) }}" width="45"
+                    <img {!! trustedBladeHandleImageFailureBanner() !!} 
+                        src="{{ bladeImageNull($joinEvent->eventDetails->user->userBanner) }}" width="45"
                         height="45" class="me-1 object-fit-cover random-color-circle">
                     <div class="d-inline-block text-start">
                         <span

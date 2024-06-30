@@ -33,7 +33,9 @@
         'rounded-box-' . strtoLower($joinEvent->tier->eventTier),
     ]) style="margin-bottom : 0;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
-            <img @class([
+            <img 
+                {!! trustedBladeHandleImageFailureBanner() !!}
+                @class([
                 'opacity-until-hover ',
                 'rounded-box-' . strtoLower($joinEvent->tier->eventTier),
             ])
@@ -62,7 +64,8 @@
                     <a class="d-flex justify-content-start"
                         href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
 
-                        <img {!! trustedBladeHandleImageFailureBanner() !!} style="max-width: 50px; "
+                        <img 
+                            {!! trustedBladeHandleImageFailureBanner() !!} style="max-width: 50px; "
                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
                             class="object-fit-cover" width="60px" height="40px">
                         <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventName }} </span>
@@ -71,7 +74,9 @@
                 <div onclick="goToUrl(event, this)"
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->user->id]) }}"
                     class="col-6 col-xl-4 d-flex justify-content-center mt-1">
-                    <img src="{{ bladeImageNull($joinEvent->user->userBanner) }}" width="45" height="45"
+                    <img 
+                        {!! trustedBladeHandleImageFailureBanner() !!}
+                        src="{{ bladeImageNull($joinEvent->user->userBanner) }}" width="45" height="45"
                         class="me-1 object-fit-cover random-color-circle">
                     <div class="text-start ">
                         <span class="text-truncate-2-lines h-auto w-100">{{ $joinEvent->user->name }}</span>
