@@ -301,6 +301,8 @@ footer {
     align-items: center;
     text-align: center;
     gap: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .event_status {
