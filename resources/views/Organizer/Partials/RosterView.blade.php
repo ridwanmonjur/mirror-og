@@ -1,7 +1,8 @@
 @php
     $random_int = rand(0, 999);
 @endphp
-<a href="{{route('public.event.view', ['id'=> $joinEvent->id])}}" class="position-relative opacity-parent-until-hover d-block">
+<div class="position-relative opacity-parent-until-hover d-block">
+
     <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
         @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
             <ul class="achievement-list px-4">
@@ -26,94 +27,91 @@
             </ul>
         @endif
     </div>
-   
+
     <div @class([
-            "event mx-auto event-width cursor-pointer visible-until-hover-parent",
-            'rounded-box-' . strtoLower($joinEvent->tier->eventTier)
-        ]) style="margin-bottom : 0;">
-        <img 
-            @class([
-                "opacity-until-hover ",
-                'rounded-box-' . strtoLower($joinEvent->tier->eventTier)
+        'event mx-auto event-width cursor-pointer visible-until-hover-parent',
+        'rounded-box-' . strtoLower($joinEvent->tier->eventTier),
+    ]) style="margin-bottom : 0;">
+        <a href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
+            <img @class([
+                'opacity-until-hover ',
+                'rounded-box-' . strtoLower($joinEvent->tier->eventTier),
             ])
-            style="object-fit: cover; border-radius: 30px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;" src="{{'/storage' . '/' . $joinEvent->eventBanner}}" width="100%" height="80%;">
-        <div class="invisible-until-hover mt-4 ms-4 position-absolute" style="top: 20px;" style="width: 100%; background-color: red;">
-           
-            @if (!isset($joinEvent->roster[0]))
-                <span>Empty roster</span>
-            @else
-                <ul  
-                    data-url="{{route('public.participant.view', ['id' => $roster->user->id])}}" 
-                    onclick="goToUrl(event, this)"
-                    class="d-flex flex-column flex-start underline_animation">
-                    @foreach ($joinEvent->roster as $roster)
-                        <li>
-                            <span>{{ $roster->user->name }}</span>
-                        </li>
-                    @endforeach
-                </ul>
-            @endif
-        </div>
-         <div class="frame1 p-0 mx-0 mb-0" >
+                style="object-fit: cover; border-radius: 30px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
+                src="{{ '/storage' . '/' . $joinEvent->eventBanner }}" width="100%" height="80%;">
+            <div class="invisible-until-hover mt-4 ms-4 position-absolute" style="top: 20px;"
+                style="width: 100%; background-color: red;">
+
+                @if (!isset($joinEvent->roster[0]))
+                    <span>Empty roster</span>
+                @else
+                    <ul data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
+                        onclick="goToUrl(event, this)" class="d-flex flex-column flex-start underline_animation">
+                        @foreach ($joinEvent->roster as $roster)
+                            <li>
+                                <span>{{ $roster->user->name }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        </a>
+        <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
-                <div class="col-12 col-lg-6 d-flex justify-content-start d my-1 px-0"
-                >
-                    <img {!! trustedBladeHandleImageFailureBanner() !!}
-                        style="max-width: 50px; "
-                        src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
-                        class="object-fit-cover"
-                        width="60px" height="40px"
-                    >
-                    <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventName }} </span>
+                <div class="col-12 col-xl-6 d-flex justify-content-start d my-1 px-0">
+                    <a class="d-flex justify-content-start"
+                        href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
+
+                        <img {!! trustedBladeHandleImageFailureBanner() !!} style="max-width: 50px; "
+                            src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
+                            class="object-fit-cover" width="60px" height="40px">
+                        <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventName }} </span>
+                    </a>
                 </div>
-                <div onclick="goToUrl(event, this)"                             
-                    data-url="{{route('public.organizer.view', ['id' => $joinEvent->user->id])}}"
-                    class="col-6 col-lg-4 d-flex justify-content-center mt-1"
-                >
-                    <img src="{{ bladeImageNull($joinEvent->user->userBanner) }}"
-                        width="45" height="45" class="me-1 object-fit-cover random-color-circle">
+                <div onclick="goToUrl(event, this)"
+                    data-url="{{ route('public.organizer.view', ['id' => $joinEvent->user->id]) }}"
+                    class="col-6 col-xl-4 d-flex justify-content-center mt-1">
+                    <img src="{{ bladeImageNull($joinEvent->user->userBanner) }}" width="45" height="45"
+                        class="me-1 object-fit-cover random-color-circle">
                     <div class="text-start ">
                         <span class="text-truncate-2-lines h-auto w-100">{{ $joinEvent->user->name }}</span>
-                        <small 
-                            data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id]: 0 }} "
-                            class="{{'followCounts' . $joinEvent->user_id}}"
-                        >
-                            {{ $followCounts[$joinEvent->user_id] }} follower{{bladePluralPrefix($followCounts[$joinEvent->user_id])}} 
+                        <small
+                            data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id] : 0 }} "
+                            class="{{ 'followCounts' . $joinEvent->user_id }}">
+                            {{ $followCounts[$joinEvent->user_id] }}
+                            follower{{ bladePluralPrefix($followCounts[$joinEvent->user_id]) }}
                         </small>
                     </div>
                 </div>
-                <form id="{{'followForm' . $joinEvent->id . $random_int }}" method="POST"
-                    class="col-6 col-lg-2 px-0" action="{{ route('participant.organizer.follow') }}">
+                <form id="{{ 'followForm' . $joinEvent->id . $random_int }}" method="POST" class="col-6 col-xl-2 px-0"
+                    action="{{ route('participant.organizer.follow') }}">
                     @csrf
                     @guest
                         <input type="hidden" name="user_id" value="">
                         <input type="hidden" name="organizer_id" value="">
                     @endguest
                     @auth
-                        <input type="hidden" name="user_id"
-                            value="{{ $user && $user->id ? $user->id : '' }}">
-                        <input type="hidden" name="organizer_id"
-                            value="{{ $joinEvent->user_id }}">
+                        <input type="hidden" name="user_id" value="{{ $user && $user->id ? $user->id : '' }}">
+                        <input type="hidden" name="organizer_id" value="{{ $joinEvent->user_id }}">
                     @endauth
-                    
+
                     @guest
                         <button type="button"
-                            onclick="reddirectToLoginWithIntened('{{route('public.organizer.view', ['id'=> $joinEvent->user_id ])}}')"
-                            class="mx-auto mt-2  {{'followButton' . $joinEvent->user_id}}"
+                            onclick="reddirectToLoginWithIntened('{{ route('public.organizer.view', ['id' => $joinEvent->user_id]) }}')"
+                            class="mx-auto mt-2  {{ 'followButton' . $joinEvent->user_id }}"
                             style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                             Follow
                         </button>
                     @endguest
                     @auth
                         @if ($user->role == 'PARTICIPANT')
-                            <button type="submit" class="{{'followButton' . $joinEvent->user_id}}"
-                                class="mx-auto mt-2 " style="background-color: {{ $joinEvent->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $joinEvent->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                            <button type="submit" class="{{ 'followButton' . $joinEvent->user_id }}" class="mx-auto mt-2 "
+                                style="background-color: {{ $joinEvent->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $joinEvent->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                                 {{ $joinEvent->isFollowing ? 'Following' : 'Follow' }}
                             </button>
                         @else
-                            <button type="button"
-                                onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
-                                class="mx-auto mt-2 {{'followButton' . $joinEvent->user_id}}"
+                            <button type="button" onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
+                                class="mx-auto mt-2 {{ 'followButton' . $joinEvent->user_id }}"
                                 style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                                 Follow
                             </button>
@@ -123,56 +121,59 @@
             </div>
         </div>
     </div>
-</a>
+</div>
 
 
-    <script>
-        function goToRoute(element) {
-            const route = element.dataset.route;
-            if (route) {
-                window.location.href = route;
-            }
+<script>
+    function goToRoute(element) {
+        const route = element.dataset.route;
+        if (route) {
+            window.location.href = route;
         }
+    }
 
-        function goToUrl(event, element) {
-            event.stopPropagation();
+    function goToUrl(event, element) {
+        event.stopPropagation();
+        event.preventDefault();
+        const url = element.getAttribute('data-url');
+        window.location.href = url;
+
+    }
+
+    (function applyRandomColorsAndShapes() {
+        const circles = document.querySelectorAll('.random-color-circle');
+
+        circles.forEach(circle => {
+            const randomColor = getRandomColor();
+            circle.style.borderWidth = '2px';
+            circle.style.borderStyle = 'solid';
+            circle.style.borderRadius = '50%';
+        });
+    })();
+
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    document.getElementById("{{ 'followForm' . $joinEvent->id . $random_int }}").addEventListener('submit',
+    async function(event) {
             event.preventDefault();
-            const url = element.getAttribute('data-url');
-            window.location.href = url;
 
-        }
-
-        (function applyRandomColorsAndShapes() {
-            const circles = document.querySelectorAll('.random-color-circle');
-            
-            circles.forEach(circle => {
-                const randomColor = getRandomColor();
-                circle.style.borderWidth = '2px';
-                circle.style.borderStyle = 'solid';
-                circle.style.borderRadius = '50%';
+            let followButtons = document.getElementsByClassName("{{ 'followButton' . $joinEvent->user_id }}");
+            let followCounts = document.getElementsByClassName("{{ 'followCounts' . $joinEvent->user_id }}");
+            console.log({
+                followButtons
             });
-        })();
-
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
-
-        document.getElementById("{{'followForm' . $joinEvent->id . $random_int }}").addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            let followButtons = document.getElementsByClassName("{{'followButton' . $joinEvent->user_id}}");
-            let followCounts = document.getElementsByClassName("{{'followCounts' . $joinEvent->user_id}}");
-            console.log({followButtons});
             let form = this;
             let formData = new FormData(form);
             [...followButtons].forEach((button) => {
                 button.style.setProperty('pointer-events', 'none');
-            });    
+            });
 
             try {
                 let jsonObject = {}
@@ -190,7 +191,7 @@
                 });
 
                 let data = await response.json();
-                [...followButtons].forEach( (followButton) => {
+                [...followButtons].forEach((followButton) => {
                     followButton.style.setProperty('pointer-events', 'none');
 
                     if (data.isFollowing) {
@@ -212,8 +213,8 @@
                 } else {
                     count--;
                 }
-                                
-                [...followCounts].forEach( (followCount) => {
+
+                [...followCounts].forEach((followCount) => {
                     followCount.dataset.count = count;
                     if (count == 1) {
                         followCount.innerHTML = '1 follower';
@@ -231,4 +232,4 @@
                 console.error('Error:', error);
             }
         });
-    </script>
+</script>

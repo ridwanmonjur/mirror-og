@@ -248,11 +248,15 @@
                 @if (!isset($joinEvents[0]))
                     <p>No events available!</p>
                 @else
-                    <button class="carousel-button position-absolute" style="top: 100px; left: 20px;"
+                    <button @class(["carousel-button position-absolute",
+                       "carousel-button-disabled"  => empty($joinEvents[2])
+                    ]) style="top: 100px; left: 20px;"
                         onclick="carouselWork(-2)">
                         &lt;
                     </button>
-                    <button class="carousel-button position-absolute" style="top: 100px; right: 20px;"
+                    <button @class(["carousel-button position-absolute",
+                       "carousel-button-disabled"  => empty($joinEvents[2])
+                    ]) style="top: 100px; right: 20px;"
                         onclick="carouselWork(2)">
                         &gt;
                     </button>
@@ -286,9 +290,7 @@
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        <a href="{{route('public.participant.view', ['id'=> $joinEvent->id])}}" class="position-relative opacity-parent-until-hover d-block">
                             @include('Organizer.Partials.RosterView', ['isRegistrationView' => false])
-                        </a>
                         <br><br>
                     @endforeach
                 </div>
@@ -304,9 +306,7 @@
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)                        
-                        <a href="{{route('public.participant.view', ['id'=> $joinEvent->id])}}" class="position-relative opacity-parent-until-hover d-block">
                             @include('Organizer.Partials.RosterView', ['isRegistrationView' => false])
-                        </a>
                         <br><br>
                     @endforeach
                 </div>
@@ -588,7 +588,7 @@
 </body>
 @livewireScripts
 <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
-
+<script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/js/intlTelInput.min.js"></script>
 <script>
     const input = document.querySelector("#phone");
@@ -723,42 +723,8 @@
         target.classList.add('tab-button-active');
     }
 
-    let currentIndex = 0;
-
-    function carouselWork(increment = 0) {
-        const eventBoxes = document.querySelectorAll('.event-carousel-works > div');
-        let boxLength = eventBoxes?.length || 0;
-        let newSum = currentIndex + increment;
-        if (newSum >= boxLength || newSum < 0) {
-            return;
-        } else {
-            currentIndex = newSum;
-        }
-
-        // carousel top button working
-        const button1 = document.querySelector('.carousel-button:nth-child(1)');
-        const button2 = document.querySelector('.carousel-button:nth-child(2)');
-        if (button1 && button2) {
-            button1.style.opacity = (currentIndex <= 2) ? '0.4' : '1';
-            button2.style.opacity = (currentIndex >= boxLength - 2) ? '0.4' : '1';
-
-            // carousel swing
-            for (let i = 0; i < currentIndex; i++) {
-                eventBoxes[i]?.classList.add('d-none');
-            }
-
-            for (let i = currentIndex; i < currentIndex + 2; i++) {
-                eventBoxes[i]?.classList.remove('d-none');
-            }
-
-            for (let i = currentIndex + 2; i < boxLength; i++) {
-                eventBoxes[i]?.classList.add('d-none');
-            }
-        }
-    }
 
     carouselWork();
-
 
     function redirectToProfilePage(userId) {
         window.location.href = "{{ route('public.organizer.view', ['id' => ':id']) }}"
