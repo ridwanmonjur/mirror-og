@@ -388,10 +388,11 @@ input[type="submit"],
     margin-bottom: 3rem;
     overflow: auto;
     max-width: 90vw;
+    height: min-content;
     background: transparent;
     border-width: 2px;
     border-style: solid;
-    border-radius: 40px;
+    border-radius: 20px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     align-content: center;
     overflow: hidden;
@@ -416,7 +417,7 @@ input[type="submit"],
     height: 430px;
     background: transparent;
     border: 2px solid rgb(90, 150, 230);
-    border-radius: 40px;
+    border-radius: 30px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -427,7 +428,7 @@ input[type="submit"],
     height: 430px;
     background: transparent;
     border: 2px solid rgb(16, 22, 68);
-    border-radius: 40px;
+    border-radius: 30px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -477,7 +478,6 @@ input[type="submit"],
     display: flex;
     align-items: center;
     text-align: center;
-    gap: 40px;
 }
 
 .logo2 {
@@ -743,8 +743,8 @@ input[type="submit"],
         grid-template-columns: 1fr 1fr;
     }
     .event-width {
-        width: 500px;
-        height: 300px;
+        width: min(550px, 40vw);
+        height: min-content;
     } 
 
 }

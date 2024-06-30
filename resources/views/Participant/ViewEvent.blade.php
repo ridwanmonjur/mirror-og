@@ -172,7 +172,7 @@
                                             <button 
                                                 class="ripple"
                                                 type="submit" id="followButton"
-                                                style="background-color: {startD{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                                                style="background-color: {{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                                                 {{ $user && $user->isFollowing ? 'Following' : 'Follow' }}
                                             </button>
                                         @else

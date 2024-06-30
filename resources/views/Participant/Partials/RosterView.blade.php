@@ -36,60 +36,45 @@
                 "opacity-until-hover",
                 'rounded-box-' . strtoLower($joinEvent->tier->eventTier)
             ])
-            style="object-fit: cover; border-radius: 40px; border-bottom-width: 2px; border-bottom-style: solid;" src="{{'/storage' . '/' . $joinEvent->eventDetails->eventBanner}}" width="100%" height="80%;">
+            style="object-fit: cover; border-radius: 30px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;" src="{{'/storage' . '/' . $joinEvent->eventDetails->eventBanner}}" width="100%" height="80%;">
         <div class="invisible-until-hover mt-4 ms-4 position-absolute" style="top: 20px;" style="width: 100%; background-color: red;">
            
             @if (!isset($joinEvent->roster[0]))
                 <span>Empty roster</span>
             @else
-                <div>
+                <ul  
+                    onclick="goToUrl(event, this)"
+                    class="d-flex flex-column flex-start underline_animation">
                     @foreach ($joinEvent->roster as $roster)
-                        <div 
-                            data-url="{{route('public.participant.view', ['id' => $roster->user->id])}}" 
-                            onclick="goToUrl(event, this)"
-                            class="d-flex justify-content-center align-items-center mb-1">
-                            <img 
-                                width="40" height="40" 
-                                src="{{ bladeImageNull($roster->user->userBanner) }}"
-                                class="me-1 random-color-circle object-fit-cover me-3"
-                            >
-                            <span class="underline_animation">{{ $roster->user->name }}</span>
-                        </div>
+                        <li 
+                    data-url="{{route('public.participant.view', ['id' => $roster->user->id])}}" 
+                        
+                        >
+                            <span>{{ $roster->user->name }}</span>
+                        </li>
                     @endforeach
-                </div>
+                </ul>
             @endif
         </div>
-        <div class="frame1" style="margin-bottom: 0;">
-            <div class="container d-flex justify-content-between flex-wrap">
-                <div   
-                    class="d-flex justify-content-start mt-1"
+        <div class="frame1 p-0 mx-0 mb-0" >
+            <div class="row mx-0 w-100" style="padding: 5px 10px;">
+                <div class="col-12 col-lg-6 d-flex justify-content-start d my-1 px-0"
                 >
                     <img {!! trustedBladeHandleImageFailureBanner() !!}
-                        style="max-width: 50px; "
                         src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
                         class="object-fit-cover"
                         width="60px" height="40px"
                     >
-                    <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventDetails->eventName }} </span>
+                    <span class="text-truncate-2-lines text-start w-100"> {{ $joinEvent->eventDetails->eventName }} </span>
                 </div>
-                <div 
-                    onclick="goToUrl(event, this)"                             
+                <div onclick="goToUrl(event, this)"                             
                     data-url="{{route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id])}}"
-                    class="d-flex justify-content-center mt-1"
+                    class="col-6 col-lg-4 d-flex justify-content-center mt-1 px-0"
                 >
-                    <img 
-                        width="45" height="45" 
-                        src="{{ bladeImageNull($joinEvent->user->userBanner) }}"
-                        class="me-1 random-color-circle object-fit-cover"
-                    >
-                    <div
-                        class="text-start"
-                    >
-                        <button 
-                            class="d-inline p-0 btn btn-link" 
-                            >{{ $joinEvent->eventDetails->user->name }}
-                        </button>
-                        <br>
+                    <img src="{{ bladeImageNull($joinEvent->eventDetails->user->userBanner) }}"
+                        width="45" height="45" class="me-1 object-fit-cover random-color-circle">
+                    <div class="d-inline-block text-start">
+                        <span class="text-truncate-2-lines h-auto w-100">{{ $joinEvent->eventDetails->user->name  }}</span>
                         <small 
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id]: 0 }} "
                             class="d-inline p-0 {{'followCounts' . $joinEvent->eventDetails?->user_id}}"
@@ -99,7 +84,7 @@
                     </div>
                 </div>
                 <form id="{{'followForm' . $joinEvent->id . $random_int }}" method="POST"
-                    action="{{ route('participant.organizer.follow') }}">
+                    class="col-6 col-lg-2 px-0" action="{{ route('participant.organizer.follow') }}">
                     @csrf
                     @guest
                         <input type="hidden" name="user_id" value="">
@@ -115,21 +100,21 @@
                     @guest
                         <button type="button"
                             onclick="reddirectToLoginWithIntened('{{route('public.organizer.view', ['id'=> $joinEvent->eventDetails?->user_id ])}}')"
-                            class="{{'followButton' . $joinEvent->eventDetails?->user_id}}"
+                            class="mx-auto mt-2 {{'followButton' . $joinEvent->eventDetails?->user_id}}"
                             style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                             Follow
                         </button>
                     @endguest
                     @auth
                         @if ($user->role == 'PARTICIPANT')
-                            <button type="submit" class="{{'followButton' . $joinEvent->eventDetails?->user_id}}"
+                            <button type="submit" class="mx-auto mt-2 {{'followButton' . $joinEvent->eventDetails?->user_id}}"
                                 style="background-color: {{ $joinEvent->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $joinEvent->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                                 {{ $joinEvent->isFollowing ? 'Following' : 'Follow' }}
                             </button>
                         @else
                             <button type="button"
                                 onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
-                                class="{{'followButton' . $joinEvent->eventDetails?->user_id}}"
+                                class="mx-auto mt-2 {{'followButton' . $joinEvent->eventDetails?->user_id}}"
                                 style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                                 Follow
                             </button>

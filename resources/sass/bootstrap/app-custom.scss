@@ -501,10 +501,11 @@ a:hover {
         -webkit-line-clamp: 2;
         width: 160px !important;
         height: 50px;
-        overflow: hidden;
+        overflow:hidden;
         display: block;
         text-overflow: ellipsis;
     }
+   
     .grid-4-columns {
         grid-template-columns: 1fr 1fr 1fr 1fr;
     }
