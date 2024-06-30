@@ -13,7 +13,7 @@
                     width="100" height="100" src="{{ $eventTierLowerImg }}"
                 >
             </div>
-            <img src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover" style="min-height: 200px !important; ">
+            <img src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover" style="min-height: 150px !important; ">
             <div class="frame1 d-flex justify-content-around flex-wrap">
                 <img src="{{ $bladeEventGameImage }}" style="padding-left: 20px;" class="logo2 mt-2">
                 <button class="event_status_1 ripple" style="@php echo $stylesEventStatus; @endphp">{{ $event->statusResolved() }}
