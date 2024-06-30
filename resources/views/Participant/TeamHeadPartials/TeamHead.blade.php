@@ -12,6 +12,13 @@
     <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
 
 </head>
+@php
+    [   
+        'backgroundStyles' => $backgroundStyles, 
+        'fontStyles' => $fontStyles, 
+        'frameStyles' => $frameStyles
+    ] = $userProfile->profile?->generateStyles();
+@endphp
 @guest
     @php
         $teamMember = null;
@@ -22,12 +29,7 @@
 @endguest
 @auth
     @php
-        [   
-            'backgroundStyles' => $backgroundStyles, 
-            'fontStyles' => $fontStyles, 
-            'frameStyles' => $frameStyles
-        ] = $selectTeam->profile?->generateStyles();
-        
+    
         $teamMember = App\Models\TeamMember::where('team_id', $selectTeam->id)
             ->where('user_id', $user->id)->get();
         if (isset($teamMember[0])) {

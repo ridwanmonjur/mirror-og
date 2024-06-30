@@ -22,6 +22,11 @@
 @php
     use Carbon\Carbon;
     $isUserSame = false;
+      [   
+            'backgroundStyles' => $backgroundStyles, 
+            'fontStyles' => $fontStyles, 
+            'frameStyles' => $frameStyles
+        ] = $userProfile->profile?->generateStyles();
 @endphp
 @auth
     @php
@@ -30,11 +35,7 @@
         }
 
         $isUserSame = $user->id == $userProfile->id;
-        [   
-            'backgroundStyles' => $backgroundStyles, 
-            'fontStyles' => $fontStyles, 
-            'frameStyles' => $frameStyles
-        ] = $userProfile->profile?->generateStyles();
+      
     @endphp
 @endauth
 <body>

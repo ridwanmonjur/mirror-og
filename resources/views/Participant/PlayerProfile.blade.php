@@ -352,8 +352,9 @@
             <button class="tab-button outer-tab" onclick="showTab(event, 'Teams', 'outer-tab')">Teams</button>
         </div>
         
-        @livewire('chat.in-page-message', ['user' => $user, 'userProfile' => $userProfile])
-
+        @if (isset($user))
+            @livewire('chat.in-page-message', ['user' => $user, 'userProfile' => $userProfile])
+        @endif
 
         <div class="tab-content pb-4  outer-tab" id="Overview">
             <br><br>
