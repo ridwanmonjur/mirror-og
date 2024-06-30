@@ -80,8 +80,8 @@
                             <div data-aos="fade-in" class="d-flex justify-content-between flex-wrap align-items-start pb-3">
                                 <h5
                                     class="text-truncated w-75"
-                                    style="max-height:60px;">
-                                    <u>{{ $event->eventName ?? 'No name yet' }}</u>
+                                    style="text-decoration: underline;">
+                                    {{ $event->eventName ?? 'No name yet' }}
                                 </h5>
                                 <div>
                                     <div>
@@ -172,7 +172,7 @@
                                             <button 
                                                 class="ripple"
                                                 type="submit" id="followButton"
-                                                style="background-color: {{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                                                style="background-color: {startD{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
                                                 {{ $user && $user->isFollowing ? 'Following' : 'Follow' }}
                                             </button>
                                         @else
@@ -189,9 +189,16 @@
                                 </form>
                             </div>
                             <br>
+                            <div class="d-none d-lg-block">
                             <h5> <u> {{ $combinedStr }} </u> </h5>
-                            <h5> <u> {{ strtoupper($timePart) }} </u> </h5>
-                            <br>
+                                <h5> <u> {{ strtoupper($timePart) }} </u> </h5>
+                            </div>
+                            <div class="d-block d-lg-none">
+                            <p> <u> {{ $combinedStr }} </p> </h5>
+                                <p> <u> {{ strtoupper($timePart) }} </u> </p>
+
+                            </div>
+                                                        <br>
                             <div>
                                 <div data-aos="fade-in" class="tab">
                                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ripple' }}"
