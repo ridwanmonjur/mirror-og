@@ -10,12 +10,12 @@
         <a class="d-block" href="/event/{{ $event['id'] }}">
             <div style="display: flex; justify-content: center;">
                 <img style="position: absolute !important; top: -35px !important; z-index: 111; border-radius: 60px !important; object-fit: cover;"
-                 src="{{ $eventTierLowerImg }}"
+                    width="100" height="100" src="{{ $eventTierLowerImg }}"
                 >
             </div>
-            <img src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover">
+            <img src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover" style="min-height: 200px !important; ">
             <div class="frame1 d-flex justify-content-around flex-wrap">
-                <img src="{{ $bladeEventGameImage }}" style="padding-left: 20px;  min-height: 200px !important; " class="logo2 mt-2">
+                <img src="{{ $bladeEventGameImage }}" style="padding-left: 20px;" class="logo2 mt-2">
                 <button class="event_status_1 ripple" style="@php echo $stylesEventStatus; @endphp">{{ $event->statusResolved() }}
                 </button>
             </div>
