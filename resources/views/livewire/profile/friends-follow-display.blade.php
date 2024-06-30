@@ -32,7 +32,7 @@
         @livewire("profile.friend-follow-list", [
             'userId' => $userId, 'name' => 'Follow', 'currentTab' => $currentTab
         ], key($currentTab . 'Follow'))
-        @livewire("pr@livewireofile.friend-follow-list", [
+        @livewire("profile.friend-follow-list", [
             'userId' => $userId, 'name' => 'Following', 'currentTab' => $currentTab
         ], key($currentTab . 'Following'))
         @livewire("profile.friend-follow-list", [
