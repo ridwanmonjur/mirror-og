@@ -15,7 +15,8 @@ function checkValidity(inpObj, inputID) {
 
     if (!inpObj.checkValidity()) {
         const customErrorMessage = customErrorMessages[inputID] || inpObj.validationMessage;
-        fieldErrorMesage.innerHTML = `<i class="fas fa-exclamation-circle form_icon__error"></i><span>${customErrorMessage}</span>`;
+        fieldErrorMesage.innerHTML = `<i
+    class="fas fa-exclamation-circle form_icon__error"></i><span>${customErrorMessage}</span>`;
         inpObj.classList.add("input__error");
         fieldErrorMesage.classList.remove("d-none");
     } else {
@@ -27,28 +28,28 @@ function checkValidity(inpObj, inputID) {
 
 const querySelector = ".wrapper input";
 
-window.onload= () => {
-document.querySelector('.wrapper').focus();
-document.querySelectorAll(querySelector).forEach(inpObj => {
-    const id = inpObj.id;
-  
-    if (id) {
-        const spanMesage = document.querySelector(`#${id} ~ span.placeholder-moves-up`);
-     
-        if (!inpObj.matches(':-webkit-autofill') && inpObj.value.trim() === "") {
-          
-            if (spanMesage) spanMesage.style.top = "20px";
-        } else {
-            if (spanMesage) spanMesage.style.top = "0px";
-        }
+window.onload = () => {
+    document.querySelector('.wrapper').focus();
+    document.querySelectorAll(querySelector).forEach(inpObj => {
+        const id = inpObj?.id;
+        console.log({inpObj, id})
+        if (id) {
+            const spanMesage = document.querySelector(`#${id} ~ span.placeholder-moves-up`);
 
-        inpObj.addEventListener("blur", () => {
-            checkValidity(inpObj, id);
-        });
-    } else {
-        console.warn("Input element without ID found:", inpObj);
-    }
-});
+            if (inpObj.value.trim() === "") {
+                console.log({inpObj, id})
+                if (spanMesage) spanMesage.style.top = "20px";
+            } else {
+                if (spanMesage) spanMesage.style.top = "0px";
+            }
+
+            inpObj.addEventListener("blur", () => {
+                checkValidity(inpObj, id);
+            });
+        } else {
+            console.warn("Input element without ID found:", inpObj);
+        }
+    });
 }
 
 // Flash message

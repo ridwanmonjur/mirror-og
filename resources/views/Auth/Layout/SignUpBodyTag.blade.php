@@ -5,5 +5,6 @@
         @yield('signUpbody')
 
     </div>
+    <script src="{{ asset('/assets/js/auth/validity.js') }}"></script>
 
 </body>
