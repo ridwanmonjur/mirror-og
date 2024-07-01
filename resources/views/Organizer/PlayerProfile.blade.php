@@ -617,12 +617,18 @@
             },
             async submitEditProfile (event) {
                 try {
+                    this.errorMessage = null;
                     event.preventDefault(); 
                     this.userProfile.mobile_no = iti.getNumber();
+                    console.log({number: iti.getNumber()});
 
                     if (!iti.isValidNumber()) {
-                        this.errorMessage = 'Valid phone number with country code is not chosen!'
-                        return;
+                        if (document.getElementById("phone").value.trim() == "") {
+                            this.userProfile.mobile_no = null;
+                        } else  {
+                            this.errorMessage = 'Valid phone number with country code is not chosen!'
+                            return;
+                        }
                     }
 
                     const url = event.target.dataset.url; 

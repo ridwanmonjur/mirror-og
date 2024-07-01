@@ -117,38 +117,49 @@ class OrganizerController extends Controller
     public function editProfile(UpdateOrganizersRequest $request)
     {
         $user = $request->attributes->get('user');
-
         $validatedData = $request->validated();
 
-        $address = $validatedData['address']['id']
-            ? Address::findOrFail($validatedData['address']['id'])
-            : new Address();
+        try {
+            DB::transaction(function () use ($user, $validatedData) {
+                if (isset($validatedData['address'])) {
+                    $address = isset($validatedData['address']['id'])
+                    ? Address::findOrFail($validatedData['address']['id'])
+                    : new Address();
 
-        if (!empty($validatedData['address']['city']) && !empty($validatedData['address']['country']) && !empty($validatedData['address']['addressLine1'])) {
-            $address->fill($validatedData['address'])->save();
-        } else {
-            throw new Exception("Incomplete address!");
-        }
-
-        User::where('id', $user->id)
-            ->first()
-            ->fill($validatedData['userProfile'])->save();
-
-        $organizer = $validatedData['organizer']['id']
-            ? Organizer::findOrFail($validatedData['organizer']['id'])
-            : new Organizer();
-            $links = ['website_link', 'instagram_link', 'twitter_link', 'facebook_link'];
-
-        foreach ($links as $link) {
-            if (isset($validatedData['organizer'][$link])) {
-                if (substr($validatedData['organizer'][$link], -1) === '/') {
-                    $validatedData['organizer'][$link] = rtrim($validatedData['organizer'][$link], '/');
+                    if (!empty($validatedData['address']['city']) && !empty($validatedData['address']['country']) && !empty($validatedData['address']['addressLine1'])) {
+                        $address->fill($validatedData['address']);
+                        $address->user_id = $user->id;
+                        $address->save();
+                    } else {
+                        if (count($validatedData['address']) > 0) {
+                            throw new Exception("Incomplete address given!");
+                        }
+                    }
                 }
-            }
-        }
-        // dd($validatedData['organizer']);
-        $organizer->fill($validatedData['organizer'])->save();
+                // Update user profile
+                User::where('id', $user->id)->first()->fill($validatedData['userProfile'])->save();
 
-        return response()->json(['success' => true, 'message' => 'Data saved successfully']);
+                // Update or create organizer
+                $organizer = isset($validatedData['organizer']['id'])
+                    ? Organizer::findOrFail($validatedData['organizer']['id'])
+                    : new Organizer();
+                
+                $organizer->user_id = $user->id;
+                
+                // Trim trailing slashes from links
+                $links = ['website_link', 'instagram_link', 'twitter_link', 'facebook_link'];
+                foreach ($links as $link) {
+                    if (isset($validatedData['organizer'][$link])) {
+                        $validatedData['organizer'][$link] = rtrim($validatedData['organizer'][$link], '/');
+                    }
+                }
+                
+                $organizer->fill($validatedData['organizer'])->save();
+            });
+
+            return response()->json(['message' => 'User profile updated successfully', 'success' => true], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'success' => false], 400);
+        }
     }
 }
