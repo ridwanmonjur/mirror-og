@@ -28,19 +28,15 @@ function checkValidity(inpObj, inputID) {
 
 const querySelector = ".wrapper input";
 
+window.onload= () => {
 document.querySelectorAll(querySelector).forEach(inpObj => {
     const id = inpObj.id;
-    let isAutofill = false;
-    let style = window.getComputedStyle(inpObj);
-    if (style && style.backgroundColor !== '#FFFFFF') {
-        isAutofill = true;
-    }
   
     if (id) {
         const spanMesage = document.querySelector(`#${id} ~ span.placeholder-moves-up`);
         console.log("hi", spanMesage)
      
-        if (!isAutofill && inpObj.value.trim() === "") {
+        if (!inpObj.matches(':-webkit-autofill') && inpObj.value.trim() === "") {
             console.log("bye")
             console.log("bye")
             console.log("bye")
@@ -58,7 +54,7 @@ document.querySelectorAll(querySelector).forEach(inpObj => {
         console.warn("Input element without ID found:", inpObj);
     }
 });
-
+}
 
 // Flash message
 function showFlashMessage(message, type) {
