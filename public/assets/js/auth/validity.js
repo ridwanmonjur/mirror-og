@@ -1,11 +1,19 @@
 // Client validation
 
 function checkValidity(inpObj, inputID) {
+    const input = document.querySelector(`#${inputID}`);
+    const spanMesage = document.querySelector(`#${inputID} ~ span.placeholder-moves-up`);
     const fieldErrorMesage = document.querySelector(`#${inputID} ~ .field-error-message`);
     const customErrorMessages = {
         email: "Email address is invalid.",
         // Add more custom error messages for different fields if needed
     };
+
+    if (input.value.trim() == "") {
+        spanMesage.style.top = "20px";
+    } else {
+        spanMesage.style.top = "0px";
+    }
 
     if (!inpObj.checkValidity()) {
         const customErrorMessage = customErrorMessages[inputID] || inpObj.validationMessage;
@@ -19,28 +27,29 @@ function checkValidity(inpObj, inputID) {
     }
 }
 
-const idList = ["email", "password"];
+const querySelector = ".wrapper input";
 
-idList.forEach(id => {
-    const inpObj = document.getElementById(id);
-    inpObj.addEventListener("blur", () => {
-        checkValidity(inpObj, id);
-    });
-});
+document.querySelectorAll(querySelector).forEach(inpObj => {
+    const id = inpObj.id;
 
-// Add an event listener to handle input changes
-idList.forEach(id => {
-    const inpObj = document.getElementById(id);
-    const placeholder = document.querySelector(`#${id} + .placeholder-moves-up`);
+    if (id) {
+        const spanMesage = document.querySelector(`#${id} ~ span.placeholder-moves-up`);
+        console.log({ inpObj, spanMesage });
 
-    inpObj.addEventListener("input", () => {
-        if (inpObj.value.trim() !== "") {
-            placeholder.classList.add("has-content");
+        if (inpObj.value.trim() === "") {
+            if (spanMesage) spanMesage.style.top = "20px";
         } else {
-            placeholder.classList.remove("has-content");
+            if (spanMesage) spanMesage.style.top = "0px";
         }
-    });
+
+        inpObj.addEventListener("blur", () => {
+            checkValidity(inpObj, id);
+        });
+    } else {
+        console.warn("Input element without ID found:", inpObj);
+    }
 });
+
 
 // Flash message
 function showFlashMessage(message, type) {
