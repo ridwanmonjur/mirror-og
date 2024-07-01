@@ -82,7 +82,7 @@ form .field {
     margin-bottom: 5px;
     font-size: 15px;
     caret-color: #43A4D7;
-    border-radius: 30px;
+    border-radius: 20px;
     border: 1px solid #bfbfbf;
     border-bottom-width: 2px;
     transition: all 0.2s ease;
@@ -347,6 +347,8 @@ input:not(:focus):valid+span.placeholder-moves-up {
 
 input:-webkit-autofill {
     z-index: -1 !important;
+    background-color: rgb(232, 232, 232);
+
 }
 
 input:-webkit-autofill +span.placeholder-moves-up {
