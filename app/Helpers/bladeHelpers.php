@@ -107,7 +107,7 @@ function bladeEventTierImage($eventTier)
 
 function bladeImageNull($eventBanner)
 {
-    $imgFailure = asset('assets/images/broken-image.jpeg');
+    $imgFailure = asset('assets/images/404.png');
     if ($eventBanner) {
         $eventBannerImg = asset('storage/'.$eventBanner);
     } else {
