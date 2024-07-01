@@ -449,9 +449,14 @@ main {
     color: darkred;
 }
 
-.colored-cell {
-    background-color: #c3bebe;
+tr:nth-child(odd) .colored-cell {
+    background-color: #d0cfcf;
 }
+
+tr:nth-child(even) .colored-cell {
+    background-color: #bdb9b9;
+}
+
 
 .nd {
     background-color: #807d7d;
