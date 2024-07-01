@@ -1,5 +1,4 @@
 // Client validation
-
 function checkValidity(inpObj, inputID) {
     const input = document.querySelector(`#${inputID}`);
     const spanMesage = document.querySelector(`#${inputID} ~ span.placeholder-moves-up`);
@@ -29,6 +28,7 @@ function checkValidity(inpObj, inputID) {
 const querySelector = ".wrapper input";
 
 window.onload= () => {
+document.querySelector('.wrapper').click();
 document.querySelectorAll(querySelector).forEach(inpObj => {
     const id = inpObj.id;
   
