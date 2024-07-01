@@ -1,5 +1,4 @@
 // Client validation
-
 function checkValidity(inpObj, inputID) {
     const input = document.querySelector(`#${inputID}`);
     const spanMesage = document.querySelector(`#${inputID} ~ span.placeholder-moves-up`);
@@ -29,19 +28,15 @@ function checkValidity(inpObj, inputID) {
 const querySelector = ".wrapper input";
 
 window.onload= () => {
+document.querySelector('.wrapper').click();
 document.querySelectorAll(querySelector).forEach(inpObj => {
     const id = inpObj.id;
   
     if (id) {
         const spanMesage = document.querySelector(`#${id} ~ span.placeholder-moves-up`);
-        console.log("hi", spanMesage)
      
         if (!inpObj.matches(':-webkit-autofill') && inpObj.value.trim() === "") {
-            console.log("bye")
-            console.log("bye")
-            console.log("bye")
-            console.log("bye")
-            // go down in box
+          
             if (spanMesage) spanMesage.style.top = "20px";
         } else {
             if (spanMesage) spanMesage.style.top = "0px";
