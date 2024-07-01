@@ -6,7 +6,6 @@ function checkValidity(inpObj, inputID) {
     const fieldErrorMesage = document.querySelector(`#${inputID} ~ .field-error-message`);
     const customErrorMessages = {
         email: "Email address is invalid.",
-        // Add more custom error messages for different fields if needed
     };
 
     if (input.value.trim() == "") {
@@ -31,12 +30,16 @@ const querySelector = ".wrapper input";
 
 document.querySelectorAll(querySelector).forEach(inpObj => {
     const id = inpObj.id;
+    let isAutofill = false;
+    let style = window.getComputedStyle(inpObj);
+    if (style && style.backgroundColor !== '#FFFFFF') {
+        isAutofill = true;
+    }
 
     if (id) {
         const spanMesage = document.querySelector(`#${id} ~ span.placeholder-moves-up`);
-        console.log({ inpObj, spanMesage });
-
-        if (inpObj.value.trim() === "") {
+        
+        if (!isAutofill && inpObj.value.trim() === "") {
             if (spanMesage) spanMesage.style.top = "20px";
         } else {
             if (spanMesage) spanMesage.style.top = "0px";
