@@ -28,7 +28,7 @@ function checkValidity(inpObj, inputID) {
 const querySelector = ".wrapper input";
 
 window.onload= () => {
-document.querySelector('.wrapper').click();
+document.querySelector('.wrapper').focus();
 document.querySelectorAll(querySelector).forEach(inpObj => {
     const id = inpObj.id;
   
