@@ -35,7 +35,7 @@
     <br>
     <div class="field">
         <label for="email" class="placeholder-moves-up-container">
-            <input type="email" name="email" id="email" required="true" class="input-area" oninput="movePlaceholderUp(this)">
+            <input autocomplete="off" type="email" name="email" id="email" required="true" class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Email</span>
             <div class="field-error-message d-none" id="email-error"></div>
         </label>
@@ -43,7 +43,7 @@
 
     <div class="field password">
         <label for="password" class="placeholder-moves-up-container">
-            <input type="password" name="password" id="password" minlength="6" maxlength="24" required="true"
+            <input autocomplete="new-password" type="password" name="password" id="password" minlength="6" maxlength="24" required="true"
                 class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Password</span>
             <i class="fa fa-eye" id="togglePassword" onclick="togglePassword('password', 'togglePassword')" style="cursor: pointer; margin-top: 10px"></i>
@@ -52,7 +52,7 @@
     </div>
     <div class="pass-txt">
         <div class="remember-checkbox">
-            <input type="checkbox" name="" id="">
+            <input autocomplete="off" type="checkbox" name="" id="">
             <label class="text-checkbox">Remember me</label>
         </div>
         <a href="{{ route('user.forget.view') }}">Forgot password?</a>
