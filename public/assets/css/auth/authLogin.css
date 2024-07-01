@@ -106,11 +106,13 @@ input:-webkit-autofill:placeholder {
 
 input:-webkit-autofill
 {
+    transition: background-color 5000s ease-in-out 0s;
     box-shadow: inset 0 0 20px 20px #fffefe29;
     font-size: 15px;
+    z-index: -1 !important;
 }
 
-input:focus, input:-webkit-autofill:hover   {
+input:focus   {
     transition: background-color 5000s ease-in-out 0s;
     font-size: 15px;
 }
@@ -344,10 +346,7 @@ input:not(:focus):valid+span.placeholder-moves-up {
     color: #43A4D7;
 }
 
-input:-webkit-autofill {
-    z-index: -1 !important;
 
-}
 
 input:-webkit-autofill +span.placeholder-moves-up {
     transform:  translateY(-50%) translateX(0px);
