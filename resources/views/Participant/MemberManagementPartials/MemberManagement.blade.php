@@ -181,10 +181,10 @@
         </table>
     </div>
 </div>
-<div class="tab-content pb-4  inner-tab d-none" id="NewMembers">
+<div class="tab-content pb-4  inner-tab d-none mx-auto" id="NewMembers">
 
-    <div class="cont mt-3 pt-3">
-        <div class="leftC">
+    <div class="tab-size d-flex justify-content-around flex-wrap tab-size mt-3 pt-3">
+        <div class="mb-2">
             <span class="icon2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -207,15 +207,15 @@
                 </span>
             </span>
         </div>
-        <div class="rightC">
+        <div class="mb-2">
             <div class="search_box">
                 <i class="fa fa-search"></i>
-                <input id="searchInput" onchange="handleSearch();" style="font-size: 15px;" class="nav__input"
+                <input  style="width: min(90vw, 350px); font-size: 15px;" id="searchInput" onchange="handleSearch();"  class="nav__input"
                     type="text" id="" placeholder="Search for player name/ email">
             </div>
         </div>
     </div>
-    <section class="featured-events scrolling-pagination">
+    <section class="featured-events scrolling-pagination ">
         @include('Participant.MemberManagementPartials.MemberManagementScroll')
     </section>
     <div class="no-more-data d-none"></div>

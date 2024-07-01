@@ -50,7 +50,10 @@
                     <ul class="d-flex flex-column flex-start underline_animation">
                         @foreach ($joinEvent->roster as $roster)
                             <li onclick="goToUrl(event, this)"
-                                data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}">
+                                data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
+                                style="list-style: none;"    
+                            >
+                                <img class="rounded-circle random-color-circle me-2" width="35" height="35" src="{{$roster->user->userBanner}}" {!!trustedBladeHandleImageFailureBanner()!!}>
                                 <span>{{ $roster->user->name }}</span>
                             </li>
                         @endforeach
@@ -80,7 +83,7 @@
                             class="text-truncate-2-lines h-auto w-100">{{ $joinEvent->eventDetails->user->name }}</span>
                         <small
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
-                            class="d-inline p-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">
+                            class="d-block p-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">
                             {{ $followCounts[$joinEvent->eventDetails->user_id] }}
                             follower{{ bladePluralPrefix($followCounts[$joinEvent->eventDetails->user_id]) }}
                         </small>
