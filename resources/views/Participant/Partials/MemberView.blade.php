@@ -15,8 +15,8 @@
         @endif            
     </p>
     @if($counTeamMembers > 0)
-        <div class="cont mt-3 pt-3">
-            <div class="leftC">
+        <div class="tab-size d-flex justify-content-around flex-wrap tab-size mt-3 pt-3">
+            <div class="mb-2">
                 <span class="icon2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -38,7 +38,7 @@
                     </span>
                 </span>
             </div>
-            <div class="rightC">
+            <div class="mb-2">
                 <div class="search_box">
                     <i class="fa fa-search"></i>
                     <input style="font-size: 14.5px;" class="nav__input" type="text" placeholder="Search for player name">
@@ -72,7 +72,7 @@
                                  <img 
                                     width="45" height="45" 
                                     src="{{ bladeImageNull($member->user->userBanner) }}"
-                                    class="mx-2 random-color-circle object-fit-cover"
+                                    class="mx-2 random-color-circle object-fit-cover rounded-circle"
                                 >
                                 <span>{{ $member->user->name }}</span>
                             </div>

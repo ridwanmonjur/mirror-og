@@ -50,7 +50,9 @@
                     <ul data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
                         onclick="goToUrl(event, this)" class="d-flex flex-column flex-start underline_animation">
                         @foreach ($joinEvent->roster as $roster)
-                            <li>
+                            <li style="list-style: none;"    
+                            >
+                                <img class="rounded-circle random-color-circle me-2" width="35" height="35" src="{{$roster->user->userBanner}}" {!!trustedBladeHandleImageFailureBanner()!!}>
                                 <span>{{ $roster->user->name }}</span>
                             </li>
                         @endforeach

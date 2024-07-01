@@ -18,7 +18,7 @@
                         <img 
                             width="45" height="45" 
                             src="{{ bladeImageNull($member->user->userBanner) }}"
-                            class="mx-2 random-color-circle object-fit-cover"
+                            class="mx-2 random-color-circle object-fit-cover rounded-circle"
                         >
                         <span>{{ $user->name }}</span>
                     </div>
