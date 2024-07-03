@@ -436,8 +436,9 @@
 
 
     carouselWork();
-    window.addEventListener('resize', debounce(carouselWork, 250));
-
+    window.addEventListener('resize', debounce((e) => {
+        carouselWork();
+    }, 250));
 
     function redirectToProfilePage(userId) {
         window.location.href = "{{ route('public.participant.view', ['id' => ':id']) }}"
