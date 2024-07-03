@@ -11,17 +11,17 @@
     <br>
     <div class="tabs">
         <button id="FollowBtn" 
-            @class(["tab-button outer-tab", "tab-button-active" => $currentTab == 'Follow'])
+            @class(["tab-button py-2 outer-tab", "tab-button-active" => $currentTab == 'Follow'])
             wire:click="setTab('Follow')">Followers
         </button>
         @if ($userProfile->role != 'ORGANIZER')
             <button id="FollowingBtn"
-            @class(["tab-button outer-tab", "tab-button-active" => $currentTab == 'Following'])
+            @class(["tab-button py-2 outer-tab", "tab-button-active" => $currentTab == 'Following'])
                 wire:click="setTab('Following')">
                 Following
             </button>
             <button id="FriendsBtn" 
-            @class(["tab-button outer-tab", "tab-button-active" => $currentTab == 'Friends'])
+            @class(["tab-button py-2 outer-tab", "tab-button-active" => $currentTab == 'Friends'])
                 wire:click="setTab('Friends')">
                 Friends
             </button>

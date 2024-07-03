@@ -260,19 +260,15 @@
                         onclick="carouselWork(2)">
                         &gt;
                     </button>
-                    @if (!isset($joinEvents[1]))
-                        <div class="d-flex justify-content-center event-carousel-works">
-                            @foreach ($joinEvents as $key => $joinEvent)
-                                @include('Organizer.Partials.RosterView',  ['isRegistrationView' => false])
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="event-carousel-styles event-carousel-works">
-                            @foreach ($joinEvents as $key => $joinEvent)
-                                @include('Organizer.Partials.RosterView',  ['isRegistrationView' => false])
-                            @endforeach
-                        </div>
-                    @endif
+                    <div @class(["event-carousel-works", 
+                        "event-carousel-styles" => isset($joinEvents[1]),
+                        "d-flex justify-content-center " => !isset($joinEvents[1])
+                    ])
+                    >
+                        @foreach ($joinEvents as $key => $joinEvent)
+                            @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
+                        @endforeach
+                    </div>
                  
                 @endif
             </div>
@@ -731,6 +727,8 @@
 
 
     carouselWork();
+    window.addEventListener('resize', debounce(carouselWork, 250));
+
 
     function redirectToProfilePage(userId) {
         window.location.href = "{{ route('public.organizer.view', ['id' => ':id']) }}"

@@ -42,14 +42,14 @@
                             <p class="text-center"> {{ $event->eventDescription }} </p>
                         </div>
                         <div class="tabs">
-                            <button id="PositionBtn" class="tab-button outer-tab tab-button-active"
+                            <button id="PositionBtn" class="tab-button py-2  outer-tab tab-button-active"
                                 onclick="showTab(event, 'Position', 'outer-tab')">Position
                             </button>
-                            <button id="AwardsBtn" class="tab-button outer-tab"
+                            <button id="AwardsBtn" class="tab-button py-2  outer-tab"
                                 onclick="showTab(event, 'Awards', 'outer-tab')">
                                 Awards
                             </button>
-                            <button id="AchievementsBtn" class="tab-button outer-tab"
+                            <button id="AchievementsBtn" class="tab-button py-2  outer-tab"
                                 onclick="showTab(event, 'Achievements', 'outer-tab')">
                                 Achievements
                             </button>

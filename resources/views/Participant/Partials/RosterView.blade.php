@@ -63,7 +63,7 @@
         </a>
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
-                <div class="col-12 col-xl-6  my-1 px-0">
+                <div class="col-12 col-lg-6  my-1 px-0">
                     <a class="d-flex justify-content-start" href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img {!! trustedBladeHandleImageFailureBanner() !!}
                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
