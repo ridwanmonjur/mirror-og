@@ -218,8 +218,9 @@
         }
 
         carouselWork();
-        window.addEventListener('resize', debounce(carouselWork, 250));
-
+        window.addEventListener('resize', debounce((e) => {
+            carouselWork();
+        }, 250));
 
         const searchInputs = document.querySelectorAll('.search_box input');
         const memberTables = document.querySelectorAll('.member-table');
