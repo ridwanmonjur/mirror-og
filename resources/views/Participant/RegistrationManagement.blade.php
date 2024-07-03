@@ -26,7 +26,7 @@
             @endif
             <div class="tab-size"><b>Outstanding Registrations</b></div>
             <br> <br>
-            <div class="event-carousel-styles">
+            <div class="event-carousel-styles mx-5 px-5">
                 @foreach ($joinEvents as $key => $joinEvent)
                     @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
                     @include('Participant.Partials.PieChart', ['isInvited' => false])
@@ -41,7 +41,7 @@
                 @if (!isset($invitedEvents[0]))
                     <p>No events available</p>
                 @else
-                    <div class="event-carousel-styles">
+                    <div class="event-carousel-styles mx-5 px-5">
                         @foreach ($invitedEvents as $key => $joinEvent)
                             @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
                             @include('Participant.Partials.PieChart', ['isInvited' => true])
