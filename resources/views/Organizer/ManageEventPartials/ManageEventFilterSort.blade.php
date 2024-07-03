@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-between w-70s align-items-center flex-wrap">
+<div class="d-flex justify-content-between w-70s align-items-center flex-wrap" style="font-size: 14px;">
     <div class="icon2 me-3 d-inline-block"
         onclick="openElementById('close-option'); openElementById('filter-option');  closeElementById('sort-option');">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-filter mt-2"
@@ -21,7 +21,7 @@
                 </span>
             </button>
             <div
-                onclick="stopPropagation(event);";  
+                onclick="stopPropagation(event);"
                 class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTitle"
             >
                 @foreach($eventCategoryList as $eventCategoryItem)
@@ -48,7 +48,7 @@
             </button>
             <div
                 onclick="stopPropagation(event);"; 
-                class="dropdown-menu px-0 py-1 pt-3" aria-labelledby="dropdownFilterType">
+                class="dropdown-menu px-0 py-1 py-0" aria-labelledby="dropdownFilterType">
                 @foreach($eventTypeList as $eventType)
                     <div class="px-3 min-w-150px py-1">
                         <input onchange="setFilterForFetch(event, '{{$eventType['eventType']}}');" type="checkbox" name="eventType" value="{{$eventType['id']}}">
@@ -72,7 +72,7 @@
             </button>
             <div
                 onclick="stopPropagation(event);"; 
-                class="dropdown-menu px-0 pt-3" aria-labelledby="dropdownFilterTier"
+                class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
             >
                 @foreach($eventTierList as $eventTier)
                     <div class="px-3 min-w-150px py-1">
@@ -98,9 +98,9 @@
             </button>
             <div
                 onclick="stopPropagation(event);"; 
-                class="dropdown-menu px-0" aria-labelledby="dropdownFilterTier"
+                class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
             >
-                <div class="px-3 py-2 min-w-250px">
+                <div class="px-3 py-1 min-w-250px">
                     <input onchange="setFilterForFetch(event, 'SEA');" type="checkbox" name="venue" value="SEA">
                     <label for="eventTier">South East Asia (SEA)</label>
                 </div>
@@ -121,7 +121,7 @@
             </button>
             <div
                 onclick="stopPropagation(event);"; 
-                class="dropdown-menu px-0" aria-labelledby="dropdownFilterTier"
+                class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
             >
                 @foreach([
                     ['title' => 'Today', 'value' => 'today'],
@@ -160,14 +160,14 @@
         </div>
         <div class="dropdown dropdown-click-outside">
             <button 
-                class="dropbtn py-2 me-3" 
+                class="dropbtn py-1 px-2 me-3" 
                 type="button" id="dropdownSortButton" 
                 style="width: 150px; display: inline-block;"
                 data-bs-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <span id="sortByTitleId">Sort by:</span>
                 <span class="dropbtn-arrow">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" class="feather feather-chevron-down">
                         <polyline points="6 9 12 15 18 9"></polyline>
@@ -178,22 +178,22 @@
                 onclick="stopPropagation(event);"; 
                 class="dropdown-menu px-3 ms-3" aria-labelledby="dropdownSortButton"
             >
-                <div class="sort-box d-block min-w-150px hover-bigger ps-3" onclick="setSortForFetch('created_at', 'Recent');">
+                <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('created_at', 'Recent');">
                     <label class="me-3 cursor-pointer" for="recent">Recent</label>
                     <span class="recentSortIcon sortIcon">
                     </span>
                 </div>
-                <div class="sort-box d-block min-w-150px hover-bigger ps-3" onclick="setSortForFetch('eventName', 'A-Z');">
+                <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('eventName', 'A-Z');">
                     <label class="me-3 cursor-pointer" for="aToZ">A-Z</label>
                     <span class="aToZSortIcon sortIcon">
                     </span>
                 </div>
-                <div class="sort-box d-block min-w-150px hover-bigger ps-3" onclick="setSortForFetch('startDate', 'Start Date');">
+                <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('startDate', 'Start Date');">
                     <label class="me-3 cursor-pointer" for="startDate">Start Date</label>
                     <span class="startDateSortIcon sortIcon">
                     </span>
                 </div>
-                <div class="sort-box d-block min-w-150px hover-bigger ps-3" onclick="setSortForFetch('prize', 'Prize Pool');">
+                <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('prize', 'Prize Pool');">
                     <label class="me-3 cursor-pointer" for="prize">Prize Pool</label>
                     <span class="prizeSortIcon sortIcon">
                     </span>
