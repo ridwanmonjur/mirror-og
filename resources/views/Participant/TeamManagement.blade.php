@@ -21,13 +21,13 @@
 
     <main class="main2">
         <div class="tabs">
-            <button class="tab-button outer-tab tab-button-active"
+            <button class="tab-button outer-tab tab-button-active px-3 py-0"
                 onclick="showTab(event, 'Overview')">Overview</button>
-            <button class="tab-button outer-tab" onclick="showTab(event, 'Members', 'outer-tab')">Members</button>
-            <button class="tab-button outer-tab" onclick="showTab(event, 'Active Rosters', 'outer-tab')">Active
+            <button class="tab-button outer-tab px-3 py-0" onclick="showTab(event, 'Members', 'outer-tab')">Members</button>
+            <button class="tab-button outer-tab px-3 py-0" onclick="showTab(event, 'Active Rosters', 'outer-tab')">Active
                 Rosters
             </button>
-            <button class="tab-button outer-tab" onclick="showTab(event, 'Roster History', 'outer-tab')">Roster
+            <button class="tab-button outer-tab px-3 py-0" onclick="showTab(event, 'Roster History', 'outer-tab')">Roster
                 History
             </button>
         </div>

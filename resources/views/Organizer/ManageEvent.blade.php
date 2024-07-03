@@ -16,7 +16,7 @@
                     Create Event
                 </button>
             </header>
-            <div class="flexbox-filter flex-wrap">
+            <div class="flexbox-filter flex-wrap" style="font-size: 14px;">
                 <p class="status-ALL">
                     <a href="{{ route('event.index', ['status' => 'ALL', 'page' => 1]) }}">All</a>
                 </p>
@@ -46,15 +46,18 @@
             <div class="d-none" id="insertFilterTags">
             </div>
             <br>
-            <div class="search-bar">
-                <svg onclick= "handleSearch();" xmlns="http://www.w3.org/2000/svg" width="24"
-                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-search search-bar2-adjust">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text" name="search" id="searchInput"
+            <div class="py-4 input-group input-group" style="width: min(90vw, 500px) !important;">
+                <div class="input-group-text" style="background: white; outline-width: 1px 1px 0 1px; border-radius: 30px 0 0 30px;">
+                    <svg onclick= "handleSearch();" xmlns="http://www.w3.org/2000/svg" width="20"
+                        height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-search">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                    
+                <input style="border-radius: 0 30px 30px 0;" class="form-control" style="font-size: 14px;" type="text" name="search" id="searchInput" 
                     placeholder="Search using title, description, or keywords">
               
             </div>

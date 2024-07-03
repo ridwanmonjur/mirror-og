@@ -16,6 +16,7 @@
     </p>
     @if($counTeamMembers > 0)
         <div class="tab-size d-flex justify-content-around flex-wrap tab-size mt-3 pt-3">
+            
             <div class="mb-2">
                 <span class="icon2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -41,7 +42,7 @@
             <div class="mb-2">
                 <div class="search_box">
                     <i class="fa fa-search"></i>
-                    <input style="font-size: 14.5px;" class="nav__input" type="text" placeholder="Search for player name">
+                    <input style="width: min(90vw, 350px); font-size: 15px;" class="nav__input" type="text" placeholder="Search for player name">
                 </div>
                 <div>
                     @if (isset($user) && $user->id == $selectTeam->user_id)

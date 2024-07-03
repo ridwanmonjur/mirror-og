@@ -50,7 +50,7 @@
             <div class="field-error-message d-none" id="password-error"></div>
         </label>
     </div>
-    <div class="pass-txt">
+    <div class="pass-txt mb-2">
         <div class="remember-checkbox">
             <input autocomplete="off" type="checkbox" name="" id="">
             <label class="text-checkbox">Remember me</label>

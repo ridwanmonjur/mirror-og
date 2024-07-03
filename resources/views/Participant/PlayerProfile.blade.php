@@ -390,8 +390,8 @@
                 @endif
             </div>
 
-            <div class="team-info">
-                <div class="showcase">
+            <div class="row px-4">
+                <div class="showcase col-12 col-xl-6">
                     <div><b>Showcase</b></div>
                     <br>
                     <div @class(["showcase-box d-none-until-hover-parent" , 
@@ -414,7 +414,7 @@
                     </div>
                 </div>
 
-                <div class="achievements">
+                <div class="achievements  col-12 col-xl-6">
                     <div><b>Achievements</b></div>
                     @if (!isset($achievementList[0]))
                         <ul class="achievement-list mt-4">
