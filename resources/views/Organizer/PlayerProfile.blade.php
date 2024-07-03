@@ -266,7 +266,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
+                            @include('Organizer.Partials.RosterView',  ['isRegistrationView' => false])
                         @endforeach
                     </div>
                  
