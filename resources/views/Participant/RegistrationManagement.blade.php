@@ -26,17 +26,14 @@
             @endif
             <div class="tab-size"><b>Outstanding Registrations</b></div>
             <br> <br>
-            <div class="position-relative d-flex justify-content-center">
-                @if (!isset($joinEvents[0]))
-                    <p>No events available</p>
-                @else
-                    <div class="event-carousel-styles">
-                        @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
-                            @include('Participant.Partials.PieChart', ['isInvited' => false])
-                        @endforeach
-                    </div>
-                @endif
+            <div @class(["event-carousel-works", 
+                "event-carousel-styles" => isset($joinEvents[1]),
+                "d-flex justify-content-center " => !isset($joinEvents[1])
+            ])
+            >
+                @foreach ($joinEvents as $key => $joinEvent)
+                    @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
+                @endforeach
             </div>
         </div>
         <div id="Overview">

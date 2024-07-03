@@ -373,25 +373,20 @@
                         onclick="carouselWork(2)">
                         &gt;
                     </button>
-                    @if (!isset($joinEvents[1]))
-                        <div class="d-flex justify-content-center event-carousel-works">
-                            @foreach ($joinEvents as $key => $joinEvent)
-                                @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="event-carousel-styles event-carousel-works">
-                            @foreach ($joinEvents as $key => $joinEvent)
-                                @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
-                            @endforeach
-                        </div>
-                    @endif
-                 
+                    <div @class(["event-carousel-works", 
+                        "event-carousel-styles" => isset($joinEvents[1]),
+                        "d-flex justify-content-center " => !isset($joinEvents[1])
+                    ])
+                    >
+                        @foreach ($joinEvents as $key => $joinEvent)
+                            @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
+                        @endforeach
+                    </div>
                 @endif
             </div>
 
             <div class="row px-4">
-                <div class="showcase col-12 col-xl-6">
+                <div class="showcase col-12 col-lg-6">
                     <div><b>Showcase</b></div>
                     <br>
                     <div @class(["showcase-box d-none-until-hover-parent" , 
@@ -414,7 +409,7 @@
                     </div>
                 </div>
 
-                <div class="achievements  col-12 col-xl-6">
+                <div class="achievements  col-12 col-lg-6">
                     <div><b>Achievements</b></div>
                     @if (!isset($achievementList[0]))
                         <ul class="achievement-list mt-4">
@@ -505,7 +500,7 @@
                     <tbody>
                         @foreach($teamList as $team)
                             <tr class="st">
-                                <td class="p-0"> 
+                                <td class="py-0 px-3"> 
                                     <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
                                          <svg class="gear-icon-btn"
                                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"

@@ -21,13 +21,13 @@
 
     <main class="main2">
         <div class="tabs">
-            <button class="tab-button outer-tab tab-button-active px-3 py-0"
+            <button class="tab-button outer-tab tab-button-active px-3"
                 onclick="showTab(event, 'Overview')">Overview</button>
-            <button class="tab-button outer-tab px-3 py-0" onclick="showTab(event, 'Members', 'outer-tab')">Members</button>
-            <button class="tab-button outer-tab px-3 py-0" onclick="showTab(event, 'Active Rosters', 'outer-tab')">Active
+            <button class="tab-button outer-tab px-3 py-2" onclick="showTab(event, 'Members', 'outer-tab')">Members</button>
+            <button class="tab-button outer-tab px-3 py-2" onclick="showTab(event, 'Active Rosters', 'outer-tab')">Active
                 Rosters
             </button>
-            <button class="tab-button outer-tab px-3 py-0" onclick="showTab(event, 'Roster History', 'outer-tab')">Roster
+            <button class="tab-button outer-tab px-3 py-2" onclick="showTab(event, 'Roster History', 'outer-tab')">Roster
                 History
             </button>
         </div>
@@ -52,25 +52,21 @@
                         onclick="carouselWork(2)">
                         &gt;
                     </button>
-                    @if (!isset($joinEvents[1]))
-                        <div class="d-flex justify-content-center event-carousel-works">
-                            @foreach ($joinEvents as $key => $joinEvent)
-                                @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="event-carousel-styles event-carousel-works">
-                            @foreach ($joinEvents as $key => $joinEvent)
-                                @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
-                            @endforeach
-                        </div>
-                    @endif
+                     <div @class(["event-carousel-works", 
+                        "event-carousel-styles" => isset($joinEvents[1]),
+                        "d-flex justify-content-center " => !isset($joinEvents[1])
+                    ])
+                    >
+                        @foreach ($joinEvents as $key => $joinEvent)
+                            @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
+                        @endforeach
+                    </div>
                  
                 @endif
             </div>
 
-            <div class="team-info">
-                <div class="showcase">
+            <div class="row px-4">
+                <div class="showcase col-12 col-lg-6">
                     <div><b>Showcase</b></div>
                     <br>
                     <div @class(["showcase-box d-none-until-hover-parent" , 
@@ -93,7 +89,7 @@
                     </div>
                 </div>
 
-                <div class="achievements">
+                <div class="achievements col-12 col-lg-6">
                     <div><b>Achievements</b></div>
                     @if (!isset($achievementList[0]))
                         <ul class="achievement-list mt-4">
@@ -222,6 +218,8 @@
         }
 
         carouselWork();
+        window.addEventListener('resize', debounce(carouselWork, 250));
+
 
         const searchInputs = document.querySelectorAll('.search_box input');
         const memberTables = document.querySelectorAll('.member-table');
