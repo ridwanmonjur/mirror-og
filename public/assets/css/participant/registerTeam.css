@@ -31,7 +31,7 @@ body {
 p {
     font-family: "Poppins", sans-serif;
     top: -50px;
-    font-size: small;
+    font-size: 0.81rem;
 }
 
 label {
