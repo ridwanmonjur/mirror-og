@@ -210,7 +210,7 @@
         <div class="mb-2">
             <div class="search_box">
                 <i class="fa fa-search"></i>
-                <input  style="width: min(90vw, 350px); font-size: 15px;" id="searchInput" onchange="handleSearch();"  class="nav__input"
+                <input  style="width: min(90vw, 350px); font-size: 0.9375rem;" id="searchInput" onchange="handleSearch();"  class="nav__input"
                     type="text" id="" placeholder="Search for player name/ email">
             </div>
         </div>

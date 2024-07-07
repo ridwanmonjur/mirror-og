@@ -18,7 +18,7 @@ body {
 }
 
 span {
-    font-size: 15px !important;
+    font-size: 0.9375rem !important;
 }
 
 button {
@@ -80,7 +80,7 @@ form .field {
     padding: 5px 25px;
     margin-top: 0;
     margin-bottom: 5px;
-    font-size: 15px;
+    font-size: 0.9375rem;
     caret-color: #43A4D7;
     border-radius: 20px;
     border: 1px solid #bfbfbf;
@@ -97,24 +97,24 @@ form {
 
 form input::placeholder {
     color: #bfbfbf;
-    font-size: 15px;
+    font-size: 0.9375rem;
 }
 
 input:-webkit-autofill:placeholder {
-    font-size: 15px;
+    font-size: 0.9375rem;
 }
 
 input:-webkit-autofill
 {
     transition: background-color 5000s ease-in-out 0s;
     border-color: #7cd1ff;
-    font-size: 15px;
+    font-size: 0.9375rem;
     z-index: -1 !important;
 }
 
 input:focus   {
     transition: background-color 5000s ease-in-out 0s;
-    font-size: 15px;
+    font-size: 0.9375rem;
 }
 
 input::selection {
@@ -270,7 +270,7 @@ form input[type="submit"]:hover, form input[type="button"]:hover {
     display: flex;
     text-align: center;
     justify-content: center;
-    font-size: 15px;
+    font-size: 0.9375rem;
 }
 
 label.placeholder-moves-up-container {
