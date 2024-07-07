@@ -43,7 +43,7 @@
                                     {{-- Mark all as read --}}
                                     I{{-- {{ $notification->object_type->getImage()  }} --}}
                                 </div>
-                                <span style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 0.9375rem;" class="text-start ms-2 my-1">
+                                <span style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 15px;" class="text-start ms-2 my-1">
                                     {!! $notification->data['data'] !!}
                                 </span>
                             </div>
