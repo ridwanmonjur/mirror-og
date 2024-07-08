@@ -1,13 +1,13 @@
-@include('Organizer.__Partials.CheckoutEventHeadTag')
+@include('Organizer.Partials.CheckoutEventHeadTag')
 
 <body>
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     <main class="main-background-2">
         <br><br><br>
-        @include('Organizer.__CheckoutPartials.CheckoutPaymentOptions', ['event' => $event])
+        @include('Organizer.CheckoutPartials.CheckoutPaymentOptions', ['event' => $event])
         <br><br>
     </main>
     
-    @include('Organizer.__CheckoutPartials.CheckoutScripts', ['fee' => $fee, 'event' => $event])
+    @include('Organizer.CheckoutPartials.CheckoutScripts', ['fee' => $fee, 'event' => $event])
     <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
 </body>

@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     <main>
         <br><br><br>
         <div class="text-center" id="step-0">
@@ -31,8 +31,8 @@
                             action="{{ route('participant.createTeamToJoinEvent.action', ['id' => $id]) }}"
                             method="POST">
 
-                            @include('Participant.__CreateEditTeamPartials.FormErrorsSuccess')
-                            @include('Participant.__CreateEditTeamPartials.FormFields', [
+                            @include('Participant.CreateEditTeamPartials.FormErrorsSuccess')
+                            @include('Participant.CreateEditTeamPartials.FormFields', [
                                 'team' => null,
                                 'buttonLabel' => 'Create & Register',
                             ])

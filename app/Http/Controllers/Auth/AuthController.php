@@ -219,7 +219,7 @@ class AuthController extends Controller
         $output = compact('events', 'mappingEventState');
 
         if ($request->ajax()) {
-            $view = view('__CommonPartials.LandingPageScroll', $output)->render();
+            $view = view('LandingPageScroll', $output)->render();
 
             return response()->json(['html' => $view]);
         }

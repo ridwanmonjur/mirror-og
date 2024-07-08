@@ -40,8 +40,8 @@
     @endphp
 @endauth
 <body>
-    @include('Organizer.__ProfilePartials.BackgroundModal')
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('Organizer.ProfilePartials.BackgroundModal')
+    @include('CommonPartials.NavbarGoToSearchPage')
     <main 
         x-data="alpineDataComponent"
     >
@@ -267,7 +267,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Organizer.__Partials.RosterView',  ['isRegistrationView' => false])
+                            @include('Organizer.Partials.RosterView',  ['isRegistrationView' => false])
                         @endforeach
                     </div>
                  
@@ -287,7 +287,7 @@
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                            @include('Organizer.__Partials.RosterView', ['isRegistrationView' => false])
+                            @include('Organizer.Partials.RosterView', ['isRegistrationView' => false])
                         <br><br>
                     @endforeach
                 </div>
@@ -303,7 +303,7 @@
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)                        
-                            @include('Organizer.__Partials.RosterView', ['isRegistrationView' => false])
+                            @include('Organizer.Partials.RosterView', ['isRegistrationView' => false])
                         <br><br>
                     @endforeach
                 </div>
@@ -814,6 +814,6 @@
             }
         });
 </script>
-@include('Organizer.__ProfilePartials.Scripts')
+@include('Organizer.ProfilePartials.Scripts')
 
 </html>
