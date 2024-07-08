@@ -11,13 +11,13 @@
 </head>
 
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.NavbarGoToSearchPage')
     <main class="main-background-2">
         <br><br><br>
-        @include('Participant.CheckoutPartials.CheckoutPaymentOptions')
+        @include('Participant.__CheckoutPartials.CheckoutPaymentOptions')
         <br><br>
     </main>
     
-    @include('Participant.CheckoutPartials.CheckoutScripts')
+    @include('Participant.__CheckoutPartials.CheckoutScripts')
     <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
 </body>

@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
         <div class="wrapper">
             <div class="first_notify">
