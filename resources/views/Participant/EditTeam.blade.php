@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     <main>
         <div class="text-center" id="step-0">
             <div class="welcome">
@@ -31,8 +31,8 @@
                         </p>
                         <br>
                         <form action="{{ route('participant.team.editStore', ['id' => $team->id]) }}" method="POST">
-                            @include('Participant.__CreateEditTeamPartials.FormErrorsSuccess')
-                            @include('Participant.__CreateEditTeamPartials.FormFields', [
+                            @include('Participant.CreateEditTeamPartials.FormErrorsSuccess')
+                            @include('Participant.CreateEditTeamPartials.FormFields', [
                                 'team' => $team, 'buttonLabel' => 'Edit'
                             ])
                     </form>

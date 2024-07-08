@@ -42,7 +42,7 @@
             <div class="mb-2">
                 <div class="search_box">
                     <i class="fa fa-search"></i>
-                    <input style="width: min(90vw, 350px); font-size: 0.9375rem;" class="nav__input" type="text" placeholder="Search for player name">
+                    <input style="width: min(90vw, 350px); font-size: 15px;" class="nav__input" type="text" placeholder="Search for player name">
                 </div>
                 <div>
                     @if (isset($user) && $user->id == $selectTeam->user_id)

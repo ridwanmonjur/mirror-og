@@ -12,18 +12,18 @@
 </head>
 
 <body>
-    @include('__CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.__TeamHeadPartials.TeamHead')
+    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('Participant.TeamHeadPartials.TeamHead')
 
     <main class="main2">
-        @include('Participant.__MemberManagementPartials.MemberManagement')
+        @include('Participant.MemberManagementPartials.MemberManagement')
     </main>
 
     
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
-    @include('Participant.__MemberManagementPartials.MemberManagementScripts')
+    @include('Participant.MemberManagementPartials.MemberManagementScripts')
     <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
 
     <script>

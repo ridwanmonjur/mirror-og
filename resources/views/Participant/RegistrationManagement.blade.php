@@ -10,8 +10,8 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    @include('__CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.__TeamHeadPartials.TeamHead')
+    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('Participant.TeamHeadPartials.TeamHead')
     <main class="main2">
         <div id="Overview">
             <br>
@@ -28,8 +28,8 @@
             <br> <br>
             <div class="event-carousel-styles mx-5 px-5">
                 @foreach ($joinEvents as $key => $joinEvent)
-                    @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
-                    @include('Participant.__Partials.PieChart', ['isInvited' => false])
+                    @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
+                    @include('Participant.Partials.PieChart', ['isInvited' => false])
                 @endforeach
             </div>
         </div>
@@ -43,8 +43,8 @@
                 @else
                     <div class="event-carousel-styles mx-5 px-5">
                         @foreach ($invitedEvents as $key => $joinEvent)
-                            @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
-                            @include('Participant.__Partials.PieChart', ['isInvited' => true])
+                            @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
+                            @include('Participant.Partials.PieChart', ['isInvited' => true])
                         @endforeach
                     </div>
                 @endif

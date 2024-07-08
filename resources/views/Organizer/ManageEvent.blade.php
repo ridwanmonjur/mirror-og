@@ -1,7 +1,7 @@
-@include('Organizer.__Partials.ManageEventHeadTag')
+@include('Organizer.Partials.ManageEventHeadTag')
 
 <body>
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
 
     <main>
         <br class="d-none-at-desktop">
@@ -37,7 +37,7 @@
                     <a href="{{ route('event.index', ['status' => 'ENDED', 'page' => 1]) }}">Ended</a>
                 </p>
             </div>
-            @include('Organizer.__ManageEventPartials.ManageEventFilterSort', [
+            @include('Organizer.ManageEventPartials.ManageEventFilterSort', [
                 'eventCategoryList' => $eventCategoryList, 
                 'eventTierList' => $eventTierList, 
                 'eventTypeList' => $eventTypeList 
@@ -84,7 +84,7 @@
             </div>
 
             <div class="scrolling-pagination grid-container">
-                @include('Organizer.__ManageEventPartials.ManageEventScroll')
+                @include('Organizer.ManageEventPartials.ManageEventScroll')
             </div>
 
             <div class="d-none"> 
@@ -117,5 +117,5 @@
             
             <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
             <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
-            @include('Organizer.__ManageEventPartials.ManageEventScripts')
+            @include('Organizer.ManageEventPartials.ManageEventScripts')
     </main>

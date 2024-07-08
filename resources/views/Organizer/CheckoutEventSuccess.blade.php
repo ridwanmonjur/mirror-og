@@ -1,12 +1,12 @@
-    @include('Organizer.__Partials.CreateEventHeadTag')
+    @include('Organizer.Partials.CreateEventHeadTag')
 
     <body>
-        @include('__CommonPartials.NavbarGoToSearchPage')
+        @include('CommonPartials.NavbarGoToSearchPage')
 
         <main>
             <div>
                 <div class="pt-5">
-                    @include('Organizer.__CheckoutPartials.CheckoutEventSuccess', ['event' => $event])
+                    @include('Organizer.CheckoutPartials.CheckoutEventSuccess', ['event' => $event])
                 </div>
             </div>
             <br><br>
