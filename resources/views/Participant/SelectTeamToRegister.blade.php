@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     <main>
             <div class="wrapper-height">
                 <div class="wrapper w-50 grid-2-at-screen mx-auto mx-2" style="background-color: #FFFBFB;">

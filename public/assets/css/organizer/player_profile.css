@@ -386,7 +386,7 @@ main {
 }
 
 .league_caption {
-    font-size: 20px;
+    font-size: 1.25rem;
 }
 
 .league_name {
@@ -432,7 +432,7 @@ main {
 .tick-button {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 1.25rem;
     cursor: pointer;
 }
 
@@ -549,7 +549,7 @@ tr:nth-child(even) .colored-cell {
     cursor: pointer;
     position: absolute;
     content: "+";
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: bold;
     text-align: center;
     margin:  auto;

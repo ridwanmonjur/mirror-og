@@ -1,8 +1,8 @@
-    @include('Organizer.__Partials.CreateEventHeadTag')
+    @include('Organizer.Partials.CreateEventHeadTag')
     <!-- https://stackoverflow.com/questions/895171/prevent-users-from-submitting-a-form-by-hitting-enter -->
 
     <body>
-        @include('__CommonPartials.NavbarGoToSearchPage')
+        @include('CommonPartials.NavbarGoToSearchPage')
         <main>
             <div>
                 <div>
@@ -10,18 +10,18 @@
                         action="{{ route('event.updateForm', $event->id) }}" method="post" name="create-event-form"
                         novalidate>
                         @csrf
-                        @include('Organizer.__CreateEditPartials.EditEventHiddenForm', ['event' => $event])
-                        @include('Organizer.__CreateEditPartials.CreateEventTimelineBox')
+                        @include('Organizer.CreateEditPartials.EditEventHiddenForm', ['event' => $event])
+                        @include('Organizer.CreateEditPartials.CreateEventTimelineBox')
                         @if (session()->has('error'))
-                            @include('Organizer.__CreateEditPartials.EditEventStepOne', [
+                            @include('Organizer.CreateEditPartials.EditEventStepOne', [
                                 'error' => session()->get('error'),
                             ])
                         @else
-                            @include('Organizer.__CreateEditPartials.EditEventStepOne')
+                            @include('Organizer.CreateEditPartials.EditEventStepOne')
                         @endif
-                        @include('Organizer.__CreateEditPartials.CreateEventForm', ['event' => $event])
+                        @include('Organizer.CreateEditPartials.CreateEventForm', ['event' => $event])
                         @if (session()->has('success'))
-                            @include('Organizer.__CreateEditPartials.CreateEventSuccess')
+                            @include('Organizer.CreateEditPartials.CreateEventSuccess')
                         @endif
                     </form>
                 </div>
@@ -29,7 +29,7 @@
             <br><br>
         </main>
         
-        @include('Organizer.__CreateEditPartials.CreateEventScripts')
+        @include('Organizer.CreateEditPartials.CreateEventScripts')
         <script>
 
         </script>

@@ -10,8 +10,8 @@
 </head>
 
 <body>
-    @include('__CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.__TeamHeadPartials.TeamHead')
+    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('Participant.TeamHeadPartials.TeamHead')
     @php
         use Carbon\Carbon;
     @endphp
