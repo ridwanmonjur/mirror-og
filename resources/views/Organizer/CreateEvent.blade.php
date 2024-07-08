@@ -1,33 +1,33 @@
-    @include('Organizer.Partials.CreateEventHeadTag')
+    @include('Organizer.__Partials.CreateEventHeadTag')
 
     <body>
-        @include('CommonPartials.NavbarGoToSearchPage')
+        @include('__CommonPartials.NavbarGoToSearchPage')
         <main>
             <div>
                 <div>
                     <form enctype="multipart/form-data" onkeydown="return event.key != 'Enter';"
                         action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
                         @csrf
-                        @include('Organizer.CreateEditPartials.CreateEventHiddenForm')
-                        @include('Organizer.CreateEditPartials.CreateEventTimelineBox')
+                        @include('Organizer.__CreateEditPartials.CreateEventHiddenForm')
+                        @include('Organizer.__CreateEditPartials.CreateEventTimelineBox')
                         @if (session()->has('error'))
-                            @include('Organizer.CreateEditPartials.CreateEventTimelineWelcome', [
+                            @include('Organizer.__CreateEditPartials.CreateEventTimelineWelcome', [
                                 'error' => session()->get('error'),
                             ])
                         @else
-                            @include('Organizer.CreateEditPartials.CreateEventTimelineWelcome')
+                            @include('Organizer.__CreateEditPartials.CreateEventTimelineWelcome')
                         @endif
-                        @include('Organizer.CreateEditPartials.CreateEventStepOne')
+                        @include('Organizer.__CreateEditPartials.CreateEventStepOne')
                         
-                        @include('Organizer.CreateEditPartials.CreateEventForm')
+                        @include('Organizer.__CreateEditPartials.CreateEventForm')
                         @if (session()->has('success'))
-                            @include('Organizer.CreateEditPartials.CreateEventSuccess')
+                            @include('Organizer.__CreateEditPartials.CreateEventSuccess')
                         @endif
                     </form>
                 </div>
             </div>
             <br><br>
         </main>
-        @include('Organizer.CreateEditPartials.CreateEventScripts')
+        @include('Organizer.__CreateEditPartials.CreateEventScripts')
 
     </body>

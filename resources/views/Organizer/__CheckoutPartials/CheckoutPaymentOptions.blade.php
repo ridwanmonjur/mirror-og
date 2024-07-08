@@ -33,10 +33,10 @@
                 class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between" data-bs-toggle="collapse"
                 href="#card-accordion" aria-expanded="false" aria-controls="card-accordion">
                 <div> Credit / Debit Card </div>
-                <div class="accordion-arrows"> @include('Organizer.CheckoutPartials.AccordionArrows') </div>
+                <div class="accordion-arrows"> @include('Organizer.__CheckoutPartials.AccordionArrows') </div>
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="card-accordion">
-                @include('Organizer.CheckoutPartials.CheckoutCardOption')
+                @include('Organizer.__CheckoutPartials.CheckoutCardOption')
             </div>
         </div>
         <div class="me-5 pb-2 mb-2 d-none">
@@ -44,7 +44,7 @@
                 class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between" data-bs-toggle="collapse"
                 href="#eWallet-accordion" aria-expanded="false" aria-controls="eWallet-accordion">
                 <div> eWallet </div>
-                <div class="accordion-arrows"> @include('Organizer.CheckoutPartials.AccordionArrows') </div>
+                <div class="accordion-arrows"> @include('Organizer.__CheckoutPartials.AccordionArrows') </div>
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="eWallet-accordion">
                 <div class="grid-4-columns">
@@ -70,7 +70,7 @@
                 class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between" data-bs-toggle="collapse"
                 href="#online-banking-accordion" aria-expanded="false" aria-controls="online-banking-accordion">
                 <div> Online Banking (FPX) </div>
-                <div class="accordion-arrows"> @include('Organizer.CheckoutPartials.AccordionArrows') </div>
+                <div class="accordion-arrows"> @include('Organizer.__CheckoutPartials.AccordionArrows') </div>
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="online-banking-accordion">
                 <div class="grid-5-columns">
@@ -96,7 +96,7 @@
                 class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between" data-bs-toggle="collapse"
                 href="#other-methods-accordion" aria-expanded="false" aria-controls="other-methods-accordion">
                 <div> Other Methods </div>
-                <div class="accordion-arrows"> @include('Organizer.CheckoutPartials.AccordionArrows') </div>
+                <div class="accordion-arrows"> @include('Organizer.__CheckoutPartials.AccordionArrows') </div>
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="other-methods-accordion">
                 <div class="grid-4-columns">
@@ -121,28 +121,51 @@
     <div class="mx-2 d-none" id="payment-summary">
         <h4>Payment Summary</h4>
         <br>
-        <div> 
-            <div>Payment </div>
-            <div class="ms-3">Team: <span>{{ $teamName }}</span></div>
-            <div class="ms-3">Member: <span>{{ $user->name }}</span></div>
-            <div class="ms-3">Email: <span>{{ $user->email }}</span></div>
-        </div>
-        <br>
         <div>
-            <div>Event</div>
+            <div>Event Categories</div>
             <div class="ms-3">Game: <span id="paymentType">{{ $event->game->gameTitle }}</span></div>
             <div class="ms-3">Type: <span id="paymentType">{{ $event->type->eventType }}</span></div>
             <div class="ms-3">Tier: <span id="paymentTier">{{ $event->tier->eventTier }}</span></div>
             <div class="ms-3">Region: <span id="paymentTier">South East Asia (SEA)</span></div>
             <br>
+            @php
+
+            @endphp
+            <div class="flexbox w-75">
+                <span>Subtotal</span>
+                <span id="subtotal">RM
+                    <span class="transform-number"> {{ $fee['entryFee'] }} </span>
+                </span>
+            </div>
+            <div class="flexbox w-75">
+                <span>Event Creation Fee Rate</span>
+                <span id="paymentRate">20%</span>
+            </div>
             <br>
             <div class="flexbox w-75">
                 <h5> TOTAL </h5>
                 <h5 id="paymentTotal">RM
-                    <span class="transform-number me-1">{{ $amount }} </span>
+                    @if ($fee['discountFee'] > 0)
+                        <span class="transform-number me-1"
+                            style="text-decoration: line-through;">{{ $fee['totalFee'] }} </span>
+                        <span class="transform-number">{{ $fee['finalFee'] }} </span>
+                    @else
+                        <span class="transform-number">{{ $fee['finalFee'] }} </span>
+                    @endif
                 </h5>
             </div>
             <br>
+            <div>Promo Code</div>
+            <form method="GET">
+                <div class="form-group w-75 d-flex">
+                    <input type="text" name="coupon"
+                        value="{{ app()->request->coupon ? app()->request->coupon : '' }}">
+                    <div class="d-inline-block px-2"></div>
+                    <button class="px-3 oceans-gaming-default-button" style="background-color: #95ADBD;">
+                        <span> Apply </span>
+                    </button>
+                </div>
+            </form>
             @if (session('errorMessageCoupon'))
                 <div class="text-red">
                     {{ session('errorMessageCoupon') }}
@@ -165,7 +188,7 @@
             <div class="d-flex justify-content-center w-75">
                 <button type="submit"
                     class="oceans-gaming-default-button-base oceans-gaming-transparent-button px-2 py-2 mt-2">
-                    <a href="{{ route('participant.register.manage', ['id' => $teamId]) }}" class="submit-texts d-block"> Cancel </a>
+                    <a href="{{ route('event.show', $event->id) }}" class="submit-texts d-block"> Cancel </a>
                     <div class="spinner-border d-none" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>

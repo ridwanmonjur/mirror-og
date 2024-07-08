@@ -51,7 +51,7 @@ button {
 }
 
 .wrapper header {
-    font-size: 1.25rem;
+    font-size: 20px;
     padding-top: 0%;
 }
 
@@ -157,11 +157,11 @@ input::selection {
 }
 
 .pass-txt {
-    font-size: 0.81rem;
+    font-size: small;
 }
 
 .sign-txt {
-    font-size: 0.81rem;
+    font-size: small;
     padding-top: 4%;
 }
 
@@ -169,7 +169,7 @@ form input[type="submit"], form input[type="button"] {
     width: 150px;
     padding-top: 10px;
     padding-bottom: 10px;
-    font-size: 0.81rem;
+    font-size: small;
     margin-top: 0px;
     color: #fff;
     padding: 10;

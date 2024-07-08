@@ -11,8 +11,8 @@
 </head>
 
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.ParticipantRequestPartials.RequestManagement')
+    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('Participant.__ParticipantRequestPartials.RequestManagement')
     <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>  
