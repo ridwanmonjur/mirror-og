@@ -20,7 +20,7 @@
 @endphp
 
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.NavbarGoToSearchPage')
 
     <main class="ps-5">
         <br>

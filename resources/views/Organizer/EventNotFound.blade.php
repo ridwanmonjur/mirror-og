@@ -1,6 +1,6 @@
-@include('Organizer.Partials.CreateEventHeadTag')
+@include('Organizer.__Partials.CreateEventHeadTag')
 <body style="margin-top: 0 !important;">
-@include('CommonPartials.NavbarGoToSearchPage')
+@include('__CommonPartials.NavbarGoToSearchPage')
 
     <main>
         <br><br><br><br>
