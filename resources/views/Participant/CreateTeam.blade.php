@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
         <div class="text-center" id="step-0">
             <div class="welcome">

@@ -45,12 +45,12 @@
     @endphp
 @endauth
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.NavbarGoToSearchPage')
 
     <main x-data="alpineDataComponent">
-        @include('Participant.Profile.BackgroundModal')
+        @include('Participant.__ProfilePartials.BackgroundModal')
 
-        @include('Participant.Profile.Forms')
+        @include('Participant.__ProfilePartials.Forms')
         <div id="backgroundBanner" class="member-section px-2 pt-2"
             @style([
                 "background-size: cover; background-repeat: no-repeat;"
@@ -106,7 +106,7 @@
                     </svg>
                     @endif
                 @if (!$isOwnProfile && !$isUserSame)
-                    @include('Participant.Profile.FriendManagement')
+                    @include('Participant.__ProfilePartials.FriendManagement')
                 @endif
             </div>
             <div class="d-flex justify-content-center align-items-start flex-wrap">
@@ -574,5 +574,5 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
 @livewireScripts
-@include('Participant.Profile.Scripts')
+@include('Participant.__ProfilePartials.Scripts')
 </html>

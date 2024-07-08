@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage', ['search' => true ])
+    @include('__CommonPartials.NavbarGoToSearchPage', ['search' => true ])
 
     <main>
         <section class="hero">

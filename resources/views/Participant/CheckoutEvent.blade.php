@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.NavbarGoToSearchPage')
     <main class="main-background-2">
         <br><br><br>
         @include('Participant.__CheckoutPartials.CheckoutPaymentOptions')

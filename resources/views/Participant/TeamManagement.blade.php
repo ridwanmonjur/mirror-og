@@ -16,8 +16,8 @@
     @endphp
 @endauth
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.TeamHeadPartials.TeamHead')
+    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('Participant.__TeamHeadPartials.TeamHead')
 
     <main class="main2">
         <div class="tabs">

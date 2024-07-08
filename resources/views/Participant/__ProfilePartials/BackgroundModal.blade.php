@@ -193,7 +193,7 @@
                             <div id="div-font-color-picker-with-frame"> </div>
                         </div>
                         <div style="{{ 
-                            $backgroundStyles,
+                            $backgroundStyles.
                             $fontStyles
                         }}" class="upload-container cursive-font px-0 mx-0 mt-2 py-2">
                             <label class="upload-label">

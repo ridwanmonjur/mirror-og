@@ -10,8 +10,8 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.TeamHeadPartials.TeamHead')
+    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('Participant.__TeamHeadPartials.TeamHead')
     <main class="main2">
         <div id="Overview">
             <br>

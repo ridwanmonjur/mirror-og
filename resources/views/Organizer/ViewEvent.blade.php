@@ -1,4 +1,4 @@
-@include('Organizer.Partials.ViewEventHeadTag')
+@include('Organizer.__Partials.ViewEventHeadTag')
 
 @php
     $status = $event->statusResolved();
@@ -15,7 +15,7 @@
 @endphp
 
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.NavbarGoToSearchPage')
 
     <main>
         <br class="d-none-at-desktop">
