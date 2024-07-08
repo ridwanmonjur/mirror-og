@@ -56,7 +56,7 @@
                             <input type="file" class="form-control"
                                 id="changeBackgroundBanner" name="backgroundBanner" 
                                 aria-describedby="inputGroupFileAddon03" aria-label="Upload"
-                                style="font-size: 15px;"
+                                style="font-size: 0.9375rem;"
                             >
                         </div>
                          <small class="d-block mb-4 mt-2"> 
@@ -193,7 +193,7 @@
                             <div id="div-font-color-picker-with-frame"> </div>
                         </div>
                         <div style="{{ 
-                            $backgroundStyles,
+                            $backgroundStyles.
                             $fontStyles
                         }}" class="upload-container cursive-font px-0 mx-0 mt-2 py-2">
                             <label class="upload-label">

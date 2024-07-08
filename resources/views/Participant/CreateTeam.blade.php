@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
         <div class="text-center" id="step-0">
             <div class="welcome">
@@ -29,8 +29,8 @@
                             What will your team be called?
                         </p>
                         <form action="{{ url('/participant/team/create') }}" method="POST">
-                            @include('Participant.CreateEditTeamPartials.FormErrorsSuccess')
-                            @include('Participant.CreateEditTeamPartials.FormFields', [
+                            @include('Participant.__CreateEditTeamPartials.FormErrorsSuccess')
+                            @include('Participant.__CreateEditTeamPartials.FormFields', [
                                 'team' => null, 'buttonLabel' => 'Create'
                             ])
                         </form>

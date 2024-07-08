@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
         <section class="hero">
             <img src="{{ asset('/assets/images/ss.png') }}" alt="">
@@ -24,7 +24,7 @@
         </div>
 
         <section class="featured-events  scrolling-pagination">
-            @include('LandingPageScroll')
+            @include('__CommonPartials.LandingPageScroll')
         </section>
 
         <div class="no-more-data d-none"></div>
