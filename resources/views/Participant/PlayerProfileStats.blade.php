@@ -39,7 +39,7 @@
 @endphp
 
 <body>
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
 
     <main class="ps-5">
         <br>

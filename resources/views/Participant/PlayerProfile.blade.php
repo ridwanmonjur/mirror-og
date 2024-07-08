@@ -45,12 +45,12 @@
     @endphp
 @endauth
 <body>
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
 
     <main x-data="alpineDataComponent">
-        @include('Participant.__ProfilePartials.BackgroundModal')
+        @include('Participant.Profile.BackgroundModal')
 
-        @include('Participant.__ProfilePartials.Forms')
+        @include('Participant.Profile.Forms')
         <div id="backgroundBanner" class="member-section px-2 pt-2"
             @style([
                 "background-size: cover; background-repeat: no-repeat;"
@@ -106,7 +106,7 @@
                     </svg>
                     @endif
                 @if (!$isOwnProfile && !$isUserSame)
-                    @include('Participant.__ProfilePartials.FriendManagement')
+                    @include('Participant.Profile.FriendManagement')
                 @endif
             </div>
             <div class="d-flex justify-content-center align-items-start flex-wrap">
@@ -379,7 +379,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Participant.__Partials.RosterView',  ['isRegistrationView' => false])
+                            @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
                         @endforeach
                     </div>
                 @endif
@@ -461,7 +461,7 @@
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
+                        @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
                         <br><br>
                     @endforeach
                 </div>
@@ -477,7 +477,7 @@
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
-                        @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
+                        @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
                         <br><br>
                     @endforeach
                 </div>
@@ -574,5 +574,5 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
 @livewireScripts
-@include('Participant.__ProfilePartials.Scripts')
+@include('Participant.Profile.Scripts')
 </html>

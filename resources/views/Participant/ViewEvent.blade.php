@@ -27,7 +27,7 @@
 @endphp
 
 <body>
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('CommonPartials.NavbarGoToSearchPage')
     <main>
         <br class="d-none-at-desktop">
         <div class="pt-2">

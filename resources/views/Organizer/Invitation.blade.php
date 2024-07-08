@@ -1,14 +1,14 @@
-@include('Organizer.__Partials.CreateEventHeadTag')
+@include('Organizer.Partials.CreateEventHeadTag')
 @php
 $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
 extract($dateArray);
 @endphp
 
 <body>
-        @include('__CommonPartials.NavbarGoToSearchPage')
+        @include('CommonPartials.NavbarGoToSearchPage')
     <main>
         <div>
-            @include('Organizer.__CreateEditPartials.CreateEventTimelineBox')
+            @include('Organizer.CreateEditPartials.CreateEventTimelineBox')
             <br>
             <div class="text-center" style="margin:auto; border-color: black; background: white; max-width: 60vw; min-height: 60vh;display:flex;flex-direction:column; justify-content:space-between;">
                 <div>
@@ -93,7 +93,7 @@ extract($dateArray);
         </div>
         <br><br>
     </main>
-    @include('Organizer.__CreateEditPartials.CreateEventScripts')
+    @include('Organizer.CreateEditPartials.CreateEventScripts')
     
 
     <script>
