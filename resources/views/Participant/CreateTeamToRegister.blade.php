@@ -31,8 +31,8 @@
                             action="{{ route('participant.createTeamToJoinEvent.action', ['id' => $id]) }}"
                             method="POST">
 
-                            @include('Participant.CreateEditTeamPartials.FormErrorsSuccess')
-                            @include('Participant.CreateEditTeamPartials.FormFields', [
+                            @include('Participant.__CreateEditTeamPartials.FormErrorsSuccess')
+                            @include('Participant.__CreateEditTeamPartials.FormFields', [
                                 'team' => null,
                                 'buttonLabel' => 'Create & Register',
                             ])

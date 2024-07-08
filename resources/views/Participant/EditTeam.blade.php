@@ -31,8 +31,8 @@
                         </p>
                         <br>
                         <form action="{{ route('participant.team.editStore', ['id' => $team->id]) }}" method="POST">
-                            @include('Participant.CreateEditTeamPartials.FormErrorsSuccess')
-                            @include('Participant.CreateEditTeamPartials.FormFields', [
+                            @include('Participant.__CreateEditTeamPartials.FormErrorsSuccess')
+                            @include('Participant.__CreateEditTeamPartials.FormFields', [
                                 'team' => $team, 'buttonLabel' => 'Edit'
                             ])
                     </form>

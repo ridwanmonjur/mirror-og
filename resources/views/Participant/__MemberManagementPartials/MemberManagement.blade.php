@@ -61,7 +61,7 @@
                 @if ($teamMembersProcessed['accepted']['count'] != 0)
                     @foreach ($teamMembersProcessed['accepted']['members'] as $member)
                         <tr class="st" id="tr-{{ $member->id }}">
-                            @include('Participant.MemberManagementPartials.MemberManagementColumns', ['member' => $member])
+                            @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
                             <td class="coloured-cell px-3">
                                 Accepted {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
@@ -86,7 +86,7 @@
                     @endforeach
                     @foreach ($teamMembersProcessed['left']['members'] as $member)
                         <tr class="st" id="tr-{{ $member->id }}">
-                            @include('Participant.MemberManagementPartials.MemberManagementColumns', ['member' => $member])
+                            @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
                             <td class="coloured-cell px-3">
                                 {{ $member->actor == 'team' ? 'Removed' : 'Left' }} {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
@@ -118,7 +118,7 @@
                     )
                     @foreach ($teamMembersProcessed['pending']['members'] as $member)
                         <tr class="st" id="tr-{{ $member->id }}">
-                            @include('Participant.MemberManagementPartials.MemberManagementColumns', ['member' => $member])
+                            @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
                             <td class="coloured-cell px-3">
                                 Pending {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
@@ -148,7 +148,7 @@
                     @endforeach
                     @foreach ($teamMembersProcessed['rejected']['members'] as $member)
                         <tr class="st" id="tr-{{ $member->id }}">
-                            @include('Participant.MemberManagementPartials.MemberManagementColumns', ['member' => $member])
+                            @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
                             <td class="coloured-cell px-3">
                                 Rejected {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
@@ -216,7 +216,7 @@
         </div>
     </div>
     <section class="featured-events scrolling-pagination ">
-        @include('Participant.MemberManagementPartials.MemberManagementScroll')
+        @include('Participant.__MemberManagementPartials.MemberManagementScroll')
     </section>
     <div class="no-more-data d-none"></div>
 </div>

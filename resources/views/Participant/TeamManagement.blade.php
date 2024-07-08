@@ -58,7 +58,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
+                            @include('Participant.__Partials.RosterView',  ['isRegistrationView' => false])
                         @endforeach
                     </div>
                  
@@ -119,7 +119,7 @@
         </div>
 
         <div class="tab-content pb-4  outer-tab d-none" id="Members">
-            @include('Participant.Partials.MemberView')
+            @include('Participant.__Partials.MemberView')
         </div>
 
         @php
@@ -139,7 +139,7 @@
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center    ">
-                            @include('Participant.Partials.RosterView', ['isRegistrationView' => false])
+                            @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
                             @if (isset($user) && $selectTeam->creator_id == $user->id)
                                 <a
                                     href="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">
@@ -168,7 +168,7 @@
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center    ">
-                            @include('Participant.Partials.RosterView',  ['isRegistrationView' => false])
+                            @include('Participant.__Partials.RosterView',  ['isRegistrationView' => false])
                             @if (isset($user) && $selectTeam->creator_id == $user->id)
                                 <a
                                     href="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">

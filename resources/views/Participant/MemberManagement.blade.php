@@ -17,14 +17,14 @@
     @include('Participant.TeamHeadPartials.TeamHead')
 
     <main class="main2">
-        @include('Participant.MemberManagementPartials.MemberManagement')
+        @include('Participant.__MemberManagementPartials.MemberManagement')
     </main>
 
     
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
-    @include('Participant.MemberManagementPartials.MemberManagementScripts')
+    @include('Participant.__MemberManagementPartials.MemberManagementScripts')
     <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
 
     <script>
