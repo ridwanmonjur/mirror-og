@@ -59,7 +59,7 @@
             "background-size: cover; background-repeat: no-repeat; min-height: 35vh;" 
         ])
     >    
-    @include('Participant.TeamHeadPartials.BackgroundModal')
+    @include('Participant.__TeamHeadPartials.BackgroundModal')
     <input type="hidden" id="teamData" value='@json($selectTeam)'>
     <input type="file" id="backgroundInput" class="d-none"> 
     {{-- @if ($isCreator) --}}
@@ -421,4 +421,4 @@
   
     <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
 @endif
-  @include('Participant.TeamHeadPartials.Scripts')
+  @include('Participant.__TeamHeadPartials.Scripts')

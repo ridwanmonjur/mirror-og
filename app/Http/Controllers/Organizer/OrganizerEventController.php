@@ -125,7 +125,7 @@ class OrganizerEventController extends Controller
 
         $mappingEventState = EventDetail::mappingEventStateResolve();
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
-        $view = view('Organizer.ManageEventPartials.ManageEventScroll', $outputArray)->render();
+        $view = view('Organizer.__ManageEventPartials.ManageEventScroll', $outputArray)->render();
 
         return response()->json(['html' => $view], 200);
     }

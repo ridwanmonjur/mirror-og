@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage', ['search' => true ])
+    @include('__CommonPartials.NavbarGoToSearchPage', ['search' => true ])
 
     <main>
         <section class="hero">
@@ -30,7 +30,7 @@
         </div>
 
         <section class="featured-events scrolling-pagination">
-            @include('LandingPageScroll')
+            @include('__CommonPartials.LandingPageScroll')
         </section>
         <div class="no-more-data d-none"></div>
         <br><br>
