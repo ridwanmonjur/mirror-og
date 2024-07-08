@@ -1,13 +1,13 @@
-    @include('Organizer.Partials.CreateEventHeadTag')
+    @include('Organizer.__Partials.CreateEventHeadTag')
     <body>
-        @include('CommonPartials.NavbarGoToSearchPage')
+        @include('__CommonPartials.NavbarGoToSearchPage')
 
         <main>
             <div>
                 <div>
                     @csrf
-                    @include('Organizer.CreateEditPartials.CreateEventSuccessTimelineBox')
-                    @include('Organizer.CreateEditPartials.CreateEventSuccess', ['event' => $event])
+                    @include('Organizer.__CreateEditPartials.CreateEventSuccessTimelineBox')
+                    @include('Organizer.__CreateEditPartials.CreateEventSuccess', ['event' => $event])
                 </div>
             </div>
             <br><br>

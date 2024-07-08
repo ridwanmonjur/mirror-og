@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    @include('CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.NavbarGoToSearchPage')
     <br><br> 
     <main>
         <h5> Your Teams </h5> <br> 
@@ -27,7 +27,7 @@
                 placeholder="Search using title, description, or keywords">
           
         </div>
-         @include('Participant.TeamListPartial.FilterSort')
+         @include('Participant.__TeamListPartial.FilterSort')
         <div class="grid-3-columns justify-content-center"> 
             @if ($count > 0)
                 @foreach ($teamList as $team)
@@ -88,7 +88,7 @@
     </main>
 
     
-    @include('Participant.TeamListPartial.FilterScripts')
+    @include('Participant.__TeamListPartial.FilterScripts')
     <script>
         function goToScreen() {
             window.location.href = "{{route('participant.request.view')}}";
