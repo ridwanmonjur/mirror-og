@@ -36,18 +36,50 @@ let loggedUserProfile = JSON.parse(loggedUserProfileInput?.value);
 let viewUserProfile = JSON.parse(viewUserProfileInput?.value);
 let fetchFirebaseUsersRoute = fetchFirebaseUsersInputRoute?.value;
 
+const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+function humanReadableChatTimeFormat(date) {
+    const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    return formattedTime
+}
+
+function humanReadableChatDateFormat(date) {
+    const year = date.getFullYear();
+    const month = monthNames[date.getMonth()];
+    const day = date.getDate().toString().padStart(2, '0');
+    
+    const formattedDate = `${day} ${month} ${year}`;    
+    return formattedDate;
+}
+
 function loadMessages(messages) {
     chatMessages.innerHTML = '';
     console.log({messagesxx: messages})
     messages.forEach(message => {
-        console.log(message)
+        if (message['newDate']) {
+            addDate(message['createdAtDate']);
+        }
+
         addMessage(message);
     });
 }
 
+function addDate(date) {
+    const dateDivContainer = document.createElement("div");
+    const dateDiv = document.createElement("small");
+    dateDivContainer.classList.add("d-flex", "justify-content-center", "my-3");
+    dateDiv.classList.add("mx-auto", "px-3", 'py-1', "rounded-pill");
+    dateDiv.style.backgroundColor = "white";
+    dateDiv.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.2)";
+    dateDiv.innerText = humanReadableChatDateFormat(date);
+    dateDivContainer.appendChild(dateDiv);
+    chatMessages.appendChild(dateDivContainer);
+}
+
+
 function addMessage(message) {
     console.log({messageY: message})
-    let {text, type, time, className, sender} = message;
+    let {text, createdAtDate, className, sender} = message;
     const messageDiv = document.createElement("div");
     messageDiv.classList.add(...className);
     let avatarDiv;
@@ -55,16 +87,20 @@ function addMessage(message) {
         avatarDiv = document.createElement("img");
         avatarDiv.src = `/storage/${sender?.userBanner}`;
         avatarDiv.height = "50";
+        avatarDiv.onerror= ()=> {
+            avatarDiv.src = '/assets/images/404.png';
+        }
+
         avatarDiv.width = "50";
         avatarDiv.classList.add('object-fit-cover', 'rounded-circle')
     } else {
-        avatarDiv = document.createElement("img");
+        avatarDiv = document.createElement("div");
         avatarDiv.classList.add("avatar");
         avatarDiv.textContent = sender.name ? 
             sender.name[0]?.toUpperCase(): sender.email[0]?.toUpperCase();
     }
 
-    avatarDiv.classList.add('me-3')
+    avatarDiv.classList.add('me-2')
 
     const messageContentDiv = document.createElement("div");
     messageContentDiv.classList.add("message-content", 'w-75');
@@ -73,7 +109,7 @@ function addMessage(message) {
 
     const timestampSpan = document.createElement("span");
     timestampSpan.classList.add("timestamp");
-    timestampSpan.textContent = time;
+    timestampSpan.textContent = humanReadableChatTimeFormat(createdAtDate);
 
     messageContentDiv.appendChild(timestampSpan);
     messageDiv.appendChild(avatarDiv);
@@ -93,6 +129,23 @@ Alpine.data('alpineDataComponent', function () {
         chats: [],
         oldRoomUsers: [],
         userIdMap: {},
+        async sendMessage() {
+            let value = chatInput?.value;
+            
+            if (!this.currentRoom || String(value).trim() == "") {
+                return;
+            }
+         
+            const docRef = await addDoc(collection(db,  `room/${this.currentRoom}/message`), {
+                senderId: loggedUserProfile.id,
+                text: value,
+                createdAt: new Date()
+            });
+
+            console.log({docRef})
+
+            chatInput.value = "";
+        },
         async initDB() {
             if (this.dataInited) return;
             let userIdMap = {};
@@ -196,12 +249,19 @@ Alpine.data('alpineDataComponent', function () {
                 q = query(q, startAfter(this.lastDocInBatch.createdAt));
             }
 
-            q = query(q, limit(5));
+            q = query(q, limit(25));
 
             let results = [];
-            onSnapshot(q, (snapshot) => {
+            onSnapshot(collection(db, `room/${id}/message`), (snapshot) => {
+                let prevCreatedAt = null;
                 snapshot.docChanges().forEach(async (querySnapshot) => {
-
+                    console.log("sth real happened");
+                    console.log("sth real happened");
+                    console.log("sth real happened");
+                    console.log("sth real happened");
+                    console.log("sth real happened");
+                    console.log("sth real happened");
+                    console.log("sth real happened");
                     let objectDoc = {
                         id: querySnapshot.doc.id,
                         ...querySnapshot.doc.data(),
@@ -217,6 +277,13 @@ Alpine.data('alpineDataComponent', function () {
                     }
                     console.log({ objectDoc, sender: Alpine.raw(this.userIdMap) });
                     objectDoc['sender'] = Alpine.raw(this.userIdMap)[objectDoc['senderId']];
+                    objectDoc['createdAtDate'] = objectDoc['createdAt'].toDate();
+                    if (objectDoc['createdAtDate']?.getDate() !== prevCreatedAt?.getDate() || objectDoc['createdAtDate'] ?.getMonth() !== prevCreatedAt?.getMonth()) {
+                        objectDoc['newDate'] = true;
+                    }
+
+                    prevCreatedAt = objectDoc['createdAtDate'];
+
                     results.push(objectDoc);
                 });
             });
@@ -232,7 +299,14 @@ Alpine.data('alpineDataComponent', function () {
         },
         init() {
             this.$watch("currentRoom", ()=>{
-                console.log({currentRoomzzz: Alpine.raw(this.messages) [this.currentRoom]})
+                let currentRoomObject = Alpine.raw(this.oldRooms).filter((value)=>{
+                    return value.id == this.currentRoom;
+                });
+
+                console.log({oldRooms: this.oldRooms, currentRoomObject});
+                this.currentRoomObject = currentRoomObject[0];
+
+                console.log({currentRoomzzz: Alpine.raw(this.messages)[this.currentRoom]})
                 loadMessages(Alpine.raw(this.messages)[this.currentRoom]) ; 
             })
         }

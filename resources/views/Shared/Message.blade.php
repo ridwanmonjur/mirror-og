@@ -20,7 +20,7 @@
                 <template x-for="room in oldRooms" :key="room.id">
                     <div  x-on:click="currentRoom = room.id" class="chat-item">
                         <template x-if="room.otherRoomMember.userBanner != null">
-                            <img x-bind:src="'/storage/' + room.otherRoomMember.userBanner" width="50" height="50"
+                            <img {!! trustedBladeHandleImageFailure() !!} x-bind:src="'/storage/' + room.otherRoomMember.userBanner" width="50" height="50"
                                 class="object-fit-cover rounded-circle">
                         </template>
                         <template x-if="room.otherRoomMember.userBanner == null">
@@ -36,9 +36,9 @@
                 </template>
             </div>
         </div>
-        <div class="chat-container col-0 d-none d-lg-flex col-lg-7 col-xl-8 m-0 p-0">
+        <div class="chat-container position-relative col-0 d-none d-lg-flex col-lg-7 col-xl-8 m-0 p-0" style="overflow: hidden;">
             <div class="chat-header w-100">
-                <h2 class="chat-user-name my-0">Alex</h2>
+                <h2 class="chat-user-name my-0" x-text="currentRoomObject.otherRoomMember.name"></h2>
                 <button class="menu-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                         class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
@@ -47,7 +47,7 @@
                     </svg>
                 </button>
             </div>
-            <div class="chat-messages" id="chat-messages">
+            <div class="chat-messages" id="chat-messages" style="overflow-y: auto;">
             </div>
             <div class="chat-input">
                 <input type="text" placeholder="Type a message...">

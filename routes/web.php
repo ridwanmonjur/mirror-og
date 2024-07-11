@@ -58,7 +58,7 @@ Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallbac
 Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback']);
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::group(['middleware' => 'check-permission:participant|admin'], function () {
+    Route::group(['middleware' => 'check-permission:participant|admin|organizer'], function () {
         Route::get('user/{id}/stats', [UserController::class, 'showStats'])->name('user.stats');
         Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackground.action');
         Route::get('profile/message', [ChatController::class, 'message'])->name('user.message.view');
