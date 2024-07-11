@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 'resources/sass/app.scss',
                 'resources/js/app.js',
+                'resources/js/alpine.js',
                 'resources/js/file-edit.js',
                 'resources/js/lightgallery.js',
                 'resources/sass/lightgallery.scss',

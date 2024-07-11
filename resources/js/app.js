@@ -7,9 +7,7 @@
  window.bootstrap = bootstrap
 // todo cookie package
 // https://www.npmjs.com/package/cookiejs
-import Alpine from 'alpinejs';
-window.Alpine = Alpine;
-Alpine.start();
+
 window.storeToken = function(token) {
     localStorage.setItem('jwtToken', token);
 };
