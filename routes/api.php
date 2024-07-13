@@ -9,6 +9,7 @@ use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
@@ -31,10 +32,11 @@ Route::middleware('auth')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
-        Route::put('user/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('user.notifications.read');
-        Route::put('user/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('user.notifications.readAll');
-        Route::post('user/{id}/banner', [UserController::class, 'replaceBanner'])->name('participant.userBanner.action');
-        Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
+        Route::put('/user/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('user.notifications.read');
+        Route::put('/user/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('user.notifications.readAll');
+        Route::post('/user/firebase', [ChatController::class, 'getFirebaseUsers'])->name('user.firebase.readAll');
+        Route::post('/user/{id}/banner', [UserController::class, 'replaceBanner'])->name('participant.userBanner.action');
+        Route::post('/user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
     });
 });
 
@@ -42,8 +44,8 @@ Route::group(['prefix' => 'participant'], function () {
 
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'check-jwt-permission:participant|admin'], function () {
-            Route::post('events', [ParticipantEventController::class, 'index'])->name('events.index');
-            Route::post('events/likes', [ParticipantController::class, 'likeEvent'])->name('participant.events.like');
+            Route::post('/events', [ParticipantEventController::class, 'index'])->name('events.index');
+            Route::post('/events/likes', [ParticipantController::class, 'likeEvent'])->name('participant.events.like');
             Route::post('/organizer/follow', [ParticipantEventController::class, 'followOrganizer'])->name('participant.organizer.follow');
             Route::post('/profile', [ParticipantController::class, 'editProfile'])->name('participant.profile.update');
             Route::post('/team', [ParticipantTeamController::class, 'editTeam'])->name('participant.team.update');
@@ -53,7 +55,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/team/member/{id}/update', [ParticipantTeamController::class, 'updateTeamMember'])->name('participant.member.update');
             Route::post('/team/member/{id}/deleteInvite', [ParticipantTeamController::class, 'withdrawInviteMember'])->name('participant.member.deleteInvite');
             Route::post('/team/member/{id}/rejectInvite', [ParticipantTeamController::class, 'rejectInviteMember'])->name('participant.member.rejectInvite');
-                    });
+        });
     });
 });
 
