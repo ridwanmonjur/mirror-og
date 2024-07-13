@@ -18,7 +18,7 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-console.log({db, app})
+console.log({db, app, firebaseConfig})
 
 const chatInput = document.querySelector(".chat-input input");
 const sendButton = document.querySelector(".chat-input button");
