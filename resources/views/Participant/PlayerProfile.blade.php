@@ -10,6 +10,7 @@
     @vite([
         'resources/sass/app.scss', 
         'resources/js/app.js', 
+        'resources/js/alpine.js', 
         'resources/js/lightgallery.js',
         'resources/sass/lightgallery.scss',   
         'resources/js/file-upload-preview.js',
@@ -63,7 +64,7 @@
             @endif
             <input type="hidden" id="games_data_input" value="{{ $userProfile->participant?->games_data ?? json_encode([]) }}">
             <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant?->getRegionDetails()) }}">
-            <input type="hidden" id="initialUserData" value='@json($userProfile->only(["id", "name"]))'>
+            <input type="hidden" id="initialUserData" value='@json($userProfile?->only(["id", "name"]))'>
             <input type="hidden" id="initialParticipantData" value='@json($userProfile->participant)'>
                 <div class="d-flex justify-content-end py-0 my-0 mb-2 flex-wrap">
                     @if ($isUserSame)

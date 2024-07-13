@@ -11,6 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
     @vite(['resources/sass/app.scss', 
         'resources/js/app.js', 
+        'resources/js/alpine.js', 
         'resources/js/lightgallery.js', 
         'resources/sass/lightgallery.scss',   
         'resources/js/file-upload-preview.js',
@@ -44,7 +45,7 @@
     <main 
         x-data="alpineDataComponent"
     >
-        <input type="hidden" id="initialUserProfile" value='@json($userProfile->only(['id', 'name', 'mobile_no']))'>
+        <input type="hidden" id="initialUserProfile" value='@json($userProfile?->only(['id', 'name', 'mobile_no']))'>
         <input type="hidden" id="initialOrganizer" value='@json($userProfile->organizer)'>
         <input type="hidden" id="initialAddress" value='@json($userProfile->address)'>
         {{-- <form action="{{route('organizer.profile.update')}}" method="POST">  --}}
@@ -146,7 +147,7 @@
                             <span class="me-2"> </span>
                             <span class="me-3" x-text="organizer.industry"> </span>
                             <span class="me-1"> 
-                                <?xml version="1.0" ?><svg enable-background="new 0 0 32 32" height="22px" id="svg2" version="1.1" viewBox="0 0 32 32" width="22px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"><g id="background"><rect fill="none" height="32" width="32"/></g><g id="user_x5F_full_x5F_add"><path d="M16,6c1.657,0,3-1.343,3-3s-1.343-3-3-3s-3,1.343-3,3S14.343,6,16,6z M23,14c-0.339,0-0.671,0.022-1,0.059   C22,11.97,22,10,22,10s0-2-2-2c-0.571,0-8,0-8,0s-2,0-2,2v8c0,2.285,2,2,2,2v12h8v-0.523C20.939,31.809,21.946,32,23,32   c4.971-0.002,8.998-4.029,9-9C31.998,18.027,27.971,14,23,14z M23,29.883c-3.801-0.009-6.876-3.084-6.885-6.883   c0.009-3.801,3.084-6.876,6.885-6.885c3.799,0.009,6.874,3.084,6.883,6.885C29.874,26.799,26.799,29.874,23,29.883z"/><g><polygon points="28,22 24.002,22 24.002,18 22,18 22,22 18,22 18,24 22,24 22,28 24.002,28 24.002,24 28,24   "/></g></g></svg>
+                                <svg enable-background="new 0 0 32 32" height="22px" id="svg2" version="1.1" viewBox="0 0 32 32" width="22px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"><g id="background"><rect fill="none" height="32" width="32"/></g><g id="user_x5F_full_x5F_add"><path d="M16,6c1.657,0,3-1.343,3-3s-1.343-3-3-3s-3,1.343-3,3S14.343,6,16,6z M23,14c-0.339,0-0.671,0.022-1,0.059   C22,11.97,22,10,22,10s0-2-2-2c-0.571,0-8,0-8,0s-2,0-2,2v8c0,2.285,2,2,2,2v12h8v-0.523C20.939,31.809,21.946,32,23,32   c4.971-0.002,8.998-4.029,9-9C31.998,18.027,27.971,14,23,14z M23,29.883c-3.801-0.009-6.876-3.084-6.885-6.883   c0.009-3.801,3.084-6.876,6.885-6.885c3.799,0.009,6.874,3.084,6.883,6.885C29.874,26.799,26.799,29.874,23,29.883z"/><g><polygon points="28,22 24.002,22 24.002,18 22,18 22,22 18,22 18,24 22,24 22,28 24.002,28 24.002,24 28,24   "/></g></g></svg>
                             </span>
                             <a href="{{route('user.stats', ['id' => $userProfile->id, 'type' => 'Follow'])}}" class="me-5">
                                 <span @class(["followCounts". $userProfile->id, ' me-3']) data-count="{{ $followersCount }}"> {{$followersCount}} follower{{bladePluralPrefix($followersCount)}} </span>
@@ -582,7 +583,6 @@
     </main>
 
 </body>
-@livewireScripts
 <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
 <script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/js/intlTelInput.min.js"></script>

@@ -564,9 +564,4 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'message' => $th->getMessage()], 422);
         }
     } 
-
-    public function message($id, Request $request) {
-        $userProfile = User::findOrFail($id);
-        return view('Participant.Message', ['userProfile' => $userProfile]);
-    }
 }

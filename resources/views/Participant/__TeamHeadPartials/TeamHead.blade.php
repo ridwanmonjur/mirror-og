@@ -2,6 +2,7 @@
     @vite([
         'resources/sass/app.scss', 
         'resources/js/app.js', 
+        'resources/js/alpine.js', 
         'resources/js/lightgallery.js',
         'resources/sass/lightgallery.scss',
         'resources/js/file-upload-preview.js',
@@ -278,7 +279,6 @@
     </div>
 </main>
 
-@livewireScripts
 <script>
         let teamData = JSON.parse(document.getElementById('teamData').value);
 

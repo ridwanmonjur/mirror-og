@@ -71,6 +71,5 @@
             document.getElementById(`${type}Btn`)?.click();
         });
     </script>
-    @livewireScripts
     <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
     <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
