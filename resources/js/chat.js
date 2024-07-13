@@ -14,11 +14,17 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_APP_ID,
 };
 
+console.log({firebaseConfig})
+console.log({firebaseConfig})
+console.log({firebaseConfig})
+
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+console.log({db, app, firebaseConfig})
 
 console.log({db, app})
+
 
 const chatInput = document.querySelector(".chat-input input");
 const sendButton = document.querySelector(".chat-input button");
