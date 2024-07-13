@@ -11,7 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function ($table) {
+        Schema::create('firebase_user_active_at', function ($table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->timestamp('updated_at');
         });
     }
 
@@ -20,7 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function ($table) {
-        });
+        Schema::dropIfExists('firebase_user_active_at');
     }
 };
