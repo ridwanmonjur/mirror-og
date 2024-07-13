@@ -31,6 +31,6 @@ function formatDateDifference(startDate) {
             return `${days} day${days > 1 ? 's' : ''} ago`;
         } 
     }   else {
-        return 'Not active in a while...'
+        return 'New user...'
     }
 }

@@ -51,7 +51,7 @@ class ChatController extends Controller
                 $usersQ->where('name', 'LIKE', "%$searchQ%");
             }
 
-            $users = $usersQ->paginate(2);
+            $users = $usersQ->paginate(10);
         }
 
         return response()->json(['data'=> $users, 'success' => true], 200);
