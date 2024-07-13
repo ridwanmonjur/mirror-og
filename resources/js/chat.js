@@ -1,8 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, addDoc, onSnapshot, limit, orderBy, doc, query, collection, collectionGroup, getDocs, getDoc, where, or } from "firebase/firestore";
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
-import dayjs from 'dayjs-ext'
-import relativeTime from 'dayjs-ext/plugin/relativeTime'
+// import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
+
 import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
@@ -19,8 +18,7 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-
-dayjs.extend(relativeTime).locale('sg')
+console.log({db, app})
 
 const chatInput = document.querySelector(".chat-input input");
 const sendButton = document.querySelector(".chat-input button");
