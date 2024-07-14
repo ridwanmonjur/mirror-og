@@ -106,20 +106,20 @@
                         <button type="button"
                             onclick="reddirectToLoginWithIntened('{{ route('public.organizer.view', ['id' => $joinEvent->user_id]) }}')"
                             class="mx-auto mt-2  {{ 'followButton' . $joinEvent->user_id }}"
-                            style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                            style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                             Follow
                         </button>
                     @endguest
                     @auth
                         @if ($user->role == 'PARTICIPANT')
                             <button type="submit" class="{{ 'followButton' . $joinEvent->user_id }}" class="mx-auto mt-2 "
-                                style="background-color: {{ $joinEvent->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $joinEvent->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                                style="background-color: {{ $joinEvent->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $joinEvent->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                                 {{ $joinEvent->isFollowing ? 'Following' : 'Follow' }}
                             </button>
                         @else
                             <button type="button" onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
                                 class="mx-auto mt-2 {{ 'followButton' . $joinEvent->user_id }}"
-                                style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                                style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                                 Follow
                             </button>
                         @endif

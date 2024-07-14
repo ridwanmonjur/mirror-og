@@ -271,7 +271,7 @@ a:hover {
 
 .swal2-popup {
     border-radius: 40px !important;
-    font-size: 14px !important;
+    font-size: 0.875rem !important;
 }
 
 .page-item.active .page-link {
@@ -444,12 +444,12 @@ a:hover {
     background: #d2d0d0; 
   }
 
-body {
-    font-size: 13px;
+html, body {
+    font-size: 14px;
 }
 
 h5 {
-    font-size: 15px;
+    font-size: 16px;
 }
   
 @media (min-width: 640px) {
@@ -458,20 +458,17 @@ h5 {
         padding-right: 0 !important;
     }
 
-    body {
-        font-size: 14px;
-    }
    
 } 
 
 
 @media screen and (min-width: 992px) {
-    body {
-        font-size: 1rem;
+    html, body {
+        font-size: 16px;
     }
 
     h5 {
-        font-size: 1.1rem;
+        font-size: 1.25rem;
     }
 
     .payment-summary {
@@ -548,11 +545,10 @@ h5 {
 }
 
 @media screen and (min-width: 1600px) {
-    body {
-        font-size: 1.125;
+    html, body {
+        font-size: 16px;
     }
 
-   
 }
 
 .notification-black {
@@ -584,10 +580,6 @@ h5 {
 }
 [x-cloak] {
     display: none !important;
-}
-
-@media (min-width: 640px) {
-   
 }
 
 .choices__inner.choices__list--single .choices__item:first-of-type  {

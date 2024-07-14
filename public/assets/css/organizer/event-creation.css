@@ -73,12 +73,12 @@ input[type="time"] {
 }
 
 .form-group .description {
-    font-size: 14px;
+    font-size: 0.875rem;
     color: #6B6B6B;
 }
 
 .form-group .small-detail {
-    font-size: 14px;
+    font-size: 0.875rem;
     color: #6B6B6B;
 }
 
@@ -365,7 +365,7 @@ input[type="time"] {
     background-color: rgba(255, 255, 255, 0.7);
     color: #43A4D7;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 1rem;
     transition: background-color 0.3s;
 }
 
@@ -801,7 +801,7 @@ input[type="submit"]:active {
     border-radius: 30px;
     /* color: white; */
     padding: 16px;
-    font-size: 16px;
+    font-size: 1rem;
     /* border: none; */
     cursor: pointer;
 }

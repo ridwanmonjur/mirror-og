@@ -43,12 +43,12 @@
                     >
                     <button data-bs-toggle="tooltip" data-bs-html="true" title="{{ $toolTip }}"
                         class="activate-tooltip oceans-gaming-default-button"
-                        style="@php echo $stylesEventStatus; @endphp text-align: left; font-size: 14px;">
+                        style="@php echo $stylesEventStatus; @endphp text-align: left; font-size: 0.875rem;">
                         <u> {{ $status }} </u>
                     </button>
                     <button style="@php echo $stylesEventRatio; @endphp"
                         class="px-2 oceans-gaming-default-button oceans-gaming-default-button-small flexbox-centered-space"
-                        style="font-size: 14px;"
+                        style="font-size: 0.875rem;"
                         >
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

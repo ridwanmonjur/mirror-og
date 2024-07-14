@@ -16,7 +16,7 @@
                     Create Event
                 </button>
             </header>
-            <div class="flexbox-filter flex-wrap" style="font-size: 14px;">
+            <div class="flexbox-filter flex-wrap">
                 <p class="status-ALL">
                     <a href="{{ route('event.index', ['status' => 'ALL', 'page' => 1]) }}">All</a>
                 </p>
@@ -57,7 +57,7 @@
                     </svg>
                 </div>
                     
-                <input style="border-radius: 0 30px 30px 0;" class="form-control" style="font-size: 14px;" type="text" name="search" id="searchInput" 
+                <input style="border-radius: 0 30px 30px 0;" class="form-control" type="text" name="search" id="searchInput" 
                     placeholder="Search using title, description, or keywords">
               
             </div>

@@ -3,7 +3,7 @@
 @endphp
 <div>
     <br>
-    <div class="showcase tab-size showcase-box showcase-column border-3 pt-4 ps-4 text-left" style="width: max(500px, 55vw);">
+    <div class="showcase tab-size showcase-box showcase-column border-3 pt-4 ps-4 text-left" style="width: min(800px,  80%);">
         <p> Name: {{ $userProfile->name }} </p>
         <p> Email: {{ $userProfile->email }} </p>
         <p> Joined: {{ is_null($userProfile->created_at) ? '-' : Carbon::parse($userProfile->created_at)->format('F j, Y') }}</p>

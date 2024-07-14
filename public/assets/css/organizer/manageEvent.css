@@ -402,5 +402,5 @@ input[type="submit"]:active {
 }
 
 #filter-option label, .sort-box{
-   font-size: 14px !important; 
+   font-size: 0.875rem !important; 
 }

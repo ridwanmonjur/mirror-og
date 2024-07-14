@@ -159,12 +159,12 @@
                                 <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
                             </svg>
                         </button>
-                        <div class="dropdown-menu py-0" style="font-size: 14px;" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-menu py-0" style="font-size: 0.875rem;" aria-labelledby="dropdownMenuButton">
                             <div>
                                 @if (is_null($status))
                                     <form class="dropdown-item" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
                                         @csrf()
-                                        <button style="font-size: 14px;" class="btn btn-link" type="submit">
+                                        <button style="font-size: 0.875rem;" class="btn btn-link" type="submit">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                                             <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
                                             </svg>
@@ -173,7 +173,7 @@
                                     </form>
                                 @else 
                                     <button class="px-2 w-100 h-100 gear-icon-btn-2 fw-bolder pt-1 pb-2 border-1 border-dark border-bottom" type="button">
-                                        <small style="font-size: 14px;" class="ms-2">  
+                                        <small style="font-size: 0.875rem;" class="ms-2">  
                                             @if ($isCreator)
                                                 You've created this team
                                             @else

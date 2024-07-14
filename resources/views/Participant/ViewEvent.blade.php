@@ -33,7 +33,7 @@
         <div class="pt-2">
             <header>
                 <u>
-                    <h5 class="text-center text-lg-start ms-lg-5">
+                    <h5 class="text-start ms-5">
                         View your events
                     </h5>
                 </u>
@@ -163,7 +163,7 @@
                                             type="button"
                                             onclick="reddirectToLoginWithIntened('{{route('public.event.view', ['id'=> $event->id])}}')"
                                             id="followButton"
-                                            style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                                            style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                                             Follow
                                         </button>
                                     @endguest
@@ -172,7 +172,7 @@
                                             <button 
                                                 class="ripple"
                                                 type="submit" id="followButton"
-                                                style="background-color: {{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                                                style="background-color: {{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                                                 {{ $user && $user->isFollowing ? 'Following' : 'Follow' }}
                                             </button>
                                         @else
@@ -181,7 +181,7 @@
                                                 type="button"
                                                 onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
                                                 id="followButton"
-                                                style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 14px; border-radius: 10px; border: none;">
+                                                style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                                                 Follow
                                             </button>
                                         @endif
