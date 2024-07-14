@@ -445,12 +445,11 @@ a:hover {
   }
 
 body {
-    font-size: 14px;
+    font-size: 13px;
 }
 
-
 h5 {
-    font-size: 17px;
+    font-size: 15px;
 }
   
 @media (min-width: 640px) {
@@ -458,6 +457,11 @@ h5 {
     .choices__list--dropdown .choices__item--selectable, .choices__list[aria-expanded] .choices__item--selectable {
         padding-right: 0 !important;
     }
+
+    body {
+        font-size: 14px;
+    }
+   
 } 
 
 
