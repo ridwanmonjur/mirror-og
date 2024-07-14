@@ -61,7 +61,7 @@
 
 .box-header>.fa, .box-header>.glyphicon, .box-header>.ion, .box-header .box-title {
     display: inline-block;
-    font-size: 18px;
+    font-size: 1.125rem;
     margin: 0;
     line-height: 1;
 }
@@ -93,7 +93,7 @@
 
 .btn-box-tool {
     padding: 5px;
-    font-size: 12px;
+    font-size: 0.75rem;
     background: transparent;
     color: #97a0b3;
 }
@@ -148,7 +148,7 @@
 .direct-chat-info {
     display: block;
     margin-bottom: 2px;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .direct-chat-timestamp {
@@ -233,7 +233,7 @@
 .direct-chat-info {
     display: block;
     margin-bottom: 2px;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .right .direct-chat-img {

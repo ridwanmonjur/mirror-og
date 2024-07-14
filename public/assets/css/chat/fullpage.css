@@ -91,7 +91,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 20px;
+    font-size: 1.25rem;
     color: white;
     margin-right: 15px;
 }
@@ -103,7 +103,7 @@ body {
 }
 
 .chat-info h3 {
-    font-size: 18px;
+    font-size: 1.125rem;
     margin-bottom: 5px;
 }
 
@@ -138,13 +138,13 @@ body {
 }
 
 .chat-user-name {
-    font-size: 20px;
+    font-size: 1.25rem;
 }
 
 .menu-btn {
     background: none;
     border: none;
-    font-size: 18px;
+    font-size: 1.125rem;
     cursor: pointer;
     color: white;
 }
@@ -189,7 +189,7 @@ body {
 }
 
 .timestamp {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #666;
     margin-top: 5px;
     position: absolute;
@@ -230,7 +230,7 @@ body {
     color: white;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 1.125rem;
     display: flex;
     align-items: center;
     justify-content: center;

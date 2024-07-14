@@ -35,7 +35,7 @@ main {
 .first_notify {
     float: center;
     text-align: center;
-    font-size: 20px;
+    font-size: 1.25rem;
     padding-top: 0%;
 }
 
@@ -140,7 +140,7 @@ input.largerCheckbox {
     /* color: white; */
     padding: 14px;
     width: 230px;
-    font-size: 12px;
+    font-size: 0.75rem;
     /* border: none; */
     cursor: pointer;
 }

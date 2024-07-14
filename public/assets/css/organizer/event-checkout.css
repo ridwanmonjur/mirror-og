@@ -14,7 +14,7 @@
     left: 90%; 
     color: white;  
     background-color: green; 
-    font-size: 10px;
+    font-size: 0.625rem;
 }
 
 @media screen and (min-width: 400px) {

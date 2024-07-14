@@ -596,7 +596,7 @@ input[type="submit"],
     background: transparent;
     border: 1px solid #000000;
     border-radius: 20px;
-    font-size: 18px;
+    font-size: 1.125rem;
     color: #000000;
     outline: black;
     z-index: 1;

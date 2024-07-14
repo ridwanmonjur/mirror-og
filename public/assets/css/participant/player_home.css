@@ -77,7 +77,7 @@ main {
 }
 
 .text__middle p {
-    font-size: 30px;
+    font-size: 1.875rem;
 }
 
 .search-form {
@@ -268,7 +268,7 @@ main {
 }
 
 .league_caption {
-    font-size: 20px;
+    font-size: 1.25rem;
 }
 
 .league_name {
@@ -386,7 +386,7 @@ footer {
         padding-left: 10%;
     }
     .text__middle p {
-        font-size: 24px;
+        font-size: 1.5rem;
 
     }
 
