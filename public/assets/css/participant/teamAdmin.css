@@ -245,7 +245,7 @@ input[type="submit"],
     background-color: #43A4D7;
     color: #FFFFFF;
     padding: 5px 10px;
-    font-size: 14px;
+    font-size: 0.875rem;
     border-radius: 10px;
     cursor: pointer;
     margin-bottom: 10px;
@@ -490,7 +490,7 @@ input[type="submit"],
 }
 
 .eventName{
-    font-size: 14px; 
+    font-size: 0.875rem; 
     text-align: left; 
     margin-top: 10px; 
     margin-left: 10px;

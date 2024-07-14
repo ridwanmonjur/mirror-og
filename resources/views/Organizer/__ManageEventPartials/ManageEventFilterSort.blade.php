@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-between w-70s align-items-center flex-wrap" style="font-size: 14px;">
+<div class="d-flex justify-content-between w-70s align-items-center flex-wrap">
     <div class="icon2 me-3 d-inline-block"
         onclick="openElementById('close-option'); openElementById('filter-option');  closeElementById('sort-option');">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-filter mt-2"
