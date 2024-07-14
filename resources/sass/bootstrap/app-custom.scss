@@ -447,11 +447,13 @@ a:hover {
 body {
     font-size: 14px;
 }
+
+
+h5 {
+    font-size: 17px;
+}
   
 @media (min-width: 640px) {
-    body {
-        font-size: 14px;
-    }
 
     .choices__list--dropdown .choices__item--selectable, .choices__list[aria-expanded] .choices__item--selectable {
         padding-right: 0 !important;
@@ -461,7 +463,11 @@ body {
 
 @media screen and (min-width: 992px) {
     body {
-        font-size: 16px;
+        font-size: 1rem;
+    }
+
+    h5 {
+        font-size: 1.1rem;
     }
 
     .payment-summary {
@@ -539,8 +545,10 @@ body {
 
 @media screen and (min-width: 1600px) {
     body {
-        font-size: 18px;
+        font-size: 1.125;
     }
+
+   
 }
 
 .notification-black {

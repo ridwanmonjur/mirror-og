@@ -5,7 +5,7 @@
 
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
-<header class="px-2"><u>Sign in to your participant account</u></header>
+<h5 class="px-2"><u>Sign in to your participant account</u></h5>
 <form 
     autocomplete="off" 
     readonly 
@@ -32,7 +32,6 @@
         @endif
         @include('Auth.Layout.Flash')
     </div>
-    <br>
     <div class="field">
         <label for="email" class="placeholder-moves-up-container">
             <input autocomplete="off" type="email" name="email" id="email" required="true" class="input-area" oninput="movePlaceholderUp(this)">

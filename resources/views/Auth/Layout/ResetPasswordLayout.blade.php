@@ -4,8 +4,8 @@
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
 <br>
-<header><u>Reset Password</u></header>
-<br><br>
+<h5><u>Reset Password</u></h5>
+<br>
 <p> Enter your old password and your new password</p>
 <form autocomplete="off" name="reset-password-form" id="reset-password-form" method="post" action="{{route('user.reset.action')}}">
     @csrf
