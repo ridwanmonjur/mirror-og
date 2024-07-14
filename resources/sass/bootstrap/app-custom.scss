@@ -449,16 +449,13 @@ html, body {
 }
 
 h5 {
-    font-size: 16px;
+    font-size: 1.1rem;
 }
   
 @media (min-width: 640px) {
-
     .choices__list--dropdown .choices__item--selectable, .choices__list[aria-expanded] .choices__item--selectable {
         padding-right: 0 !important;
     }
-
-   
 } 
 
 
@@ -468,7 +465,7 @@ h5 {
     }
 
     h5 {
-        font-size: 1.25rem;
+        font-size: 1.15rem;
     }
 
     .payment-summary {
@@ -544,11 +541,14 @@ h5 {
 
 }
 
-@media screen and (min-width: 1600px) {
+@media screen and (min-width: 1400px) {
     html, body {
         font-size: 16px;
     }
 
+    h5{
+        font-size: 1.25rem;
+    }
 }
 
 .notification-black {
