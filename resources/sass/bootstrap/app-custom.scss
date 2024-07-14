@@ -444,7 +444,26 @@ a:hover {
     background: #d2d0d0; 
   }
 
+body {
+    font-size: 14px;
+}
+  
+@media (min-width: 640px) {
+    body {
+        font-size: 14px;
+    }
+
+    .choices__list--dropdown .choices__item--selectable, .choices__list[aria-expanded] .choices__item--selectable {
+        padding-right: 0 !important;
+    }
+} 
+
+
 @media screen and (min-width: 992px) {
+    body {
+        font-size: 16px;
+    }
+
     .payment-summary {
         padding-left: 40px;
         padding-right: 40px;
@@ -518,6 +537,12 @@ a:hover {
 
 }
 
+@media screen and (min-width: 1600px) {
+    body {
+        font-size: 18px;
+    }
+}
+
 .notification-black {
     color: black;
 }
@@ -550,9 +575,7 @@ a:hover {
 }
 
 @media (min-width: 640px) {
-    .choices__list--dropdown .choices__item--selectable, .choices__list[aria-expanded] .choices__item--selectable {
-        padding-right: 0 !important;
-    }
+   
 }
 
 .choices__inner.choices__list--single .choices__item:first-of-type  {
