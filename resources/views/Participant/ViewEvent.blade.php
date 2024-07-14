@@ -31,15 +31,15 @@
     <main>
         <br class="d-none-at-desktop">
         <div class="pt-2">
-            <header class="flexbox-welcome">
+            <header>
                 <u>
-                    <h5>
+                    <h5 class="text-center text-lg-start ms-lg-5">
                         View your events
                     </h5>
                 </u>
             </header>
         </div>
-        <br><br>
+        <br>
         <div class="grid-container">
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }}">
@@ -51,7 +51,7 @@
                 </div>
             @endif
             <div>
-                <div style="padding-left: 20px;padding-right:20px;">
+                <div>
                     <div class="mx-2 position-relative">
 
                         <div class="d-flex justify-content-center d-lg-none">
@@ -60,8 +60,8 @@
                         </div>
                         <a data-fslightbox="lightbox" href="{{ $eventBannerImg }}">
 
-                        <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover; margin: auto;"
-                            @class(['rounded-banner height-image ', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
+                        <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover;"
+                            @class(['rounded-banner height-image ms-0', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
                             alt="" data-fslightbox="lightbox">
                             </a>
                         @if ($event->eventBanner)

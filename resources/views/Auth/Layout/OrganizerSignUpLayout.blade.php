@@ -3,13 +3,12 @@
 @section('signUpbody')
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
-<header><u>Create an  organizer account</u></header>
+<h5><u>Create an  organizer account</u></h5>
 <form autocomplete="off" readonly name="organizer-signup-form" id="organizer-signup-form" method="post" action="{{route('organizer.signup.action')}}">
     @csrf
     <div class="flash-message">
         @include('Auth.Layout.Flash')
     </div>
-    <br>
     <div class="field">
         <label for="username" class="placeholder-moves-up-container">
             <input autocomplete="off" type="username" name="username" id="username" required="true" class="input-area" oninput="movePlaceholderUp(this)">

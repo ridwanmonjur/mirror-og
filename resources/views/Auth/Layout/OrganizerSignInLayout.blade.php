@@ -5,7 +5,7 @@
 
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
-<header><u>Sign in to your organizer account</u></header>
+<h5 class="mt-3 my-0"><u>Sign in to your organizer account</u></h5>
 <form 
     autocomplete="off" 
     readonly 
@@ -26,7 +26,6 @@
         &nbsp;to resend verification email.
         @endif
     </div>
-    <br>
     <div class="field">
         <label for="email" class="placeholder-moves-up-container">
             <input autocomplete="off" type="email" name="email" id="email" required="true" class="input-area" oninput="movePlaceholderUp(this)">
