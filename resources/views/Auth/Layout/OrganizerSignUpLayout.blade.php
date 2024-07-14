@@ -3,7 +3,7 @@
 @section('signUpbody')
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
-<h5><u>Create an  organizer account</u></h5>
+<h5 class="mt-2 mb-0"><u>Create an  organizer account</u></h5>
 <form autocomplete="off" readonly name="organizer-signup-form" id="organizer-signup-form" method="post" action="{{route('organizer.signup.action')}}">
     @csrf
     <div class="flash-message">

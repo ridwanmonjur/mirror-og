@@ -321,6 +321,12 @@ footer {
 
 /* Mobile styles */
 
+@media (max-width: 560px) {
+    .featured-events {
+        margin: 0 1vw;
+    }
+}
+
 @media (max-width: 800px) {
     .nav__sect1 {
         justify-content: space-between;

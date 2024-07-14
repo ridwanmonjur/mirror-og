@@ -33,7 +33,7 @@
         <div class="pt-2">
             <header>
                 <u>
-                    <h5 class="text-center text-lg-start ms-lg-5">
+                    <h5 class="text-start ms-5">
                         View your events
                     </h5>
                 </u>

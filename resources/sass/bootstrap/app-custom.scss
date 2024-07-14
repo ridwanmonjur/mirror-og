@@ -444,12 +444,12 @@ a:hover {
     background: #d2d0d0; 
   }
 
-body {
-    font-size: 13px;
+html, body {
+    font-size: 14px;
 }
 
 h5 {
-    font-size: 15px;
+    font-size: 16px;
 }
   
 @media (min-width: 640px) {
@@ -458,15 +458,12 @@ h5 {
         padding-right: 0 !important;
     }
 
-    body {
-        font-size: 14px;
-    }
    
 } 
 
 
 @media screen and (min-width: 992px) {
-    body {
+    html, body {
         font-size: 1rem;
     }
 
@@ -548,11 +545,10 @@ h5 {
 }
 
 @media screen and (min-width: 1600px) {
-    body {
+    html, body {
         font-size: 1.125;
     }
 
-   
 }
 
 .notification-black {

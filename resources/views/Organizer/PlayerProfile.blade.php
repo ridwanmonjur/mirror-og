@@ -224,7 +224,7 @@
         </div>
         <div x-cloak x-show="!isEditMode" class="tab-content pb-4 outer-tab px-5" id="Overview">
             <br> 
-            <div class="showcase tab-size showcase-box showcase-column pt-4 grid-4-columns text-center" style="width: max(500px, 55vw);">
+            <div class="showcase tab-size showcase-box showcase-column pt-4 grid-4-columns text-center" style="width: min(800px,  80%);">
                 <div> 
                     <h3> {{$lastYearEventsCount}} </h3>
                     <p> Events Organized in Last Year </p>

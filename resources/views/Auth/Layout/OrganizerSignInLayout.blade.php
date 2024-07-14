@@ -5,7 +5,7 @@
 
 
 <img src="{{ asset('/assets/images/auth/logo.png') }}">
-<h5 class="mt-3 my-0"><u>Sign in to your organizer account</u></h5>
+<h5 class="mt-2 mb-0"><u>Sign in to your organizer account</u></h5>
 <form 
     autocomplete="off" 
     readonly 
