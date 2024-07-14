@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
+import pluginPurgeCss from "@mojojoejo/vite-plugin-purgecss";
 
 export default defineConfig({
     plugins: [
@@ -21,7 +22,14 @@ export default defineConfig({
             ],
             refresh: true,
         }),
-       
+        pluginPurgeCss({
+            content: [
+                "**/*.js",
+                "**/*.blade.php",
+            ],
+            css: ['resources/sass/bootstrap/app-cutom.scss'],
+            variables: true,
+        }),
     ],
     build: { 
         minify: true, 
