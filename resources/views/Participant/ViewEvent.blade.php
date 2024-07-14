@@ -189,16 +189,12 @@
                                 </form>
                             </div>
                             <br>
-                            <div class="d-none d-lg-block">
+                            <div >
                                 <h5> <u> {{ $combinedStr }} </u> </h5>
                                 <h5> <u> {{ strtoupper($timePart) }} </u> </h5>
                             </div>
-                            <div class="d-block d-lg-none">
-                                <p> <u> {{ $combinedStr }} </u> </p> 
-                                <p> <u> {{ strtoupper($timePart) }} </u> </p>
-
-                            </div>
-                                                        <br>
+                           
+                            <br>
                             <div>
                                 <div data-aos="fade-in" class="tab">
                                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ripple' }}"
