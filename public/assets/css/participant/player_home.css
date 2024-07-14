@@ -119,7 +119,7 @@ main {
     position: relative;
     margin-bottom: 40px;
     min-height: 470px;
-    width: 360px;
+    width: min(360px, 95vw);
     background: transparent;
     border: 2px solid rgb(82, 159, 23);
     border-radius: 40px;
@@ -323,11 +323,12 @@ footer {
 
 @media (max-width: 560px) {
     .featured-events {
-        margin: 0 1vw;
+        grid-template-columns: 1fr;
     }
 }
 
-@media (max-width: 800px) {
+
+@media (min-width: 560px) and (max-width: 800px) {
     .nav__sect1 {
         justify-content: space-between;
         padding: 0 10px;
@@ -391,6 +392,7 @@ footer {
 
     .featured-events {
         padding: 1rem 0;
+        margin: 0 15vw;
         grid-template-columns: 1fr;
     }
 
