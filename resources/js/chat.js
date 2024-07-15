@@ -81,7 +81,6 @@ function addDate(date) {
     chatMessages.appendChild(dateDivContainer);
 }
 
-
 function addMessage(message) {
     let {text, createdAtDate, className, sender} = message;
     const messageDiv = document.createElement("div");
@@ -137,13 +136,24 @@ Alpine.data('alpineDataComponent', function () {
         },
         roomUserIdMap: {},
         async changeUser(user) {
-            user = Alpine.raw(user);    
+            user = Alpine.raw(user);  
+            console.log({user, map: this.roomUserIdMap, rooms: Alpine.raw(this.oldRooms)});
+            console.log({user, map: this.roomUserIdMap, rooms: Alpine.raw(this.oldRooms)});
+            console.log({user, map: this.roomUserIdMap, rooms: Alpine.raw(this.oldRooms)});
+            console.log({user, map: this.roomUserIdMap, rooms: Alpine.raw(this.oldRooms)});
+
             if (user?.id && user?.id == loggedUserProfile?.id) {
                 window.toastError("You can't send messages to yourself");
                 return; 
             }
 
             if (user?.id in this.roomUserIdMap) {
+                console.log("hi");
+                console.log("hi");
+
+                console.log("hi");
+                console.log("hi");
+
                 let currentRoomObject = Alpine.raw(this.oldRooms)?.filter((value)=>{
                     return value.otherRoomMemberId == user?.id;
                 });
@@ -409,7 +419,6 @@ Alpine.data('alpineDataComponent', function () {
            
         },
         init() {
-
             this.$watch("currentRoom", () => {
                 if (this.currentRoom == "newRoom") {
                     return;

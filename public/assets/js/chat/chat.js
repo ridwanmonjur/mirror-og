@@ -1,16 +1,13 @@
 window.onload = () => {
     window.loadMessage();
-
     const event = new CustomEvent("fetchstart"); 
     window.dispatchEvent(event);
     // document.querySelector('.add-chat')?.click();
-
-
 };
 
-
 function formatDateDifference(startDate) {
-    if(startDate) {
+    if (startDate) {
+        startDate = new Date(startDate);
         const endDate = new Date();
 
         const msInDay = 24 * 60 * 60 * 1000;
@@ -20,7 +17,9 @@ function formatDateDifference(startDate) {
 
         const diffInMs = endDate - startDate;
 
-        if (diffInMs >= msInYear) {
+        if (diffInMs < msInDay) {
+            return 'Active today';
+        } else if (diffInMs >= msInYear) {
             const years = Math.floor(diffInMs / msInYear);
             return `${years} year${years > 1 ? 's' : ''} ago`;
         } else if (diffInMs >= msInMonth) {
@@ -33,7 +32,7 @@ function formatDateDifference(startDate) {
             const days = Math.floor(diffInMs / msInDay);
             return `${days} day${days > 1 ? 's' : ''} ago`;
         } 
-    }   else {
-        return 'New user...'
+    } else {
+        return 'New user...';
     }
 }
