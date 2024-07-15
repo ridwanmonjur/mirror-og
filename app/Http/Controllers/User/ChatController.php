@@ -10,10 +10,17 @@ use Illuminate\Support\Facades\DB;
 class ChatController extends Controller
 {
     public function message(Request $request) {
-        $userProfile = null;
+        $userProfile = $error = null;
         $loggedUser =  $request->attributes->get('user');
-        if ($request->has('id')) {
-            $userProfile = User::findOrFail($request->id);
+        if ($request->has('userId')) {
+            if ($loggedUser->id == $request->userId) {
+                $error = "Please don't chat with yourself! Use a todo app instead.";
+            }
+
+            $userProfile = User::find($request->userId);
+            if (!$userProfile) {
+                $error = "No user exists by that name";
+            } 
         }
 
         $user = User::select(['id', 'name', 'role', 'userBanner'])->findOrFail(
@@ -26,7 +33,9 @@ class ChatController extends Controller
         );
         
 
-        return view('Shared.Message', ['userProfile' => $userProfile, 'user' => $user]);
+        return view('Shared.Message', ['userProfile' => $userProfile, 
+            'user' => $user, 'error' => $error
+        ]);
     }
 
     public function getFirebaseUsers(Request $request) {
@@ -35,9 +44,6 @@ class ChatController extends Controller
 
         if ($request->has('userIdList'))  {
             $userIdList = $request->userIdList;
-            // $users = User::whereIn('id', $userIdList)
-            // ->select(['id', 'name', 'role', 'userBanner'])
-            // ->get();
 
             $users = $users = DB::table('users')
                 ->leftJoin('firebase_user_active_at', 'users.id', '=', 'firebase_user_active_at.user_id')
@@ -51,7 +57,7 @@ class ChatController extends Controller
                 $usersQ->where('name', 'LIKE', "%$searchQ%");
             }
 
-            $users = $usersQ->paginate(10);
+            $users = $usersQ->paginate(5);
         }
 
         return response()->json(['data'=> $users, 'success' => true], 200);
