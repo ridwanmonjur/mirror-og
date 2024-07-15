@@ -205,11 +205,12 @@
                                         @endif
                                     @endauth
                                 </form>
-                                <button 
-                                    x-on:click=""
-                                    class="oceans-gaming-default-button oceans-gaming-transparent-button bg-light border-0 rounded px-3 py-2"> 
-                                    Message
-                                </button>
+                                <a href="{{route('user.message.view', ['userId' => $userProfile->id] )}}">
+                                    <button 
+                                        class="oceans-gaming-default-button oceans-gaming-transparent-button bg-light border-0 rounded px-3 py-2"> 
+                                        Message
+                                    </button>
+                                </a>
                             </div>
                         @endif
                         <br>

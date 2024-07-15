@@ -11,6 +11,7 @@
         <input type="hidden" id="fetchFirebaseUsersInput" value="{{ route('user.firebase.readAll') }}">
         <input type="hidden" id="viewUserProfile" value='@json($userProfile?->only(['id', 'name', 'mobile_no']))'>
         <input type="hidden" id="loggedUserProfile" value='@json($user)'>
+        <input type="hidden" id="errorMessage" value='{{$error}}'>
         <div class="sidebar col-12 col-lg-5 col-xl-4 m-0 p-0">
             <div class="sidebar-header">
                 <h2 id="initDB" class="my-0">Chat List</h2>
@@ -41,7 +42,7 @@
                 </template>
             </div>
         </div>
-        <div class="chat-container position-relative col-0 d-none d-lg-flex col-lg-7 col-xl-8 m-0 p-0" style="overflow: hidden;">
+        <div class="chat-container position-relative col-12 d-flex col-lg-7 col-xl-8 m-0 p-0" style="overflow: hidden;">
             <div class="chat-header w-100">
                 <h2 class="chat-user-name my-0" x-text="currentRoomObject?.otherRoomMember?.name ?? 'Start a chat'"></h2>
                 <button class="menu-btn dropdown">
@@ -127,13 +128,15 @@
                             </table>
                             <ul class="pagination cursor-pointer py-3">
                                 <template x-for="link in prospectiveChats?.links?? []" :key="link.label"> 
-                                    <li x-on:click="fetchProspectiveChatters(event)" x-bind:data-url="link.url" :class="{'page-item': true, 'active': link.active, 'disabled': link.url}" > 
+                                    <li x-on:click="if (link.url) { fetchProspectiveChatters(event); }" x-bind:data-url="link.url" :class="{'page-item': true, 'active': link.active, 'disabled': link.url}" > 
                                         <a 
                                             onclick="event.preventDefault()"
                                             :class="{
-                                            'page-link' : true,
-                                            'text-light': link.active,
-                                        }" x-html="link.label"> </a>
+                                                'page-link' : true,
+                                                'text-light': link.active,
+                                            }" x-html="link.label"
+                                        > 
+                                        </a>
                                     </li>
                                 </template>
                             </ul>
@@ -147,6 +150,12 @@
         </div>
     </div>
 </body>
+<script>
+    let error = document.getElementById('errorMessage')?.value;
+    if (error) {
+        localStorage.setItem("error", "true");
+        localStorage.setItem("message", error);
+    }
+</script>
 <script src="{{ asset('/assets/js/chat/chat.js') }}"></script>
-
 </html>

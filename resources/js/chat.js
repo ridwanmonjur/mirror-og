@@ -42,8 +42,6 @@ function humanReadableChatTimeFormat(date) {
     return formattedTime
 }
 
-
-
 function humanReadableChatDateFormat(date) {
     const year = date.getFullYear();
     const month = monthNames[date.getMonth()];
@@ -112,7 +110,6 @@ function addMessage(message) {
     messageContentDiv.classList.add("message-content", 'w-75');
     messageContentDiv.textContent = text;
 
-
     const timestampSpan = document.createElement("span");
     timestampSpan.classList.add("timestamp");
     timestampSpan.textContent = humanReadableChatTimeFormat(createdAtDate);
@@ -141,14 +138,14 @@ Alpine.data('alpineDataComponent', function () {
         roomUserIdMap: {},
         async changeUser(user) {
             user = Alpine.raw(user);    
-            if (user.id == loggedUserProfile?.id) {
+            if (user?.id && user?.id == loggedUserProfile?.id) {
                 window.toastError("You can't send messages to yourself");
                 return; 
             }
 
-            if (user.id in this.roomUserIdMap) {
+            if (user?.id in this.roomUserIdMap) {
                 let currentRoomObject = Alpine.raw(this.oldRooms)?.filter((value)=>{
-                    return value.otherRoomMemberId == user.id;
+                    return value.otherRoomMemberId == user?.id;
                 });
                 
                 if (currentRoomObject && currentRoomObject[0]) {
@@ -162,9 +159,9 @@ Alpine.data('alpineDataComponent', function () {
                 let currentRoomObject = {
                     id: null,
                     otherRoomMember: { ...user },
-                    otherRoomMemberId: user.id,
+                    otherRoomMemberId: user?.id,
                     user1: Number(loggedUserProfile.id).toString(),
-                    user2: Number(user.id).toString()
+                    user2: Number(user?.id).toString()
                 }
 
                 this.currentRoomObject = currentRoomObject;
@@ -232,12 +229,6 @@ Alpine.data('alpineDataComponent', function () {
             });
 
             users = await users.json();
-
-            console.log({users});
-            console.log({users});
-            console.log({users});
-            console.log({users});
-
             this.prospectiveChats = users?.data;
         },
         async initDB() {
@@ -287,7 +278,7 @@ Alpine.data('alpineDataComponent', function () {
             
                             newUsers = await newUsers.json();
                             for (let user of newUsers?.data) {
-                                this.roomUserIdMap[user.id] = user;
+                                this.roomUserIdMap[user?.id] = user;
                             }
 
                             this.oldRooms.unshift(data);
@@ -319,7 +310,7 @@ Alpine.data('alpineDataComponent', function () {
 
                 users = await users.json();
                 for (let user of users?.data) {
-                    roomUserIdMap[user.id] = user;
+                    roomUserIdMap[user?.id] = user;
                 }
 
                 roomUserIdMap[loggedUserProfile.id] = loggedUserProfile;
@@ -335,9 +326,16 @@ Alpine.data('alpineDataComponent', function () {
                 }
 
                 this.isDataInited = true;
-                let chats = document.querySelectorAll('.chat-item');
-                chats[0]?.click();
-
+                let url = new URL(window?.location?.href);
+                let searchParams = new URLSearchParams(url?.search);
+                const userId = searchParams?.get('userId');
+                console.log({userId});
+                if (userId != loggedUserProfile?.id) {
+                    this.changeUser(viewUserProfile);
+                } else {
+                    let chats = document.querySelectorAll('.chat-item');
+                    chats[0]?.click();
+                }
             });
 
             // await this.getMessages();
@@ -394,10 +392,6 @@ Alpine.data('alpineDataComponent', function () {
                 });
 
                 if (id in this.messages) {
-                    console.log("hi", results)
-                    console.log("hi", results)
-                    console.log("hi", results)
-
                     this.messages[id] = this.messages[id].concat(results);
                 } else {
                     this.messages[id] = results;
@@ -435,8 +429,6 @@ Alpine.data('alpineDataComponent', function () {
     }
 });
 
-// var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {})
-// myModal.toggle()
 
 
 Alpine.start();
