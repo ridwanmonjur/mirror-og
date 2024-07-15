@@ -324,6 +324,7 @@ footer {
 @media (max-width: 560px) {
     .featured-events {
         grid-template-columns: 1fr;
+        margin: 0 5vw;
     }
 }
 

@@ -22,20 +22,20 @@
                 </button>
             </div>
             <div class="chat-list">
-                <template x-for="room in oldRooms" :key="room.id">
-                    <div  x-on:click="currentRoom = room.id" class="chat-item">
-                        <template x-if="room.otherRoomMember.userBanner != null">
-                            <img {!! trustedBladeHandleImageFailure() !!} x-bind:src="'/storage/' + room.otherRoomMember.userBanner" width="50" height="50"
+                <template x-for="room in oldRooms?? []" :key="room.id">
+                    <div  x-on:click="currentRoom = room?.id" class="chat-item">
+                        <template x-if="room?.otherRoomMember?.userBanner != null">
+                            <img {!! trustedBladeHandleImageFailure() !!} x-bind:src="'/storage/' + room?.otherRoomMember?.userBanner" width="50" height="50"
                                 class="object-fit-cover rounded-circle me-3">
                         </template>
-                        <template x-if="room.otherRoomMember.userBanner == null">
+                        <template x-if="room?.otherRoomMember?.userBanner == null">
                             <div class="avatar me-3"
-                                x-text="room.otherRoomMember.name ? room.otherRoomMember.name[0]?.toUpperCase(): room.otherRoomMember.email[0]?.toUpperCase()">
+                                x-text="room.otherRoomMember?.name ? room.otherRoomMember?.name[0]?.toUpperCase(): room?.otherRoomMember?.email[0]?.toUpperCase()">
                             </div>
                         </template>
                         <div class="chat-info">
-                            <h3 x-text="room.otherRoomMember.name"></h3>
-                            <p class="status my-0" x-html="formatDateDifference(room.otherRoomMember.updated_at)"></p>
+                            <h3 x-text="room?.otherRoomMember?.name"></h3>
+                            <p class="status my-0" x-html="formatDateDifference(room.otherRoomMember?.updated_at)"></p>
                         </div>
                     </div>
                 </template>
@@ -44,13 +44,22 @@
         <div class="chat-container position-relative col-0 d-none d-lg-flex col-lg-7 col-xl-8 m-0 p-0" style="overflow: hidden;">
             <div class="chat-header w-100">
                 <h2 class="chat-user-name my-0" x-text="currentRoomObject?.otherRoomMember?.name ?? 'Start a chat'"></h2>
-                <button class="menu-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                        class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                <button class="menu-btn dropdown">
+                {{-- Settions icon --}}
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24" fill="currentColor"
+                        class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
+                        data-bs-toggle="dropdown" aria-expanded="false"
+                    >
                         <path
                             d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
                     </svg>
+                    <ul class="dropdown-menu py-0">
+                        <li><a class="dropdown-item py-2" href="#">Block</a></li>
+                        <li><a class="dropdown-item py-2" href="#">Report</a></li>
+                    </ul>
                 </button>
+               
             </div>
             <div class="chat-messages" id="chat-messages" style="overflow-y: auto;">
             </div>
@@ -98,11 +107,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <template x-for="chat in prospectiveChats?.data?? []" :key="chat.name"> 
+                                    <template x-for="chat in prospectiveChats?.data?? []" :key="chat.name + chat.id"> 
                                         <tr class="border-none" style="vertical-align: center !important;">
                                             <th scope="row"></th>
                                             <td>
-                                                <img class="object-fit-cover rounded-circle" height="40" width="40" {!!trustedBladeHandleImageFailure()!!} x-bind:src="'/storage/' + room.otherRoomMember.userBanner" >
+                                                <img class="object-fit-cover rounded-circle" height="40" width="40" {!!trustedBladeHandleImageFailure()!!} x-bind:src="'/storage/' + chat?.userBanner" >
                                                 <span class="ms-3" x-text="chat?.name"> </span>
                                             </td>
                                             <td class="pt-3 pb-2" x-text="chat?.role.toLowerCase()"></td>
