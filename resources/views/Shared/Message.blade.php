@@ -7,7 +7,9 @@
 
 <body>
     <div x-data="alpineDataComponent" class="app-container row"
-        @fetchstart.window="console.log('Received event:', $event);initDB(event)">
+        {{-- @fetchstart.window="console.log('Received event:', $event);initDB(event)" --}}
+        {{-- x-init="initDB();" --}}
+        >
         <input type="hidden" id="fetchFirebaseUsersInput" value="{{ route('user.firebase.readAll') }}">
         <input type="hidden" id="viewUserProfile" value='@json($userProfile?->only(['id', 'name', 'mobile_no']))'>
         <input type="hidden" id="loggedUserProfile" value='@json($user)'>
@@ -22,8 +24,8 @@
                     </svg>
                 </button>
             </div>
-            <div class="chat-list">
-                <template x-for="room in oldRooms?? []" :key="room.id">
+            <div class="chat-list" @scroll.window.throttle="handleScrollChat">
+                <template x-for="room in oldRooms" :key="room?.id">
                     <div  x-on:click="currentRoom = room?.id" class="chat-item">
                         <template x-if="room?.otherRoomMember?.userBanner != null">
                             <img {!! trustedBladeHandleImageFailure() !!} x-bind:src="'/storage/' + room?.otherRoomMember?.userBanner" width="50" height="50"
@@ -31,7 +33,7 @@
                         </template>
                         <template x-if="room?.otherRoomMember?.userBanner == null">
                             <div class="avatar me-3"
-                                x-text="room.otherRoomMember?.name ? room.otherRoomMember?.name[0]?.toUpperCase(): room?.otherRoomMember?.email[0]?.toUpperCase()">
+                                x-text="room.otherRoomMember?.name ? room.otherRoomMember?.name?.charAt(0)?.toUpperCase(): room?.otherRoomMember?.email[0]?.toUpperCase()">
                             </div>
                         </template>
                         <div class="chat-info">
