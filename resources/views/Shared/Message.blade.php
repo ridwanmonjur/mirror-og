@@ -11,9 +11,8 @@
         {{-- x-init="initDB();" --}}
         >
         <input type="hidden" id="fetchFirebaseUsersInput" value="{{ route('user.firebase.readAll') }}">
-        <input type="hidden" id="viewUserProfile" value='@json($userProfile?->only(['id', 'name', 'mobile_no']))'>
-        <input type="hidden" id="loggedUserProfile" value='@json($user)'>
-        <input type="hidden" id="errorMessage" value='{{$error}}'>
+        <input type="hidden" id="viewUserProfile" value="{{json_encode($userProfile?->only(['id', 'name', 'mobile_no']))}}">
+        <input type="hidden" id="loggedUserProfile" value="{{json_encode($user)}}">
         <div class="sidebar col-12 col-lg-5 col-xl-4 m-0 p-0">
             <div class="sidebar-header">
                 <h2 id="initDB" class="my-0">Chat List</h2>
@@ -25,7 +24,7 @@
                 </button>
             </div>
             <div class="chat-list" @scroll.window.throttle="handleScrollChat">
-                <template x-for="room in oldRooms" :key="room?.id">
+                <template x-for="room in oldRooms" :key="room.id">
                     <div  x-on:click="currentRoom = room?.id" class="chat-item">
                         <template x-if="room?.otherRoomMember?.userBanner != null">
                             <img {!! trustedBladeHandleImageFailure() !!} x-bind:src="'/storage/' + room?.otherRoomMember?.userBanner" width="50" height="50"

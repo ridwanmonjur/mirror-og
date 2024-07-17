@@ -64,8 +64,8 @@
             @endif
             <input type="hidden" id="games_data_input" value="{{ $userProfile->participant?->games_data ?? json_encode([]) }}">
             <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant?->getRegionDetails()) }}">
-            <input type="hidden" id="initialUserData" value='@json($userProfile?->only(["id", "name"]))'>
-            <input type="hidden" id="initialParticipantData" value='@json($userProfile->participant)'>
+            <input type="hidden" id="initialUserData" value="{{json_encode($userProfile?->only(["id", "name"]))}}">
+            <input type="hidden" id="initialParticipantData" value="{{json_encode($userProfile->participant)}}">
                 <div class="d-flex justify-content-end py-0 my-0 mb-2 flex-wrap">
                     @if ($isUserSame)
                     <input type="file" id="backgroundInput" class="d-none"> 

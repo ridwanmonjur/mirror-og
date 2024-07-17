@@ -45,9 +45,9 @@
     <main 
         x-data="alpineDataComponent"
     >
-        <input type="hidden" id="initialUserProfile" value='@json($userProfile?->only(['id', 'name', 'mobile_no']))'>
-        <input type="hidden" id="initialOrganizer" value='@json($userProfile->organizer)'>
-        <input type="hidden" id="initialAddress" value='@json($userProfile->address)'>
+        <input type="hidden" id="initialUserProfile" value="{{json_encode($userProfile?->only(['id', 'name', 'mobile_no']))}}">
+        <input type="hidden" id="initialOrganizer" value="{{json_encode($userProfile->organizer)}}">
+        <input type="hidden" id="initialAddress" value="{{json_encode($userProfile->address)}}">
         {{-- <form action="{{route('organizer.profile.update')}}" method="POST">  --}}
         <div>
             <div id="backgroundBanner" class="member-section px-2 pt-2"

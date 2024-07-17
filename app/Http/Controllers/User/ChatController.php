@@ -10,16 +10,16 @@ use Illuminate\Support\Facades\DB;
 class ChatController extends Controller
 {
     public function message(Request $request) {
-        $userProfile = $error = null;
+        $userProfile = null;
         $loggedUser =  $request->attributes->get('user');
         if ($request->has('userId')) {
             if ($loggedUser->id == $request->userId) {
-                $error = "Please don't chat with yourself! Use a todo app instead.";
+                return $this->showErrorParticipant("Please don't chat with yourself! Use a todo app instead.");
             }
 
             $userProfile = User::find($request->userId);
             if (!$userProfile) {
-                $error = "No user exists by that name";
+                return $this->showErrorParticipant("We have no user by this id!");
             } 
         }
 
@@ -31,10 +31,9 @@ class ChatController extends Controller
             ['user_id' => $loggedUser->id],
             ['updated_at' => now()]
         );
-        
 
         return view('Shared.Message', ['userProfile' => $userProfile, 
-            'user' => $user, 'error' => $error
+            'user' => $user
         ]);
     }
 

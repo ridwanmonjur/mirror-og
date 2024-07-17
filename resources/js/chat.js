@@ -14,15 +14,11 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_APP_ID,
 };
 
-
-
 const app = initializeApp(firebaseConfig);
 
 const db = initializeFirestore(app, {
     localCache: memoryLocalCache(),
 });
-
-
 
 const chatInput = document.querySelector(".chat-input input");
 const sendButton = document.querySelector(".chat-input button");
@@ -70,7 +66,6 @@ function loadMessages(messages) {
         }
 
         addMessage(message);
-
     });
 }
 
