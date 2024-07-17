@@ -60,7 +60,7 @@ function scrollIntoView() {
 }
 
 function loadMessages(messages) {
-    messages?.forEach((message, index) => {
+    messages?.forEach((message) => {
         if (message['isLastDateShow'] ) {
             addDate(message['lastDate']);
         }
@@ -128,7 +128,6 @@ Alpine.data('alpineDataComponent', function () {
         oldRooms: [],
         messages: {},
         currentId: null,
-        lastMsgInBatch: {},
         chats: [],
         prospectiveChats: {
             data: [],
@@ -173,7 +172,8 @@ Alpine.data('alpineDataComponent', function () {
 
                         await addDoc(collection(db,  "room"), {
                             user1: currentRoomObject.user1,
-                            user2: currentRoomObject.user2
+                            user2: currentRoomObject.user2,
+                            createdAt: new Date()
                         });
                     }, null
                 )  
@@ -254,6 +254,7 @@ Alpine.data('alpineDataComponent', function () {
 
             let subscribeToRoomSnapshot = onSnapshot(roomQ, async (rommSnapshot) => {
                 rommSnapshot.docChanges().forEach(async (change) => {
+                    console.log({doc: change.doc.data(), id: change.doc.id, rooms})
                     if (change.type === "added") {
                         let data = change.doc.data();
                         data['id'] = change.doc.id;
@@ -264,7 +265,6 @@ Alpine.data('alpineDataComponent', function () {
                             userIdList.push(data.user2);
                             data.otherRoomMemberId = data.user2;
                         }
-
 
                         if (isInitialDataFetched) {
                             rooms.unshift(data);
@@ -279,6 +279,7 @@ Alpine.data('alpineDataComponent', function () {
                     }
                 });
 
+                console.log({occurrence: 1});
 
                 let route = fetchFirebaseUsersInputRoute.value;
 
@@ -304,8 +305,9 @@ Alpine.data('alpineDataComponent', function () {
                     room['otherRoomMember'] = roomUserIdMap[room['otherRoomMemberId']];
                 }
                 this.roomUserIdMap = roomUserIdMap;
-                console.log({ogRooms: rooms, rooms: Alpine.raw(this.oldRooms)});
+                console.log({ogRooms: rooms, rooms: Alpine.raw(this.oldRooms), isInitialDataFetched});
                 if (isInitialDataFetched) {
+                    console.log({occurrence: 2});
                     this.oldRooms.unshift(rooms[0]);
                     await this.getMessages(rooms[0]['id']);
                     this.currentRoom = rooms[0].id;
@@ -313,20 +315,11 @@ Alpine.data('alpineDataComponent', function () {
                 } else {
                     for (let room of rooms) {
                         await this.getMessages(room['id']);
-                        this.oldRooms = rooms;
+                        this.oldRooms = [...rooms];
                     }
                 }
-                
-                let url = new URL(window?.location?.href);
-                let searchParams = new URLSearchParams(url?.search);
-                const userId = searchParams?.get('userId');
-                if (userId && userId != loggedUserProfile?.id) {
-                    this.changeUser(viewUserProfile);
-                } else {
-                    let chats = document.querySelectorAll('.chat-item');
-                    chats[0]?.click();
-                }
                 isInitialDataFetched = true;
+               
             });
 
             this.roomSnapshot = subscribeToRoomSnapshot;
@@ -343,9 +336,9 @@ Alpine.data('alpineDataComponent', function () {
 
             let isInitialDataFetched = false;
 
-            if (this.lastMsgInBatch &&  id in this.lastMsgInBatch && this.lastMsgInBatch[id].createdAt) {
-                q = query(q, startAfter(this.lastMsgInBatch));
-            }
+            // if (this.lastMsgInBatch &&  id in this.lastMsgInBatch && this.lastMsgInBatch[id].createdAt) {
+            //     q = query(q, startAfter(this.lastMsgInBatch));
+            // }
 
             q = query(q, limit(10));
 
@@ -403,9 +396,9 @@ Alpine.data('alpineDataComponent', function () {
                 }
 
                 if (id in this.messages) {
-                    this.messages[id] = this.messages[id].concat(results);
+                    this.messages[id] = [ ...this.messages[id], ...results ];
                 } else {
-                    this.messages[id] = results;
+                    this.messages[id] = [...results];
                 } 
                 
                 if (this.currentRoom == id) {
@@ -413,7 +406,6 @@ Alpine.data('alpineDataComponent', function () {
                     scrollIntoView();
                 }
                 
-                if (length > 0) this.lastMsgInBatch[id] = results[length-1];
                 isInitialDataFetched = true;
             }, (error)=>{
                 console.log({error})
@@ -422,8 +414,18 @@ Alpine.data('alpineDataComponent', function () {
 
             this.chatSnapshots.push(subscribeToChat);
         },
-        init() {
-            this.initDB();
+        async init() {
+            await this.initDB();
+            let url = new URL(window?.location?.href);
+            let searchParams = new URLSearchParams(url?.search);
+            const userId = searchParams?.get('userId');
+            // must be before this line
+            if (userId && userId != loggedUserProfile?.id) {
+                this.changeUser(viewUserProfile);
+            } else {
+                let chats = document.querySelectorAll('.chat-item');
+                chats[0]?.click();
+            }
 
             this.$watch("currentRoom", async () => {
                 if (this.currentRoom == "newRoom") {
@@ -434,7 +436,7 @@ Alpine.data('alpineDataComponent', function () {
                     return value.id == this.currentRoom;
                 });
 
-                this.currentRoomObject = currentRoomObject[0];
+                this.currentRoomObject = { ...currentRoomObject[0] };
                 chatMessages.innerHTML = '';
                 loadMessages(Alpine.raw(this.messages)[this.currentRoom]);
                 scrollIntoView();
