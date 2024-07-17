@@ -60,7 +60,7 @@
         ])
     >    
     @include('Participant.__TeamHeadPartials.BackgroundModal')
-    <input type="hidden" id="teamData" value='@json($selectTeam)'>
+    <input type="hidden" id="teamData" value="{{json_encode($selectTeam)}}">
     <input type="file" id="backgroundInput" class="d-none"> 
     {{-- @if ($isCreator) --}}
         <div class="team-section" 

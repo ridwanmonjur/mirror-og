@@ -64,7 +64,7 @@ window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => {
         if (result.isConfirmed) {
             resultConfirmedCb()
         } else if (result.isDenied) {
-            resultDeniedCb()
+            if (resultDeniedCb) { resultDeniedCb() }
         }
     })
 }
