@@ -1,12 +1,8 @@
- // Default Laravel bootstrapper, installs axios
  import Swal from 'sweetalert2'
- // Added: Actual Bootstrap JavaScript dependency
  import * as Popper from '@popperjs/core'
  window.Popper = Popper
  import * as bootstrap from 'bootstrap'
  window.bootstrap = bootstrap
-// todo cookie package
-// https://www.npmjs.com/package/cookiejs
 
 window.storeToken = function(token) {
     localStorage.setItem('jwtToken', token);
@@ -20,15 +16,12 @@ window.loadBearerHeader = function() {
 
 window.loadBearerCompleteHeader = function() {
     return {
-        // credentials: 'include',
         credentials: 'include',
         'Accept': 'application/json',
         'Content-Type': 'application/json',
 
     };
 };
-
-
 
 window.Swal = Swal;
 
@@ -65,7 +58,6 @@ window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => {
         showCancelButton: false,
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
-        dangerButtonColor: "#8CCD39",
         confirmButtonColor: "#43A4D7",
         
     }).then((result) => {
@@ -91,7 +83,6 @@ window.loadMessage = () => {
         Swal.fire({
             icon: "success",
             title: "Success...",
-            dangerButtonColor: "#8CCD39",
             confirmButtonColor: "#43A4D7",
             text: message,
             timer: 6000
@@ -99,7 +90,6 @@ window.loadMessage = () => {
      
     } else if (error === 'true') {
             Swal.fire({
-                dangerButtonColor: "#8CCD39",
                 confirmButtonColor: "#43A4D7",
                 icon: "error",
                 title: "Oops...",

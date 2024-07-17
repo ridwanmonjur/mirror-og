@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, addDoc, onSnapshot, limit, orderBy, doc, query, collection, collectionGroup, getDocs, getDoc, where, or } from "firebase/firestore";
+import { initializeFirestore, memoryLocalCache, addDoc, onSnapshot, getDocsFromCache, startAfter, limit, orderBy, doc, query, collection, collectionGroup, getDocs, getDoc, where, or } from "firebase/firestore";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 import Alpine from 'alpinejs';
@@ -18,7 +18,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
+const db = initializeFirestore(app, {
+    localCache: memoryLocalCache(),
+});
 
 
 
@@ -43,9 +45,11 @@ function humanReadableChatTimeFormat(date) {
 }
 
 function humanReadableChatDateFormat(date) {
-    const year = date.getFullYear();
-    const month = monthNames[date.getMonth()];
-    const day = date.getDate().toString().padStart(2, '0');
+    if (!date) return "Error occurred";
+    const year = date?.getFullYear();
+    let monthFromDate = date?.getMonth();
+    const month = monthNames [monthFromDate] ?? null;
+    const day = date?.getDate()?.toString()?.padStart(2, '0');
     
     const formattedDate = `${day} ${month} ${year}`;    
     return formattedDate;
@@ -60,12 +64,13 @@ function scrollIntoView() {
 }
 
 function loadMessages(messages) {
-    messages?.forEach(message => {
-        if (message['newDate']) {
-            addDate(message['createdAtDate']);
+    messages?.forEach((message, index) => {
+        if (message['isLastDateShow'] ) {
+            addDate(message['lastDate']);
         }
 
         addMessage(message);
+
     });
 }
 
@@ -100,7 +105,7 @@ function addMessage(message) {
         avatarDiv = document.createElement("div");
         avatarDiv.classList.add("avatar");
         avatarDiv.textContent = sender.name ? 
-            sender.name[0]?.toUpperCase(): sender.email[0]?.toUpperCase();
+            sender.name?.charAt(0)?.toUpperCase(): sender.email[0]?.toUpperCase();
     }
 
     avatarDiv.classList.add('me-2')
@@ -135,12 +140,10 @@ Alpine.data('alpineDataComponent', function () {
             links: []
         },
         roomUserIdMap: {},
+        roomSnapshot: null,
+        chatSnapshots: [],
         async changeUser(user) {
             user = Alpine.raw(user);  
-            console.log({user, map: this.roomUserIdMap, rooms: Alpine.raw(this.oldRooms)});
-            console.log({user, map: this.roomUserIdMap, rooms: Alpine.raw(this.oldRooms)});
-            console.log({user, map: this.roomUserIdMap, rooms: Alpine.raw(this.oldRooms)});
-            console.log({user, map: this.roomUserIdMap, rooms: Alpine.raw(this.oldRooms)});
 
             if (user?.id && user?.id == loggedUserProfile?.id) {
                 window.toastError("You can't send messages to yourself");
@@ -148,12 +151,6 @@ Alpine.data('alpineDataComponent', function () {
             }
 
             if (user?.id in this.roomUserIdMap) {
-                console.log("hi");
-                console.log("hi");
-
-                console.log("hi");
-                console.log("hi");
-
                 let currentRoomObject = Alpine.raw(this.oldRooms)?.filter((value)=>{
                     return value.otherRoomMemberId == user?.id;
                 });
@@ -165,16 +162,26 @@ Alpine.data('alpineDataComponent', function () {
                 }
             } else {
                 chatMessages.innerHTML = '';
-                this.currentRoom = "newRoom";
-                let currentRoomObject = {
-                    id: null,
-                    otherRoomMember: { ...user },
-                    otherRoomMemberId: user?.id,
-                    user1: Number(loggedUserProfile.id).toString(),
-                    user2: Number(user?.id).toString()
-                }
+                window.dialogOpen("Are you sure you want to start a new chat with this person ?", 
+                    async () => {
+                        this.currentRoom = "newRoom";
+                        let currentRoomObject = {
+                            user1: Number(loggedUserProfile.id).toString(),
+                            user2: Number(user?.id).toString()
+                        }
 
-                this.currentRoomObject = currentRoomObject;
+                        this.currentRoomObject = {
+                            ...currentRoomObject,
+                            otherRoomMember: { ...user, name: "Loading new user..." },
+                            otherRoomMemberId: user?.id,
+                        }
+
+                        await addDoc(collection(db,  "room"), {
+                            user1: currentRoomObject.user1,
+                            user2: currentRoomObject.user2
+                        });
+                    }, null
+                )  
             }
         },
         async sendMessage() {
@@ -192,15 +199,7 @@ Alpine.data('alpineDataComponent', function () {
 
             try{
                 if (this.currentRoom == "newRoom") {
-                    let doc = await addDoc(collection(db,  "room"), {
-                       user1: this.currentRoomObject.user1,
-                       user2: this.currentRoomObject.user2
-                    });
-
-                    this.currentRoomObject.id = doc.id;
-                    this.oldRooms.unshift(this.currentRoomObject);
-                    this.currentRoom = doc.id;
-                    this.roomUserIdMap[this.currentRoomObject['otherRoomMemberId']] = this.currentRoomObject['otherRoomMember'];
+                   window.toastError("New chat still being updated...")
                 }
 
                 await addDoc(collection(db,  `room/${this.currentRoom}/message`), {
@@ -243,9 +242,12 @@ Alpine.data('alpineDataComponent', function () {
         },
         async initDB() {
             if (this.isDataInited) return;
+            // todo 1: fix new message
+            let isInitialDataFetched = false;
             let roomUserIdMap = {};
             let currentUserId = loggedUserProfile?.id;
             let rooms = [], userIdList = [];
+            let length = 0;
             const roomCollectionRef = collection(db, 'room');
 
             const roomQ = query(roomCollectionRef,
@@ -255,55 +257,33 @@ Alpine.data('alpineDataComponent', function () {
                 )
             );
 
-            onSnapshot(roomQ, async  (rommSnapshot) => {
+            let subscribeToRoomSnapshot = onSnapshot(roomQ, async (rommSnapshot) => {
                 rommSnapshot.docChanges().forEach(async (change) => {
                     if (change.type === "added") {
-
-                        let newUserIdList = [];
                         let data = change.doc.data();
                         data['id'] = change.doc.id;
                         if (data.user1 != currentUserId) {
                             userIdList.push(data.user1);
-                            newUserIdList.push(data.user1);
                             data.otherRoomMemberId = data.user1;
                         } else {
                             userIdList.push(data.user2);
-                            newUserIdList.push(data.user2);
                             data.otherRoomMemberId = data.user2;
                         }
 
-                        if (this.isDataInited) {
-                            data['otherRoomMember'] = this.roomUserIdMap[data['otherRoomMemberId']];
-                            await this.getMessages(data['id']);
-                            let newUsers = await fetch(fetchFirebaseUsersInputRoute.value, {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                                },
-                                body: JSON.stringify({
-                                    newUserIdList
-                                })
-                            });
-            
-                            newUsers = await newUsers.json();
-                            for (let user of newUsers?.data) {
-                                this.roomUserIdMap[user?.id] = user;
-                            }
 
-                            this.oldRooms.unshift(data);
+                        if (isInitialDataFetched) {
+                            rooms.unshift(data);
+                        } else {
+                            rooms.push(data);
                         }
 
-                        rooms.push(data);
+                        length++;
                     }
                     if (change.type === "modified") {
                         console.log("Modified city: ", change.doc.data());
                     }
                 });
 
-                if (this.isDataInited) {
-                    return;
-                }
 
                 let route = fetchFirebaseUsersInputRoute.value;
 
@@ -328,46 +308,57 @@ Alpine.data('alpineDataComponent', function () {
                 for (let room of rooms) {
                     room['otherRoomMember'] = roomUserIdMap[room['otherRoomMemberId']];
                 }
-
-                this.oldRooms = rooms;
                 this.roomUserIdMap = roomUserIdMap;
-                for (let room of rooms) {
-                    await this.getMessages(room['id']);
+                console.log({ogRooms: rooms, rooms: Alpine.raw(this.oldRooms)});
+                if (isInitialDataFetched) {
+                    this.oldRooms.unshift(rooms[0]);
+                    await this.getMessages(rooms[0]['id']);
+                    this.currentRoom = rooms[0].id;
+                    return;
+                } else {
+                    for (let room of rooms) {
+                        await this.getMessages(room['id']);
+                        this.oldRooms = rooms;
+                    }
                 }
-
-                this.isDataInited = true;
+                
                 let url = new URL(window?.location?.href);
                 let searchParams = new URLSearchParams(url?.search);
                 const userId = searchParams?.get('userId');
-                console.log({userId});
-                if (userId != loggedUserProfile?.id) {
+                if (userId && userId != loggedUserProfile?.id) {
                     this.changeUser(viewUserProfile);
                 } else {
                     let chats = document.querySelectorAll('.chat-item');
                     chats[0]?.click();
                 }
+                isInitialDataFetched = true;
             });
 
-            // await this.getMessages();
+            this.roomSnapshot = subscribeToRoomSnapshot;
+        },
+        async handleScrollChat(event) {
+            let element = event.target; 
         },
         async getMessages(id) {
 
             let q = query(
                 collection(db, `room/${id}/message`),
-                orderBy("createdAt")
+                orderBy("createdAt", "desc")
             );
 
+            let isInitialDataFetched = false;
 
             if (this.lastMsgInBatch &&  id in this.lastMsgInBatch && this.lastMsgInBatch[id].createdAt) {
                 q = query(q, startAfter(this.lastMsgInBatch));
             }
 
-            // q = query(q, limit(15));
+            q = query(q, limit(10));
 
-            onSnapshot(q, (snapshot) => {
+            let subscribeToChat = onSnapshot(q, {
+                includeMetadata: true,
+            },  (snapshot) => {
                 let results = [];
-                let prevCreatedAt = this.lastMsgInBatch && id in this.lastMsgInBatch ? 
-                this.lastMsgInBatch[id]?.createdAtDate : null;
+                let prevCreatedAt = null;
                 let length = 0;
                 snapshot.docChanges().forEach(async (change) => {
                     if (change.type === "added") {
@@ -386,20 +377,35 @@ Alpine.data('alpineDataComponent', function () {
                         } else {
                             window.alert("Some error occurred");
                         }
+                        console.log({prevCreatedAt, length, inited: this.isDataInited, isInitialDataFetched});
 
                         objectDoc['sender'] = Alpine.raw(this.roomUserIdMap)[objectDoc['senderId']];
                         objectDoc['createdAtDate'] = objectDoc['createdAt'].toDate();
-                        if (objectDoc['createdAtDate']?.getDate() !== prevCreatedAt?.getDate() || objectDoc['createdAtDate'] ?.getMonth() !== prevCreatedAt?.getMonth()) {
-                            objectDoc['newDate'] = true;
-                        }
+                        if (length) {
+                            if (objectDoc['createdAtDate']?.getDate() !== prevCreatedAt?.getDate() 
+                                || objectDoc['createdAtDate'] ?.getMonth() !== prevCreatedAt?.getMonth()
+                                || objectDoc['createdAtDate'] ?.getYear() !== prevCreatedAt?.getYear()
+                            ) {
+                                objectDoc['isLastDateShow'] = true;
+                                objectDoc['lastDate'] = prevCreatedAt;
+                            } 
+                        } 
 
                         prevCreatedAt = objectDoc['createdAtDate'];
-
-                        results.push(objectDoc);
                         length++;
+                        if (isInitialDataFetched) {
+                            results.push(objectDoc);
+                        } else {
+                            results.unshift(objectDoc);
+                        }
                     }
 
                 });
+
+                if (length && !isInitialDataFetched) {
+                    results[0]['isLastDateShow'] = true;
+                    results[0]['lastDate'] = results[0]['createdAtDate'];
+                }
 
                 if (id in this.messages) {
                     this.messages[id] = this.messages[id].concat(results);
@@ -407,19 +413,24 @@ Alpine.data('alpineDataComponent', function () {
                     this.messages[id] = results;
                 } 
                 
-                console.log(Alpine.raw(this.messages));
-
                 if (this.currentRoom == id) {
                     loadMessages(results);
                     scrollIntoView();
                 }
                 
                 if (length > 0) this.lastMsgInBatch[id] = results[length-1];
+                isInitialDataFetched = true;
+            }, (error)=>{
+                console.log({error})
+                toastError("Failed to fetch data");
             });
-           
+
+            this.chatSnapshots.push(subscribeToChat);
         },
         init() {
-            this.$watch("currentRoom", () => {
+            this.initDB();
+
+            this.$watch("currentRoom", async () => {
                 if (this.currentRoom == "newRoom") {
                     return;
                 }
@@ -434,6 +445,12 @@ Alpine.data('alpineDataComponent', function () {
                 scrollIntoView();
             })
 
+        },
+        destroy() {
+            if (this.roomSnapshot) this.roomSnapshot();
+            for (let snap in this.chatSnapshots) {
+                snap();
+            }
         }
     }
 });
@@ -441,3 +458,17 @@ Alpine.data('alpineDataComponent', function () {
 
 
 Alpine.start();
+
+
+/*
+    -> keep track of rooms' unsent messages
+    -> keep track of online users
+    1) if you send a message, you can't be unread. all read.
+        check if the same for others. 
+        1) check if online from locally fetched list. if not make unread other guy
+        2) if other guy online:
+            1) on the same room: unread = false; 
+            2) in different rooms: no action
+
+
+*/

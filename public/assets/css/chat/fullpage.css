@@ -4,6 +4,7 @@
     box-sizing: border-box;
 }
 
+
 body {
     font-family: 'Roboto', sans-serif;
     display: flex;
@@ -15,6 +16,7 @@ body {
 
 .app-container {
     padding-top: 10px;
+    padding-bottom: 10px;
     width: 95%;
     height: auto;
     background: none;
@@ -46,7 +48,7 @@ body {
     background-color: black;
     /* More transparent black */
     color: white;
-    border-radius: 20px 0 0 0;
+    border-radius: 20px 20px 0 0;
     /* Rounded corners at the top left */
 }
 
@@ -119,7 +121,7 @@ body {
     margin-top: 20px;
     overflow: hidden;
     display: flex;
-    min-height: 50vh;
+    min-height: 70vh;
     max-height: 100vh;
     flex-direction: column;
     background: transparent;
@@ -161,7 +163,7 @@ body {
     /* Use the generated background image */
     background-size: cover;
     background-position: center;
-    border-radius: 0 0 20px 0;
+    border-radius: 0;
     /* Rounded corners at the bottom right */
 }
 
@@ -266,6 +268,7 @@ body {
         width: 90%;
         height: 90%;
         padding-top: 0px;
+        padding-bottom: 0px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
 
