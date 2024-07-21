@@ -400,14 +400,6 @@ input[type="time"] {
     margin: auto;
 }
 
-.d-centered-at-mobile {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
 
 .container-border {
     display: flex;

@@ -50,13 +50,13 @@
     </button>
 </div>
 <br>
-<div class="tab-content pb-4  inner-tab" id="CurrentMembers">
+<div class="tab-content pb-4 d-none inner-tab" id="CurrentMembers">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
         {{ $teamMembersProcessed['accepted']['count'] }} accepted member{{bladePluralPrefix($teamMembersProcessed['accepted']['count'])}}
-        and {{ $teamMembersProcessed['left']['count'] }} removed members{{bladePluralPrefix($teamMembersProcessed['left']['count'])}}
+        and {{ $teamMembersProcessed['left']['count'] }} removed member{{bladePluralPrefix($teamMembersProcessed['left']['count'])}}
     </p>
     <div class="cont mt-3 pt-3">
-        <table class="member-table">
+        <table class="tab-size">
             <tbody class="accepted-member-table">
                 @if ($teamMembersProcessed['accepted']['count'] != 0)
                     @foreach ($teamMembersProcessed['accepted']['members'] as $member)
@@ -108,7 +108,7 @@
 <div class="tab-content pb-4  inner-tab d-none" id="PendingMembers" data-type="member" style="text-align: center;">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
         {{ $teamMembersProcessed['pending']['count'] }} invited and
-        and {{ $teamMembersProcessed['rejected']['count'] }} rejected members
+        and {{ $teamMembersProcessed['rejected']['count'] }} rejected member{{bladePluralPrefix($teamMembersProcessed['rejected']['count'])}}
     </p>
     <div class="cont mt-3 pt-3">
         <table class="member-table">
@@ -181,44 +181,197 @@
         </table>
     </div>
 </div>
-<div class="tab-content pb-4  inner-tab d-none mx-auto" id="NewMembers">
-
-    <div class="tab-size d-flex justify-content-around flex-wrap tab-size mt-3 pt-3">
-        <div class="mb-2">
-            <span class="icon2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" class="feather feather-filter">
-                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3">
-                    </polygon>
-                </svg>
-                <span> Filter </span>
-            </span>
-            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            <span class="icon2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
-                    <path d="M15 7h6v6" />
-                </svg>
-                <span>
-                    Sort
+<div class="tab-content pb-4 inner-tab mx-auto" id="NewMembers">
+    <form id="newMembersForm">
+        <div class="tab-size d-flex justify-content-between align-items-center flex-wrap tab-size mt-0">
+            <div class="mb-2">
+                <span class="cursor-pointer me-4" onclick="
+                        document.getElementById('filter-option').classList.remove('d-none'); document.getElementById('sort-option').classList.add('d-none');
+                    ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="feather feather-filter">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3">
+                        </polygon>
+                    </svg>
+                    <span> Filter </span>
                 </span>
-            </span>
-        </div>
-        <div class="mb-2">
-            <div class="search_box">
-                <i class="fa fa-search"></i>
-                <input  style="width: min(90vw, 350px); font-size: 0.9375rem;" id="searchInput" onchange="handleSearch();"  class="nav__input"
-                    type="text" id="" placeholder="Search for player name/ email">
+                <span class="cursor-pointer" onclick="
+                        document.getElementById('filter-option').classList.add('d-none'); document.getElementById('sort-option').classList.remove('d-none');
+                    ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
+                        <path d="M15 7h6v6" />
+                    </svg>
+                    <span>
+                        Sort
+                    </span>
+                </span>
+            </div>
+            <div class="mb-2">
+                <div class="d-flex justify-content-end">
+                    <input name="search" style="width: min(90vw, 350px); font-size: 1rem;" id="searchInput" class="rounded-pill px-4 form-control"
+                        type="text" placeholder="Search for player name/ email...">
+                    <button type="button" class="btn btn-primary text-light px-2 ms-2 border-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="feather feather-search cursor-pointer"
+                        >
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-    <section class="featured-events scrolling-pagination ">
+        <div class="tab-size px-0">
+            <div id="filter-option" class="mx-0 px-0 d-none mb-2">
+                <div class="d-flex justify-content-start">
+                    <div class="dropdown me-3">
+                        <button
+                            class="px-3 py-1 py-2 button-design-removed" type="button" id="dropdownFilterType"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span>Age </span>
+                            <span class="dropbtn-arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-chevron-down">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </span>
+                        </button>
+                        <div
+                            onclick="event.stopPropagation();"; 
+                            class="dropdown-menu px-3" aria-labelledby="dropdownFilterTier"
+                        >
+                            <p class="mb-1">Choose a date of birth to filter age</p>
+                            <input  type="date" class="form-control" name="bod">
+                        </div>
+                    </div>
+
+                    <div class="dropdown me-3">
+                        <button class="px-3 py-2 button-design-removed" type="button" id="dropdownFilterTier"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span>Region </span>
+                            <span class="dropbtn-arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-chevron-down">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </span>
+                        </button>
+                        <div
+                            onclick="event.stopPropagation;"; 
+                            class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
+                        >
+                            <div class="px-3 py-1">
+                                <p class="mb-1">Choose a country of origin</p>
+                                {{-- <input id="select2-country2" type="checkbox" name="venue"> --}}
+                                <select id="select2-country2" class="form-control" name="region" style="width: 200px !important;">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown me-3">
+                        <button class="px-3 py-2 button-design-removed" type="button" id="dropdownFilterTier"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span>Status</span>
+                            <span class="dropbtn-arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-chevron-down">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </span>
+                        </button>
+                        <div
+                            onclick="event.stopPropagation();"; 
+                            class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
+                        >
+                            @foreach([
+                                ['title' => 'Team member', 'value' => 'member'],
+                                ['title' => 'Pending invite', 'value' => 'pending'],
+                                ['title' => 'Rejected invite', 'value' => 'rejected'],
+                                ['title' => 'Left team', 'value' => 'left'],
+                                ['title' => 'No status', 'value' => 'no-status'],
+                            ] as $status)
+                                <div class="px-3 py-1" style="width: 200px;">
+                                    <input
+                                        type="checkbox" name="status" value="{{$status['value']}}"
+                                    >
+                                    <label for="status">{{$status['title']}}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            <div id="sort-option" class="mx-0 px-0 mb-3 d-none">
+                <div class="ddropdown dropdown-click-outside d-inline-block">
+                    <button 
+                        class="dropbtn py-1 px-2 me-3" 
+                        type="button" id="dropdownSortButton" 
+                        style="width: 150px; display: inline-block;"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <span id="sortByTitleId">Sort by:</span>
+                        <span class="dropbtn-arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-chevron-down">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </button>
+                    <div
+                        onclick="event.stopPropagation();"; 
+                        class="dropdown-menu px-3 ms-3" aria-labelledby="dropdownSortButton"
+                    >
+                        <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('recent');">
+                            <label class="me-3 cursor-pointer" for="recent">Recent</label>
+                            <span class="recentSortIcon sortIcon">
+                            </span>
+                        </div>
+                        <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('age');">
+                            <label class="me-3 cursor-pointer" for="age">Age</label>
+                            <span class="aToZSortIcon sortIcon">
+                            </span>
+                        </div>
+                        <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('region');">
+                            <label class="me-3 cursor-pointer" for="region">Region</label>
+                            <span class="startDateSortIcon sortIcon">
+                            </span>
+                        </div>
+                        <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('name');">
+                            <label class="me-3 cursor-pointer" for="prize">Name</label>
+                            <span class="prizeSortIcon sortIcon">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <input type="text" style="visibility: hidden;" name="sortKeys" id="sortKeys" value="">
+            </div> 
+            <div id="filter-search-results" class="d-none" style="cursor: not-allowed;">
+                 <span class="me-5 cursor-not-allowed" class="d-none">
+                    <small class="me-4">Filter: </small>
+                </span> 
+                <span class="me-5 cursor-not-allowed" class="d-none">
+                    <small class="me-3">Sort: </small>
+                    {{-- <small  id="default-sorts" class="btn btn-primary text-light px-2 py-0">Default</small> --}}
+                </span> 
+            </div>
+        </div>
+        <input type="hidden" id ="teamId" value="{{$selectTeam->id}}">
+        <input type="hidden" id ="membersUrl" value="{{route('user.teams.index', ['type' => 'team'])}}">
+    </form>
+
+    <section class="featured-events scrolling-pagination">
         @include('Participant.__MemberManagementPartials.MemberManagementScroll')
     </section>
-    <div class="no-more-data d-none"></div>
+
 </div>
 
-<script></script>
+

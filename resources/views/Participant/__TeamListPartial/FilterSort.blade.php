@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-between w-70s align-items-center flex-wrap mt-2">
-    <div class="icon2 me-3 d-inline-block"
+    <div class="cursor-pointer me-3 d-inline-block"
         onclick="openElementById('close-option'); openElementById('filter-option');  closeElementById('sort-option');">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-filter mt-2"
             viewBox="0 0 16 16">
@@ -125,7 +125,7 @@
     </div>
 
     <div class="d-flex justify-content-between" id="insertSortTypeIcon">
-        <div class="icon2 d-inline me-2 mt-2" 
+        <div class="cursor-pointer d-inline me-2 mt-2" 
             onclick="toggleDropdown('dropdownSortButton'); setFetchSortType(event);"
             >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">

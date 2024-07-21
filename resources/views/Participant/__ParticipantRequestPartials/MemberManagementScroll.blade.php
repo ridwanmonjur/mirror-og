@@ -2,7 +2,7 @@
     <tbody>
         @foreach ($userList as $user)
             <tr class="st">
-                <td class="colorless-col">
+                <td class="colorless-col px-0">
                     <a href="{{route('public.participant.view', ['id' => $member->user->id])}}"> 
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                             class="bi bi-gear" viewBox="0 0 16 16">

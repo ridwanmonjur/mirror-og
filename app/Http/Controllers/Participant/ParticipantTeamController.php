@@ -123,12 +123,10 @@ class ParticipantTeamController extends Controller
         $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
         $teamMembersProcessed = TeamMember::getProcessedTeamMembers($selectTeam->id);
         $creator_id = $selectTeam->creator_id;
-        $userList = User::getParticipants($request, $selectTeam->id)->paginate($page);
-        foreach ($userList as $user) {
-            $user->is_in_team = $user->members->isNotEmpty() ? 'yes' : 'no';
-        }
-
-        return view('Participant.MemberManagement', compact('selectTeam', 'redirect', 'teamMembersProcessed', 'creator_id', 'userList', 'id', 'captain'));
+        $userList = [];
+        return view('Participant.MemberManagement', compact('selectTeam', 'redirect', 
+            'teamMembersProcessed', 'creator_id', 'id', 'captain', 'userList'
+        ));
     }
 
     public function rosterMemberManagement(Request $request, $id, $teamId)
@@ -149,8 +147,9 @@ class ParticipantTeamController extends Controller
             $rosterMembersKeyedByMemberId = RosterMember::keyByMemberId($rosterMembers);
 
             return view('Participant.RosterManagement',
-                compact('selectTeam', 'joinEvent', 'teamMembers', 'creator_id', 'rosterMembersKeyedByMemberId', 'rosterMembers', 'id', 'captain')
-            );
+                compact('selectTeam', 'joinEvent', 'teamMembers', 'creator_id', 
+                'rosterMembersKeyedByMemberId', 'rosterMembers', 'id', 'captain'
+            ));
         } else {
             return $this->showErrorParticipant('This event is missing or you need to be a member to view events!');
         }
@@ -200,7 +199,11 @@ class ParticipantTeamController extends Controller
                 'actor' => 'team',
             ]);
         } catch (Exception $e) {
-            $errorMessage = $e->getMessage();
+            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
+                $errorMessage = 'You have had a previous pending invitation or successful member!';
+            } else {
+                $errorMessage = 'Your request to this participant failed!';
+            }
 
             return response()->json(['success' => false, 'message' => $errorMessage], 403);
         }

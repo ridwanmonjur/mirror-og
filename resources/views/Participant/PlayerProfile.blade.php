@@ -47,7 +47,7 @@
 @endauth
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
-
+    <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     <main x-data="alpineDataComponent">
         @include('Participant.__ProfilePartials.BackgroundModal')
 
@@ -501,7 +501,7 @@
                     <tbody>
                         @foreach($teamList as $team)
                             <tr class="st">
-                                <td class="py-0 px-3"> 
+                                <td class="py-0 px-0 mx-0"> 
                                     <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
                                          <svg class="gear-icon-btn"
                                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -574,6 +574,5 @@
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
-@livewireScripts
 @include('Participant.__ProfilePartials.Scripts')
 </html>

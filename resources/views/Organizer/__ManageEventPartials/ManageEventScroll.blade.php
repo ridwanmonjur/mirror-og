@@ -158,7 +158,7 @@
                 </div>
                 
             </div>
-            <div class="group-hover-flexbox icon2 mb-2">
+            <div class="group-hover-flexbox cursor-pointer mb-2">
                     
                     @if (in_array($status, ['ONGOING', 'DRAFT', 'SCHEDULED']))
                         <a class="m-0 p-0" href="{{ route('event.show', $event->id) }}">

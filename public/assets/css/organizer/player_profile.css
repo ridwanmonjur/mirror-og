@@ -240,7 +240,7 @@ main {
 }
 
 .member-table {
-    width: 65%;
+    width: min(90vw, 1000px);
     margin: 0 auto;
     border-collapse: collapse;
     margin-top: 20px;
@@ -269,14 +269,6 @@ main {
     margin-right: 10px;
 }
 
-.nationality-flag {
-    width: 35px;
-    height: 20px;
-}
-
-.rosterHis {
-    align-items: center;
-}
 
 .player_event {
     margin: 0;
@@ -296,16 +288,6 @@ main {
     border-radius: 40px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     align-content: center;
-}
-
-.event_1 {
-    margin-bottom: 3rem;
-    overflow: auto;
-    width: 350px;
-    background: transparent;
-    border: 2px solid rgb(90, 150, 230);
-    border-radius: 40px;
-    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
 }
 
 .event_2 {

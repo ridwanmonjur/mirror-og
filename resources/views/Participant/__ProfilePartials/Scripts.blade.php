@@ -216,36 +216,12 @@
                 this.participant = participantData;
             },
             async fetchCountries () {
-                async function storeDataInLocalStorage() {
-                    try {
-                        let isValid = false;
-                        let data = JSON.parse(localStorage.getItem('countriesData'));
-                        let innerData = data?.data;
-                        if (innerData) {
-                            isValid = innerData[0] && innerData[1] && innerData[99] && innerData[100];
-                        } 
-
-                        if (isValid) {
-                            return data;
-                        }
-
-                        const response = await fetch('/countries');
-                        data = await response.json();
-                        localStorage.setItem('countriesData', JSON.stringify(data));
-                        return data;
-                    } catch (error) {
-                        console.error('Error storing data in localStorage:', error);
-                    }
-                }
-
                 if (this.isCountriesFetched) return;
                 try {
-                    const data = await storeDataInLocalStorage();
-
+                    const data = await storeFetchDataInLocalStorage('/countries');
                     if (data?.data) {
                         this.isCountriesFetched = true;
                         this.countries = data.data;
-
                         const choices2 = new Choices(document.getElementById('select2-country'), {
                             itemSelectText: "",
                             allowHTML: "",
@@ -259,8 +235,6 @@
 
                         const choicesContainer = document.querySelector('.choices');
                         choicesContainer.style.width = "150px";
-
-                        
                     } else {
                         this.errorMessage = "Failed to get data!";
                     }

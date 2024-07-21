@@ -101,6 +101,13 @@ class User extends Authenticatable implements FilamentUser
     {
         return self::query()
             ->where('role', 'PARTICIPANT')
+            ->select([
+                'id',
+                "email",
+                "role",
+                "userBanner",
+                'name',
+            ])
             ->when($request->has('search'), function ($query) use ($request) {
                 $search = trim($request->input('search'));
                 if (! empty($search)) {
@@ -110,6 +117,12 @@ class User extends Authenticatable implements FilamentUser
                 }
             })
             ->with([
+                'participant' => function ($query) use ($teamId) {
+                    $query->select([
+                        'region_flag', 
+                        'user_id'
+                    ]);
+                },
                 'members' => function ($query) use ($teamId) {
                     $query->where('team_id', $teamId);
                 },

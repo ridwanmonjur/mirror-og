@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Management</title>
+    <title>Team Member Management</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/manage_team.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    
-
+    <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -18,13 +18,11 @@
     <main class="main2">
         @include('Participant.__MemberManagementPartials.MemberManagement')
     </main>
-
     
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
     @include('Participant.__MemberManagementPartials.MemberManagementScripts')
-    <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
 
     <script>
         let actionMap = {
@@ -364,5 +362,4 @@
                 .replace(':id', userId);
         }
     </script>
-
 </body>

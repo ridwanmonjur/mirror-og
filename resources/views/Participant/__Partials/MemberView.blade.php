@@ -15,10 +15,10 @@
         @endif            
     </p>
     @if($counTeamMembers > 0)
-        <div class="tab-size d-flex justify-content-around flex-wrap tab-size mt-3 pt-3">
+        <div class="tab-size d-flex justify-content-between flex-wrap tab-size mt-3 pt-3">
             
             <div class="mb-2">
-                <span class="icon2">
+                <span class="cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" class="feather feather-filter">
@@ -28,7 +28,7 @@
                     <span> Filter </span>
                 </span>
                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                <span class="icon2">
+                <span class="cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
@@ -40,14 +40,17 @@
                 </span>
             </div>
             <div class="mb-2">
-                <div class="search_box">
-                    <i class="fa fa-search"></i>
-                    <input style="width: min(90vw, 350px); font-size: 0.9375rem;" class="nav__input" type="text" placeholder="Search for player name">
-                </div>
-                <div>
-                    @if (isset($user) && $user->id == $selectTeam->user_id)
-                        <img src="/assets/images/add.png" height="40px" width="40px">
-                    @endif
+                <div class="d-flex justify-content-end">
+                    <input style="width: min(90vw, 350px); font-size: 1rem;" class="rounded-pill px-4 form-control me-3 cursor-pointer" type="text" placeholder="Search for player name">
+                    <button type="button" class="btn btn-primary text-light px-2 border-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="feather feather-search"
+                        >
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>

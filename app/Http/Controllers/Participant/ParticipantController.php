@@ -26,21 +26,20 @@ class ParticipantController extends Controller
 {
     public function searchParticipant(Request $request)
     {
-        // TODO LIVEWIRE
+        try {
+            $teamId = $request->teamId;
+            $page = 1;
+            $userList = User::getParticipants($request, $teamId)->paginate($page);
+            foreach ($userList as $user) {
+                $user->is_in_team = $user->members->isNotEmpty();
+            }
 
-        $teamId = $request->teamId;
-        $selectTeam = Team::find($teamId);
-        $page = 5;
-        $userList = User::getParticipants($request, $teamId)->paginate($page);
-        foreach ($userList as $user) {
-            $user->is_in_team = $user->members->isNotEmpty() ? 'yes' : 'no';
+            return response()->json(['data' => $userList, 'success' => true]);
+        } catch (Exception $e) {
+            return response()->json(['data' => [], 'success' => false, 'error' => $e->getMessage()], 400);
         }
-
-        $outputArray = compact('userList', 'selectTeam');
-        $view = view('Participant.__MemberManagementPartials.MemberManagementScroll', $outputArray)->render();
-
-        return response()->json(['html' => $view]);
     }
+
 
     public function viewRequest(Request $request)
     {

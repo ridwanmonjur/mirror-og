@@ -32,6 +32,7 @@ Route::middleware('auth')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
+        Route::post('/user/participants', [ParticipantController::class, 'searchParticipant'])->name('user.teams.index');
         Route::put('/user/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('user.notifications.read');
         Route::put('/user/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('user.notifications.readAll');
         Route::post('/user/firebase', [ChatController::class, 'getFirebaseUsers'])->name('user.firebase.readAll');

@@ -1,8 +1,7 @@
 window.onload = () => {
     window.loadMessage();
-    // const event = new CustomEvent("fetchstart"); 
-    // window.dispatchEvent(event);
-    // document.querySelector('.add-chat')?.click();
+    const event = new CustomEvent("fetchstart"); 
+    window.dispatchEvent(event);
 };
 
 function formatDateDifference(startDate) {

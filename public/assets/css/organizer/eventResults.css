@@ -1,6 +1,6 @@
 
 .member-table {
-    width: 65%;
+    width: min(90vw, 1000px);
     margin: 0 auto;
     border-collapse: collapse;
     margin-top: 20px;
@@ -32,13 +32,3 @@
     background-image: url('/assets/images/participants/crown-tilted.png');
 }
 
-
-
-.nationality-flag {
-    width: 35px;
-    height: 20px;
-}
-
-.rosterHis {
-    align-items: center;
-}

@@ -278,6 +278,7 @@
         </div>
     </div>
 </main>
+<script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
 
 <script>
         let teamData = JSON.parse(document.getElementById('teamData').value);
@@ -308,31 +309,9 @@
                     }
                 },
                 async fetchCountries () {
-                    async function storeDataInLocalStorage() {
-                        try {
-                            let isValid = false;
-                            let data = JSON.parse(localStorage.getItem('countriesData'));
-                            let innerData = data?.data;
-                            if (innerData) {
-                                isValid = innerData[0] && innerData[1] && innerData[99] && innerData[100];
-                            } 
-
-                            if (isValid) {
-                                return data;
-                            }
-
-                            const response = await fetch('/countries');
-                            data = await response.json();
-                            localStorage.setItem('countriesData', JSON.stringify(data));
-                            return data;
-                        } catch (error) {
-                            console.error('Error storing data in localStorage:', error);
-                        }
-                    }
-
                     if (this.isCountriesFetched) return;
                     try {
-                        const data = await storeDataInLocalStorage();
+                        const data = await storeFetchDataInLocalStorage('/countries');
 
                         if (data?.data) {
                             this.isCountriesFetched = true;
@@ -418,7 +397,6 @@
     )});
 </script>
 @if ($isCreator)
-  
     <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
 @endif
   @include('Participant.__TeamHeadPartials.Scripts')
