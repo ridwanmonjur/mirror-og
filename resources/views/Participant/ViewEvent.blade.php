@@ -196,7 +196,7 @@
                            
                             <br>
                             <div>
-                                <div data-aos="fade-in" class="tab">
+                                <div class="tab">
                                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ripple' }}"
                                         onclick="openTab(event, 'Overview')">Overview</button>
                                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ripple' }}"

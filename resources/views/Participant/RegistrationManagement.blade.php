@@ -11,7 +11,7 @@
 </head>
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.__TeamHeadPartials.TeamHead')
+    @include('Participant.__Partials.TeamHead')
     <main class="main2">
         <div id="Overview">
             <br>
