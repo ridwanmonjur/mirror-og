@@ -31,12 +31,16 @@ class ParticipantTeamController extends Controller
         if ($teamIdList) {
             $membersCount = Team::getTeamMembersCountForEachTeam($teamIdList);
             $count = $teamList->count();
-
-            return view('Participant.TeamList', compact('teamList', 'count', 'membersCount'));
         } else {
             $membersCount = 0;
             $count = 0;
+        }
 
+        if ($request->expectsJson) {
+            return response()->json(['data' => [
+                'teamList' => $teamList, 'count' => $count,  'membersCount' => $membersCount
+            ], 'sucess' => true], 200);
+        } else {
             return view('Participant.TeamList', compact('teamList', 'count', 'membersCount'));
         }
     }
@@ -52,7 +56,7 @@ class ParticipantTeamController extends Controller
         $selectTeam = Team::where('id', $id)
             ->with(['members' => function ($query) {
                 $query->where('status', 'accepted')
-                    ->with('user');
+                    ->with('user', 'user.participant');
             }])->first();
         // dd($selectTeam);
         if ($selectTeam) {
@@ -78,10 +82,9 @@ class ParticipantTeamController extends Controller
             // dd($joinEvents, $activeEvents, $historyEvents);
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
-            $teamMembers = $selectTeam->members;
 
             return view('Participant.TeamManagement',
-                compact('selectTeam', 'joinEvents', 'captain', 'teamMembers',
+                compact('selectTeam', 'joinEvents', 'captain',
                     'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
                     'wins', 'streak', 'awardList', 'achievementList'
                 )

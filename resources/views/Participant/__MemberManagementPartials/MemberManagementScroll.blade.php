@@ -1,6 +1,5 @@
 <table class="member-table" id="member-table-body">
     <tbody>
-       
     </tbody>
 </table>
 
@@ -11,59 +10,87 @@
 {{-- <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script> --}}
 <script>
     let newMembersForm = document.getElementById('newMembersForm');
-    let newMembersFormKeys = ['sortKeys', 'bod', 'region', 'status'];
+    let newMembersFormKeys = ['sortKeys', 'birthDate', 'region', 'status'];
     let sortKeysInput = document.getElementById("sortKeys")
     function setSortForFetch(value) {
-        console.log({value, sortKeysInput});
-        console.log({value, sortKeysInput});
-        console.log({value, sortKeysInput});
-        document.getElementById("sortKeys").value = value;
+        const element = document.getElementById("sortKeys");
+
+        if (element) {
+            element.value = value;
+            const event = new CustomEvent("sortKeysChange", {
+                detail: {
+                    name: 'sortKeys',
+                    value: value,
+                }
+            }); 
+            window.dispatchEvent(event);
+            fetchMembers();
+        }
     }
 
     let countries = [];
+    window.addEventListener('sortKeysChange',
+        debounce((event) => {
+            changeUI(event);
+        }, 300)
+    );
+    
     newMembersForm.addEventListener('change',
         debounce((event) => {
-            let target = event.target;
-            let {name, value} = target;
-            console.log({newMembersForm: newMembersForm})
-            let formData = new FormData(newMembersForm);
-
-            let isAppend = true;
-            let targetElemnets = document.querySelectorAll(`small[data-form-name="${name}"]`);
-
-            for (let targetElemnet of targetElemnets) {
-                targetElemnet.destroy();
-            }
-
-            for (let element of newMembersFormKeys) {
-                console.log({key, values: formData.getAll(key)});
-            }
-            
-            targetElemnet = document.createElement('small');
-            targetElemnet.classList.add('btn', 'btn-primary', 'text-light', 'px-2', 'py-0');
-            targetElemnet.setAttribute('data-form-name', name);
-            let filterSearchResultsElem = document.getElementById('filter-search-results');
-            filterSearchResultsElem.classList.remove('d-none');
-            if (name == 'sortKeys') {
-                filterSearchResultsElem.children[1].classList.remove('d-none');
-            } else {
-                filterSearchResultsElem.children[0].classList.remove('d-none');
-            }
-
-            targetElemnet.innerHTML +
-
+            changeUI(event);
             fetchMembers();
         }, 300)
     );
 
+    function changeUI(event) {
+        let target = event.target, 
+            name = undefined,
+            value = undefined;
+        if (event.detail) {
+            target = event.detail;
+        }    
+
+        name = target.name;
+        value = target.value;
+        console.log({event, name, value});
+        
+        console.log("HI");console.log("HI");console.log("HI");console.log("HI");
+        if (name != "search") {
+            let formData = new FormData(newMembersForm);
+            let isAppend = true;
+            let targetElemnetParent = document.querySelector(`small[data-form-parent="${name}"]`);
+
+            if (name == 'sortKeys') {
+                let defaultSort = document.querySelector(`small[data-form-parent="default-sort"]`);
+                defaultSort?.remove();
+            } else {
+                let defaultFilter = document.querySelector(`small[data-form-parent="default-filter"]`);
+                defaultFilter?.remove();
+            }
+
+            targetElemnetParent.innerHTML = '';
+            targetElemnetHeading = document.createElement('small');
+            targetElemnetHeading.classList.add('me-2');
+            targetElemnetHeading.innerHTML = String(name)?.toUpperCase();
+            targetElemnetParent.append(targetElemnetHeading);
+            for (let formValue of formData.getAll(name)) {
+                targetElemnet = document.createElement('small');
+                targetElemnet.classList.add('btn', 'btn-secondary', 'text-light', 
+                    'rounded-pill', 'px-2', 'py-0', 'me-1'
+                );
+                targetElemnet.innerHTML = formValue;
+                targetElemnetParent.append(targetElemnet);
+            }
+        }
+    }
+
     async function fetchCountries () {
         try {
             const data = await storeFetchDataInLocalStorage('/countries');
-            console.log({data})
             if (data?.data) {
                 countries = data.data;
                 const choices2 = document.getElementById('select2-country2');
-                let countriesHtml = '';
+                let countriesHtml = "<option value=''";
                 countries.forEach((value) => {
                     countriesHtml +=`
                         <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
@@ -71,7 +98,6 @@
                 });
 
                 choices2.innerHTML = countriesHtml;
-                console.log({choices2, countriesHtml});
                 /*
                 const choices2 = new Choices(document.getElementById('select2-country2'), {
                     itemSelectText: "",
@@ -105,8 +131,6 @@
             route = document.getElementById('membersUrl')?.value;
         }
         
-        console.log({route});
-        console.log({route});
         let formData = new FormData(newMembersForm);
         let jsonObject = {}
         for (let [key, value] of formData.entries()) {
@@ -131,9 +155,7 @@
         if (data.success && 'data' in data) {
             users = data?.data?.data;
             links = data?.data?.links;
-            console.log({users});
             for (user of users) {
-                console.log({user});
                 bodyHtml+=`
                     <tr class="st">
                         <td class="colorless-col px-0 mx-0">
@@ -198,10 +220,8 @@
         }
 
         let tbodyElement = document.querySelector('#member-table-body tbody');
-        console.log({tbodyElement, bodyHtml, pageHtml});
         tbodyElement.innerHTML = bodyHtml;  
         let pageLinks = document.querySelector('#member-table-links');
-        console.log({tbodyElement, bodyHtml, pageHtml});
         pageLinks.innerHTML = pageHtml; 
     };
 

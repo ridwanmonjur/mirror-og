@@ -39,8 +39,7 @@
 
 <div class="tabs">
     <button id="CurrentMembersBtn" class="tab-button inner-tab tab-button-active"
-        onclick="showTab(event, 'CurrentMembers', 'inner-tab')">Current
-        Members
+        onclick="showTab(event, 'CurrentMembers', 'inner-tab')">Current Members
     </button>
     <button id="PendingMembersBtn" class="tab-button inner-tab" onclick="showTab(event, 'PendingMembers', 'inner-tab')">
         Pending Members
@@ -56,7 +55,7 @@
         and {{ $teamMembersProcessed['left']['count'] }} removed member{{bladePluralPrefix($teamMembersProcessed['left']['count'])}}
     </p>
     <div class="cont mt-3 pt-3">
-        <table class="tab-size">
+        <table class="tab-size member-table">
             <tbody class="accepted-member-table">
                 @if ($teamMembersProcessed['accepted']['count'] != 0)
                     @foreach ($teamMembersProcessed['accepted']['members'] as $member)
@@ -183,10 +182,13 @@
 </div>
 <div class="tab-content pb-4 inner-tab mx-auto" id="NewMembers">
     <form id="newMembersForm">
+        <input type="hidden" name="sortKeys" id="sortKeys" value="">
         <div class="tab-size d-flex justify-content-between align-items-center flex-wrap tab-size mt-0">
             <div class="mb-2">
                 <span class="cursor-pointer me-4" onclick="
-                        document.getElementById('filter-option').classList.remove('d-none'); document.getElementById('sort-option').classList.add('d-none');
+                        document.getElementById('filter-option').classList.remove('d-none'); 
+                        document.getElementById('sort-option').classList.add('d-none');
+                        document.getElementById('filter-search-results').classList.remove('d-none');
                     ">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -197,7 +199,9 @@
                     <span> Filter </span>
                 </span>
                 <span class="cursor-pointer" onclick="
-                        document.getElementById('filter-option').classList.add('d-none'); document.getElementById('sort-option').classList.remove('d-none');
+                        document.getElementById('filter-option').classList.add('d-none'); 
+                        document.getElementById('sort-option').classList.remove('d-none');
+                        document.getElementById('filter-search-results').classList.remove('d-none');
                     ">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round"
@@ -231,7 +235,7 @@
                 <div class="d-flex justify-content-start">
                     <div class="dropdown me-3">
                         <button
-                            class="px-3 py-1 py-2 button-design-removed" type="button" id="dropdownFilterType"
+                            class="ps-0 pe-3 py-1 py-2 button-design-removed" type="button" id="dropdownFilterType"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span>Age </span>
                             <span class="dropbtn-arrow">
@@ -247,12 +251,12 @@
                             class="dropdown-menu px-3" aria-labelledby="dropdownFilterTier"
                         >
                             <p class="mb-1">Choose a date of birth to filter age</p>
-                            <input  type="date" class="form-control" name="bod">
+                            <input  type="date" class="form-control" name="birthDate">
                         </div>
                     </div>
 
                     <div class="dropdown me-3">
-                        <button class="px-3 py-2 button-design-removed" type="button" id="dropdownFilterTier"
+                        <button class="ps-0 pe-3 py-2 button-design-removed" type="button" id="dropdownFilterTier"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span>Region </span>
                             <span class="dropbtn-arrow">
@@ -271,12 +275,13 @@
                                 <p class="mb-1">Choose a country of origin</p>
                                 {{-- <input id="select2-country2" type="checkbox" name="venue"> --}}
                                 <select id="select2-country2" class="form-control" name="region" style="width: 200px !important;">
+                                    <option value=""> </option>
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class="dropdown me-3">
-                        <button class="px-3 py-2 button-design-removed" type="button" id="dropdownFilterTier"
+                        <button class="ps-0 pe-3 py-2 button-design-removed" type="button" id="dropdownFilterTier"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span>Status</span>
                             <span class="dropbtn-arrow">
@@ -352,14 +357,36 @@
                         </div>
                     </div>
                 </div>
-                <input type="text" style="visibility: hidden;" name="sortKeys" id="sortKeys" value="">
             </div> 
-            <div id="filter-search-results" class="d-none" style="cursor: not-allowed;">
-                 <span class="me-5 cursor-not-allowed" class="d-none">
+
+            <div id="filter-search-results" class="d-none">
+                <span class="me-5 cursor-not-allowed" class="">
                     <small class="me-4">Filter: </small>
+                    <span class="">
+                        <small data-form-parent="default-filter" class="me-2">
+                            <small class="btn btn-secondary text-light rounded-pill px-2 py-0">
+                                Default
+                            </small>
+                        </small>
+                        <small data-form-parent="birthDate" class="me-2">  
+                        </small>
+                        <small data-form-parent="region" class="me-2">  
+                        </small>
+                        <small data-form-parent="status" class="me-2">  
+                        </small>
+                    </span>
                 </span> 
-                <span class="me-5 cursor-not-allowed" class="d-none">
+                <span class="me-5 cursor-not-allowed" class="">
                     <small class="me-3">Sort: </small>
+                    <span class="">
+                        <small data-form-parent="default-sort" class="me-2">
+                            <small class="btn btn-secondary text-light rounded-pill px-2 py-0">
+                                Default
+                            </small>
+                        </small>
+                        <small data-form-parent="sortKeys">  
+                        </small>
+                    </span>
                     {{-- <small  id="default-sorts" class="btn btn-primary text-light px-2 py-0">Default</small> --}}
                 </span> 
             </div>

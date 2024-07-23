@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Management</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/manage_team.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 @auth

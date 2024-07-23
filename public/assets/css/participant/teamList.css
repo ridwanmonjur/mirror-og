@@ -175,7 +175,6 @@ input[type="submit"],
     background-size: cover;
     background-position: center;
     /* Default image URL */
-    background-image: url('/assets/images/fnatic.jpg');
     border: 3px solid rgb(24, 115, 24);
     border-radius: 50%;
 }
