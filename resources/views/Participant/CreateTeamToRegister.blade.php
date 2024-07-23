@@ -31,11 +31,33 @@
                             action="{{ route('participant.createTeamToJoinEvent.action', ['id' => $id]) }}"
                             method="POST">
 
-                            @include('Participant.__CreateEditTeamPartials.FormErrorsSuccess')
-                            @include('Participant.__CreateEditTeamPartials.FormFields', [
-                                'team' => null,
-                                'buttonLabel' => 'Create & Register',
-                            ])
+                            @csrf
+                            @if ($errors->any())
+                                <div class="text-red">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                            @if (session()->has('errorMessage'))
+                                <div class="text-red">
+                                    {{ session()->get('errorMessage') }}
+                                </div>
+                            @endif
+
+                             <div class="d-flex flex-column align-items-center justify-content-center">
+                                <input type="text" value="" name="teamName" id="teamName"
+                                    placeholder="Team Name" onclick="clearPlaceholder(this)"
+                                    onblur="restorePlaceholder(this)">
+                                <input type="text" style="height: 100px;" value="" name="teamDescription"
+                                    id="teamDescription" placeholder="Write your team description..."
+                                    onclick="clearPlaceholder(this)" onblur="restorePlaceholder(this)">
+                                <br> <br>
+                                <input type="submit" onclick="" value="Create & Regjster">
+
+                            </div>
                         </form>
                     </div>
                     <br><br>
