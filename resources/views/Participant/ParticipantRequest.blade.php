@@ -12,7 +12,7 @@
 
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.__ParticipantRequestPartials.RequestManagement')
+    @include('Participant.__Partials.RequestManagement')
     <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>  
