@@ -167,10 +167,6 @@ class ParticipantTeamController extends Controller
     {
         try{
             $validatedData = $request->validated();
-            if (isset($validatedData['country']) &&  isset($validatedData['country']['value'])) {
-                $validatedData['country'] = $validatedData['country']['value'];
-            }
-
             $team = Team::findOrFail($request['id']);
             $team->update($validatedData);
             if (isset($team->country)) {

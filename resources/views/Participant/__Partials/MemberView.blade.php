@@ -52,7 +52,7 @@
             </div>
             <div class="mb-2">
                 <div class="d-flex justify-content-end">
-                    <input style="width: min(90vw, 350px); font-size: 1rem;" class="rounded-pill px-4 form-control me-3 cursor-pointer" type="text" placeholder="Search for player name">
+                    <input name="search" style="width: min(90vw, 350px); font-size: 1rem;" class="rounded-pill px-4 form-control me-3 cursor-pointer" type="text" placeholder="Search for player name">
                     <button type="button" class="btn btn-primary text-light px-2 border-0">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -87,6 +87,9 @@
                         >
                             <p class="mb-1">Choose a date of birth to filter age</p>
                             <input  type="date" class="form-control" name="birthDate">
+                            <button type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light" onclick="
+                                resetInput('birthDate');
+                            "> Reset </button>
                         </div>
                     </div>
 
@@ -112,6 +115,9 @@
                                 <select id="select2-country2" class="form-control" name="region" style="width: 200px !important;">
                                     <option value=""> </option>
                                 </select>
+                                 <button type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light" onclick="
+                                    resetInput('region');
+                                "> Reset </button>
                             </div>
                         </div>
                     </div>
@@ -132,11 +138,10 @@
                             class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
                         >
                             @foreach([
-                                ['title' => 'Team member', 'value' => 'member'],
+                                ['title' => 'Team member', 'value' => 'accepted'],
                                 ['title' => 'Pending invite', 'value' => 'pending'],
                                 ['title' => 'Rejected invite', 'value' => 'rejected'],
                                 ['title' => 'Left team', 'value' => 'left'],
-                                ['title' => 'No status', 'value' => 'no-status'],
                             ] as $status)
                                 <div class="px-3 py-1" style="width: 200px;">
                                     <input
@@ -172,23 +177,20 @@
                     >
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('recent');">
                             <label class="me-3 cursor-pointer" for="recent">Recent</label>
-                            <span class="recentSortIcon sortIcon">
-                            </span>
                         </div>
-                        <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('age');">
+                        <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('birthDate');">
                             <label class="me-3 cursor-pointer" for="age">Age</label>
-                            <span class="aToZSortIcon sortIcon">
-                            </span>
                         </div>
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('region');">
                             <label class="me-3 cursor-pointer" for="region">Region</label>
-                            <span class="startDateSortIcon sortIcon">
-                            </span>
                         </div>
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('name');">
-                            <label class="me-3 cursor-pointer" for="prize">Name</label>
-                            <span class="prizeSortIcon sortIcon">
-                            </span>
+                            <label class="me-3 cursor-pointer" for="name">Name</label>
+                        </div>
+                        <div class="d-block min-w-150px hover-bigger ps-3 py-1" onclick="resetInput('sortKeys');">
+                            <button type="button" class="rounded-pill btn btn-sm btn-primary text-light"> 
+                                Reset 
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -196,7 +198,7 @@
 
             <div id="filter-search-results" class="d-none">
                 <span class="me-5 cursor-not-allowed" class="">
-                    <small class="me-4">Filter: </small>
+                    <small class="me-4">Filter/ Sort: </small>
                     <span class="">
                         <small data-form-parent="default-filter" class="me-2">
                             <small class="btn btn-secondary text-light rounded-pill px-2 py-0">
@@ -208,16 +210,6 @@
                         <small data-form-parent="region" class="me-2">  
                         </small>
                         <small data-form-parent="status" class="me-2">  
-                        </small>
-                    </span>
-                </span> 
-                <span class="me-5 cursor-not-allowed" class="">
-                    <small class="me-3">Sort: </small>
-                    <span class="">
-                        <small data-form-parent="default-sort" class="me-2">
-                            <small class="btn btn-secondary text-light rounded-pill px-2 py-0">
-                                Default
-                            </small>
                         </small>
                         <small data-form-parent="sortKeys">  
                         </small>
@@ -238,6 +230,8 @@
 </div>
 
 <script>
+    let filteredSortedMembers = [];
+    let countries = [];
     let membersJsonInput = document.getElementById('membersJson');
     let captainJsonInput = document.getElementById('captainJson');
     let membersJson = JSON.parse(membersJsonInput.value);
@@ -245,13 +239,13 @@
 
     let newMembersForm = document.getElementById('newMembersForm');
     let newMembersFormKeys = ['sortKeys', 'birthDate', 'region', 'status'];
-    let sortKeysInput = document.getElementById("sortKeys")
+    let sortKeysInput = document.getElementById("sortKeys");
     function setSortForFetch(value) {
         const element = document.getElementById("sortKeys");
 
         if (element) {
             element.value = value;
-            const event = new CustomEvent("sortKeysChange", {
+            const event = new CustomEvent("formChange", {
                 detail: {
                     name: 'sortKeys',
                     value: value,
@@ -262,60 +256,79 @@
         }
     }
 
-    let countries = [];
-    window.addEventListener('sortKeysChange',
+    
+    window.addEventListener('formChange',
         debounce((event) => {
-            changeUI(event);
+            changeFilterSortUI(event);
+            fetchMembers();
         }, 300)
     );
     
     newMembersForm.addEventListener('change',
         debounce((event) => {
-            changeUI(event);
+            changeFilterSortUI(event);
             fetchMembers();
         }, 300)
     );
 
-    function changeUI(event) {
-        let target = event.target, 
-            name = undefined,
-            value = undefined;
+    function changeFilterSortUI(event) {
+        let target = event.target; 
         if (event.detail) {
             target = event.detail;
         }    
 
         name = target.name;
         value = target.value;
-        console.log({event, name, value});
         
-        console.log("HI");console.log("HI");console.log("HI");console.log("HI");
-        if (name != "search") {
-            let formData = new FormData(newMembersForm);
-            let isAppend = true;
-            let targetElemnetParent = document.querySelector(`small[data-form-parent="${name}"]`);
-
-            if (name == 'sortKeys') {
-                let defaultSort = document.querySelector(`small[data-form-parent="default-sort"]`);
-                defaultSort?.remove();
-            } else {
-                let defaultFilter = document.querySelector(`small[data-form-parent="default-filter"]`);
-                defaultFilter?.remove();
-            }
-
-            targetElemnetParent.innerHTML = '';
-            targetElemnetHeading = document.createElement('small');
-            targetElemnetHeading.classList.add('me-2');
-            targetElemnetHeading.innerHTML = String(name)?.toUpperCase();
-            targetElemnetParent.append(targetElemnetHeading);
-            for (let formValue of formData.getAll(name)) {
-                targetElemnet = document.createElement('small');
-                targetElemnet.classList.add('btn', 'btn-secondary', 'text-light', 
-                    'rounded-pill', 'px-2', 'py-0', 'me-1'
-                );
-                targetElemnet.innerHTML = formValue;
-                targetElemnetParent.append(targetElemnet);
+        if (name == "search") {
+            return;
+        }
+            
+        let formData = new FormData(newMembersForm);
+        let targetElemnetParent = document.querySelector(`small[data-form-parent="${name}"]`);
+        let defaultFilter = document.querySelector(`small[data-form-parent="default-filter"]`);
+        
+        let isShowDefaults = true;
+        for (let newMembersFormKey of newMembersFormKeys) {
+            let elementValue = formData.getAll(newMembersFormKey);
+            if (elementValue != "" || (Array.isArray(elementValue) && elementValue[0] )) {
+                isShowDefaults = isShowDefaults && false;
             }
         }
+
+        if (isShowDefaults) {
+            defaultFilter.classList.remove('d-none');
+        } else {
+            defaultFilter.classList.add('d-none');
+        }
+
+        console.log({targetElemnetParent});
+        targetElemnetParent.innerHTML = '';
+
+        let valuesFormData = formData.getAll(name);
+        if (value == "" || (Array.isArray(valuesFormData) && valuesFormData[0] == null )) {
+            return;
+        }
+        
+
+        console.log("HI", {name, value, LIST: formData.getAll(name)});
+        console.log("HI", {name, value, LIST: formData.getAll(name)});
+        console.log("HI", {name, value, LIST: formData.getAll(name)});
+        console.log("HI", {name, value, LIST: formData.getAll(name)});
+
+        targetElemnetHeading = document.createElement('small');
+        targetElemnetHeading.classList.add('me-2');
+        targetElemnetHeading.innerHTML = String(name)?.toUpperCase();
+        targetElemnetParent.append(targetElemnetHeading);
+        for (let formValue of valuesFormData) {
+            targetElemnet = document.createElement('small');
+            targetElemnet.classList.add('btn', 'btn-secondary', 'text-light', 
+                'rounded-pill', 'px-2', 'py-0', 'me-1'
+            );
+            targetElemnet.innerHTML = formValue;
+            targetElemnetParent.append(targetElemnet);
+        }
+                
     }
 
     async function fetchCountries () {
@@ -324,7 +337,7 @@
             if (data?.data) {
                 countries = data.data;
                 const choices2 = document.getElementById('select2-country2');
-                let countriesHtml = "<option value=''";
+                let countriesHtml = "<option value=''>Choose a country</option>";
                 countries.forEach((value) => {
                     countriesHtml +=`
                         <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
@@ -340,22 +353,57 @@
         }
     }
 
+    function sortMembers(membersJson) {
+        return membersJson;
+    }
+
     async function fetchMembers(event = null) {
         let route;
-        let bodyHtml = '', pageHtml = '';
-        let teamId = document.getElementById('teamId')?.value;
-        if (event?.target && event.target?.dataset?.url) {
-                route = event.target.dataset.url;
-        } else {
-            route = document.getElementById('membersUrl')?.value;
+        let bodyHtml = '';
+
+        let formData = new FormData(newMembersForm);
+        let sortedMembers = sortMembers(membersJson);
+        filteredSortedMembers = [];
+
+        for (let sortedMember of sortedMembers) {
+            let isToBeAdded = true;
+            let nameFilter = String(formData.get('search')).toLowerCase().trim();
+            let regionFilter = formData.get('region');
+            let ageFilter = formData.get('birthDate');
+
+            let statusListFilter = formData.getAll('status');
+            if (nameFilter != "" && !(
+                String(sortedMember?.user?.name).includes(nameFilter) ||
+                String(sortedMember?.user?.email).includes(nameFilter)
+            )) {
+                isToBeAdded = isToBeAdded && false;
+            } 
+
+            if (regionFilter != "" && sortedMember?.user?.participant?.region != regionFilter) {
+                isToBeAdded = isToBeAdded && false;
+            } 
+
+            let isArrayFilter = statusListFilter && statusListFilter[0] == null;
+            for (let statusItemFilter of statusListFilter) {
+                if (statusItemFilter === sortedMember?.status) isArrayFilter = true || isArrayFilter;
+            }
+            isToBeAdded = isArrayFilter && isToBeAdded;
+
+            if (ageFilter != "" && new Date(sortedMember?.user?.participant?.birthday) < new Date(ageFilter)) {
+                isToBeAdded = isToBeAdded && false;
+            } 
+
+           if (isToBeAdded) {
+                filteredSortedMembers.push(sortedMember);
+           }
         }
         
-        for (member of membersJson) {
+        for (member of filteredSortedMembers) {
             bodyHtml+=`
                 <tr class="st px-3">
                     <td class="colorless-col">
                         <svg 
-                            onclick="redirectToProfilePage('${member.user_id}'');"
+                            onclick="redirectToProfilePage('${member.user_id}');"
                             class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg" width="20"
                             height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                             <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
@@ -387,13 +435,25 @@
                     </td>
                 </tr>
             `;
-
-           
         }
 
         let tbodyElement = document.querySelector('#member-table-body tbody');
         tbodyElement.innerHTML = bodyHtml;  
     };
+
+    function resetInput(name) {
+        document.querySelector(`[name="${name}"]`).value = '';
+        let formData = new FormData(newMembersForm);
+        let newValue = name == "sortKeys" ? [] : ""; 
+        formData.set(name, newValue);
+        const event = new CustomEvent("formChange", {
+            detail: {
+                name: name,
+                value: newValue
+            }
+        }); 
+        window.dispatchEvent(event);
+    }
 
     fetchMembers();
     fetchCountries();

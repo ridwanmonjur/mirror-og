@@ -179,10 +179,6 @@ class ParticipantController extends Controller
     {
         $validatedData = $request->validated();
         $participant = Participant::findOrFail($validatedData['participant']['id']);
-        if (isset($validatedData['participant']['region']) && isset($validatedData['participant']['region']['value'])) {
-            $validatedData['participant']['region'] = $validatedData['participant']['region']['value'];
-        }
-        
         $participant->update($validatedData['participant']);
         $user = User::findOrFail($validatedData['user']['id']);
         $user->update($validatedData['user']);

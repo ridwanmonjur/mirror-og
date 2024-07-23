@@ -7,11 +7,11 @@
     <ul class="pagination cursor-pointer py-3" id="member-table-links">
     </ul>
 </div>
-{{-- <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script> --}}
 <script>
     let newMembersForm = document.getElementById('newMembersForm');
     let newMembersFormKeys = ['sortKeys', 'birthDate', 'region', 'status'];
-    let sortKeysInput = document.getElementById("sortKeys")
+    let sortKeysInput = document.getElementById("sortKeys");
+    
     function setSortForFetch(value) {
         const element = document.getElementById("sortKeys");
 
@@ -60,13 +60,8 @@
             let isAppend = true;
             let targetElemnetParent = document.querySelector(`small[data-form-parent="${name}"]`);
 
-            if (name == 'sortKeys') {
-                let defaultSort = document.querySelector(`small[data-form-parent="default-sort"]`);
-                defaultSort?.remove();
-            } else {
-                let defaultFilter = document.querySelector(`small[data-form-parent="default-filter"]`);
-                defaultFilter?.remove();
-            }
+            let defaultFilter = document.querySelector(`small[data-form-parent="default-filter"]`);
+            defaultFilter?.remove();
 
             targetElemnetParent.innerHTML = '';
             targetElemnetHeading = document.createElement('small');
@@ -98,21 +93,6 @@
                 });
 
                 choices2.innerHTML = countriesHtml;
-                /*
-                const choices2 = new Choices(document.getElementById('select2-country2'), {
-                    itemSelectText: "",
-                    allowHTML: "",
-                    choices: data.data.map((value) => ({
-                        label: `${value.emoji_flag} ${value.name.en}`,
-                        value: value.id,
-                        disabled: false,
-                        selected: false,
-                    })),
-                });
-
-                const choicesContainer = document.querySelector('.choices');
-                choicesContainer.style.width = "9.375rem";
-                */
             } else {
                 errorMessage = "Failed to get data!";
             }

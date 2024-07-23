@@ -204,12 +204,9 @@
             errorMessage: errorInput?.value, 
             isCountriesFetched: false ,
             changeFlagEmoji() {
-                let region = this.participant.region.value ?? this.participant.region;
-                if (region) {
-                    let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == region);
-                    this.participant.region_name = countryX?.name.en;
-                    this.participant.region_flag = countryX?.emoji_flag;
-                }
+                let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == this.participant.region);
+                this.participant.region_name = countryX?.name.en;
+                this.participant.region_flag = countryX?.emoji_flag;
             },
             reset() {
                 this.user = userData;
@@ -222,19 +219,17 @@
                     if (data?.data) {
                         this.isCountriesFetched = true;
                         this.countries = data.data;
-                        const choices2 = new Choices(document.getElementById('select2-country'), {
-                            itemSelectText: "",
-                            allowHTML: "",
-                            choices: data.data.map((value) => ({
-                                label: `${value.emoji_flag} ${value.name.en}`,
-                                value: value.id,
-                                disabled: false,
-                                selected: value.id === this.participant.region,
-                            })),
-                        });
+                        const choices2 = document.getElementById('select2-country3');
 
-                        const choicesContainer = document.querySelector('.choices');
-                        choicesContainer.style.width = "150px";
+                         let countriesHtml = "<option value=''>Choose a country</option>";
+                            data?.data.forEach((value) => {
+                                countriesHtml +=`
+                                    <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
+                                `;
+                            });
+                            console.log({countriesHtml});
+                            choices2.innerHTML = countriesHtml;
+                            choices2.selected = this.participant.region;
                     } else {
                         this.errorMessage = "Failed to get data!";
                     }

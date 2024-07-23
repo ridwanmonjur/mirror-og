@@ -22,7 +22,6 @@
         'resources/sass/colorpicker.scss',
     ])
     <link rel="stylesheet" href="{{ asset('/assets/css/chat/inpage-message.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
 
 </head>
 @php
@@ -212,8 +211,7 @@
                                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
                                     <template x-if="countries">
-                                        <select id="select2-country" :change="changeFlagEmoji" style="width: 150px;"  data-placeholder="Select a country" x-model="participant.region"> 
-                                        </select>
+                                        <select x-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;" class="d-inline form-control"  data-placeholder="Select a country" x-model="participant.region"> 
                                     </template>
                                 </span>
                                 <span class="me-3">
@@ -573,6 +571,5 @@
 
 
 </body>
-<script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
 @include('Participant.__ProfilePartials.Scripts')
 </html>

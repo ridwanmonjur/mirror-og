@@ -10,7 +10,6 @@
         'resources/js/colorpicker.js',
         'resources/sass/colorpicker.scss',
     ])
-    <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
 
 </head>
 @php
@@ -340,7 +339,7 @@
                                 xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                                 <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                             </svg>
-                            <select  id="select2-country" :change="changeFlagEmoji" style="width: 150px;" class="d-inline"  data-placeholder="Select a country" x-model="country"> 
+                            <select x-on:change="changeFlagEmoji" id="select2-country" style="width: 150px;" class="d-inline form-control"  data-placeholder="Select a country" x-model="country"> 
                             </select>
                         </span>
                     </div>
@@ -507,12 +506,9 @@
                 ], 
                 errorMessage: errorInput?.value, 
                 changeFlagEmoji() {
-                    let country = this.country?.value ?? this.country;
-                    if (country) {
-                        let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == country);
-                        this.country_name = countryX?.name.en;
-                        this.country_flag = countryX?.emoji_flag;
-                    }
+                    let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == this.country);
+                    this.country_name = countryX?.name.en;
+                    this.country_flag = countryX?.emoji_flag;
                 },
                 async fetchCountries () {
                     if (this.isCountriesFetched) return;
@@ -523,21 +519,16 @@
                             this.isCountriesFetched = true;
                             this.countries = data.data;
 
-                            const choices2 = new Choices(document.getElementById('select2-country'), {
-                                itemSelectText: "",
-                                allowHTML: "",
-                                choices: data.data.map((value) => ({
-                                    label: `${value.emoji_flag} ${value.name.en}`,
-                                    value: value.id,
-                                    disabled: false,
-                                    selected: value.id === this.country,
-                                })),
+                            const choices2 = document.getElementById('select2-country');
+                            let countriesHtml = "<option value=''>Choose a country</option>";
+                            data?.data.forEach((value) => {
+                                countriesHtml +=`
+                                    <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
+                                `;
                             });
-
-                            const choicesContainer = document.querySelector('.choices');
-                            choicesContainer.style.width = "150px";
-
-                            
+                            console.log({countriesHtml});
+                            choices2.innerHTML = countriesHtml;
+                            choices2.selected = this.country;
                         } else {
                             this.errorMessage = "Failed to get data!";
                         }
@@ -595,17 +586,10 @@
                     console.log({backgroundStyles, fontStyles})
                     var banner = document.getElementById('backgroundBanner');
                     banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-                    
-                    
                 }
-
             })
     )});
-</script>
-@if ($isCreator)
-    <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
-@endif
-<script>
+
     let colorOrGradient = null; 
     function applyBackground(event, colorOrGradient) {
         document.querySelectorAll('.color-active').forEach(element => {
@@ -705,8 +689,6 @@
 
         window.addEventListener(Events.IMAGE_ADDED, async (e) => {
             const { detail } = e ;
-
-            console.log('detail', detail);
             const file = detail.files[0];
             const fileContent = await readFileAsBase64(file);
             await changeBackgroundDesignRequest({
@@ -764,10 +746,7 @@
             errorCallback('There was a problem with the request: ' + error);
         }
     }
-
     
-</script>
-<script>
     const uploadButton = document.getElementById("upload-button");
     const uploadButton2 = document.getElementById("upload-button2");
     const imageUpload = document.getElementById("image-upload");

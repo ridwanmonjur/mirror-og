@@ -32,7 +32,7 @@
         </button>
     </div>
     <br>
-    <div class="tab-content pb-4  inner-tab" id="InvitatedTeam">
+    <div class="tab-content pb-4 px-5 inner-tab" id="InvitatedTeam">
         <p class="text-center mx-auto mt-2">
             Teams requesting you to join them.
         </p>
@@ -43,7 +43,7 @@
                         <div class="upload-container">
                             <div class="circle-container" style="cursor: pointer;">
                                 <div id="uploaded-image" class="uploaded-image"
-                                    style="background-image: url({{ $teamAndMember->teamBanner ? '/storage' . '/' . $teamAndMember->teamBanner : '/assets/images/fnatic.jpg' }} );">
+                                    style="background-image: url({{ $teamAndMember->teamBanner ? '/storage' . '/' . $teamAndMember->teamBanner : '/assets/images/404.jpg' }} );">
                                 </div>
                                 </label>
                             </div>
@@ -105,7 +105,7 @@
             </div>
         @endif
     </div>
-    <div class="tab-content pb-4  inner-tab d-none" id="SentTeam" data-type="member" style="text-align: center;">
+    <div class="tab-content pb-4 px-5 inner-tab d-none" id="SentTeam" data-type="member" style="text-align: center;">
         <p class="text-center mx-auto mt-2">
             View your sent team requests. You may delete these requests if you don't approve of the team.
         </p>
@@ -158,7 +158,7 @@
             @endif
         </div>
     </div>
-    <div class="tab-content pb-4  inner-tab d-none" id="PrivateInvitations">
+    <div class="tab-content pb-4 px-5 inner-tab d-none" id="PrivateInvitations">
         <p class="text-center mx-auto mt-2">
             View all events you have been invited
         </p>
