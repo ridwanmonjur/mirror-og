@@ -105,6 +105,7 @@ Route::group(['prefix' => 'participant'], function () {
                 ->middleware('prevent-back-history')
                 ->name('participant.team.manage');
             Route::get('/team/{id}/register', [ParticipantEventController::class, 'registrationManagement'])->name('participant.register.manage');
+            Route::get('/team/{id}/temp', [ParticipantEventController::class, 'getTemp']);
 
             Route::post('/team/roster/approve', [ParticipantRosterController::class, 'approveRosterMember'])->name('participant.roster.approve');
             Route::post('/team/roster/disapprove', [ParticipantRosterController::class, 'disapproveRosterMember'])->name('participant.roster.disapprove');
