@@ -52,7 +52,7 @@
             </div>
             <div class="mb-2">
                 <div class="d-flex justify-content-end">
-                    <input name="search" style="width: min(90vw, 350px); font-size: 1rem;" class="rounded-pill px-4 form-control me-3 cursor-pointer" type="text" placeholder="Search for player name">
+                    <input name="search" style="width: min(90vw, 350px); font-size: 1rem;" class="rounded-pill px-4 form-control me-3 cursor-pointer" type="text" placeholder="Search for player name/ email">
                     <button type="button" class="btn btn-primary text-light px-2 border-0">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -302,7 +302,6 @@
             defaultFilter.classList.add('d-none');
         }
 
-        console.log({targetElemnetParent});
         targetElemnetParent.innerHTML = '';
 
         let valuesFormData = formData.getAll(name);
@@ -310,12 +309,6 @@
             return;
         }
         
-
-        console.log("HI", {name, value, LIST: formData.getAll(name)});
-        console.log("HI", {name, value, LIST: formData.getAll(name)});
-        console.log("HI", {name, value, LIST: formData.getAll(name)});
-        console.log("HI", {name, value, LIST: formData.getAll(name)});
-
         targetElemnetHeading = document.createElement('small');
         targetElemnetHeading.classList.add('me-2');
         targetElemnetHeading.innerHTML = String(name)?.toUpperCase();

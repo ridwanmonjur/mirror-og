@@ -252,6 +252,9 @@
                         >
                             <p class="mb-1">Choose a date of birth to filter age</p>
                             <input  type="date" class="form-control" name="birthDate">
+                            <button type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light" onclick="
+                                resetInput('birthDate');
+                            "> Reset </button>
                         </div>
                     </div>
 
@@ -277,6 +280,9 @@
                                 <select id="select2-country2" class="form-control" name="region" style="width: 200px !important;">
                                     <option value=""> </option>
                                 </select>
+                                <button type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light" onclick="
+                                    resetInput('region');
+                                "> Reset </button>
                             </div>
                         </div>
                     </div>
@@ -301,7 +307,6 @@
                                 ['title' => 'Pending invite', 'value' => 'pending'],
                                 ['title' => 'Rejected invite', 'value' => 'rejected'],
                                 ['title' => 'Left team', 'value' => 'left'],
-                                ['title' => 'No status', 'value' => 'no-status'],
                             ] as $status)
                                 <div class="px-3 py-1" style="width: 200px;">
                                     <input
@@ -337,31 +342,29 @@
                     >
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('recent');">
                             <label class="me-3 cursor-pointer" for="recent">Recent</label>
-                            <span class="recentSortIcon sortIcon">
-                            </span>
                         </div>
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('age');">
                             <label class="me-3 cursor-pointer" for="age">Age</label>
-                            <span class="aToZSortIcon sortIcon">
-                            </span>
                         </div>
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('region');">
                             <label class="me-3 cursor-pointer" for="region">Region</label>
-                            <span class="startDateSortIcon sortIcon">
-                            </span>
                         </div>
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('name');">
                             <label class="me-3 cursor-pointer" for="prize">Name</label>
-                            <span class="prizeSortIcon sortIcon">
-                            </span>
                         </div>
+                        <button type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light"
+                            onclick="
+                            resetInput('sortKeys');
+                        ">
+                            Reset
+                        </button>
                     </div>
                 </div>
             </div> 
 
             <div id="filter-search-results" class="d-none">
                 <span class="me-5 cursor-not-allowed" class="">
-                    <small class="me-4">Filter: </small>
+                    <small class="me-4">Filter/ Sort: </small>
                     <span class="">
                         <small data-form-parent="default-filter" class="me-2">
                             <small class="btn btn-secondary text-light rounded-pill px-2 py-0">
@@ -373,16 +376,6 @@
                         <small data-form-parent="region" class="me-2">  
                         </small>
                         <small data-form-parent="status" class="me-2">  
-                        </small>
-                    </span>
-                </span> 
-                <span class="me-5 cursor-not-allowed" class="">
-                    <small class="me-3">Sort: </small>
-                    <span class="">
-                        <small data-form-parent="default-sort" class="me-2">
-                            <small class="btn btn-secondary text-light rounded-pill px-2 py-0">
-                                Default
-                            </small>
                         </small>
                         <small data-form-parent="sortKeys">  
                         </small>

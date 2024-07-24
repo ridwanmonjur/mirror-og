@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Teams</title>
+    <title>Your Teams</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/manageEvent.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamList.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -16,20 +16,22 @@
     <main>
         <h5> Your Teams </h5> <br>
         <form id="newTeamsForm">
-            <div class="search-bar">
+            <div>
                 <input type="hidden" id="countServer" value="{{ $count }}">
                 <input type="hidden" id="teamListServer" value="{{ json_encode($teamList) }}">
                 <input type="hidden" id="membersCountServer" value="{{ json_encode($membersCount) }}">
                 <input type="hidden" id="userIdServer" value="{{ $user->id }}">
 
-                <svg onclick= "handleSearch();" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" class="feather feather-search search-bar2-adjust">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text" name="search" id="searchInput"
-                    placeholder="Search using title, description, or keywords">
+                <input name="search" style="width: min(90vw, 450px); font-size: 1rem;" class="rounded-pill px-4 form-control d-inline-block me-3 cursor-pointer" type="text" placeholder="Search for player name/ email">
+                <button type="button" class="btn btn-primary text-light px-2 border-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="feather feather-search"
+                    >
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
 
             </div>
             <div class="d-flex justify-content-between  w-70s align-items-center flex-wrap mt-2">
@@ -194,7 +196,7 @@
                     {{-- <small  id="default-sorts" class="btn btn-primary text-light px-2 py-0">Default</small> --}}
                 </span>
             </div>
-            <div class="grid-3-columns justify-content-center" id="filter-sort-results">
+            <div class="grid-3-columns justify-content-center" id="filter-sort-results" style="grid-auto-rows : 1fr !important;">
             </div>
         </form>
         <br>
@@ -289,37 +291,12 @@
                 defaultFilter.classList.add('d-none');
             }
 
-            console.log({
-                targetElemnetParent
-            });
             targetElemnetParent.innerHTML = '';
 
             let valuesFormData = formData.getAll(name);
             if (value == "" || (Array.isArray(valuesFormData) && valuesFormData[0] == null)) {
                 return;
             }
-
-
-            console.log("HI", {
-                name,
-                value,
-                LIST: formData.getAll(name)
-            });
-            console.log("HI", {
-                name,
-                value,
-                LIST: formData.getAll(name)
-            });
-            console.log("HI", {
-                name,
-                value,
-                LIST: formData.getAll(name)
-            });
-            console.log("HI", {
-                name,
-                value,
-                LIST: formData.getAll(name)
-            });
 
             targetElemnetHeading = document.createElement('small');
             targetElemnetHeading.classList.add('me-2');
@@ -356,8 +333,7 @@
 
                 let statusListFilter = formData.getAll('status');
                 if (nameFilter != "" && !(
-                        String(sortedTeam?.user?.name).includes(nameFilter) ||
-                        String(sortedTeam?.user?.email).includes(nameFilter)
+                        String(sortedTeam?.teamName).includes(nameFilter) 
                     )) {
                     isToBeAdded = isToBeAdded && false;
                 }
@@ -459,11 +435,10 @@
                                             </label>
                                         </div>
                                         <div>
-                                    
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="text-center">
-                                    <h3 class="team-name" id="team-name">${team?.teamName}</h3>
+                                    <div class="text-center">
+                                        <h3 class="team-name" id="team-name">${team?.teamName}</h3>
                                         <span> Region: ${team?.country_name ? team?.country_name: '-'} </span>  <br>
                                         <br>
                                         <span> Teams:
@@ -484,10 +459,7 @@
                     `;
                 }
             }
-            console.log({
-                html
-            })
-
+           
             filterSortResultsDiv.innerHTML = html;
         }
 

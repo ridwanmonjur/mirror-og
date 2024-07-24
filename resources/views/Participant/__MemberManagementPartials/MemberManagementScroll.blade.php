@@ -17,7 +17,7 @@
 
         if (element) {
             element.value = value;
-            const event = new CustomEvent("sortKeysChange", {
+            const event = new CustomEvent("formChange", {
                 detail: {
                     name: 'sortKeys',
                     value: value,
@@ -29,7 +29,7 @@
     }
 
     let countries = [];
-    window.addEventListener('sortKeysChange',
+    window.addEventListener('formChange',
         debounce((event) => {
             changeUI(event);
         }, 300)
@@ -42,41 +42,71 @@
         }, 300)
     );
 
+    function resetInput(name) {
+        document.querySelector(`[name="${name}"]`).value = '';
+        let formData = new FormData(newMembersForm);
+        let newValue = name == "sortKeys" ? [] : ""; 
+        formData.set(name, newValue);
+        const event = new CustomEvent("formChange", {
+            detail: {
+                name: name,
+                value: newValue
+            }
+        }); 
+        window.dispatchEvent(event);
+    }
+
     function changeUI(event) {
-        let target = event.target, 
-            name = undefined,
-            value = undefined;
+        let target = event.target; 
         if (event.detail) {
             target = event.detail;
         }    
 
         name = target.name;
         value = target.value;
-        console.log({event, name, value});
         
-        console.log("HI");console.log("HI");console.log("HI");console.log("HI");
-        if (name != "search") {
-            let formData = new FormData(newMembersForm);
-            let isAppend = true;
-            let targetElemnetParent = document.querySelector(`small[data-form-parent="${name}"]`);
-
-            let defaultFilter = document.querySelector(`small[data-form-parent="default-filter"]`);
-            defaultFilter?.remove();
-
-            targetElemnetParent.innerHTML = '';
-            targetElemnetHeading = document.createElement('small');
-            targetElemnetHeading.classList.add('me-2');
-            targetElemnetHeading.innerHTML = String(name)?.toUpperCase();
-            targetElemnetParent.append(targetElemnetHeading);
-            for (let formValue of formData.getAll(name)) {
-                targetElemnet = document.createElement('small');
-                targetElemnet.classList.add('btn', 'btn-secondary', 'text-light', 
-                    'rounded-pill', 'px-2', 'py-0', 'me-1'
-                );
-                targetElemnet.innerHTML = formValue;
-                targetElemnetParent.append(targetElemnet);
+        if (name == "search") {
+            return;
+        }
+            
+        let formData = new FormData(newMembersForm);
+        let targetElemnetParent = document.querySelector(`small[data-form-parent="${name}"]`);
+        let defaultFilter = document.querySelector(`small[data-form-parent="default-filter"]`);
+        
+        let isShowDefaults = true;
+        for (let newMembersFormKey of newMembersFormKeys) {
+            let elementValue = formData.getAll(newMembersFormKey);
+            if (elementValue != "" || (Array.isArray(elementValue) && elementValue[0] )) {
+                isShowDefaults = isShowDefaults && false;
             }
         }
+
+        if (isShowDefaults) {
+            defaultFilter.classList.remove('d-none');
+        } else {
+            defaultFilter.classList.add('d-none');
+        }
+
+        targetElemnetParent.innerHTML = '';
+
+        let valuesFormData = formData.getAll(name);
+        if (value == "" || (Array.isArray(valuesFormData) && valuesFormData[0] == null )) {
+            return;
+        }
+        
+        targetElemnetHeading = document.createElement('small');
+        targetElemnetHeading.classList.add('me-2');
+        targetElemnetHeading.innerHTML = String(name)?.toUpperCase();
+        targetElemnetParent.append(targetElemnetHeading);
+        for (let formValue of valuesFormData) {
+            targetElemnet = document.createElement('small');
+            targetElemnet.classList.add('btn', 'btn-secondary', 'text-light', 
+                'rounded-pill', 'px-2', 'py-0', 'me-1'
+            );
+            targetElemnet.innerHTML = formValue;
+            targetElemnetParent.append(targetElemnet);
+        }
+                
     }
 
     async function fetchCountries () {

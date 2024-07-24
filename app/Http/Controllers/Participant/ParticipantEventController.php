@@ -278,12 +278,12 @@ class ParticipantEventController extends Controller
             if ($selectTeam && $isAlreadyMember) {
                 [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs]
                     = $selectTeam->processTeamRegistration($user, $event, true);
-                Event::dispatch(new JoinEventConfirmed(
-                    compact(
-                        'memberList', 'organizerList', 'memberNotification',
-                        'organizerNotification', 'allEventLogs'
-                    )
-                ));
+                // Event::dispatch(new JoinEventConfirmed(
+                //     compact(
+                //         'memberList', 'organizerList', 'memberNotification',
+                //         'organizerNotification', 'allEventLogs'
+                //     )
+                // ));
 
                 DB::commit();
 
