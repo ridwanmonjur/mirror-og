@@ -914,6 +914,11 @@ input[type="submit"]:active {
     font-size: 13px;
 }
 
+body{
+    height: auto;
+    overflow: auto;
+}
+
 @media screen and (min-width: 700px) {
     .swiper-container {
         display: block;
@@ -935,6 +940,11 @@ input[type="submit"]:active {
 }
 
 @media screen and (min-width: 1000px) {
+    body{
+        height: 100vh;
+        overflow: hidden;
+    }
+
     .event_extra {
         margin: 0;
         width: 100%;

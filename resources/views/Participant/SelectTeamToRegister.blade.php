@@ -8,45 +8,41 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/registerTeam.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/timeline.css') }}">
-
 </head>
 
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
-        <div class="flexbox box-width back-next">
-            <button onclick="goToNextScreen('step-1', 'none')" type="button"
-                class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-            <button onclick="goToNextScreen('step-3', 'timeline-1')" type="button" class="oceans-gaming-default-button"
-                onclick=""> Next > </button>
-        </div>
         <div class="time-line-box mx-auto" id="timeline-box">
             <div class="swiper-container ps-5 text-center">
                 <div class="swiper-wrapper ps-5">
                     <div class="swiper-slide swiper-slide__left" id="timeline-1">
-                        <div class="timestamp" onclick="goToNextScreen('step-1', 'timeline-1')"><span
+                        <div class="timestamp text-primary" onclick="window.toastError('Current tab selected!');"><span
                                 class="cat">Select Team</span></div>
-                        <div class="status__left" onclick="goToNextScreen('step-1', 'timeline-1')">
-                            <span><small></small></span></div>
+                        <div class="status__left" onclick="window.toastError('Current tab selected!');">
+                            <span><small class="bg-primary"></small></span></div>
                     </div>
                     <div class="swiper-slide" id="timeline-2">
-                        <div class="timestamp" onclick="goToNextScreen('step-5', 'timeline-2')"><span>Receive
-                                Notification</span></div>
-                        <div class="status" onclick="goToNextScreen('step-5', 'timeline-2')">
+                        <div class="timestamp" onclick="window.toastError('Please select a team first!');">
+                            <span>Manage Members</span>
+                        </div>
+                        <div class="status" onclick="window.toastError('Please select a team first!');">
                             <span><small></small></span></div>
                     </div>
                     <div class="swiper-slide" id="timeline-launch">
-                        <div class="timestamp" onclick="goToNextScreen('step-launch-1', 'timeline-launch')"><span
-                                class="date">Manage Members</span></div>
-                        <div class="status" onclick="goToNextScreen('step-launch-1', 'timeline-launch')">
+                        <div class="timestamp" onclick="window.toastError('Please select a team first!');"><span
+                                class="date">Manage Roster</span>
+                            </div>
+                        <div class="status" onclick="window.toastError('Please select a team first!');">
                             <span><small></small></span></div>
                     </div>
                     <div class="swiper-slide swiper-slide__right" id="timeline-payment">
                         <div class="timestamp"
-                            onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">
-                            <span>Manage Roster</span></div>
+                            onclick="window.toastError('Please select a team first!');">
+                            <span>Manage Registration</span>
+                        </div>
                         <div class="status__right"
-                            onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">
+                            onclick="window.toastError('Please select a team first!');">
                             <span><small></small></span>
                         </div>
                     </div>
@@ -56,13 +52,10 @@
         <div class="breadcrumb-top">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a onclick="goToNextScreen('step-1', 'timeline-1')">Categories</a></li>
-                    <li class="breadcrumb-item"><a onclick="goToNextScreen('step-5', 'timeline-2')">Details</a></li>
-                    <li class="breadcrumb-item"><a
-                            onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">Payment</a>
-                    </li>
-                    <li class="breadcrumb-item"><a
-                            onclick="goToNextScreen('step-launch-1', 'timeline-launch')">Launch</a></li>
+                    <li class="breadcrumb-item"><a onclick="window.toastError('Current tab selected!');">Select Team</a></li>
+                    <li class="breadcrumb-item"><a onclick="document.getElementById('selectTeamButtonId')?.click();">Manage Members</a></li>
+                    <li class="breadcrumb-item"><a onclick="document.getElementById('selectTeamButtonId')?.click();">Manage Roster</a></li>
+                    <li class="breadcrumb-item"><a onclick="document.getElementById('selectTeamButtonId')?.click();">Manage Registration</a></li>
                 </ol>
             </nav>
         </div>
@@ -139,7 +132,7 @@
                     </p>
 
                     <div class="text-center">
-                        <button form="selectTeam" disabled class="oceans-gaming-default-button" type="submit">
+                        <button id="selectTeamButtonId" form="selectTeam" disabled class="oceans-gaming-default-button" type="submit">
                             Confirm Team and Notify
                         </button>
                     </div>
@@ -150,9 +143,14 @@
                 </div>
             </div>
         </div>
-        </form>
+        <div class="d-flex box-width back-next">
+            <button onclick="goToCancelButton()" type="button"
+                class="btn border-dark rounded-pill py-2 px-4"> Back </button>
+            <button form="selectTeam" type="submit" 
+                class="btn btn-primary text-light rounded-pill py-2 px-4"
+                onclick=""> Next > </button>
+        </div>
     </main>
-    <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
     <script>
         function goToCancelButton() {
             let url = "{{ route('participant.event.view', $id) }}";

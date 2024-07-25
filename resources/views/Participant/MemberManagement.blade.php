@@ -7,15 +7,74 @@
     <title>Team Member Management</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/manage_team.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/timeline.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.__Partials.TeamHead')
-
     <main class="main2">
+        @if (isset($redirect) && $redirect)
+            <div class="time-line-box mx-auto" id="timeline-box">
+                <div class="swiper-container text-center">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide swiper-slide__left" id="timeline-1">
+                            <div class="timestamp" onclick="goToNextScreen('step-1', 'timeline-1')"><span
+                                    class="cat">Select Team</span></div>
+                            <div class="status__left" onclick="goToNextScreen('step-1', 'timeline-1')">
+                                <span><small></small></span></div>
+                        </div>
+                        <div class="swiper-slide" id="timeline-2">
+                            <div class="timestamp" onclick="goToNextScreen('step-5', 'timeline-2')"><span>Receive
+                                    Notification</span></div>
+                            <div class="status" onclick="goToNextScreen('step-5', 'timeline-2')">
+                                <span><small></small></span></div>
+                        </div>
+                        <div class="swiper-slide" id="timeline-launch">
+                            <div class="timestamp" onclick="goToNextScreen('step-launch-1', 'timeline-launch')"><span
+                                    class="date">Manage Members</span></div>
+                            <div class="status" onclick="goToNextScreen('step-launch-1', 'timeline-launch')">
+                                <span><small></small></span></div>
+                        </div>
+                        <div class="swiper-slide swiper-slide__right" id="timeline-payment">
+                            <div class="timestamp"
+                                onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">
+                                <span>Manage Roster</span></div>
+                            <div class="status__right"
+                                onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">
+                                <span><small></small></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="breadcrumb-top">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a onclick="goToNextScreen('step-1', 'timeline-1')">Categories</a></li>
+                        <li class="breadcrumb-item"><a onclick="goToNextScreen('step-5', 'timeline-2')">Details</a></li>
+                        <li class="breadcrumb-item"><a
+                                onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">Payment</a>
+                        </li>
+                        <li class="breadcrumb-item"><a
+                                onclick="goToNextScreen('step-launch-1', 'timeline-launch')">Launch</a></li>
+                    </ol>
+                </nav>
+            </div>
+        @else
+            @include('Participant.__Partials.TeamHead') 
+        @endif
         @include('Participant.__MemberManagementPartials.MemberManagement')
+        @if (isset($redirect) && $redirect)
+            <div class="d-flex box-width back-next mb-5">
+                <button onclick="goToNextScreen('step-1', 'none')" type="button"
+                    class="btn border-dark rounded-pill py-2 px-4"> Back </button>
+                <button onclick="goToNextScreen('step-3', 'timeline-1')" type="button" 
+                    class="btn btn-primary text-light rounded-pill py-2 px-4"
+                    onclick=""> Next > </button>
+            </div>
+            <br><br><br><br><br><br>
+        @endif
     </main>
     
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>

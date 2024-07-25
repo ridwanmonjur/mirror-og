@@ -2,41 +2,39 @@
     use Carbon\Carbon;
     $isRedirect = (isset($redirect) && $redirect);
 @endphp
-
+@if (!$isRedirect)
     <div class="mb-2 text-success mx-auto text-center">
-        @if ($isRedirect)
-            <span>
-                You have joined this event successfully!
-            </span>
-            <a
-                href="{{ route('participant.roster.manage', ['id' => $id, 'teamId' => $selectTeam->id]) }}">
-                <button class="oceans-gaming-default-button oceans-gaming-default-button-link ms-2 me-2" type="submit"
-                    style="display: inline !important;">
-                    <u> Manage Roster</u>
-                </button>
-            </a>
-            <a
-                href="{{ route('participant.event.view', ['id' => $id]) }}">
-                <button class="oceans-gaming-default-button oceans-gaming-gray-button ms-2 me-2" type="submit" style="display: inline !important;">
-                    View Event
-                </button>
-            </a>
-        @endif
-        @if (!$isRedirect)
-            <a
-                href="{{ route('participant.team.manage', ['id' => $id]) }}">
-                <button class="oceans-gaming-default-button oceans-gaming-gray-button ms-2 me-2" type="submit" style="display: inline !important;">
-                    Manage Team
-                </button>
-            </a>
-        @endif
+        <span>
+            You have joined this event successfully!
+        </span>
+        <a
+            href="{{ route('participant.roster.manage', ['id' => $eventId, 'teamId' => $selectTeam->id]) }}">
+            <button class="oceans-gaming-default-button oceans-gaming-default-button-link ms-2 me-2" type="submit"
+                style="display: inline !important;">
+                <u> Manage Roster</u>
+            </button>
+        </a>
+        <a
+            href="{{ route('participant.event.view', ['id' => $eventId]) }}">
+            <button class="oceans-gaming-default-button oceans-gaming-gray-button ms-2 me-2" type="submit" style="display: inline !important;">
+                View Event
+            </button>
+        </a>
+   
+        <a
+            href="{{ route('participant.team.manage', ['id' => $id]) }}">
+            <button class="oceans-gaming-default-button oceans-gaming-gray-button ms-2 me-2" type="submit" style="display: inline !important;">
+                Manage Team
+            </button>
+        </a>
         <a href={{ route('participant.home.view')}}>
             <button class="btn btn-link ms-0 me-2" type="submit" style="display: inline !important;">
                 Home Screen
             </button>
         </a>
+    
     </div>
-
+@endif
 <div class="tabs">
     <button id="CurrentMembersBtn" class="tab-button inner-tab tab-button-active"
         onclick="showTab(event, 'CurrentMembers', 'inner-tab')">Current Members
@@ -178,6 +176,7 @@
                 @endif
             </tbody>
         </table>
+   
     </div>
 </div>
 <div class="tab-content pb-4 inner-tab mx-auto" id="NewMembers">
@@ -391,7 +390,6 @@
     <section class="featured-events scrolling-pagination">
         @include('Participant.__MemberManagementPartials.MemberManagementScroll')
     </section>
-
 </div>
 
 

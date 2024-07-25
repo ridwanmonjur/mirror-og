@@ -13,37 +13,32 @@
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
-        <div class="flexbox box-width back-next">
-            <button onclick="goToNextScreen('step-1', 'none')" type="button"
-                class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-            <button onclick="goToNextScreen('step-3', 'timeline-1')" type="button" class="oceans-gaming-default-button"
-                onclick=""> Next > </button>
-        </div>
         <div class="time-line-box mx-auto" id="timeline-box">
-            <div class="swiper-container ps-5 text-center">
-                <div class="swiper-wrapper ps-5">
+            <div class="swiper-container text-center">
+                <div class="swiper-wrapper">
                     <div class="swiper-slide swiper-slide__left" id="timeline-1">
-                        <div class="timestamp" onclick="goToNextScreen('step-1', 'timeline-1')"><span
+                        <div class="timestamp" onclick="window.toastError('Cannot go back to team selection again!');"><span
                                 class="cat">Select Team</span></div>
-                        <div class="status__left" onclick="goToNextScreen('step-1', 'timeline-1')">
+                        <div class="status__left" onclick="window.toastError('Cannot go back to team selection again!');">
                             <span><small></small></span></div>
                     </div>
                     <div class="swiper-slide" id="timeline-2">
-                        <div class="timestamp" onclick="goToNextScreen('step-5', 'timeline-2')"><span>Receive
-                                Notification</span></div>
-                        <div class="status" onclick="goToNextScreen('step-5', 'timeline-2')">
+                        <div class="timestamp" onclick="window.toastError('This is the current tab!');">
+                            <span>Manage Members</span>
+                        </div>
+                        <div class="status" onclick="window.toastError('This is the current tab!');">
                             <span><small></small></span></div>
                     </div>
                     <div class="swiper-slide" id="timeline-launch">
-                        <div class="timestamp" onclick="goToNextScreen('step-launch-1', 'timeline-launch')"><span
-                                class="date">Manage Members</span></div>
-                        <div class="status" onclick="goToNextScreen('step-launch-1', 'timeline-launch')">
+                        <div class="timestamp" onclick="document.getElementById('proxySubmit').click();"><span
+                                class="date">Manage Roster</span></div>
+                        <div class="status" onclick="document.getElementById('proxySubmit').click();">
                             <span><small></small></span></div>
                     </div>
                     <div class="swiper-slide swiper-slide__right" id="timeline-payment">
                         <div class="timestamp"
                             onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">
-                            <span>Manage Roster</span></div>
+                            <span>Manage Registration</span></div>
                         <div class="status__right"
                             onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">
                             <span><small></small></span>
@@ -58,7 +53,7 @@
                     <li class="breadcrumb-item"><a onclick="goToNextScreen('step-1', 'timeline-1')">Categories</a></li>
                     <li class="breadcrumb-item"><a onclick="goToNextScreen('step-5', 'timeline-2')">Details</a></li>
                     <li class="breadcrumb-item"><a
-                            onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">Payment</a>
+                        onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">Manage Roster</a>
                     </li>
                     <li class="breadcrumb-item"><a
                             onclick="goToNextScreen('step-launch-1', 'timeline-launch')">Launch</a></li>
@@ -76,25 +71,35 @@
                 </p>
 
                 <p>You can check the registration status on your <a href="{{ route('participant.register.manage', ['id' => $selectTeam->id]) }}"> <u> team </u> </a>'s page.</p>
-                <a href="{{ route('participant.memberManage.action', ['teamId' => $selectTeam->id, 'id' => $id]) }}">
+                <form id="eventNotify" method="POST" action="{{ route('participant.memberManage.action') }}">
+                    @csrf
+                    <input type="hidden" value="{{$id}}" name="eventId">
+                    <input type="hidden" value="{{$id}}" name="teamId">
                     <div class="text-center">
                         <input type="submit" class="choose-payment-method" value="Done">
                     </div>
-                </a>
+                </form>
                 <div class="text-center">
                     <button onclick="goToRegistrationScreen()" class="oceans-gaming-default-button oceans-gaming-transparent-button"> See Registration Status </button>
                 </div>
                 <br><br>
             </div>
         </div>
-        
+        <div class="d-flex box-width back-next">
+            <span></span>
+            {{-- <button onclick="goToNextScreen('step-1', 'none')" type="button"
+                class="btn border-dark rounded-pill py-2 px-4"> Back </button> --}}
+            <button form="eventNotify" type="submit"
+                id="proxySubmit" 
+                class="btn btn-primary text-light rounded-pill py-2 px-4"
+            > Next > </button>
+        </div>
     </main>
     <script>
         function goToRegistrationScreen() {
             window.location.href = "{{ route('participant.register.manage', ['id'=> $selectTeam->id]) }}";
         }
     </script>
-    <script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
 
 </body>
 

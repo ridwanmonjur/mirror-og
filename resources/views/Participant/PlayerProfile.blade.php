@@ -545,10 +545,20 @@
                     <tbody>
                         @foreach($pastTeam as $team)
                             <tr class="st">
-                                <td> </td>
-                                <td class="d-flex align-items-center">
+                                <td class="py-0 px-0 mx-0"> 
+                                    <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
+                                         <svg class="gear-icon-btn"
+                                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                            class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                                            <path
+                                                d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                                        </svg>
+                                    </a>
+                                </td>
+                                <td class="d-flex align-items-center colored-cell">
                                     <img
-                                        class="d-inline-block object-fit-cover me-3"
+                                        class="rounded-circle d-inline-block object-fit-cover me-3"
                                         src="{{ '/storage' . '/'. $team->teamBanner }}"
                                         {!! trustedBladeHandleImageFailure() !!} 
                                         height="40"
@@ -556,8 +566,8 @@
                                     > 
                                     <span>{{$team->teamName}}</span>
                                 </td>
-                                <td style="font-size: 1.5rem;">{{$team->country_flag}}</td>
-                                <td>{{$team->members_count}}/5</td>
+                                <td style="font-size: 1.5rem;" class="colored-cell">{{$team->country_flag}}</td>
+                                <td class="colored-cell">{{$team->members_count}}/5</td>
                             </tr>
                         @endforeach
                     </tbody>

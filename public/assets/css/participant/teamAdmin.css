@@ -18,11 +18,10 @@
     display: block !important;
     align-items: center;
     justify-content: center;
-    background-image: url("/assets/images/event-creation-bg.png");
     background-repeat: round;
     background-size: cover;
     margin: 0;
-    padding: 20px 0 20vh;
+    padding: 0px 0 20vh;
 }
 
 .menu-toggle {

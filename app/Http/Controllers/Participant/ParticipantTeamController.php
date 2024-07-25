@@ -94,16 +94,16 @@ class ParticipantTeamController extends Controller
         }
     }
 
-    public function teamMemberManagementRedirected(Request $request, $id, $teamId)
+    public function teamMemberManagementRedirected(Request $request)
     {
         $page = 5;
         $user = $request->attributes->get('user') ?? auth()->user();
-        $selectTeam = Team::where('id', $teamId)
-            ->where('creator_id', $user->id)->with('members')->first();
+        $teamId = $request->teamId;
+        $selectTeam = Team::where('id', $teamId)->with('members')->first();
         if ($selectTeam) {
-            return $this->handleTeamManagement($selectTeam, $id, $request, $page, true);
+            return $this->handleTeamManagement($selectTeam, $request->eventId, $request, $page, true);
         } else {
-            return redirect()->route('participant.team.manage', ['id' => $id]);
+            return $this->showErrorParticipant('This event is missing or cannot be retrieved!');
         }
     }
 
@@ -121,14 +121,14 @@ class ParticipantTeamController extends Controller
         }
     }
 
-    protected function handleTeamManagement($selectTeam, $id, $request, $page, $redirect = false)
+    protected function handleTeamManagement($selectTeam, $eventId, $request, $page, $redirect = false)
     {
         $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
         $teamMembersProcessed = TeamMember::getProcessedTeamMembers($selectTeam->id);
         $creator_id = $selectTeam->creator_id;
         $userList = [];
         return view('Participant.MemberManagement', compact('selectTeam', 'redirect', 
-            'teamMembersProcessed', 'creator_id', 'id', 'captain', 'userList'
+            'teamMembersProcessed', 'creator_id', 'eventId', 'captain', 'userList'
         ));
     }
 

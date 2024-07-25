@@ -18,3 +18,8 @@
 .dropbtn:active {
     outline: none !important;
 }
+
+.main2 {
+    background-image: url("/assets/images/event-creation-bg.png");
+
+}

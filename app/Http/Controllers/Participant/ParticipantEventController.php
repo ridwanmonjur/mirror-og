@@ -13,6 +13,7 @@ use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\TeamMember;
 use App\Models\User;
+use ErrorException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -267,6 +268,9 @@ class ParticipantEventController extends Controller
             $user = $request->attributes->get('user');
             $userId = $request->attributes->get('user')->id;
             $teamId = $request->input('selectedTeamId');
+            if ($teamId == "") {
+                throw new ErrorException("No team has been chosen");
+            }
             $isAlreadyMember = TeamMember::isAlreadyMember($teamId, $userId);
             $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $userId, 'accepted');
             if ($hasJoinedOtherTeams) {
@@ -357,12 +361,12 @@ class ParticipantEventController extends Controller
                 }]);
                 [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs]
                     = $selectTeam->processTeamRegistration($user, $event, true);
-                event(new JoinEventConfirmed(
-                    compact(
-                        'memberList', 'organizerList', 'memberNotification',
-                        'organizerNotification', 'allEventLogs'
-                    )
-                ));
+                // event(new JoinEventConfirmed(
+                //     compact(
+                //         'memberList', 'organizerList', 'memberNotification',
+                //         'organizerNotification', 'allEventLogs'
+                //     )
+                // ));
                 DB::commit();
 
                 return view('Participant.EventNotify', compact('id', 'selectTeam'));

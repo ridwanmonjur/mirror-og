@@ -139,7 +139,7 @@
                                             <path
                                                 d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
                                         </svg>
-                                    <td>
+                                    </td>
                                     <td class="coloured-cell px-3">
                                         <div class="player-info">
                                             <span>{{ $teamAndMember->teamName }}</span>
@@ -195,15 +195,15 @@
                                     width="80">
                             </div>
                             <div class="d-inline pe-4">
-                                <img src="{{ bladeImageNull($invitation->event->game->gameIcon) }}" height="60"
-                                    width="60">
+                                <img src="{{ bladeImageNull($invitation->event->game->gameIcon) }}" height="40"
+                                    width="40" class="object-fit-cover me-3">
                                 You have been invited to event
                                 <span>"{{ $invitation->event->eventName }}"</span>
                                 by {{ $invitation->event->user->name }}
                                 {{ is_null($invitation->updated_at) ? '' : Carbon::parse($invitation->updated_at)->diffForHumans()}}.
                                 <button 
                                     onclick="redirectToProfilePage({{ $invitation->event->id }});"    
-                                    class="btn btn-link text-left d-inline"
+                                    class="btn btn-link text-left ms-3 d-inline"
                                 >
                                 <u>View event</u>
                                 </button>
