@@ -9,8 +9,9 @@
 body {
     width: 100%;
     height: auto;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
-    justify-content: center;
     background-image: url("/assets/images/Single_Screen.png");
 }
 
@@ -18,14 +19,13 @@ body {
     padding: 20px;
     height: 90vh;
     width: 100vw;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    margin: auto;
 }
 
 .wrapper {
     border-radius: 25px;
     border: 2px solid #676767;
+    width: 80%;
 }
 
 p {
@@ -180,3 +180,8 @@ input.largerCheckbox {
     align-items: center;
 }
 
+@media screen and (min-width: 992px) {
+    .wrapper {
+        width: 50%;
+    }
+}

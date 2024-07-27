@@ -7,7 +7,7 @@
 
 <body>
     <div x-data="alpineDataComponent" class="app-container row"
-        {{-- @fetchstart.window="console.log('Received event:', $event);initDB(event)" --}}
+        @fetchstart.window="console.log('Received event:', $event); "
         {{-- x-init="initDB();" --}}
         >
         <input type="hidden" id="fetchFirebaseUsersInput" value="{{ route('user.firebase.readAll') }}">
@@ -23,9 +23,9 @@
                     </svg>
                 </button>
             </div>
-            <div class="chat-list" @scroll.window.throttle="handleScrollChat">
+            <div class="chat-list">
                 <template x-for="room in oldRooms" :key="room.id">
-                    <div  x-on:click="currentRoom = room?.id" class="chat-item">
+                    <div x-bind:data-identity-for-read="room.id" x-on:click="currentRoom = room?.id" class="chat-item">
                         <template x-if="room?.otherRoomMember?.userBanner != null">
                             <img {!! trustedBladeHandleImageFailure() !!} x-bind:src="'/storage/' + room?.otherRoomMember?.userBanner" width="50" height="50"
                                 class="object-fit-cover rounded-circle me-3">
@@ -37,10 +37,18 @@
                         </template>
                         <div class="chat-info">
                             <h3 x-text="room?.otherRoomMember?.name"></h3>
-                            <p class="status my-0" x-html="formatDateDifference(room.otherRoomMember?.updated_at)"></p>
+                            <p class="status my-0">
+                                <span x-html="formatDateDifference(room.otherRoomMember?.updated_at)"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill mt-1 ms-2 d-none" viewBox="0 0 16 16">
+                                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"/>
+                                </svg>
+                            </p>
                         </div>
+                       
                     </div>
+                    
                 </template>
+                 
             </div>
         </div>
         <div class="chat-container position-relative col-12 d-flex col-lg-7 col-xl-8 m-0 p-0" style="overflow: hidden;">

@@ -22,7 +22,6 @@
         'resources/sass/colorpicker.scss',
     ])
     <link rel="stylesheet" href="{{ asset('/assets/css/chat/inpage-message.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
 
 </head>
 @php
@@ -47,7 +46,7 @@
 @endauth
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
-
+    <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     <main x-data="alpineDataComponent">
         @include('Participant.__ProfilePartials.BackgroundModal')
 
@@ -212,8 +211,7 @@
                                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
                                     <template x-if="countries">
-                                        <select id="select2-country" :change="changeFlagEmoji" style="width: 150px;"  data-placeholder="Select a country" x-model="participant.region"> 
-                                        </select>
+                                        <select x-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;" class="d-inline form-control"  data-placeholder="Select a country" x-model="participant.region"> 
                                     </template>
                                 </span>
                                 <span class="me-3">
@@ -501,7 +499,7 @@
                     <tbody>
                         @foreach($teamList as $team)
                             <tr class="st">
-                                <td class="py-0 px-3"> 
+                                <td class="py-0 px-0 mx-0"> 
                                     <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
                                          <svg class="gear-icon-btn"
                                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -547,10 +545,20 @@
                     <tbody>
                         @foreach($pastTeam as $team)
                             <tr class="st">
-                                <td> </td>
-                                <td class="d-flex align-items-center">
+                                <td class="py-0 px-0 mx-0"> 
+                                    <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
+                                         <svg class="gear-icon-btn"
+                                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                            class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                                            <path
+                                                d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                                        </svg>
+                                    </a>
+                                </td>
+                                <td class="d-flex align-items-center colored-cell">
                                     <img
-                                        class="d-inline-block object-fit-cover me-3"
+                                        class="rounded-circle d-inline-block object-fit-cover me-3"
                                         src="{{ '/storage' . '/'. $team->teamBanner }}"
                                         {!! trustedBladeHandleImageFailure() !!} 
                                         height="40"
@@ -558,8 +566,8 @@
                                     > 
                                     <span>{{$team->teamName}}</span>
                                 </td>
-                                <td style="font-size: 1.5rem;">{{$team->country_flag}}</td>
-                                <td>{{$team->members_count}}/5</td>
+                                <td style="font-size: 1.5rem;" class="colored-cell">{{$team->country_flag}}</td>
+                                <td class="colored-cell">{{$team->members_count}}/5</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -573,7 +581,5 @@
 
 
 </body>
-<script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
-@livewireScripts
 @include('Participant.__ProfilePartials.Scripts')
 </html>

@@ -39,6 +39,7 @@
       
     @endphp
 @endauth
+<script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
 <body>
     @include('Organizer.__ProfilePartials.BackgroundModal')
     @include('__CommonPartials.NavbarGoToSearchPage')

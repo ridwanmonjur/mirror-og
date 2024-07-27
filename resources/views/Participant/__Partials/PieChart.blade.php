@@ -17,7 +17,7 @@
         <span>Paid: <u class="text-success">RM {{ $exisitngSum }}</u>
             <span>Pending: <u style="color: red;">RM {{ $pedning }} </u> <span></p>
     </div>
-    <div class="popover__content pt-0">
+    <div @class(["popover__content" => !$isRedirect, "d-none" => $isRedirect, "pt-0"])>
         <p class="popover__message  pt-0">
             <table class="align-start px-3 mx-3">
                 <thead>

@@ -49,10 +49,6 @@ class Team extends Model
         return $this->morphMany(ActivityLogs::class, 'subject');
     }
 
-    private static function getTeamByCreatorId($teamId)
-    {
-        return self::where('id', $teamId)->value('user_id');
-    }
 
     public static function getTeamAndMembersByTeamId($teamId)
     {

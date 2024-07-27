@@ -40,8 +40,12 @@
             </header>
         </div>
         <br>
-        <div class="grid-container">
+        <div>
             @if ($tier)
+                
+                <div class="{{ 'side-image side-image-' . $eventTierLower }} ">
+                    <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="180" height="125">
+                </div>
                 <div class="{{ 'side-image side-image-' . $eventTierLower }}">
                     <img class="side-image-absolute-bottom" src="{{ $eventTierLowerImg }}" width="180"
                         height="125">
@@ -50,10 +54,12 @@
                 <div>
                 </div>
             @endif
+        </div>
+        <div class="grid-container">
+            <div> </div>
             <div>
                 <div>
                     <div class="mx-2 position-relative">
-
                         <div class="d-flex justify-content-center d-lg-none">
                             <img class="image-at-top" src="{{ $eventTierLowerImg }}" {!! trustedBladeHandleImageFailureResize() !!}
                                 width="120" height="90">
@@ -196,7 +202,7 @@
                            
                             <br>
                             <div>
-                                <div data-aos="fade-in" class="tab">
+                                <div class="tab">
                                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ripple' }}"
                                         onclick="openTab(event, 'Overview')">Overview</button>
                                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ripple' }}"
@@ -340,16 +346,11 @@
                         </div>
                     </div>
                 </div>
+                <div> </div>
 
             </div>
         </div>
-        @if ($tier)
-            <div class="{{ 'side-image side-image-' . $eventTierLower }} ">
-                <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="180" height="125">
-            </div>
-        @else
-            <div></div>
-        @endif
+        
         </div>
         <br>
     </main>

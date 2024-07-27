@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event creation</title>
+    <title>Team Edit</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamCreate.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
@@ -31,10 +31,33 @@
                         </p>
                         <br>
                         <form action="{{ route('participant.team.editStore', ['id' => $team->id]) }}" method="POST">
-                            @include('Participant.__CreateEditTeamPartials.FormErrorsSuccess')
-                            @include('Participant.__CreateEditTeamPartials.FormFields', [
-                                'team' => $team, 'buttonLabel' => 'Edit'
-                            ])
+                            @csrf
+                            @if ($errors->any())
+                                <div class="text-red">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                            @if (session()->has('errorMessage'))
+                                <div class="text-red">
+                                    {{ session()->get('errorMessage') }}
+                                </div>
+                            @endif
+
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <input type="text" value="{{ $team ? $team->teamName : '' }}" name="teamName" id="teamName" placeholder="Team Name"
+                                    onclick="clearPlaceholder(this)" onblur="restorePlaceholder(this)">
+                                <input type="text" style="height: 100px;" value="{{ $team ? $team->teamDescription : '' }}" name="teamDescription"
+                                    id="teamDescription" placeholder="Write your team description..." onclick="clearPlaceholder(this)"
+                                    onblur="restorePlaceholder(this)">
+                                <br> <br>
+                                <input type="submit" onclick="" value="Edit">
+                                
+                            </div>
+
                     </form>
                 </div>
             </div>

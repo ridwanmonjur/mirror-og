@@ -75,7 +75,7 @@ body {
     /* Rounded corners for chat items */
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    /* transition: background-color 0.3s ease; */
 }
 
 .chat-item:hover {

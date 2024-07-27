@@ -1,47 +1,240 @@
-<table class="member-table">
+<table class="member-table" id="member-table-body">
     <tbody>
-        @foreach ($userList as $user)
-            <tr class="st">
-                <td class="colorless-col">
-                    <svg 
-                        onclick="redirectToProfilePage({{$user->id}});"
-                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                        class="bi bi-gear" viewBox="0 0 16 16">
-                        <path
-                            d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0" />
-                        <path
-                            d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z" />
-                    </svg>
-                <td>
-                <td class="coloured-cell px-3">
-                    <div class="player-info">
-                        <img 
-                            width="45" height="45" 
-                            src="{{ bladeImageNull($member->user->userBanner) }}"
-                            class="mx-2 random-color-circle object-fit-cover rounded-circle"
-                        >
-                        <span>{{ $user->name }}</span>
-                    </div>
-                </td>
-                <td class="flag-cell coloured-cell px-3 fs-4">
-                    <span>{{ $member->user->participant->region_flag }} </span>
-                </td>
-                <td class="coloured-cell px-3">
-                    @if ($user->is_in_team == 'yes')
-                        Team status ({{ ucfirst($user->members[0]->status) }})
-                    @else
-                        Not in team
-                    @endif
-                </td>
-                <td class="colorless-col">
-                    <div class="gear-icon-btn" onclick="inviteMember({{ $user->id }}, {{ $selectTeam->id }})">
-                        @if ($user->is_in_team != 'yes')
-                            <img src="/assets/images/add.png" height="25px" width="25px">
-                        @endif
-                    </div>
-                </td>
-            </tr>
-        @endforeach
     </tbody>
 </table>
-<div class="member-table"> {{ $userList->links() }} </div>
+
+<div class="tab-size mt-4"> 
+    <ul class="pagination cursor-pointer py-3" id="member-table-links">
+    </ul>
+</div>
+<script>
+    let newMembersForm = document.getElementById('newMembersForm');
+    let newMembersFormKeys = ['sortKeys', 'birthDate', 'region', 'status'];
+    let sortKeysInput = document.getElementById("sortKeys");
+    
+    function setSortForFetch(value) {
+        const element = document.getElementById("sortKeys");
+
+        if (element) {
+            element.value = value;
+            const event = new CustomEvent("formChange", {
+                detail: {
+                    name: 'sortKeys',
+                    value: value,
+                }
+            }); 
+            window.dispatchEvent(event);
+            fetchMembers();
+        }
+    }
+
+    let countries = [];
+    window.addEventListener('formChange',
+        debounce((event) => {
+            changeUI(event);
+        }, 300)
+    );
+    
+    newMembersForm.addEventListener('change',
+        debounce((event) => {
+            changeUI(event);
+            fetchMembers();
+        }, 300)
+    );
+
+    function resetInput(name) {
+        document.querySelector(`[name="${name}"]`).value = '';
+        let formData = new FormData(newMembersForm);
+        let newValue = name == "sortKeys" ? [] : ""; 
+        formData.set(name, newValue);
+        const event = new CustomEvent("formChange", {
+            detail: {
+                name: name,
+                value: newValue
+            }
+        }); 
+        window.dispatchEvent(event);
+    }
+
+    function changeUI(event) {
+        let target = event.target; 
+        if (event.detail) {
+            target = event.detail;
+        }    
+
+        name = target.name;
+        value = target.value;
+        
+        if (name == "search") {
+            return;
+        }
+            
+        let formData = new FormData(newMembersForm);
+        let targetElemnetParent = document.querySelector(`small[data-form-parent="${name}"]`);
+        let defaultFilter = document.querySelector(`small[data-form-parent="default-filter"]`);
+        
+        let isShowDefaults = true;
+        for (let newMembersFormKey of newMembersFormKeys) {
+            let elementValue = formData.getAll(newMembersFormKey);
+            if (elementValue != "" || (Array.isArray(elementValue) && elementValue[0] )) {
+                isShowDefaults = isShowDefaults && false;
+            }
+        }
+
+        if (isShowDefaults) {
+            defaultFilter.classList.remove('d-none');
+        } else {
+            defaultFilter.classList.add('d-none');
+        }
+
+        targetElemnetParent.innerHTML = '';
+
+        let valuesFormData = formData.getAll(name);
+        if (value == "" || (Array.isArray(valuesFormData) && valuesFormData[0] == null )) {
+            return;
+        }
+        
+        targetElemnetHeading = document.createElement('small');
+        targetElemnetHeading.classList.add('me-2');
+        targetElemnetHeading.innerHTML = String(name)?.toUpperCase();
+        targetElemnetParent.append(targetElemnetHeading);
+        for (let formValue of valuesFormData) {
+            targetElemnet = document.createElement('small');
+            targetElemnet.classList.add('btn', 'btn-secondary', 'text-light', 
+                'rounded-pill', 'px-2', 'py-0', 'me-1'
+            );
+            targetElemnet.innerHTML = formValue;
+            targetElemnetParent.append(targetElemnet);
+        }
+                
+    }
+
+    async function fetchCountries () {
+        try {
+            const data = await storeFetchDataInLocalStorage('/countries');
+            if (data?.data) {
+                countries = data.data;
+                const choices2 = document.getElementById('select2-country2');
+                let countriesHtml = "<option value=''";
+                countries.forEach((value) => {
+                    countriesHtml +=`
+                        <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
+                    `;
+                });
+
+                choices2.innerHTML = countriesHtml;
+            } else {
+                errorMessage = "Failed to get data!";
+            }
+        } catch (error) {
+            console.error('Error fetching countries:', error);
+        }
+    }
+
+    async function fetchMembers(event = null) {
+        let route;
+        let bodyHtml = '', pageHtml = '';
+        let teamId = document.getElementById('teamId')?.value;
+        if (event?.target && event.target?.dataset?.url) {
+                route = event.target.dataset.url;
+        } else {
+            route = document.getElementById('membersUrl')?.value;
+        }
+        
+        let formData = new FormData(newMembersForm);
+        let jsonObject = {}
+        for (let [key, value] of formData.entries()) {
+            jsonObject[key] = value;
+        }
+
+        let links = [];
+        data = await fetch(route, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                teamId,
+                ...jsonObject
+            })
+        });
+
+        data = await data.json();
+        
+        if (data.success && 'data' in data) {
+            users = data?.data?.data;
+            links = data?.data?.links;
+            for (user of users) {
+                bodyHtml+=`
+                    <tr class="st">
+                        <td class="colorless-col px-0 mx-0">
+                            <svg 
+                                onclick="redirectToProfilePage(${user.id});"
+                                class="gear-icon-btn"
+                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                                <path
+                                    d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                            </svg>
+                        </td>
+                        <td class="coloured-cell px-1">
+                            <div class="player-info">
+                                <img 
+                                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    width="45" height="45" 
+                                    src="/storage/${user.userBanner}"
+                                    class="mx-2 random-color-circle object-fit-cover rounded-circle"
+                                >
+                                <span>${user.name}</span>
+                            </div>
+                        </td>
+                        <td class="flag-cell coloured-cell px-3 fs-4">
+                            <span>${user.participant.region_flag}</span>
+                        </td>
+                         <td class="coloured-cell px-3">
+                            ${user.is_in_team ?
+                                'Team status ' + user.members[0].status
+                            :
+                                'Not in team'
+                            }
+                        </td>
+                        <td class="colorless-col" style="min-width: 1.875rem;">
+                            <div class="gear-icon-btn ${user.is_in_team && 'd-none'}" onclick="inviteMember('${user.id}', '${teamId}')">
+                                    <img src="/assets/images/add.png" height="1.5625rem" width="1.5625rem">
+                            </div>
+                        </td>
+                      
+                    </tr>
+                `;
+            }
+
+            for (let link of links) {
+                pageHtml += `
+                    <li
+                        data-url='${link.url}'
+                        onclick="{ fetchMembers(event); }"  
+                        class="page-item ${link.active && 'active'} ${link.url && 'disabled'}" 
+                    > 
+                        <a 
+                            onclick="event.preventDefault()"
+                            class="page-link ${link.active && 'text-light'}"
+                        > 
+                            ${link.label}
+                        </a>
+                    </li>
+                `;
+            }
+
+        }
+
+        let tbodyElement = document.querySelector('#member-table-body tbody');
+        tbodyElement.innerHTML = bodyHtml;  
+        let pageLinks = document.querySelector('#member-table-links');
+        pageLinks.innerHTML = pageHtml; 
+    };
+
+    fetchMembers();
+    fetchCountries();
+</script>  

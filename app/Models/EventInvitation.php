@@ -25,4 +25,23 @@ class EventInvitation extends Model
     {
         return $this->belongsTo(EventDetail::class, 'event_id');
     }
+
+    public static function getParticipants($request, $teamId)
+    {
+        return self::query()
+            ->where('role', 'PARTICIPANT')
+            ->when($request->has('search'), function ($query) use ($request) {
+                $search = trim($request->input('search'));
+                if (! empty($search)) {
+                    $query->where(function ($q) use ($search) {
+                        $q->orWhere('name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%");
+                    });
+                }
+            })
+            ->with([
+                'members' => function ($query) use ($teamId) {
+                    $query->where('team_id', $teamId);
+                },
+            ]);
+    }
 }

@@ -31,12 +31,16 @@ class ParticipantTeamController extends Controller
         if ($teamIdList) {
             $membersCount = Team::getTeamMembersCountForEachTeam($teamIdList);
             $count = $teamList->count();
-
-            return view('Participant.TeamList', compact('teamList', 'count', 'membersCount'));
         } else {
             $membersCount = 0;
             $count = 0;
+        }
 
+        if ($request->expectsJson) {
+            return response()->json(['data' => [
+                'teamList' => $teamList, 'count' => $count,  'membersCount' => $membersCount
+            ], 'sucess' => true], 200);
+        } else {
             return view('Participant.TeamList', compact('teamList', 'count', 'membersCount'));
         }
     }
@@ -52,7 +56,7 @@ class ParticipantTeamController extends Controller
         $selectTeam = Team::where('id', $id)
             ->with(['members' => function ($query) {
                 $query->where('status', 'accepted')
-                    ->with('user');
+                    ->with('user', 'user.participant');
             }])->first();
         // dd($selectTeam);
         if ($selectTeam) {
@@ -78,10 +82,9 @@ class ParticipantTeamController extends Controller
             // dd($joinEvents, $activeEvents, $historyEvents);
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
-            $teamMembers = $selectTeam->members;
 
             return view('Participant.TeamManagement',
-                compact('selectTeam', 'joinEvents', 'captain', 'teamMembers',
+                compact('selectTeam', 'joinEvents', 'captain',
                     'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount',
                     'wins', 'streak', 'awardList', 'achievementList'
                 )
@@ -91,16 +94,16 @@ class ParticipantTeamController extends Controller
         }
     }
 
-    public function teamMemberManagementRedirected(Request $request, $id, $teamId)
+    public function teamMemberManagementRedirected(Request $request)
     {
         $page = 5;
         $user = $request->attributes->get('user') ?? auth()->user();
-        $selectTeam = Team::where('id', $teamId)
-            ->where('creator_id', $user->id)->with('members')->first();
+        $teamId = $request->teamId;
+        $selectTeam = Team::where('id', $teamId)->with('members')->first();
         if ($selectTeam) {
-            return $this->handleTeamManagement($selectTeam, $id, $request, $page, true);
+            return $this->handleTeamManagement($selectTeam, $request->eventId, $request, $page, true);
         } else {
-            return redirect()->route('participant.team.manage', ['id' => $id]);
+            return $this->showErrorParticipant('This event is missing or cannot be retrieved!');
         }
     }
 
@@ -118,24 +121,26 @@ class ParticipantTeamController extends Controller
         }
     }
 
-    protected function handleTeamManagement($selectTeam, $id, $request, $page, $redirect = false)
+    protected function handleTeamManagement($selectTeam, $eventId, $request, $page, $redirect = false)
     {
         $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
         $teamMembersProcessed = TeamMember::getProcessedTeamMembers($selectTeam->id);
         $creator_id = $selectTeam->creator_id;
-        $userList = User::getParticipants($request, $selectTeam->id)->paginate($page);
-        foreach ($userList as $user) {
-            $user->is_in_team = $user->members->isNotEmpty() ? 'yes' : 'no';
-        }
-
-        return view('Participant.MemberManagement', compact('selectTeam', 'redirect', 'teamMembersProcessed', 'creator_id', 'userList', 'id', 'captain'));
+        $userList = [];
+        return view('Participant.MemberManagement', compact('selectTeam', 'redirect', 
+            'teamMembersProcessed', 'creator_id', 'eventId', 'captain', 'userList'
+        ));
     }
 
     public function rosterMemberManagement(Request $request, $id, $teamId)
     {
         $user_id = $request->attributes->get('user')->id;
-        $selectTeam = Team::where('id', $teamId)->where('creator_id', $user_id)
+        $selectTeam = Team::where('id', $teamId)
+            ->whereHas('members', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id)->where('status', 'accepted');
+            })
             ->first();
+
         $joinEvent = JoinEvent::where('team_id', intval($teamId))->where('event_details_id', intval($id))->first();
 
         if ($selectTeam && $joinEvent) {
@@ -147,10 +152,12 @@ class ParticipantTeamController extends Controller
                 ->where('join_events_id', $joinEvent->id)->get();
 
             $rosterMembersKeyedByMemberId = RosterMember::keyByMemberId($rosterMembers);
+            $isRedirect = $request->redirect == "true";
 
             return view('Participant.RosterManagement',
-                compact('selectTeam', 'joinEvent', 'teamMembers', 'creator_id', 'rosterMembersKeyedByMemberId', 'rosterMembers', 'id', 'captain')
-            );
+                compact('selectTeam', 'joinEvent', 'teamMembers', 'creator_id', 'isRedirect',
+                'rosterMembersKeyedByMemberId', 'rosterMembers', 'id', 'captain'
+            ));
         } else {
             return $this->showErrorParticipant('This event is missing or you need to be a member to view events!');
         }
@@ -165,10 +172,6 @@ class ParticipantTeamController extends Controller
     {
         try{
             $validatedData = $request->validated();
-            if (isset($validatedData['country']) &&  isset($validatedData['country']['value'])) {
-                $validatedData['country'] = $validatedData['country']['value'];
-            }
-
             $team = Team::findOrFail($request['id']);
             $team->update($validatedData);
             if (isset($team->country)) {
@@ -200,7 +203,11 @@ class ParticipantTeamController extends Controller
                 'actor' => 'team',
             ]);
         } catch (Exception $e) {
-            $errorMessage = $e->getMessage();
+            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
+                $errorMessage = 'You have had a previous pending invitation or successful member!';
+            } else {
+                $errorMessage = 'Your request to this participant failed!';
+            }
 
             return response()->json(['success' => false, 'message' => $errorMessage], 403);
         }
