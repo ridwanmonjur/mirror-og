@@ -21,9 +21,9 @@
                         <div class="swiper-wrapper ps-5">
                             <div class="swiper-slide swiper-slide__left" id="timeline-1">
                                 <div class="timestamp" onclick="window.toastError('Current tab selected!');"><span
-                                        class="cat">Select Team</span></div>
+                                        class="cat text-primary">Select Team</span></div>
                                 <div class="status__left" onclick="window.toastError('Current tab selected!');">
-                                    <span><small></small></span></div>
+                                    <span><small class="bg-primary"></small></span></div>
                             </div>
                             <div class="swiper-slide" id="timeline-2">
                                 <div class="timestamp" onclick="window.toastError('Please select a team first!');">
@@ -52,7 +52,7 @@
                 <div class="breadcrumb-top">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a onclick="window.toastError('Current tab selected!');">Select Team</a></li>
+                            <li class="breadcrumb-item"><a class="text-primary" onclick="window.toastError('Current tab selected!');">Select Team</a></li>
                             <li class="breadcrumb-item"><a onclick="window.toastError('Please select a team first!');">Manage Members</a></li>
                             <li class="breadcrumb-item"><a onclick="window.toastError('Please select a team first!');">Manage Roster</a></li>
                             <li class="breadcrumb-item"><a onclick="window.toastError('Please select a team first!');">Manage Registration</a></li>

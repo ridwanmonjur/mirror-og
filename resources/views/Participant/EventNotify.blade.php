@@ -13,34 +13,37 @@
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
+        {{-- Hidden urls --}}
+        <a class="d-none" id="manageRosterUrl" href="{{route('participant.roster.manage', ['id' => $id, 'teamId' => $selectTeam->id, 'redirect' => 'true' ] ) }}"> </a>
+        <a class="d-none" id="manageRegistrationUrl" href="{{route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $id ] ) }}"> </a>
         <div class="time-line-box mx-auto" id="timeline-box">
             <div class="swiper-container text-center">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide swiper-slide__left" id="timeline-1">
                         <div class="timestamp" onclick="window.toastError('Cannot go back to team selection again!');"><span
-                                class="cat">Select Team</span></div>
+                                class="cat text-primary">Select Team</span></div>
                         <div class="status__left" onclick="window.toastError('Cannot go back to team selection again!');">
-                            <span><small></small></span></div>
+                            <span><small class="bg-primary"></small></span></div>
                     </div>
                     <div class="swiper-slide" id="timeline-2">
-                        <div class="timestamp" onclick="window.toastError('This is the current tab!');">
+                        <div class="timestamp" onclick="document.getElementById('proxySubmit')?.click();">
                             <span>Manage Members</span>
                         </div>
-                        <div class="status" onclick="window.toastError('This is the current tab!');">
+                        <div class="status" onclick="document.getElementById('proxySubmit')?.click();">
                             <span><small></small></span></div>
                     </div>
                     <div class="swiper-slide" id="timeline-launch">
-                        <div class="timestamp" onclick="document.getElementById('proxySubmit').click();"><span
+                        <div class="timestamp" onclick="document.getElementById('manageRosterUrl')?.click();"><span
                                 class="date">Manage Roster</span></div>
-                        <div class="status" onclick="document.getElementById('proxySubmit').click();">
+                        <div class="status" onclick="document.getElementById('manageRosterUrl')?.click();">
                             <span><small></small></span></div>
                     </div>
                     <div class="swiper-slide swiper-slide__right" id="timeline-payment">
                         <div class="timestamp"
-                            onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">
+                            onclick="document.getElementById('manageRegistrationUrl')?.click();">
                             <span>Manage Registration</span></div>
                         <div class="status__right"
-                            onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">
+                            onclick="document.getElementById('manageRegistrationUrl')?.click();">
                             <span><small></small></span>
                         </div>
                     </div>
@@ -50,13 +53,13 @@
         <div class="breadcrumb-top">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a onclick="goToNextScreen('step-1', 'timeline-1')">Categories</a></li>
-                    <li class="breadcrumb-item"><a onclick="goToNextScreen('step-5', 'timeline-2')">Details</a></li>
+                    <li class="breadcrumb-item"><a class="text-primary" onclick="window.toastError('Cannot go back to team selection again!');">Select Team</a></li>
+                    <li class="breadcrumb-item"><a onclick="document.getElementById('proxySubmit')?.click();">Manage Memebers</a></li>
                     <li class="breadcrumb-item"><a
-                        onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">Manage Roster</a>
+                        onclick="document.getElementById('manageRosterUrl')?.click();">Manage Roster</a>
                     </li>
                     <li class="breadcrumb-item"><a
-                            onclick="goToNextScreen('step-launch-1', 'timeline-launch')">Launch</a></li>
+                            onclick="document.getElementById('manageRegistrationUrl')?.click();">Manage Registration</a></li>
                 </ol>
             </nav>
         </div>
@@ -74,7 +77,7 @@
                 <form id="eventNotify" method="POST" action="{{ route('participant.memberManage.action') }}">
                     @csrf
                     <input type="hidden" value="{{$id}}" name="eventId">
-                    <input type="hidden" value="{{$id}}" name="teamId">
+                    <input type="hidden" value="{{$selectTeam->id}}" name="teamId">
                     <div class="text-center">
                         <input type="submit" class="choose-payment-method" value="Done">
                     </div>

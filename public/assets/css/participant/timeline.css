@@ -11,8 +11,8 @@
 
 .breadcrumb-top {
     position: absolute;
-    display: flex;
-    justify-content: center;
+    margin-left: 30px;
+
     top: 15vh;
     width: 100vw;
 }
@@ -369,15 +369,7 @@
         top: 90vh;
     }
 
-    .back-next button:nth-child(1) {
-        position: absolute;
-        left: 60px;
-    }
-
-    .back-next button:nth-child(2) {
-        position: absolute;
-        right: 60px;
-    }
+        
 
     .cat {
         left: -40%;

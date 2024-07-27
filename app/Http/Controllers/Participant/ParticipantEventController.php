@@ -208,7 +208,16 @@ class ParticipantEventController extends Controller
         $member = TeamMember::where('user_id', $user_id)->select('id')->get()->first();
 
         if ($selectTeam) {
-            $invitationListIds = $selectTeam->invitationList->pluck('event_id');
+            if ($request->eventId) {
+                $invitationListIds = [];
+                $isRedirect = true;
+                $eventId = $request->eventId;
+            } else {
+                $invitationListIds = $selectTeam->invitationList->pluck('event_id');
+                $isRedirect = false;
+                $eventId = null;
+            }
+
             [$joinEventUserIds, $joinEvents] = JoinEvent::getJoinEventsAndIds($id, $invitationListIds, false);
             [$invitedEventUserIds, $invitedEvents] = JoinEvent::getJoinEventsAndIds($id, $invitationListIds, true);
 
@@ -219,7 +228,9 @@ class ParticipantEventController extends Controller
                 = JoinEvent::processEvents($joinEvents, $isFollowing);
 
             return view('Participant.RegistrationManagement',
-                compact('selectTeam', 'invitedEvents', 'followCounts', 'paymentsByMemberId', 'member', 'joinEvents', 'isFollowing')
+                compact('selectTeam', 'invitedEvents', 'followCounts', 'paymentsByMemberId', 'member', 
+                    'joinEvents', 'isFollowing', 'isRedirect', 'eventId'
+                )
             );
         } else {
             return redirect()->back()->with('error', "Team not found/ You're not authorized.");
@@ -258,6 +269,8 @@ class ParticipantEventController extends Controller
     public function getTemp(Request $request, $id) {
         $teamId = $request->input('selectedTeamId');
         $selectTeam = Team::findOrFail($id);
+        // teamId
+        $id = 1;
         return view('Participant.EventNotify', compact('id', 'selectTeam'));
     }
 

@@ -33,7 +33,7 @@
             </button>
         </div>
 
-        <div class="tab-content pb-4 d-none outer-tab" id="Overview">
+        <div class="tab-content pb-4 outer-tab" id="Overview">
             <br><br>
             <div class="d-flex justify-content-center"><b>Recent Events</b></div>
             <br> <br>
@@ -119,7 +119,7 @@
             </div>
         </div>
 
-        <div class="tab-content pb-4  outer-tab" id="Members">
+        <div class="tab-content pb-4 d-none outer-tab" id="Members">
             @include('Participant.__Partials.MemberView')
         </div>
 

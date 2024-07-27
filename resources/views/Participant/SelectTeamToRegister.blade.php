@@ -52,7 +52,7 @@
         <div class="breadcrumb-top">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a onclick="window.toastError('Current tab selected!');">Select Team</a></li>
+                    <li class="breadcrumb-item"><a class="text-primary" onclick="window.toastError('Current tab selected!');">Select Team</a></li>
                     <li class="breadcrumb-item"><a onclick="document.getElementById('selectTeamButtonId')?.click();">Manage Members</a></li>
                     <li class="breadcrumb-item"><a onclick="document.getElementById('selectTeamButtonId')?.click();">Manage Roster</a></li>
                     <li class="breadcrumb-item"><a onclick="document.getElementById('selectTeamButtonId')?.click();">Manage Registration</a></li>
@@ -145,7 +145,7 @@
         </div>
         <div class="d-flex box-width back-next">
             <button onclick="goToCancelButton()" type="button"
-                class="btn border-dark rounded-pill py-2 px-4"> Back </button>
+                class="btn border-dark rounded-pill py-2 px-4 cursor-pointer"> Back </button>
             <button form="selectTeam" type="submit" 
                 class="btn btn-primary text-light rounded-pill py-2 px-4"
                 onclick=""> Next > </button>

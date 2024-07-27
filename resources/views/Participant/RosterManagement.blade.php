@@ -6,16 +6,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roster Management</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/timeline.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/manage_team.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.__Partials.TeamHead')
+    <main class="main2">
+    @if ($isRedirect)
+        <form method="POST" action="{{ route('participant.memberManage.action') }}">
+            @csrf
+            <input type="hidden" value="{{$id}}" name="eventId">
+            <input type="hidden" value="{{$selectTeam->id}}" name="teamId">
+            <input id="manageMemberButton" type="submit" class="d-none" value="Done">
+            </div>
+        </form>
+        <a class="d-none" id="manageRosterUrl" href="{{route('participant.roster.manage', ['id' => $id, 'teamId' => $selectTeam->id, 'redirect' => 'true' ] ) }}"> </a>
+        <a class="d-none" id="manageRegistrationUrl" href="{{route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $id ] ) }}"> </a>
+        <div class="time-line-box mx-auto" id="timeline-box">
+            <div class="swiper-container text-center">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide swiper-slide__left" id="timeline-1">
+                        <div class="timestamp" onclick="window.toastError('Cannot go back to \'Select Team\'.');"><span
+                                class="cat">Select Team</span></div>
+                        <div class="status__left" onclick="window.toastError('Cannot go back to \'Select Team\'.');">
+                            <span><small></small></span></div>
+                    </div>
+                    <div class="swiper-slide" id="timeline-2">
+                        <div class="timestamp" onclick="document.getElementById('manageMemberButton')?.click();"><span >Manage Members</span></div>
+                        <div class="status" onclick="document.getElementById('manageMemberButton')?.click();">
+                            <span><small></small></span></div>
+                    </div>
+                    <div class="swiper-slide" id="timeline-launch">
+                        <div class="timestamp" onclick="document.getElementById('manageRosterUrl').click();"><span
+                                class="date text-primary">Manage Roster</span></div>
+                        <div class="status" onclick="document.getElementById('manageRosterUrl').click();">
+                            <span><small class="bg-primary"></small></span></div>
+                    </div>
+                    <div class="swiper-slide swiper-slide__right" id="timeline-payment">
+                        <div class="timestamp"
+                            onclick="document.getElementById('manageRegistrationUrl').click();">
+                            <span>Manage Registration</span></div>
+                        <div class="status__right"
+                            onclick="document.getElementById('manageRegistrationUrl').click();">
+                            <span><small></small></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="breadcrumb-top">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a onclick="window.toastError('Cannot go back to \'Select Team\'.');">Select Team</a></li>
+                    <li class="breadcrumb-item"><a class="text-primary" onclick="document.getElementById('manageMemberButton')?.click();">Manage Members</a></li>
+                    <li class="breadcrumb-item"><a
+                            onclick="document.getElementById('manageRosterUrl').click();">Manage Roster</a>
+                    </li>
+                    <li class="breadcrumb-item"><a
+                            onclick="document.getElementById('manageRegistrationUrl').click();">Manage Registration</a></li>
+                </ol>
+            </nav>
+        </div>
+    @else
+        @include('Participant.__Partials.TeamHead') 
+    @endif
     @php
         use Carbon\Carbon;
+        $isCreator = $selectTeam->creator_id == $user->id;
     @endphp
-    <main class="main2">
+        @if ($isRedirect) 
+            <div class="text-center">
+                <h5><u>Currrent Roster</u></h5>
+                <p>Manage your current roster</p>
+            </div>
+        @endif
         <div class="mb-4 text-success mx-auto text-center">
             You have joined this event successfully!
             <a
@@ -124,7 +190,16 @@
                 </p>
             @endif
         </div>
-
+        @if ($isRedirect)
+            <div class="d-flex box-width back-next mb-5">
+                <button type="button"
+                    class="btn border-dark rounded-pill py-2 px-4" onclick="document.getElementById('manageMemberButton')?.click();"> Back </button>
+                <button type="button" 
+                    class="btn btn-primary text-light rounded-pill py-2 px-4"
+                    onclick="document.getElementById('manageRegistrationUrl')?.click();"> Next > </button>
+            </div>
+            <br><br><br><br><br><br>
+        @endif
     </main>
 
     <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>

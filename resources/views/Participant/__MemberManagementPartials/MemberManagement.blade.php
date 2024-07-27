@@ -8,13 +8,6 @@
             You have joined this event successfully!
         </span>
         <a
-            href="{{ route('participant.roster.manage', ['id' => $eventId, 'teamId' => $selectTeam->id]) }}">
-            <button class="oceans-gaming-default-button oceans-gaming-default-button-link ms-2 me-2" type="submit"
-                style="display: inline !important;">
-                <u> Manage Roster</u>
-            </button>
-        </a>
-        <a
             href="{{ route('participant.event.view', ['id' => $eventId]) }}">
             <button class="oceans-gaming-default-button oceans-gaming-gray-button ms-2 me-2" type="submit" style="display: inline !important;">
                 View Event
@@ -22,7 +15,7 @@
         </a>
    
         <a
-            href="{{ route('participant.team.manage', ['id' => $id]) }}">
+            href="{{ route('participant.team.manage', ['id' => $eventId]) }}">
             <button class="oceans-gaming-default-button oceans-gaming-gray-button ms-2 me-2" type="submit" style="display: inline !important;">
                 Manage Team
             </button>
@@ -35,7 +28,7 @@
     
     </div>
 @endif
-<div class="tabs">
+<div @class(["tabs", "d-none" => 'isset($redirect) && $redirect'])>
     <button id="CurrentMembersBtn" class="tab-button inner-tab tab-button-active"
         onclick="showTab(event, 'CurrentMembers', 'inner-tab')">Current Members
     </button>
@@ -46,8 +39,18 @@
         Members
     </button>
 </div>
+@if (isset($redirect) && $redirect) 
+    <a class="d-none" id="manageRosterUrl" href="{{route('participant.roster.manage', ['id' => $eventId, 'teamId' => $selectTeam->id, 'redirect' => 'true' ] ) }}"> </a>
+    <a class="d-none" id="manageRegistrationUrl" href="{{route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $eventId ] ) }}"> </a>
+@endif
 <br>
-<div class="tab-content pb-4 d-none inner-tab" id="CurrentMembers">
+<div class="tab-content pb-4 inner-tab" id="CurrentMembers">
+    @if (isset($redirect) && $redirect) 
+        <div class="text-center">
+            <h5><u>Currrent Members</u></h5>
+            <p>Manage your current members</p>
+        </div>
+    @endif
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
         {{ $teamMembersProcessed['accepted']['count'] }} accepted member{{bladePluralPrefix($teamMembersProcessed['accepted']['count'])}}
         and {{ $teamMembersProcessed['left']['count'] }} removed member{{bladePluralPrefix($teamMembersProcessed['left']['count'])}}
@@ -103,6 +106,12 @@
     </div>
 </div>
 <div class="tab-content pb-4  inner-tab d-none" id="PendingMembers" data-type="member" style="text-align: center;">
+    @if (isset($redirect) && $redirect) 
+        <div class="text-center">
+            <h5><u>Pending Members</u></h5>
+            <p>Manage your pending members</p>
+        </div>
+    @endif
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
         {{ $teamMembersProcessed['pending']['count'] }} invited and
         and {{ $teamMembersProcessed['rejected']['count'] }} rejected member{{bladePluralPrefix($teamMembersProcessed['rejected']['count'])}}
@@ -179,7 +188,13 @@
    
     </div>
 </div>
-<div class="tab-content pb-4 inner-tab mx-auto" id="NewMembers">
+<div class="tab-content pb-4 inner-tab mx-auto d-none" id="NewMembers">
+    @if (isset($redirect) && $redirect) 
+        <div class="text-center">
+            <h5><u>New Members</u></h5>
+            <p>Add new members to your team</p>
+        </div>
+    @endif
     <form id="newMembersForm">
         <input type="hidden" name="sortKeys" id="sortKeys" value="">
         <div class="tab-size d-flex justify-content-between align-items-center flex-wrap tab-size mt-0">

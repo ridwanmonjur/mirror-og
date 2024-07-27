@@ -98,11 +98,8 @@ Route::group(['prefix' => 'participant'], function () {
             Route::get('/team/create', [ParticipantTeamController::class, 'createTeamView'])->name('participant.team.create');
             Route::get('/team/{id}/edit', [ParticipantTeamController::class, 'editTeamView'])->name('participant.team.edit');
             Route::get('/team/confirm', [ParticipantEventController::class, 'confirmUpdate']);
-            Route::get('/team/{id}/manage/member', [ParticipantTeamController::class, 'teamMemberManagement'])
-                ->name('participant.member.manage');
-            Route::get('/team/{id}/manage', [ParticipantTeamController::class, 'teamManagement'])
-                ->middleware('prevent-back-history')
-                ->name('participant.team.manage');
+            Route::get('/team/{id}/manage/member', [ParticipantTeamController::class, 'teamMemberManagement'])->name('participant.member.manage');
+            Route::get('/team/{id}/manage', [ParticipantTeamController::class, 'teamManagement'])->name('participant.team.manage');
             Route::get('/team/{id}/register', [ParticipantEventController::class, 'registrationManagement'])->name('participant.register.manage');
             Route::get('/team/{id}/temp', [ParticipantEventController::class, 'getTemp']);
 

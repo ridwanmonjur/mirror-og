@@ -135,8 +135,12 @@ class ParticipantTeamController extends Controller
     public function rosterMemberManagement(Request $request, $id, $teamId)
     {
         $user_id = $request->attributes->get('user')->id;
-        $selectTeam = Team::where('id', $teamId)->where('creator_id', $user_id)
+        $selectTeam = Team::where('id', $teamId)
+            ->whereHas('members', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id)->where('status', 'accepted');
+            })
             ->first();
+
         $joinEvent = JoinEvent::where('team_id', intval($teamId))->where('event_details_id', intval($id))->first();
 
         if ($selectTeam && $joinEvent) {
@@ -148,9 +152,10 @@ class ParticipantTeamController extends Controller
                 ->where('join_events_id', $joinEvent->id)->get();
 
             $rosterMembersKeyedByMemberId = RosterMember::keyByMemberId($rosterMembers);
+            $isRedirect = $request->redirect == "true";
 
             return view('Participant.RosterManagement',
-                compact('selectTeam', 'joinEvent', 'teamMembers', 'creator_id', 
+                compact('selectTeam', 'joinEvent', 'teamMembers', 'creator_id', 'isRedirect',
                 'rosterMembersKeyedByMemberId', 'rosterMembers', 'id', 'captain'
             ));
         } else {

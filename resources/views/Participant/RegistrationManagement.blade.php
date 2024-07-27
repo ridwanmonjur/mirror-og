@@ -7,49 +7,130 @@
     <title>Registration Management</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/pie-chart.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/timeline.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/manage_team.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
-    @include('Participant.__Partials.TeamHead')
     <main class="main2">
+
+    @if ($isRedirect)
+        <form method="POST" action="{{ route('participant.memberManage.action') }}">
+            @csrf
+            <input type="hidden" value="{{$eventId}}" name="eventId">
+            <input type="hidden" value="{{$selectTeam->id}}" name="teamId">
+            <input id="manageMemberButton" type="submit" class="d-none" value="Done">
+            </div>
+        </form>
+        <a class="d-none" id="manageRosterUrl" href="{{route('participant.roster.manage', ['id' => $eventId, 'teamId' => $selectTeam->id, 'redirect' => 'true' ] ) }}"> </a>
+        <a class="d-none" id="manageRegistrationUrl" href="{{route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $eventId ] ) }}"> </a>
+        <div class="time-line-box mx-auto" id="timeline-box">
+            <div class="swiper-container text-center">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide swiper-slide__left" id="timeline-1">
+                        <div class="timestamp" onclick="window.toastError('Cannot go back to \'Select Team\'.');"><span
+                                class="cat">Select Team</span></div>
+                        <div class="status__left" onclick="window.toastError('Cannot go back to \'Select Team\'.');">
+                            <span><small></small></span></div>
+                    </div>
+                    <div class="swiper-slide" id="timeline-2">
+                        <div class="timestamp" onclick="document.getElementById('manageMemberButton')?.click();"><span >Manage Members</span></div>
+                        <div class="status" onclick="document.getElementById('manageMemberButton')?.click();">
+                            <span><small></small></span></div>
+                    </div>
+                    <div class="swiper-slide" id="timeline-launch">
+                        <div class="timestamp" onclick="document.getElementById('manageRosterUrl')?.click();"><span
+                                class="date">Manage Roster</span></div>
+                        <div class="status" onclick="document.getElementById('manageRosterUrl')?.click();">
+                            <span><small></small></span></div>
+                    </div>
+                    <div class="swiper-slide swiper-slide__right" id="timeline-payment">
+                        <div class="timestamp text-primary"
+                            onclick="document.getElementById('manageRegistrationUrl').click();">
+                            <span>Manage Registration</span></div>
+                        <div class="status__right"
+                            onclick="document.getElementById('manageRegistrationUrl').click();">
+                            <span><small class="bg-primary"></small></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="breadcrumb-top">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a onclick="window.toastError('Cannot go back to \'Select Team\'.');">Select Team</a></li>
+                    <li class="breadcrumb-item"><a onclick="document.getElementById('manageMemberButton')?.click();">Manage Members</a></li>
+                    <li class="breadcrumb-item"><a 
+                            onclick="document.getElementById('manageRosterUrl').click();">Manage Roster</a>
+                    </li>
+                    <li class="breadcrumb-item"><a class="text-primary" 
+                            onclick="document.getElementById('manageRegistrationUrl').click();">Manage Registration</a></li>
+                </ol>
+            </nav>
+        </div>
+    @else
+        @include('Participant.__Partials.TeamHead') 
+    @endif
         <div id="Overview">
-            <br>
-            @if (session('successMessage'))
-                <div class="text-success text-center">{{session('successMessage')}}</div>
+            @if (!$isRedirect)
                 <br>
-            @elseif (session('errorMessage'))
-                <div class="text-red text-center">{{session('errorMessage')}}</div>
-                <br>
-            @else
-                <br>
+                @if (session('successMessage'))
+                    <div class="text-success text-center">{{session('successMessage')}}</div>
+                    <br>
+                @elseif (session('errorMessage'))
+                    <div class="text-red text-center">{{session('errorMessage')}}</div>
+                    <br>
+                @else
+                    <br>
+                @endif
+                <div class="tab-size"><b>Outstanding Registrations</b></div>
+                <br> <br>
             @endif
-            <div class="tab-size"><b>Outstanding Registrations</b></div>
-            <br> <br>
-            <div class="event-carousel-styles mx-5 px-5">
+            <div @class(["event-carousel-styles" => !$isRedirect, "mx-5 px-5"])>
                 @foreach ($joinEvents as $key => $joinEvent)
-                    @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
+                    @if ($isRedirect) 
+                        <div class="text-center">
+                            <h5><u>Event Registration</u></h5>
+                            <p>You can pay now, or complete payment later...</p>
+                        </div>
+                    @else 
+                        @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
+                    @endif
                     @include('Participant.__Partials.PieChart', ['isInvited' => false])
                 @endforeach
             </div>
         </div>
-        <div id="Overview">
-            <br><br>
-            <div class="tab-size"><b>Event Invitations</b></div>
-             <br> <br>
-            <div class="position-relative d-flex justify-content-center">
-                @if (!isset($invitedEvents[0]))
-                    <p>No events available</p>
-                @else
-                    <div class="event-carousel-styles mx-5 px-5">
-                        @foreach ($invitedEvents as $key => $joinEvent)
-                            @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
-                            @include('Participant.__Partials.PieChart', ['isInvited' => true])
-                        @endforeach
-                    </div>
-                @endif
-            <br> <br>
-        </div>
+        @if (!$isRedirect)
+            <div id="Overview">
+                <br><br>
+                <div class="tab-size"><b>Event Invitations</b></div>
+                <br> <br>
+                <div class="position-relative d-flex justify-content-center">
+                    @if (!isset($invitedEvents[0]))
+                        <p>No events available</p>
+                    @else
+                        <div class="event-carousel-styles mx-5 px-5">
+                            @foreach ($invitedEvents as $key => $joinEvent)
+                                @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
+                                @include('Participant.__Partials.PieChart', ['isInvited' => true])
+                            @endforeach
+                        </div>
+                    @endif
+                <br> <br>
+            </div>
+        @endif
+        @if ($isRedirect)
+            <div class="d-flex box-width back-next mb-5">
+                <button type="button"
+                    class="btn border-dark rounded-pill py-2 px-4" onclick="document.getElementById('manageRosterUrl')?.click();"> Back </button>
+                <button type="button" 
+                    class="btn btn-primary text-light rounded-pill py-2 px-4"
+                    onclick="document.getElementById('manageRegistrationUrl')?.click();"> Next > </button>
+            </div>
+            <br><br><br><br><br><br>
+        @endif
     </main>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
