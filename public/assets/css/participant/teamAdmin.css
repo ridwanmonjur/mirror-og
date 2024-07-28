@@ -399,10 +399,23 @@
     object-fit: cover;
 }
 
-.trophy {
-    height: 100px;
-    width: 100px;
-    text-align: center;
+
+.event:hover .cover {
+    animation: grayscale 2s ease-in-out;
+}
+
+@keyframes grayscale {
+    0% {
+        filter: grayscale(1);
+
+    }
+    50% {
+        filter: grayscale(0);
+    }
+    
+    100% {
+        filter: grayscale(0);
+    }
 }
 
 
