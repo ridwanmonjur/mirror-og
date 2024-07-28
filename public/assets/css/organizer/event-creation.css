@@ -498,7 +498,7 @@ color: #43A4D7; */
     max-width: 80vw;
     /* border: 1px solid black; */
     margin: auto;
-    overflow-y: auto;
+    /* overflow-y: auto; */
 }
 
 .swiper-wrapper {

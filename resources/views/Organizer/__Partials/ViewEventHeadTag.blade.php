@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/viewEvent.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
+    @include('__CommonPartials.HeadIcon')
     
 </head>
 
