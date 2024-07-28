@@ -283,6 +283,24 @@ main {
     border-radius: 40px 40px 0px 0px;
 }
 
+.event:hover .cover {
+    animation: grayscale 2s ease-in-out;
+}
+
+@keyframes grayscale {
+    0% {
+        filter: grayscale(1);
+
+    }
+    50% {
+        filter: grayscale(0);
+    }
+    
+    100% {
+        filter: grayscale(0);
+    }
+}
+
 .event h3,
 .event p {
     padding: 1rem;

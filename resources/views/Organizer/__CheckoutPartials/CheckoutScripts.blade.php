@@ -205,9 +205,6 @@
     };
     let paymentElementOptions = {
         type: 'accordion',
-        defaultCollapsed: false,
-        radios: false,
-        spacedAccordionItems: false
     };
     let addressElementOptions = {
         mode: 'billing',
