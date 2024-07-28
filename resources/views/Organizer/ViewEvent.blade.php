@@ -22,9 +22,9 @@
         <div class="">
             <header class="flexbox-welcome">
                 <u>
-                    <h3>
+                    <h5 class="ps-5">
                         View your events
-                    </h3>
+                    </h5>
                 </u>
             </header>
         </div>

@@ -43,7 +43,6 @@
         <br>
         <div>
             @if ($tier)
-                
                 <div class="{{ 'side-image side-image-' . $eventTierLower }} ">
                     <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="180" height="125">
                 </div>
