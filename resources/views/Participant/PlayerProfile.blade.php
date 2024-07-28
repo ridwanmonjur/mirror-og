@@ -7,6 +7,7 @@
     <title>Profile Page</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
+    @include('__CommonPartials.HeadIcon')
     @vite([
         'resources/sass/app.scss', 
         'resources/js/app.js', 

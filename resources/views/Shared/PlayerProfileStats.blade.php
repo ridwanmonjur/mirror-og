@@ -7,6 +7,7 @@
     <title>Manage Event Results</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @include('__CommonPartials.HeadIcon')
     <style> 
         main {
             margin: 0;
