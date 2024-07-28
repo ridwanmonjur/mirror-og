@@ -18,7 +18,12 @@ use Illuminate\Support\Facades\Route;
 /* THIS IS THE UNSIGNED VIEW */
 // Home
 Route::get('/', [AuthController::class, 'showLandingPage'])->name('landing.view');
-
+Route::get('/hello', function () {
+    return view('Email.reset', [
+        'token' => 1234,
+        'imageLogo' => asset('assets/images/logo-default.png')
+    ]);
+});
 // Forget, reset password
 Route::get('/forget-password', [AuthController::class, 'createForget'])->name('user.forget.view');
 Route::get('/reset-password/{token}', [AuthController::class, 'createReset'])->name('user.reset.view');

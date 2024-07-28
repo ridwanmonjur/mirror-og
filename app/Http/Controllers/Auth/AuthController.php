@@ -309,7 +309,11 @@ class AuthController extends Controller
 
         DB::table('password_reset_tokens')->updateOrInsert(['email' => $request->email], ['token' => $token, 'expires_at' => Carbon::now()->addDay()]);
 
-        Mail::send('Email.reset', ['token' => $token], function ($message) use ($email) {
+        Mail::send('Email.reset', [
+            'token' => $token,
+            'imageLogo' => public_path('assets/images/logo-default.png')
+        ]
+            , function ($message) use ($email) {
             $message->to($email);
             $message->subject('Reset Password');
         });

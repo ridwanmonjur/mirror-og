@@ -33,7 +33,7 @@
         </label>
     </div>
     <div class="field">
-        <input type="submit" value="Reset Password" class="oceans-gaming-default-button oceans-gaming-green-button">
+        <input id="submit" type="submit" value="Reset Password" class="oceans-gaming-default-button oceans-gaming-green-button">
     <br>
     <br><br>
 </form>
@@ -54,3 +54,4 @@ function togglePassword(fieldId, buttonId) {
 @endsection
 
 @include('Auth.Layout.SignUpBodyTag')
+

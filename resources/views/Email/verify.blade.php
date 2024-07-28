@@ -1,9 +1,49 @@
-@include('Auth.Layout.HeadTag')
-<body>
-<div class="wrapper">
-<h1>Email Verification Mail</h1>
-  
-Please verify your email with below link: 
-<a href="{{ route('user.verify.action', $token) }}">Verify Email</a>
-</div> 
-</body>
+@php
+    $primaryColor = '#43A4D7';
+    $secondaryColor = '#81bc1a';
+@endphp
+@extends('Email.Layout.Layout')
+@section('title')
+    {{ 'Email Verification Mail' }}
+@endsection
+
+@push('head')
+    <link rel="stylesheet" href="path/to/your/custom.css">
+    <script src="path/to/your/custom.js"></script>
+@endpush
+@section('emailTitle')
+    {{ 'Email Verification Mail' }}
+@endsection
+@section('content')
+    <tr>
+        <td style="padding: 0; text-align: center;">
+            <table width="600" border="0" cellspacing="0" cellpadding="0"
+                style="background-color: white; margin: 0 auto; padding: 0 20px; border-radius: 10px;">
+                <tr>
+                    <td style="padding: 0 20px; text-align: left; color: #333333;">
+                        <p>Hi,</p>
+                        <p>You recently created your account with us. Click the button below to verify
+                            it.</p>
+                        <p style="text-align: center;">
+                            <a href="{{ route('user.verify.action', $token) }}"
+                                style="display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: {{$secondaryColor}}; text-decoration: none; border-radius: 5px;">
+                                Verify email
+                            </a>
+                        </p>
+                        <p>If you did not create an account with us, please ignore this email or contact support if you have
+                            questions.</p>
+                        <p>Thanks,<br>Oceans Gaming</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; padding: 10px 0; color: #999999;">
+                        <p>If you're having trouble with the button above, copy and paste the URL below into your web
+                            browser:</p>
+                        <p><a href="{{ route('user.verify.action', $token) }}"
+                                style="color: {{$secondaryColor}};">{{ route('user.verify.action', $token) }}</a></p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+@endsection
