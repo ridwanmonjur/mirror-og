@@ -52,10 +52,16 @@ window.onload = () => {
     });
 }
 
-// Flash message
-function showFlashMessage(message, type) {
-    const flashMessage = document.querySelector(".flash-message");
-    flashMessage.classList.toggle("d-none");
+function movePlaceholderUp(input) {
+    const label = input.parentElement;
+    const placeholder = label.querySelector('.placeholder-moves-up');
+    if (input.value !== '') {
+        placeholder.style.top = '0px';
+        placeholder.style.fontSize = '12px';
+    } else {
+        placeholder.style.top = '';
+        placeholder.style.fontSize = '';
+    }
 }
 
 // Toggle password
