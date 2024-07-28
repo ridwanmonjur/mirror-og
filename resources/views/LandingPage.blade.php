@@ -17,7 +17,9 @@
 
     <main>
         <section class="hero">
-            <img src="{{ asset('/assets/images/ss.png') }}" alt="">
+            <img 
+                onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                src="{{ asset('/assets/images/ss.png') }}" alt="">
         </section>
 
         <div class="text__middle">
