@@ -288,6 +288,52 @@ a:hover {
     outline: none !important;
 }
 
+.colored-toast.swal2-icon-success {
+    background-color: #a5dc86 !important;
+  }
+  
+  .colored-toast.swal2-icon-error {
+    background-color: #f27474 !important;
+  }
+  
+  .colored-toast.swal2-icon-warning {
+    background-color: #f8bb86 !important;
+  }
+  
+  .colored-toast.swal2-icon-info {
+    background-color: #3fc3ee !important;
+  }
+  
+  .colored-toast.swal2-icon-question {
+    background-color: #87adbd !important;
+  }
+
+  .swal2-confirm:active, .swal2-deny:active {
+    border-color: transparent !important;
+    outline-color: transparent !important;
+  }
+
+  h2.swal2-title, .swal2-title, div:where(.swal2-container) h2:where(.swal2-title) {
+    font-size: 1rem !important;
+
+  }
+
+  .colored-toast .swal2-title {
+    color: white;
+  }
+  
+  .colored-toast .swal2-close {
+    color: white;
+  }
+  
+  .colored-toast .swal2-html-container {
+    color: white;
+  }
+
+  @media screen and (min-width: 100px) {
+  
+  }
+
 @media screen and (min-width: 1300px) {
     .w-70s {
         width: 70%;
@@ -543,6 +589,10 @@ h5 {
         grid-template-columns: 1fr 1fr;
     }
 
+    h2.swal2-title, .swal2-title, div:where(.swal2-container) h2:where(.swal2-title) {
+        font-size: 1.5rem !important;
+    
+    }
 }
 
 @media screen and (min-width: 1400px) {
