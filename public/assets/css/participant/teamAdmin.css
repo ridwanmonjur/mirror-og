@@ -297,6 +297,7 @@
 
 .coloured-cell {
     background-color: #c3bebe;
+    vertical-align: middle;
 }
 
 .player-info {
@@ -436,6 +437,7 @@
     border: none;
     padding: 0;
     cursor: pointer;
+    vertical-align: middle;
 }
 
 

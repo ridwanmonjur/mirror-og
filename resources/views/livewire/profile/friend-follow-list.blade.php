@@ -6,7 +6,7 @@
         @if (!isset($data[0]))
             <p class="text-center mt-5"> You have no users in this list. </p>
         @else
-            <table class="member-table">
+            <table style="max-width: 80%; margin: auto;" class="table table-striped bg-white">
                 <tbody>
                     @foreach ($data as $member)
                         <tr wire:key="{{ $name . $member->id }}" class="st">
