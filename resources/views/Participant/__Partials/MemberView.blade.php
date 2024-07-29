@@ -16,6 +16,7 @@
     </p>
     <form id="newMembersForm">
     <input type="hidden" name="sortKeys" id="sortKeys" value="">
+    <input type="hidden" name="sortType" id="sortKeys" value="">
 
     @if($counTeamMembers > 0)
         <div class="tab-size d-flex justify-content-between flex-wrap tab-size mt-3 pt-3">
@@ -156,6 +157,19 @@
             </div>
             <div id="sort-option" class="mx-0 px-0 mb-3 d-none">
                 <div class="ddropdown dropdown-click-outside d-inline-block">
+                    <span>
+                        {{-- Ascending --}}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-sort-alpha-up" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371zm1.57-.785L11 2.687h-.047l-.652 2.157z"/>
+                        <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645zm-8.46-.5a.5.5 0 0 1-1 0V3.707L2.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L4.5 3.707z"/>
+                        </svg>
+                        {{-- Descending --}}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-sort-alpha-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371zm1.57-.785L11 2.687h-.047l-.652 2.157z"/>
+                            <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645zM4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293z"/>
+                        </svg>
+
+                    </span>
                     <button 
                         class="dropbtn py-1 px-2 me-3" 
                         type="button" id="dropdownSortButton" 
@@ -309,19 +323,43 @@
             return;
         }
         
-        targetElemnetHeading = document.createElement('small');
+        targetElemnetHeading = document.createElement('span');
         targetElemnetHeading.classList.add('me-2');
-        targetElemnetHeading.innerHTML = String(name)?.toUpperCase();
+        targetElemnetHeading.innerHTML = formatStringUpper(name);
         targetElemnetParent.append(targetElemnetHeading);
         for (let formValue of valuesFormData) {
             targetElemnet = document.createElement('small');
             targetElemnet.classList.add('btn', 'btn-secondary', 'text-light', 
                 'rounded-pill', 'px-2', 'py-0', 'me-1'
             );
-            targetElemnet.innerHTML = formValue;
+            targetElemnet.innerHTML = formatStringUpper(formValue);
             targetElemnetParent.append(targetElemnet);
         }
                 
+    }
+
+    function getNestedValue(obj, propertyPath) {
+        return propertyPath.split('.').reduce((acc, part) => acc && acc[part], obj);
+    }
+
+    function sortByProperty(arr, propertyPath, ascending = true) {
+        return arr.sort((a, b) => {
+            let aValue = getNestedValue(a, propertyPath);
+            let bValue = getNestedValue(b, propertyPath);
+
+            if (typeof aValue === 'string' && typeof bValue === 'string') {
+                return ascending ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+            } else {
+                return ascending ? aValue - bValue : bValue - aValue;
+            }
+        });
+    }
+
+
+    function formatStringUpper(str) {
+        str = str.charAt(0).toUpperCase() + str.slice(1);
+        str = str.replace(/([a-z])([A-Z])/g, '$1 $2');
+        return str;
     }
 
     async function fetchCountries () {
@@ -347,6 +385,7 @@
     }
 
     function sortMembers(membersJson) {
+        // membersJson = sortByProperty(membersJson)
         return membersJson;
     }
 

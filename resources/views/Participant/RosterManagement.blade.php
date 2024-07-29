@@ -170,7 +170,7 @@
                                         </button>
                                     @else
                                         <button id="remove-{{$member->id}}" class="gear-icon-btn" onclick="disapproveMember({{$member->id}})">
-                                        ✘
+                                            ✘
                                         </button>
                                     @endif
                                 </td>
