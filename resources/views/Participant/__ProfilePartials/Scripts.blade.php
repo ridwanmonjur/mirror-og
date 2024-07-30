@@ -204,7 +204,7 @@
             errorMessage: errorInput?.value, 
             isCountriesFetched: false ,
             changeFlagEmoji() {
-                let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == this.participant.region);
+                let countryX = Alpine.raw(this.countries || []).find(elem => elem.id === this.participant.region);
                 this.participant.region_name = countryX?.name.en;
                 this.participant.region_flag = countryX?.emoji_flag;
             },

@@ -21,7 +21,7 @@ class FriendFollowList extends Component
     public function initData()
     {
         $propertyName = null;
-        if ($this->name == 'Follow') {
+        if ($this->name === 'Follow') {
             $propertyName = 'followeeUser';
             $data = ParticipantFollow::where('participant_followee', $this->userId)
                 ->with($propertyName)
@@ -29,7 +29,7 @@ class FriendFollowList extends Component
             
             $this->propertyName = $propertyName;
             return $data;
-        } elseif ($this->name == 'Following') {
+        } elseif ($this->name === 'Following') {
             $propertyName = 'followerUser';
             $data = ParticipantFollow::where('participant_follower', $this->userId)
                 ->with($propertyName)
@@ -37,7 +37,7 @@ class FriendFollowList extends Component
             
             $this->propertyName = $propertyName;
             return $data;
-        } elseif ($this->name == 'OrgFollow') {
+        } elseif ($this->name === 'OrgFollow') {
             $propertyName = 'participantUser';
             $data = OrganizerFollow::where('participant_followee', $this->userId)
                 ->with($propertyName)
@@ -45,7 +45,7 @@ class FriendFollowList extends Component
             
             $this->propertyName = $propertyName;
             return $data;
-        } elseif ($this->name == 'Friends') {
+        } elseif ($this->name === 'Friends') {
             $propertyName = 'relatedUser';
             $data = Friend::where(function ($query) {
                 $query->where('user1_id', $this->userId)->orWhere('user2_id', $this->userId);
@@ -55,7 +55,7 @@ class FriendFollowList extends Component
                 ->paginate($this->page, ['*'], $propertyName);
     
             $data->getCollection()->transform(function ($friend) {
-                $friend->relatedUser = $friend->user1_id != $this->userId ? $friend->user1 : $friend->user2;
+                $friend->relatedUser = $friend->user1_id !== $this->userId ? $friend->user1 : $friend->user2;
                 return $friend;
             });
 

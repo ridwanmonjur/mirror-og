@@ -29,7 +29,7 @@
             let eventType = formValues['eventType'] ?? null;
             eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
             
-            if (eventRate == -1) {
+            if (eventRate === -1) {
                 Toast.fire({
                     icon: 'error',
                     text: `Invalid event tier or event type!`
@@ -39,7 +39,7 @@
             eventFee = eventSubTotal * (eventRate / 100);
             eventTotal = eventSubTotal + eventFee;
             
-            if (eventTier == null || eventType == null || eventSubTotal == -1) {
+            if (eventTier === null || eventType === null || eventSubTotal === -1) {
                 getElementByIdAndSetInnerHTML('paymentType', "N/A");
                 getElementByIdAndSetInnerHTML('paymentTier', "N/A");
                 getElementByIdAndSetInnerHTML('paymentTotal', "N/A");
@@ -77,10 +77,10 @@
 
 <script>
     function checkStringNullOrEmptyAndReturn(value) {
-        if (value === null || value === undefined) return null;
+        if (value ===null || value ====ndefined) return null;
 
         let _value = String(value).trim();
-        return (_value === "") ? null : _value;
+        return (_value ==="") ? null : _value;
     }
 
     function checkStringNullOrEmptyAndReturnFromLocalStorage(key) {
@@ -114,7 +114,7 @@
     function fillEventTags() {
         let eventTags = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTags');
         
-        if (eventTags != null) {
+        if (eventTags !== null) {
             let eventTagsParsed = Object(JSON.parse(eventTags));
             
             var tagify = new Tagify(document.querySelector('#eventTags'),
@@ -194,7 +194,7 @@
             }
         }
         
-        if (startTimeInput.value === "" || endTimeInput.value === "") {
+        if (startTimeInput.value ==="" || endTimeInput.value ====") {
             return;
         }
         
@@ -269,7 +269,7 @@
             // banner
             setLocalStorageFromEventObject('eventTierTitle', tier?.eventTier);
             setLocalStorageFromEventObject('eventTags', $event?.eventTags);
-            if ($event?.eventTags != null) {
+            if ($event?.eventTags !== null) {
             } else {
                 new Tagify(document.querySelector('#eventTags'), []);
             }
@@ -282,7 +282,7 @@
     document.addEventListener("keydown", function(event) {
         var target = event.target;
 
-        if (event.key === "Enter" && target.tagName.toLowerCase() !== "textarea" && target.tagName.toLowerCase() === "input") {
+        if (event.key ==="Enter" && target.tagName.toLowerCase() !== "textarea" && target.tagName.toLowerCase() ====input") {
             event.preventDefault();
         }
     });

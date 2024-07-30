@@ -30,7 +30,7 @@ function bladeGetPaymentLogos($logoType)
 
 function fixTimeToRemoveSeconds($time)
 {
-    if ($time == null) {
+    if (!isset($time) || $time === null) {
         return null;
     }
     if (substr_count($time, ':') === 2) {
@@ -45,7 +45,7 @@ function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants
 {
     $stylesEventRatio = '';
 
-    if ($totalParticipants == 0) {
+    if ($totalParticipants === 0) {
         $ratio = 0;
     } else {
         $ratio = (float) $registeredParticipants / $totalParticipants;
@@ -53,7 +53,7 @@ function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants
 
     if ($ratio > 0.9) {
         $stylesEventRatio .= 'background-color: #EF4444; color: white;';
-    } elseif ($ratio == 0) {
+    } elseif ($ratio === 0) {
         $stylesEventRatio .= 'background-color: #8CCD39; color: white;';
     } elseif ($ratio > 0.5) {
         $stylesEventRatio .= 'background-color: #FA831F; color: white;';
@@ -67,7 +67,7 @@ function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants
 function bladeGenerateEventStartEndDateStr($startDate, $startTime)
 {
     $startTime = fixTimeToRemoveSeconds($startTime);
-    if ($startDate != null && $startTime != null) {
+    if (isset($startDate) && $startDate !== null && isset($startTime) && $startTime !== null) {
         $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime, 'UTC') ?? null;
         // $carbonDateTimeUtc = $carbonDateTimeUtc->setTimezone('Asia/Singapore');
         $datePart = $carbonDateTimeUtc->format('Y-m-d');

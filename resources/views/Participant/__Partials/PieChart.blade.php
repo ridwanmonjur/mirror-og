@@ -61,14 +61,14 @@
        
     </div>
     <div class="mx-auto text-center">
-        @if ($joinEvent->payment_status != "completed")
+        @if ($joinEvent->payment_status !== "completed")
             <button class="btn oceans-gaming-default-button" data-bs-toggle="modal"
                 data-bs-target="{{ '#payModal' . $random_int }}">Contribute </button>
         @else
             <button style="pointer-events: none;" class="btn oceans-gaming-default-button oceans-gaming-gray-button px-3">Contribution Full </button>
         @endif
         <br>
-        @if ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "pending")
+        @if ($joinEvent->payment_status === "completed" && $joinEvent->join_status === "pending")
             <form action="{{route('participant.confirmOrCancel.action')}}" id="confirmRegistration" method="POST">
                 @csrf
                 <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
@@ -79,7 +79,7 @@
                     Confirm Registration
                 </button>
             </form>
-        @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "confirmed")
+        @elseif ($joinEvent->payment_status === "completed" && $joinEvent->join_status === "confirmed")
             <form action="{{route('participant.confirmOrCancel.action')}}" id="confirmRegistration" method="POST">
                 @csrf
                 <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
@@ -90,7 +90,7 @@
                 <br>
                 <p class="text-success">Your registration is confirmed!</p>
             </form>
-        @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "canceled")
+        @elseif ($joinEvent->payment_status === "completed" && $joinEvent->join_status === "canceled")
                <button
                     style="cursor: not-allowed; pointer-events: none;"
                     class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button px-2">

@@ -56,19 +56,19 @@ class TeamMember extends Model
         $members = self::where('team_id', $id)->with('user')->get();
         foreach ($members as $member) {
             $status = $member->status;
-            if ($status == 'accepted') {
+            if ($status === 'accepted') {
                 $acceptedMembers[] = $member;
                 $acceptedMembersCount++;
-            } elseif ($status == 'pending') {
+            } elseif ($status === 'pending') {
                 $pendingMembers[] = $member;
                 $pendingMembersCount++;
-            } elseif ($status == 'rejected') {
+            } elseif ($status === 'rejected') {
                 $rejectedMembers[] = $member;
                 $rejectedMembersCount++;
-            } elseif ($status == 'left') {
+            } elseif ($status === 'left') {
                 $leftMembers[] = $member;
                 $leftMembersCount++;
-            } elseif ($status == 'invited') {
+            } elseif ($status === 'invited') {
                 $invitedMembers[] = $member;
                 $invitedMemberCount++;
             }

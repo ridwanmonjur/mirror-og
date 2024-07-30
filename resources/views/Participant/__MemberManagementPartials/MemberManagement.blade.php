@@ -58,7 +58,7 @@
     <div class="cont mt-3 pt-3">
         <table class="tab-size member-table">
             <tbody class="accepted-member-table">
-                @if ($teamMembersProcessed['accepted']['count'] != 0)
+                @if ($teamMembersProcessed['accepted']['count'] !== 0)
                     @foreach ($teamMembersProcessed['accepted']['members'] as $member)
                         <tr class="st" id="tr-{{ $member->id }}">
                             @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
@@ -66,7 +66,7 @@
                                 Accepted {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
                             <td>
-                                @if ($user->id == $selectTeam->creator_id)
+                                @if ($user->id === $selectTeam->creator_id)
                                     <button id="remove-{{ $member->id }}" class="gear-icon-btn"
                                         onclick="disapproveMember({{ $member->id }})">
                                     ✘
@@ -74,7 +74,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if (!$captain || $member->id != $captain->team_member_id)
+                                @if (!$captain || $member->id !== $captain->team_member_id)
                                     <button id="captain-{{ $member->id }}" class="gear-icon-btn invisible-until-hover"
                                         onclick="captainMember({{ $member->id }}, {{ $selectTeam->id }})">
                                         <img height="30" width="30"
@@ -88,10 +88,10 @@
                         <tr class="st" id="tr-{{ $member->id }}">
                             @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
                             <td class="coloured-cell px-3">
-                                {{ $member->actor == 'team' ? 'Removed' : 'Left' }} {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
+                                {{ $member->actor === 'team' ? 'Removed' : 'Left' }} {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
                             <td>
-                                 @if ($user->id == $selectTeam->creator_id && $member->actor == 'team')
+                                 @if ($user->id === $selectTeam->creator_id && $member->actor === 'team')
                                     <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
                                         onclick="approveMember({{ $member->id }})">
                                         ✔
@@ -119,8 +119,8 @@
     <div class="cont mt-3 pt-3">
         <table class="member-table">
             <tbody class="pending-member-table">
-                @if ($teamMembersProcessed['pending']['count'] != 0 || 
-                        $teamMembersProcessed['rejected']['count'] != 0 
+                @if ($teamMembersProcessed['pending']['count'] !== 0 || 
+                        $teamMembersProcessed['rejected']['count'] !== 0 
                     )
                     @foreach ($teamMembersProcessed['pending']['members'] as $member)
                         <tr class="st" id="tr-{{ $member->id }}">
@@ -129,7 +129,7 @@
                                 Pending {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
                             <td>
-                                @if ($user->id == $selectTeam->creator_id && $member->actor == 'user')
+                                @if ($user->id === $selectTeam->creator_id && $member->actor === 'user')
                                     <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
                                         onclick="approveMember({{ $member->id }})">
                                         ✔
@@ -137,7 +137,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($user->id == $selectTeam->creator_id && $member->actor == 'team' )
+                                @if ($user->id === $selectTeam->creator_id && $member->actor === 'team' )
                                     <button id="withdrawInviteMember-{{ '$member->user_id' }}" class="gear-icon-btn"
                                         onclick="withdrawInviteMember({{ $member->id }})">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -159,7 +159,7 @@
                                 Rejected {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
                             <td>
-                                @if ($user->id == $selectTeam->creator_id && $member->actor != 'user' )
+                                @if ($user->id === $selectTeam->creator_id && $member->actor !== 'user' )
                                     <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
                                         onclick="approveMember({{ $member->id }})">
                                         ✔
@@ -167,7 +167,7 @@
                                 @endif
                             </td>
                              <td>
-                                @if ($user->id == $selectTeam->creator_id)
+                                @if ($user->id === $selectTeam->creator_id)
                                     <button id="withdrawInviteMember-{{ '$member->user_id' }}" class="gear-icon-btn"
                                         onclick="withdrawInviteMember({{ $member->id }})">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"

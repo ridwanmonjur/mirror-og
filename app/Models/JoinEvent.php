@@ -109,7 +109,7 @@ class JoinEvent extends Model
         $maxStreak = 0;
 
         foreach ($joins as $join) {
-            if ($join->position == 1) {
+            if ($join->position === 1) {
                 $sumPositionOne++;
             } else {
                 $maxStreak = max($maxStreak, $streak);
@@ -137,7 +137,7 @@ class JoinEvent extends Model
         $maxStreak = 0;
 
         foreach ($joins as $join) {
-            if ($join->position == 1) {
+            if ($join->position === 1) {
                 $sumPositionOne++;
             } else {
                 $maxStreak = max($maxStreak, $streak);
@@ -214,7 +214,7 @@ class JoinEvent extends Model
 
             if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
                 $activeEvents[] = $joinEvent;
-            } elseif ($joinEvent->status == 'ENDED') {
+            } elseif ($joinEvent->status === 'ENDED') {
                 $historyEvents[] = $joinEvent;
             }
         }

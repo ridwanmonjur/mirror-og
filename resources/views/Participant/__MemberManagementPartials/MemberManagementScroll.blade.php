@@ -45,7 +45,7 @@
     function resetInput(name) {
         document.querySelector(`[name="${name}"]`).value = '';
         let formData = new FormData(newMembersForm);
-        let newValue = name == "sortKeys" ? [] : ""; 
+        let newValue = name === "sortKeys" ? [] : ""; 
         formData.set(name, newValue);
         const event = new CustomEvent("formChange", {
             detail: {
@@ -65,7 +65,7 @@
         name = target.name;
         value = target.value;
         
-        if (name == "search") {
+        if (name === "search") {
             return;
         }
             
@@ -76,7 +76,7 @@
         let isShowDefaults = true;
         for (let newMembersFormKey of newMembersFormKeys) {
             let elementValue = formData.getAll(newMembersFormKey);
-            if (elementValue != "" || (Array.isArray(elementValue) && elementValue[0] )) {
+            if (elementValue !== "" || (Array.isArray(elementValue) && elementValue[0] )) {
                 isShowDefaults = isShowDefaults && false;
             }
         }
@@ -90,7 +90,7 @@
         targetElemnetParent.innerHTML = '';
 
         let valuesFormData = formData.getAll(name);
-        if (value == "" || (Array.isArray(valuesFormData) && valuesFormData[0] == null )) {
+        if (value === "" || (Array.isArray(valuesFormData) && valuesFormData[0] === null )) {
             return;
         }
         

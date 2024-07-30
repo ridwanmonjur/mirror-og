@@ -9,13 +9,13 @@
         let page = 1;
         let search = null;
         let searchBar = document.querySelector('input#search-bar');
-        if (searchBar.style.display != 'none') {
+        if (searchBar.style.display !== 'none') {
             search = searchBar.value;
         } else {
             searchBar = document.querySelector('input#search-bar-mobile');
             search = searchBar.value;
         }
-        if (!search || String(search).trim() == "") {
+        if (!search || String(search).trim() === "") {
             search = null;
             ENDPOINT += "?page=" + page;
         } else {

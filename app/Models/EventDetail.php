@@ -94,7 +94,7 @@ class EventDetail extends Model
 
             if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
                 $activeEvents[] = $joinEvent;
-            } elseif ($joinEvent->status == 'ENDED') {
+            } elseif ($joinEvent->status === 'ENDED') {
                 $historyEvents[] = $joinEvent;
             }
         }
@@ -142,7 +142,7 @@ class EventDetail extends Model
 
         if (in_array($this->status, ['DRAFT', 'PREVEW'])) {
             return 'DRAFT';
-        } elseif (is_null($this->payment_transaction_id) || $this->status == 'PENDING') {
+        } elseif (is_null($this->payment_transaction_id) || $this->status === 'PENDING') {
             return 'PENDING';
         } elseif (! $carbonEndDateTime || ! $carbonStartDateTime) {
             Log::error('EventDetail.php: statusResolved: EventDetail with id= '.$this->id
@@ -166,7 +166,7 @@ class EventDetail extends Model
 
     public function fixTimeToRemoveSeconds($time)
     {
-        if ($time == null) {
+        if (!isset($time) || $time === null) {
             return null;
         } elseif (substr_count($time, ':') === 2) {
             $time = explode(':', $time);
@@ -180,7 +180,7 @@ class EventDetail extends Model
 
     public function createCarbonDateTimeFromDB($date, $time)
     {
-        if ($date == null || $time == null) {
+        if (!$date || !$time) {
             return null;
         }
 
@@ -218,19 +218,19 @@ class EventDetail extends Model
             }
 
             $currentDateTime = Carbon::now()->utc();
-            if ($status == 'ALL') {
+            if ($status === 'ALL') {
                 return $query;
-            } elseif ($status == 'DRAFT') {
+            } elseif ($status === 'DRAFT') {
                 return $query->whereIn('status', ['DRAFT', 'PREVIEW']);
-            } elseif ($status == 'PENDING') {
+            } elseif ($status === 'PENDING') {
                 return $query->where('status', 'PENDING')->orWhereNull('payment_transaction_id');
-            } elseif ($status == 'ENDED') {
+            } elseif ($status === 'ENDED') {
                 return $query
                     ->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime])
                     ->where('status', '<>', 'PREVIEW')
                     ->whereNotNull('payment_transaction_id')
                     ->where('status', '<>', 'DRAFT');
-            } elseif ($status == 'LIVE') {
+            } elseif ($status === 'LIVE') {
                 return $query
                     ->where(function ($query) use ($currentDateTime) {
                         return $query
@@ -242,7 +242,7 @@ class EventDetail extends Model
                     ->whereNotNull('payment_transaction_id')
                     ->where('status', '<>', 'PREVIEW')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
-            } elseif ($status == 'SCHEDULED') {
+            } elseif ($status === 'SCHEDULED') {
                 return $query
                     ->whereNotNull('sub_action_public_date')
                     ->whereNotNull('sub_action_public_time')
@@ -283,10 +283,10 @@ class EventDetail extends Model
         $eventListQuery->when($request->has('sort'), function ($query) use ($request) {
             $sort = $request->input('sort');
             foreach ($sort as $key => $value) {
-                if (! empty(trim($key)) && $value != 'none') {
-                    if ($key == 'startDate') {
+                if (! empty(trim($key)) && $value !== 'none') {
+                    if ($key === 'startDate') {
                         $query->orderBy('startDate', $value)->orderBy('startTime', $value);
-                    } elseif ($key == 'prize') {
+                    } elseif ($key === 'prize') {
                         $query
                             ->join('event_tier', 'event_details.event_tier_id', '=', 'event_tier.id')
                             ->orderBy('event_tier.tierPrizePool', $value);
@@ -421,10 +421,10 @@ class EventDetail extends Model
         } catch (Exception $e) {
         }
 
-        $isEditMode = $eventDetail->id != null;
-        $isDraftMode = $request->launch_visible == 'DRAFT';
+        $isEditMode = isset($eventDetail->id) && $eventDetail->id !== null;
+        $isDraftMode = $request->launch_visible === 'DRAFT';
 
-        $isPreviewMode = $isEditMode ? false : $request->livePreview == 'true';
+        $isPreviewMode = $isEditMode ? false : $request->livePreview === 'true';
         $carbonStartDateTime = null;
         $carbonEndDateTime = null;
         $carbonPublishedDateTime = null;
@@ -471,22 +471,22 @@ class EventDetail extends Model
         $eventDetail->eventDescription = $request->eventDescription;
         $eventDetail->eventTags = $request->eventTags;
 
-        if ($request->launch_visible == 'DRAFT') {
+        if ($request->launch_visible === 'DRAFT') {
             $eventDetail->status = 'DRAFT';
             $eventDetail->sub_action_public_date = null;
             $eventDetail->sub_action_public_time = null;
             $eventDetail->sub_action_private = 'private';
         } else {
             $eventDetail->sub_action_private = $request->launch_visible;
-            if ($request->launch_visible == 'public') {
+            if ($request->launch_visible === 'public') {
                 $launch_date = $request->launch_date_public;
                 $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_public);
-            } elseif ($request->launch_visible == 'private') {
+            } elseif ($request->launch_visible === 'private') {
                 $launch_date = $request->launch_date_private;
                 $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_private);
             }
 
-            if ($request->launch_schedule == 'schedule' && $launch_date && $launch_time) {
+            if ($request->launch_schedule === 'schedule' && $launch_date && $launch_time) {
                 $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date.' '.$launch_time)->utc();
                 if ($launch_date && $launch_time && $carbonPublishedDateTime < $carbonStartDateTime && $carbonPublishedDateTime < $carbonEndDateTime) {
                     $eventDetail->status = 'SCHEDULED';
@@ -495,7 +495,7 @@ class EventDetail extends Model
                 } else {
                     throw new TimeGreaterException('Published time must be before start time and end time.');
                 }
-            } elseif ($request->launch_schedule == 'now') {
+            } elseif ($request->launch_schedule === 'now') {
                 $eventDetail->status = 'UPCOMING';
                 $eventDetail->sub_action_public_date = null;
                 $eventDetail->sub_action_public_time = null;
@@ -522,7 +522,7 @@ class EventDetail extends Model
 
         if (is_null($event)) {
             throw new ModelNotFoundException("Event not found with id: $id");
-        } elseif ($event->user_id != $userId) {
+        } elseif ($event->user_id !== $userId) {
             throw new UnauthorizedException('You cannot view an event of another organizer!');
         } else {
             return $event;
@@ -535,7 +535,7 @@ class EventDetail extends Model
 
         if (! $event) {
             throw new ModelNotFoundException("Event not found with id: $eventId");
-        } elseif ($event->user_id != $userId) {
+        } elseif ($event->user_id !== $userId) {
             throw new UnauthorizedException('You cannot view an event of another organizer!');
         } else {
             return $event;

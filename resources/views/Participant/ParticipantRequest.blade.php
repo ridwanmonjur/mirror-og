@@ -20,7 +20,7 @@
     @if (isset($id))
         <div class="mb-2 text-success mx-auto text-center">
             You have joined this event successfully!
-            @if ($selectTeam->creator_id == $user->id)
+            @if ($selectTeam->creator_id === $user->id)
                 <form class="d-inline" method="GET"
                     action="{{ route('participant.roster.manage', ['id' => $id, 'teamId' => $selectTeam->id]) }}">
                     <button class="oceans-gaming-default-button oceans-gaming-default-button-link ms-2 me-2" type="submit"
@@ -64,7 +64,7 @@
                                     </label>
                                 </div>
                                 <h3 class="team-name" id="team-name">{{ $teamAndMember->teamName }}</h3>
-                                <i> {{ $teamAndMember->status == 'pending' ? 'Requested' : 'Rejected' }}  {{ is_null($teamAndMember->updated_at) ? '' : Carbon::parse($teamAndMember->updated_at)->diffForHumans() }} </i>
+                                <i> {{ $teamAndMember->status === 'pending' ? 'Requested' : 'Rejected' }}  {{ is_null($teamAndMember->updated_at) ? '' : Carbon::parse($teamAndMember->updated_at)->diffForHumans() }} </i>
                                 <br>
                                 <p>Total Members:
                                     @if (isset($membersCount[$teamAndMember->id]))
@@ -93,7 +93,7 @@
                                             ✔ Approve
                                         </button>
                                     </div>
-                                    @if ($teamAndMember->status == 'pending')
+                                    @if ($teamAndMember->status === 'pending')
                                         <div class="">
                                             <button id="remove-{{ $teamAndMember->id }}" class="btn btn-link"
                                                 onclick="disapproveTeam({{ $teamAndMember->id }})">
@@ -278,7 +278,7 @@
                 document.getElementById('PrivateInvitationsBtn').click();
             }
 
-            if (successValue == 'true') {
+            if (successValue === 'true') {
                 if (teamName) {
                     Toast.fire({
                         icon: 'success',

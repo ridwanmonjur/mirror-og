@@ -69,7 +69,7 @@
 
         } else {
             filter[event.target.name] = filter[event.target.name].filter(
-                _value => _value != value
+                _value => _value !== value
             );
 
             deleteTagByNameValue(event.target.name, event.target.value);
@@ -93,7 +93,7 @@
         let filter = fetchVariables.getFilter();
 
         filter[name] = filter[name].filter(
-            _value => _value != value
+            _value => _value !== value
         );
 
         fetchVariables.setFilter(filter);
@@ -134,10 +134,10 @@
         let sortType = fetchVariables.getSortType();
         let sortKey = fetchVariables.getSortKey();
 
-        if (sortType && sortKey != "") {
-            if (sortType == SORT_CONSTANTS['ASC']) {
+        if (sortType && sortKey !== "") {
+            if (sortType === SORT_CONSTANTS['ASC']) {
                 sortType = SORT_CONSTANTS['NONE'];
-            } else if (sortType == SORT_CONSTANTS['DESC']) {
+            } else if (sortType === SORT_CONSTANTS['DESC']) {
                 sortType = SORT_CONSTANTS['ASC'];
             } else {
                 sortType = SORT_CONSTANTS['DESC'];
@@ -202,7 +202,7 @@
             var key = decodeURIComponent(pair[0]);
             var value = decodeURIComponent(pair[1] || '');
 
-            if (key.trim() != "") {
+            if (key.trim() !== "") {
 
                 if (key in params) {
                     params[key] = [...params[key], value];

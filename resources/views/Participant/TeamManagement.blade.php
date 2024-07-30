@@ -142,7 +142,7 @@
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center    ">
                             @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
-                            @if (isset($user) && $selectTeam->creator_id == $user->id)
+                            @if (isset($user) && $selectTeam->creator_id === $user->id)
                                 <a
                                     href="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}">
                                     <button class="btn btn-link me-2 gear-icon-btn" type="submit">
@@ -171,7 +171,7 @@
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center    ">
                             @include('Participant.__Partials.RosterView',  ['isRegistrationView' => false])
-                            @if (isset($user) && $selectTeam->creator_id == $user->id)
+                            @if (isset($user) && $selectTeam->creator_id === $user->id)
                                 <a
                                     href="{{ route('participant.roster.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}"
                                 >

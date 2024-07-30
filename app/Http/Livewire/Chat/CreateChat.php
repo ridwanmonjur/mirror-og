@@ -22,7 +22,7 @@ class CreateChat extends Component
         $checkedConversation = Conversation::where('receiver_id', auth()->user()->id)->where('sender_id', $receiverId)->orWhere('receiver_id', $receiverId)->where('sender_id', auth()->user()->id)->get();
 
 
-        if (count($checkedConversation) == 0) {
+        if (count($checkedConversation) === 0) {
 
      // dd(no conversation);
 

@@ -8,7 +8,7 @@ function carouselWork(increment = 0) {
     }
 
     let incrementSignMultipier = increment >= 0 ? 1 : -1;
-    if (increment != 0) increment = numberOfBoxes * incrementSignMultipier;
+    if (increment !== 0) increment = numberOfBoxes * incrementSignMultipier;
 
     let newSum = currentIndex + increment;
 

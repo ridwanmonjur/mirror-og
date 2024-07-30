@@ -150,7 +150,7 @@
                                     <div class="card-organizer">
                                         <p style="display: inline;"><u>
                                                 {{ $event?->user?->organizer?->companyName ?? 'Add' }} </u> </p>
-                                        <p class="small-text" id="followCount" data-count="{{ $followersCount }}"> <i> {{ $followersCount }} {{ $followersCount == 1  ? 'follower' : 'followers' }} </i> </p>
+                                        <p class="small-text" id="followCount" data-count="{{ $followersCount }}"> <i> {{ $followersCount }} {{ $followersCount === 1  ? 'follower' : 'followers' }} </i> </p>
                                     </div>
                                 </div>
 
@@ -174,7 +174,7 @@
                                         </button>
                                     @endguest
                                     @auth
-                                        @if ($user->role == 'PARTICIPANT')
+                                        @if ($user->role === 'PARTICIPANT')
                                             <button 
                                                 class="ripple"
                                                 type="submit" id="followButton"
@@ -262,7 +262,7 @@
                                     </button>
                                 @endguest
                                 @auth
-                                    @if ($user->role == "PARTICIPANT")
+                                    @if ($user->role === "PARTICIPANT")
                                         <button type="submit" class="oceans-gaming-default-button ripple">
                                             <span>Join</span>
                                         </button>
@@ -423,9 +423,9 @@
                 }
                 
                 likesButton.style.setProperty('pointer-events', 'auto');
-                if (count == 1) {
+                if (count === 1) {
                     likesCount.innerHTML = '1';
-                } else if (count == 0) {
+                } else if (count === 0) {
                     likesCount.innerHTML = `0`;
                 } else {
                     likesCount.innerHTML = `${count}`;
@@ -480,9 +480,9 @@
                 }
                 
                 followButton.style.setProperty('pointer-events', 'auto');
-                if (count == 1) {
+                if (count === 1) {
                     followCount.innerHTML = '<i> 1 follower </i>';
-                } else if (count == 0) {
+                } else if (count === 0) {
                     followCount.innerHTML = `<i> 0 followers </i>`;
                 } else {
                     followCount.innerHTML = `<i> ${count} followers </i>`;

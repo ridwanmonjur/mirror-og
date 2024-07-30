@@ -32,7 +32,7 @@ class TeamMemberCreatedListener
 
             switch ($status) {
                 case 'pending':
-                    if ($event->teamMember->actor == 'team') {
+                    if ($event->teamMember->actor === 'team') {
                         $action = 'invited';
                         $userNotification = [
                             'text' => '<span class="notification-gray"> The team'

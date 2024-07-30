@@ -92,8 +92,8 @@ class ParticipantEventController extends Controller
                     ->where('event_id', $event->id)
                     ->first();
 
-                if ($event->sub_action_private == 'private') {
-                    $checkIfUserIsOrganizerOfEvent = $event->user_id == $userId;
+                if ($event->sub_action_private === 'private') {
+                    $checkIfUserIsOrganizerOfEvent = $event->user_id === $userId;
                     $checkIfUserIsInvited = true;
                     $checkIfShouldDisallow = ! ($checkIfUserIsOrganizerOfEvent || $checkIfUserIsInvited);
                     if ($checkIfShouldDisallow) {
@@ -101,8 +101,8 @@ class ParticipantEventController extends Controller
                     }
                 }
 
-                if ($status == 'SCHEDULED') {
-                    $checkIfUserIsOrganizerOfEvent = $event->user_id == $userId;
+                if ($status === 'SCHEDULED') {
+                    $checkIfUserIsOrganizerOfEvent = $event->user_id === $userId;
                     if (! $checkIfUserIsOrganizerOfEvent) {
                         throw new UnauthorizedException('You cannot view a scheduled event');
                     }
@@ -110,7 +110,7 @@ class ParticipantEventController extends Controller
 
                 $existingJoint = JoinEvent::getJoinedByTeamsForSameEvent($event->id, $userId);
             } else {
-                if ($event->sub_action_private == 'private') {
+                if ($event->sub_action_private === 'private') {
                     throw new UnauthorizedException('Login to access this event.');
                 } else {
                     $existingJoint = null;
@@ -281,7 +281,7 @@ class ParticipantEventController extends Controller
             $user = $request->attributes->get('user');
             $userId = $request->attributes->get('user')->id;
             $teamId = $request->input('selectedTeamId');
-            if ($teamId == "") {
+            if ($teamId === "") {
                 throw new ErrorException("No team has been chosen");
             }
             $isAlreadyMember = TeamMember::isAlreadyMember($teamId, $userId);
@@ -321,7 +321,7 @@ class ParticipantEventController extends Controller
             }
         } catch (Exception $e) {
             DB::rollBack();
-            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
+            if ($e->getCode() === '23000' || $e->getCode() === 1062) {
                 $errorMessage = "Please choose a team that hasn't joined this event!";
             } else {
                 $errorMessage = $e->getMessage();
@@ -390,7 +390,7 @@ class ParticipantEventController extends Controller
             }
         } catch (Exception $e) {
             DB::rollBack();
-            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
+            if ($e->getCode() === '23000' || $e->getCode() === 1062) {
                 $errorMessage = 'Please choose a unique name!';
             } else {
                 $errorMessage = $e->getMessage();
@@ -407,13 +407,13 @@ class ParticipantEventController extends Controller
     {
         try {
             // dd($request);
-            $successMessage = $request->join_status == 'confirmed' ? 'Your registration is now successfully confirmed!'
+            $successMessage = $request->join_status === 'confirmed' ? 'Your registration is now successfully confirmed!'
                 : 'Your registration is now successfully canceled.';
 
             $joinEvent = JoinEvent::where('id', $request->join_event_id)->select(['id', 'join_status', 'payment_status'])->firstOrFail();
 
-            $isPermitted = $joinEvent->payment_status == 'completed' &&
-                ($request->join_status == 'confirmed' || $request->join_status == 'canceled');
+            $isPermitted = $joinEvent->payment_status === 'completed' &&
+                ($request->join_status === 'confirmed' || $request->join_status === 'canceled');
 
             if ($isPermitted) {
                 $joinEvent->join_status = $request->join_status;

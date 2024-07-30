@@ -11,7 +11,7 @@
     <div onclick="deleteCaptain({{ $member->id }}, {{ $selectTeam->id }})"
         class="player-info cursor-pointer"
     >
-        @if ($captain && $member->id == $captain->team_member_id)
+        @if ($captain && $member->id === $captain->team_member_id)
             <div class="player-image"> </div>
         @endif
         <img 

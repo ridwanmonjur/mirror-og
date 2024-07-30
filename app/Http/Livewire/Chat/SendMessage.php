@@ -43,7 +43,7 @@ class SendMessage extends Component
 
     public function sendMessage()
     {
-        if ($this->body == null) {
+        if (!isset($this->body) || $this->body === null) {
             return null;
         }
 

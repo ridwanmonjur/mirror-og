@@ -41,7 +41,7 @@ const createGradientPicker = function (container, onLastUpdateCb, onHideCb = nul
             console.log('changed', color)
         },
         onLastUpdate: color => {
-            if (onLastUpdateCb && localStorage.getItem('isInited')== "true") { onLastUpdateCb(color); }
+            if (onLastUpdateCb && localStorage.getItem('isInited')=== "true") { onLastUpdateCb(color); }
             localStorage.setItem('isInited', "true");
         }
     }) 

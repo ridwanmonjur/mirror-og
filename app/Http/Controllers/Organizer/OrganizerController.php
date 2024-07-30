@@ -36,9 +36,9 @@ class OrganizerController extends Controller
         try {
             $loggedInUser = Auth::user();
             $user = User::findOrFail($id);
-            if ($user->role == 'PARTICIPANT') {
+            if ($user->role === 'PARTICIPANT') {
                 return redirect()->route('public.participant.view', ['id' => $id]);
-            } elseif ($user->role == 'ADMIN') {
+            } elseif ($user->role === 'ADMIN') {
                 return $this->showErrorParticipant('This is an admin view!');
             }
 

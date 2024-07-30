@@ -6,7 +6,7 @@
         <main>
             <div>
                 <div>
-                    <form enctype="multipart/form-data" onkeydown="return event.key != 'Enter';"
+                    <form enctype="multipart/form-data" onkeydown="return event.key !== 'Enter';"
                         action="{{ route('event.updateForm', $event->id) }}" method="post" name="create-event-form"
                         novalidate>
                         @csrf

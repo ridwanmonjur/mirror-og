@@ -24,14 +24,14 @@ class ParticipantFriendsFollowsCount extends Component
     public function mount()
     {
         if ($this->userId) {
-            if ($this->name == "follower") {
+            if ($this->name === "follower") {
                 $this->count =  ParticipantFollow::where('participant_followee', $this->userId)
                     ->count();
                 $this->hyperlink = route("user.stats", [
                     'id' => $this->userId, 'type' => 'Follow'
                 ]);
                 $this->text = 'Follower'. bladePluralPrefix($this->count);
-            } elseif ($this->name == "followee") {
+            } elseif ($this->name === "followee") {
                 $this->count =  ParticipantFollow::where('participant_follower', $this->userId)
                     ->count();
                 $this->hyperlink = route("user.stats", [
@@ -39,7 +39,7 @@ class ParticipantFriendsFollowsCount extends Component
                 ]);
                 $this->text = 'Following';
 
-            } elseif ($this->name == "friend") {
+            } elseif ($this->name === "friend") {
                 $this->count =  Friend::where(function($query) {
                     $query->where('user1_id', $this->userId)
                           ->orWhere('user2_id', $this->userId);

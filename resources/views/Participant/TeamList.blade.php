@@ -270,7 +270,7 @@
             name = target.name;
             value = target.value;
 
-            if (name == "search") {
+            if (name === "search") {
                 return;
             }
 
@@ -281,7 +281,7 @@
             let isShowDefaults = true;
             for (let newTeamsFormKey of newTeamsFormKeys) {
                 let elementValue = formData.getAll(newTeamsFormKey);
-                if (elementValue != "" || (Array.isArray(elementValue) && elementValue[0])) {
+                if (elementValue !== "" || (Array.isArray(elementValue) && elementValue[0])) {
                     isShowDefaults = isShowDefaults && false;
                 }
             }
@@ -295,7 +295,7 @@
             targetElemnetParent.innerHTML = '';
 
             let valuesFormData = formData.getAll(name);
-            if (value == "" || (Array.isArray(valuesFormData) && valuesFormData[0] == null)) {
+            if (value === "" || (Array.isArray(valuesFormData) && valuesFormData[0] === null)) {
                 return;
             }
 
@@ -332,24 +332,24 @@
                 let regionFilter = formData.get('region');
                 let ageFilter = formData.get('birthDate');
 
-                let statusListFilter = formData.getAll('status');
-                if (nameFilter != "" && !(
+                let statusListFilter = formData.getAll('status') ?? null;
+                if (nameFilter !== "" && !(
                         String(sortedTeam?.teamName).includes(nameFilter) 
                     )) {
                     isToBeAdded = isToBeAdded && false;
                 }
 
-                if (regionFilter != "" && sortedTeam?.country != regionFilter) {
+                if (regionFilter !== "" && sortedTeam?.country !== regionFilter) {
                     isToBeAdded = isToBeAdded && false;
                 }
 
-                let isArrayFilter = statusListFilter && statusListFilter[0] == null;
+                let isArrayFilter = statusListFilter && statusListFilter[0] === null;
                 for (let statusItemFilter of statusListFilter) {
                     if (statusItemFilter === sortedTeam?.status) isArrayFilter = true || isArrayFilter;
                 }
                 isToBeAdded = isArrayFilter && isToBeAdded;
 
-                if (ageFilter != "" && new Date(sortedTeam?.user?.participant?.birthday) < new Date(ageFilter)) {
+                if (ageFilter !== "" && new Date(sortedTeam?.user?.participant?.birthday) < new Date(ageFilter)) {
                     isToBeAdded = isToBeAdded && false;
                 }
 
@@ -387,7 +387,7 @@
         function resetInput(name) {
             document.querySelector(`[name="${name}"]`).value = '';
             let formData = new FormData(newTeamsForm);
-            let newValue = name == "sortKeys" ? [] : "";
+            let newValue = name === "sortKeys" ? [] : "";
             formData.set(name, newValue);
             const event = new CustomEvent("formChange", {
                 detail: {
@@ -445,7 +445,7 @@
                                         <span> Teams:
                                             ${membersCountServerValue[team?.id] ? membersCountServerValue[team?.id] : 0}
                                         </span> <br>
-                                        <small class="${team?.creator_id != userIdServerValue && 'd-none'}"><i>Created by you</i></small>
+                                        <small class="${team?.creator_id !== userIdServerValue && 'd-none'}"><i>Created by you</i></small>
                                         <br>
                                         <span> 
                                             ${membersCountServerValue[team?.id] ? 

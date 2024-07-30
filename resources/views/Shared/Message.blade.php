@@ -27,11 +27,11 @@
             <div class="chat-list">
                 <template x-for="room in oldRooms" :key="room.id">
                     <div x-bind:data-identity-for-read="room.id" x-on:click="currentRoom = room?.id" class="chat-item">
-                        <template x-if="room?.otherRoomMember?.userBanner != null">
+                        <template x-if="room?.otherRoomMember?.userBanner !== null || room?.otherRoomMember?.userBanner !== undefined">
                             <img {!! trustedBladeHandleImageFailure() !!} x-bind:src="'/storage/' + room?.otherRoomMember?.userBanner" width="50" height="50"
                                 class="object-fit-cover rounded-circle me-3">
                         </template>
-                        <template x-if="room?.otherRoomMember?.userBanner == null">
+                        <template x-if="room?.otherRoomMember?.userBanner === null || room?.otherRoomMember?.userBanner === undefined">
                             <div class="avatar me-3"
                                 x-text="room.otherRoomMember?.name ? room.otherRoomMember?.name?.charAt(0)?.toUpperCase(): room?.otherRoomMember?.email[0]?.toUpperCase()">
                             </div>

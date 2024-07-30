@@ -74,11 +74,11 @@ class ParticipantCheckoutController extends Controller
             $user = $request->get('user');
             $userId = $user->id;
             $status = $request->get('redirect_status');
-            if ($status == 'succeeded' && $request->has('payment_intent_client_secret')) {
+            if ($status === 'succeeded' && $request->has('payment_intent_client_secret')) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
                 if ($paymentIntent['amount'] > 0 &&
-                    $paymentIntent['amount_received'] == $paymentIntent['amount']
+                    $paymentIntent['amount_received'] === $paymentIntent['amount']
                 ) {
                     $transaction = PaymentTransaction::createTransaction(
                         $intentId, 'SUCCESS', $paymentIntent['amount'] / 100
@@ -99,7 +99,7 @@ class ParticipantCheckoutController extends Controller
                     $participantPaymentSum = ParticipantPayment::select(['join_events_id', 'id', 'payment_amount'])
                         ->where('join_events_id', $joinEvent->id)
                         ->sum('payment_amount');
-                    if ($total == $participantPaymentSum) {
+                    if ($total === $participantPaymentSum) {
                         $joinEvent->payment_status = 'completed';
                         $joinEvent->save();
                     }

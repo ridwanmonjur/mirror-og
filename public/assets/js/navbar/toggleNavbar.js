@@ -13,7 +13,7 @@ function searchNavbar(event) {
     } else {
         endpoint = "/participant/events";
     }
-    let endpointFinal = page == null ? ENDPOINT : ENDPOINT + "?page=" + page;
+    let endpointFinal = page ? ENDPOINT : ENDPOINT + "?page=" + page;
     
     fetch(endpointFinal, {
             method: 'POST',

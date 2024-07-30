@@ -29,7 +29,7 @@
         document.querySelector('.scrolling-pagination').innerHTML = '';
         search = e.target.value;
         ENDPOINT = "{{ route('landing.view') }}";
-        if (!search || String(search).trim() == "") {
+        if (!search || String(search).trim() === "") {
             search = null;
             ENDPOINT += "?page=" + page;
             infinteLoadMore(null, ENDPOINT);

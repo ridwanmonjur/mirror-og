@@ -7,7 +7,7 @@
 <div id="CurrentMembers">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
         {{ $counTeamMembers }} accepted member{{bladePluralPrefix($counTeamMembers)}} &nbsp;&nbsp;
-        @if (isset($user) && $selectTeam->creator_id == $user->id)
+        @if (isset($user) && $selectTeam->creator_id === $user->id)
             <button class="oceans-gaming-default-button oceans-gaming-default-button-link" 
                 onclick="window.location.href='{{route('participant.member.manage', ['id'=> $selectTeam->id ])}}'">
                 Manage Members
@@ -294,7 +294,7 @@
         name = target.name;
         value = target.value;
         
-        if (name == "search") {
+        if (name === "search") {
             return;
         }
             
@@ -305,7 +305,7 @@
         let isShowDefaults = true;
         for (let newMembersFormKey of newMembersFormKeys) {
             let elementValue = formData.getAll(newMembersFormKey);
-            if (elementValue != "" || (Array.isArray(elementValue) && elementValue[0] )) {
+            if (elementValue !== "" || (Array.isArray(elementValue) && elementValue[0] )) {
                 isShowDefaults = isShowDefaults && false;
             }
         }
@@ -319,7 +319,7 @@
         targetElemnetParent.innerHTML = '';
 
         let valuesFormData = formData.getAll(name);
-        if (value == "" || (Array.isArray(valuesFormData) && valuesFormData[0] == null )) {
+        if (value === "" || (Array.isArray(valuesFormData) && (valuesFormData[0] === null || valuesFormData[0] === undefined) )) {
             return;
         }
         
@@ -404,24 +404,24 @@
             let ageFilter = formData.get('birthDate');
 
             let statusListFilter = formData.getAll('status');
-            if (nameFilter != "" && !(
+            if (nameFilter !== "" && !(
                 String(sortedMember?.user?.name).includes(nameFilter) ||
                 String(sortedMember?.user?.email).includes(nameFilter)
             )) {
                 isToBeAdded = isToBeAdded && false;
             } 
 
-            if (regionFilter != "" && sortedMember?.user?.participant?.region != regionFilter) {
+            if (regionFilter !== "" && sortedMember?.user?.participant?.region !== regionFilter) {
                 isToBeAdded = isToBeAdded && false;
             } 
 
-            let isArrayFilter = statusListFilter && statusListFilter[0] == null;
+            let isArrayFilter = statusListFilter && statusListFilter[0] === null;
             for (let statusItemFilter of statusListFilter) {
                 if (statusItemFilter === sortedMember?.status) isArrayFilter = true || isArrayFilter;
             }
             isToBeAdded = isArrayFilter && isToBeAdded;
 
-            if (ageFilter != "" && new Date(sortedMember?.user?.participant?.birthday) < new Date(ageFilter)) {
+            if (ageFilter !== "" && new Date(sortedMember?.user?.participant?.birthday) < new Date(ageFilter)) {
                 isToBeAdded = isToBeAdded && false;
             } 
 
@@ -445,7 +445,7 @@
                     </td>
                     <td class="coloured-cell px-3">
                         <div class="player-info">
-                                <div class="${!captainJson || member.id != captainJson?.team_member_id && 'd-none'} player-image">
+                                <div class="${!captainJson || member.id !== captainJson?.team_member_id && 'd-none'} player-image">
                                 </div>
                                 <img 
                                     width="45" height="45" 
@@ -476,7 +476,7 @@
     function resetInput(name) {
         document.querySelector(`[name="${name}"]`).value = '';
         let formData = new FormData(newMembersForm);
-        let newValue = name == "sortKeys" ? [] : ""; 
+        let newValue = name === "sortKeys" ? [] : ""; 
         formData.set(name, newValue);
         const event = new CustomEvent("formChange", {
             detail: {

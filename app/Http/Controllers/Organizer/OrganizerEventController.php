@@ -281,9 +281,9 @@ class OrganizerEventController extends Controller
             $eventDetail->user_id = $request->get('user')->id;
             $eventDetail->save();
 
-            if ($request->livePreview == 'true') {
+            if ($request->livePreview === 'true') {
                 return redirect('organizer/event/'.$eventDetail->id.'/live');
-            } elseif ($request->goToCheckoutPage == 'yes') {
+            } elseif ($request->goToCheckoutPage === 'yes') {
                 return redirect('organizer/event/'.$eventDetail->id.'/checkout');
             } else {
                 return redirect('organizer/event/'.$eventDetail->id.'/success');
@@ -305,7 +305,7 @@ class OrganizerEventController extends Controller
             );
             $status = $event->statusResolved();
 
-            if ($status == 'ENDED') {
+            if ($status === 'ENDED') {
                 return $this->showErrorOrganizer("Event has already ended id: $id");
             } elseif (! in_array($status, ['UPCOMING', 'DRAFT', 'SCHEDULED', 'PENDING'])) {
                 return $this->showErrorOrganizer("Event has already gone live for id: $id");
@@ -347,9 +347,9 @@ class OrganizerEventController extends Controller
                 $eventDetail->user_id = $request->get('user')->id;
                 $eventDetail->save();
 
-                if ($request->livePreview == 'true') {
+                if ($request->livePreview === 'true') {
                     return redirect('organizer/event/'.$eventDetail->id.'/live');
-                } elseif ($request->goToCheckoutPage == 'yes') {
+                } elseif ($request->goToCheckoutPage === 'yes') {
                     return redirect('organizer/event/'.$eventDetail->id.'/checkout');
                 } else {
                     return redirect('organizer/event/'.$eventDetail->id.'/success');

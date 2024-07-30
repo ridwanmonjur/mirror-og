@@ -7,7 +7,7 @@ function checkValidity(inpObj, inputID) {
         email: "Email address is invalid.",
     };
 
-    if (input.value.trim() == "") {
+    if (input.value.trim() === "") {
         spanMesage.style.top = "20px";
     } else {
         spanMesage.style.top = "0px";

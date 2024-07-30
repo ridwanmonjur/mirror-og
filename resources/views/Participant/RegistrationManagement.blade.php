@@ -180,10 +180,10 @@
 
         function keydown(input) {
             let modalId = input.dataset.modalId;
-            if (event.key === "Backspace" || event.key === "Delete") { 
+            if (event.key ==="Backspace" || event.key =="Delete") { 
                 event.preventDefault();
             }
-            if (event.key.length === 1 && !/\d/.test(event.key)) {
+            if (event.key.length ===1 && !/\d/.test(event.key)) {
                 event.preventDefault();
             }
         }
