@@ -47,7 +47,7 @@ $this->receiverInstance= null;
         $this->auth_id = auth()->id();
         //get selected conversation 
 
-        if ($conversation->sender_id === $this->auth_id) {
+        if ($conversation->sender_id == $this->auth_id) {
             $this->receiverInstance = User::firstWhere('id', $conversation->receiver_id);
             # code...
         } else {

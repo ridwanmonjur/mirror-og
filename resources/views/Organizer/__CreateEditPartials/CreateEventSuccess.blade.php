@@ -12,18 +12,18 @@
         </u>
     </div>
     <div class="box-width">
-        @if ($status === 'ERROR')
+        @if ($status == 'ERROR')
             <p id="notification">Your <u>{{ strtolower($status) }}</u> event has no proper start date/ end date!</p>
-        @elseif ($status === 'DRAFT')
-            <p id="notification">Your <u>{{ strtolower($status) }}</u> event has been {{$event->created_at !== $event->updated_at ? 'updated' : 'created'}}. </p>
-        @elseif ($status === 'SCHEDULED')
+        @elseif ($status == 'DRAFT')
+            <p id="notification">Your <u>{{ strtolower($status) }}</u> event has been {{$event->created_at != $event->updated_at ? 'updated' : 'created'}}. </p>
+        @elseif ($status == 'SCHEDULED')
             <p id="notification">Your <u>{{ $event->sub_action_private }}</u> event has been scheduled to launch on
                 {{ $combinedStr }} at {{ $timePart }}!</p>
-        @elseif ($status === 'UPCOMING' || $status === 'ONGOING')
+        @elseif ($status == 'UPCOMING' || $status == 'ONGOING')
             <p id="notification">Your <u>{{ $event->sub_action_private }}</u> event is already live!</p>
-        @elseif ($status === 'ENDED')
+        @elseif ($status == 'ENDED')
             <p id="notification">Your <u>{{ $event->sub_action_private }}</u> event has ended</p>
-        @elseif ($status === 'PENDING')
+        @elseif ($status == 'PENDING')
             <p id="notification"> Your {{ $event->sub_action_private ?? 'public / private' }} event's payment status is pending 
                 or some details are missing!
             </p>
@@ -37,7 +37,7 @@
     </button>
     <br><br>
     <!-- <a style="" href="{{ route('event.show', $event->id) }}"> <u> Click to more details for event type: {{ $event->sub_action_private }} id: {{ $event->id }} </u></a> -->
-    @if ($event->sub_action_private === 'private')
+    @if ($event->sub_action_private == 'private')
         <a href="{{ route('event.invitation.index', $event->id) }}">
             <button class="oceans-gaming-default-button"
                 style="padding: 10px 50px; background-color: transparent; color: black; border: 1px solid black;">

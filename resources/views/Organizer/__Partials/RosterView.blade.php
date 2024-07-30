@@ -111,7 +111,7 @@
                         </button>
                     @endguest
                     @auth
-                        @if ($user->role === 'PARTICIPANT')
+                        @if ($user->role == 'PARTICIPANT')
                             <button type="submit" class="{{ 'followButton' . $joinEvent->user_id }}" class="mx-auto mt-2 "
                                 style="background-color: {{ $joinEvent->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $joinEvent->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                                 {{ $joinEvent->isFollowing ? 'Following' : 'Follow' }}
@@ -223,9 +223,9 @@
 
                 [...followCounts].forEach((followCount) => {
                     followCount.dataset.count = count;
-                    if (count === 1) {
+                    if (count == 1) {
                         followCount.innerHTML = '1 follower';
-                    } else if (count === 0) {
+                    } else if (count == 0) {
                         followCount.innerHTML = `0 followers`;
                     } else {
                         followCount.innerHTML = `${followCount.dataset.count} followers`;

@@ -5,7 +5,7 @@
         <main>
             <div>
                 <div>
-                    <form enctype="multipart/form-data" onkeydown="return event.key !== 'Enter';"
+                    <form enctype="multipart/form-data" onkeydown="return event.key != 'Enter';"
                         action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
                         @csrf
                         @include('Organizer.__CreateEditPartials.CreateEventHiddenForm')

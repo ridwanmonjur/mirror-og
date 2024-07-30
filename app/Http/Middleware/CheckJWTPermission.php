@@ -31,7 +31,7 @@ class CheckJWTPermission
     {
         foreach ($currentRoleList as $key => $value) {
 
-            if ($value === $userAccess) {
+            if ($value == $userAccess) {
                 return true;
             }
         }

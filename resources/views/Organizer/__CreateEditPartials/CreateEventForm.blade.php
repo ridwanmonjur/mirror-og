@@ -40,7 +40,7 @@
                             <a href="#" @class([
                                 'box_2nd selectable-box',
                                 'color-border-success' =>
-                                    $event && $gameCategory->id === $event->event_type_id,
+                                    $event && $gameCategory->id == $event->event_type_id,
                             ])>
                                 <h2 class="{{ 'inputEventTypeTitle box-title' }}">
                                     <u>{{ $gameCategory->eventType }}</u>
@@ -102,7 +102,7 @@
                         'event selectable-box box-tier',
                         'rounded-box-' . strtolower($tierCategory->eventTier),
                         'color-border-success-dotted' =>
-                            $event && $tierCategory->id === $event->event_tier_id,
+                            $event && $tierCategory->id == $event->event_tier_id,
                     ])>
                         <div class="event_head_container ">
                             <img id='starfish' src="{{ asset('storage/' . $tierCategory->tierIcon) }}"
@@ -433,34 +433,34 @@
     <br>
     <div class="payment-summary">
         @if ($isEventNotNull)
-            @if ($status === 'DRAFT')
+            @if ($status == 'DRAFT')
                 <div>
                     <h5>Event Status</h5>
                     <p class="text-success">Your event is currently saved as draft.</p>
                 </div>
-            @elseif ($status === 'SCHEDULED')
+            @elseif ($status == 'SCHEDULED')
                 <div>
                     <h5>Event Status</h5>
                     <p class="text-success">Your {{ $event->sub_action_private }} event is scheduled to launch on:
                         {{ $combinedStr }} at
                         {{ $timePart }}. </p>
                 </div>
-            @elseif ($status === 'UPCOMING' || $status === 'ONGOING')
+            @elseif ($status == 'UPCOMING' || $status == 'ONGOING')
                 <div>
                     <h5>Event Status</h5>
                     <p class="text-success">Your {{ $event->sub_action_private }} event is live now
                     </p>
                 </div>
-            @elseif ($status === 'ENDED')
+            @elseif ($status == 'ENDED')
                 <div>
                     <h5>Event Status</h5>
                     <p class="text-success">Your {{ $event->sub_action_private }} event has already ended
                     </p>
                 </div>
-            @elseif ($status === 'PENDING')
+            @elseif ($status == 'PENDING')
             <div>
                     <p class="text-success"> 
-                        @if ($event->status === "DRAFT")
+                        @if ($event->status == "DRAFT")
                         You chose a draft event.
                         @else
                         Launch type: {{ $event->sub_action_private }}
@@ -471,7 +471,7 @@
                 </div>
             @endif
         @endif
-        <input @if (!$isEventNotNull || $isEventNotNull && $status === "DRAFT") checked @endif onchange="toggleRadio(this, 'draft'); updateLaunchButton('draft');" type="radio"
+        <input @if (!$isEventNotNull || $isEventNotNull && $status == "DRAFT") checked @endif onchange="toggleRadio(this, 'draft'); updateLaunchButton('draft');" type="radio"
             id="draft" name="launch_visible" value="DRAFT">
         <label for="draft"><u>Save as draft</u></label>
         <div class="radio-indent draft">
@@ -480,7 +480,7 @@
 
         <!-- public? -->
         <input 
-            @if ($isEventNotNull && $status !===== "DRAFT" && $event->sub_action_private ===  "public" ) checked @endif
+            @if ($isEventNotNull && $status != "DRAFT" && $event->sub_action_private ==  "public" ) checked @endif
             onchange="toggleRadio(this, 'public' ); updateLaunchButton('launch'); launchScheduleDefaultSelected('launch_schedule_default_1');"
             required type="radio" id="public" name="launch_visible" value="public">
         <label for="public"><u>Public</u></label><br>
@@ -489,14 +489,14 @@
         </div>
 
         <div @class(["radio-indent-hidden", "public", 
-            "d-none" => !$isEventNotNull || $status === "DRAFT" || $event->sub_action_private ===  "private"
+            "d-none" => !$isEventNotNull || $status == "DRAFT" || $event->sub_action_private ==  "private"
         ])>
-            <input @if ($isEventNotNull && !$event->sub_action_public_date && $event->sub_action_private ===  "public") checked @endif
+            <input @if ($isEventNotNull && !$event->sub_action_public_date && $event->sub_action_private ==  "public") checked @endif
                 onchange="updateLaunchButton('launch');" type="radio" class="launch_schedule_default_1"
                 name="launch_schedule" value="now">
             <label for="sub_action_public"><u>Launch now</u></label><br>
             <input 
-                @if ($isEventNotNull && $event->sub_action_public_date && $event->sub_action_private === "public") checked @endif 
+                @if ($isEventNotNull && $event->sub_action_public_date && $event->sub_action_private == "public") checked @endif 
                 onchange="updateLaunchButton('schedule');" type="radio" id="launch_schedule"
                 name="launch_schedule" value="schedule">
             <label for="sub_action_public"><u>Schedule launch</u></label><br>
@@ -514,7 +514,7 @@
             </div>
         </div>
         <input
-            @if ($isEventNotNull && $status !===== "DRAFT" && $event->sub_action_private ===  "private" ) checked @endif
+            @if ($isEventNotNull && $status != "DRAFT" && $event->sub_action_private ==  "private" ) checked @endif
             onchange="toggleRadio(this, 'private'); updateLaunchButton('launch'); launchScheduleDefaultSelected('launch_schedule_default_2');"
             required type="radio" id="private" name="launch_visible" value="private">
         <label for="private"><u>Private</u></label><br>
@@ -523,18 +523,18 @@
         </div>
 
         <div @class(["radio-indent-hidden", "private", 
-            "d-none" => !$isEventNotNull || $status === "DRAFT" || $event->sub_action_private ===  "public"
+            "d-none" => !$isEventNotNull || $status == "DRAFT" || $event->sub_action_private ==  "public"
         ])>
             <!-- private launch now? -->
             <input
-                @if ($isEventNotNull && !$event->sub_action_public_date && $event->sub_action_private === "private") checked @endif
+                @if ($isEventNotNull && !$event->sub_action_public_date && $event->sub_action_private == "private") checked @endif
                 onchange="updateLaunchButton('launch');" type="radio" class="launch_schedule_default_2"
                 name="launch_schedule" value="now">
             <label for="sub_action_public"><u>Launch now</u></label><br>
 
             <!-- private launch schedule? -->
             <input 
-                @if ($isEventNotNull && $event->sub_action_public_date && $event->sub_action_private === "private") checked @endif
+                @if ($isEventNotNull && $event->sub_action_public_date && $event->sub_action_private == "private") checked @endif
                 onclick="updateLaunchButton('schedule');" type="radio" id="launch_schedule"
                 name="launch_schedule" value="schedule">
             <label for="sub_action_public"><u>Schedule launch</u></label><br>
@@ -653,7 +653,7 @@
             </div>
             <br>
             <div class="text-center">
-                @if ($event && $event->payment_transaction_id !===== null)
+                @if ($event && $event->payment_transaction_id != null)
                     <button class="choose-payment-method"
                         style="background-color: #8CCD39 !important;" type="button">
                         Paid successfully!

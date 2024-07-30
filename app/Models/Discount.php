@@ -53,7 +53,7 @@ class Discount extends Model
             if ($startTime < $currentDateTime && $endTime > $currentDateTime && $discount->isEnforced) {
                 $fee['entryFee'] = $eventTierEntryFee * 1000;
                 $fee['totalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
-                $fee['discountFee'] = $discount->type === 'percent' ?
+                $fee['discountFee'] = $discount->type == 'percent' ?
                     ($discount->amount / 100) * $fee['totalFee'] : $discount->amount;
                 $fee['finalFee'] = $fee['totalFee'] - $fee['discountFee'];
 

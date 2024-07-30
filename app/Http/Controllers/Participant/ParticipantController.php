@@ -117,9 +117,9 @@ class ParticipantController extends Controller
             $user = User::findOrFail($id);
             $loggedInUser = Auth::user();
 
-            if ($user->role === 'ORGANIZER') {
+            if ($user->role == 'ORGANIZER') {
                 return redirect()->route('public.organizer.view', ['id' => $id]);
-            } elseif ($user->role === 'ADMIN') {
+            } elseif ($user->role == 'ADMIN') {
                 return $this->showErrorParticipant('This is an admin view!');
             }
 
@@ -275,7 +275,7 @@ class ParticipantController extends Controller
                 return back();
 
             } catch (Exception $e) {
-                if ($e->getCode() === '23000' || $e->getCode() === 1062) {
+                if ($e->getCode() == '23000' || $e->getCode() == 1062) {
                     $errorMessage = 'You have had a previous friend request!';
                 } else {
                     $errorMessage = 'Your request to this participant failed!';
@@ -289,12 +289,12 @@ class ParticipantController extends Controller
             try {
                 $friend = Friend::checkFriendship($validatedData['updateUserId'], $user->id)->firstOrFail();
                 $status = $validatedData['updateStatus'];
-                $isPermitted = $status === 'left';
+                $isPermitted = $status == 'left';
                 if (! $isPermitted) {
-                    if ($status === 'accepted' || $status === 'rejected') {
-                        $isPermitted = ($friend->status === 'pending' && $user->id !== $friend->actor_id) ||
-                        ($friend->status === 'left' && $user->id === $friend->actor_id) ||
-                        ($friend->status === 'rejected' && $user->id === $friend->actor_id);
+                    if ($status == 'accepted' || $status == 'rejected') {
+                        $isPermitted = ($friend->status == 'pending' && $user->id != $friend->actor_id) ||
+                        ($friend->status == 'left' && $user->id == $friend->actor_id) ||
+                        ($friend->status == 'rejected' && $user->id == $friend->actor_id);
                     }
                 }
 

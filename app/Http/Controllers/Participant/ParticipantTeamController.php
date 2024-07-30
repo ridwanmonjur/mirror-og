@@ -152,7 +152,7 @@ class ParticipantTeamController extends Controller
                 ->where('join_events_id', $joinEvent->id)->get();
 
             $rosterMembersKeyedByMemberId = RosterMember::keyByMemberId($rosterMembers);
-            $isRedirect = $request->redirect === "true";
+            $isRedirect = $request->redirect == "true";
 
             return view('Participant.RosterManagement',
                 compact('selectTeam', 'joinEvent', 'teamMembers', 'creator_id', 'isRedirect',
@@ -203,7 +203,7 @@ class ParticipantTeamController extends Controller
                 'actor' => 'team',
             ]);
         } catch (Exception $e) {
-            if ($e->getCode() === '23000' || $e->getCode() === 1062) {
+            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
                 $errorMessage = 'You have had a previous pending invitation or successful member!';
             } else {
                 $errorMessage = 'Your request to this participant failed!';
@@ -228,7 +228,7 @@ class ParticipantTeamController extends Controller
 
             return redirect()->back()->with('successJoin', 'Your request to this team was sent!');
         } catch (Exception $e) {
-            if ($e->getCode() === '23000' || $e->getCode() === 1062) {
+            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
                 $errorMessage = 'You have requested before!';
             } else {
                 $errorMessage = 'Your request to this team failed!';
@@ -272,10 +272,10 @@ class ParticipantTeamController extends Controller
         }
 
         $status = $request->status;
-        $isPermitted = $status === 'left';
+        $isPermitted = $status == 'left';
         if (! $isPermitted) {
-            if ($status === 'accepted' || $status === 'rejected') {
-                $isPermitted = $member->status === 'pending' && $request->actor !== $member->actor;
+            if ($status == 'accepted' || $status == 'rejected') {
+                $isPermitted = $member->status == 'pending' && $request->actor != $member->actor;
             }
         }
 
@@ -285,7 +285,7 @@ class ParticipantTeamController extends Controller
 
         $team = Team::where('id', $member->team_id)->first();
 
-        if ($team->creator_id === $member->user_id) {
+        if ($team->creator_id == $member->user_id) {
             return response()->json(['success' => false, 'message' => "Can't modify creator of the team"], 400);
         }
 
@@ -386,7 +386,7 @@ class ParticipantTeamController extends Controller
             $existingTeam = Team::where('teamName', $request->input('teamName'))->first();
 
             if (isset($existingTeam)) {
-                if ($existingTeam['id'] !== $team->id) {
+                if ($existingTeam['id'] != $team->id) {
                     throw ValidationException::withMessages([
                         'teamName' => 'Team name already exists. Please choose a different name.',
                     ]);

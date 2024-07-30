@@ -42,7 +42,7 @@
             $user = auth()->user();
         }
 
-        $isUserSame = $user?->id === $userProfile->id;
+        $isUserSame = $user?->id == $userProfile->id;
     @endphp
 @endauth
 <body>
@@ -143,7 +143,7 @@
                     </div>
                 </div>
                 <div class="member-details">
-                        <div x-show="errorMessage !== null && isEditMode" class="text-red" x-text="errorMessage"> </div>
+                        <div x-show="errorMessage != null && isEditMode" class="text-red" x-text="errorMessage"> </div>
                         <div x-cloak x-show="isEditMode" style="color: black;">
                             <input 
                                 placeholder = "Enter your nickname..."

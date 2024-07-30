@@ -8,9 +8,9 @@
 @php
     if (isset($user)) {
         $role = $user->role;
-        if ($role === 'PARTICIPANT') {
+        if ($role == 'PARTICIPANT') {
             $routeLogo = route('landing.view');
-        } else if ($role === 'ORGANIZER') {
+        } else if ($role == 'ORGANIZER') {
             $routeLogo = route('organizer.home.view');
         }
         else {
@@ -49,7 +49,7 @@
             @include('__CommonPartials.__Navbar.NavbarGuest')
         @endguest
         @auth
-            @if (isset($user) && $user->role === 'PARTICIPANT')
+            @if (isset($user) && $user->role == 'PARTICIPANT')
                 @include('__CommonPartials.__Navbar.WhereIsMoop')
             @endif
             @include('__CommonPartials.__Navbar.NavbarAuth')
@@ -107,12 +107,12 @@
                     </p>
                 </div>
             </div>
-            @if ($user->role === 'PARTICIPANT' || $user->role === 'ADMIN')
+            @if ($user->role == 'PARTICIPANT' || $user->role == 'ADMIN')
                 <a href="{{ url('/participant/team/create/' ) }}" class="py-1">Create a Team</a>
                 <a href="{{ url('/participant/team/list/' ) }}" class="py-1">Team List</a>
                 <a href="{{ url('/participant/request/' ) }}" class="py-1">Team Requests</a>
             @endif
-            @if ($user->role === 'ORGANIZER' || $user->role === 'ADMIN')
+            @if ($user->role == 'ORGANIZER' || $user->role == 'ADMIN')
                 <a class="py-1" href="{{ route('event.create') }}" style="text-decoration: none;" href="{{ route('logout.action') }}">Create an event</a>
                 <a class="py-1" href="{{ route('event.index') }}" style="text-decoration: none;" href="{{ route('logout.action') }}">Manage event</a>
             @endif

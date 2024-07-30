@@ -13,7 +13,7 @@ class ChatController extends Controller
         $userProfile = null;
         $loggedUser =  $request->attributes->get('user');
         if ($request->has('userId')) {
-            if ($loggedUser->id === $request->userId) {
+            if ($loggedUser->id == $request->userId) {
                 return $this->showErrorParticipant("Please don't chat with yourself! Use a todo app instead.");
             }
 

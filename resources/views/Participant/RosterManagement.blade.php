@@ -75,7 +75,7 @@
     @endif
     @php
         use Carbon\Carbon;
-        $isCreator = $selectTeam->creator_id === $user->id;
+        $isCreator = $selectTeam->creator_id == $user->id;
     @endphp
         @if ($isRedirect) 
             <div class="text-center">
@@ -134,7 +134,7 @@
                                 </td>
                                 <td class="coloured-cell" style="width: 25px;">
                                     <span class="player-info" style="cursor: pointer;">
-                                        @if ($captain && $member->id === $captain->team_member_id)
+                                        @if ($captain && $member->id == $captain->team_member_id)
                                             <div style="cursor: pointer;" 
                                                 class="player-image"
                                                 onclick="deleteCaptain({{$member->id}})"
@@ -175,7 +175,7 @@
                                     @endif
                                 </td>
                                 <td  class="colorless-col">
-                                    @if (!$captain || $member->id !== $captain->team_member_id)
+                                    @if (!$captain || $member->id != $captain->team_member_id)
                                         <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover ml-2" onclick="capatainMember({{$member->id}})">
                                             <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
                                         </button>
@@ -212,7 +212,7 @@
         function scroll() {
             let successValue = localStorage.getItem('success');
 
-            if (successValue === 'true') {
+            if (successValue == 'true') {
                 
                 document.querySelector('.main2').scrollIntoView();
             }

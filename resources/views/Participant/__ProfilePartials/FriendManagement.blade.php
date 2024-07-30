@@ -1,9 +1,9 @@
 @auth
-    @if ($user->id !== $userProfile->id)
+    @if ($user->id != $userProfile->id)
 
-        @if ($friend && $user->role === "PARTICIPANT")
-            @if ($friend->status === 'pending')
-                @if ($friend->actor_id !== $userProfile->id)
+        @if ($friend && $user->role == "PARTICIPANT")
+            @if ($friend->status == 'pending')
+                @if ($friend->actor_id != $userProfile->id)
                     <span class="d-flex justify-content-start align-items-center mt-1">
                         <button
                             onclick="formRequestSubmitById('Are you sure you want to delete this request?' ,'deleteFriendRequest')"
@@ -33,7 +33,7 @@
                         <span class="">Reject</span>
                     </button>
                 @endif
-            @elseif ($friend->status === 'accepted')
+            @elseif ($friend->status == 'accepted')
                 <div class="d-flex justify-content-start align-items-center dropdown-show mt-1">
                     <button type="button" style="background: #D8DADF" role="button" id="dropdownMenuLink"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -58,11 +58,11 @@
                         </a>
                     </div>
                 </div>
-            @elseif ($friend->status === 'rejected')
+            @elseif ($friend->status == 'rejected')
                 <button type="button" style="background: #D8DADF" role="button" id="dropdownMenuLink"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @class([
                         'rounded-pill bg-light border-dark text-dark btn text-dark px-2 py-2 me-2 mt-1',
-                        'dropdown-toggle' => $friend->actor_id === $user->id,
+                        'dropdown-toggle' => $friend->actor_id == $user->id,
                     ])>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-person-x-fill me-2" viewBox="0 0 16 16">
@@ -71,7 +71,7 @@
                     </svg>
                     <span>Didn't accept</span>
                 </button>
-                @if ($friend->actor_id === $user->id)
+                @if ($friend->actor_id == $user->id)
                     <div class="dropdown-menu py-0 mt-1" aria-labelledby="dropdownMenuLink">
                         <a class="dropdown-item cursor-pointer  px-4 " style="padding-top: 12px; padding-bottom: 12px;"
                             onclick="formRequestSubmitById('Are you sure you want to accept this person as your friend?' ,'acceptFriendRequest')">
@@ -85,11 +85,11 @@
                         </a>
                     </div>
                 @endif
-            @elseif ($friend->status === 'left')
+            @elseif ($friend->status == 'left')
                 <button type="button" style="background: #D8DADF" role="button" id="dropdownMenuLink"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @class([
                         'rounded-pill bg-light border-dark text-dark btn text-dark px-2 py-2 me-2 mt-1',
-                        'dropdown-toggle' => $friend->actor_id === $user->id,
+                        'dropdown-toggle' => $friend->actor_id == $user->id,
                     ])>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-person-x-fill me-2" viewBox="0 0 16 16">
@@ -98,7 +98,7 @@
                     </svg>
                     <span>Not friends</span>
                 </button>
-                @if ($friend->actor_id === $user->id)
+                @if ($friend->actor_id == $user->id)
                     <div class="dropdown-menu py-0 mt-1" aria-labelledby="dropdownMenuLink">
                         <a class="dropdown-item cursor-pointer  cursor-pointer px-4 "
                             style="padding-top: 12px; padding-bottom: 12px;"
@@ -116,7 +116,7 @@
             @endif
         @endif
 
-        @if (!$isUserSame && !$friend && $user->role === "PARTICIPANT")
+        @if (!$isUserSame && !$friend && $user->role == "PARTICIPANT")
             <button type="button"
                 onclick="formRequestSubmitById('Are you sure you want to send this friend request?' ,'sendFriendRequest')"
                 class="btn btn-primary rounded-pill text-light px-3 py-2 me-2 mt-1">
@@ -130,7 +130,7 @@
                 <span> Add friend</span>
             </button>
         @endif
-        @if ($user->role === "PARTICIPANT")
+        @if ($user->role == "PARTICIPANT")
             @if ($isFollowingParticipant)
                 <button type="button" onclick="formRequestSubmitById(null ,'sendFollowRequest')"
                     class="btn btn-success rounded-pill text-dark px-3 py-2 mt-1">

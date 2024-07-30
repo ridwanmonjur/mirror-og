@@ -36,7 +36,7 @@
             $user = auth()->user();
         }
 
-        $isUserSame = $user->id === $userProfile->id;
+        $isUserSame = $user->id == $userProfile->id;
       
     @endphp
 @endauth
@@ -105,7 +105,7 @@
                 </div>
                 <div class="member-details mx-auto text-center">
                     <div x-cloak x-show="isEditMode" class="pb-3">
-                        <div x-show="errorMessage !== null" class="text-red" x-text="errorMessage"> </div>
+                        <div x-show="errorMessage != null" class="text-red" x-text="errorMessage"> </div>
                         <input 
                             placeholder = "Enter your name..."
                             style="width: 250px;"
@@ -190,7 +190,7 @@
                                         </button>
                                     @endguest
                                     @auth
-                                        @if ($user->role === 'PARTICIPANT')
+                                        @if ($user->role == 'PARTICIPANT')
                                             <button type="submit" id="followButton"
                                                 @class(["rounded px-3 py-2 ", 'followButton'. $userProfile->id])
                                                 style="background-color: {{ $user && $userProfile->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $userProfile->isFollowing ? 'black' : 'white' }}; border: none;">
@@ -362,7 +362,7 @@
                             "🎮 Gaming"
                         ] as $industry)
                             <option
-                                {{$userProfile->organizer && $userProfile->organizer->industry === $industry ? 'selected' : ''}} 
+                                {{$userProfile->organizer && $userProfile->organizer->industry == $industry ? 'selected' : ''}} 
                                 value="{{$industry}}"
                             >{{$industry}}
                             </option> 
@@ -622,7 +622,7 @@
                     console.log({number: iti.getNumber()});
 
                     if (!iti.isValidNumber()) {
-                        if (document.getElementById("phone").value.trim() === "") {
+                        if (document.getElementById("phone").value.trim() == "") {
                             this.userProfile.mobile_no = null;
                         } else  {
                             this.errorMessage = 'Valid phone number with country code is not chosen!'
@@ -803,9 +803,9 @@
                                 
                 [...followCounts].forEach( (followCount) => {
                     followCount.dataset.count = count;
-                    if (count === 1) {
+                    if (count == 1) {
                         followCount.innerHTML = '1 follower';
-                    } else if (count === 0) {
+                    } else if (count == 0) {
                         followCount.innerHTML = `0 followers`;
                     } else {
                         followCount.innerHTML = `${followCount.dataset.count} followers`;

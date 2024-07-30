@@ -21,7 +21,7 @@ class RosterMember extends Model
         $data = [];
 
         foreach ($teamMembers as $member) {
-            if ($member->status === 'accepted') {
+            if ($member->status == 'accepted') {
                 $data[] = [
                     'join_events_id' => $joinEventId,
                     'user_id' => $member->user_id,

@@ -71,7 +71,7 @@
                     page++;
                     ENDPOINT = "{{ route('landing.view') }}";
 
-                    if (!search || String(search).trim() === "") {
+                    if (!search || String(search).trim() == "") {
                         search = null;
                         ENDPOINT += "?page=" + page;
                     } else {

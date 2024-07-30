@@ -85,13 +85,13 @@ class OrganizerCheckoutController extends Controller
             $userId = $user->id;
             $status = $request->get('redirect_status');
 
-            if ($status === 'succeeded' && $request->has('payment_intent_client_secret')) {
+            if ($status == 'succeeded' && $request->has('payment_intent_client_secret')) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
 
                 if ($paymentIntent['amount'] > 0 &&
-                    $paymentIntent['amount_received'] === $paymentIntent['amount'] &&
-                    $paymentIntent['metadata']['eventId'] === $id
+                    $paymentIntent['amount_received'] == $paymentIntent['amount'] &&
+                    $paymentIntent['metadata']['eventId'] == $id
                 ) {
                     $transaction = PaymentTransaction::createTransaction(
                         $intentId, 'SUCCESS', $paymentIntent['amount'] / 100
@@ -103,7 +103,7 @@ class OrganizerCheckoutController extends Controller
 
                     $event->payment_transaction_id = $transaction->id;
                     // this line must be below setting the payment transaction
-                    if ($event->status !== 'DRAFT') {
+                    if ($event->status != 'DRAFT') {
                         $event->status = 'NOT PENDING';
                         $event->status = $event->isCompleteEvent() ? $event->statusResolved() : 'PENDING';
                     }

@@ -1,7 +1,7 @@
 @php
     use Carbon\Carbon;
 @endphp
-@if ($currentTab === $name)
+@if ($currentTab == $name)
     <div>
         @if (!isset($data[0]))
             <p class="text-center mt-5"> You have no users in this list. </p>

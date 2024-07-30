@@ -51,9 +51,9 @@ class AuthController extends Controller
 
     protected function _registerOrLoginUser($user, $type, $role)
     {
-        if ($type === 'google') {
+        if ($type == 'google') {
             $finduser = User::where('google_id', $user->id)->first();
-        } elseif ($type === 'steam') {
+        } elseif ($type == 'steam') {
             $finduser = User::where('steam_id', $user->id)->first();
         }
         if ($finduser) {
@@ -69,9 +69,9 @@ class AuthController extends Controller
 
             if ($finduser) {
 
-                if ($type === 'google') {
+                if ($type == 'google') {
                     $finduser->google_id = $user->id;
-                } elseif ($type === 'steam') {
+                } elseif ($type == 'steam') {
                     $finduser->steam_id = $user->id;
                 }
 
@@ -90,14 +90,14 @@ class AuthController extends Controller
                     'created_at' =>now()
                 ]);
 
-                if ($newUser->role === 'ORGANIZER') {
+                if ($newUser->role == 'ORGANIZER') {
 
                     $organizer = new Organizer([
                         'user_id' => $newUser->id,
                     ]);
 
                     $organizer->save();
-                } elseif ($newUser->role === 'PARTICIPANT') {
+                } elseif ($newUser->role == 'PARTICIPANT') {
 
                     $participant = new Participant([
                         'user_id' => $newUser->id,
@@ -108,9 +108,9 @@ class AuthController extends Controller
 
                 $newUser->email_verified_at = now();
 
-                if ($type === 'google') {
+                if ($type == 'google') {
                     $newUser->google_id = $user->id;
-                } elseif ($type === 'steam') {
+                } elseif ($type == 'steam') {
                     $newUser->steam_id = $user->id;
                 }
 
@@ -134,9 +134,9 @@ class AuthController extends Controller
         if ($error) {
             return view('Participant.EventNotFound', ['error' => $error]);
         } else {
-            if ($finduser->role === 'PARTICIPANT') {
+            if ($finduser->role == 'PARTICIPANT') {
                 return redirect()->route('participant.home.view');
-            } elseif ($finduser->role === 'ORGANIZER' || $finduser->role === 'ADMIN') {
+            } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
                 return redirect()->route('organizer.home.view');
             }
         }
@@ -179,9 +179,9 @@ class AuthController extends Controller
         if ($error) {
             return view('Participant.EventNotFound', ['error' => $error]);
         } else {
-            if ($finduser->role === 'PARTICIPANT') {
+            if ($finduser->role == 'PARTICIPANT') {
                 return redirect()->route('participant.home.view');
-            } elseif ($finduser->role === 'ORGANIZER' || $finduser->role === 'ADMIN') {
+            } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
                 return redirect()->route('organizer.home.view');
             }
         }
@@ -253,7 +253,7 @@ class AuthController extends Controller
             'password_confirmation' => 'required|min:6',
         ]);
 
-        if ($request->password !== $request->password_confirmation) {
+        if ($request->password != $request->password_confirmation) {
             return back()->with(['error' => 'Password confirmation does not match.']);
         }
 
@@ -452,7 +452,7 @@ class AuthController extends Controller
             $user->email_verified_token = $token;
             $user->save();
 
-            if ($userRole === 'organizer') {
+            if ($userRole == 'organizer') {
 
                 $organizer = new Organizer([
                     'user_id' => $user->id,
@@ -461,7 +461,7 @@ class AuthController extends Controller
                 ]);
 
                 $organizer->save();
-            } elseif ($userRole === 'participant') {
+            } elseif ($userRole == 'participant') {
 
                 $participant = new Participant([
                     'user_id' => $user->id,
@@ -489,7 +489,7 @@ class AuthController extends Controller
             DB::rollBack();
             Log::error($e->getMessage());
 
-            if ($e->getCode() === '23000' || $e->getCode() === 1062) {
+            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
                 return redirect()
                     ->route($redirectErrorRoute)
                     ->with('error', 'The email already exists. Add another email!');
@@ -542,7 +542,7 @@ class AuthController extends Controller
                     ]);
                 }
 
-                if ($user->role !== $userRoleCapital && $user->role !== 'ADMIN') {
+                if ($user->role != $userRoleCapital && $user->role != 'ADMIN') {
                     throw new ErrorException("Invalid Role for $userRoleSentence");
                 }
 

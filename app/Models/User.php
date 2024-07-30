@@ -18,7 +18,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessFilament(): bool
     {
-        return $this->role === 'ADMIN';
+        return $this->role == 'ADMIN';
     }
 
     public static $filamentUserColumn = 'is_filament_user';

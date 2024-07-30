@@ -6,7 +6,7 @@
     <a href="#" role="button" class="btn position-relative" id="dropdownMenuLinkNotification" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt="">
-        @if ($countUnread!==0)
+        @if ($countUnread!=0)
             <span style="top: -20px;" id="countUnread" data-notification-count="{{$countUnread}}" class="badge text-light bg-primary">{{$countUnread}}</span>
         @endif
     </a>
@@ -115,7 +115,7 @@
                 </div>
             </a>
         </div>
-        @if ($user->role === 'ORGANIZER' || $user->role === 'ADMIN')
+        @if ($user->role == 'ORGANIZER' || $user->role == 'ADMIN')
             <a class="dropdown-item py-3  ps-4 align-middle " href="{{ route('organizer.profile.view') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-circle me-3" viewBox="0 0 16 16">
   <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
@@ -138,7 +138,7 @@
                 Manage
             </a>
         @endif
-        @if ($user->role === 'PARTICIPANT' || $user->role === 'ADMIN')
+        @if ($user->role == 'PARTICIPANT' || $user->role == 'ADMIN')
             <a class="dropdown-item py-3  ps-4 align-middle " href="{{ route('participant.profile.view') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-circle me-3" viewBox="0 0 16 16">
   <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>

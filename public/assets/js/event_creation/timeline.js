@@ -296,15 +296,15 @@ function saveEvent(willGoToNextPage = true) {
         launch_schedule = launch_schedule_form['launch_schedule'];
     }
     
-    if (launch_visible === "public") {
+    if (launch_visible == "public") {
         launch_date = launch_schedule_form['launch_date_public'];
         launch_time = launch_schedule_form['launch_time_public'];
-    } else if (launch_visible === "private") {
+    } else if (launch_visible == "private") {
         launch_date = launch_schedule_form['launch_date_private'];
         launch_time = launch_schedule_form['launch_time_private'];
     }
    
-    if (launch_visible === 'DRAFT') {
+    if (launch_visible == 'DRAFT') {
         createEventForm.submit();
         return;
     }
@@ -316,12 +316,12 @@ function saveEvent(willGoToNextPage = true) {
         'startDate', 'startTime', 'endDate', 'endTime', 'eventName', 'eventDescription',
     ]);
 
-    if (launch_schedule !== 'now' && (!launch_date===null || launch_time===null)) {
+    if (launch_schedule != 'now' && (launch_date==null || launch_time==null)) {
         isFormValid = false;
         invalidKey = 'launch_date';
     }
     
-    if (localStorage.getItem('eventBanner') === null && getFormValues(['eventBanner']) === null) {
+    if (localStorage.getItem('eventBanner') == null && getFormValues(['eventBanner']) == null) {
         isFormValid = false;
         invalidKey = 'eventBanner';
     }
@@ -331,7 +331,7 @@ function saveEvent(willGoToNextPage = true) {
         invalidKey = 'launch_schedule';
     }
     
-    if (formValidation !== null) {
+    if (formValidation != null) {
         isFormValid = formValidation[0];
         invalidKey = formValidation[1];
     }
@@ -347,12 +347,12 @@ function saveEvent(willGoToNextPage = true) {
         
         goToNextScreen(nextId, nextTimeline);
         
-        if (nextId === 'step-payment') {  
+        if (nextId == 'step-payment') {  
             fillStepPaymentValues();
         }
 
         return;
-    } else if (launch_visible !== "DRAFT" && willGoToNextPage && launch_schedule === 'now') {
+    } else if (launch_visible != "DRAFT" && willGoToNextPage && launch_schedule == 'now') {
         setFormValues({ 'launch_schedule': 'now' });
         goToNextScreen('step-launch-2', 'timeline-launch');
         return;
@@ -385,7 +385,7 @@ function goToNextScreen(nextId, nextTimeline) {
         const paragraph = document.querySelector(`#${timeline} .timestamp span`);
         const cicle = document.querySelector(`#${timeline} small`);
         
-        if (timeline === nextTimeline) {
+        if (timeline == nextTimeline) {
             
             if (!paragraph.classList.contains("font-color-active-timeline")) paragraph.classList.add("font-color-active-timeline");
             
@@ -408,7 +408,7 @@ function goToNextScreen(nextId, nextTimeline) {
         }
     })
 
-    if (nextId === allIDs[4]) {
+    if (nextId == allIDs[4]) {
         let box = document.getElementById('event-tier-display');
         let eventTierTitle = localStorage.getItem('eventTierTitle') ?? null;
         

@@ -170,14 +170,14 @@ Alpine.data('alpineDataComponent', function () {
         changeUser(user) {
             user = Alpine.raw(user);  
 
-            if (user?.id && user?.id === loggedUserProfile?.id) {
+            if (user?.id && user?.id == loggedUserProfile?.id) {
                 window.toastError("You can't send messages to yourself");
                 return; 
             }
 
             if (user?.id in this.roomUserIdMap) {
                 let currentRoomObject = Alpine.raw(this.oldRooms)?.filter((value)=>{
-                    return value.otherRoomMemberId === user?.id;
+                    return value.otherRoomMemberId == user?.id;
                 });
                 
                 if (currentRoomObject && currentRoomObject[0]) {
@@ -218,13 +218,13 @@ Alpine.data('alpineDataComponent', function () {
                 return;
             }
 
-            if ( String(value).trim() === "") {
+            if ( String(value).trim() == "") {
                 window.toastError("Empty messages!")
                 return;
             }
 
             try{
-                if (this.currentRoom === "newRoom") {
+                if (this.currentRoom == "newRoom") {
                    window.toastError("New chat still being updated...")
                 }
 
@@ -242,7 +242,7 @@ Alpine.data('alpineDataComponent', function () {
             chatInput.value = "";
         },
         async fetchProspectiveChatters(event = null) {
-            if (event === null && this.prospectiveChats?.data[0]) {
+            if (event == null && this.prospectiveChats?.data[0]) {
                 return;
             }
 
@@ -279,8 +279,8 @@ Alpine.data('alpineDataComponent', function () {
 
             const roomQ = query(roomCollectionRef,
                 or(
-                    where("user1", "===", String(currentUserId)),
-                    where("user2", "===", String(currentUserId))
+                    where("user1", "==", String(currentUserId)),
+                    where("user2", "==", String(currentUserId))
                 )
             );
 
@@ -289,7 +289,7 @@ Alpine.data('alpineDataComponent', function () {
                     if (change.type === "added") {
                         let data = change.doc.data();
                         data['id'] = change.doc.id;
-                        if (data.user1 !== currentUserId) {
+                        if (data.user1 != currentUserId) {
                             userIdList.push(data.user1);
                             data.otherRoomMemberId = data.user1;
                         } else {
@@ -375,10 +375,10 @@ Alpine.data('alpineDataComponent', function () {
                     ...doc.data(),
                 };
 
-                if (objectDoc['senderId'] === loggedUserProfile.id) {
+                if (objectDoc['senderId'] == loggedUserProfile.id) {
                     objectDoc['className'] = ['message', 'reply'];
                     objectDoc['isMe'] = true;
-                } else if (objectDoc['senderId'] !== loggedUserProfile.id) {
+                } else if (objectDoc['senderId'] != loggedUserProfile.id) {
                     objectDoc['className'] = ['message'];
                     objectDoc['isMe'] = false;
                 } else {
@@ -416,7 +416,7 @@ Alpine.data('alpineDataComponent', function () {
                 this.messages[id] = results;
             } 
             
-            if (this.currentRoom === id) {
+            if (this.currentRoom == id) {
                 appendMessages(results, length);
                 scrollIntoView("bottom", length);
             }
@@ -447,10 +447,10 @@ Alpine.data('alpineDataComponent', function () {
                             ...change.doc.data(),
                         };
 
-                        if (objectDoc['senderId'] === loggedUserProfile.id) {
+                        if (objectDoc['senderId'] == loggedUserProfile.id) {
                             objectDoc['className'] = ['message', 'reply'];
                             objectDoc['isMe'] = true;
-                        } else if (objectDoc['senderId'] !== loggedUserProfile.id) {
+                        } else if (objectDoc['senderId'] != loggedUserProfile.id) {
                             objectDoc['className'] = ['message'];
                             objectDoc['isMe'] = false;
                         } else {
@@ -492,7 +492,7 @@ Alpine.data('alpineDataComponent', function () {
                 
                     // const element = document.querySelector(`[data-identity-for-read="${this.currentRoom}"]`);
                     // let lastMsgInBatch = messsages[length-1];
-                    // if (lastMsgInBatch && lastMsgInBatch?.senderId !== loggedUserProfile?.id && !lastMsgInBatch.isRead) {
+                    // if (lastMsgInBatch && lastMsgInBatch?.senderId != loggedUserProfile?.id && !lastMsgInBatch.isRead) {
                     //     element.style.backgroundColor = 'transparent';
                     //     element.querySelector('.bi-bell-fill').classList.add('d-none');
                     //     const messageRef = doc(db, `room/${this.currentRoom}/message`, lastMsgInBatch.id);
@@ -502,7 +502,7 @@ Alpine.data('alpineDataComponent', function () {
                     // } 
     
                     // document.querySelectorAll('.chat-item').forEach((item)=>{
-                    //     if (item.style.backgroundColor !== 'black') {
+                    //     if (item.style.backgroundColor != 'black') {
                     //         item.style.backgroundColor = 'transparent';
                     //     }
                     // });
@@ -518,11 +518,11 @@ Alpine.data('alpineDataComponent', function () {
                     this.messages[id] = results;
                 } 
                 
-                if (this.currentRoom === id) {
+                if (this.currentRoom == id) {
                     appendMessages(results, length);
                     scrollIntoView(length);
                     let lastMsgInBatch = results[length-1];
-                    if (lastMsgInBatch && lastMsgInBatch?.senderId !== loggedUserProfile?.id && !lastMsgInBatch.isRead) {
+                    if (lastMsgInBatch && lastMsgInBatch?.senderId != loggedUserProfile?.id && !lastMsgInBatch.isRead) {
                         const messageRef = doc(db, `room/${this.currentRoom}/message`, lastMsgInBatch.id);
                         await updateDoc(messageRef, {
                             isRead: true
@@ -530,7 +530,7 @@ Alpine.data('alpineDataComponent', function () {
                     } 
                 } else {
                     let lastMsgInBatch = results[length-1];
-                    if (lastMsgInBatch && (lastMsgInBatch.senderId !== loggedUserProfile.id && !lastMsgInBatch.isRead)) {
+                    if (lastMsgInBatch && (lastMsgInBatch.senderId != loggedUserProfile.id && !lastMsgInBatch.isRead)) {
                         const element = document.querySelector(`[data-identity-for-read="${id}"]`);
                         element.style.backgroundColor = 'black';
                         element.querySelector('.bi-bell-fill').classList.remove('d-none');
@@ -550,7 +550,7 @@ Alpine.data('alpineDataComponent', function () {
             let searchParams = new URLSearchParams(url?.search);
             const userId = searchParams?.get('userId');
             
-            if (userId && userId !== loggedUserProfile?.id) {
+            if (userId && userId != loggedUserProfile?.id) {
                 this.changeUser(viewUserProfile);
             } 
         },
@@ -567,12 +567,12 @@ Alpine.data('alpineDataComponent', function () {
             }, 400));
             
             this.$watch("currentRoom", async () => {
-                if (this.currentRoom === "newRoom") {
+                if (this.currentRoom == "newRoom") {
                     return;
                 }
 
                 let currentRoomObject = Alpine.raw(this.oldRooms).filter((value)=>{
-                    return value.id === this.currentRoom;
+                    return value.id == this.currentRoom;
                 });
 
                 this.currentRoomObject = currentRoomObject[0];
@@ -582,7 +582,7 @@ Alpine.data('alpineDataComponent', function () {
                 
                 const element = document.querySelector(`[data-identity-for-read="${this.currentRoom}"]`);
                 let lastMsgInBatch = messsages[length-1];
-                if (lastMsgInBatch && lastMsgInBatch?.senderId !== loggedUserProfile?.id && !lastMsgInBatch.isRead) {
+                if (lastMsgInBatch && lastMsgInBatch?.senderId != loggedUserProfile?.id && !lastMsgInBatch.isRead) {
                     element.style.backgroundColor = 'transparent';
                     element.querySelector('.bi-bell-fill').classList.add('d-none');
                     const messageRef = doc(db, `room/${this.currentRoom}/message`, lastMsgInBatch.id);
@@ -592,7 +592,7 @@ Alpine.data('alpineDataComponent', function () {
                 } 
 
                 document.querySelectorAll('.chat-item').forEach((item)=>{
-                    if (item.style.backgroundColor !== 'black') {
+                    if (item.style.backgroundColor != 'black') {
                         item.style.backgroundColor = 'transparent';
                     }
                 });

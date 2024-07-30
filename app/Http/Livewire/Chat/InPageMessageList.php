@@ -22,7 +22,7 @@ class InPageMessageList extends Component
         Log::info($this->messages instanceof \Illuminate\Database\Eloquent\Collection);
 
         Log::info($this->conversationId);
-        if ($newMessage['conversationId'] === $this->conversationId) {
+        if ($newMessage['conversationId'] == $this->conversationId) {
             $newOne = new Message($newMessage['newMessage']);
             $newOne->id = $newMessage['newMessage']['id'];
             $this->messages->push( $newOne);

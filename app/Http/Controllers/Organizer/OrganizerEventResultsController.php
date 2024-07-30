@@ -130,7 +130,7 @@ class OrganizerEventResultsController extends Controller
                 return response()->json(['success' => false, 'message' => 'Join event, team or event details not found'], 400);
             }
         } catch (Exception $e) {
-            if ($e->getCode() === '23000' || $e->getCode() === 1062) {
+            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
                 return response()->json(['success' => false, 'message' => 'Award already exists'], 422);
             } else {
                 return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
@@ -177,7 +177,7 @@ class OrganizerEventResultsController extends Controller
                 return response()->json(['success' => false, 'message' => 'Join event or team not found'], 400);
             }
         } catch (QueryException $e) {
-            if ($e->getCode() === '23000' || $e->getCode() === 1062) {
+            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
                 return response()->json(['success' => false, 'message' => 'Achievement already exists'], 422);
             } else {
                 return response()->json(['success' => false, 'message' => 'Database error'], 500);

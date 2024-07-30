@@ -1,7 +1,7 @@
 <div>
     @foreach ($messages as $msg)
         @php
-            $isMyMessage = $user->id === $msg->user_id;
+            $isMyMessage = $user->id == $msg->user_id;
             if ($isMyMessage) {
                 $classNameDirection = 'left';
                 $banner = $user->userBanner;

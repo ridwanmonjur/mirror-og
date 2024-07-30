@@ -35,7 +35,7 @@ function infinteLoadMore(page, ENDPOINT) {
     let hasClass = noMoreDataElement.classList.contains('d-none');
   
     if (hasClass) {
-        let endpointFinal = page ? ENDPOINT : ENDPOINT + "?page=" + page
+        let endpointFinal = page == null ? ENDPOINT : ENDPOINT + "?page=" + page
         fetch(endpointFinal, {
             method: 'GET',
             headers: {
@@ -85,7 +85,7 @@ function infinteLoadMoreByPost(ENDPOINT, body) {
             .then((response) => response.json())
             .then((response) => {
                 
-                if (response.html === '') {
+                if (response.html == '') {
                     noMoreDataElement.classList.remove('d-none');
                     noMoreDataElement.style.display = 'flex';
                     noMoreDataElement.style.justifyContent = 'center';
@@ -123,7 +123,7 @@ function loadByPost(ENDPOINT, body) {
     })
         .then((response) => response.json())
         .then((response) => {
-            if (response.html === '') {
+            if (response.html == '') {
                 scrollingPaginationElement.innerHTML = "";
                 noMoreDataElement.classList.remove('d-none');
                 noMoreDataElement.style.display = 'flex';

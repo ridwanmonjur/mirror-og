@@ -15,7 +15,7 @@
                     <div @class([
                         'scroll-images',
                         'color-border-success' =>
-                            $event && $category->id === $event->event_category_id,
+                            $event && $category->id == $event->event_category_id,
                     ])
                         onclick="
                         document.querySelectorAll('.scroll-images').forEach(element => {
