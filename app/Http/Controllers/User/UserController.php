@@ -35,7 +35,6 @@ class UserController extends Controller
 
     public function replaceBackground(Request $request)
     {
-
         try {
             $validated = $request->validate([
                 'backgroundBanner' => 'nullable',
@@ -47,7 +46,6 @@ class UserController extends Controller
             ]);
             $user = $request->attributes->get('user');
             if ($request->teamId) {
-
                 $profile = TeamProfile::where('team_id', $request->teamId)->firstOrNew();
                 $profile->team_id = $request->teamId;
                 $oldBanner = $profile->backgroundBanner;
@@ -82,22 +80,21 @@ class UserController extends Controller
             }
             if ($request->expectsJson()) {
                 return response()->json(['success' => true, 'message' => 'Succeeded', 'data' => $profile], 201);
-            } else {
-                return back();
             }
+
+            return back();
         } catch (Exception $e) {
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-            } else {
-                session()->flash('errorMessage', $e->getMessage());
-                return back();
             }
+            session()->flash('errorMessage', $e->getMessage());
+
+            return back();
         }
     }
 
-    public function showStats($id, Request $request) {
-
-        return view('Shared.PlayerProfileStats', ['userId' => $id, ]);
-
+    public function showStats($id, Request $request)
+    {
+        return view('Shared.PlayerProfileStats', ['userId' => $id]);
     }
 }

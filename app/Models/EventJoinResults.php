@@ -15,7 +15,8 @@ class EventJoinResults extends Model
             ->where('join_events.event_details_id', '=', $id)
             ->leftJoin('teams', 'join_events.team_id', '=', 'teams.id')
             ->leftJoin('event_join_results', 'join_events.id', '=', 'event_join_results.join_events_id')
-            ->select('join_events.id as id1',
+            ->select(
+                'join_events.id as id1',
                 'join_events.event_details_id',
                 'join_events.team_id',
                 'teams.*',

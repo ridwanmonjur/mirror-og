@@ -16,11 +16,6 @@ class User extends Authenticatable implements FilamentUser
 
     public $timestamps = false;
 
-    public function canAccessFilament(): bool
-    {
-        return $this->role == 'ADMIN';
-    }
-
     public static $filamentUserColumn = 'is_filament_user';
 
     /**
@@ -46,6 +41,11 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function canAccessFilament(): bool
+    {
+        return $this->role === 'ADMIN';
+    }
 
     public function address()
     {
@@ -103,9 +103,9 @@ class User extends Authenticatable implements FilamentUser
             ->where('role', 'PARTICIPANT')
             ->select([
                 'id',
-                "email",
-                "role",
-                "userBanner",
+                'email',
+                'role',
+                'userBanner',
                 'name',
             ])
             ->when($request->has('search'), function ($query) use ($request) {
@@ -117,10 +117,10 @@ class User extends Authenticatable implements FilamentUser
                 }
             })
             ->with([
-                'participant' => function ($query) use ($teamId) {
+                'participant' => function ($query) {
                     $query->select([
-                        'region_flag', 
-                        'user_id'
+                        'region_flag',
+                        'user_id',
                     ]);
                 },
                 'members' => function ($query) use ($teamId) {
@@ -136,7 +136,7 @@ class User extends Authenticatable implements FilamentUser
 
         $fileContent = base64_decode($fileData['content']);
         $fileNameInitial = 'userBackground-'.time().'.'.pathinfo($fileData['filename'], PATHINFO_EXTENSION);
-        $fileName = "images/user/$fileNameInitial";
+        $fileName = "images/user/{$fileNameInitial}";
         $storagePath = storage_path('app/public/'.$fileName);
         file_put_contents($storagePath, $fileContent);
 
@@ -150,7 +150,7 @@ class User extends Authenticatable implements FilamentUser
     {
         $file = $request->file('backgroundBanner');
         $fileNameInitial = 'userBanner-'.time().'.'.$file->getClientOriginalExtension();
-        $fileName = "images/user/$fileNameInitial";
+        $fileName = "images/user/{$fileNameInitial}";
         $file->storeAs('images/user/', $fileNameInitial);
         $profile->backgroundBanner = $fileName;
         $profile->backgroundColor = null;
@@ -165,10 +165,8 @@ class User extends Authenticatable implements FilamentUser
         if ($fileName) {
             if (Storage::disk('public')->exists($fileName)) {
                 Storage::disk('public')->delete($fileName);
-            } else {
-                // dd("File does not exist");
             }
-        } else {
+            // dd("File does not exist");
         }
     }
 }

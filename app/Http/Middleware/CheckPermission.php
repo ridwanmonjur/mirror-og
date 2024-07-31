@@ -32,9 +32,8 @@ class CheckPermission
 
     private function checkPermissionHelper($userAccess, $currentRoleList)
     {
-        foreach ($currentRoleList as $key => $value) {
-
-            if ($value == $userAccess) {
+        foreach ($currentRoleList as $value) {
+            if ($value === $userAccess) {
                 return true;
             }
         }

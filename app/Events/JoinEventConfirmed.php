@@ -35,6 +35,11 @@ class JoinEventConfirmed
         $this->allEventLogs ??= $parameters['allEventLogs'];
     }
 
+    public function __toString()
+    {
+        return $this->getModelAsString();
+    }
+
     /**
      * Get the channels the event should broadcast on.
      *
@@ -45,13 +50,6 @@ class JoinEventConfirmed
         return [
             new PrivateChannel('channel-name'),
         ];
-    }
-
-    public function __toString()
-    {
-        $string = $this->getModelAsString();
-
-        return $string;
     }
 
     protected function getModelAsString()

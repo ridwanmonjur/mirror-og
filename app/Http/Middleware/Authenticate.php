@@ -16,23 +16,26 @@ class Authenticate extends Middleware
     {
         if ($request->expectsJson()) {
             return response()->json(['error' => 'This is why we getting json error in fetch?'], 401);
-        } elseif ($request->is('admin/*')) {
+        }
+        if ($request->is('admin/*')) {
             session()->flash('error', 'Please log in as an admin.');
 
             return 'admin/login';
-        } elseif ($request->is('participant/*')) {
+        }
+        if ($request->is('participant/*')) {
             // dd(URL::current());
             Session::put('intended', URL::current());
             session()->flash('error', 'Please log in as a participant to access this page.');
 
             return route('participant.signin.view');
-        } elseif ($request->is('organizer/*')) {
+        }
+        if ($request->is('organizer/*')) {
             Session::put('intended', URL::current());
             session()->flash('error', 'Please log in as an organizer to access this page.');
 
             return route('organizer.signin.view');
-        } else {
-            return route('participant.signin.view');
         }
+
+        return route('participant.signin.view');
     }
 }

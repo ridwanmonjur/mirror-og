@@ -21,7 +21,7 @@ Route::get('/', [AuthController::class, 'showLandingPage'])->name('landing.view'
 Route::get('/hello', function () {
     return view('Email.reset', [
         'token' => 1234,
-        'imageLogo' => asset('assets/images/logo-default.png')
+        'imageLogo' => asset('assets/images/logo-default.png'),
     ]);
 });
 // Forget, reset password

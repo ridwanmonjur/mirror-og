@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -8,12 +9,12 @@ return new class extends Migration
     public function up()
     {
         // Rename follows table to organizer_follows if organizer_follows doesn't exist
-        if (!Schema::hasTable('organizer_follows')) {
+        if (! Schema::hasTable('organizer_follows')) {
             Schema::rename('follows', 'organizer_follows');
         }
 
         // Create participant_follows table if it doesn't exist
-        if (!Schema::hasTable('participant_follows')) {
+        if (! Schema::hasTable('participant_follows')) {
             Schema::create('participant_follows', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedBigInteger('participant1_user');
@@ -52,7 +53,7 @@ return new class extends Migration
         }
 
         Schema::table('participants', function (Blueprint $table) {
-            if (!Schema::hasColumn('participants', 'isAgeVisible')) {
+            if (! Schema::hasColumn('participants', 'isAgeVisible')) {
                 $table->boolean('isAgeVisible')->default(true);
             }
         });
@@ -65,7 +66,7 @@ return new class extends Migration
         }
 
         // Create user_profile table
-        if (!Schema::hasTable('user_profile')) {
+        if (! Schema::hasTable('user_profile')) {
             Schema::create('user_profile', function (Blueprint $table) {
                 $table->string('backgroundColor')->nullable();
                 $table->string('backgroundBanner')->nullable();
@@ -76,7 +77,7 @@ return new class extends Migration
         }
 
         // Create team_profile table
-        if (!Schema::hasTable('team_profile')) {
+        if (! Schema::hasTable('team_profile')) {
             Schema::create('team_profile', function (Blueprint $table) {
                 $table->string('backgroundColor')->nullable();
                 $table->string('backgroundBanner')->nullable();
@@ -96,20 +97,20 @@ return new class extends Migration
 
         // Add columns back to organizers table
         Schema::table('organizers', function (Blueprint $table) {
-            if (!Schema::hasColumn('organizers', 'backgroundColor')) {
+            if (! Schema::hasColumn('organizers', 'backgroundColor')) {
                 $table->string('backgroundColor')->nullable();
             }
-            if (!Schema::hasColumn('organizers', 'backgroundBanner')) {
+            if (! Schema::hasColumn('organizers', 'backgroundBanner')) {
                 $table->string('backgroundBanner')->nullable();
             }
         });
 
         // Add and remove columns in participants table
         Schema::table('participants', function (Blueprint $table) {
-            if (!Schema::hasColumn('participants', 'backgroundColor')) {
+            if (! Schema::hasColumn('participants', 'backgroundColor')) {
                 $table->string('backgroundColor')->nullable();
             }
-            if (!Schema::hasColumn('participants', 'backgroundBanner')) {
+            if (! Schema::hasColumn('participants', 'backgroundBanner')) {
                 $table->string('backgroundBanner')->nullable();
             }
             if (Schema::hasColumn('participants', 'isAgeVisible')) {
@@ -119,7 +120,7 @@ return new class extends Migration
 
         // Add columns back to teams table
         Schema::table('teams', function (Blueprint $table) {
-            if (!Schema::hasColumn('teams', 'backgroundColor')) {
+            if (! Schema::hasColumn('teams', 'backgroundColor')) {
                 $table->string('backgroundColor')->nullable();
             }
         });

@@ -8,7 +8,6 @@ use App\Events\TeamMemberUpdated;
 use App\Listeners\JoinEventConfirmation;
 use App\Listeners\TeamMemberCreatedListener;
 use App\Listeners\TeamMemberUpdatedListener;
-use App\Models\EventDetail;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;

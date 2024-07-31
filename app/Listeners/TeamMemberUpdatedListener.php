@@ -33,7 +33,7 @@ class TeamMemberUpdatedListener
 
             switch ($status) {
                 case 'accepted':
-                    if ($event->teamMember->actor == 'team') {
+                    if ($event->teamMember->actor === 'team') {
                         $action = 'accepted';
                         $userLog = '<span class="notification-gray"> You joined'
                             .' the team, <span class="notification-black">'.$teamName
@@ -60,7 +60,7 @@ class TeamMemberUpdatedListener
                     break;
                 case 'left':
                     $action = 'left';
-                    if ($event->teamMember->actor == 'team') {
+                    if ($event->teamMember->actor === 'team') {
                         $userLog = '<span class="notification-gray"> You left'
                             .' the team, <span class="notification-black">'.$teamName
                             .'</span>. </span>';
@@ -87,7 +87,7 @@ class TeamMemberUpdatedListener
                     break;
                 case 'rejected':
                     $action = 'rejected';
-                    if ($event->teamMember->actor == 'team') {
+                    if ($event->teamMember->actor === 'team') {
                         $userNotification = [
                             'text' => '<span class="notification-gray">'
                                 .'<span class="notification-black">'.$teamName

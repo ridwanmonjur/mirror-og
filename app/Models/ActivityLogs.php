@@ -12,12 +12,12 @@ class ActivityLogs extends Model
         'created_at', 'updated_at',
     ];
 
+    protected $table = 'activity_logs';
+
     public function subject()
     {
         return $this->morphTo();
     }
-
-    protected $table = 'activity_logs';
 
     public function findActivityLog($parameters)
     {

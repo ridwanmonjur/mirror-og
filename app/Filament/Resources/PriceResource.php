@@ -11,9 +11,9 @@ use Filament\Tables;
 
 class PriceResource extends Resource
 {
-    protected static ?string $model = Price::class;
-
     public static ?string $navigationGroup = 'Manage Event';
+
+    protected static ?string $model = Price::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
@@ -21,7 +21,7 @@ class PriceResource extends Resource
     {
         return $form
             ->schema([
-                //
+
             ]);
     }
 
@@ -29,10 +29,10 @@ class PriceResource extends Resource
     {
         return $table
             ->columns([
-                //
+
             ])
             ->filters([
-                //
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -45,7 +45,7 @@ class PriceResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
 

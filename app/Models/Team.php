@@ -49,12 +49,12 @@ class Team extends Model
         return $this->morphMany(ActivityLogs::class, 'subject');
     }
 
-
     public static function getTeamAndMembersByTeamId($teamId)
     {
         return self::with(['members.user' => function ($query) {
             $query->select(['name', 'id', 'email']);
-        }])
+            },
+        ])
             ->whereHas('members', function ($query) {
                 $query->where('status', 'accepted');
             })
@@ -68,7 +68,8 @@ class Team extends Model
         })
             ->with(['members' => function ($query) {
                 $query->where('status', 'accepted');
-            }])
+                },
+            ])
             ->get();
 
         $teamIdList = $teamList->pluck('id')->toArray();
@@ -78,12 +79,12 @@ class Team extends Model
                 'teamList' => $teamList,
                 'teamIdList' => $teamIdList,
             ];
-        } else {
-            return [
-                'teamList' => null,
-                'teamIdList' => null,
-            ];
         }
+
+        return [
+            'teamList' => null,
+            'teamIdList' => null,
+        ];
     }
 
     public static function getUserTeamList($user_id, $status = 'accepted')
@@ -93,10 +94,12 @@ class Team extends Model
         })
             ->with(['members' => function ($query) {
                 $query->where('status', 'accepted');
-            }])
+                },
+            ])
             ->withCount(['members' => function ($query) {
                 $query->where('status', 'accepted');
-            }])
+                },
+            ])
             ->get();
 
         $teamIdList = $teamList->pluck('id')->toArray();
@@ -109,15 +112,14 @@ class Team extends Model
 
     public static function getUserPastTeamList($user_id)
     {
-        $teamList = self::whereHas('members', function ($query) use ($user_id) {
+        return self::whereHas('members', function ($query) use ($user_id) {
             $query->where('user_id', $user_id)->where('status', 'rejected');
         })
             ->withCount(['members' => function ($query) {
                 $query->where('status', 'accepted');
-            }])
+                },
+            ])
             ->get();
-
-        return $teamList;
     }
 
     public static function getUserTeamListAndCount($user_id)
@@ -136,12 +138,12 @@ class Team extends Model
                 'teamList' => $teamList,
                 'count' => $count,
             ];
-        } else {
-            return [
-                'teamList' => [],
-                'count' => 0,
-            ];
         }
+
+        return [
+            'teamList' => [],
+            'count' => 0,
+        ];
     }
 
     public function getAwardListByTeam()
@@ -226,14 +228,16 @@ class Team extends Model
     {
         $team = Team::where('id', $teamId)
             ->select(['id', 'teamName', 'teamBanner', 'creator_id'])
-            ->with(['members' => function ($q) {
-                $q->where('status', 'accepted')
-                    ->select('id', 'user_id', 'team_id', 'status')
-                    ->with(['user' => function ($q) {
-                        $q->select('id');
+            ->with(
+                ['members' => function ($q) {
+                    $q->where('status', 'accepted')
+                        ->select('id', 'user_id', 'team_id', 'status')
+                        ->with(['user' => function ($q) {
+                            $q->select('id');
+                            },
+                        ]);
                     },
-                    ]);
-            }]
+                ]
             )->first();
 
         $memberUserIds = $team
@@ -343,7 +347,7 @@ class Team extends Model
     {
         $file = $request->file('file');
         $fileNameInitial = 'teamBanner-'.time().'.'.$file->getClientOriginalExtension();
-        $fileName = "images/team/$fileNameInitial";
+        $fileName = "images/team/{$fileNameInitial}";
         $file->storeAs('images/team/', $fileNameInitial);
         $this->teamBanner = $fileName;
         $this->save();
@@ -355,7 +359,7 @@ class Team extends Model
     {
         if ($fileName) {
             $fileNameInitial = str_replace('images/team/', '', $fileName);
-            $fileNameFinal = "images/team/$fileNameInitial";
+            $fileNameFinal = "images/team/{$fileNameInitial}";
 
             if (file_exists($fileNameFinal)) {
                 unlink($fileNameFinal);

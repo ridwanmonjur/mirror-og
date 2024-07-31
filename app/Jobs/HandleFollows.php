@@ -47,7 +47,7 @@ class HandleFollows implements ShouldQueue
         if (! class_exists($strategyClass)) {
             throw new \InvalidArgumentException("Strategy class {$strategyClass} does not exist.");
         }
-        $strategy = new $strategyClass;
+        $strategy = new $strategyClass();
         $strategy->handle($this->parameters);
     }
 }

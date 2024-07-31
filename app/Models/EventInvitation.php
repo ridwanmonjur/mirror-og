@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class EventInvitation extends Model
 {
-    protected $table = 'event_invitations';
-
     use HasFactory;
+
+    protected $table = 'event_invitations';
 
     public function organizer()
     {

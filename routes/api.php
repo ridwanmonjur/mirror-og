@@ -42,7 +42,6 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::group(['prefix' => 'participant'], function () {
-
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'check-jwt-permission:participant|admin'], function () {
             Route::post('/events', [ParticipantEventController::class, 'index'])->name('events.index');
@@ -59,8 +58,6 @@ Route::group(['prefix' => 'participant'], function () {
         });
     });
 });
-
-
 
 Route::group(['prefix' => 'organizer'], function () {
     Route::group(['middleware' => 'auth'], function () {

@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrganizersRequest;
 use App\Models\Address;
 use App\Models\EventDetail;
-use App\Models\OrganizerFollow;
 use App\Models\JoinEvent;
 use App\Models\Organizer;
+use App\Models\OrganizerFollow;
 use App\Models\Team;
 use App\Models\User;
 use Exception;
@@ -36,9 +36,10 @@ class OrganizerController extends Controller
         try {
             $loggedInUser = Auth::user();
             $user = User::findOrFail($id);
-            if ($user->role == 'PARTICIPANT') {
+            if ($user->role === 'PARTICIPANT') {
                 return redirect()->route('public.participant.view', ['id' => $id]);
-            } elseif ($user->role == 'ADMIN') {
+            }
+            if ($user->role === 'ADMIN') {
                 return $this->showErrorParticipant('This is an admin view!');
             }
 
@@ -53,6 +54,55 @@ class OrganizerController extends Controller
             return $this->viewProfile($request, $loggedInUser ? $loggedInUser->id : null, $user, false);
         } catch (Exception $e) {
             return $this->showErrorParticipant($e->getMessage());
+        }
+    }
+
+    public function editProfile(UpdateOrganizersRequest $request)
+    {
+        $user = $request->attributes->get('user');
+        $validatedData = $request->validated();
+
+        try {
+            DB::transaction(function () use ($user, $validatedData) {
+                if (isset($validatedData['address'])) {
+                    $address = isset($validatedData['address']['id'])
+                    ? Address::findOrFail($validatedData['address']['id'])
+                    : new Address();
+
+                    if (! empty($validatedData['address']['city']) && ! empty($validatedData['address']['country']) && ! empty($validatedData['address']['addressLine1'])) {
+                        $address->fill($validatedData['address']);
+                        $address->user_id = $user->id;
+                        $address->save();
+                    } else {
+                        if (count($validatedData['address']) > 0) {
+                            throw new Exception('Incomplete address given!');
+                        }
+                    }
+                }
+                // Update user profile
+                User::where('id', $user->id)->first()->fill($validatedData['userProfile'])->save();
+
+                // Update or create organizer
+                $organizer = isset($validatedData['organizer']['id'])
+                    ? Organizer::findOrFail($validatedData['organizer']['id'])
+                    : new Organizer();
+
+                $organizer->user_id = $user->id;
+
+                // Trim trailing slashes from links
+                $links = ['website_link', 'instagram_link', 'twitter_link', 'facebook_link'];
+                foreach ($links as $link) {
+                    if (isset($validatedData['organizer'][$link])) {
+                        $validatedData['organizer'][$link] = rtrim($validatedData['organizer'][$link], '/');
+                    }
+                }
+
+                $organizer->fill($validatedData['organizer'])->save();
+            });
+
+            return response()->json(['message' => 'User profile updated successfully', 'success' => true], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'success' => false], 400);
         }
     }
 
@@ -102,64 +152,24 @@ class OrganizerController extends Controller
             ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
                 = EventDetail::processEvents($joinEvents, $isFollowing);
 
-            return view('Organizer.PlayerProfile',
-                compact('joinEvents', 'userProfile', 'isOwnProfile', 'followersCount',
-                    'joinEventsHistory', 'joinEventsActive', 'followCounts', 'lastYearEventsCount',
-                    'beforeLastYearEventsCount', 'teamsCount', 'tierPrizeCount'
+            return view(
+                'Organizer.PlayerProfile',
+                compact(
+                    'joinEvents',
+                    'userProfile',
+                    'isOwnProfile',
+                    'followersCount',
+                    'joinEventsHistory',
+                    'joinEventsActive',
+                    'followCounts',
+                    'lastYearEventsCount',
+                    'beforeLastYearEventsCount',
+                    'teamsCount',
+                    'tierPrizeCount'
                 )
             );
         } catch (Exception $e) {
             return $this->showErrorParticipant($e->getMessage());
-        }
-
-    }
-
-    public function editProfile(UpdateOrganizersRequest $request)
-    {
-        $user = $request->attributes->get('user');
-        $validatedData = $request->validated();
-
-        try {
-            DB::transaction(function () use ($user, $validatedData) {
-                if (isset($validatedData['address'])) {
-                    $address = isset($validatedData['address']['id'])
-                    ? Address::findOrFail($validatedData['address']['id'])
-                    : new Address();
-
-                    if (!empty($validatedData['address']['city']) && !empty($validatedData['address']['country']) && !empty($validatedData['address']['addressLine1'])) {
-                        $address->fill($validatedData['address']);
-                        $address->user_id = $user->id;
-                        $address->save();
-                    } else {
-                        if (count($validatedData['address']) > 0) {
-                            throw new Exception("Incomplete address given!");
-                        }
-                    }
-                }
-                // Update user profile
-                User::where('id', $user->id)->first()->fill($validatedData['userProfile'])->save();
-
-                // Update or create organizer
-                $organizer = isset($validatedData['organizer']['id'])
-                    ? Organizer::findOrFail($validatedData['organizer']['id'])
-                    : new Organizer();
-                
-                $organizer->user_id = $user->id;
-                
-                // Trim trailing slashes from links
-                $links = ['website_link', 'instagram_link', 'twitter_link', 'facebook_link'];
-                foreach ($links as $link) {
-                    if (isset($validatedData['organizer'][$link])) {
-                        $validatedData['organizer'][$link] = rtrim($validatedData['organizer'][$link], '/');
-                    }
-                }
-                
-                $organizer->fill($validatedData['organizer'])->save();
-            });
-
-            return response()->json(['message' => 'User profile updated successfully', 'success' => true], 200);
-        } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'success' => false], 400);
         }
     }
 }

@@ -6,9 +6,7 @@ use Tests\Support\AcceptanceTester;
 
 class CreateEventCest
 {
-    public function _before(AcceptanceTester $I)
-    {
-    }
+    public function _before(AcceptanceTester $I) {}
 
     // tests
     public function tryToTest(AcceptanceTester $I)

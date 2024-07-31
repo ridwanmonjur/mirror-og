@@ -9,10 +9,11 @@ class TeamProfile extends Model
 {
     use HasFactory;
 
-    protected $table = 'team_profile';
-    protected $fillable = ['frameColor', 'backgroundColor', 'backgroundGradient', 'fontColor', 'team_id'];
-
     public $timestamps = false;
+
+    protected $table = 'team_profile';
+
+    protected $fillable = ['frameColor', 'backgroundColor', 'backgroundGradient', 'fontColor', 'team_id'];
 
     public function generateStyles()
     {

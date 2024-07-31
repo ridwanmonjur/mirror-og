@@ -10,7 +10,7 @@ class OrganizerFollow extends Model
 {
     use HasFactory;
 
-    protected $table = "organizer_follows";
+    protected $table = 'organizer_follows';
 
     protected $fillable = [
         'participant_user_id',

@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Address extends Model
 {
-    protected $table = 'user_address';
-
     use HasFactory;
 
     public $timestamps = false;
+
+    protected $table = 'user_address';
 
     protected $fillable = ['addressLine1', 'addressLine2', 'city', 'country', 'user_id'];
 }
