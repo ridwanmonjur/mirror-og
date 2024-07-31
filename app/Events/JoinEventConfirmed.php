@@ -63,7 +63,7 @@ class JoinEventConfirmed
             $propertyName = $property->getName();
             $propertyValue = $property->getValue($this);
             $stringValue = is_object($propertyValue) ? $propertyValue->__toString() : var_export($propertyValue, true);
-            $string .= "$propertyName: $stringValue, ";
+            $string .= "{$propertyName}: {$stringValue}, ";
         }
         $string = rtrim($string, ', ').'}';
 

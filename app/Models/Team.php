@@ -53,7 +53,7 @@ class Team extends Model
     {
         return self::with(['members.user' => function ($query) {
             $query->select(['name', 'id', 'email']);
-            },
+        },
         ])
             ->whereHas('members', function ($query) {
                 $query->where('status', 'accepted');
@@ -68,7 +68,7 @@ class Team extends Model
         })
             ->with(['members' => function ($query) {
                 $query->where('status', 'accepted');
-                },
+            },
             ])
             ->get();
 
@@ -94,11 +94,11 @@ class Team extends Model
         })
             ->with(['members' => function ($query) {
                 $query->where('status', 'accepted');
-                },
+            },
             ])
             ->withCount(['members' => function ($query) {
                 $query->where('status', 'accepted');
-                },
+            },
             ])
             ->get();
 
@@ -117,7 +117,7 @@ class Team extends Model
         })
             ->withCount(['members' => function ($query) {
                 $query->where('status', 'accepted');
-                },
+            },
             ])
             ->get();
     }
@@ -234,9 +234,9 @@ class Team extends Model
                         ->select('id', 'user_id', 'team_id', 'status')
                         ->with(['user' => function ($q) {
                             $q->select('id');
-                            },
+                        },
                         ]);
-                    },
+                },
                 ]
             )->first();
 

@@ -214,7 +214,7 @@ class JoinEvent extends Model
 
             if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
                 $activeEvents[] = $joinEvent;
-            } elseif ($joinEvent->status == 'ENDED') {
+            } elseif ($joinEvent->status === 'ENDED') {
                 $historyEvents[] = $joinEvent;
             }
         }
@@ -233,7 +233,6 @@ class JoinEvent extends Model
                 });
             })
             ->exists();
-
     }
 
     public static function getJoinedByTeamsForSameEvent($eventId, $userId)
@@ -246,6 +245,5 @@ class JoinEvent extends Model
             })
             ->get()
             ->first();
-
     }
 }

@@ -59,7 +59,9 @@
         ],
         "pint": "./vendor/bin/pint",
         "stan": "./vendor/bin/phpstan analyse --memory-limit=2G",
-        "pint:test": "./vendor/bin/pint",
+        "pint:fix": "./vendor/bin/pint",
+        "insights": "php artisan insights",
+        "insights:fix": "php artisan insights --fix",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
