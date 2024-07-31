@@ -16,7 +16,7 @@
     </p>
     <form id="newMembersForm">
     <input type="hidden" name="sortKeys" id="sortKeys" value="">
-    <input type="hidden" name="sortType" id="sortKeys" value="">
+    <input type="hidden" name="sortType" id="sortType" value="">
 
     @if($counTeamMembers > 0)
         <div class="tab-size d-flex justify-content-between flex-wrap tab-size mt-3 pt-3">
@@ -157,18 +157,17 @@
             </div>
             <div id="sort-option" class="mx-0 px-0 mb-3 d-none">
                 <div class="ddropdown dropdown-click-outside d-inline-block">
-                    <span>
+                    <span class="sort-icon-list" onclick="changeSortType()">
                         {{-- Ascending --}}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-sort-alpha-up" viewBox="0 0 16 16">
+                        <svg data-value="asc-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="d-none cursor-pointer gear-icon-button bi bi-sort-alpha-up" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371zm1.57-.785L11 2.687h-.047l-.652 2.157z"/>
                         <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645zm-8.46-.5a.5.5 0 0 1-1 0V3.707L2.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L4.5 3.707z"/>
                         </svg>
                         {{-- Descending --}}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-sort-alpha-down" viewBox="0 0 16 16">
+                        <svg data-value="desc-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="d-none cursor-pointer gear-icon-button bi bi-sort-alpha-down" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371zm1.57-.785L11 2.687h-.047l-.652 2.157z"/>
                             <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645zM4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293z"/>
                         </svg>
-
                     </span>
                     <button 
                         class="dropbtn py-1 px-2 me-3" 
@@ -255,6 +254,8 @@
     let newMembersFormKeys = ['sortKeys', 'birthDate', 'region', 'status'];
     let sortKeysInput = document.getElementById("sortKeys");
     function setSortForFetch(value) {
+        const sortByTitleId = document.getElementById('sortByTitleId');
+        sortByTitleId.innerText = formatStringUpper(value);
         const element = document.getElementById("sortKeys");
 
         if (element) {
@@ -266,13 +267,43 @@
                 }
             }); 
             window.dispatchEvent(event);
-            fetchMembers();
+            // fetchMembers();
         }
     }
 
+    function changeSortType() {
+        let sortTypeElement = document.getElementById("sortType");
+        let sortIconList = document.querySelector(".sort-icon-list");
+        let currentSortType = sortTypeElement?.value;
+        if (!sortTypeElement) return;
+        sortIconList?.querySelectorAll("svg").forEach((element)=>{
+            element.classList.add("d-none");
+        })
+
+        if (currentSortType === "") {
+            sortTypeElement.value = "asc";
+            sortIconList.querySelector(`[data-value="asc-icon"]`).classList.remove("d-none");
+        }
+
+        if (currentSortType === "asc") {
+            sortTypeElement.value = "desc";
+            sortIconList.querySelector(`[data-value="desc-icon"]`).classList.remove("d-none");
+        }
+
+        if (currentSortType === "desc") {
+            sortTypeElement.value = "";
+        }
+
+        fetchMembers();
+    }
     
     window.addEventListener('formChange',
         debounce((event) => {
+            let target = event.target; 
+            let name = target.name;
+            let value = target.value;
+            
+
             changeFilterSortUI(event);
             fetchMembers();
         }, 300)
@@ -296,6 +327,19 @@
         
         if (name == "search") {
             return;
+        }
+
+        if (name ===  "sortKeys") {
+            let sortTypeElement = document.getElementById("sortType");
+            let sortIconList = document.querySelector(".sort-icon-list");
+            let currentSortType = sortTypeElement?.value;
+            if (!sortTypeElement) return;
+            sortIconList?.querySelectorAll("svg").forEach((element)=>{
+                element.classList.add("d-none");
+            })
+
+            sortTypeElement.value = "asc";
+            sortIconList.querySelector(`[data-value="asc-icon"]`).classList.remove("d-none");
         }
             
         let formData = new FormData(newMembersForm);
@@ -335,7 +379,6 @@
             targetElemnet.innerHTML = formatStringUpper(formValue);
             targetElemnetParent.append(targetElemnet);
         }
-                
     }
 
     function getNestedValue(obj, propertyPath) {
@@ -384,9 +427,24 @@
         }
     }
 
-    function sortMembers(membersJson) {
-        // membersJson = sortByProperty(membersJson)
-        return membersJson;
+    function sortMembers(arr, sortKey, sortOrder) {
+        if (sortOrder === "" | sortOrder === null) {
+          return membersJson;  
+        }
+        
+        let arr2 = [...arr];
+        console.log({sortKey, sortOrder});
+
+        let sortTypeToKeyMap = {
+            "birthDate" : "user.participant.birthDay",
+            "region" : "user.participant.region",
+            "status": "status",
+            "name": "user.name",
+            "recent": "id"
+        };
+
+        arr2 = sortByProperty(arr2, sortTypeToKeyMap[sortKey], sortOrder == "asc");
+        return arr2;
     }
 
     async function fetchMembers(event = null) {
@@ -394,7 +452,8 @@
         let bodyHtml = '';
 
         let formData = new FormData(newMembersForm);
-        let sortedMembers = sortMembers(membersJson);
+        console.log(membersJson);
+        let sortedMembers = sortMembers(membersJson, formData.get("sortKeys"), formData.get("sortType"));
         filteredSortedMembers = [];
 
         for (let sortedMember of sortedMembers) {
