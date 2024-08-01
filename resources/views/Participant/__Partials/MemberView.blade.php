@@ -83,12 +83,12 @@
                             </span>
                         </button>
                         <div
-                            onclick="event.stopPropagation();"; 
+                            onclick="event.stopPropagation();" 
                             class="dropdown-menu px-3" aria-labelledby="dropdownFilterTier"
                         >
                             <p class="mb-1">Choose a date of birth to filter age</p>
                             <input  type="date" class="form-control" name="birthDate">
-                            <button type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light" onclick="
+                            <button id="birthDateResetButton" type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light" onclick="
                                 resetInput('birthDate');
                             "> Reset </button>
                         </div>
@@ -116,7 +116,7 @@
                                 <select id="select2-country2" class="form-control" name="region" style="width: 200px !important;">
                                     <option value=""> </option>
                                 </select>
-                                 <button type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light" onclick="
+                                 <button id="regionResetButton" type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light" onclick="
                                     resetInput('region');
                                 "> Reset </button>
                             </div>
@@ -135,7 +135,7 @@
                             </span>
                         </button>
                         <div
-                            onclick="event.stopPropagation();"; 
+                            onclick="event.stopPropagation();" 
                             class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
                         >
                             @foreach([
@@ -185,7 +185,7 @@
                         </span>
                     </button>
                     <div
-                        onclick="event.stopPropagation();"; 
+                        onclick="event.stopPropagation();" 
                         class="dropdown-menu px-3 ms-3" aria-labelledby="dropdownSortButton"
                     >
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('recent');">
@@ -200,7 +200,7 @@
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('name');">
                             <label class="me-3 cursor-pointer" for="name">Name</label>
                         </div>
-                        <div class="d-block min-w-150px hover-bigger ps-3 py-1" onclick="resetInput('sortKeys');">
+                        <div class="d-block min-w-150px hover-bigger ps-3 py-1" id="sortKeysResetButton" onclick="resetInput('sortKeys');">
                             <button type="button" class="rounded-pill btn btn-sm btn-primary text-light"> 
                                 Reset 
                             </button>
@@ -299,11 +299,6 @@
     
     window.addEventListener('formChange',
         debounce((event) => {
-            let target = event.target; 
-            let name = target.name;
-            let value = target.value;
-            
-
             changeFilterSortUI(event);
             fetchMembers();
         }, 300)
@@ -317,13 +312,17 @@
     );
 
     function changeFilterSortUI(event) {
-        let target = event.target; 
+        let target = null, type = null, value = null; 
         if (event.detail) {
-            target = event.detail;
-        }    
-
+            target = event.detail; 
+        }  else {
+            target = event.target; 
+        }
+        
         name = target.name;
         value = target.value;
+        type = target.type;
+
         
         if (name == "search") {
             return;
@@ -371,13 +370,56 @@
         targetElemnetHeading.classList.add('me-2');
         targetElemnetHeading.innerHTML = formatStringUpper(name);
         targetElemnetParent.append(targetElemnetHeading);
+        console.log({valuesFormData});
         for (let formValue of valuesFormData) {
-            targetElemnet = document.createElement('small');
+            let targetElemnet = document.createElement('small');
             targetElemnet.classList.add('btn', 'btn-secondary', 'text-light', 
                 'rounded-pill', 'px-2', 'py-0', 'me-1'
             );
-            targetElemnet.innerHTML = formatStringUpper(formValue);
+
+            targetElemnet.dataset.type = target.type === "checkbox" ? "checkbox" : target.type;
+            targetElemnet.dataset.name = name;
+            targetElemnet.dataset.value = formValue;
+            targetElemnet.innerHTML = `
+                <span> ${formatStringUpper(formValue)} </span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle ms-2" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+            `;
+            
             targetElemnetParent.append(targetElemnet);
+
+            console.log({name, value: formValue, targetElemnet, type: target.type});
+            if (targetElemnet.dataset.type === "checkbox") {
+                targetElemnet.onclick = function (event2) {
+                    let target2 = event2.currentTarget; 
+                    let name2 = target2.dataset.name;
+                    let value2 = target2.dataset.value;
+                    let checkbox = document.querySelector(`input[type="checkbox"][name="${name2}"][value="${value2}"]`);
+                    console.log({checkbox, target2, dataset: target2.dataset});
+                    checkbox.checked = false;
+                    checkbox.removeAttribute('checked');
+                    window.dispatchEvent(new CustomEvent("formChange", {
+                        detail: {
+                            name: name2,
+                            value: formData.getAll(name2),
+                            type: "checkbox"
+                        }
+                    }) );
+                }
+            }   else {
+                targetElemnet.onclick = function (event3) {
+                    let target3 = event3.currentTarget; 
+                    let name3 = target3.dataset.name;
+                    let value3 = target3.dataset.value; 
+                    console.log({target3, dataset: target3.dataset});
+
+                    let resetButton = document.querySelector(`#${name3}ResetButton`);
+                    resetButton.click();
+                }
+            }
+            
         }
     }
 
@@ -428,7 +470,10 @@
     }
 
     function sortMembers(arr, sortKey, sortOrder) {
-        if (sortOrder === "" | sortOrder === null) {
+        if (sortKey === "" || sortKey === null || sortOrder === "" || sortOrder === null) {
+           const sortByTitleId = document.getElementById('sortByTitleId');
+            sortByTitleId.innerText = "Sort By";
+          
           return membersJson;  
         }
         
@@ -436,7 +481,7 @@
         console.log({sortKey, sortOrder});
 
         let sortTypeToKeyMap = {
-            "birthDate" : "user.participant.birthDay",
+            "birthDate" : "user.participant.birthday",
             "region" : "user.participant.region",
             "status": "status",
             "name": "user.name",

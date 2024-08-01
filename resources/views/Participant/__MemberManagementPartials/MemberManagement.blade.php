@@ -257,7 +257,7 @@
                             </span>
                         </button>
                         <div
-                            onclick="event.stopPropagation();"; 
+                            onclick="event.stopPropagation();" 
                             class="dropdown-menu px-3" aria-labelledby="dropdownFilterTier"
                         >
                             <p class="mb-1">Choose a date of birth to filter age</p>
@@ -309,7 +309,7 @@
                             </span>
                         </button>
                         <div
-                            onclick="event.stopPropagation();"; 
+                            onclick="event.stopPropagation();" 
                             class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
                         >
                             @foreach([
@@ -347,7 +347,7 @@
                         </span>
                     </button>
                     <div
-                        onclick="event.stopPropagation();"; 
+                        onclick="event.stopPropagation();" 
                         class="dropdown-menu px-3 ms-3" aria-labelledby="dropdownSortButton"
                     >
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('recent');">
