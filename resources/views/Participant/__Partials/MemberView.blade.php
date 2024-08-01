@@ -156,7 +156,7 @@
                 </div>
             </div>
             <div id="sort-option" class="mx-0 px-0 mb-3 d-none">
-                <div class="ddropdown dropdown-click-outside d-inline-block">
+                <div class="dropdown dropdown-click-outside d-inline-block">
                     <span class="sort-icon-list" onclick="changeSortType()">
                         {{-- Ascending --}}
                         <svg data-value="asc-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="d-none cursor-pointer gear-icon-button bi bi-sort-alpha-up" viewBox="0 0 16 16">
@@ -253,6 +253,21 @@
     let newMembersForm = document.getElementById('newMembersForm');
     let newMembersFormKeys = ['sortKeys', 'birthDate', 'region', 'status'];
     let sortKeysInput = document.getElementById("sortKeys");
+
+    function resetInput(name) {
+        let formData = new FormData(newMembersForm);
+        let newValue = name == "sortKeys" ? [] : ""; 
+        document.querySelector(`[name="${name}"]`).value = newValue;
+        formData.set(name, newValue);
+        const event = new CustomEvent("formChange", {
+            detail: {
+                name: name,
+                value: newValue
+            }
+        }); 
+        window.dispatchEvent(event);
+    }
+
     function setSortForFetch(value) {
         const sortByTitleId = document.getElementById('sortByTitleId');
         sortByTitleId.innerText = formatStringUpper(value);
@@ -576,20 +591,6 @@
         let tbodyElement = document.querySelector('#member-table-body tbody');
         tbodyElement.innerHTML = bodyHtml;  
     };
-
-    function resetInput(name) {
-        document.querySelector(`[name="${name}"]`).value = '';
-        let formData = new FormData(newMembersForm);
-        let newValue = name == "sortKeys" ? [] : ""; 
-        formData.set(name, newValue);
-        const event = new CustomEvent("formChange", {
-            detail: {
-                name: name,
-                value: newValue
-            }
-        }); 
-        window.dispatchEvent(event);
-    }
 
     fetchMembers();
     fetchCountries();

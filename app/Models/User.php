@@ -97,7 +97,7 @@ class User extends Authenticatable implements FilamentUser
         return $this->morphMany(ActivityLogs::class, 'subject');
     }
 
-    public static function getParticipants($request, $teamId)
+    public static function getParticipants($request)
     {
         return self::query()
             ->where('role', 'PARTICIPANT')
@@ -116,15 +116,29 @@ class User extends Authenticatable implements FilamentUser
                     });
                 }
             })
+            ->whereHas('participant', function ($query) use ($request) {
+                $region = trim($request->input('region'));
+                $birthDate = $request->input('birthDate');
+            
+                if (!empty($region)) {
+                    $query->where('region', $region);
+                }
+            
+                if (!empty($birthDate)) {
+                    $query->whereDate('birthday', '<', $birthDate);
+                }
+            })
             ->with([
                 'participant' => function ($query) {
                     $query->select([
                         'region_flag',
+                        'region',
+                        'birthday',
                         'user_id',
                     ]);
                 },
-                'members' => function ($query) use ($teamId) {
-                    $query->where('team_id', $teamId);
+                'members' => function ($query) use ($request) {
+                    $query->where('team_id', $request->teamId);
                 },
             ]);
     }

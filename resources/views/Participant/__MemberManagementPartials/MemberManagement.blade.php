@@ -28,7 +28,7 @@
     
     </div>
 @endif
-<div @class(["tabs", "d-none" => 'isset($redirect) && $redirect'])>
+<div @class(["tabs", "d-none" => isset($redirect) && $redirect])>
     <button id="CurrentMembersBtn" class="tab-button inner-tab tab-button-active"
         onclick="showTab(event, 'CurrentMembers', 'inner-tab')">Current Members
     </button>
@@ -192,7 +192,8 @@
         </div>
     @endif
     <form id="newMembersForm">
-        <input type="hidden" name="sortKeys" id="sortKeys" value="">
+         <input type="hidden" name="sortKeys" id="sortKeys" value="">
+        <input type="hidden" name="sortType" id="sortType" value="">
         <div class="tab-size d-flex justify-content-between align-items-center flex-wrap tab-size mt-0">
             <div class="mb-2">
                 <span class="cursor-pointer me-4" onclick="
@@ -262,7 +263,7 @@
                         >
                             <p class="mb-1">Choose a date of birth to filter age</p>
                             <input  type="date" class="form-control" name="birthDate">
-                            <button type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light" onclick="
+                            <button id="birthDateResetButton" type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light" onclick="
                                 resetInput('birthDate');
                             "> Reset </button>
                         </div>
@@ -290,7 +291,7 @@
                                 <select id="select2-country2" class="form-control" name="region" style="width: 200px !important;">
                                     <option value=""> </option>
                                 </select>
-                                <button type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light" onclick="
+                                <button id="regionResetButton" type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light" onclick="
                                     resetInput('region');
                                 "> Reset </button>
                             </div>
@@ -331,6 +332,18 @@
             </div>
             <div id="sort-option" class="mx-0 px-0 mb-3 d-none">
                 <div class="ddropdown dropdown-click-outside d-inline-block">
+                    <span class="sort-icon-list" onclick="changeSortType()">
+                        {{-- Ascending --}}
+                        <svg data-value="asc-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="d-none cursor-pointer gear-icon-button bi bi-sort-alpha-up" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371zm1.57-.785L11 2.687h-.047l-.652 2.157z"/>
+                        <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645zm-8.46-.5a.5.5 0 0 1-1 0V3.707L2.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.5.5 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L4.5 3.707z"/>
+                        </svg>
+                        {{-- Descending --}}
+                        <svg data-value="desc-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="d-none cursor-pointer gear-icon-button bi bi-sort-alpha-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10.082 5.629 9.664 7H8.598l1.789-5.332h1.234L13.402 7h-1.12l-.419-1.371zm1.57-.785L11 2.687h-.047l-.652 2.157z"/>
+                            <path d="M12.96 14H9.028v-.691l2.579-3.72v-.054H9.098v-.867h3.785v.691l-2.567 3.72v.054h2.645zM4.5 2.5a.5.5 0 0 0-1 0v9.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L4.5 12.293z"/>
+                        </svg>
+                    </span>
                     <button 
                         class="dropbtn py-1 px-2 me-3" 
                         type="button" id="dropdownSortButton" 
@@ -362,7 +375,7 @@
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('name');">
                             <label class="me-3 cursor-pointer" for="prize">Name</label>
                         </div>
-                        <button type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light"
+                        <button id="sortKeysResetButton" type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light"
                             onclick="
                             resetInput('sortKeys');
                         ">
@@ -416,8 +429,25 @@
     let newMembersForm = document.getElementById('newMembersForm');
     let newMembersFormKeys = ['sortKeys', 'birthDate', 'region', 'status'];
     let sortKeysInput = document.getElementById("sortKeys");
-    
+    let countries = [];
+
+    function resetInput(name) {
+        let formData = new FormData(newMembersForm);
+        let newValue = name == "sortKeys" ? [] : ""; 
+        document.querySelector(`[name="${name}"]`).value = newValue;
+        formData.set(name, newValue);
+        const event = new CustomEvent("formChange", {
+            detail: {
+                name: name,
+                value: newValue
+            }
+        }); 
+        window.dispatchEvent(event);
+    }
+
     function setSortForFetch(value) {
+        const sortByTitleId = document.getElementById('sortByTitleId');
+        sortByTitleId.innerText = formatStringUpper(value);
         const element = document.getElementById("sortKeys");
 
         if (element) {
@@ -429,49 +459,77 @@
                 }
             }); 
             window.dispatchEvent(event);
-            fetchMembers();
         }
     }
 
-    let countries = [];
+    function changeSortType() {
+        let sortTypeElement = document.getElementById("sortType");
+        let sortIconList = document.querySelector(".sort-icon-list");
+        let currentSortType = sortTypeElement?.value;
+        if (!sortTypeElement) return;
+        sortIconList?.querySelectorAll("svg").forEach((element)=>{
+            element.classList.add("d-none");
+        })
+
+        if (currentSortType === "") {
+            sortTypeElement.value = "asc";
+            sortIconList.querySelector(`[data-value="asc-icon"]`).classList.remove("d-none");
+        }
+
+        if (currentSortType === "asc") {
+            sortTypeElement.value = "desc";
+            sortIconList.querySelector(`[data-value="desc-icon"]`).classList.remove("d-none");
+        }
+
+        if (currentSortType === "desc") {
+            sortTypeElement.value = "";
+        }
+
+        fetchMembers();
+    }
+    
     window.addEventListener('formChange',
         debounce((event) => {
-            changeUI(event);
+            changeFilterSortUI(event);
+            fetchMembers();
         }, 300)
     );
     
     newMembersForm.addEventListener('change',
         debounce((event) => {
-            changeUI(event);
+            changeFilterSortUI(event);
             fetchMembers();
         }, 300)
     );
 
-    function resetInput(name) {
-        document.querySelector(`[name="${name}"]`).value = '';
-        let formData = new FormData(newMembersForm);
-        let newValue = name == "sortKeys" ? [] : ""; 
-        formData.set(name, newValue);
-        const event = new CustomEvent("formChange", {
-            detail: {
-                name: name,
-                value: newValue
-            }
-        }); 
-        window.dispatchEvent(event);
-    }
-
-    function changeUI(event) {
-        let target = event.target; 
+    function changeFilterSortUI(event) {
+        let target = null, type = null, value = null; 
         if (event.detail) {
-            target = event.detail;
-        }    
-
+            target = event.detail; 
+        }  else {
+            target = event.target; 
+        }
+        
         name = target.name;
         value = target.value;
+        type = target.type;
+
         
         if (name == "search") {
             return;
+        }
+
+        if (name ===  "sortKeys") {
+            let sortTypeElement = document.getElementById("sortType");
+            let sortIconList = document.querySelector(".sort-icon-list");
+            let currentSortType = sortTypeElement?.value;
+            if (!sortTypeElement) return;
+            sortIconList?.querySelectorAll("svg").forEach((element)=>{
+                element.classList.add("d-none");
+            })
+
+            sortTypeElement.value = "asc";
+            sortIconList.querySelector(`[data-value="asc-icon"]`).classList.remove("d-none");
         }
             
         let formData = new FormData(newMembersForm);
@@ -499,20 +557,101 @@
             return;
         }
         
-        targetElemnetHeading = document.createElement('small');
+        targetElemnetHeading = document.createElement('span');
         targetElemnetHeading.classList.add('me-2');
-        targetElemnetHeading.innerHTML = String(name)?.toUpperCase();
+        targetElemnetHeading.innerHTML = formatStringUpper(name);
         targetElemnetParent.append(targetElemnetHeading);
+        console.log({valuesFormData});
         for (let formValue of valuesFormData) {
-            targetElemnet = document.createElement('small');
+            let targetElemnet = document.createElement('small');
             targetElemnet.classList.add('btn', 'btn-secondary', 'text-light', 
                 'rounded-pill', 'px-2', 'py-0', 'me-1'
             );
-            targetElemnet.innerHTML = formValue;
+
+            targetElemnet.dataset.type = target.type === "checkbox" ? "checkbox" : target.type;
+            targetElemnet.dataset.name = name;
+            targetElemnet.dataset.value = formValue;
+            targetElemnet.innerHTML = `
+                <span> ${formatStringUpper(formValue)} </span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle ms-2" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+            `;
+            
             targetElemnetParent.append(targetElemnet);
+
+            console.log({name, value: formValue, targetElemnet, type: target.type});
+            if (targetElemnet.dataset.type === "checkbox") {
+                targetElemnet.onclick = function (event2) {
+                    let target2 = event2.currentTarget; 
+                    let name2 = target2.dataset.name;
+                    let value2 = target2.dataset.value;
+                    let checkbox = document.querySelector(`input[type="checkbox"][name="${name2}"][value="${value2}"]`);
+                    console.log({checkbox, target2, dataset: target2.dataset});
+                    checkbox.checked = false;
+                    checkbox.removeAttribute('checked');
+                    window.dispatchEvent(new CustomEvent("formChange", {
+                        detail: {
+                            name: name2,
+                            value: formData.getAll(name2),
+                            type: "checkbox"
+                        }
+                    }) );
+                }
+            }   else {
+                targetElemnet.onclick = function (event3) {
+                    let target3 = event3.currentTarget; 
+                    let name3 = target3.dataset.name;
+                    let value3 = target3.dataset.value; 
+                    console.log({target3, dataset: target3.dataset});
+
+                    let resetButton = document.querySelector(`#${name3}ResetButton`);
+                    resetButton.click();
+                }
+            }
+            
         }
-                
     }
+
+    function getNestedValue(obj, propertyPath) {
+        return propertyPath.split('.').reduce((acc, part) => acc && acc[part], obj);
+    }
+
+    function sortByProperty(arr, propertyPath, ascending = true) {
+        return arr.sort((a, b) => {
+            let aValue = getNestedValue(a, propertyPath);
+            let bValue = getNestedValue(b, propertyPath);
+
+            if (typeof aValue === 'string' && typeof bValue === 'string') {
+                return ascending ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+            } else {
+                return ascending ? aValue - bValue : bValue - aValue;
+            }
+        });
+    }
+
+
+    function formatStringUpper(str) {
+        str = str.charAt(0).toUpperCase() + str.slice(1);
+        str = str.replace(/([a-z])([A-Z])/g, '$1 $2');
+        return str;
+    }
+
+    function resetInput(name) {
+        document.querySelector(`[name="${name}"]`).value = '';
+        let formData = new FormData(newMembersForm);
+        let newValue = name == "sortKeys" ? [] : ""; 
+        formData.set(name, newValue);
+        const event = new CustomEvent("formChange", {
+            detail: {
+                name: name,
+                value: newValue
+            }
+        }); 
+        window.dispatchEvent(event);
+    }
+
 
     async function fetchCountries () {
         try {
@@ -547,10 +686,6 @@
         }
         
         let formData = new FormData(newMembersForm);
-        let jsonObject = {}
-        for (let [key, value] of formData.entries()) {
-            jsonObject[key] = value;
-        }
 
         let links = [];
         data = await fetch(route, {
@@ -561,7 +696,12 @@
             },
             body: JSON.stringify({
                 teamId,
-                ...jsonObject
+                birthDate: formData.get("birthDate"),
+                region: formData.get("region"),
+                search: formData.get("search"),
+                sortKeys: formData.get("sortKeys"),
+                sortType: formData.get("sortType"),
+                status: formData.getAll("status")
             })
         });
 
