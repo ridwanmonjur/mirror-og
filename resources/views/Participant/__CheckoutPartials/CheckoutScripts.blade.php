@@ -193,8 +193,7 @@
             colorText: '#30313d',
             colorDanger: '#df1b41',
             fontFamily: 'Ideal Sans, system-ui, sans-serif',
-            spacingUnit: '3px',
-            borderRadius: '20px',
+            borderRadius: '0px',
             colorPrimary: 'black',
             colorBackground: '#ffffff',
         },
@@ -209,7 +208,7 @@
         type: 'accordion',
     };
     let addressElementOptions = {
-        mode: 'billing',
+        mode: 'shipping',
         blockPoBox: false,
         fields: {
             phone: 'never',

@@ -375,7 +375,10 @@
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('name');">
                             <label class="me-3 cursor-pointer" for="prize">Name</label>
                         </div>
-                        <button id="sortKeysResetButton" type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light"
+                        <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('created_at');">
+                            <label class="me-3 cursor-pointer" for="prize">Joined</label>
+                        </div>
+                        <button id="sortKeysResetButton" type="button" class="my-2 ms-3 rounded-pill btn btn-sm btn-primary text-light"
                             onclick="
                             resetInput('sortKeys');
                         ">
@@ -633,9 +636,11 @@
 
 
     function formatStringUpper(str) {
-        str = str.charAt(0).toUpperCase() + str.slice(1);
-        str = str.replace(/([a-z])([A-Z])/g, '$1 $2');
-        return str;
+        return str
+            .replace(/^./, (match) => match.toUpperCase())
+            .replace(/([a-z])([A-Z])/g, '$1 $2')
+            .replace(/(_|\s)([a-z])/g, (match, p1, p2) => p1 + p2.toUpperCase())
+            .replace(/_/g, ' ');
     }
 
     function resetInput(name) {

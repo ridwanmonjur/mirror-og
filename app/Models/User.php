@@ -114,7 +114,8 @@ class User extends Authenticatable implements FilamentUser
     
         $mapSortKeysToValues = [
             'name' => 'name',
-            // 'region' => 'participantx.region',
+            'created_at' => 'created_at',
+            // 'region' => 'participants.region',
             // 'birthDate' => 'participants.birthday',
             'recent' => 'id'
         ];

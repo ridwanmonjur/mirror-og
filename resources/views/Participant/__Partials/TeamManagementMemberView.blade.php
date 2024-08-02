@@ -457,9 +457,11 @@
 
 
     function formatStringUpper(str) {
-        str = str.charAt(0).toUpperCase() + str.slice(1);
-        str = str.replace(/([a-z])([A-Z])/g, '$1 $2');
-        return str;
+        return str
+            .replace(/^./, (match) => match.toUpperCase())
+            .replace(/([a-z])([A-Z])/g, '$1 $2')
+            .replace(/(_|\s)([a-z])/g, (match, p1, p2) => p1 + p2.toUpperCase())
+            .replace(/_/g, ' ');
     }
 
     async function fetchCountries () {

@@ -191,8 +191,7 @@
             colorText: '#30313d',
             colorDanger: '#df1b41',
             fontFamily: 'Ideal Sans, system-ui, sans-serif',
-            spacingUnit: '3px',
-            borderRadius: '20px',
+            borderRadius: '0px',
             colorPrimary: 'black',
             colorBackground: '#ffffff',
         },
@@ -210,7 +209,7 @@
         mode: 'billing',
         blockPoBox: false,
         fields: {
-            phone: 'never',
+            phone: 'always',
         },
     };
 

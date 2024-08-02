@@ -1,5 +1,5 @@
-<div class="grid-2-columns mx-4" id="payment-discount-view">
-    <div class="mx-2">
+<div class="row" id="payment-discount-view">
+    <div class="col-12 col-xl-5 px-3">
         <h4>Payment Method</h4>
         @if (session('errorCheckout'))
             <div class="text-red my-2">
@@ -118,7 +118,7 @@
             </div>
         </div>
     </div>
-    <div class="mx-2 d-none" id="payment-summary">
+    <div class="col-12 col-xl-7" id="payment-summary">
         <h4>Payment Summary</h4>
         <br>
         <div> 

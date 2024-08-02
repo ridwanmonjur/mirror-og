@@ -38,6 +38,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/user/firebase', [ChatController::class, 'getFirebaseUsers'])->name('user.firebase.readAll');
         Route::post('/user/{id}/banner', [UserController::class, 'replaceBanner'])->name('participant.userBanner.action');
         Route::post('/user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
+        Route::post('/card/intent', [StripeController::class,  'stripeCardIntentCreate'])->name('stripe.stripeCardIntentCreate');
+    
     });
 });
 
@@ -75,12 +77,7 @@ Route::group(['prefix' => 'organizer'], function () {
     });
 });
 
-Route::name('stripe.')
-    ->controller(StripeController::class)
-    ->prefix('stripe')
-    ->group(function () {
-        Route::post('card/intent', 'stripeCardIntentCreate')->name('stripeCardIntentCreate');
-    });
+
 
 Route::post('/event/{id}/invitation', [OrganizerInvitationController::class, 'store'])->name('event.invitation.store');
 
