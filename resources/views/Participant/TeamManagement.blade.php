@@ -121,7 +121,7 @@
         </div>
 
         <div class="tab-content pb-4 outer-tab" id="Members">
-            @include('Participant.__Partials.MemberView')
+            @include('Participant.__Partials.TeamManagementMemberView')
         </div>
 
         @php
