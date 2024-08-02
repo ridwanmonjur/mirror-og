@@ -64,7 +64,7 @@
                                 </button>
                                 <div onclick="event.stopPropagation();" class="dropdown-menu px-3"
                                     aria-labelledby="dropdownFilterSort">
-                                    <p class="mb-1">Choose a date of birth to filter team creation date</p>
+                                    <p class="mb-1">Choose a date to filter team by creation time</p>
                                     <input type="date" class="form-control" name="created_at">
                                     <button id="created_atResetButton" type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light"
                                         onclick="
@@ -262,7 +262,7 @@
         // Elements
         let newTeamsForm = document.getElementById('newTeamsForm');
         let filteredSortedTeams = [];
-        let newTeamsFormKeys = ['sortKeys', 'created_at', 'region', 'status'];
+        let newTeamsFormKeys = ['sortKeys', 'created_at', 'region', 'status', 'membersCount'];
         let sortKeysInput = document.getElementById("sortKeys");
 
         let teamListServer = document.getElementById('teamListServer');

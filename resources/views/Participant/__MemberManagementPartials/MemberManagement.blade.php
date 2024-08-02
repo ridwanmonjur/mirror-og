@@ -314,14 +314,14 @@
                             class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
                         >
                             @foreach([
-                                ['title' => 'Team member', 'value' => 'member'],
+                                ['title' => 'Team member', 'value' => 'accepted'],
                                 ['title' => 'Pending invite', 'value' => 'pending'],
                                 ['title' => 'Rejected invite', 'value' => 'rejected'],
                                 ['title' => 'Left team', 'value' => 'left'],
                             ] as $status)
                                 <div class="px-3 py-1" style="width: 200px;">
                                     <input
-                                        type="checkbox" name="status" value="{{$status['value']}}"
+                                        type="checkbox" checked name="status" value="{{$status['value']}}"
                                     >
                                     <label for="status">{{$status['title']}}</label>
                                 </div>
@@ -366,12 +366,12 @@
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('recent');">
                             <label class="me-3 cursor-pointer" for="recent">Recent</label>
                         </div>
-                        <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('age');">
+                        {{-- <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('birthDate');">
                             <label class="me-3 cursor-pointer" for="age">Age</label>
                         </div>
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('region');">
                             <label class="me-3 cursor-pointer" for="region">Region</label>
-                        </div>
+                        </div> --}}
                         <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('name');">
                             <label class="me-3 cursor-pointer" for="prize">Name</label>
                         </div>
