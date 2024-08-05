@@ -11,12 +11,18 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @include('__CommonPartials.HeadIcon')
 </head>
-
-<body>
+@php
+    $isRedirect = isset($redirect) && $redirect;
+@endphp
+<body
+    @style(["min-height: 100vh;" => $isRedirect])
+>
     @include('__CommonPartials.NavbarGoToSearchPage')
-    <main class="main2">
+    <main 
+        @style(["height: 95vh" => $isRedirect])
+     class="main2">
         <input type="hidden" name="isRedirectInput" id="isRedirectInput" value="{{isset($redirect) && $redirect}}">
-        @if (isset($redirect) && $redirect)
+        @if ($isRedirect)
               <form method="POST" action="{{ route('participant.memberManage.action') }}">
                 @csrf
                 <input type="hidden" value="{{$eventId}}" name="eventId">
@@ -79,7 +85,7 @@
         <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
 
         @include('Participant.__MemberManagementPartials.MemberManagement')
-        @if (isset($redirect) && $redirect)
+        @if ($isRedirect)
             <div class="d-flex box-width back-next mb-5">
                 <button onclick="goBackScreens()" type="button"
                     class="btn border-dark rounded-pill py-2 px-4"> Back </button>
@@ -87,6 +93,7 @@
                     class="btn btn-primary text-light rounded-pill py-2 px-4"
                     onclick=""> Next > </button>
             </div>
+        @else 
             <br><br><br><br><br><br>
         @endif
     </main>

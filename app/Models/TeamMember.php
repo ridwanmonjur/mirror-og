@@ -25,6 +25,7 @@ class TeamMember extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    
     public function payments()
     {
         return $this->hasMany(ParticipantPayment::class, 'team_members_id', 'id');

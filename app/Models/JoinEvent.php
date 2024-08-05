@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class JoinEvent extends Model
@@ -52,15 +53,8 @@ class JoinEvent extends Model
         return $this->hasMany(EventJoinResults::class, 'join_events_id', 'id');
     }
 
-    public function eventTier()
-    {
-        return $this->hasOneThrough(EventTier::class, EventDetail::class, 'id', 'id', 'event_details_id', 'event_tier_id');
-    }
 
-    public function participantPayments()
-    {
-        return $this->hasMany(ParticipantPayment::class, 'join_events_id');
-    }
+ 
 
     public static function getJoinEventsForTeam($team_id)
     {
@@ -167,61 +161,91 @@ class JoinEvent extends Model
 
         return $joint;
     }
-
-    public static function getJoinEventsAndIds($teamId, $invitationListIds, $whereIn = true)
+    
+    public static function fetchJoinEvents($teamId, $invitationListIds = [], $eventId = null)
     {
+        $fixJoinEvents = function(Collection $eventList): array
+        {
+            $organizerIdList = $eventIdList = [];
+
+            $eventList->each(function ($event) use (&$organizerIdList, &$eventIdList) {
+                $organizerIdList[] = $event->eventDetails->user_id;
+                $eventIdList[] = $event->id;
+            });
+
+            return [ $eventIdList, $organizerIdList ];
+        };
+
         $query = static::where('team_id', $teamId);
+        $invitedEvents = $joinEvents = collect();
+        $invitedEventOrganizerIds = $joinEventOrganizerIds = $invitedIds = $joinIds = []; 
+        $withClause = [
+            'eventDetails', 'eventDetails.tier', 'eventDetails.user', 'eventDetails.game', 'members.payments', 'members.user',
+        ];
 
-        if ($whereIn) {
-            $query->whereIn('event_details_id', $invitationListIds);
+        if (!is_null($eventId)) {
+            $joinEvents = $query->where('event_details_id', $eventId)->get();
+            $invitedEvents = null;
         } else {
-            $query->whereNotIn('event_details_id', $invitationListIds);
+
+            $joinEvents = $query->whereNotIn('event_details_id', $invitationListIds)->with($withClause)->get();
+            $invitedEvents =  static::where('team_id', $teamId)
+                ->whereIn('event_details_id', $invitationListIds)->with($withClause)
+                ->get();
+        }
+        [$joinIds, $joinEventOrganizerIds] = $fixJoinEvents($joinEvents);
+        [$invitedIds, $invitedEventOrganizerIds] = $fixJoinEvents($invitedEvents);
+        $eventIds = [...$joinIds, ...$invitedIds];
+
+        if (!is_null($eventId)) {
+            $groupedPaymentsByEvent = $groupedPaymentsByEventAndTeamMember = [];
+        } else {
+            $groupedPaymentsByEvent =  ParticipantPayment::select('join_events_id', DB::raw('SUM(payment_amount) as total_payment_amount'))
+                ->whereIn('join_events_id', $eventIds)
+                ->groupBy('join_events_id')
+                ->get()
+                ->pluck('total_payment_amount', 'join_events_id');
+                
+            $groupedPaymentsByEventAndTeamMember =  ParticipantPayment::select('join_events_id', 'team_members_id', DB::raw('SUM(payment_amount) as total_payment_amount'))
+                ->whereIn('join_events_id', $eventIds)
+                ->groupBy('join_events_id', 'team_members_id')
+                ->get()
+                ->groupBy('join_events_id')
+                ->map(function ($group) {
+                    return $group->pluck('total_payment_amount', 'team_members_id');
+                });
         }
 
-        $joinEvents = $query->with([
-            'eventDetails', 'eventDetails.tier', 'eventDetails.user', 'eventDetails.game', 'participantPayments', 'participantPayments.members.user',
-        ])
-            ->withSum('participantPayments', 'payment_amount')
-            ->groupBy('event_details_id')
-            ->get();
-
-        // dd($joinEvents);
-
-        foreach ($joinEvents as $joinEvent) {
-            $joinEvent->status = $joinEvent->eventDetails->statusResolved();
-            $joinEvent->tier = $joinEvent->eventDetails->tier;
-            $joinEvent->game = $joinEvent->eventDetails->game;
-        }
-
-        $joinEventIds = $joinEvents->pluck('eventDetails.user.id')->toArray();
-
-        return [
-            $joinEventIds,
-            $joinEvents,
+        return [ 
+            $joinEventOrganizerIds, $joinEvents, $invitedEventOrganizerIds,
+            $invitedEvents, $groupedPaymentsByEvent, $groupedPaymentsByEventAndTeamMember,
         ];
     }
+    
 
-    public static function processEvents($events, $isFollowing)
+    public static function processEvents(Collection $events, array $isFollowing): array
     {
-        $activeEvents = [];
-        $historyEvents = [];
+        $activeEvents = collect();
+        $historyEvents = collect();
 
-        foreach ($events as $joinEvent) {
+        $events->each(function ($joinEvent) use ($isFollowing, $activeEvents, $historyEvents) {
             $joinEvent->status = $joinEvent->eventDetails->statusResolved();
             $joinEvent->tier = $joinEvent->eventDetails->tier;
             $joinEvent->game = $joinEvent->eventDetails->game;
             $joinEvent->isFollowing = array_key_exists($joinEvent->eventDetails->user_id, $isFollowing);
 
             if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
-                $activeEvents[] = $joinEvent;
+                $activeEvents->push($joinEvent);
             } elseif ($joinEvent->status === 'ENDED') {
-                $historyEvents[] = $joinEvent;
+                $historyEvents->push($joinEvent);
             }
-        }
+        });
 
-        // dd($events, $activeEvents, $historyEvents);
-
-        return ['joinEvents' => $events, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents];
+        return [
+            'joinEvents' => $events,
+            'activeEvents' => $activeEvents,
+            'historyEvents' => $historyEvents,
+        ];
     }
 
     public static function hasJoinedByOtherTeamsForSameEvent($eventId, $userId, $status)

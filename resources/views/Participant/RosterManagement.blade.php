@@ -12,9 +12,13 @@
     @include('__CommonPartials.HeadIcon')
 </head>
 
-<body>
+<body
+    @style(["min-height: 100vh;" => $isRedirect])
+>
     @include('__CommonPartials.NavbarGoToSearchPage')
-    <main class="main2">
+    <main 
+        @style(["height: 95vh" => $isRedirect])
+     class="main2">
         <input type="hidden" name="isRedirectInput" id="isRedirectInput" value="{{$isRedirect}}">
 
     @if ($isRedirect)
@@ -202,6 +206,7 @@
                     class="btn btn-primary text-light rounded-pill py-2 px-4"
                     onclick="document.getElementById('manageRegistrationUrl')?.click();"> Next > </button>
             </div>
+        @else
             <br><br><br><br><br><br>
         @endif
     </main>

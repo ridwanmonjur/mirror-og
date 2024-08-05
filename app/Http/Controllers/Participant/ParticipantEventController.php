@@ -15,6 +15,7 @@ use App\Models\TeamMember;
 use App\Models\User;
 use ErrorException;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -184,27 +185,15 @@ class ParticipantEventController extends Controller
                     $query->where('user_id', $user_id)->where('status', 'accepted');
                 });
             });
-        })->with([
-            'members' => function ($query) {
-                $query->where('status', 'accepted')->with('user');
-            },
-            'invitationList', 'members.payments' => function ($query) {
-                $query
-                    ->groupBy('team_members_id')
-                    ->select('team_members_id', DB::raw('SUM(payment_amount) as total_payment'));
-            },
-        ])->first();
-
-        $paymentsByMemberId = [];
-        foreach ($selectTeam->members as $member) {
-            if ($member->payments->isNotEmpty()) {
-                $firstPayment = $member->payments->first();
-                $paymentsByMemberId[$member->id] = $firstPayment->total_payment;
-            } else {
-                $paymentsByMemberId[$member->id] = 0;
-            }
-        }
-
+        })->with(
+            $request->eventId? [] : [
+                'members' => function ($query) {
+                    $query->where('status', 'accepted')->with('user');
+                },
+                'invitationList'
+            ]
+        )->first();
+        $groupedPaymentsByEventAndTeamMember = [];
         $member = TeamMember::where('user_id', $user_id)->select('id')->get()->first();
 
         if ($selectTeam) {
@@ -217,18 +206,19 @@ class ParticipantEventController extends Controller
                 $isRedirect = false;
                 $eventId = null;
             }
+            [
+                $joinEventOrganizerIds, $joinEvents, $invitedEventOrganizerIds,
+                $invitedEvents, $groupedPaymentsByEvent, $groupedPaymentsByEventAndTeamMember,
+            ] = JoinEvent::fetchJoinEvents($id, $invitationListIds, $request->eventId);
 
-            [$joinEventUserIds, $joinEvents] = JoinEvent::getJoinEventsAndIds($id, $invitationListIds, false);
-            [$invitedEventUserIds, $invitedEvents] = JoinEvent::getJoinEventsAndIds($id, $invitationListIds, true);
-
-            $userIds = array_unique(array_merge($joinEventUserIds, $invitedEventUserIds));
+            $userIds = array_unique(array_merge($joinEventOrganizerIds, $invitedEventOrganizerIds));
             $followCounts = OrganizerFollow::getFollowCounts($userIds);
             $isFollowing = OrganizerFollow::getIsFollowing($user_id, $userIds);
             ['joinEvents' => $joinEvents, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents]
                 = JoinEvent::processEvents($joinEvents, $isFollowing);
 
             return view('Participant.RegistrationManagement',
-                compact('selectTeam', 'invitedEvents', 'followCounts', 'paymentsByMemberId', 'member', 
+                compact('selectTeam', 'invitedEvents', 'followCounts', 'groupedPaymentsByEvent', 'groupedPaymentsByEventAndTeamMember', 'member', 
                     'joinEvents', 'isFollowing', 'isRedirect', 'eventId'
                 )
             );

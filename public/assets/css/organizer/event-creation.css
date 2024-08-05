@@ -915,7 +915,6 @@ input[type="submit"]:active {
 
 body{
     height: auto;
-    overflow: auto;
 }
 
 @media screen and (min-width: 700px) {
@@ -941,7 +940,6 @@ body{
 @media screen and (min-width: 1000px) {
     body{
         height: 100vh;
-        overflow: hidden;
     }
 
     .event_extra {

@@ -196,9 +196,12 @@
             borderRadius: '0px',
             colorPrimary: 'black',
             colorBackground: '#ffffff',
-        },
+            borderRadius: '10px'
+            
+                    },
         rules: {
             '.Input, .Block': {
+                padding: '8px',
                 backgroundColor: 'transparent',
                 border: '1.5px solid var(--colorPrimary)'
             }
@@ -208,10 +211,10 @@
         type: 'accordion',
     };
     let addressElementOptions = {
-        mode: 'shipping',
-        blockPoBox: false,
+        mode: 'billing',
+        blockPoBox: true,
         fields: {
-            phone: 'never',
+            phone: 'always',
         },
     };
 

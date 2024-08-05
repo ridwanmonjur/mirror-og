@@ -1,8 +1,8 @@
 @php
     $random_int = rand(0, 999);
-    $total = $joinEvent->tier->tierEntryFee * $joinEvent->tier->tierTeamSlot;
-    $exisitngSum = $joinEvent->participant_payments_sum_payment_amount ?? 0;
-    // dd($exisitngSum);
+    $total = $joinEvent->tier->tierEntryFee * 5;
+    $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
+    $individualContributionTotal = 0;
 
     $pedning = $total - $exisitngSum;
     $percent = round(($exisitngSum * 100) / $total);
@@ -30,6 +30,10 @@
                 </thead>
                 <tbody>
                     @foreach($selectTeam->members as $member)
+                        @php
+                            $memberContribution = $groupedPaymentsByEventAndTeamMember[$joinEvent->id][$member->id] ?? 0;
+                            $individualContributionTotal += $memberContribution;
+                        @endphp
                         <tr style="border-collapse: seperate !important; border-spacing: 0 1em !important;">
                             <td class="pe-3 pb-2">
                                 <img
@@ -40,10 +44,10 @@
                                 {{$member->user->name}}
                             </td>
                             <td class="pe-3 pb-2">
-                                RM {{$paymentsByMemberId[$member->id] ?? 0}}
+                                RM {{$memberContribution ?? 0}}
                             </td>
                             <td class="pe-2 pb-2">
-                                {{round($paymentsByMemberId[$member->id]*100/$total, 2) ?? 0}}%
+                                {{round(($memberContribution?? 0) *100 / $total, 2) ?? 0}}%
                             </td>
                             <td class="ps-3 pe-2 pb-2">
                                 <a href="{{route('public.participant.view', ['id' => $member->user->id])}}" class="text-right">
@@ -55,6 +59,9 @@
                             </td>
                         </tr>
                     @endforeach
+                    @if ($individualContributionTotal != $total) 
+                        <p>Another member made the remaining payment...</p>
+                    @endif
                 </tbody>
             </table>
         </p>
