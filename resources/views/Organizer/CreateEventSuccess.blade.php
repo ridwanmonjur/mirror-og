@@ -5,7 +5,6 @@
         <main>
             <div>
                 <div>
-                    @csrf
                     @include('Organizer.__CreateEditPartials.CreateEventSuccessTimelineBox')
                     @include('Organizer.__CreateEditPartials.CreateEventSuccess', ['event' => $event])
                 </div>

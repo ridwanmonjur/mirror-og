@@ -25,7 +25,7 @@ function bladeGetPaymentLogos($logoType)
 
     $logo = $logoName[$logoType];
 
-    return config("constants.$logo");
+    return config("constants.{$logo}");
 }
 
 function fixTimeToRemoveSeconds($time)
@@ -94,7 +94,6 @@ function bladeGenerateEventStartEndDateStr($startDate, $startTime)
 
 function bladeEventTierImage($eventTier)
 {
-
     if ($eventTier) {
         $eventTierLower = strtolower($eventTier);
         $eventTierLowerImg = asset('/assets/images/'.$eventTierLower.'.png');
@@ -121,21 +120,21 @@ function trustedBladeHandleImageFailure()
 {
     $imgFailure = asset('assets/images/404.png');
 
-    return "onerror=\"this.onerror=null;this.src='$imgFailure';\"";
+    return "onerror=\"this.onerror=null;this.src='{$imgFailure}';\"";
 }
 
 function trustedBladeHandleImageFailureResize()
 {
     $imgFailure = asset('assets/images/404.png');
 
-    return "onerror=\"this.onerror=null;this.width='500px';this.height='50px';this.src='$imgFailure';\"";
+    return "onerror=\"this.onerror=null;this.width='500px';this.height='50px';this.src='{$imgFailure}';\"";
 }
 
 function trustedBladeHandleImageFailureBanner()
 {
     $imgFailure = asset('assets/images/404.png');
 
-    return "onerror=\"this.onerror=null;this.src='$imgFailure';\"";
+    return "onerror=\"this.onerror=null;this.src='{$imgFailure}';\"";
 }
 
 function bladeEventGameImage($eventBanner)
@@ -151,9 +150,7 @@ function bladeEventGameImage($eventBanner)
 
 function bladeEventTowerLowerClass($eventTier)
 {
-    $eventTierLower = $eventTier ? strtolower($eventTier) : 'no-tier';
-
-    return $eventTierLower;
+    return $eventTier ? strtolower($eventTier) : 'no-tier';
 }
 
 function bladeOrdinalPrefix($number)

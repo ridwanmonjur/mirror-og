@@ -28,8 +28,8 @@ class ChangePositionStrategy
             Log::info('ChangePositions===========>');
             Log::info($parameters);
             $emoji = [1 => '🥇', 2 => '🥈'];
-            $activityLogX = new ActivityLogs;
-            $notificationX = new Notifications;
+            $activityLogX = new ActivityLogs();
+            $notificationX = new Notifications();
             $positionString = bladeOrdinalPrefix($parameters['position']);
             $foundLogs = $activityLogX->findActivityLog($parameters)->get();
             $foundNotifications = $notificationX->findNotifications($parameters)->get();
@@ -54,7 +54,6 @@ class ChangePositionStrategy
                         'log' => $activityLog,
                     ]);
                 }
-
             } else {
                 $parameters['log'] = $activityLog;
                 $activityLogX->createActivityLogs($parameters);
@@ -66,7 +65,8 @@ class ChangePositionStrategy
                 'links' => [[
                     'url' => route('public.event.view', ['id' => $parameters['eventId']]),
                     'name' => 'View event',
-                ]],
+                ],
+                ],
             ];
 
             if (isset($foundNotifications[0])) {
@@ -98,8 +98,8 @@ class AddAwardStrategy
             //     'action' => 'Position',
             //     'teamName' => $request->teamName
             // ]));
-            $notificationX = new Notifications;
-            $activityLogX = new ActivityLogs;
+            $notificationX = new Notifications();
+            $activityLogX = new ActivityLogs();
             $notificationLog = <<<HTML
                 <span class="notification-gray"> You achieved {$parameters['award']} in the team, 
                     <span class="notification-black">{$parameters['teamName']}</span>.
@@ -121,7 +121,8 @@ class AddAwardStrategy
                 'links' => [[
                     'url' => route('public.event.view', ['id' => $parameters['eventId']]),
                     'name' => 'View event',
-                ]],
+                ],
+                ],
             ];
 
             $notificationX->createNotifications($parameters);
@@ -143,8 +144,8 @@ class AddAchievementStrategy
             // 'object_id' => $rowId,
             // 'action' => 'Position',
             // 'teamName' => $request->teamName
-            $notificationX = new Notifications;
-            $activityLogX = new ActivityLogs;
+            $notificationX = new Notifications();
+            $activityLogX = new ActivityLogs();
             $notificationLog = <<<HTML
                 <span class="notification-gray"> You achieved {$parameters['achievement']} in the team, 
                     <span class="notification-black">{$parameters['teamName']}</span>.
@@ -166,7 +167,8 @@ class AddAchievementStrategy
                 'links' => [[
                     'url' => route('public.event.view', ['id' => $parameters['eventId']]),
                     'name' => 'View event',
-                ]],
+                ],
+                ],
             ];
 
             $notificationX->createNotifications($parameters);
@@ -190,9 +192,9 @@ class DeleteAwardStrategy
             //     'action' => 'Position',
             //     'teamName' => $request->teamName
             // ]));
-            $activityLogX = new ActivityLogs;
+            $activityLogX = new ActivityLogs();
             $activityLogX->findActivityLog($parameters)->delete();
-            $notificationX = new Notifications;
+            $notificationX = new Notifications();
             $notificationX->findNotifications($parameters)->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -214,9 +216,9 @@ class DeleteAchievementStrategy
             //     'action' => 'Position',
             //     'teamName' => $request->teamName
             // ]));
-            $activityLogX = new ActivityLogs;
+            $activityLogX = new ActivityLogs();
             $activityLogX->findActivityLog($parameters)->delete();
-            $notificationX = new Notifications;
+            $notificationX = new Notifications();
             $notificationX->findNotifications($parameters)->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -247,7 +249,7 @@ class HandleResults implements ShouldQueue
         if (! class_exists($strategyClass)) {
             throw new \InvalidArgumentException("Strategy class {$strategyClass} does not exist.");
         }
-        $strategy = new $strategyClass;
+        $strategy = new $strategyClass();
         $strategy->handle($this->parameters);
     }
 }

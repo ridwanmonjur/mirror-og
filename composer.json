@@ -24,19 +24,15 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
-        "codeception/codeception": "^5.1",
-        "codeception/module-asserts": "^3.0",
-        "codeception/module-laravel": "^3.1",
-        "codeception/module-phpbrowser": "*",
-        "codeception/module-rest": "^3.3",
-        "codeception/module-webdriver": "^4.0",
         "doctrine/dbal": "^3.6",
         "fakerphp/faker": "^1.9.1",
+        "larastan/larastan": "^2.0",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "laravel/ui": "^4.2",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
+        "nunomaduro/phpinsights": "^2.11",
         "phpunit/phpunit": "^10.1",
         "spatie/laravel-ignition": "^2.0"
     },
@@ -62,7 +58,10 @@
             "chmod -R ug+rwx storage bootstrap/cache"
         ],
         "pint": "./vendor/bin/pint",
-        "pint:test": "./vendor/bin/pint",
+        "stan": "./vendor/bin/phpstan analyse --memory-limit=2G",
+        "pint:fix": "./vendor/bin/pint",
+        "insights": "php artisan insights",
+        "insights:fix": "php artisan insights --fix",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
@@ -90,7 +89,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "minimum-stability": "stable",

@@ -9,10 +9,11 @@ class UserProfile extends Model
 {
     use HasFactory;
 
-    protected $table = 'user_profile';
-    protected $fillable = ['frameColor', 'backgroundColor', 'backgroundGradient', 'fontColor', 'user_id'];
-
     public $timestamps = false;
+
+    protected $table = 'user_profile';
+
+    protected $fillable = ['frameColor', 'backgroundColor', 'backgroundGradient', 'fontColor', 'user_id'];
 
     public function generateStyles()
     {

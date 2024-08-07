@@ -91,6 +91,7 @@ class ParticipantCheckoutController extends Controller
                         'payment_amount' => $paymentIntent['amount'] / 100,
                         'payment_id' => $transaction->id,
                     ]);
+
                     $joinEvent = JoinEvent::select('id', 'event_details_id', 'payment_status')->findOrFail($paymentIntent['metadata']['joinEventId']);
                     $event = EventDetail::select(['id', 'event_tier_id'])
                         ->where('id', $joinEvent->event_details_id)

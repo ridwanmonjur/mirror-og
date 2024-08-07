@@ -64,24 +64,14 @@
     let copyUrl = "{{ route('event.show', $event->id) }}";
     const copyUtil = () => {
         navigator.clipboard.writeText(copyUrl).then(function() {
-            Swal.fire({
-                toast: true,
-                position: 'top-right',
+            Toast.fire({
                 icon: 'success',
-                title: 'Copied!',
                 text: 'Event url copied to clipboard',
-                showConfirmButton: false,
-                timer: 1500,
-                customClass: {
-                    popup: 'colored-toast'
-                },
-                timerProgressBar: true
-            })
+            });
 
-        }, function(err) {
-            console.error('Could not copy text to clipboard: ', err);
         });
-    }
+    };
+
     let shareUrl = document.querySelectorAll('.js-shareUrl');
     for (let i = 0; i < shareUrl.length; i++) {
         shareUrl[i].addEventListener('click', copyUtil, false);

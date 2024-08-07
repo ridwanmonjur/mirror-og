@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('user_profile', function (Blueprint $table) {
-            if (!Schema::hasColumn('user_profile', 'id')) {
+            if (! Schema::hasColumn('user_profile', 'id')) {
                 $table->id();
             }
 
-            if (!Schema::hasColumn('user_profile', 'user_id')) {
+            if (! Schema::hasColumn('user_profile', 'user_id')) {
                 $table->unsignedBigInteger('user_id');
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             }
@@ -32,7 +32,7 @@ return new class extends Migration
             if (Schema::hasColumn('user_profile', 'id')) {
                 $table->dropColumn('id');
             }
-            
+
             if (Schema::hasColumn('user_profile', 'user_id')) {
                 $table->dropConstrainedForeignId('user_id');
             }

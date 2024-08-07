@@ -21,7 +21,7 @@ Route::get('/', [AuthController::class, 'showLandingPage'])->name('landing.view'
 Route::get('/hello', function () {
     return view('Email.reset', [
         'token' => 1234,
-        'imageLogo' => asset('assets/images/logo-default.png')
+        'imageLogo' => asset('assets/images/logo-default.png'),
     ]);
 });
 // Forget, reset password
@@ -120,6 +120,8 @@ Route::group(['prefix' => 'participant'], function () {
             // Event management
             Route::get('/event/{id}/team/{teamId}/manage/roster', [ParticipantTeamController::class, 'rosterMemberManagement'])
                 ->middleware('prevent-back-history')->name('participant.roster.manage');
+            Route::post('/event/{id}/team/{teamId}/manage/roster', [ParticipantEventController::class, 'showSuccess'])
+                ->middleware('prevent-back-history')->name('participant.event.success');
             Route::post('/event/member', [ParticipantTeamController::class, 'teamMemberManagementRedirected'])->name('participant.memberManage.action');
             Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.event.view');
             Route::post('/event/{id}/join/team/select', [ParticipantEventController::class, 'selectTeamToJoinEvent'])->name('participant.selectTeamToJoin.action');

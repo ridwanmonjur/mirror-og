@@ -1,5 +1,4 @@
 /*! purgecss start ignore */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
 
 .text-center {
@@ -86,7 +85,6 @@ svg{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
 }
 
 .d-none {
@@ -590,7 +588,7 @@ h5 {
     }
 
     h2.swal2-title, .swal2-title, div:where(.swal2-container) h2:where(.swal2-title) {
-        font-size: 1.5rem !important;
+        font-size: 1.1rem !important;
     
     }
 }

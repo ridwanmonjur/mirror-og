@@ -23,8 +23,6 @@ window.loadBearerCompleteHeader = function() {
     };
 };
 
-window.Swal = Swal;
-
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-right',
@@ -35,7 +33,6 @@ const Toast = Swal.mixin({
     timerProgressBar: true
 })
 
-window.Toast = Toast;
 
 window.toastError = function (message, error = null) {
     console.error(error)
@@ -59,7 +56,6 @@ window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => {
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
         confirmButtonColor: "#43A4D7",
-        
     }).then((result) => {
         if (result.isConfirmed) {
             resultConfirmedCb()
@@ -104,8 +100,5 @@ window.loadMessage = () => {
     localStorage.removeItem('tab');
 }
 
-import AOS from 'aos'
-window.AOS = AOS;
-AOS.init({
-    duration: 700
-});
+window.Toast = Toast;
+window.Swal = Swal;

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamp('expiry_date')->nullable();
             $table->timestamps();
             $table->foreignId('reply_id')->nullable()->constrained('messages')->onDelete('set null');
-            $table->timestamp('read_at')->nullable(); 
+            $table->timestamp('read_at')->nullable();
         });
     }
 

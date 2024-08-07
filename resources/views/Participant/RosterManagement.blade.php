@@ -12,9 +12,15 @@
     @include('__CommonPartials.HeadIcon')
 </head>
 
-<body>
+<body
+    @style(["min-height: 100vh;" => $isRedirect])
+>
     @include('__CommonPartials.NavbarGoToSearchPage')
-    <main class="main2">
+    <main 
+        @style(["height: 95vh" => $isRedirect])
+     class="main2">
+        <input type="hidden" name="isRedirectInput" id="isRedirectInput" value="{{$isRedirect}}">
+
     @if ($isRedirect)
         <form method="POST" action="{{ route('participant.memberManage.action') }}">
             @csrf
@@ -72,6 +78,7 @@
         </div>
     @else
         @include('Participant.__Partials.TeamHead') 
+        <br>
     @endif
     @php
         use Carbon\Carbon;
@@ -163,20 +170,20 @@
                                         Not in roster
                                     @endif
                                 </td>
-                                <td class="colorless-col">
+                                <td class="colorless-col pl-4">
                                     @if (!$isRoster)
                                         <button id="add-{{$member->id}}" class="gear-icon-btn" onclick="approveMember({{$member->id}})">
                                             ✔
                                         </button>
                                     @else
                                         <button id="remove-{{$member->id}}" class="gear-icon-btn" onclick="disapproveMember({{$member->id}})">
-                                        ✘
+                                            ✘
                                         </button>
                                     @endif
                                 </td>
-                                <td  class="colorless-col">
+                                <td  class="colorless-col px-0 mx-0">
                                     @if (!$captain || $member->id != $captain->team_member_id)
-                                        <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover ml-2" onclick="capatainMember({{$member->id}})">
+                                        <button id="captain-{{$member->id}}" class="gear-icon-btn invisible-until-hover mx-0 px-0" onclick="capatainMember({{$member->id}})">
                                             <img height="30" width="30" src="{{asset('assets/images/participants/crown-straight.png')}}">
                                         </button>
                                     @endif
@@ -199,6 +206,7 @@
                     class="btn btn-primary text-light rounded-pill py-2 px-4"
                     onclick="document.getElementById('manageRegistrationUrl')?.click();"> Next > </button>
             </div>
+        @else
             <br><br><br><br><br><br>
         @endif
     </main>
@@ -231,6 +239,12 @@
         };
 
         function reloadUrl(currentUrl, buttonName) {
+            let isRedirect = document.getElementById("isRedirectInput")?.value;
+            if (isRedirect) {
+                document.getElementById('manageRosterUrl')?.click();
+                return;
+            }
+            
             if (currentUrl.includes('?')) {
                 currentUrl = currentUrl.split('?')[0];
             } 

@@ -7,9 +7,7 @@ use Tests\Support\AcceptanceTester;
 
 class SigninCest
 {
-    public function _before(AcceptanceTester $I)
-    {
-    }
+    public function _before(AcceptanceTester $I) {}
 
     // tests
     public function tryToTestOrganizerLogin(AcceptanceTester $I)

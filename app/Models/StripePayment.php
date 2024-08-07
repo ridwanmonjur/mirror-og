@@ -48,9 +48,9 @@ class StripePayment
     {
         if (array_key_exists('customer', $arr) && ! empty($arr['customer'])) {
             return $this->stripeClient->paymentMethods->all($arr);
-        } else {
-            return [];
         }
+
+        return [];
     }
 
     public function retrieveStripePaymentByPaymentId($paymentId)

@@ -16,11 +16,6 @@ class User extends Authenticatable implements FilamentUser
 
     public $timestamps = false;
 
-    public function canAccessFilament(): bool
-    {
-        return $this->role == 'ADMIN';
-    }
-
     public static $filamentUserColumn = 'is_filament_user';
 
     /**
@@ -46,6 +41,11 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function canAccessFilament(): bool
+    {
+        return $this->role === 'ADMIN';
+    }
 
     public function address()
     {
@@ -97,38 +97,81 @@ class User extends Authenticatable implements FilamentUser
         return $this->morphMany(ActivityLogs::class, 'subject');
     }
 
-    public static function getParticipants($request, $teamId)
+    public static function getParticipants($request)
     {
+        $teamId = $request->input('teamId');
+        $status = $request->input('status');
+        $search = trim($request->input('search'));
+        $region = trim($request->input('region'));
+        $birthDate = $request->input('birthDate');
+        $sortType = trim($request->input('sortType'));
+        $sortKeys = trim($request->input('sortKeys'));
+        
+        if (empty($sortKeys) || empty($sortType)) {
+            $sortType = 'asc';
+            $sortKeys = 'recent';
+        }
+    
+        $mapSortKeysToValues = [
+            'name' => 'name',
+            'created_at' => 'created_at',
+            // 'region' => 'participants.region',
+            // 'birthDate' => 'participants.birthday',
+            'recent' => 'id'
+        ];
+        
+        $sortColumn = $mapSortKeysToValues[$sortKeys] ?? 'id'; 
+    
         return self::query()
             ->where('role', 'PARTICIPANT')
             ->select([
                 'id',
-                "email",
-                "role",
-                "userBanner",
+                'email',
+                'role',
+                'userBanner',
                 'name',
             ])
-            ->when($request->has('search'), function ($query) use ($request) {
-                $search = trim($request->input('search'));
-                if (! empty($search)) {
+            ->where(function ($query) use ($search, $status, $teamId) {
+                if (!empty($search)) {
                     $query->where(function ($q) use ($search) {
-                        $q->orWhere('name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%");
+                        $q->orWhere('name', 'LIKE', "%{$search}%")
+                          ->orWhere('email', 'LIKE', "%{$search}%");
+                    });
+                }
+    
+                $countStatus = count($status);
+                if ($countStatus !== 0 && $countStatus !== 4) {
+                    $query->whereHas('members', function ($q) use ($teamId, $status) {
+                        $q->where('team_id', $teamId)
+                          ->whereIn('status', $status);
                     });
                 }
             })
+            ->whereHas('participant', function ($query) use ($region, $birthDate) {
+                if (!empty($region)) {
+                    $query->where('region', $region);
+                }
+    
+                if (!empty($birthDate)) {
+                    $query->whereDate('birthday', '<', $birthDate);
+                }
+            })
             ->with([
-                'participant' => function ($query) use ($teamId) {
+                'participant' => function ($query) {
                     $query->select([
-                        'region_flag', 
-                        'user_id'
+                        'region_flag',
+                        'region',
+                        'birthday',
+                        'user_id',
                     ]);
                 },
                 'members' => function ($query) use ($teamId) {
                     $query->where('team_id', $teamId);
                 },
-            ]);
+            ])
+            ->orderBy($sortColumn, $sortType); 
     }
-
+    
     public function uploadUserBanner($request)
     {
         $requestData = json_decode($request->getContent(), true);
@@ -136,7 +179,7 @@ class User extends Authenticatable implements FilamentUser
 
         $fileContent = base64_decode($fileData['content']);
         $fileNameInitial = 'userBackground-'.time().'.'.pathinfo($fileData['filename'], PATHINFO_EXTENSION);
-        $fileName = "images/user/$fileNameInitial";
+        $fileName = "images/user/{$fileNameInitial}";
         $storagePath = storage_path('app/public/'.$fileName);
         file_put_contents($storagePath, $fileContent);
 
@@ -150,7 +193,7 @@ class User extends Authenticatable implements FilamentUser
     {
         $file = $request->file('backgroundBanner');
         $fileNameInitial = 'userBanner-'.time().'.'.$file->getClientOriginalExtension();
-        $fileName = "images/user/$fileNameInitial";
+        $fileName = "images/user/{$fileNameInitial}";
         $file->storeAs('images/user/', $fileNameInitial);
         $profile->backgroundBanner = $fileName;
         $profile->backgroundColor = null;
@@ -165,10 +208,8 @@ class User extends Authenticatable implements FilamentUser
         if ($fileName) {
             if (Storage::disk('public')->exists($fileName)) {
                 Storage::disk('public')->delete($fileName);
-            } else {
-                // dd("File does not exist");
             }
-        } else {
+            // dd("File does not exist");
         }
     }
 }

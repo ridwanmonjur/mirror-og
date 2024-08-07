@@ -11,11 +11,27 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @include('__CommonPartials.HeadIcon')
 </head>
-
-<body>
+@php
+    $isRedirect = isset($redirect) && $redirect;
+@endphp
+<body
+    @style(["min-height: 100vh;" => $isRedirect])
+>
     @include('__CommonPartials.NavbarGoToSearchPage')
-    <main class="main2">
-        @if (isset($redirect) && $redirect)
+    <main 
+        @style(["height: 95vh" => $isRedirect])
+     class="main2">
+        <input type="hidden" name="isRedirectInput" id="isRedirectInput" value="{{isset($redirect) && $redirect}}">
+        @if ($isRedirect)
+              <form method="POST" action="{{ route('participant.memberManage.action') }}">
+                @csrf
+                <input type="hidden" value="{{$eventId}}" name="eventId">
+                <input type="hidden" value="{{$selectTeam->id}}" name="teamId">
+                <input id="manageMemberButton" type="submit" class="d-none" value="Done">
+                </div>
+            </form>
+            <a class="d-none" id="manageRosterUrl" href="{{route('participant.roster.manage', ['id' => $eventId, 'teamId' => $selectTeam->id, 'redirect' => 'true' ] ) }}"> </a>
+            <a class="d-none" id="manageRegistrationUrl" href="{{route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $eventId ] ) }}"> </a>
             <div class="time-line-box mx-auto" id="timeline-box">
                 <div class="swiper-container text-center">
                     <div class="swiper-wrapper">
@@ -63,9 +79,13 @@
             </div>
         @else
             @include('Participant.__Partials.TeamHead') 
+            <br>
+
         @endif
+        <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
+
         @include('Participant.__MemberManagementPartials.MemberManagement')
-        @if (isset($redirect) && $redirect)
+        @if ($isRedirect)
             <div class="d-flex box-width back-next mb-5">
                 <button onclick="goBackScreens()" type="button"
                     class="btn border-dark rounded-pill py-2 px-4"> Back </button>
@@ -73,17 +93,27 @@
                     class="btn btn-primary text-light rounded-pill py-2 px-4"
                     onclick=""> Next > </button>
             </div>
+        @else 
             <br><br><br><br><br><br>
         @endif
     </main>
     
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
-    <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
-    @include('Participant.__MemberManagementPartials.MemberManagementScripts')
 
     <script>
+        let tabButtonBalueValue = localStorage.getItem("tab");
         let currentTabIndexForNextBack = 0;
+        if (tabButtonBalueValue !== null || tabButtonBalueValue!== undefined){
+            if (tabButtonBalueValue === "PendingMembersBtn") {
+                currentTabIndexForNextBack = 1;
+            }
+
+            if (tabButtonBalueValue === "NewMembersBtn") {
+                currentTabIndexForNextBack = 2;
+            }
+        }
+
         function goBackScreens () {
             if (currentTabIndexForNextBack <=0 ) {
                 Toast.fire({
@@ -179,7 +209,12 @@
 
             localStorage.setItem('success', 'true');
             localStorage.setItem('message', 'Successfully updated user.');
-            localStorage.setItem('tab', buttonName);            
+            localStorage.setItem('tab', buttonName);      
+            let isRedirect = document.getElementById("isRedirectInput")?.value;
+            if (isRedirect) {
+                document.getElementById("manageMemberButton")?.click();
+                return;
+            } 
             window.location.replace(currentUrl);
         }
 

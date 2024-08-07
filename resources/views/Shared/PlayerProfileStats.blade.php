@@ -11,7 +11,6 @@
     <style> 
         main {
             margin: 0;
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             color: #2E4B59;
             min-height: 100vh; 
         }
@@ -57,6 +56,7 @@
         
         <br>
     </main>
+    @livewireScripts
     @stack('script')
         
     <script>

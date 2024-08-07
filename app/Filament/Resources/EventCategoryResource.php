@@ -12,9 +12,9 @@ use Filament\Tables;
 
 class EventCategoryResource extends Resource
 {
-    protected static ?string $model = EventCategory::class;
-
     public static ?string $navigationGroup = 'Manage Event';
+
+    protected static ?string $model = EventCategory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
@@ -22,7 +22,7 @@ class EventCategoryResource extends Resource
     {
         return $form
             ->schema([
-                //
+
                 Forms\Components\TextInput::make('gameTitle')
                     ->required()
                     ->maxLength(255),
@@ -48,7 +48,6 @@ class EventCategoryResource extends Resource
     {
         return $table
             ->columns([
-                //
 
                 Tables\Columns\TextColumn::make('gameTitle')->searchable()->sortable(),
                 Tables\Columns\ImageColumn::make('gameIcon'),
@@ -59,7 +58,7 @@ class EventCategoryResource extends Resource
 
             ])
             ->filters([
-                //
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -72,7 +71,7 @@ class EventCategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
 

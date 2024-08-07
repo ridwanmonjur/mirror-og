@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
 
 :root {
     --timeline-start-width-desktop: 100px;
@@ -387,7 +387,6 @@ input[type="time"] {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
 }
 
 .d-none {
@@ -915,7 +914,6 @@ input[type="submit"]:active {
 
 body{
     height: auto;
-    overflow: auto;
 }
 
 @media screen and (min-width: 700px) {
@@ -941,7 +939,6 @@ body{
 @media screen and (min-width: 1000px) {
     body{
         height: 100vh;
-        overflow: hidden;
     }
 
     .event_extra {

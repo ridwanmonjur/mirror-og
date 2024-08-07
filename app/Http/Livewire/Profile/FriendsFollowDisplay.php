@@ -8,19 +8,23 @@ use Livewire\Component;
 class FriendsFollowDisplay extends Component
 {
     public $currentTab = 'Follower';
+
     public $userProfile = null;
+
     public $userId = 0;
 
     protected $paginationTheme = 'bootstrap';
 
-    public function mount() {
+    public function mount()
+    {
         if ($this->userId) {
             $this->userProfile = User::where('id', $this->userId)
                 ->first();
         }
     }
 
-    public function setTab($currentTab) {
+    public function setTab($currentTab)
+    {
         $this->currentTab = $currentTab;
     }
 

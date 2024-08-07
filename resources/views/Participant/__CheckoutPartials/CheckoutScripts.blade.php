@@ -130,6 +130,8 @@
             });
 
             const json = await response.json();
+             let spinner = document.getElementById('spinner-element');
+            spinner?.remove();
             const clientSecret = json.data.client_secret;
             elements = stripe.elements({
                 clientSecret,
@@ -193,13 +195,14 @@
             colorText: '#30313d',
             colorDanger: '#df1b41',
             fontFamily: 'Ideal Sans, system-ui, sans-serif',
-            spacingUnit: '3px',
-            borderRadius: '20px',
+            borderRadius: '0px',
             colorPrimary: 'black',
             colorBackground: '#ffffff',
+            borderRadius: '20px' 
         },
         rules: {
             '.Input, .Block': {
+                padding: '10px',
                 backgroundColor: 'transparent',
                 border: '1.5px solid var(--colorPrimary)'
             }
@@ -210,9 +213,9 @@
     };
     let addressElementOptions = {
         mode: 'billing',
-        blockPoBox: false,
+        blockPoBox: true,
         fields: {
-            phone: 'never',
+            phone: 'always',
         },
     };
 

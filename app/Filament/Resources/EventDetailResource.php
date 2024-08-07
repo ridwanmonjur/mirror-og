@@ -12,11 +12,11 @@ use Filament\Tables;
 
 class EventDetailResource extends Resource
 {
+    public static ?string $navigationGroup = 'Manage Event';
+
     protected static ?string $model = EventDetail::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
-
-    public static ?string $navigationGroup = 'Manage Event';
 
     public static function form(Form $form): Form
     {
@@ -64,7 +64,7 @@ class EventDetailResource extends Resource
                     ->toggleable()->dateTime(),
             ])
             ->filters([
-                //
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -77,7 +77,7 @@ class EventDetailResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
 

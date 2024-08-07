@@ -29,10 +29,10 @@ class OrganizerInvitationController extends Controller
         $isUserSameAsAuth = true;
 
         if (! $event) {
-            throw new ModelNotFoundException("Event not found with id: $id");
-        } else {
-            return view('Organizer.Invitation', compact('event', 'isUserSameAsAuth', 'teamList', 'user_id', 'game', 'tier', 'type'));
+            throw new ModelNotFoundException("Event not found with id: {$id}");
         }
+
+        return view('Organizer.Invitation', compact('event', 'isUserSameAsAuth', 'teamList', 'user_id', 'game', 'tier', 'type'));
     }
 
     /**

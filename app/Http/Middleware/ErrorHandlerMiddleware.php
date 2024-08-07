@@ -28,19 +28,18 @@ class ErrorHandlerMiddleware
 
             if ($request->expectsJson()) {
                 return response()->json(['error' => $errorMessage], $statusCode);
-            } else {
-                if ($request->is('admin/*')) {
-                    $view = 'Participant.EventNotFound';
-                } elseif ($request->is('participant/*')) {
-                    $view = 'Participant.EventNotFound';
-                } elseif ($request->is('organizer/*')) {
-                    $view = 'Organizer.EventNotFound';
-                } else {
-                    $view = 'Participant.EventNotFound';
-                }
-
-                return response()->view($view, ['statusCode' => $statusCode, 'errorMessage' => $errorMessage], $statusCode);
             }
+            if ($request->is('admin/*')) {
+                $view = 'Participant.EventNotFound';
+            } elseif ($request->is('participant/*')) {
+                $view = 'Participant.EventNotFound';
+            } elseif ($request->is('organizer/*')) {
+                $view = 'Organizer.EventNotFound';
+            } else {
+                $view = 'Participant.EventNotFound';
+            }
+
+            return response()->view($view, ['statusCode' => $statusCode, 'errorMessage' => $errorMessage], $statusCode);
         }
     }
 }

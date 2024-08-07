@@ -11,8 +11,8 @@ class Participant extends Model
     use HasFactory;
 
     protected $fillable = [
-        'birthday', 'user_id', 'domain', 'age', 'bio', 'nickname', 'region', 
-        'region_name', 'region_flag', 'games_data', 'isAgeVisible'
+        'birthday', 'user_id', 'domain', 'age', 'bio', 'nickname', 'region',
+        'region_name', 'region_flag', 'games_data', 'isAgeVisible',
     ];
 
     protected $casts = [

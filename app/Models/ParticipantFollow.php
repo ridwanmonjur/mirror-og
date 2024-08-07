@@ -4,13 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class ParticipantFollow extends Model
 {
     use HasFactory;
 
-    protected $table = "participant_follows";
+    protected $table = 'participant_follows';
 
     protected $fillable = [
         'participant_follower',
@@ -33,7 +32,7 @@ class ParticipantFollow extends Model
             $query->where('participant_follower', $follower)
                 ->where('participant_followee', $followee);
         })
-          
+
             ->first();
     }
 }
