@@ -1,11 +1,9 @@
 
-@import url('https://fonts.googleapis.com/css?family=Dancing+Script');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
 }
 
 
@@ -544,7 +542,6 @@ tr:nth-child(even) .colored-cell {
 }
 
 .cursive-font {
-    font-family: 'Dancing Script', cursive;
     text-align: center;
 }
 

@@ -33,7 +33,6 @@ const Toast = Swal.mixin({
     timerProgressBar: true
 })
 
-window.Toast = Toast;
 
 window.toastError = function (message, error = null) {
     console.error(error)
@@ -101,3 +100,5 @@ window.loadMessage = () => {
     localStorage.removeItem('tab');
 }
 
+window.Toast = Toast;
+window.Swal = Swal;
