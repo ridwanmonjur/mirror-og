@@ -130,6 +130,8 @@
             });
 
             const json = await response.json();
+             let spinner = document.getElementById('spinner-element');
+            spinner?.remove();
             const clientSecret = json.data.client_secret;
             elements = stripe.elements({
                 clientSecret,
@@ -196,12 +198,11 @@
             borderRadius: '0px',
             colorPrimary: 'black',
             colorBackground: '#ffffff',
-            borderRadius: '10px'
-            
-                    },
+            borderRadius: '20px' 
+        },
         rules: {
             '.Input, .Block': {
-                padding: '8px',
+                padding: '10px',
                 backgroundColor: 'transparent',
                 border: '1.5px solid var(--colorPrimary)'
             }

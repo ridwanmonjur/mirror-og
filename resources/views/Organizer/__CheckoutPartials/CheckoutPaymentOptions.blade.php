@@ -1,5 +1,7 @@
-<div class="grid-2-columns mx-4" id="payment-discount-view">
-    <div class="mx-2">
+<div class="row px-5 my-2" id="payment-discount-view">
+    <div class="d-none d-lg-block px-3">
+    </div>
+    <div class="col-12 col-xl-8 px-3">
         <h4>Payment Method</h4>
         @if (session('errorCheckout'))
             <div class="text-red my-2">
@@ -13,12 +15,28 @@
             <div id="cardLogoId" class="payment-element-children-view">
                 <form method="POST" onsubmit="finalizeStripeCardPayment(event);">
                     <input type="hidden" name="user_id" value="{{ $event->userId }}" />
-                    <div>
-                        <div id="address-element" class="my-2"> </div>
-                        <div id="card-element" class="my-2"> </div>
+                    <small style="color: gray;">Please don't reload or leave this page until you see a success/ failed notification.</small>
+                    <br><br>
+                    <div id="spinner-element" class="d-flex justify-content-center mt-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <br><br>
+                            <br><br>
+                            <span class="visually-hidden text-center ">Loading...</span>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-center my-3 d-none" id="submit-button-element">
-                        <button class="oceans-gaming-default-button" type="submit"> Submit </button>
+                    <div class="row w-100">
+                        <div class="col-12 col-lg-6">
+                            <div id="address-element" class="my-2"> </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div id="card-element" class="my-2"> </div>
+                            <div class="d-none d-lg-block">
+                                <br><br><br><br>
+                            </div>
+                            <div class="d-flex justify-content-center my-3 d-none" id="submit-button-element">
+                                <button class="oceans-gaming-default-button" type="submit"> Submit </button>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -99,7 +117,7 @@
                 <div class="accordion-arrows"> @include('Organizer.__CheckoutPartials.AccordionArrows') </div>
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="other-methods-accordion">
-                <div class="grid-4-columns">
+                <div class="grid-4-columns">id="submit-button-element"
                     @foreach (bladeGetPaymentLogos('otherEWallet') as $logo)
                         <div class="position-relative" style="width: min-content;">
                             <img src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
@@ -118,7 +136,7 @@
             </div>
         </div>
     </div>
-    <div class="mx-2 d-none" id="payment-summary">
+    <div class="col-12 col-xl-4" id="payment-summary">
         <h4>Payment Summary</h4>
         <br>
         <div>
@@ -158,10 +176,10 @@
             <div>Promo Code</div>
             <form method="GET">
                 <div class="form-group w-75 d-flex">
-                    <input type="text" name="coupon"
+                    <input type="text" name="coupon" class="px-3 py-0"
                         value="{{ app()->request->coupon ? app()->request->coupon : '' }}">
                     <div class="d-inline-block px-2"></div>
-                    <button class="px-3 oceans-gaming-default-button" style="background-color: #95ADBD;">
+                    <button class="oceans-gaming-default-button" style="background-color: #95ADBD;">
                         <span> Apply </span>
                     </button>
                 </div>

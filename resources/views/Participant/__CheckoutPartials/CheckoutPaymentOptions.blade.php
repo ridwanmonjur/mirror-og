@@ -17,6 +17,13 @@
                     <input type="hidden" name="user_id" value="{{ $event->userId }}" />
                     <small style="color: gray;">Please don't reload or leave this page until you see a success/ failed notification.</small>
                     <br><br>
+                    <div id="spinner-element" class="d-flex justify-content-center mt-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <br><br>
+                            <br><br>
+                            <span class="visually-hidden text-center ">Loading...</span>
+                        </div>
+                    </div>
                     <div class="row w-100">
                         <div class="col-12 col-lg-6">
                             <div id="address-element" class="my-2"> </div>

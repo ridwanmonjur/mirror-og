@@ -23,8 +23,6 @@ window.loadBearerCompleteHeader = function() {
     };
 };
 
-window.Swal = Swal;
-
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-right',
@@ -59,7 +57,6 @@ window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => {
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
         confirmButtonColor: "#43A4D7",
-        
     }).then((result) => {
         if (result.isConfirmed) {
             resultConfirmedCb()
