@@ -62,14 +62,14 @@ input[type="submit"],
 .welcome {
     margin-top: 40px;
     margin-bottom: 80px;
-    font-weight: lighter;
+    font-weight: 400;
     color: #2E4B59 !important;
 }
 
 .welcome p {
     width: 600px;
     margin: auto;
-    font-weight: lighter;
+    font-weight: 400;
     text-overflow: clip;
     font-size: larger;
 }

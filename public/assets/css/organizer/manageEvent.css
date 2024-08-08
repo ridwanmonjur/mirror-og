@@ -95,7 +95,7 @@ input[type="submit"],
     justify-content: space-between;
     margin-top: 20px;
     margin-bottom: 20px;
-    font-weight: lighter;
+    font-weight: 400;
 }
 
 .flexbox-filter {
