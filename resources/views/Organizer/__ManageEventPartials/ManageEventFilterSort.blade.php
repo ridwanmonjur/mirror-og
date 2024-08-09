@@ -1,7 +1,9 @@
-<div class="d-flex justify-content-between w-70s align-items-center flex-wrap">
+<input type="hidden" id="startDate" name="startDate"> 
+<input type="hidden" id="endDate" name="endDate">
+<div class="d-flex justify-content-start w-70s align-items-center flex-wrap mb-3">
     <div class="cursor-pointer me-3 d-inline-block"
         onclick="openElementById('close-option'); openElementById('filter-option');  closeElementById('sort-option');">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-filter mt-2"
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-filter"
             viewBox="0 0 16 16">
             <path
                 d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
@@ -108,8 +110,9 @@
         </div>
 
         <div class="dropdown me-3">
-            <button class="px-3 py-2 button-design-removed" type="button" id="dropdownFilterTier"
-                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="px-3 py-2 button-design-removed position-relative" type="button" id="dropdownFilterDate"
+                aria-haspopup="true" aria-expanded="false"
+            >
                 <span>Date </span>
                 <span class="dropbtn-arrow">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -120,38 +123,19 @@
                 </span>
             </button>
             <div
-                onclick="stopPropagation(event);"; 
-                class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
-            >
-                @foreach([
-                    ['title' => 'Today', 'value' => 'today'],
-                    ['title' => 'Yesterday', 'value' => 'yesterday'],
-                    ['title' => 'This week', 'value' => 'this-week'],
-                    ['title' => 'This month', 'value' => 'this-month'],
-                    ['title' => 'This year', 'value' => 'this-year'],
-                ] as $eventType)
-                    <div class="px-3 py-1" style="width: 200px;">
-                        <input onchange="setFilterForFetch(event, '{{$eventType['title']}}'); " type="checkbox" name="date" value="{{$eventType['value']}}">
-                        <label for="eventType">{{$eventType['title']}}</label>
-                    </div>
-                @endforeach
-                <div class="px-3 py-1 form-row d-none">
-                    <div class="form-group">
-                    <label for="inputEmail4">Start Date</label>
-                    <input type="date" class="form-control" id="inputEmail4" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                    <label for="inputPassword4">End date</label>
-                    <input type="date" class="form-control" id="inputPassword4" placeholder="Password">
-                    </div>
-                </div>
+                onclick="
+                    stopPropagation(event); 
+                "; 
+                class="position-relative top-0 right-0 px-0 py-1" aria-labelledby="dropdownFilterTier"
+                >
+                    <div id="litepicker"> </div>
             </div>
         </div>
 
     </div>
 
     <div class="d-flex justify-content-between" id="insertSortTypeIcon">
-        <div class="cursor-pointer d-inline me-2 mt-2" 
+        <div class="cursor-pointer d-inline me-2" 
             onclick="toggleDropdown('dropdownSortButton'); setFetchSortType(event);"
             >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
@@ -201,4 +185,6 @@
             </div>
         </div>
     </div>
+
+               
 </div>

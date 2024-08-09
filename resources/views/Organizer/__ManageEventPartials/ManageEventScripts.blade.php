@@ -1,6 +1,36 @@
  <script src="{{ asset('/assets/js/models/FetchVariables.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/litepicker@2.0/dist/litepicker.min.js"></script>
 
  <script>
+    var isPickerShown = false;
+    var picker = new Litepicker({ 
+        element: document.getElementById('litepicker'),
+        singleMode: false,
+        autoApply: false,
+        setup: (_picker) => {
+            _picker.on('button:apply', (date1, date2) => {
+                _date1 = `${date1.getDate()}/${date1.getMonth() + 1}/${date1.getFullYear()}`;
+                _date2 = `${date2.getDate()}/${date2.getMonth() + 1}/${date2.getFullYear()}`;
+                console.log({isPickerShown, date1, date2, _date1, _date2});
+                isPickerShown = false;
+                document.getElementById('startDate').value = _date1;
+                document.getElementById('endDate').value = _date2;
+                console.log({_date1, _date2});
+                deleteTagByNameValue('startDate', _date1);
+                deleteTagByNameValue('endDate', _date2);
+                addFilterTags(`Date: ${_date1} - ${_date2}`, 'durationDate', `${_date1}${_date2}`);
+                console.log({isPickerShown});
+            });
+        }
+    });
+
+    function togglePicker(event) {
+        if (event) {
+            picker?.show(); }
+        }
+
+    document.getElementById("dropdownFilterDate")?.addEventListener('click', togglePicker);
+
     const SORT_CONSTANTS = {
         'ASC' : 'asc',
         'DESC': 'desc',
@@ -83,7 +113,7 @@
     function deleteTagByNameValue(name, value){
         let id = `${name}${value}tag`;
         let tagElement = document.getElementById(id);
-        tagElement.remove();
+        tagElement?.remove();
     }
 
     function deleteTagByParent(event, name, value) {
@@ -92,11 +122,11 @@
 
         let filter = fetchVariables.getFilter();
 
-        filter[name] = filter[name].filter(
+        filter[name] = filter[name]?.filter(
             _value => _value != value
         );
 
-        fetchVariables.setFilter(filter);
+        fetchVariables?.setFilter(filter);
         fetchSearchSortFiter();
         fetchVariables.visualize();
     }
@@ -156,7 +186,7 @@
         fetchVariables.visualize();  
     }
 
-    const copyUrlFunction = (copyUrl) => {
+    const copyUrlFunction2 = (copyUrl) => {
         navigator.clipboard.writeText(copyUrl).then(function() {
         }, function(err) {
             console.error('Could not copy text to clipboard: ', err);

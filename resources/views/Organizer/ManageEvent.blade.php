@@ -1,5 +1,6 @@
 @include('Organizer.__Partials.ManageEventHeadTag')
 
+
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
 
