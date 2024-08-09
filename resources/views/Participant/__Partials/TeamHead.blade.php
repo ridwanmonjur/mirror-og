@@ -377,8 +377,8 @@
                                         </button>
                                     </form>
                                 @else 
-                                    <button class="px-2 w-100 h-100 gear-icon-btn-2 fw-bolder pt-1 pb-2 border-1 border-dark border-bottom" type="button">
-                                        <small style="font-size: 0.875rem;" class="ms-2">  
+                                    <button class="px-2 w-100 h-100 gear-icon-btn-2 pt-1 pb-2 border-1 border-dark border-bottom" type="button">
+                                        <small style="font-size: 0.875rem; font-weight: 500;" class="ms-2">  
                                             @if ($isCreator)
                                                 You've created this team
                                             @else
