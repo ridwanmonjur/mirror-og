@@ -301,70 +301,28 @@ class EventDetail extends Model
 
         $eventListQuery->when($request->has('filter'), function ($query) use ($request) {
             $filter = $request->input('filter');
-            if (array_key_exists('eventTier', $filter)) {
-                $query->whereIn('event_tier_id', $filter['eventTier']);
+            if (array_key_exists('eventTier[]', $filter)) {
+                if (isset($filter['eventTier[]'][0])) {
+                    $query->whereIn('event_tier_id', $filter['eventTier[]']);
+                }
             }
 
-            if (array_key_exists('eventType', $filter)) {
-                $query->whereIn('event_type_id', $filter['eventType']);
+            if (array_key_exists('eventType[]', $filter)) {
+                if (isset($filter['eventType[]'][0])) {
+                    $query->whereIn('event_type_id', $filter['eventType[]']);
+                }
             }
 
-            if (array_key_exists('gameTitle', $filter)) {
-                $query->whereIn('event_category_id', $filter['gameTitle']);
+            if (array_key_exists('gameTitle[]', $filter)) {
+                if (isset($filter['gameTitle[]'][0])) {
+                    $query->whereIn('event_category_id', $filter['gameTitle[]']);
+                }  
             }
 
-            if (array_key_exists('date', $filter)) {
-                return $query->where(function ($q) use ($filter) {
-                    if (isset($filter['date'][1])) {
-                        foreach ($filter['date'] as $element) {
-                            switch ($element) {
-                                case 'today':
-                                    $q->orWhereBetween('created_at', [now()->startOfDay(), now()]);
-                                    break;
-                                case 'yesterday':
-                                    $q->orWhereBetween('created_at', [now()->subDay()->startOfDay(), now()->startOfDay()]);
-                                    break;
-                                case 'this-week':
-                                    $q->orWhereBetween('created_at', [now()->subWeek(), now()]);
-                                    break;
-                                case 'this-month':
-                                    $q->orWhereBetween('created_at', [now()->subMonth(), now()]);
-                                    break;
-                                case 'this-year':
-                                    $q->orWhereBetween('created_at', [now()->subYear(), now()]);
-                                    break;
-                                case 'custom-range':
-                                    $q->orWhereBetween('created_at', [$filter['startDate'][0], $filter['endDate'][0]]);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    } else {
-                        switch ($filter['date'][0]) {
-                            case 'today':
-                                $q->whereBetween('created_at', [now()->startOfDay(), now()]);
-                                break;
-                            case 'yesterday':
-                                $q->whereBetween('created_at', [now()->subDay()->startOfDay(), now()->startOfDay()]);
-                                break;
-                            case 'this-week':
-                                $q->whereBetween('created_at', [now()->subWeek(), now()]);
-                                break;
-                            case 'this-month':
-                                $q->whereBetween('created_at', [now()->subMonth(), now()]);
-                                break;
-                            case 'this-year':
-                                $q->whereBetween('created_at', [now()->subYear(), now()]);
-                                break;
-                            case 'custom-range':
-                                $q->whereBetween('created_at', [$filter['startDate'][0], $filter['endDate'][0]]);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                });
+            if (array_key_exists('date[]', $filter)) {
+                // return $query->where(function ($q) use ($filter) {
+                    
+                // });
             }
 
             return $query;

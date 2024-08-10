@@ -28,7 +28,6 @@
                 </u>
             </header>
         </div>
-        <br><br>
         <div class="grid-container">
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }}">

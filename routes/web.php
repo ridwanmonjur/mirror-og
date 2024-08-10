@@ -88,9 +88,8 @@ Route::group(['prefix' => 'participant'], function () {
             // Home page
             Route::get('/home', [ParticipantEventController::class, 'home'])->name('participant.home.view');
 
-            // Home page
-            Route::get('/request', [ParticipantController::class, 'viewRequest'])->middleware('prevent-back-button')
-                ->name('participant.request.view');
+            // Request page
+            Route::get('/request', [ParticipantController::class, 'viewRequest'])->name('participant.request.view');
 
             // Friends
             Route::post('/friends', [ParticipantController::class, 'updateFriend'])->name('participant.friends.update');

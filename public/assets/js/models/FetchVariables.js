@@ -1,17 +1,19 @@
 // ManageEventFetchProcessor
 class FetchVariables {
-    constructor() {
+    constructor(formId = null, formKeys = []) {
         this.sortType = 'desc';
         this.sortKey = '';
         this.filter = {};
         this.search = null;
         this.fetchedPage = 1;
         this.currentPage = 1;
+        this.formId = formId;
+        this.formKeys = formKeys;
     }
 
     visualize() {
         console.log({
-            filter: this.filter,
+            filter: this.getFilter(),
             search: this.search,
             sortKey: this.sortKey,
             sortType: this.sortType,
@@ -28,7 +30,17 @@ class FetchVariables {
     }
 
     getFilter() {
-        return this.filter;
+        let form = document.getElementById(this.formId);
+        console.log({form})
+        let formData = new FormData(form);
+        console.log({formData, keys: [...formData.keys()]})
+
+        let filterValues = {};
+        for (let key of this.formKeys) {
+            filterValues[key] = formData.getAll(key);
+        }
+
+        return filterValues;
     }
 
     getFetchedPage() {
@@ -49,6 +61,9 @@ class FetchVariables {
 
     setFilter(value) {
         this.filter = value;
+    }
+
+    setFilterDate(date1, date2) {
     }
 
     setSearch(value) {

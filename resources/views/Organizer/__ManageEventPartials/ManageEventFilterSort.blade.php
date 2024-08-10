@@ -1,6 +1,8 @@
-<input type="hidden" id="startDate" name="startDate"> 
-<input type="hidden" id="endDate" name="endDate">
-<div class="d-flex justify-content-start w-70s align-items-center flex-wrap mb-3">
+<form id="filterForm">
+
+<input type="hidden" id="startDate" name="date[]"> 
+<input type="hidden" id="endDate" name="date[]">
+<div class="d-flex justify-content-start w-70s align-items-center flex-wrap">
     <div class="cursor-pointer me-3 d-inline-block"
         onclick="openElementById('close-option'); openElementById('filter-option');  closeElementById('sort-option');">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-filter"
@@ -28,7 +30,7 @@
             >
                 @foreach($eventCategoryList as $eventCategoryItem)
                     <div class="px-3 min-w-150px py-1">
-                        <input onchange="setFilterForFetch(event, '{{$eventCategoryItem['gameTitle']}}');" type="checkbox" name="gameTitle" value="{{$eventCategoryItem['id']}}">
+                        <input onchange="setFilterForFetch(event, '{{$eventCategoryItem['gameTitle']}}');" type="checkbox" name="gameTitle[]" value="{{$eventCategoryItem['id']}}">
                         <label for="gameTitle">{{$eventCategoryItem['gameTitle']}}</label>
                     </div>
                 @endforeach
@@ -53,8 +55,8 @@
                 class="dropdown-menu px-0 py-1 py-0" aria-labelledby="dropdownFilterType">
                 @foreach($eventTypeList as $eventType)
                     <div class="px-3 min-w-150px py-1">
-                        <input onchange="setFilterForFetch(event, '{{$eventType['eventType']}}');" type="checkbox" name="eventType" value="{{$eventType['id']}}">
-                        <label for="eventType">{{$eventType['eventType']}}</label>
+                        <input onchange="setFilterForFetch(event, '{{$eventType['eventType']}}');" type="checkbox" name="eventType[]" value="{{$eventType['id']}}">
+                         <label for="eventType">{{$eventType['eventType']}}</label>
                     </div>
                 @endforeach
             </div>
@@ -78,7 +80,7 @@
             >
                 @foreach($eventTierList as $eventTier)
                     <div class="px-3 min-w-150px py-1">
-                        <input onchange="setFilterForFetch(event, '{{$eventTier['eventTier']}}');" type="checkbox" name="eventTier" value="{{$eventTier['id']}}">
+                        <input onchange="setFilterForFetch(event, '{{$eventTier['eventTier']}}');" type="checkbox" name="eventTier[]" value="{{$eventTier['id']}}">
                         <label for="eventTier">{{$eventTier['eventTier']}}</label>
                     </div>
                 @endforeach
@@ -103,7 +105,7 @@
                 class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
             >
                 <div class="px-3 py-1 min-w-250px">
-                    <input onchange="setFilterForFetch(event, 'SEA');" type="checkbox" name="venue" value="SEA">
+                    <input onchange="setFilterForFetch(event, 'SEA');" type="checkbox" name="venue[]" value="SEA">
                     <label for="eventTier">South East Asia (SEA)</label>
                 </div>
             </div>
@@ -164,22 +166,18 @@
             >
                 <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('created_at', 'Recent');">
                     <label class="me-3 cursor-pointer" for="recent">Recent</label>
-                    <span class="recentSortIcon sortIcon">
                     </span>
                 </div>
                 <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('eventName', 'A-Z');">
                     <label class="me-3 cursor-pointer" for="aToZ">A-Z</label>
-                    <span class="aToZSortIcon sortIcon">
                     </span>
                 </div>
                 <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('startDate', 'Start Date');">
                     <label class="me-3 cursor-pointer" for="startDate">Start Date</label>
-                    <span class="startDateSortIcon sortIcon">
                     </span>
                 </div>
                 <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1" onclick="setSortForFetch('prize', 'Prize Pool');">
                     <label class="me-3 cursor-pointer" for="prize">Prize Pool</label>
-                    <span class="prizeSortIcon sortIcon">
                     </span>
                 </div>
             </div>
@@ -188,3 +186,4 @@
 
                
 </div>
+</form>

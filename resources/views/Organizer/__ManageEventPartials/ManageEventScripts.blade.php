@@ -3,6 +3,7 @@
 
  <script>
     var isPickerShown = false;
+    let formKeys = ['gameTitle[]', 'eventType[]', 'eventTier[]', 'venue[]', 'date[]'];
     var picker = new Litepicker({ 
         element: document.getElementById('litepicker'),
         singleMode: false,
@@ -60,14 +61,14 @@
         }, 1000)
     );
 
-    let fetchVariables = new FetchVariables();    
+    let fetchVariables = new FetchVariables(
+        "filterForm", formKeys    
+    );    
 
     function fetchSearchSortFiter() {
         resetNoMoreElement();
 
-        let params = convertUrlStringToQueryStringOrObject({
-            isObject: true
-        });
+        let params = new URLSearchParams(window.location.search);
 
         if (!params) params = {}
 
@@ -89,23 +90,16 @@
     }
 
     function setFilterForFetch(event, title) {
-        let filter = fetchVariables.getFilter();
 
         let value = event.target.value;
 
         if (event.target.checked) {
-            filter[event.target.name] = [...filter[event.target.name] ?? [], value];
             addFilterTags(title, event.target.name, event.target.value);
 
         } else {
-            filter[event.target.name] = filter[event.target.name].filter(
-                _value => _value != value
-            );
-
             deleteTagByNameValue(event.target.name, event.target.value);
         }
 
-        fetchVariables.setFilter(filter);
         fetchSearchSortFiter();
         fetchVariables.visualize();
     }
@@ -120,13 +114,6 @@
         let element = event.currentTarget;
         element.parentElement.remove();
 
-        let filter = fetchVariables.getFilter();
-
-        filter[name] = filter[name]?.filter(
-            _value => _value != value
-        );
-
-        fetchVariables?.setFilter(filter);
         fetchSearchSortFiter();
         fetchVariables.visualize();
     }
@@ -134,9 +121,9 @@
     function addFilterTags(title, name, value) {
         let tagElement = document.getElementById('insertFilterTags');
         tagElement.classList.remove('d-none');
-        tagElement.classList.add('d-flex');
+        tagElement.classList.add('d-flex', 'flex-wrap');
         tagElement.innerHTML += `
-            <div id='${name}${value}tag' class="me-3 px-3 d-flex justify-content-around" style="background-color: #95AEBD; color: white; border-radius: 30px;"> 
+            <div id='${name}${value}tag' class="me-3 px-3 py-1 d-flex justify-content-around mb-2" style="background-color: #95AEBD; color: white; border-radius: 30px;"> 
                 <span class="me-3"> ${title} </span>
                 <svg
                     onclick="deleteTagByParent(event, '${name}', '${value}');"
@@ -195,63 +182,11 @@
 
     var ENDPOINT;
 
-    function getQueryStringValue(key) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(key);
-    }
-
-    function convertObjectToURLString(object) {
-        var queryString = "";
-        
-        for (const [key, value] of Object.entries(object)) {
-            if (Array.isArray(value)) {
-                value.forEach(function(value) {
-                    queryString += `${key}=${value}&`;
-                });
-            } else {
-                queryString += `${key}=${value}&`;
-            }
-        }
-
-        return queryString;
-    }
 
 
-    function convertUrlStringToQueryStringOrObject({
-        isObject
-    } = {
-        isObject: false
-    }) {
-        var queryString = window.location.search;
-        var queryString = queryString.substring(1);
-        var paramsArray = queryString.split("&");
-        var params = {};
+    let params = new URLSearchParams(window.location.search);
 
-        paramsArray.forEach(function(param) {
-            var pair = param.split("=");
-            var key = decodeURIComponent(pair[0]);
-            var value = decodeURIComponent(pair[1] || '');
-
-            if (key.trim() != "") {
-
-                if (key in params) {
-                    params[key] = [...params[key], value];
-                } else {
-                    params[key] = [value];
-                }
-            }
-        });
-
-        if (isObject) {
-            return params;
-        } else { 
-            return convertObjectToURLString(params);
-        }
-    }
-
-    ENDPOINT = "/organizer/event/?" + convertUrlStringToQueryStringOrObject({
-        isObject: false
-    });
+    ENDPOINT = `/organizer/event/?page=${params.get('page')}&status=${params.get('status')}`; 
 
 
     function handleSearch() {
@@ -267,19 +202,15 @@
             }
         }
 
-        let params = convertUrlStringToQueryStringOrObject({
-            isObject: true
-        });
+        let params = new URLSearchParams(window.location.search);
 
-        if (!params) params = {}
-
-        params.page = 1;
         ENDPOINT = "{{ route('event.search.view') }}";
         fetchVariables.setSearch(inputValue)
 
         let body = {
-            ...params,
-             filter: fetchVariables.getFilter(),
+            page: 1,
+            status: params.get('status'),
+            filter: fetchVariables.getFilter(),
             sort: { 
                 [fetchVariables.getSortKey()] : fetchVariables.getSortType()
             },
@@ -320,24 +251,18 @@
 
     window.addEventListener(
         "scroll",
-        (e) => {
+        debounce((e) => {
 
             var windowHeight = window.innerHeight;
             var documentHeight = document.documentElement.scrollHeight;
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             if (scrollTop + windowHeight >= documentHeight - 200) {
                 
-                let params = convertUrlStringToQueryStringOrObject({
-                    isObject: true
-                });
+                let params = new URLSearchParams(window.location.search);
 
                 fetchVariables.setCurrentPage(fetchVariables.getCurrentPage() + 1);
 
                 let body = {};
-
-                if (!params) { 
-                    params = {};
-                }
 
                 if ( fetchVariables.getCurrentPage() > fetchVariables.getFetchedPage() + 1 ) {
                     fetchVariables.setCurrentPage( fetchVariables.getFetchedPage() );
@@ -345,8 +270,6 @@
                 }
 
                 fetchVariables.setFetchedPage(fetchVariables.getCurrentPage());
-
-                params.page = fetchVariables.getCurrentPage();
                 
                 ENDPOINT = "{{ route('event.search.view') }}";
 
@@ -357,7 +280,8 @@
                     },
                     userId: Number("{{ auth()->user()->id }}"),
                     search: fetchVariables.getSearch(),
-                    ...params
+                    status: params.get('status'),
+                    page: fetchVariables.getCurrentPage()
                 }
                 try{
                     infinteLoadMoreByPost(ENDPOINT, body)
@@ -365,7 +289,7 @@
                     fetchVariables.setFetchedPage(fetchVariables.getCurrentPage()-1);
                 };
             }
-        }
+        }, 300);
     );
     
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

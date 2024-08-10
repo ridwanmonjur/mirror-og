@@ -44,10 +44,10 @@
                 'eventTypeList' => $eventTypeList 
             ])
             </div>
-            <div class="d-none" id="insertFilterTags">
+            <div class="d-none py-2" id="insertFilterTags">
             </div>
             <br>
-            <div class="py-4 input-group input-group" style="width: min(90vw, 500px) !important;">
+            <div class="py-0 input-group input-group" style="width: min(90vw, 500px) !important;">
                 <div class="input-group-text" style="background: white; outline-width: 1px 1px 0 1px; border-radius: 30px 0 0 30px;">
                     <svg onclick= "handleSearch();" xmlns="http://www.w3.org/2000/svg" width="20"
                         height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
