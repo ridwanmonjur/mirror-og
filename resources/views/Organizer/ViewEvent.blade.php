@@ -243,5 +243,4 @@
             window.location.href = url;
         }
     </script>
-    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
-    <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
+    <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>

@@ -134,8 +134,7 @@
         <span class="ms-1 py-1 text-primary"><b>Close</b></span>
     </div>
 </nav>
-<script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
-<script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
+<script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
 @if (isset($search))
     @include('__CommonPartials.__Navbar.NavbarShowSearchResultsScript')
 @else

@@ -2,6 +2,78 @@
 <script src="https://cdn.jsdelivr.net/npm/litepicker@2.0/dist/litepicker.min.js"></script>
 
  <script>
+    
+    function infinteLoadMoreByPost(ENDPOINT, body) {
+        let noMoreDataElement = document.querySelector('.no-more-data');
+        let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
+        let hasClass = noMoreDataElement.classList.contains('d-none');
+        
+        if (hasClass) {
+            fetch(ENDPOINT, {
+                method: 'post',
+                headers: {
+                    'Accept': 'text/html',
+                    "Content-Type": "application/json",
+                    ...window.loadBearerHeader()
+                },
+                body: JSON.stringify(body)
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    
+                    if (response.html == '') {
+                        noMoreDataElement.classList.remove('d-none');
+                        noMoreDataElement.style.display = 'flex';
+                        noMoreDataElement.style.justifyContent = 'center';
+                        noMoreDataElement.textContent = "We don't have more data to display";
+                    } else {
+                        scrollingPaginationElement.innerHTML += response.html ;
+                    }
+                })
+                .catch(function (error) {
+
+                    console.log('Server error occured');
+                    throw new Error('Error occurred');
+                });
+        } else {
+            return;
+        }
+    }
+
+
+    function loadByPost(ENDPOINT, body) {
+        let noMoreDataElement = document.querySelector('.no-more-data');
+        let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
+        let hasClass = noMoreDataElement.classList.contains('d-none');
+        
+        if (hasClass) { }
+        
+        fetch(ENDPOINT, {
+            method: 'post',
+            headers: {
+                'Accept': 'text/html',
+                "Content-Type": "application/json",
+                ...window.loadBearerHeader()
+            },
+            body: JSON.stringify(body)
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.html == '') {
+                    scrollingPaginationElement.innerHTML = "";
+                    noMoreDataElement.classList.remove('d-none');
+                    noMoreDataElement.style.display = 'flex';
+                    noMoreDataElement.style.justifyContent = 'center';
+                    noMoreDataElement.textContent = "Data not found by your query...";
+                } else {
+                    scrollingPaginationElement.innerHTML = response.html;
+                }
+            })
+            .catch(function (error) {
+                scrollingPaginationElement.innerHTML = "Work in Progress!";
+            });
+    }
+
     var isPickerShown = false;
     let formKeys = ['gameTitle[]', 'eventType[]', 'eventTier[]', 'venue[]', 'date[]'];
     var picker = new Litepicker({ 
@@ -182,8 +254,6 @@
 
     var ENDPOINT;
 
-
-
     let params = new URLSearchParams(window.location.search);
 
     ENDPOINT = `/organizer/event/?page=${params.get('page')}&status=${params.get('status')}`; 
@@ -256,7 +326,7 @@
             var windowHeight = window.innerHeight;
             var documentHeight = document.documentElement.scrollHeight;
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop + windowHeight >= documentHeight - 200) {
+            if (scrollTop + windowHeight >= documentHeight - 600) {
                 
                 let params = new URLSearchParams(window.location.search);
 
@@ -289,11 +359,7 @@
                     fetchVariables.setFetchedPage(fetchVariables.getCurrentPage()-1);
                 };
             }
-        }, 300);
+        }, 300)
     );
     
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
 </script>

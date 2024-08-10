@@ -32,8 +32,7 @@
     </main>
     
 
-    <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
-    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
+    <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
     <script>
 
         function getCookie(cookieName) {

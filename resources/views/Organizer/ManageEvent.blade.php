@@ -116,7 +116,6 @@
             <div class="no-more-data d-none mb-3" style="margin-top: 50px;" ></div>
 
             
-            <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
-            <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
+            <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
             @include('Organizer.__ManageEventPartials.ManageEventScripts')
     </main>

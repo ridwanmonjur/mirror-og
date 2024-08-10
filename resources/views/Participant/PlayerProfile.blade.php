@@ -47,7 +47,6 @@
 @endauth
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
-    <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     <main x-data="alpineDataComponent">
         @include('Participant.__ProfilePartials.BackgroundModal')
 

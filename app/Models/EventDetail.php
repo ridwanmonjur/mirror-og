@@ -218,9 +218,7 @@ class EventDetail extends Model
             }
 
             $currentDateTime = Carbon::now()->utc();
-            if ($status == 'ALL') {
-                return $query;
-            } elseif ($status == 'DRAFT') {
+            if ($status == 'DRAFT') {
                 return $query->whereIn('status', ['DRAFT', 'PREVIEW']);
             } elseif ($status == 'PENDING') {
                 return $query->where('status', 'PENDING')->orWhereNull('payment_transaction_id');
@@ -251,9 +249,7 @@ class EventDetail extends Model
                     ->where('status', '<>', 'PREVIEW')
                     ->whereNotNull('payment_transaction_id')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
-            } else {
-                return $query;
-            }
+            } 
         });
 
         $eventListQuery->when($request->has('search'), function ($query) use ($request) {

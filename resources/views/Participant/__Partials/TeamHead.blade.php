@@ -483,7 +483,6 @@
         </div>
     </div>
 </main>
-<script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
 
 <script>
         let teamData = JSON.parse(document.getElementById('teamData').value);

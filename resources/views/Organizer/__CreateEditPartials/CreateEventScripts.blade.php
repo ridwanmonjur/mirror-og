@@ -70,9 +70,9 @@
         }
     }
 </script>
-<script src="{{ asset('/assets/js/event_creation/timeline.js') }}"></script>
-<script src="{{ asset('/assets/js/event_creation/event_create.js') }}"></script>
-<script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
+<script src="{{ asset('/assets/js/organizer/event_creation/timeline.js') }}"></script>
+<script src="{{ asset('/assets/js/organizer/event_creation/event_create.js') }}"></script>
+<script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.min.js"></script>
 
 <script>

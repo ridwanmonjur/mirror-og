@@ -19,5 +19,5 @@
     </main>
     
     @include('Participant.__CheckoutPartials.CheckoutScripts')
-    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
+    <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
 </body>
