@@ -30,6 +30,7 @@ class ParticipantController extends Controller
             $page = 5;
             $userList = User::getParticipants($request)->paginate($page);
             foreach ($userList as $user) {
+                // @phpstan-ignore-next-line
                 $user->is_in_team = $user->members->isNotEmpty();
             }
 

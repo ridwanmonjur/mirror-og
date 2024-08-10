@@ -2,14 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class EventJoinResults extends Model
 {
+
+    use HasFactory;
+
     protected $table = 'event_join_results';
 
-    public static function getEventJoinResults($id)
+    public static function getEventJoinResults(int| string $id): Collection
     {
         return DB::table('join_events')
             ->where('join_events.event_details_id', '=', $id)

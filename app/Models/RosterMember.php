@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 
 class RosterMember extends Model
 {
@@ -11,12 +13,12 @@ class RosterMember extends Model
 
     protected $table = 'roster_members';
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public static function bulkCreateRosterMembers($joinEventId, $teamMembers)
+    public static function bulkCreateRosterMembers(int| string $joinEventId, Collection $teamMembers): bool
     {
         $data = [];
 
@@ -33,14 +35,14 @@ class RosterMember extends Model
         return self::insert($data);
     }
 
-    public static function getMembersByTeamIdList($teamIdList)
+    public static function getMembersByTeamIdList(array $teamIdList): Collection
     {
         return self::whereIn('join_events_id', $teamIdList)
             ->with('user')
             ->get();
     }
 
-    public static function processEvents($members)
+    public static function processEvents(Collection $members): array
     {
         $acceptedMembers = [];
 
@@ -52,7 +54,7 @@ class RosterMember extends Model
         return $acceptedMembers;
     }
 
-    public static function keyByMemberId($rosterMembers)
+    public static function keyByMemberId(Collection $rosterMembers): array
     {
         $associativeArray = [];
         foreach ($rosterMembers as $rosterMember) {

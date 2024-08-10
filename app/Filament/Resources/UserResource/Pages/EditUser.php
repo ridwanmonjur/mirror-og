@@ -28,14 +28,17 @@ class EditUser extends EditRecord
         $record->update($data);
 
         if (! is_null($data['role'])) {
+            // @phpstan-ignore-next-line
             $record->role = $data['role'];
         }
 
         if (! is_null($data['status'])) {
+            // @phpstan-ignore-next-line
             $record->status = $data['status'];
         }
 
         if (! is_null($data['email_verified_at'])) {
+            // @phpstan-ignore-next-line
             $record->email_verified_at = $data['email_verified_at'];
         }
 

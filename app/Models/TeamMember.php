@@ -6,6 +6,8 @@ use App\Events\TeamMemberCreated;
 use App\Events\TeamMemberUpdated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TeamMember extends Model
 {
@@ -20,40 +22,40 @@ class TeamMember extends Model
 
     protected $table = 'team_members';
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     
-    public function payments()
+    public function payments(): HasMany
     {
         return $this->hasMany(ParticipantPayment::class, 'team_members_id', 'id');
     }
 
-    public function team()
+    public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class, 'team_id', 'id');
     }
 
-    public static function isAlreadyMember($teamId, $userId)
+    public static function isAlreadyMember(int| string $teamId, int| string $userId)
     {
         return self::where('team_id', $teamId)
             ->where('user_id', $userId)
             ->get();
     }
 
-    public static function getMembersByTeamIdList($teamIdList)
+    public static function getMembersByTeamIdList(array $teamIdList)
     {
         return self::whereIn('team_id', $teamIdList)
             ->with('user')
             ->get();
     }
 
-    public static function getProcessedTeamMembers($id)
+    public static function getProcessedTeamMembers(string| int $id): array
     {
-        $acceptedMembers = $pendingMembers = $rejectedMembers = $invitedMembers = $leftMembers = [];
-        $acceptedMembersCount = $pendingMembersCount = $rejectedMembersCount = $invitedMemberCount = $leftMembersCount = 0;
+        $acceptedMembers = $pendingMembers = $rejectedMembers = $leftMembers = collect();
+        $acceptedMembersCount = $pendingMembersCount = $rejectedMembersCount  = $leftMembersCount = 0;
         $members = self::where('team_id', $id)->with('user')->get();
         foreach ($members as $member) {
             $status = $member->status;
@@ -93,7 +95,7 @@ class TeamMember extends Model
         ];
     }
 
-    public static function bulkCreateTeanMembers($teamId, $userIds, $status)
+    public static function bulkCreateTeanMembers(string| int $teamId, array $userIds, string $status): bool
     {
         $data = [];
 

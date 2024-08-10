@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -13,42 +16,42 @@ class JoinEvent extends Model
 
     protected $table = 'join_events';
 
-    public function eventDetail()
+    public function eventDetail(): BelongsTo
     {
         return $this->belongsTo(EventDetail::class);
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'joiner_id', 'id');
     }
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'users');
     }
 
-    public function eventDetails()
+    public function eventDetails(): BelongsTo
     {
         return $this->belongsTo(EventDetail::class, 'event_details_id', 'id');
     }
 
-    public function teams()
+    public function teams(): HasMany
     {
         return $this->hasMany(Team::class, 'team_id');
     }
 
-    public function members()
+    public function members(): HasMany
     {
         return $this->hasMany(TeamMember::class, 'team_id', 'team_id');
     }
 
-    public function roster()
+    public function roster(): HasMany
     {
         return $this->hasMany(RosterMember::class, 'join_events_id', 'id');
     }
 
-    public function results()
+    public function results(): HasMany
     {
         return $this->hasMany(EventJoinResults::class, 'join_events_id', 'id');
     }
@@ -248,7 +251,9 @@ class JoinEvent extends Model
         ];
     }
 
-    public static function hasJoinedByOtherTeamsForSameEvent($eventId, $userId, $status)
+    public static function hasJoinedByOtherTeamsForSameEvent(
+        string| int $eventId, string| int $userId, string $status
+    ): bool
     {
         return self::where('event_details_id', $eventId)
             ->where(function ($query) use ($userId, $status) {
@@ -259,7 +264,7 @@ class JoinEvent extends Model
             ->exists();
     }
 
-    public static function getJoinedByTeamsForSameEvent($eventId, $userId)
+    public static function getJoinedByTeamsForSameEvent($eventId, $userId): ?self
     {
         return self::where('event_details_id', $eventId)
             ->where(function ($query) use ($userId) {
@@ -267,7 +272,6 @@ class JoinEvent extends Model
                     $query->where('user_id', $userId)->where('status', 'accepted');
                 });
             })
-            ->get()
             ->first();
     }
 }

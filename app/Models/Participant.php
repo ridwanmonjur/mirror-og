@@ -19,7 +19,7 @@ class Participant extends Model
         'games_data' => 'array',
     ];
 
-    public function getRegionDetails()
+    public function getRegionDetails(): Country
     {
         return Country::select('emoji_flag', 'name', 'id')
             ->find($this->region);

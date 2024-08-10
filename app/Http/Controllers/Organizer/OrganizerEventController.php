@@ -352,7 +352,7 @@ class OrganizerEventController extends Controller
     {
         try {
             $event = EventDetail::find($id);
-            EventDetail::destroyEventBanner($event->fileBanner);
+            EventDetail::destroyEventBanner($event->eventBanner);
             $event->delete();
 
             return redirect('organizer/event');

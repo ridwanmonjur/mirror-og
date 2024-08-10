@@ -3,13 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Achievements extends Model
 {
     protected $table = 'achievements';
+    use HasFactory;
 
-    public static function getTeamAchievements($id)
+    /**
+    * @param string|int $id
+    * @return \Illuminate\Support\Collection<int, \App\Models\JoinEvent>
+    */
+    public static function getTeamAchievements(string| int $id): Collection
     {
         return DB::table('join_events')
             ->where('join_events.event_details_id', '=', $id)

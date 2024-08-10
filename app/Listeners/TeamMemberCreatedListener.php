@@ -53,16 +53,6 @@ class TeamMemberCreatedListener
                     }
                     break;
             }
-            if ($userLog) {
-                ActivityLogs::create([
-                    'action' => $action,
-                    'subject_id' => $userId,
-                    'subject_type' => User::class,
-                    'object_id' => $event->teamMember->id,
-                    'object_type' => TeamMember::class,
-                    'log' => $userLog,
-                ]);
-            }
             if ($teamCreatorNotification) {
                 Notifications::create([
                     'data' => json_encode([

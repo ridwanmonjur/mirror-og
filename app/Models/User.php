@@ -3,8 +3,14 @@
 namespace App\Models;
 
 use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 
@@ -47,57 +53,57 @@ class User extends Authenticatable implements FilamentUser
         return $this->role === 'ADMIN';
     }
 
-    public function address()
+    public function address(): HasOne
     {
         return $this->hasOne(Address::class, 'user_id', 'id');
     }
 
-    public function organizer()
+    public function organizer(): HasOne
     {
         return $this->hasOne(Organizer::class, 'user_id');
     }
 
-    public function participant()
+    public function participant(): HasOne
     {
         return $this->hasOne(Participant::class, 'user_id');
     }
 
-    public function team()
+    public function team(): HasOne
     {
         return $this->hasOne(Team::class, 'creator_id');
     }
 
-    public function profile()
+    public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class, 'user_id');
     }
 
-    public function teams()
+    public function teams(): BelongsToMany
     {
         return $this->belongsToMany(Team::class, 'team_members');
     }
 
-    public function members()
+    public function members(): HasMany
     {
         return $this->hasMany(TeamMember::class, 'user_id');
     }
 
-    public function following()
+    public function following(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'organizer_follows', 'user_id', 'organizer_id');
     }
 
-    public function follows()
+    public function follows(): HasMany
     {
         return $this->hasMany(OrganizerFollow::class, 'user_id');
     }
 
-    public function activities()
+    public function activities(): MorphMany
     {
         return $this->morphMany(ActivityLogs::class, 'subject');
     }
 
-    public static function getParticipants($request)
+    public static function getParticipants(Request $request): Builder
     {
         $teamId = $request->input('teamId');
         $status = $request->input('status');
@@ -172,7 +178,7 @@ class User extends Authenticatable implements FilamentUser
             ->orderBy($sortColumn, $sortType); 
     }
     
-    public function uploadUserBanner($request)
+    public function uploadUserBanner(Request $request)
     {
         $requestData = json_decode($request->getContent(), true);
         $fileData = $requestData['file'];
@@ -189,7 +195,7 @@ class User extends Authenticatable implements FilamentUser
         return asset('storage/'.$fileName);
     }
 
-    public function uploadBackgroundBanner($request, $profile)
+    public function uploadBackgroundBanner(Request $request, UserProfile $profile)
     {
         $file = $request->file('backgroundBanner');
         $fileNameInitial = 'userBanner-'.time().'.'.$file->getClientOriginalExtension();
@@ -203,7 +209,7 @@ class User extends Authenticatable implements FilamentUser
         return asset('storage/'.$fileName);
     }
 
-    public function destroyUserBanner($fileName)
+    public function destroyUserBanner(string| null $fileName)
     {
         if ($fileName) {
             if (Storage::disk('public')->exists($fileName)) {

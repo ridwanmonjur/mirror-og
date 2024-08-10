@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ParticipantPayment extends Model
 {
@@ -16,7 +17,7 @@ class ParticipantPayment extends Model
         'payment_id',
     ];
 
-    public function members()
+    public function members(): BelongsTo
     {
         return $this->belongsTo(TeamMember::class);
     }

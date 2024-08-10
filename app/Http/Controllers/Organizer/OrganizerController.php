@@ -44,10 +44,12 @@ class OrganizerController extends Controller
             }
 
             if ($loggedInUser) {
+                // @phpstan-ignore-next-line
                 $user->isFollowing = OrganizerFollow::where('participant_user_id', $loggedInUser->id)
                     ->where('organizer_user_id', $user->id)
                     ->first();
             } else {
+                // @phpstan-ignore-next-line
                 $user->isFollowing = null;
             }
 

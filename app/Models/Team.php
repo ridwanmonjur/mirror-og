@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\DB;
 
 class Team extends Model
@@ -14,42 +19,42 @@ class Team extends Model
 
     protected $fillable = ['teamName', 'teamDescription', 'country', 'country_name', 'country_flag'];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'creator_id');
     }
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'users');
     }
 
-    public function members()
+    public function members(): HasMany
     {
         return $this->hasMany(TeamMember::class);
     }
 
-    public function awards()
+    public function awards(): HasMany
     {
         return $this->hasMany(AwardResults::class, 'join_events_id', 'id');
     }
 
-    public function invitationList()
+    public function invitationList(): HasMany
     {
         return $this->hasMany(EventInvitation::class, 'team_id');
     }
 
-    public function profile()
+    public function profile(): HasOne
     {
         return $this->hasOne(TeamProfile::class, 'team_id');
     }
 
-    public function activities()
+    public function activities(): MorphMany
     {
         return $this->morphMany(ActivityLogs::class, 'subject');
     }
 
-    public static function getTeamAndMembersByTeamId($teamId)
+    public static function getTeamAndMembersByTeamId(int| string $teamId): ? self
     {
         return self::with(['members.user' => function ($query) {
             $query->select(['name', 'id', 'email']);
@@ -61,7 +66,7 @@ class Team extends Model
             ->find($teamId);
     }
 
-    public static function getUserTeamListAndPluckIds($user_id)
+    public static function getUserTeamListAndPluckIds(int| string $user_id): array
     {
         $teamList = self::whereHas('members', function ($query) use ($user_id) {
             $query->where('user_id', $user_id)->where('status', 'accepted');
@@ -309,7 +314,7 @@ class Team extends Model
                 .' <span class="notification-blue">'.$event->eventName.' </span>.'
                 .'</span>';
             $rosterCaptain = TeamMember::where('team_id', $this->id)
-                ->where('user_id', $user->id)->get()->first();
+                ->where('user_id', $user->id)->first();
         }
 
         $organizerList = [$event->user];

@@ -150,7 +150,7 @@
                                 <div onclick="event.stopPropagation();" class="dropdown-menu px-3 py-1"
                                     aria-labelledby="dropdownFilterSort">
                                         <p class="mb-1">Choose the minimumn number of members in team</p>
-                                        <input type="range" class="form-range" name="membersCount" min="0" defaultValue="1" max="10" step="1" id="customRange3">
+                                        <input type="range" class="form-range" name="membersCount" min="0" defaultValue="0" value="0" max="10" step="1" id="customRange3">
                                          <button type="button"
                                             class="my-2 rounded-pill btn btn-sm btn-primary text-light"
                                             id="membersCountResetButton"

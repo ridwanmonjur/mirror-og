@@ -51,11 +51,13 @@ class AuthController extends Controller
 
     protected function _registerOrLoginUser($user, $type, $role)
     {
+        $finduser = null;
         if ($type == 'google') {
             $finduser = User::where('google_id', $user->id)->first();
         } elseif ($type == 'steam') {
             $finduser = User::where('steam_id', $user->id)->first();
         }
+
         if ($finduser) {
             // if (!$user->user['email_verified']) {
             //     return ['finduser' => null, 'error' => 'Your Gmail is not verified'];
@@ -125,8 +127,12 @@ class AuthController extends Controller
     public function handleGoogleCallback(Request $request)
     {
         // dd("hio");
+        //** @var \Illuminate\Support\Facades\Socialite $socialite */
+        // @phpstan-ignore-next-line 
         $user = Socialite::driver('google')->stateless()->user();
         $role = Session::get('role');
+        // phpcs:enable
+
         ['finduser' => $finduser, 'error' => $error]
             = $this->_registerOrLoginUser($user, 'google', $role);
 
