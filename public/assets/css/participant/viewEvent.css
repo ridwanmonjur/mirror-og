@@ -202,7 +202,7 @@ input[type="submit"]:active {
 }
 
 .height-image {
-    height: 250px;
+    height: 180px;
 }
 
 .card-image {
@@ -340,7 +340,7 @@ input[type="submit"]:active {
 
 .image-at-top {
     position: absolute;
-    top: -40px;
+    top: -20px;
     width: 90px;
     height: 60px;
 }

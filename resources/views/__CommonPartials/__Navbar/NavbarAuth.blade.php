@@ -30,10 +30,9 @@
                     @foreach($user->notifications as $notification)
                         <div data-loop-count="{{ $loop->index }}" 
                             @class([
-                            "text-center px-2 border-light border-0 notification-container",
-                            "notification-container-not-read" =>  is_null ($notification->read_at),
-                            "notification-container-read" =>  !is_null ($notification->read_at)
-
+                                "text-center px-2 border-light border-0 notification-container",
+                                "notification-container-not-read" =>  is_null ($notification->read_at),
+                                "notification-container-read" =>  !is_null ($notification->read_at)
                             ])
                         >
                             <div class="d-flex justify-content-start align-items-center pt-2">

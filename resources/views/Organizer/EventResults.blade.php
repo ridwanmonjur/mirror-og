@@ -450,8 +450,6 @@
     </main>
     @stack('script')
     
-    <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
-    
     <script>
         var awardToDeleteId = null;
         var achievementToDeleteId = null;
@@ -680,5 +678,4 @@
                 .replace(':id', teamId);
         }
     </script>
-    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
-    <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
+    <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>

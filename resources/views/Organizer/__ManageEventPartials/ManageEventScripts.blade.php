@@ -1,6 +1,124 @@
  <script src="{{ asset('/assets/js/models/FetchVariables.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/litepicker@2.0/dist/litepicker.min.js"></script>
 
  <script>
+    
+    function infinteLoadMoreByPost(ENDPOINT, body) {
+        let noMoreDataElement = document.querySelector('.no-more-data');
+        let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
+        let hasClass = noMoreDataElement.classList.contains('d-none');
+        
+        if (hasClass) {
+            fetch(ENDPOINT, {
+                method: 'post',
+                headers: {
+                    'Accept': 'text/html',
+                    "Content-Type": "application/json",
+                    ...window.loadBearerHeader()
+                },
+                body: JSON.stringify(body)
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    
+                    if (response.html == '') {
+                        noMoreDataElement.classList.remove('d-none');
+                        noMoreDataElement.style.display = 'flex';
+                        noMoreDataElement.style.justifyContent = 'center';
+                        noMoreDataElement.textContent = "We don't have more data to display";
+                    } else {
+                        scrollingPaginationElement.innerHTML += response.html ;
+                    }
+                })
+                .catch(function (error) {
+
+                    console.log('Server error occured');
+                    throw new Error('Error occurred');
+                });
+        } else {
+            return;
+        }
+    }
+
+
+    function loadByPost(ENDPOINT, body) {
+        let noMoreDataElement = document.querySelector('.no-more-data');
+        let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
+        let hasClass = noMoreDataElement.classList.contains('d-none');
+        
+        if (hasClass) { }
+        
+        fetch(ENDPOINT, {
+            method: 'post',
+            headers: {
+                'Accept': 'text/html',
+                "Content-Type": "application/json",
+                ...window.loadBearerHeader()
+            },
+            body: JSON.stringify(body)
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.html == '') {
+                    scrollingPaginationElement.innerHTML = "";
+                    noMoreDataElement.classList.remove('d-none');
+                    noMoreDataElement.style.display = 'flex';
+                    noMoreDataElement.style.justifyContent = 'center';
+                    noMoreDataElement.textContent = "Data not found by your query...";
+                } else {
+                    scrollingPaginationElement.innerHTML = response.html;
+                }
+            })
+            .catch(function (error) {
+                scrollingPaginationElement.innerHTML = "Work in Progress!";
+            });
+    }
+
+    var isPickerShown = false;
+    let formKeys = ['gameTitle[]', 'eventType[]', 'eventTier[]', 'venue[]', 'date[]'];
+    var datePicker = new Litepicker({ 
+        element: document.getElementById('litepicker'),
+        singleMode: false,
+        autoApply: false,
+        setup: (_datePicker) => {
+            _datePicker.on('button:apply', (date1, date2) => {
+                _date1 = `${date1.getDate()}/${date1.getMonth() + 1}/${date1.getFullYear()}`;
+                _date2 = `${date2.getDate()}/${date2.getMonth() + 1}/${date2.getFullYear()}`;
+                console.log({isPickerShown, date1, date2, _date1, _date2});
+                isPickerShown = false;
+                let startDateInput = document.getElementById('startDate');
+                if (startDateInput) startDateInput.value = _date1;
+                let endDateInput = document.getElementById('endDate');
+                if (endDateInput) endDateInput.value = _date2;
+                deleteTagByNameValue('startDate', _date1);
+                deleteTagByNameValue('endDate', _date2);
+                addFilterTags(`Date: ${_date1} - ${_date2}`, 'durationDate', `${_date1}${_date2}`);
+                console.log({isPickerShown});
+                fetchSearchSortFiter();
+                fetchVariables.visualize();
+            });
+            _datePicker.on('button:cancel', () => {
+                console.log({isPickerShown});
+                isPickerShown = false;
+                let startDateInput = document.getElementById('startDate');
+                if (startDateInput) startDateInput.value = "";
+                let endDateInput = document.getElementById('endDate').value = "";
+                if (endDateInput) endDateInput.value = "";
+                let tag = document.querySelector(".durationDate");
+                tag?.remove();
+                fetchSearchSortFiter();
+                fetchVariables.visualize();
+            });
+        }
+    });
+
+    function togglePicker(event) {
+        if (event) {
+            datePicker?.show(); }
+        }
+
+    document.getElementById("dropdownFilterDate")?.addEventListener('click', togglePicker);
+
     const SORT_CONSTANTS = {
         'ASC' : 'asc',
         'DESC': 'desc',
@@ -30,14 +148,14 @@
         }, 1000)
     );
 
-    let fetchVariables = new FetchVariables();    
+    let fetchVariables = new FetchVariables(
+        "filterForm", formKeys    
+    );    
 
     function fetchSearchSortFiter() {
         resetNoMoreElement();
 
-        let params = convertUrlStringToQueryStringOrObject({
-            isObject: true
-        });
+        let params = new URLSearchParams(window.location.search);
 
         if (!params) params = {}
 
@@ -59,23 +177,16 @@
     }
 
     function setFilterForFetch(event, title) {
-        let filter = fetchVariables.getFilter();
 
         let value = event.target.value;
 
         if (event.target.checked) {
-            filter[event.target.name] = [...filter[event.target.name] ?? [], value];
             addFilterTags(title, event.target.name, event.target.value);
 
         } else {
-            filter[event.target.name] = filter[event.target.name].filter(
-                _value => _value != value
-            );
-
             deleteTagByNameValue(event.target.name, event.target.value);
         }
 
-        fetchVariables.setFilter(filter);
         fetchSearchSortFiter();
         fetchVariables.visualize();
     }
@@ -83,20 +194,24 @@
     function deleteTagByNameValue(name, value){
         let id = `${name}${value}tag`;
         let tagElement = document.getElementById(id);
-        tagElement.remove();
+        tagElement?.remove();
     }
 
     function deleteTagByParent(event, name, value) {
         let element = event.currentTarget;
         element.parentElement.remove();
+        let inputCheckbox = document.querySelector(`input[name="${name}"][value="${value}"][type="checkbox"]`);
+        if (inputCheckbox) {
+            inputCheckbox.checked = false;
+            inputCheckbox.removeAttribute("checked");
+        } else {
+            datePicker.clearSelection();
+            let startDateInput = document.getElementById('startDate');
+            if (startDateInput) startDateInput.value = "";
+            let endDateInput = document.getElementById('endDate').value = "";
+            if (endDateInput) endDateInput.value = "";
+        }
 
-        let filter = fetchVariables.getFilter();
-
-        filter[name] = filter[name].filter(
-            _value => _value != value
-        );
-
-        fetchVariables.setFilter(filter);
         fetchSearchSortFiter();
         fetchVariables.visualize();
     }
@@ -104,9 +219,9 @@
     function addFilterTags(title, name, value) {
         let tagElement = document.getElementById('insertFilterTags');
         tagElement.classList.remove('d-none');
-        tagElement.classList.add('d-flex');
+        tagElement.classList.add('d-flex', 'flex-wrap');
         tagElement.innerHTML += `
-            <div id='${name}${value}tag' class="me-3 px-3 d-flex justify-content-around" style="background-color: #95AEBD; color: white; border-radius: 30px;"> 
+            <div id='${name}${value}tag' class="me-3 ${name} px-3 py-1 d-flex justify-content-around mb-2" style="background-color: #95AEBD; color: white; border-radius: 30px;"> 
                 <span class="me-3"> ${title} </span>
                 <svg
                     onclick="deleteTagByParent(event, '${name}', '${value}');"
@@ -156,7 +271,7 @@
         fetchVariables.visualize();  
     }
 
-    const copyUrlFunction = (copyUrl) => {
+    const copyUrlFunction2 = (copyUrl) => {
         navigator.clipboard.writeText(copyUrl).then(function() {
         }, function(err) {
             console.error('Could not copy text to clipboard: ', err);
@@ -165,63 +280,9 @@
 
     var ENDPOINT;
 
-    function getQueryStringValue(key) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(key);
-    }
+    let params = new URLSearchParams(window.location.search);
 
-    function convertObjectToURLString(object) {
-        var queryString = "";
-        
-        for (const [key, value] of Object.entries(object)) {
-            if (Array.isArray(value)) {
-                value.forEach(function(value) {
-                    queryString += `${key}=${value}&`;
-                });
-            } else {
-                queryString += `${key}=${value}&`;
-            }
-        }
-
-        return queryString;
-    }
-
-
-    function convertUrlStringToQueryStringOrObject({
-        isObject
-    } = {
-        isObject: false
-    }) {
-        var queryString = window.location.search;
-        var queryString = queryString.substring(1);
-        var paramsArray = queryString.split("&");
-        var params = {};
-
-        paramsArray.forEach(function(param) {
-            var pair = param.split("=");
-            var key = decodeURIComponent(pair[0]);
-            var value = decodeURIComponent(pair[1] || '');
-
-            if (key.trim() != "") {
-
-                if (key in params) {
-                    params[key] = [...params[key], value];
-                } else {
-                    params[key] = [value];
-                }
-            }
-        });
-
-        if (isObject) {
-            return params;
-        } else { 
-            return convertObjectToURLString(params);
-        }
-    }
-
-    ENDPOINT = "/organizer/event/?" + convertUrlStringToQueryStringOrObject({
-        isObject: false
-    });
+    ENDPOINT = `/organizer/event/?page=${params.get('page')}&status=${params.get('status')}`; 
 
 
     function handleSearch() {
@@ -237,19 +298,15 @@
             }
         }
 
-        let params = convertUrlStringToQueryStringOrObject({
-            isObject: true
-        });
+        let params = new URLSearchParams(window.location.search);
 
-        if (!params) params = {}
-
-        params.page = 1;
         ENDPOINT = "{{ route('event.search.view') }}";
         fetchVariables.setSearch(inputValue)
 
         let body = {
-            ...params,
-             filter: fetchVariables.getFilter(),
+            page: 1,
+            status: params.get('status'),
+            filter: fetchVariables.getFilter(),
             sort: { 
                 [fetchVariables.getSortKey()] : fetchVariables.getSortType()
             },
@@ -290,24 +347,18 @@
 
     window.addEventListener(
         "scroll",
-        (e) => {
+        debounce((e) => {
 
             var windowHeight = window.innerHeight;
             var documentHeight = document.documentElement.scrollHeight;
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop + windowHeight >= documentHeight - 200) {
+            if (scrollTop + windowHeight >= documentHeight - 600) {
                 
-                let params = convertUrlStringToQueryStringOrObject({
-                    isObject: true
-                });
+                let params = new URLSearchParams(window.location.search);
 
                 fetchVariables.setCurrentPage(fetchVariables.getCurrentPage() + 1);
 
                 let body = {};
-
-                if (!params) { 
-                    params = {};
-                }
 
                 if ( fetchVariables.getCurrentPage() > fetchVariables.getFetchedPage() + 1 ) {
                     fetchVariables.setCurrentPage( fetchVariables.getFetchedPage() );
@@ -315,8 +366,6 @@
                 }
 
                 fetchVariables.setFetchedPage(fetchVariables.getCurrentPage());
-
-                params.page = fetchVariables.getCurrentPage();
                 
                 ENDPOINT = "{{ route('event.search.view') }}";
 
@@ -327,7 +376,8 @@
                     },
                     userId: Number("{{ auth()->user()->id }}"),
                     search: fetchVariables.getSearch(),
-                    ...params
+                    status: params.get('status'),
+                    page: fetchVariables.getCurrentPage()
                 }
                 try{
                     infinteLoadMoreByPost(ENDPOINT, body)
@@ -335,11 +385,7 @@
                     fetchVariables.setFetchedPage(fetchVariables.getCurrentPage()-1);
                 };
             }
-        }
+        }, 300)
     );
     
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
 </script>

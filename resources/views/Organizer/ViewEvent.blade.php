@@ -28,7 +28,6 @@
                 </u>
             </header>
         </div>
-        <br><br>
         <div class="grid-container">
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }}">
@@ -244,5 +243,4 @@
             window.location.href = url;
         }
     </script>
-    <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
-    <script src="{{ asset('/assets/js/tab/tab.js') }}"></script>
+    <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>

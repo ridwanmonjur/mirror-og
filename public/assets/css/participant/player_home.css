@@ -59,7 +59,6 @@ main {
 /* Hero Section */
 
 .hero {
-    background-image: url('/assets/hero-bg.jpg');
     background-size: cover;
     text-align: center;
     padding: 5rem 0;

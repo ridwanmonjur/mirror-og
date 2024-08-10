@@ -204,25 +204,7 @@
                     @endif
                 </div>
 
-            <script>
-                const copyUtil = (urlType) => {
-                    let copyUrl = '';
-                    switch (urlType) {
-                        case 'event':
-                            copyUrl = "{{ route('event.index', $eventId) }}";
-                            copyUrlFunction(copyUrl);
-                            break;
-                        case 'facebook':
-                            copyUrl = "{{ route('organizer.live.view', $eventId) }}";
-                            localStorage.setItem('copyUrl', copyUrl);
-                            break;
-                        default:
-                            copyUrl = "Set copy url first!";
-                            localStorage.setItem('copyUrl', copyUrl);
-                            break;
-                    }
-                }
-            </script>
+            
         </div>
     </div>
 @endforeach

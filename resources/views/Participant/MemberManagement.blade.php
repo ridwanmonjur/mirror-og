@@ -82,7 +82,6 @@
             <br>
 
         @endif
-        <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
 
         @include('Participant.__MemberManagementPartials.MemberManagement')
         @if ($isRedirect)
@@ -99,7 +98,6 @@
     </main>
     
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
-    <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
 
     <script>
         let tabButtonBalueValue = localStorage.getItem("tab");

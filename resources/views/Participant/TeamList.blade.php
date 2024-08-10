@@ -253,7 +253,6 @@
         <br>
     </main>
 
-    <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>
     <script>
         function goToScreen() {
             window.location.href = "{{ route('participant.request.view') }}";

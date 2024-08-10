@@ -32,6 +32,7 @@ Route::middleware('auth')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
+        Route::post('/user/likes', [ParticipantController::class, 'likeEvent'])->name('participant.events.like');
         Route::post('/user/participants', [ParticipantController::class, 'searchParticipant'])->name('user.teams.index');
         Route::put('/user/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('user.notifications.read');
         Route::put('/user/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('user.notifications.readAll');
@@ -47,7 +48,6 @@ Route::group(['prefix' => 'participant'], function () {
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'check-jwt-permission:participant|admin'], function () {
             Route::post('/events', [ParticipantEventController::class, 'index'])->name('events.index');
-            Route::post('/events/likes', [ParticipantController::class, 'likeEvent'])->name('participant.events.like');
             Route::post('/organizer/follow', [ParticipantEventController::class, 'followOrganizer'])->name('participant.organizer.follow');
             Route::post('/profile', [ParticipantController::class, 'editProfile'])->name('participant.profile.update');
             Route::post('/team', [ParticipantTeamController::class, 'editTeam'])->name('participant.team.update');

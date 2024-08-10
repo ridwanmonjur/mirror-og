@@ -226,9 +226,7 @@
         </div>
     </main>
 
-    <script src="{{ asset('/assets/js/window/addOnload.js') }}"></script>
     <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
-    <script src="{{ asset('/assets/js/fetch/fetch.js') }}"></script>  
     <script>
        function generateHeaders() {
             return {

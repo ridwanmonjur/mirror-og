@@ -35,21 +35,6 @@ class OrganizerEventController extends Controller
         }
     }
 
-    public function combineParams($queryParams)
-    {
-        $combinedParams = [];
-
-        foreach ($queryParams as $key => $value) {
-            if (is_array($value) && count($value) > 1) {
-                $combinedParams[$key] = $value;
-            } else {
-                $combinedParams[$key] = is_array($value) ? $value[0] : [$value];
-            }
-        }
-
-        return $combinedParams;
-    }
-
     public function index(Request $request)
     {
         $eventCategoryList = EventCategory::all();
@@ -61,7 +46,6 @@ class OrganizerEventController extends Controller
         $organizer = Organizer::where('user_id', $userId)->first();
         $eventListQuery = EventDetail::generateOrganizerPartialQueryForFilter($request);
         $mappingEventState = EventDetail::mappingEventStateResolve();
-
         $eventList = $eventListQuery
             ->with(['tier', 'type', 'game'])
             ->where('user_id', $user->id)

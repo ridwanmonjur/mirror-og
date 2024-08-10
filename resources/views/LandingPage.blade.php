@@ -38,8 +38,7 @@
         <div class="no-more-data d-none"></div>
         <br><br>
         
-        <script src="{{ asset('/assets/js/navbar/toggleNavbar.js') }}"></script>
-        <script src="{{ asset('/assets/js/pagination/loadMore.js') }}"></script>
+        <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
         <script>
             var ENDPOINT = "{{ route('landing.view') }}";
             var page = 1;
