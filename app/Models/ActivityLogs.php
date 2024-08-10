@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Log;
 
 class ActivityLogs extends Model
 {
+    use HasFactory;
     protected $fillable = ['action', 'subject_id', 'subject_type',
         'object_id', 'object_type', 'log', 'image',
         'created_at', 'updated_at',
@@ -14,14 +18,15 @@ class ActivityLogs extends Model
 
     protected $table = 'activity_logs';
 
-    public function subject()
+    public function subject(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function findActivityLog($parameters)
+    public function findActivityLog(array $parameters): Builder
     {
-        $query = ActivityLogs::where([
+        $query = ActivityLogs::query();
+        $query->where([
             'subject_type' => $parameters['subject_type'],
             'object_type' => $parameters['object_type'],
             'object_id' => $parameters['object_id'],
@@ -37,7 +42,7 @@ class ActivityLogs extends Model
         return $query;
     }
 
-    public function createActivityLogs($parameters)
+    public function createActivityLogs(array $parameters): void
     {
         Log::info('hit createActivityLogs');
         Log::info($parameters['subject_id']);

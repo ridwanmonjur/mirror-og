@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -17,9 +18,14 @@ class Notifications extends Model
         'read_at', 'data',
     ];
 
-    public function findNotifications($parameters)
+    public function findNotifications(array $parameters): Builder
     {
-        $query = Notifications::where([
+        if (!isset($parameters['object_type'], $parameters['object_id'], $parameters['subject_id'])) {
+            throw new \InvalidArgumentException('Missing required parameters.');
+        }
+
+        $query = Notifications::query();
+        $query->where([
             'notifiable_type' => User::class,
             'object_type' => $parameters['object_type'],
             'object_id' => $parameters['object_id'],
@@ -34,7 +40,8 @@ class Notifications extends Model
         return $query;
     }
 
-    public function createNotifications($parameters)
+
+    public function createNotifications(array $parameters): void
     {
         Log::info('hit createNotifications');
 

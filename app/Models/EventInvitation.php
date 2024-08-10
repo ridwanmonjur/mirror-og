@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Http\Request;
 
 class EventInvitation extends Model
 {
@@ -11,22 +14,22 @@ class EventInvitation extends Model
 
     protected $table = 'event_invitations';
 
-    public function organizer()
+    public function organizer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'organizer_id');
     }
 
-    public function team()
+    public function team(): BelongsTo
     {
         return $this->belongsTo(User::class, 'team_id');
     }
 
-    public function event()
+    public function event(): BelongsTo
     {
         return $this->belongsTo(EventDetail::class, 'event_id');
     }
 
-    public static function getParticipants($request, $teamId)
+    public static function getParticipants(Request $request, int| string $teamId): Builder
     {
         return self::query()
             ->where('role', 'PARTICIPANT')
@@ -37,11 +40,6 @@ class EventInvitation extends Model
                         $q->orWhere('name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%");
                     });
                 }
-            })
-            ->with([
-                'members' => function ($query) use ($teamId) {
-                    $query->where('team_id', $teamId);
-                },
-            ]);
+            });
     }
 }

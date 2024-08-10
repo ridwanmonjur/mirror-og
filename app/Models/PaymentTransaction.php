@@ -13,10 +13,11 @@ class PaymentTransaction extends Model
     protected $table = 'payment_transactions';
 
     public static function createTransaction(
-        $paymentId,
-        $paymentStatus,
-        $paymentAmount
-    ) {
+        string| int $paymentId,
+        string $paymentStatus,
+        float $paymentAmount
+    ) : ? self 
+    {
         return self::create([
             'payment_id' => $paymentId,
             'payment_status' => $paymentStatus,

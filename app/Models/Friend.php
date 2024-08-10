@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Friend extends Model
 {
@@ -11,19 +12,21 @@ class Friend extends Model
 
     protected $table = 'friends';
 
+    public User | null $relatedUser = null;
+
     protected $fillable = ['user1_id', 'user2_id', 'status', 'actor_id'];
 
-    public function user1()
+    public function user1(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user1_id', 'id');
     }
 
-    public function user2()
+    public function user2(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user2_id', 'id');
     }
 
-    public static function checkFriendship($userProfileId, $logged_user_id)
+    public static function checkFriendship(string|int $userProfileId, string|int $logged_user_id): ?self
     {
         return self::where(function ($query) use ($userProfileId, $logged_user_id) {
             $query->where('user1_id', $userProfileId)

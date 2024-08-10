@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 
 class OrganizerFollow extends Model
@@ -17,22 +18,22 @@ class OrganizerFollow extends Model
         'organizer_user_id',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function participantUser()
+    public function participantUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'participant_user_id', 'id');
     }
 
-    public function organizer()
+    public function organizer(): BelongsTo
     {
         return $this->belongsTo(Organizer::class);
     }
 
-    public static function getFollowCounts($userIds)
+    public static function getFollowCounts(array| null $userIds): array
     {
         return DB::table('users')
             ->leftJoin('organizer_follows', function ($q) {
@@ -45,7 +46,7 @@ class OrganizerFollow extends Model
             ->toArray();
     }
 
-    public static function getIsFollowing($userId, $userIds)
+    public static function getIsFollowing(int| string $userId, array| null $userIds): array
     {
         return DB::table('organizer_follows')
             ->where('participant_user_id', $userId)

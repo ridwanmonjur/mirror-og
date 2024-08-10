@@ -15,7 +15,7 @@ class UserProfile extends Model
 
     protected $fillable = ['frameColor', 'backgroundColor', 'backgroundGradient', 'fontColor', 'user_id'];
 
-    public function generateStyles()
+    public function generateStyles(): array
     {
         $backgroundStyles = $fontStyles = $frameStyles = '';
 

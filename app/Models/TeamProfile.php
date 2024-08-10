@@ -15,7 +15,7 @@ class TeamProfile extends Model
 
     protected $fillable = ['frameColor', 'backgroundColor', 'backgroundGradient', 'fontColor', 'team_id'];
 
-    public function generateStyles()
+    public function generateStyles(): array
     {
         $backgroundStyles = $fontStyles = $frameStyles = '';
 

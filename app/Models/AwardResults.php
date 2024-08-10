@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class AwardResults extends Model
 {
+    use HasFactory;
     protected $table = 'awards_results';
 
-    public static function getTeamAwardResults($id)
+    public static function getTeamAwardResults(string|int $id): Collection
     {
         return DB::table('join_events')
             ->where('join_events.event_details_id', '=', $id)

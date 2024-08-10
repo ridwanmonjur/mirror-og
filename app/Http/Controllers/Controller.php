@@ -24,24 +24,4 @@ class Controller extends BaseController
     {
         return view('Participant.EventNotFound', compact('error'));
     }
-
-    protected function handleQueryParams(Request $request)
-    {
-        $queryParams = Request::query();
-
-        // Check if 'success' or 'tab' is present in query params
-        if (isset($queryParams['success'])) {
-            $successValue = $queryParams['success'];
-            unset($queryParams['success']);
-            Session::flash('success', $successValue);
-        }
-        if (isset($queryParams['tab'])) {
-            $tabValue = $queryParams['tab'];
-            unset($queryParams['tab']);
-            Session::flash('tab', $tabValue);
-        }
-
-        // Update the request query parameters
-        Request::replace($queryParams);
-    }
 }

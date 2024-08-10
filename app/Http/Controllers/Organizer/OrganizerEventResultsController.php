@@ -108,7 +108,7 @@ class OrganizerEventResultsController extends Controller
                 ->where('team_id', $request->team_id)
                 ->where('event_details_id', $request->input('event_details_id'))
                 ->select('id', 'team_id')
-                ->get()->first();
+                ->first();
             $awardExists = DB::table('awards')->where('id', $request->input('award_id'))->exists();
             $teamExists = DB::table('teams')->where('id', $request->team_id)->exists();
             if ($joinEvent && $awardExists && $teamExists) {
@@ -155,7 +155,7 @@ class OrganizerEventResultsController extends Controller
                 ->select('id', 'team_id')
                 ->where('team_id', $request->team_id)
                 ->where('event_details_id', $request->input('event_details_id'))
-                ->get()->first();
+                ->first();
 
             $teamExists = DB::table('teams')->where('id', $request->team_id)->exists();
             if ($joinEvent && $teamExists) {

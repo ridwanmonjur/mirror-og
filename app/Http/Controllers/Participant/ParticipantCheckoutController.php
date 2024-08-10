@@ -88,7 +88,7 @@ class ParticipantCheckoutController extends Controller
                         'team_members_id' => $paymentIntent['metadata']['memberId'],
                         'user_id' => $userId,
                         'join_events_id' => $paymentIntent['metadata']['joinEventId'],
-                        'payment_amount' => $paymentIntent['amount'] / 100,
+                        'payment_amount' => (float) $paymentIntent['amount'] / 100,
                         'payment_id' => $transaction->id,
                     ]);
 
@@ -96,7 +96,7 @@ class ParticipantCheckoutController extends Controller
                     $event = EventDetail::select(['id', 'event_tier_id'])
                         ->where('id', $joinEvent->event_details_id)
                         ->with('tier')->first();
-                    $total = $event->tier->tierEntryFee * $event->tier->tierTeamSlot;
+                    $total = (float) $event->tier->tierEntryFee * (float) $event->tier->tierTeamSlot;
                     $participantPaymentSum = ParticipantPayment::select(['join_events_id', 'id', 'payment_amount'])
                         ->where('join_events_id', $joinEvent->id)
                         ->sum('payment_amount');

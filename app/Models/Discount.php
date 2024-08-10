@@ -3,25 +3,27 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Discount extends Model
 {
+    use HasFactory;
     protected $fillable = [];
 
     protected $table = 'organizer_create_event_discounts';
 
-    public static function createNoDiscountFeeObject($fee, $entryFee)
+    public static function createNoDiscountFeeObject(array $fee, string $entryFee): array
     {
         $fee['discountFee'] = 0;
-        $fee['entryFee'] = $entryFee * 1000;
+        $fee['entryFee'] = (float) $entryFee * 1000;
         $fee['totalFee'] = $fee['finalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
         $fee['discountId'] = $fee['discountName'] = $fee['discountType'] = $fee['discountAmount'] = null;
 
         return $fee;
     }
 
-    public static function createDiscountFeeObject($couponName, $eventTierEntryFee)
+    public static function createDiscountFeeObject(string| null $couponName, string $eventTierEntryFee): array
     {
         $fee = [];
 
@@ -51,7 +53,7 @@ class Discount extends Model
             $fee['discountAmount'] = $discount->amount;
 
             if ($startTime < $currentDateTime && $endTime > $currentDateTime && $discount->isEnforced) {
-                $fee['entryFee'] = $eventTierEntryFee * 1000;
+                $fee['entryFee'] = (float) $eventTierEntryFee * 1000;
                 $fee['totalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
                 $fee['discountFee'] = $discount->type == 'percent' ?
                     ($discount->amount / 100) * $fee['totalFee'] : $discount->amount;

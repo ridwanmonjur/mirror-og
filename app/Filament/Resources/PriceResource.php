@@ -13,7 +13,6 @@ class PriceResource extends Resource
 {
     public static ?string $navigationGroup = 'Manage Event';
 
-    protected static ?string $model = Price::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 

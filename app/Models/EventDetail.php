@@ -7,8 +7,12 @@ use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\UnauthorizedException;
 
@@ -24,56 +28,63 @@ class EventDetail extends Model
         'eventTags' => 'array',
     ];
 
-    public function user()
+    public $acceptedMembersCount = 0;
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function invitationList()
+    public function invitationList(): HasMany
     {
         return $this->hasMany(EventInvitation::class, 'event_id');
     }
 
-    public function tier()
+    public function tier(): BelongsTO
     {
         return $this->belongsTo(EventTier::class, 'event_tier_id');
     }
 
-    public function type()
+    public function type(): BelongsTo
     {
         return $this->belongsTo(EventType::class, 'event_type_id');
     }
 
-    public function game()
+    public function game(): BelongsTo
     {
         return $this->belongsTo(EventCategory::class, 'event_category_id');
     }
 
-    public function payment_transaction()
+    public function payment_transaction(): BelongsTo
     {
         return $this->belongsTo(PaymentTransaction::class, 'payment_transaction_id');
     }
 
-    public function joinEvent()
+    public function joinEvent(): HasMany
     {
         return $this->hasMany(JoinEvent::class);
     }
 
-    public function joinEvents()
+    public function joinEvents(): HasMany
     {
         return $this->hasMany(JoinEvent::class, 'event_details_id', 'id');
     }
 
-    private static function storeEventBanner($file)
+    private static function storeEventBanner(UploadedFile $file): string
     {
-        $fileNameInitial = 'eventBanner-'.time().'.'.$file->getClientOriginalExtension();
+        $extension = $file->getClientOriginalExtension();
+        if (!$extension) {
+            throw new Exception("File extension not retrieved!");
+        }
+
+        $fileNameInitial = 'eventBanner-'.time().'.'.$extension;
         $fileNameFinal = "images/events/$fileNameInitial";
         $file->storeAs('images/events/', $fileNameInitial);
 
         return $fileNameFinal;
     }
 
-    public static function destroyEventBanner($file)
+    public static function destroyEventBanner(string| null $file): void
     {
         $fileNameInitial = str_replace('images/events/', '', $file);
         $fileNameFinal = "images/events/$fileNameInitial";
@@ -83,10 +94,10 @@ class EventDetail extends Model
         }
     }
 
-    public static function processEvents($events, $isFollowing)
+    public static function processEvents(Collection $events, array $isFollowing): array
     {
-        $activeEvents = [];
-        $historyEvents = [];
+        $activeEvents = collect();
+        $historyEvents = collect();
 
         foreach ($events as $joinEvent) {
             $joinEvent->status = $joinEvent->statusResolved();
@@ -102,7 +113,7 @@ class EventDetail extends Model
         return ['joinEvents' => $events, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents];
     }
 
-    public function isCompleteEvent()
+    public function isCompleteEvent(): bool
     {
         $isComplete = true;
         if (
@@ -126,7 +137,7 @@ class EventDetail extends Model
         return $isComplete;
     }
 
-    public function statusResolved()
+    public function statusResolved(): string
     {
         $carbonPublishedDateTime = $this->createCarbonDateTimeFromDB(
             $this->sub_action_public_date, $this->sub_action_public_time
@@ -164,7 +175,7 @@ class EventDetail extends Model
 
     }
 
-    public function fixTimeToRemoveSeconds($time)
+    public function fixTimeToRemoveSeconds(string| null $time): string| null
     {
         if ($time == null) {
             return null;
@@ -178,7 +189,7 @@ class EventDetail extends Model
         }
     }
 
-    public function createCarbonDateTimeFromDB($date, $time)
+    public function createCarbonDateTimeFromDB(string| null $date, string| null $time): ?string
     {
         if ($date == null || $time == null) {
             return null;
@@ -190,12 +201,12 @@ class EventDetail extends Model
         return $carbonDateTime;
     }
 
-    public static function mappingEventStateResolve()
+    public static function mappingEventStateResolve(): array
     {
         return config('constants.mappingEventState');
     }
 
-    public function eventTier()
+    public function eventTier(): BelongsTo
     {
         return $this->belongsTo(EventTier::class, 'event_tier_id');
     }
@@ -206,11 +217,7 @@ class EventDetail extends Model
         $eventListQuery->when($request->has('status'), function ($query) use ($request) {
             $status = $request->input('status');
             if (is_array($status)) {
-                if (isset($status)) {
-                    $status = $status[0];
-                } else {
-                    return $query;
-                }
+                $status = $status[0];
             }
 
             if (empty(trim($status))) {
@@ -433,6 +440,8 @@ class EventDetail extends Model
             $eventDetail->sub_action_public_time = null;
             $eventDetail->sub_action_private = 'private';
         } else {
+            $launch_date = null;
+            $launch_time = null;
             $eventDetail->sub_action_private = $request->launch_visible;
             if ($request->launch_visible == 'public') {
                 $launch_date = $request->launch_date_public;
@@ -444,6 +453,7 @@ class EventDetail extends Model
 
             if ($request->launch_schedule == 'schedule' && $launch_date && $launch_time) {
                 $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date.' '.$launch_time)->utc();
+                // @phpstan-ignore-next-line
                 if ($launch_date && $launch_time && $carbonPublishedDateTime < $carbonStartDateTime && $carbonPublishedDateTime < $carbonEndDateTime) {
                     $eventDetail->status = 'SCHEDULED';
                     $eventDetail->sub_action_public_date = $carbonPublishedDateTime->format('Y-m-d');
@@ -465,7 +475,12 @@ class EventDetail extends Model
         return $eventDetail;
     }
 
-    public static function findEventWithRelationsAndThrowError($userId, $id, $relations = null, $relationCount = null): EventDetail
+    public static function findEventWithRelationsAndThrowError(
+            string| int $userId, 
+            string| int $id, 
+            array| null $relations = null, 
+            string | null $relationCount = null
+        ): EventDetail
     {
         $relations ??= ['type', 'tier', 'game'];
         $eventQuery = self::with($relations);
@@ -485,7 +500,7 @@ class EventDetail extends Model
         }
     }
 
-    public static function findEventAndThrowError($eventId, $userId): EventDetail
+    public static function findEventAndThrowError(string| int $eventId, string| int $userId): EventDetail
     {
         $event = self::find($eventId);
 

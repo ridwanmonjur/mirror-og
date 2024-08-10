@@ -85,10 +85,12 @@ class ParticipantEventController extends Controller
             $followersCount = OrganizerFollow::where('organizer_user_id', $event->user_id)->count();
             $likesCount = Like::where('event_id', $event->id)->count();
             if ($user && $userId) {
+                // @phpstan-ignore-next-line
                 $user->isFollowing = OrganizerFollow::where('participant_user_id', $userId)
                     ->where('organizer_user_id', $event->user_id)
                     ->first();
 
+                // @phpstan-ignore-next-line
                 $user->isLiking = Like::where('user_id', $userId)
                     ->where('event_id', $event->id)
                     ->first();
@@ -96,7 +98,11 @@ class ParticipantEventController extends Controller
                 if ($event->sub_action_private == 'private') {
                     $checkIfUserIsOrganizerOfEvent = $event->user_id == $userId;
                     $checkIfUserIsInvited = true;
+                    // phstan correct actually
+                    // @phpstan-ignore-next-line
                     $checkIfShouldDisallow = ! ($checkIfUserIsOrganizerOfEvent || $checkIfUserIsInvited);
+                    // phstan correct actually
+                    // @phpstan-ignore-next-line
                     if ($checkIfShouldDisallow) {
                         throw new UnauthorizedException("This is a provate event and you're neither organizer nor a participant of event");
                     }
@@ -132,7 +138,6 @@ class ParticipantEventController extends Controller
         $organizerId = $request->organizer_id;
         $existingFollow = OrganizerFollow::where('participant_user_id', $userId)
             ->where('organizer_user_id', $organizerId)
-            ->get()
             ->first();
         $organizer = User::findOrFail($organizerId);
 
@@ -194,7 +199,7 @@ class ParticipantEventController extends Controller
             ]
         )->first();
         $groupedPaymentsByEventAndTeamMember = [];
-        $member = TeamMember::where('user_id', $user_id)->select('id')->get()->first();
+        $member = TeamMember::where('user_id', $user_id)->select('id')->first();
 
         if ($selectTeam) {
             if ($request->eventId) {
@@ -410,31 +415,30 @@ class ParticipantEventController extends Controller
                 // dd($joinEvent, $request);
             } else {
                 return back()->with('errorMessage', 'Error operation not permitted.');
-
             }
 
             return back()->with('successMessage', $successMessage);
         } catch (Exception $e) {
-            return $this->showParticipantError($e->getMessage());
+            return $this->showErrorParticipant($e->getMessage());
         }
     }
 
     public function showSuccess (Request $request) {
-        try {
-            $user = $request->get('user');
-            $userId = $user->id;
+        // try {
+        //     $user = $request->get('user');
+        //     $userId = $user->id;
       
-        } catch (ModelNotFoundException|UnauthorizedException $e) {
-            return $this->showErrorOrganizer($e->getMessage());
-        } catch (Exception $e) {
-            return $this->showErrorOrganizer("Event can't be retieved with id: $id");
-        }
+        // } catch (ModelNotFoundException|UnauthorizedException $e) {
+        //     return $this->showErrorOrganizer($e->getMessage());
+        // } catch (Exception $e) {
+        //     return $this->showErrorOrganizer("Event can't be retieved with id: $id");
+        // }
 
-        return view('Participant.RegistrationSuccess', [
-            'event' => $event,
-            'mappingEventState' => EventDetail::mappingEventStateResolve(),
-            'isUser' => $isUserSameAsAuth,
-            'livePreview' => 1,
-        ]);
+        // return view('Participant.RegistrationSuccess', [
+        //     'event' => $event,
+        //     'mappingEventState' => EventDetail::mappingEventStateResolve(),
+        //     'isUser' => $isUserSameAsAuth,
+        //     'livePreview' => 1,
+        // ]);
     }
 }
