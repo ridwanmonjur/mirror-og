@@ -20,10 +20,6 @@ class Notifications extends Model
 
     public function findNotifications(array $parameters): Builder
     {
-        if (!isset($parameters['object_type'], $parameters['object_id'], $parameters['subject_id'])) {
-            throw new \InvalidArgumentException('Missing required parameters.');
-        }
-
         $query = Notifications::query();
         $query->where([
             'notifiable_type' => User::class,

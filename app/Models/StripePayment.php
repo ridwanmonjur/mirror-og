@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use Stripe\Collection;
+use Stripe\Customer;
+use Stripe\Invoice;
+use Stripe\PaymentIntent;
 use Stripe\StripeClient;
 
 class StripePayment
@@ -13,7 +17,7 @@ class StripePayment
         $this->stripeClient = new StripeClient(env('STRIPE_SECRET'));
     }
 
-    public function createStripeCustomer($name, $email)
+    public function createStripeCustomer(string $name, string $email): ?Customer
     {
         return $this->stripeClient->customers->create([
             'email' => $email,
@@ -21,7 +25,7 @@ class StripePayment
         ]);
     }
 
-    public function createPaymentIntent($array)
+    public function createPaymentIntent(array $array): ?PaymentIntent
     {
         return $this->stripeClient->paymentIntents->create([
             ...$array,
@@ -30,36 +34,52 @@ class StripePayment
         ]);
     }
 
-    public function createStripeInvoice($customerId)
+    public function createStripeInvoice(string| int | null $customerId): ?Invoice
     {
-        return $this->stripeClient->invoices->create([
-            'customer' => $customerId,
-            'collection_method' => 'send_invoice',
-            'days_until_due' => 0,
-        ]);
+        if ($customerId) {
+            return $this->stripeClient->invoices->create([
+                'customer' => $customerId,
+                'collection_method' => 'send_invoice',
+                'days_until_due' => 0,
+            ]);
+        }
+        
+        return null;
     }
 
-    public function retrieveStripeCustomer($customerId)
+    public function retrieveStripeCustomer(string | int | null $customerId): ?Customer
     {
-        return $this->stripeClient->customers->retrieve($customerId, []);
+        if ($customerId) {
+            return $this->stripeClient->customers->retrieve($customerId, []);
+        }
+
+        return null;
     }
 
-    public function retrieveAllStripePaymentsByCustomer($arr)
+    public function retrieveAllStripePaymentsByCustomer($arr): Collection
     {
         if (array_key_exists('customer', $arr) && ! empty($arr['customer'])) {
             return $this->stripeClient->paymentMethods->all($arr);
         }
 
-        return [];
+        return new Collection();
     }
 
-    public function retrieveStripePaymentByPaymentId($paymentId)
+    public function retrieveStripePaymentByPaymentId(string| int | null $paymentId): ?PaymentIntent
     {
-        return $this->stripeClient->paymentIntents->retrieve($paymentId, []);
+        if ($paymentId) {
+            return $this->stripeClient->paymentIntents->retrieve($paymentId, []);
+        }
+
+        return null;
     }
 
-    public function finalizeStripeInvoice($invoiceId)
+    public function finalizeStripeInvoice(string| int | null $invoiceId): ? Invoice
     {
-        return $this->stripeClient->invoices->finalizeInvoice($invoiceId, []);
+        if ($invoiceId) {
+            return $this->stripeClient->invoices->finalizeInvoice($invoiceId, []);
+        }
+
+        return null;
     }
 }
