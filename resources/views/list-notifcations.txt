@@ -18,11 +18,17 @@ events:
 6. joined/left
 7. liked
 
-_ and  _ are friends. time
-_ achieved "_achievement_". time
-_ statrted following user. time
-_ won _ in users' event. time
-_ joined user's event. time
+1. _ and  _ are friends. time
+
+2. _ achieved "_achievement_". time
+
+3. _ started following user. time
+
+4. _ won _ in users' event. time (up to 4th place)
+
+5. _ joined user's event. time
+
+6. _ left user's event. time
 
 notifications are for other party.
 1. friends -> requested u
