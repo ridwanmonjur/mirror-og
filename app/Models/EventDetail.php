@@ -316,9 +316,11 @@ class EventDetail extends Model
             }
 
             if (array_key_exists('date[]', $filter)) {
-                // return $query->where(function ($q) use ($filter) {
-                    
-                // });
+                $dates = $filter['date[]'];
+            
+                if (isset($dates[0]) && isset($dates[1]) && $dates[0] != "" && $dates[1] != "") {
+                    $query->whereBetween('created_at', [$dates[0], $dates[1]]);
+                }
             }
 
             return $query;

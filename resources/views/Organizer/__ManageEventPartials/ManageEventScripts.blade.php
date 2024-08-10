@@ -76,30 +76,45 @@
 
     var isPickerShown = false;
     let formKeys = ['gameTitle[]', 'eventType[]', 'eventTier[]', 'venue[]', 'date[]'];
-    var picker = new Litepicker({ 
+    var datePicker = new Litepicker({ 
         element: document.getElementById('litepicker'),
         singleMode: false,
         autoApply: false,
-        setup: (_picker) => {
-            _picker.on('button:apply', (date1, date2) => {
+        setup: (_datePicker) => {
+            _datePicker.on('button:apply', (date1, date2) => {
                 _date1 = `${date1.getDate()}/${date1.getMonth() + 1}/${date1.getFullYear()}`;
                 _date2 = `${date2.getDate()}/${date2.getMonth() + 1}/${date2.getFullYear()}`;
                 console.log({isPickerShown, date1, date2, _date1, _date2});
                 isPickerShown = false;
-                document.getElementById('startDate').value = _date1;
-                document.getElementById('endDate').value = _date2;
-                console.log({_date1, _date2});
+                let startDateInput = document.getElementById('startDate');
+                if (startDateInput) startDateInput.value = _date1;
+                let endDateInput = document.getElementById('endDate');
+                if (endDateInput) endDateInput.value = _date2;
                 deleteTagByNameValue('startDate', _date1);
                 deleteTagByNameValue('endDate', _date2);
                 addFilterTags(`Date: ${_date1} - ${_date2}`, 'durationDate', `${_date1}${_date2}`);
                 console.log({isPickerShown});
+                fetchSearchSortFiter();
+                fetchVariables.visualize();
+            });
+            _datePicker.on('button:cancel', () => {
+                console.log({isPickerShown});
+                isPickerShown = false;
+                let startDateInput = document.getElementById('startDate');
+                if (startDateInput) startDateInput.value = "";
+                let endDateInput = document.getElementById('endDate').value = "";
+                if (endDateInput) endDateInput.value = "";
+                let tag = document.querySelector(".durationDate");
+                tag?.remove();
+                fetchSearchSortFiter();
+                fetchVariables.visualize();
             });
         }
     });
 
     function togglePicker(event) {
         if (event) {
-            picker?.show(); }
+            datePicker?.show(); }
         }
 
     document.getElementById("dropdownFilterDate")?.addEventListener('click', togglePicker);
@@ -185,6 +200,17 @@
     function deleteTagByParent(event, name, value) {
         let element = event.currentTarget;
         element.parentElement.remove();
+        let inputCheckbox = document.querySelector(`input[name="${name}"][value="${value}"][type="checkbox"]`);
+        if (inputCheckbox) {
+            inputCheckbox.checked = false;
+            inputCheckbox.removeAttribute("checked");
+        } else {
+            datePicker.clearSelection();
+            let startDateInput = document.getElementById('startDate');
+            if (startDateInput) startDateInput.value = "";
+            let endDateInput = document.getElementById('endDate').value = "";
+            if (endDateInput) endDateInput.value = "";
+        }
 
         fetchSearchSortFiter();
         fetchVariables.visualize();
@@ -195,7 +221,7 @@
         tagElement.classList.remove('d-none');
         tagElement.classList.add('d-flex', 'flex-wrap');
         tagElement.innerHTML += `
-            <div id='${name}${value}tag' class="me-3 px-3 py-1 d-flex justify-content-around mb-2" style="background-color: #95AEBD; color: white; border-radius: 30px;"> 
+            <div id='${name}${value}tag' class="me-3 ${name} px-3 py-1 d-flex justify-content-around mb-2" style="background-color: #95AEBD; color: white; border-radius: 30px;"> 
                 <span class="me-3"> ${title} </span>
                 <svg
                     onclick="deleteTagByParent(event, '${name}', '${value}');"
