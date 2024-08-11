@@ -410,6 +410,8 @@ class ParticipantTeamController extends Controller
         $teamMembersProcessed = TeamMember::getProcessedTeamMembers($selectTeam->id);
         $creator_id = $selectTeam->creator_id;
         $userList = [];
+        // dd($teamMembersProcessed);
+
         return view('Participant.MemberManagement', compact(
             'selectTeam',
             'redirect',

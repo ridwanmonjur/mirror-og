@@ -194,7 +194,6 @@ class ParticipantEventController extends Controller
         )->first();
         $groupedPaymentsByEventAndTeamMember = [];
         $member = TeamMember::where('user_id', $user_id)->select('id')->first();
-
         if ($selectTeam) {
             if ($request->eventId) {
                 $invitationListIds = [];
