@@ -192,11 +192,11 @@
                         <div class="d-block position-relative text-left coloured-cell mx-auto py-3 px-3 mx-3 mb-5 w-75"
                             id="div-{{ $invitation->id }}">
                             <div class="position-absolute d-flex justify-content-center w-100" style="top: -30px">
-                                <img src="{{ bladeImageNull($invitation->event->tier->tierIcon) }}" height="60"
+                                <img src="{{ bladeImageNull($invitation->event->tier?->tierIcon) }}" height="60"
                                     width="80">
                             </div>
                             <div class="d-inline pe-4">
-                                <img src="{{ bladeImageNull($invitation->event->game->gameIcon) }}" height="40"
+                                <img src="{{ bladeImageNull($invitation->event->game?->gameIcon) }}" height="40"
                                     width="40" class="object-fit-cover me-3">
                                 You have been invited to event
                                 <span>"{{ $invitation->event->eventName }}"</span>

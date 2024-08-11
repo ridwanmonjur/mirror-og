@@ -30,14 +30,14 @@
 
     <div @class([
         'event mx-auto event-width cursor-pointer visible-until-hover-parent',
-        'rounded-box-' . strtoLower($joinEvent->tier->eventTier),
+        'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
     ]) style="margin-bottom : 0;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
             <img 
                 {!! trustedBladeHandleImageFailureBanner() !!}
                 @class([
                 'opacity-until-hover ',
-                'rounded-box-' . strtoLower($joinEvent->tier->eventTier),
+                'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
             ])
                 style="object-fit: cover; border-radius: 30px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventBanner }}" width="100%" height="80%;">
@@ -68,7 +68,7 @@
 
                         <img 
                             {!! trustedBladeHandleImageFailureBanner() !!} style="max-width: 50px; "
-                            src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game->gameIcon : null) }}"
+                            src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
                             class="object-fit-cover" width="60px" height="40px">
                         <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventName }} </span>
                     </a>

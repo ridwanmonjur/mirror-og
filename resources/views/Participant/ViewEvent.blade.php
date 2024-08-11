@@ -19,7 +19,7 @@
     $status = $event->statusResolved();
     $stylesEventStatus = bladeEventStatusStyleMapping($status);
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
-    $tier = $event->tier ? $event->tier->eventTier : null;
+    $tier = $event->tier ? $event->tier?->eventTier : null;
     $eventTierLower = bladeEventTowerLowerClass($tier);
     $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
     extract($dateArray);
@@ -289,7 +289,7 @@
                                 &nbsp;
                                 @if ($event->tier)
                                     <span style="position: relative; top: 5px;"> RM
-                                        {{ $event->tier->tierPrizePool ?? 'No Prize' }} Prize Pool</span>
+                                        {{ $event->tier?->tierPrizePool ?? 'No Prize' }} Prize Pool</span>
                                 @else
                                     <p>Tier PrizePool: Not available</p>
                                 @endif
@@ -305,7 +305,7 @@
                                 &nbsp;
                                 @if ($event->tier)
                                     <span style="position: relative; top: 5px;">RM
-                                        {{ $event->tier->tierEntryFee ?? 'Free' }} Entry Fees</span>
+                                        {{ $event->tier?->tierEntryFee ?? 'Free' }} Entry Fees</span>
                                 @else
                                     <p>Tier Entry Fee: Not available</p>
                                 @endif
@@ -330,7 +330,7 @@
                                     <line x1="6" y1="20" x2="6" y2="14"></line>
                                 </svg>
                                 &nbsp;
-                                <span style="position: relative; top: 5px;">{{ $event->acceptedMembersCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available' }}</span>
+                                <span style="position: relative; top: 5px;">{{ $event->acceptedMembersCount }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}</span>
                             </div>
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
