@@ -92,7 +92,6 @@
                 console.log({data})
                 // TODO
                 // COOKIE TASK
-                window.storeToken(data.token);
                 window.location.href = data.route;
             } else {
                 document.querySelector('.flash-message').innerHTML = `<div class="text-red">${data.message}</div>`;

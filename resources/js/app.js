@@ -4,9 +4,6 @@
  import * as bootstrap from 'bootstrap'
  window.bootstrap = bootstrap
 
-window.storeToken = function(token) {
-    localStorage.setItem('jwtToken', token);
-};
 
 window.loadBearerHeader = function() {
     return {

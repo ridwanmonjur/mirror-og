@@ -83,24 +83,6 @@
             <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
             
             <script>
-                function getCookie(cookieName) {
-                    const cookies = document.cookie.split(';');
-                    for (let cookie of cookies) {
-                        const [name, value] = cookie.trim().split('=');
-                        if (name === cookieName) {
-                            return decodeURIComponent(value);
-                        }
-                    }
-                    return null; 
-                }
-
-                const cookieValue = getCookie('jwt_cookie');
-                window.storeToken(cookieValue)
-                if (cookieValue !== null) {
-                    console.log('Cookie value:', cookieValue);
-                } else {
-                    console.log('Cookie not found');
-                }
                 
                 var ENDPOINT = "{{ route('landing.view') }}";
                 var page = 1;
