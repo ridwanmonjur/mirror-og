@@ -1,9 +1,9 @@
 @php
     $random_int = rand(0, 999);
+    // dd($groupedPaymentsByEvent, $member, $groupedPaymentsByEventAndTeamMember, $joinEvent);  
     $total = $joinEvent->tier?->tierEntryFee * 5;
     $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
     $individualContributionTotal = 0;
-
     $pedning = $total - $exisitngSum;
     $percent = round(($exisitngSum * 100) / $total);
 
@@ -29,19 +29,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($selectTeam->members as $member)
+                    @foreach($selectTeam->members as $member2)
                         @php
-                            $memberContribution = $groupedPaymentsByEventAndTeamMember[$joinEvent->id][$member->id] ?? 0;
+                            $memberContribution = $groupedPaymentsByEventAndTeamMember[$joinEvent->id][$member2->id] ?? 0;
                             $individualContributionTotal += $memberContribution;
                         @endphp
                         <tr style="border-collapse: seperate !important; border-spacing: 0 1em !important;">
                             <td class="pe-3 pb-2">
                                 <img
                                     class="object-fit-cover rounded-circle me-2 border border-primary random-color-circle" 
-                                    src="{{'/storage' . '/' . $member->user->userBanner}}" width="35" height="35"
+                                    src="{{'/storage' . '/' . $member2->user->userBanner}}" width="35" height="35"
                                     {!! trustedBladeHandleImageFailureBanner() !!}
                                 >
-                                {{$member->user->name}}
+                                {{$member2->user->name}}
                             </td>
                             <td class="pe-3 pb-2">
                                 RM {{$memberContribution ?? 0}}
@@ -50,7 +50,7 @@
                                 {{round(($memberContribution?? 0) *100 / $total, 2) ?? 0}}%
                             </td>
                             <td class="ps-3 pe-2 pb-2">
-                                <a href="{{route('public.participant.view', ['id' => $member->user->id])}}" class="text-right">
+                                <a href="{{route('public.participant.view', ['id' => $member2->user->id])}}" class="text-right">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
                                     <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
@@ -59,11 +59,26 @@
                             </td>
                         </tr>
                     @endforeach
-                    @if ($individualContributionTotal != $total) 
-                        <p>Another member made the remaining payment...</p>
-                    @endif
+                   <tr style="border-collapse: seperate !important; border-spacing: 0 1em !important;">
+                            <td class="pe-3 pb-2">
+                               
+                            </td>
+                            <td class="pe-3 pb-2">
+                                RM {{$exisitngSum}}
+                            </td>
+                            <td class="pe-2 pb-2">
+                               100%
+                            </td>
+                            <td class="ps-3 pe-2 pb-2">
+                                
+                            </td>
+                        </tr>
                 </tbody>
             </table>
+             @if ($exisitngSum !== $individualContributionTotal) 
+                <p class="mx-4">Another member made the remaining RM {{$exisitngSum- $individualContributionTotal}} .</p>
+                <p class="mx-4">Existing members paid RM {{$individualContributionTotal}} .</p>
+            @endif
         </p>
        
     </div>

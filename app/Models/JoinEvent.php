@@ -151,7 +151,7 @@ class JoinEvent extends Model
             ->with('user');
     }
 
-    public static function saveJoinEvent($data): JoinEvent
+    public static function saveJoinEvent(array $data): JoinEvent
     {
         $joint = new JoinEvent();
         $joint->team_id = $data['team_id'];
@@ -164,22 +164,24 @@ class JoinEvent extends Model
     }
 
     public static function fetchJoinEvents(
-        int|string $teamId, array|null $invitationListIds = [], int|string|null $eventId = null
+        int|string $teamId, Collection|array|null $invitationListIds = [], int|string|null $eventId = null
     ): array
     {
-        $fixJoinEvents = function (Collection $eventList): array {
+        $fixJoinEvents = function (Collection| null $eventList): array {
             $organizerIdList = $eventIdList = [];
-
-            $eventList->each(function ($event) use (&$organizerIdList, &$eventIdList) {
-                $organizerIdList[] = $event->eventDetails->user_id;
-                $eventIdList[] = $event->id;
-            });
+            if ($eventList) {
+                $eventList->each(function ($event) use (&$organizerIdList, &$eventIdList) {
+                    $organizerIdList[] = $event->eventDetails->user_id;
+                    $eventIdList[] = $event->id;
+                });
+            }
 
             return [ $eventIdList, $organizerIdList ];
         };
 
         $query = static::where('team_id', $teamId);
-        $invitedEvents = $joinEvents = collect();
+        $invitedEvents = collect(); 
+        $joinEvents = collect();
         $invitedEventOrganizerIds = $joinEventOrganizerIds = $invitedIds = $joinIds = [];
         $withClause = [
             'eventDetails', 'eventDetails.tier', 'eventDetails.user', 'eventDetails.game', 'members.payments', 'members.user',
@@ -262,7 +264,7 @@ class JoinEvent extends Model
             ->exists();
     }
 
-    public static function getJoinedByTeamsForSameEvent($eventId, $userId): ?self
+    public static function getJoinedByTeamsForSameEvent(string| int $eventId, string| int $userId): ?self
     {
         return self::where('event_details_id', $eventId)
             ->where(function ($query) use ($userId) {
