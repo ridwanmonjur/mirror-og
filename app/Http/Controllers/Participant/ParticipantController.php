@@ -129,64 +129,6 @@ class ParticipantController extends Controller
         }
     }
 
-    private function viewProfile(Request $request, $logged_user_id, $userProfile, $isOwnProfile = true)
-    {
-        try {
-            [
-                'teamList' => $teamList,
-                'teamIdList' => $teamIdList,
-            ] = Team::getUserTeamList($userProfile->id);
-            $pastTeam = Team::getUserPastTeamList($userProfile->id);
-
-            $awardList = Team::getAwardListByTeamIdList($teamIdList);
-            $achievementList = Team::getAchievementListByTeamIdList($teamIdList);
-            $joinEvents = JoinEvent::getJoinEventsForTeamListWithEventsRosterResults($teamIdList);
-            $totalEventsCount = $joinEvents->count();
-            ['wins' => $wins, 'streak' => $streak] =
-                JoinEvent::getJoinEventsWinCountForTeamList($teamIdList);
-
-            $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
-            $followCounts = OrganizerFollow::getFollowCounts($userIds);
-            if ($logged_user_id) {
-                $isFollowingOrganizerList = OrganizerFollow::getIsFollowing($logged_user_id, $userIds);
-                $friend = Friend::checkFriendship($logged_user_id, $userProfile->id);
-                $isFollowingParticipant = ParticipantFollow::checkFollow($logged_user_id, $userProfile->id);
-            } else {
-                $isFollowingOrganizerList = [];
-                $friend = null;
-                $isFollowingParticipant = null;
-            }
-            $joinEventsHistory = $joinEventsActive = $values = [];
-            ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
-                = JoinEvent::processEvents($joinEvents, $isFollowingOrganizerList);
-
-            $joinEventIds = $joinEvents->pluck('id')->toArray();
-
-            return view(
-                'Participant.PlayerProfile',
-                compact(
-                    'joinEvents',
-                    'userProfile',
-                    'teamList',
-                    'isOwnProfile',
-                    'joinEventsHistory',
-                    'joinEventsActive',
-                    'followCounts',
-                    'totalEventsCount',
-                    'wins',
-                    'streak',
-                    'awardList',
-                    'achievementList',
-                    'pastTeam',
-                    'friend',
-                    'isFollowingParticipant'
-                )
-            );
-        } catch (Exception $e) {
-            return $this->showErrorParticipant($e->getMessage());
-        }
-    }
-
     public function editProfile(UpdateParticipantsRequest $request)
     {
         $validatedData = $request->validated();
@@ -375,5 +317,61 @@ class ParticipantController extends Controller
         return back();
     }
 
-   
+    private function viewProfile(Request $request, $logged_user_id, $userProfile, $isOwnProfile = true)
+    {
+        try {
+            [
+                'teamList' => $teamList,
+                'teamIdList' => $teamIdList,
+            ] = Team::getUserTeamList($userProfile->id);
+            $pastTeam = Team::getUserPastTeamList($userProfile->id);
+
+            $awardList = Team::getAwardListByTeamIdList($teamIdList);
+            $achievementList = Team::getAchievementListByTeamIdList($teamIdList);
+            $joinEvents = JoinEvent::getJoinEventsForTeamListWithEventsRosterResults($teamIdList);
+            $totalEventsCount = $joinEvents->count();
+            ['wins' => $wins, 'streak' => $streak] =
+                JoinEvent::getJoinEventsWinCountForTeamList($teamIdList);
+
+            $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
+            $followCounts = OrganizerFollow::getFollowCounts($userIds);
+            if ($logged_user_id) {
+                $isFollowingOrganizerList = OrganizerFollow::getIsFollowing($logged_user_id, $userIds);
+                $friend = Friend::checkFriendship($logged_user_id, $userProfile->id);
+                $isFollowingParticipant = ParticipantFollow::checkFollow($logged_user_id, $userProfile->id);
+            } else {
+                $isFollowingOrganizerList = [];
+                $friend = null;
+                $isFollowingParticipant = null;
+            }
+            $joinEventsHistory = $joinEventsActive = $values = [];
+            ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
+                = JoinEvent::processEvents($joinEvents, $isFollowingOrganizerList);
+
+            $joinEventIds = $joinEvents->pluck('id')->toArray();
+
+            return view(
+                'Participant.PlayerProfile',
+                compact(
+                    'joinEvents',
+                    'userProfile',
+                    'teamList',
+                    'isOwnProfile',
+                    'joinEventsHistory',
+                    'joinEventsActive',
+                    'followCounts',
+                    'totalEventsCount',
+                    'wins',
+                    'streak',
+                    'awardList',
+                    'achievementList',
+                    'pastTeam',
+                    'friend',
+                    'isFollowingParticipant'
+                )
+            );
+        } catch (Exception $e) {
+            return $this->showErrorParticipant($e->getMessage());
+        }
+    }
 }

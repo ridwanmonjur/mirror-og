@@ -61,7 +61,7 @@ class ParticipantEventController extends Controller
                     },
                     ]);
                 },
-            ],
+                ],
                 null
             )->find($id);
 

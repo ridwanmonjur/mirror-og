@@ -40,7 +40,7 @@ class JoinEventConfirmed
         $reflection = new ReflectionObject($this);
         $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE);
 
-        $string = get_class($this).' {';
+        $string = static::class.' {';
         foreach ($properties as $property) {
             $property->setAccessible(true);
             $propertyName = $property->getName();
@@ -48,7 +48,7 @@ class JoinEventConfirmed
             $stringValue = is_object($propertyValue) ? $propertyValue->__toString() : var_export($propertyValue, true);
             $string .= "{$propertyName}: {$stringValue}, ";
         }
-        
+
         $string = rtrim($string, ', ').'}';
 
         return $string;
@@ -65,5 +65,4 @@ class JoinEventConfirmed
             new PrivateChannel('channel-name'),
         ];
     }
-
 }

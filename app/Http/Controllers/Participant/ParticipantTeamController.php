@@ -128,25 +128,6 @@ class ParticipantTeamController extends Controller
         return $this->showErrorParticipant('This event is missing or you need to be a member to view events!');
     }
 
-    protected function handleTeamManagement($selectTeam, $eventId, $request, $page, $redirect = false)
-    {
-        $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
-        $teamMembersProcessed = TeamMember::getProcessedTeamMembers($selectTeam->id);
-        $creator_id = $selectTeam->creator_id;
-        $userList = [];
-        return view('Participant.MemberManagement', compact(
-            'selectTeam',
-            'redirect',
-            'teamMembersProcessed',
-            'creator_id',
-            'eventId',
-            'captain',
-            'userList'
-        ));
-    }
-
-   
-
     public function rosterMemberManagement(Request $request, $id, $teamId)
     {
         $user_id = $request->attributes->get('user')->id;
@@ -349,21 +330,6 @@ class ParticipantTeamController extends Controller
 
         return response()->json(['success' => 'true'], 200);
     }
-    
-    private function validateAndSaveTeam($request, $team, $user_id)
-    {
-        $request->validate([
-            'teamName' => 'required|string|max:25',
-            'teamDescription' => 'required',
-        ]);
-
-        $team->teamName = $request->input('teamName');
-        $team->teamDescription = $request->input('teamDescription');
-        $team->creator_id = $user_id;
-        $team->save();
-
-        return $team;
-    }
 
     public function teamStore(Request $request)
     {
@@ -438,7 +404,35 @@ class ParticipantTeamController extends Controller
         }
     }
 
-    
+    protected function handleTeamManagement($selectTeam, $eventId, $request, $page, $redirect = false)
+    {
+        $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
+        $teamMembersProcessed = TeamMember::getProcessedTeamMembers($selectTeam->id);
+        $creator_id = $selectTeam->creator_id;
+        $userList = [];
+        return view('Participant.MemberManagement', compact(
+            'selectTeam',
+            'redirect',
+            'teamMembersProcessed',
+            'creator_id',
+            'eventId',
+            'captain',
+            'userList'
+        ));
+    }
 
-    
+    private function validateAndSaveTeam($request, $team, $user_id)
+    {
+        $request->validate([
+            'teamName' => 'required|string|max:25',
+            'teamDescription' => 'required',
+        ]);
+
+        $team->teamName = $request->input('teamName');
+        $team->teamDescription = $request->input('teamDescription');
+        $team->creator_id = $user_id;
+        $team->save();
+
+        return $team;
+    }
 }

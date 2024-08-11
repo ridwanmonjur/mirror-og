@@ -45,82 +45,6 @@ class AuthController extends Controller
         return response()->json(['success' => true, 'data' => $games], 200);
     }
 
-    protected function _registerOrLoginUser($user, $type, $role)
-    {
-        $finduser = null;
-        if ($type === 'google') {
-            $finduser = User::where('google_id', $user->id)->first();
-        } elseif ($type === 'steam') {
-            $finduser = User::where('steam_id', $user->id)->first();
-        }
-
-        if ($finduser) {
-            // if (!$user->user['email_verified']) {
-            //     return ['finduser' => null, 'error' => 'Your Gmail is not verified'];
-            // }
-
-            Auth::login($finduser);
-
-            return ['finduser' => $finduser, 'error' => null];
-        }
-        
-        $finduser = User::where('email', $user->email)->first();
-
-        if ($finduser) {
-            if ($type === 'google') {
-                $finduser->google_id = $user->id;
-            } elseif ($type === 'steam') {
-                $finduser->steam_id = $user->id;
-            }
-
-            $finduser->email_verified_at = now();
-            Auth::login($finduser);
-            $finduser->save();
-
-            return ['finduser' => $finduser, 'error' => null];
-        }
-
-        $newUser = User::create([
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => bcrypt(Str::random(13)),
-            'role' => strtoupper($role),
-            'created_at' => now(),
-        ]);
-
-        if ($newUser->role === 'ORGANIZER') {
-            $organizer = new Organizer([
-                'user_id' => $newUser->id,
-            ]);
-
-            $organizer->save();
-        } elseif ($newUser->role === 'PARTICIPANT') {
-            $participant = new Participant([
-                'user_id' => $newUser->id,
-            ]);
-
-            $participant->save();
-        }
-
-        $newUser->email_verified_at = now();
-
-        if ($type === 'google') {
-            $newUser->google_id = $user->id;
-        } elseif ($type === 'steam') {
-            $newUser->steam_id = $user->id;
-        }
-
-        $newUser->save();
-        Auth::login($newUser);
-
-        return ['finduser' => $newUser, 'error' => null];
-    }
-
-    private function generateToken()
-    {
-        return Str::random(64);
-    }
-
     public function handleGoogleCallback(Request $request)
     {
         // dd("hio");
@@ -314,9 +238,9 @@ class AuthController extends Controller
         Mail::send(
             'Email.reset',
             [
-            'token' => $token,
-            'imageLogo' => public_path('assets/images/logo-default.png'),
-        ],
+                'token' => $token,
+                'imageLogo' => public_path('assets/images/logo-default.png'),
+            ],
             function ($message) use ($email) {
                 $message->to($email);
                 $message->subject('Reset Password');
@@ -561,5 +485,79 @@ class AuthController extends Controller
         }
     }
 
-    
+    protected function _registerOrLoginUser($user, $type, $role)
+    {
+        $finduser = null;
+        if ($type === 'google') {
+            $finduser = User::where('google_id', $user->id)->first();
+        } elseif ($type === 'steam') {
+            $finduser = User::where('steam_id', $user->id)->first();
+        }
+
+        if ($finduser) {
+            // if (!$user->user['email_verified']) {
+            //     return ['finduser' => null, 'error' => 'Your Gmail is not verified'];
+            // }
+
+            Auth::login($finduser);
+
+            return ['finduser' => $finduser, 'error' => null];
+        }
+
+        $finduser = User::where('email', $user->email)->first();
+
+        if ($finduser) {
+            if ($type === 'google') {
+                $finduser->google_id = $user->id;
+            } elseif ($type === 'steam') {
+                $finduser->steam_id = $user->id;
+            }
+
+            $finduser->email_verified_at = now();
+            Auth::login($finduser);
+            $finduser->save();
+
+            return ['finduser' => $finduser, 'error' => null];
+        }
+
+        $newUser = User::create([
+            'name' => $user->name,
+            'email' => $user->email,
+            'password' => bcrypt(Str::random(13)),
+            'role' => strtoupper($role),
+            'created_at' => now(),
+        ]);
+
+        if ($newUser->role === 'ORGANIZER') {
+            $organizer = new Organizer([
+                'user_id' => $newUser->id,
+            ]);
+
+            $organizer->save();
+        } elseif ($newUser->role === 'PARTICIPANT') {
+            $participant = new Participant([
+                'user_id' => $newUser->id,
+            ]);
+
+            $participant->save();
+        }
+
+        $newUser->email_verified_at = now();
+
+        if ($type === 'google') {
+            $newUser->google_id = $user->id;
+        } elseif ($type === 'steam') {
+            $newUser->steam_id = $user->id;
+        }
+
+        $newUser->save();
+        Auth::login($newUser);
+
+        return ['finduser' => $newUser, 'error' => null];
+    }
+
+    private function generateToken()
+    {
+        return Str::random(64);
+    }
 }
