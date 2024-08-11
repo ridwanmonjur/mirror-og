@@ -129,7 +129,7 @@
                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                         </svg>
                         &nbsp;
-                        <span>{{ $event->type->eventType ?? 'Choose a type' }}</span>
+                        <span>{{ $event->type?->eventType ?? 'Choose a type' }}</span>
                     </div>
                     <div class="d-flex justify-content-around">
                         @if (!in_array($status, ['PENDING', 'DRAFT'])) 
