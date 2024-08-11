@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -56,13 +57,13 @@ class JoinEvent extends Model
         return $this->hasMany(EventJoinResults::class, 'join_events_id', 'id');
     }
 
-    public static function getJoinEventsForTeam($team_id)
+    public static function getJoinEventsForTeam(int|string $team_id): Builder
     {
         return self::where('team_id', $team_id)
             ->with('user');
     }
 
-    public static function getJoinEventsForTeamWithEventsRosterResults($team_id)
+    public static function getJoinEventsForTeamWithEventsRosterResults(int|string $team_id): Collection
     {
         return self::where('team_id', $team_id)
             ->with(['eventDetails',  'user', 'results', 'roster' => function ($q) {
@@ -72,7 +73,7 @@ class JoinEvent extends Model
             ->get();
     }
 
-    public static function getJoinEventsForTeamListWithEventsRosterResults($teamIdList)
+    public static function getJoinEventsForTeamListWithEventsRosterResults(array $teamIdList= []): Collection
     {
         return self::whereIn('team_id', $teamIdList)
             ->with(['eventDetails',  'user', 'results', 'roster' => function ($q) {
@@ -82,13 +83,13 @@ class JoinEvent extends Model
             ->get();
     }
 
-    public static function getJoinEventsCountForTeam($team_id)
+    public static function getJoinEventsCountForTeam(int| string $team_id): int
     {
         return self::where('team_id', $team_id)
             ->count();
     }
 
-    public static function getJoinEventsWinCountForTeam($team_id)
+    public static function getJoinEventsWinCountForTeam(int| string $team_id): array
     {
         $joins = DB::table('event_join_results')
             ->whereIn('join_events_id', function ($q) use ($team_id) {
@@ -116,7 +117,7 @@ class JoinEvent extends Model
         return ['wins' => $sumPositionOne, 'streak' => $streak];
     }
 
-    public static function getJoinEventsWinCountForTeamList($teamIdList)
+    public static function getJoinEventsWinCountForTeamList(array $teamIdList = []): array
     {
         $joins = DB::table('event_join_results')
             ->whereIn('join_events_id', function ($q) use ($teamIdList) {
@@ -144,7 +145,7 @@ class JoinEvent extends Model
         return ['wins' => $sumPositionOne, 'streak' => $streak];
     }
 
-    public static function getJoinEventsByTeamIdList($teamIdList)
+    public static function getJoinEventsByTeamIdList($teamIdList): Builder
     {
         return self::whereIn('team_id', $teamIdList)
             ->with('user');
@@ -162,7 +163,9 @@ class JoinEvent extends Model
         return $joint;
     }
 
-    public static function fetchJoinEvents($teamId, $invitationListIds = [], $eventId = null)
+    public static function fetchJoinEvents(
+        int|string $teamId, array|null $invitationListIds = [], int|string|null $eventId = null
+    ): array
     {
         $fixJoinEvents = function (Collection $eventList): array {
             $organizerIdList = $eventIdList = [];
