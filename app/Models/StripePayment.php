@@ -25,7 +25,7 @@ class StripePayment
         ]);
     }
 
-    public function createPaymentIntent(array $array): ?PaymentIntent
+    public function createPaymentIntent(array $array): PaymentIntent
     {
         return $this->stripeClient->paymentIntents->create([
             ...$array,

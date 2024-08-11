@@ -178,7 +178,7 @@ class User extends Authenticatable implements FilamentUser
             ->orderBy($sortColumn, $sortType);
     }
 
-    public function uploadUserBanner(Request $request)
+    public function uploadUserBanner(Request $request): ?string
     {
         $requestData = json_decode($request->getContent(), true);
         $fileData = $requestData['file'];
@@ -195,7 +195,7 @@ class User extends Authenticatable implements FilamentUser
         return asset('storage/'.$fileName);
     }
 
-    public function uploadBackgroundBanner(Request $request, UserProfile $profile)
+    public function uploadBackgroundBanner(Request $request, UserProfile $profile): ?string
     {
         $file = $request->file('backgroundBanner');
         $fileNameInitial = 'userBanner-'.time().'.'.$file->getClientOriginalExtension();
@@ -209,7 +209,7 @@ class User extends Authenticatable implements FilamentUser
         return asset('storage/'.$fileName);
     }
 
-    public function destroyUserBanner(string| null $fileName)
+    public function destroyUserBanner(string| null $fileName): void
     {
         if ($fileName) {
             if (Storage::disk('public')->exists($fileName)) {
