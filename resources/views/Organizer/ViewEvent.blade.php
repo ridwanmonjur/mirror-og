@@ -85,7 +85,7 @@
                                         &nbsp;
                                         <div class="card-organizer">
                                             <p style="display: inline;"><u>
-                                                {{ $event->user->organizer->companyName ?? 'Add' }} </u> </p>
+                                                {{ $event->user->organizer?->companyName ?? 'Add' }} </u> </p>
                                             
                                             <p class="small-text"> <i> {{ $followersCount }} follower{{ bladePluralPrefix($followersCount) }} </i> </p>
                                         </div>
