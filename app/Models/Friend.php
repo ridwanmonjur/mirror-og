@@ -10,9 +10,9 @@ class Friend extends Model
 {
     use HasFactory;
 
-    protected $table = 'friends';
-
     public User | null $relatedUser = null;
+
+    protected $table = 'friends';
 
     protected $fillable = ['user1_id', 'user2_id', 'status', 'actor_id'];
 

@@ -37,7 +37,21 @@ class JoinEventConfirmed
 
     public function __toString()
     {
-        return $this->getModelAsString();
+        $reflection = new ReflectionObject($this);
+        $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE);
+
+        $string = get_class($this).' {';
+        foreach ($properties as $property) {
+            $property->setAccessible(true);
+            $propertyName = $property->getName();
+            $propertyValue = $property->getValue($this);
+            $stringValue = is_object($propertyValue) ? $propertyValue->__toString() : var_export($propertyValue, true);
+            $string .= "{$propertyName}: {$stringValue}, ";
+        }
+        
+        $string = rtrim($string, ', ').'}';
+
+        return $string;
     }
 
     /**
@@ -52,21 +66,4 @@ class JoinEventConfirmed
         ];
     }
 
-    protected function getModelAsString()
-    {
-        $reflection = new ReflectionObject($this);
-        $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE);
-
-        $string = get_class($this).' {';
-        foreach ($properties as $property) {
-            $property->setAccessible(true);
-            $propertyName = $property->getName();
-            $propertyValue = $property->getValue($this);
-            $stringValue = is_object($propertyValue) ? $propertyValue->__toString() : var_export($propertyValue, true);
-            $string .= "{$propertyName}: {$stringValue}, ";
-        }
-        $string = rtrim($string, ', ').'}';
-
-        return $string;
-    }
 }

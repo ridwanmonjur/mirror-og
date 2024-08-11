@@ -2,20 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Achievements extends Model
 {
-    protected $table = 'achievements';
     use HasFactory;
+    protected $table = 'achievements';
 
     /**
-    * @param string|int $id
-    * @return \Illuminate\Support\Collection<int, \App\Models\JoinEvent>
-    */
+     * @param string|int $id
+     *
+     * @return \Illuminate\Support\Collection<int, \App\Models\JoinEvent>
+     */
     public static function getTeamAchievements(string| int $id): Collection
     {
         return DB::table('join_events')

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PriceResource\Pages;
-use App\Models\Price;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -12,7 +11,6 @@ use Filament\Tables;
 class PriceResource extends Resource
 {
     public static ?string $navigationGroup = 'Manage Event';
-
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 

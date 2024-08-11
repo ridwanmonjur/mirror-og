@@ -20,6 +20,8 @@ class EventDetail extends Model
 {
     use HasFactory;
 
+    public $acceptedMembersCount = 0;
+
     protected $table = 'event_details';
 
     protected $guarded = [];
@@ -27,8 +29,6 @@ class EventDetail extends Model
     protected $casts = [
         'eventTags' => 'array',
     ];
-
-    public $acceptedMembersCount = 0;
 
     public function user(): BelongsTo
     {
@@ -70,24 +70,10 @@ class EventDetail extends Model
         return $this->hasMany(JoinEvent::class, 'event_details_id', 'id');
     }
 
-    private static function storeEventBanner(UploadedFile $file): string
-    {
-        $extension = $file->getClientOriginalExtension();
-        if (!$extension) {
-            throw new Exception("File extension not retrieved!");
-        }
-
-        $fileNameInitial = 'eventBanner-'.time().'.'.$extension;
-        $fileNameFinal = "images/events/$fileNameInitial";
-        $file->storeAs('images/events/', $fileNameInitial);
-
-        return $fileNameFinal;
-    }
-
     public static function destroyEventBanner(string| null $file): void
     {
         $fileNameInitial = str_replace('images/events/', '', $file);
-        $fileNameFinal = "images/events/$fileNameInitial";
+        $fileNameFinal = "images/events/{$fileNameInitial}";
 
         if (file_exists($fileNameFinal)) {
             unlink($fileNameFinal);
@@ -105,7 +91,7 @@ class EventDetail extends Model
 
             if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING'])) {
                 $activeEvents[] = $joinEvent;
-            } elseif ($joinEvent->status == 'ENDED') {
+            } elseif ($joinEvent->status === 'ENDED') {
                 $historyEvents[] = $joinEvent;
             }
         }
@@ -140,65 +126,65 @@ class EventDetail extends Model
     public function statusResolved(): string
     {
         $carbonPublishedDateTime = $this->createCarbonDateTimeFromDB(
-            $this->sub_action_public_date, $this->sub_action_public_time
+            $this->sub_action_public_date,
+            $this->sub_action_public_time
         );
         $carbonEndDateTime = $this->createCarbonDateTimeFromDB(
-            $this->endDate, $this->endTime
+            $this->endDate,
+            $this->endTime
         );
         $carbonStartDateTime = $this->createCarbonDateTimeFromDB(
-            $this->startDate, $this->startTime
+            $this->startDate,
+            $this->startTime
         );
 
         $carbonNow = Carbon::now()->utc();
 
         if (in_array($this->status, ['DRAFT', 'PREVEW'])) {
             return 'DRAFT';
-        } elseif (is_null($this->payment_transaction_id) || $this->status == 'PENDING') {
+        }
+        if (is_null($this->payment_transaction_id) || $this->status === 'PENDING') {
             return 'PENDING';
-        } elseif (! $carbonEndDateTime || ! $carbonStartDateTime) {
+        }
+        if (! $carbonEndDateTime || ! $carbonStartDateTime) {
             Log::error('EventDetail.php: statusResolved: EventDetail with id= '.$this->id
                 .' and name= '.$this->eventName.' has null end or start date time');
 
             return 'ERROR';
-        } elseif ($carbonEndDateTime < $carbonNow) {
+        }
+        if ($carbonEndDateTime < $carbonNow) {
             return 'ENDED';
-        } else {
-
-            if ($carbonStartDateTime < $carbonNow) {
-                return 'ONGOING';
-            } elseif ($carbonPublishedDateTime && $carbonPublishedDateTime > $carbonNow) {
-                return 'SCHEDULED';
-            } else {
-                return 'UPCOMING';
-            }
         }
 
+        if ($carbonStartDateTime < $carbonNow) {
+            return 'ONGOING';
+        }
+        if ($carbonPublishedDateTime && $carbonPublishedDateTime > $carbonNow) {
+            return 'SCHEDULED';
+        }
+        return 'UPCOMING';
     }
 
     public function fixTimeToRemoveSeconds(string| null $time): string| null
     {
-        if ($time == null) {
+        if ($time === null) {
             return null;
-        } elseif (substr_count($time, ':') === 2) {
-            $time = explode(':', $time);
-            $time = $time[0].':'.$time[1];
-
-            return $time;
-        } else {
-            return $time;
         }
+        if (substr_count($time, ':') === 2) {
+            $time = explode(':', $time);
+            return $time[0].':'.$time[1];
+        }
+        return $time;
     }
 
     public function createCarbonDateTimeFromDB(string| null $date, string| null $time): ?string
     {
-        if ($date == null || $time == null) {
+        if ($date === null || $time === null) {
             return null;
         }
 
-        $carbonDateTime = Carbon::createFromFormat('Y-m-d H:i', $date.' '.$this->fixTimeToRemoveSeconds($time))
+        return Carbon::createFromFormat('Y-m-d H:i', $date.' '.$this->fixTimeToRemoveSeconds($time))
             ->utc();
-
-        return $carbonDateTime;
     }
 
     public static function mappingEventStateResolve(): array
@@ -225,17 +211,20 @@ class EventDetail extends Model
             }
 
             $currentDateTime = Carbon::now()->utc();
-            if ($status == 'DRAFT') {
+            if ($status === 'DRAFT') {
                 return $query->whereIn('status', ['DRAFT', 'PREVIEW']);
-            } elseif ($status == 'PENDING') {
+            }
+            if ($status === 'PENDING') {
                 return $query->where('status', 'PENDING')->orWhereNull('payment_transaction_id');
-            } elseif ($status == 'ENDED') {
+            }
+            if ($status === 'ENDED') {
                 return $query
                     ->whereRaw('CONCAT(endDate, " ", endTime) < ?', [$currentDateTime])
                     ->where('status', '<>', 'PREVIEW')
                     ->whereNotNull('payment_transaction_id')
                     ->where('status', '<>', 'DRAFT');
-            } elseif ($status == 'LIVE') {
+            }
+            if ($status === 'LIVE') {
                 return $query
                     ->where(function ($query) use ($currentDateTime) {
                         return $query
@@ -247,7 +236,7 @@ class EventDetail extends Model
                     ->whereNotNull('payment_transaction_id')
                     ->where('status', '<>', 'PREVIEW')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
-            } elseif ($status == 'SCHEDULED') {
+            } elseif ($status === 'SCHEDULED') {
                 return $query
                     ->whereNotNull('sub_action_public_date')
                     ->whereNotNull('sub_action_public_time')
@@ -256,24 +245,23 @@ class EventDetail extends Model
                     ->where('status', '<>', 'PREVIEW')
                     ->whereNotNull('payment_transaction_id')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
-            } 
+            }
         });
 
         $eventListQuery->when($request->has('search'), function ($query) use ($request) {
             $search = trim($request->input('search'));
             if (empty($search)) {
                 return $query;
-            } else {
-                return $query->where(function ($q) use ($search) {
-                    return $q
-                        ->orWhere('eventDescription', 'LIKE', "%{$search}%")
-                        ->orWhere('eventName', 'LIKE', "%{$search}%")
-                        ->orWhere('eventTags', 'LIKE', "%{$search}%")
-                        ->orWhereHas('game', function ($query) use ($search) {
-                            $query->where('gameTitle', 'LIKE', "%$search%");
-                        });
-                });
             }
+            return $query->where(function ($q) use ($search) {
+                return $q
+                    ->orWhere('eventDescription', 'LIKE', "%{$search}%")
+                    ->orWhere('eventName', 'LIKE', "%{$search}%")
+                    ->orWhere('eventTags', 'LIKE', "%{$search}%")
+                    ->orWhereHas('game', function ($query) use ($search) {
+                        $query->where('gameTitle', 'LIKE', "%{$search}%");
+                    });
+            });
         });
 
         return $eventListQuery;
@@ -286,10 +274,10 @@ class EventDetail extends Model
         $eventListQuery->when($request->has('sort'), function ($query) use ($request) {
             $sort = $request->input('sort');
             foreach ($sort as $key => $value) {
-                if (! empty(trim($key)) && $value != 'none') {
-                    if ($key == 'startDate') {
+                if (! empty(trim($key)) && $value !== 'none') {
+                    if ($key === 'startDate') {
                         $query->orderBy('startDate', $value)->orderBy('startTime', $value);
-                    } elseif ($key == 'prize') {
+                    } elseif ($key === 'prize') {
                         $query
                             ->join('event_tier', 'event_details.event_tier_id', '=', 'event_tier.id')
                             ->orderBy('event_tier.tierPrizePool', $value);
@@ -319,13 +307,13 @@ class EventDetail extends Model
             if (array_key_exists('gameTitle[]', $filter)) {
                 if (isset($filter['gameTitle[]'][0])) {
                     $query->whereIn('event_category_id', $filter['gameTitle[]']);
-                }  
+                }
             }
 
             if (array_key_exists('date[]', $filter)) {
                 $dates = $filter['date[]'];
-            
-                if (isset($dates[0]) && isset($dates[1]) && $dates[0] != "" && $dates[1] != "") {
+
+                if (isset($dates[0]) && isset($dates[1]) && $dates[0] !== '' && $dates[1] !== '') {
                     $query->whereBetween('created_at', [$dates[0], $dates[1]]);
                 }
             }
@@ -355,17 +343,16 @@ class EventDetail extends Model
 
                 if (empty($search)) {
                     return $query;
-                } else {
-                    return $query->where(function ($q) use ($search) {
-                        return $q
-                            ->orWhere('eventDescription', 'LIKE', "%{$search}%")
-                            ->orWhere('eventName', 'LIKE', "%{$search}%")
-                            ->orWhere('eventTags', 'LIKE', "%{$search}%")
-                            ->orWhereHas('game', function ($query) use ($search) {
-                                $query->where('gameTitle', 'LIKE', "%$search%");
-                            });
-                    });
                 }
+                return $query->where(function ($q) use ($search) {
+                    return $q
+                        ->orWhere('eventDescription', 'LIKE', "%{$search}%")
+                        ->orWhere('eventName', 'LIKE', "%{$search}%")
+                        ->orWhere('eventTags', 'LIKE', "%{$search}%")
+                        ->orWhereHas('game', function ($query) use ($search) {
+                            $query->where('gameTitle', 'LIKE', "%{$search}%");
+                        });
+                });
             });
 
         return $eventListQuery;
@@ -384,10 +371,10 @@ class EventDetail extends Model
         } catch (Exception $e) {
         }
 
-        $isEditMode = $eventDetail->id != null;
-        $isDraftMode = $request->launch_visible == 'DRAFT';
+        $isEditMode = $eventDetail->id !== null;
+        $isDraftMode = $request->launch_visible === 'DRAFT';
 
-        $isPreviewMode = $isEditMode ? false : $request->livePreview == 'true';
+        $isPreviewMode = $isEditMode ? false : $request->livePreview === 'true';
         $carbonStartDateTime = null;
         $carbonEndDateTime = null;
         $carbonPublishedDateTime = null;
@@ -434,7 +421,7 @@ class EventDetail extends Model
         $eventDetail->eventDescription = $request->eventDescription;
         $eventDetail->eventTags = $request->eventTags;
 
-        if ($request->launch_visible == 'DRAFT') {
+        if ($request->launch_visible === 'DRAFT') {
             $eventDetail->status = 'DRAFT';
             $eventDetail->sub_action_public_date = null;
             $eventDetail->sub_action_public_time = null;
@@ -443,15 +430,15 @@ class EventDetail extends Model
             $launch_date = null;
             $launch_time = null;
             $eventDetail->sub_action_private = $request->launch_visible;
-            if ($request->launch_visible == 'public') {
+            if ($request->launch_visible === 'public') {
                 $launch_date = $request->launch_date_public;
                 $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_public);
-            } elseif ($request->launch_visible == 'private') {
+            } elseif ($request->launch_visible === 'private') {
                 $launch_date = $request->launch_date_private;
                 $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_private);
             }
 
-            if ($request->launch_schedule == 'schedule' && $launch_date && $launch_time) {
+            if ($request->launch_schedule === 'schedule' && $launch_date && $launch_time) {
                 $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date.' '.$launch_time)->utc();
                 // @phpstan-ignore-next-line
                 if ($launch_date && $launch_time && $carbonPublishedDateTime < $carbonStartDateTime && $carbonPublishedDateTime < $carbonEndDateTime) {
@@ -461,7 +448,7 @@ class EventDetail extends Model
                 } else {
                     throw new TimeGreaterException('Published time must be before start time and end time.');
                 }
-            } elseif ($request->launch_schedule == 'now') {
+            } elseif ($request->launch_schedule === 'now') {
                 $eventDetail->status = 'UPCOMING';
                 $eventDetail->sub_action_public_date = null;
                 $eventDetail->sub_action_public_time = null;
@@ -476,12 +463,11 @@ class EventDetail extends Model
     }
 
     public static function findEventWithRelationsAndThrowError(
-            string| int $userId, 
-            string| int $id, 
-            array| null $relations = null, 
-            string | null $relationCount = null
-        ): EventDetail
-    {
+        string| int $userId,
+        string| int $id,
+        array| null $relations = null,
+        string | null $relationCount = null
+    ): EventDetail {
         $relations ??= ['type', 'tier', 'game'];
         $eventQuery = self::with($relations);
 
@@ -492,12 +478,12 @@ class EventDetail extends Model
         $event = $eventQuery->find($id);
 
         if (is_null($event)) {
-            throw new ModelNotFoundException("Event not found with id: $id");
-        } elseif ($event->user_id != $userId) {
-            throw new UnauthorizedException('You cannot view an event of another organizer!');
-        } else {
-            return $event;
+            throw new ModelNotFoundException("Event not found with id: {$id}");
         }
+        if ($event->user_id !== $userId) {
+            throw new UnauthorizedException('You cannot view an event of another organizer!');
+        }
+        return $event;
     }
 
     public static function findEventAndThrowError(string| int $eventId, string| int $userId): EventDetail
@@ -505,11 +491,25 @@ class EventDetail extends Model
         $event = self::find($eventId);
 
         if (! $event) {
-            throw new ModelNotFoundException("Event not found with id: $eventId");
-        } elseif ($event->user_id != $userId) {
-            throw new UnauthorizedException('You cannot view an event of another organizer!');
-        } else {
-            return $event;
+            throw new ModelNotFoundException("Event not found with id: {$eventId}");
         }
+        if ($event->user_id !== $userId) {
+            throw new UnauthorizedException('You cannot view an event of another organizer!');
+        }
+        return $event;
+    }
+
+    private static function storeEventBanner(UploadedFile $file): string
+    {
+        $extension = $file->getClientOriginalExtension();
+        if (! $extension) {
+            throw new Exception('File extension not retrieved!');
+        }
+
+        $fileNameInitial = 'eventBanner-'.time().'.'.$extension;
+        $fileNameFinal = "images/events/{$fileNameInitial}";
+        $file->storeAs('images/events/', $fileNameInitial);
+
+        return $fileNameFinal;
     }
 }

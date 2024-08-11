@@ -9,18 +9,19 @@ use Illuminate\Support\Facades\DB;
 
 class ChatController extends Controller
 {
-    public function message(Request $request) {
+    public function message(Request $request)
+    {
         $userProfile = null;
-        $loggedUser =  $request->attributes->get('user');
+        $loggedUser = $request->attributes->get('user');
         if ($request->has('userId')) {
-            if ($loggedUser->id == $request->userId) {
+            if ($loggedUser->id === $request->userId) {
                 return $this->showErrorParticipant("Please don't chat with yourself! Use a todo app instead.");
             }
 
             $userProfile = User::find($request->userId);
-            if (!$userProfile) {
-                return $this->showErrorParticipant("We have no user by this id!");
-            } 
+            if (! $userProfile) {
+                return $this->showErrorParticipant('We have no user by this id!');
+            }
         }
 
         $user = User::select(['id', 'name', 'role', 'userBanner'])->findOrFail(
@@ -32,16 +33,16 @@ class ChatController extends Controller
             ['updated_at' => now()]
         );
 
-        return view('Shared.Message', ['userProfile' => $userProfile, 
-            'user' => $user
+        return view('Shared.Message', ['userProfile' => $userProfile,
+            'user' => $user,
         ]);
     }
 
-    public function getFirebaseUsers(Request $request) {
-        
+    public function getFirebaseUsers(Request $request)
+    {
         $users = null;
 
-        if ($request->has('userIdList'))  {
+        if ($request->has('userIdList')) {
             $userIdList = $request->userIdList;
 
             $users = $users = DB::table('users')
@@ -49,16 +50,16 @@ class ChatController extends Controller
                 ->whereIn('users.id', $userIdList)
                 ->select('users.id', 'users.name', 'users.role', 'users.userBanner', 'firebase_user_active_at.updated_at')
                 ->get();
-        }   else if ($request->has('searchQ')) {
+        } elseif ($request->has('searchQ')) {
             $searchQ = $request->searchQ;
             $usersQ = User::select(['id', 'name', 'role', 'userBanner']);
             if ($searchQ) {
-                $usersQ->where('name', 'LIKE', "%$searchQ%");
+                $usersQ->where('name', 'LIKE', "%{$searchQ}%");
             }
 
             $users = $usersQ->paginate(5);
         }
 
-        return response()->json(['data'=> $users, 'success' => true], 200);
+        return response()->json(['data' => $users, 'success' => true], 200);
     }
 }

@@ -43,7 +43,7 @@ class StripePayment
                 'days_until_due' => 0,
             ]);
         }
-        
+
         return null;
     }
 
@@ -74,7 +74,7 @@ class StripePayment
         return null;
     }
 
-    public function finalizeStripeInvoice(string| int | null $invoiceId): ? Invoice
+    public function finalizeStripeInvoice(string| int | null $invoiceId): ?Invoice
     {
         if ($invoiceId) {
             return $this->stripeClient->invoices->finalizeInvoice($invoiceId, []);

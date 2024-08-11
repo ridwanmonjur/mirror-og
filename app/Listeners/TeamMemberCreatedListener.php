@@ -3,7 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\TeamMemberCreated;
-use App\Models\ActivityLogs;
 use App\Models\Notifications;
 use App\Models\TeamMember;
 use App\Models\User;
