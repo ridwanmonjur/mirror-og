@@ -141,9 +141,9 @@
         <br>
         <div>
             <div>Event Categories</div>
-            <div class="ms-3">Game: <span id="paymentType">{{ $event->game->gameTitle }}</span></div>
+            <div class="ms-3">Game: <span id="paymentType">{{ $event->game?->gameTitle }}</span></div>
             <div class="ms-3">Type: <span id="paymentType">{{ $event->type->eventType }}</span></div>
-            <div class="ms-3">Tier: <span id="paymentTier">{{ $event->tier->eventTier }}</span></div>
+            <div class="ms-3">Tier: <span id="paymentTier">{{ $event->tier?->eventTier }}</span></div>
             <div class="ms-3">Region: <span id="paymentTier">South East Asia (SEA)</span></div>
             <br>
             @php

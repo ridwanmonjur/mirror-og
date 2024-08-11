@@ -27,7 +27,6 @@ class TeamMember extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    
     public function payments(): HasMany
     {
         return $this->hasMany(ParticipantPayment::class, 'team_members_id', 'id');
@@ -55,7 +54,7 @@ class TeamMember extends Model
     public static function getProcessedTeamMembers(string| int $id): array
     {
         $acceptedMembers = $pendingMembers = $rejectedMembers = $leftMembers = collect();
-        $acceptedMembersCount = $pendingMembersCount = $rejectedMembersCount  = $leftMembersCount = 0;
+        $acceptedMembersCount = $pendingMembersCount = $rejectedMembersCount = $leftMembersCount = 0;
         $members = self::where('team_id', $id)->with('user')->get();
         foreach ($members as $member) {
             $status = $member->status;

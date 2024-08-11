@@ -1,6 +1,6 @@
 @php
     $random_int = rand(0, 999);
-    $total = $joinEvent->tier->tierEntryFee * 5;
+    $total = $joinEvent->tier?->tierEntryFee * 5;
     $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
     $individualContributionTotal = 0;
 

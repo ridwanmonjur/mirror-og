@@ -112,22 +112,22 @@ class User extends Authenticatable implements FilamentUser
         $birthDate = $request->input('birthDate');
         $sortType = trim($request->input('sortType'));
         $sortKeys = trim($request->input('sortKeys'));
-        
+
         if (empty($sortKeys) || empty($sortType)) {
             $sortType = 'asc';
             $sortKeys = 'recent';
         }
-    
+
         $mapSortKeysToValues = [
             'name' => 'name',
             'created_at' => 'created_at',
             // 'region' => 'participants.region',
             // 'birthDate' => 'participants.birthday',
-            'recent' => 'id'
+            'recent' => 'id',
         ];
-        
-        $sortColumn = $mapSortKeysToValues[$sortKeys] ?? 'id'; 
-    
+
+        $sortColumn = $mapSortKeysToValues[$sortKeys] ?? 'id';
+
         return self::query()
             ->where('role', 'PARTICIPANT')
             ->select([
@@ -138,27 +138,27 @@ class User extends Authenticatable implements FilamentUser
                 'name',
             ])
             ->where(function ($query) use ($search, $status, $teamId) {
-                if (!empty($search)) {
+                if (! empty($search)) {
                     $query->where(function ($q) use ($search) {
                         $q->orWhere('name', 'LIKE', "%{$search}%")
-                          ->orWhere('email', 'LIKE', "%{$search}%");
+                            ->orWhere('email', 'LIKE', "%{$search}%");
                     });
                 }
-    
+
                 $countStatus = count($status);
                 if ($countStatus !== 0 && $countStatus !== 4) {
                     $query->whereHas('members', function ($q) use ($teamId, $status) {
                         $q->where('team_id', $teamId)
-                          ->whereIn('status', $status);
+                            ->whereIn('status', $status);
                     });
                 }
             })
             ->whereHas('participant', function ($query) use ($region, $birthDate) {
-                if (!empty($region)) {
+                if (! empty($region)) {
                     $query->where('region', $region);
                 }
-    
-                if (!empty($birthDate)) {
+
+                if (! empty($birthDate)) {
                     $query->whereDate('birthday', '<', $birthDate);
                 }
             })
@@ -175,9 +175,9 @@ class User extends Authenticatable implements FilamentUser
                     $query->where('team_id', $teamId);
                 },
             ])
-            ->orderBy($sortColumn, $sortType); 
+            ->orderBy($sortColumn, $sortType);
     }
-    
+
     public function uploadUserBanner(Request $request)
     {
         $requestData = json_decode($request->getContent(), true);

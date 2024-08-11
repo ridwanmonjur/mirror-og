@@ -4,13 +4,13 @@
     $status = $event->statusResolved();
     $stylesEventStatus = bladeEventStatusStyleMapping($status);
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
-    $tier = $event->tier ? $event->tier->eventTier : null;
+    $tier = $event->tier ? $event->tier?->eventTier : null;
     $eventTierLower = bladeEventTowerLowerClass($tier);
     $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
     extract($dateArray);
     $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
-    $bladeEventGameImage = bladeImageNull($event->game ? $event->game->gameIcon : null);
+    $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
     $followersCount = App\Models\OrganizerFollow::where('organizer_user_id', $event->user_id)->count();
 @endphp
 
@@ -150,7 +150,7 @@
                                     &nbsp;
                                     @if ($event->tier)
                                         <span style="position: relative; top: 5px;"> RM
-                                            {{ $event->tier->tierPrizePool ?? 'No Prize' }} Prize Pool</span>
+                                            {{ $event->tier?->tierPrizePool ?? 'No Prize' }} Prize Pool</span>
                                     @else
                                         <span>Select event tier</span>
                                     @endif
@@ -166,7 +166,7 @@
                                     &nbsp;
                                     @if ($event->tier)
                                         <span style="position: relative; top: 5px;">RM
-                                            {{ $event->tier->tierEntryFee ?? 'Free' }} Entry Fees</span>
+                                            {{ $event->tier?->tierEntryFee ?? 'Free' }} Entry Fees</span>
                                     @else
                                         <span>Entry fee unavailable</span>
                                     @endif
@@ -194,7 +194,7 @@
                                     &nbsp;
                                     @if ($event->tier)
                                         <span style="position: relative; top: 5px;">
-                                            {{ $event->acceptedMembersCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available' }}
+                                            {{ $event->acceptedMembersCount }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}
                                         </span>
                                     @else
                                         <span>No event tier chosen</span>

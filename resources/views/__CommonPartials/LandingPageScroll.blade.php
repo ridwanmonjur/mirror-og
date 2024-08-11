@@ -2,9 +2,9 @@
     @php
         $stylesEventStatus = bladeEventStatusStyleMapping($event->status);
         $stylesEventStatus .= 'padding-top: -150px; ';
-        $eventTierLowerImg = bladeEventTierImage($event->tier ? $event->tier->eventTier: null);
+        $eventTierLowerImg = bladeEventTierImage($event->tier ? $event->tier?->eventTier: null);
         $eventBannerImg = bladeImageNull($event->eventBanner);
-        $bladeEventGameImage = bladeImageNull($event->game ? $event->game->gameIcon : null);
+        $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
     @endphp
     <div class="event">
         <a class="d-block" href="/event/{{ $event['id'] }}">

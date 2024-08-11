@@ -56,9 +56,6 @@ class JoinEvent extends Model
         return $this->hasMany(EventJoinResults::class, 'join_events_id', 'id');
     }
 
-
- 
-
     public static function getJoinEventsForTeam($team_id)
     {
         return self::where('team_id', $team_id)
@@ -106,7 +103,7 @@ class JoinEvent extends Model
         $maxStreak = 0;
 
         foreach ($joins as $join) {
-            if ($join->position == 1) {
+            if ($join->position === 1) {
                 $sumPositionOne++;
             } else {
                 $maxStreak = max($maxStreak, $streak);
@@ -134,7 +131,7 @@ class JoinEvent extends Model
         $maxStreak = 0;
 
         foreach ($joins as $join) {
-            if ($join->position == 1) {
+            if ($join->position === 1) {
                 $sumPositionOne++;
             } else {
                 $maxStreak = max($maxStreak, $streak);
@@ -164,11 +161,10 @@ class JoinEvent extends Model
 
         return $joint;
     }
-    
+
     public static function fetchJoinEvents($teamId, $invitationListIds = [], $eventId = null)
     {
-        $fixJoinEvents = function(Collection $eventList): array
-        {
+        $fixJoinEvents = function (Collection $eventList): array {
             $organizerIdList = $eventIdList = [];
 
             $eventList->each(function ($event) use (&$organizerIdList, &$eventIdList) {
@@ -181,18 +177,17 @@ class JoinEvent extends Model
 
         $query = static::where('team_id', $teamId);
         $invitedEvents = $joinEvents = collect();
-        $invitedEventOrganizerIds = $joinEventOrganizerIds = $invitedIds = $joinIds = []; 
+        $invitedEventOrganizerIds = $joinEventOrganizerIds = $invitedIds = $joinIds = [];
         $withClause = [
             'eventDetails', 'eventDetails.tier', 'eventDetails.user', 'eventDetails.game', 'members.payments', 'members.user',
         ];
 
-        if (!is_null($eventId)) {
+        if (! is_null($eventId)) {
             $joinEvents = $query->where('event_details_id', $eventId)->get();
             $invitedEvents = null;
         } else {
-
             $joinEvents = $query->whereNotIn('event_details_id', $invitationListIds)->with($withClause)->get();
-            $invitedEvents =  static::where('team_id', $teamId)
+            $invitedEvents = static::where('team_id', $teamId)
                 ->whereIn('event_details_id', $invitationListIds)->with($withClause)
                 ->get();
         }
@@ -200,16 +195,16 @@ class JoinEvent extends Model
         [$invitedIds, $invitedEventOrganizerIds] = $fixJoinEvents($invitedEvents);
         $eventIds = [...$joinIds, ...$invitedIds];
 
-        if (!is_null($eventId)) {
+        if (! is_null($eventId)) {
             $groupedPaymentsByEvent = $groupedPaymentsByEventAndTeamMember = [];
         } else {
-            $groupedPaymentsByEvent =  ParticipantPayment::select('join_events_id', DB::raw('SUM(payment_amount) as total_payment_amount'))
+            $groupedPaymentsByEvent = ParticipantPayment::select('join_events_id', DB::raw('SUM(payment_amount) as total_payment_amount'))
                 ->whereIn('join_events_id', $eventIds)
                 ->groupBy('join_events_id')
                 ->get()
                 ->pluck('total_payment_amount', 'join_events_id');
-                
-            $groupedPaymentsByEventAndTeamMember =  ParticipantPayment::select('join_events_id', 'team_members_id', DB::raw('SUM(payment_amount) as total_payment_amount'))
+
+            $groupedPaymentsByEventAndTeamMember = ParticipantPayment::select('join_events_id', 'team_members_id', DB::raw('SUM(payment_amount) as total_payment_amount'))
                 ->whereIn('join_events_id', $eventIds)
                 ->groupBy('join_events_id', 'team_members_id')
                 ->get()
@@ -219,12 +214,11 @@ class JoinEvent extends Model
                 });
         }
 
-        return [ 
+        return [
             $joinEventOrganizerIds, $joinEvents, $invitedEventOrganizerIds,
             $invitedEvents, $groupedPaymentsByEvent, $groupedPaymentsByEventAndTeamMember,
         ];
     }
-    
 
     public static function processEvents(Collection $events, array $isFollowing): array
     {
@@ -252,9 +246,10 @@ class JoinEvent extends Model
     }
 
     public static function hasJoinedByOtherTeamsForSameEvent(
-        string| int $eventId, string| int $userId, string $status
-    ): bool
-    {
+        string| int $eventId,
+        string| int $userId,
+        string $status
+    ): bool {
         return self::where('event_details_id', $eventId)
             ->where(function ($query) use ($userId, $status) {
                 $query->whereHas('members', function ($query) use ($userId, $status) {

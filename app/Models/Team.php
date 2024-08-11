@@ -54,7 +54,7 @@ class Team extends Model
         return $this->morphMany(ActivityLogs::class, 'subject');
     }
 
-    public static function getTeamAndMembersByTeamId(int| string $teamId): ? self
+    public static function getTeamAndMembersByTeamId(int| string $teamId): ?self
     {
         return self::with(['members.user' => function ($query) {
             $query->select(['name', 'id', 'email']);

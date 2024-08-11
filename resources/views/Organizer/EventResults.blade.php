@@ -14,7 +14,7 @@
 </head>
 @php
     use Carbon\Carbon;
-    $tier = $event->tier ? $event->tier->eventTier : null;
+    $tier = $event->tier ? $event->tier?->eventTier : null;
     $eventTierLower = bladeEventTowerLowerClass($tier);
     $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
@@ -121,7 +121,7 @@
                                                                     {{ $joinEventAndTeam->teamName }}. </h5>
                                                                 <br>
                                                                 <p> Choose between 1 and
-                                                                    {{ $event->tier->tierTeamSlot }}</p>
+                                                                    {{ $event->tier?->tierTeamSlot }}</p>
                                                                 <br>
                                                                 <div
                                                                     class="input-group mb-3 mx-auto d-flex justify-content-center">
@@ -130,7 +130,7 @@
                                                                     <input class="form-control"
                                                                         style="max-width: 100px !important;"
                                                                         type="number" name="position" min="1"
-                                                                        max="{{ $event->tier->tierTeamSlot }}">
+                                                                        max="{{ $event->tier?->tierTeamSlot }}">
                                                                     <input type="hidden" name="eventName"
                                                                         value="{{ $event->eventName ?? 'No name yet' }}">
                                                                     <input type="hidden" name="teamName"

@@ -40,7 +40,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/user/{id}/banner', [UserController::class, 'replaceBanner'])->name('participant.userBanner.action');
         Route::post('/user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
         Route::post('/card/intent', [StripeController::class,  'stripeCardIntentCreate'])->name('stripe.stripeCardIntentCreate');
-    
     });
 });
 
@@ -76,8 +75,6 @@ Route::group(['prefix' => 'organizer'], function () {
         });
     });
 });
-
-
 
 Route::post('/event/{id}/invitation', [OrganizerInvitationController::class, 'store'])->name('event.invitation.store');
 

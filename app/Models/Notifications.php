@@ -36,7 +36,6 @@ class Notifications extends Model
         return $query;
     }
 
-
     public function createNotifications(array $parameters): void
     {
         Log::info('hit createNotifications');

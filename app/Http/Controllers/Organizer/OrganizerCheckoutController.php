@@ -40,40 +40,40 @@ class OrganizerCheckoutController extends Controller
                     'mappingEventState' => EventDetail::mappingEventStateResolve(),
                     'isUser' => $isUserSameAsAuth,
                 ]);
-            } elseif (is_null($event->tier)) {
+            }
+            if (is_null($event->tier)) {
                 return $this->showErrorOrganizer(
-                    "Event with id: $id has no event tier chosen",
+                    "Event with id: {$id} has no event tier chosen",
                     ['edit' => true, 'id' => $id]
                 );
-            } else {
-
-                $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
-                    'customer' => $user->stripe_customer_id,
-                ]);
-                [$fee, $isDiscountApplied, $error] = array_values(
-                    Discount::createDiscountFeeObject($request->coupon, $event->tier->tierEntryFee)
-                );
-
-                if ($isDiscountApplied) {
-                    session()->flash('successMessageCoupon', "Applying your coupon named: $request->coupon!");
-                } elseif (! is_null($error)) {
-                    session()->flash('errorMessageCoupon', $error);
-                }
-
-                return view('Organizer.CheckoutEvent', [
-                    'event' => $event,
-                    'mappingEventState' => EventDetail::mappingEventStateResolve(),
-                    'isUser' => $isUserSameAsAuth,
-                    'livePreview' => 1,
-                    'fee' => $fee,
-                    'paymentMethods' => $paymentMethods,
-                ]);
             }
+
+            $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
+                'customer' => $user->stripe_customer_id,
+            ]);
+            [$fee, $isDiscountApplied, $error] = array_values(
+                Discount::createDiscountFeeObject($request->coupon, $event->tier?->tierEntryFee)
+            );
+
+            if ($isDiscountApplied) {
+                session()->flash('successMessageCoupon', "Applying your coupon named: {$request->coupon}!");
+            } elseif (! is_null($error)) {
+                session()->flash('errorMessageCoupon', $error);
+            }
+
+            return view('Organizer.CheckoutEvent', [
+                'event' => $event,
+                'mappingEventState' => EventDetail::mappingEventStateResolve(),
+                'isUser' => $isUserSameAsAuth,
+                'livePreview' => 1,
+                'fee' => $fee,
+                'paymentMethods' => $paymentMethods,
+            ]);
         } catch (ModelNotFoundException|UnauthorizedException $e) {
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             return $this->showErrorOrganizer(
-                "Event not retrieved with id: $id"
+                "Event not retrieved with id: {$id}"
             );
         }
     }
@@ -85,25 +85,30 @@ class OrganizerCheckoutController extends Controller
             $userId = $user->id;
             $status = $request->get('redirect_status');
 
-            if ($status == 'succeeded' && $request->has('payment_intent_client_secret')) {
+            if ($status === 'succeeded' && $request->has('payment_intent_client_secret')) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
 
                 if ($paymentIntent['amount'] > 0 &&
-                    $paymentIntent['amount_received'] == $paymentIntent['amount'] &&
-                    $paymentIntent['metadata']['eventId'] == $id
+                    $paymentIntent['amount_received'] === $paymentIntent['amount'] &&
+                    $paymentIntent['metadata']['eventId'] === $id
                 ) {
                     $transaction = PaymentTransaction::createTransaction(
-                        $intentId, 'SUCCESS', $paymentIntent['amount'] / 100
+                        $intentId,
+                        'SUCCESS',
+                        $paymentIntent['amount'] / 100
                     );
 
                     $event = EventDetail::findEventWithRelationsAndThrowError(
-                        $userId, $id, null, 'joinEvents'
+                        $userId,
+                        $id,
+                        null,
+                        'joinEvents'
                     );
 
                     $event->payment_transaction_id = $transaction->id;
                     // this line must be below setting the payment transaction
-                    if ($event->status != 'DRAFT') {
+                    if ($event->status !== 'DRAFT') {
                         $event->status = 'NOT PENDING';
                         $event->status = $event->isCompleteEvent() ? $event->statusResolved() : 'PENDING';
                     }
@@ -121,7 +126,6 @@ class OrganizerCheckoutController extends Controller
             return redirect()
                 ->route('organizer.checkout.view', ['id' => $id])
                 ->with('errorCheckout', 'Your payment has failed unfortunately!');
-
         } catch (ModelNotFoundException|UnauthorizedException $e) {
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {

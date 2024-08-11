@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class EventJoinResults extends Model
 {
-
     use HasFactory;
 
     protected $table = 'event_join_results';

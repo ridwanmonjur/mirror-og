@@ -4,15 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\EventDetail;
-use App\Models\Notifications;
 use App\Models\Organizer;
 use App\Models\Participant;
-use App\Models\TeamProfile;
 use App\Models\User;
-use App\Models\UserProfile;
 use Carbon\Carbon;
 use ErrorException;
-use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -49,86 +45,11 @@ class AuthController extends Controller
         return response()->json(['success' => true, 'data' => $games], 200);
     }
 
-    protected function _registerOrLoginUser($user, $type, $role)
-    {
-        $finduser = null;
-        if ($type == 'google') {
-            $finduser = User::where('google_id', $user->id)->first();
-        } elseif ($type == 'steam') {
-            $finduser = User::where('steam_id', $user->id)->first();
-        }
-
-        if ($finduser) {
-            // if (!$user->user['email_verified']) {
-            //     return ['finduser' => null, 'error' => 'Your Gmail is not verified'];
-            // }
-
-            Auth::login($finduser);
-
-            return ['finduser' => $finduser, 'error' => null];
-        } else {
-            $finduser = User::where('email', $user->email)->first();
-
-            if ($finduser) {
-
-                if ($type == 'google') {
-                    $finduser->google_id = $user->id;
-                } elseif ($type == 'steam') {
-                    $finduser->steam_id = $user->id;
-                }
-
-                $finduser->email_verified_at = now();
-                Auth::login($finduser);
-                $finduser->save();
-
-                return ['finduser' => $finduser, 'error' => null];
-            } else {
-
-                $newUser = User::create([
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'password' => bcrypt(Str::random(13)),
-                    'role' => strtoupper($role),
-                    'created_at' =>now()
-                ]);
-
-                if ($newUser->role == 'ORGANIZER') {
-
-                    $organizer = new Organizer([
-                        'user_id' => $newUser->id,
-                    ]);
-
-                    $organizer->save();
-                } elseif ($newUser->role == 'PARTICIPANT') {
-
-                    $participant = new Participant([
-                        'user_id' => $newUser->id,
-                    ]);
-
-                    $participant->save();
-                }
-
-                $newUser->email_verified_at = now();
-
-                if ($type == 'google') {
-                    $newUser->google_id = $user->id;
-                } elseif ($type == 'steam') {
-                    $newUser->steam_id = $user->id;
-                }
-
-                $newUser->save();
-                Auth::login($newUser);
-
-                return ['finduser' => $newUser, 'error' => null];
-            }
-        }
-    }
-
     public function handleGoogleCallback(Request $request)
     {
         // dd("hio");
         //** @var \Illuminate\Support\Facades\Socialite $socialite */
-        // @phpstan-ignore-next-line 
+        // @phpstan-ignore-next-line
         $user = Socialite::driver('google')->stateless()->user();
         $role = Session::get('role');
         // phpcs:enable
@@ -139,12 +60,12 @@ class AuthController extends Controller
         Session::forget('role');
         if ($error) {
             return view('Participant.EventNotFound', ['error' => $error]);
-        } else {
-            if ($finduser->role == 'PARTICIPANT') {
-                return redirect()->route('participant.home.view');
-            } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
-                return redirect()->route('organizer.home.view');
-            }
+        }
+        if ($finduser->role === 'PARTICIPANT') {
+            return redirect()->route('participant.home.view');
+        }
+        if ($finduser->role === 'ORGANIZER' || $finduser->role === 'ADMIN') {
+            return redirect()->route('organizer.home.view');
         }
     }
 
@@ -184,14 +105,13 @@ class AuthController extends Controller
         Session::forget('role');
         if ($error) {
             return view('Participant.EventNotFound', ['error' => $error]);
-        } else {
-            if ($finduser->role == 'PARTICIPANT') {
-                return redirect()->route('participant.home.view');
-            } elseif ($finduser->role == 'ORGANIZER' || $finduser->role == 'ADMIN') {
-                return redirect()->route('organizer.home.view');
-            }
         }
-
+        if ($finduser->role === 'PARTICIPANT') {
+            return redirect()->route('participant.home.view');
+        }
+        if ($finduser->role === 'ORGANIZER' || $finduser->role === 'ADMIN') {
+            return redirect()->route('organizer.home.view');
+        }
     }
 
     public function showLandingPage(Request $request)
@@ -259,7 +179,7 @@ class AuthController extends Controller
             'password_confirmation' => 'required|min:6',
         ]);
 
-        if ($request->password != $request->password_confirmation) {
+        if ($request->password !== $request->password_confirmation) {
             return back()->with(['error' => 'Password confirmation does not match.']);
         }
 
@@ -315,14 +235,17 @@ class AuthController extends Controller
 
         DB::table('password_reset_tokens')->updateOrInsert(['email' => $request->email], ['token' => $token, 'expires_at' => Carbon::now()->addDay()]);
 
-        Mail::send('Email.reset', [
-            'token' => $token,
-            'imageLogo' => public_path('assets/images/logo-default.png')
-        ]
-            , function ($message) use ($email) {
-            $message->to($email);
-            $message->subject('Reset Password');
-        });
+        Mail::send(
+            'Email.reset',
+            [
+                'token' => $token,
+                'imageLogo' => public_path('assets/images/logo-default.png'),
+            ],
+            function ($message) use ($email) {
+                $message->to($email);
+                $message->subject('Reset Password');
+            }
+        );
 
         return back()->with('success', 'Password reset link sent. Please check your email.');
     }
@@ -393,11 +316,6 @@ class AuthController extends Controller
         return view('Auth.VerifySuccess');
     }
 
-    private function generateToken()
-    {
-        return Str::random(64);
-    }
-
     //SignUp Auth View
 
     public function signUp(Request $request)
@@ -451,15 +369,14 @@ class AuthController extends Controller
                 'email' => $validatedData['email'],
                 'password' => $validatedData['password'],
                 'role' => $userRoleCapital,
-                'created_at' => now()
+                'created_at' => now(),
             ]);
 
             $token = $this->generateToken();
             $user->email_verified_token = $token;
             $user->save();
 
-            if ($userRole == 'organizer') {
-
+            if ($userRole === 'organizer') {
                 $organizer = new Organizer([
                     'user_id' => $user->id,
                     'companyDescription' => $validatedData['companyDescription'],
@@ -467,8 +384,7 @@ class AuthController extends Controller
                 ]);
 
                 $organizer->save();
-            } elseif ($userRole == 'participant') {
-
+            } elseif ($userRole === 'participant') {
                 $participant = new Participant([
                     'user_id' => $user->id,
                 ]);
@@ -495,16 +411,14 @@ class AuthController extends Controller
             DB::rollBack();
             Log::error($e->getMessage());
 
-            if ($e->getCode() == '23000' || $e->getCode() == 1062) {
+            if ($e->getCode() === '23000' || $e->getCode() === 1062) {
                 return redirect()
                     ->route($redirectErrorRoute)
                     ->with('error', 'The email already exists. Add another email!');
-            } else {
-                return redirect()
-                    ->route($redirectErrorRoute)
-                    ->with('error', 'An error occurred while processing your request.');
             }
-
+            return redirect()
+                ->route($redirectErrorRoute)
+                ->with('error', 'An error occurred while processing your request.');
         } catch (\Throwable $th) {
             DB::rollBack();
 
@@ -548,24 +462,20 @@ class AuthController extends Controller
                     ]);
                 }
 
-                if ($user->role != $userRoleCapital && $user->role != 'ADMIN') {
-                    throw new ErrorException("Invalid Role for $userRoleSentence");
+                if ($user->role !== $userRoleCapital && $user->role !== 'ADMIN') {
+                    throw new ErrorException("Invalid Role for {$userRoleSentence}");
                 }
 
                 $request->session()->regenerate();
 
-                $response = response()->json([
-                    'message' => "Account signed in successfully as $userRole!",
+                return response()->json([
+                    'message' => "Account signed in successfully as {$userRole}!",
                     'route' => route($userRole.'.home.view'),
                     'token' => null,
                     'success' => true,
                 ], 200);
-
-                return $response;
-
-            } else {
-                throw new ErrorException('The email or password you entered is incorrect!');
             }
+            throw new ErrorException('The email or password you entered is incorrect!');
         } catch (QueryException $e) {
             Log::error($e->getMessage());
 
@@ -573,5 +483,81 @@ class AuthController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => $th->getMessage()], 422);
         }
-    } 
+    }
+
+    protected function _registerOrLoginUser($user, $type, $role)
+    {
+        $finduser = null;
+        if ($type === 'google') {
+            $finduser = User::where('google_id', $user->id)->first();
+        } elseif ($type === 'steam') {
+            $finduser = User::where('steam_id', $user->id)->first();
+        }
+
+        if ($finduser) {
+            // if (!$user->user['email_verified']) {
+            //     return ['finduser' => null, 'error' => 'Your Gmail is not verified'];
+            // }
+
+            Auth::login($finduser);
+
+            return ['finduser' => $finduser, 'error' => null];
+        }
+
+        $finduser = User::where('email', $user->email)->first();
+
+        if ($finduser) {
+            if ($type === 'google') {
+                $finduser->google_id = $user->id;
+            } elseif ($type === 'steam') {
+                $finduser->steam_id = $user->id;
+            }
+
+            $finduser->email_verified_at = now();
+            Auth::login($finduser);
+            $finduser->save();
+
+            return ['finduser' => $finduser, 'error' => null];
+        }
+
+        $newUser = User::create([
+            'name' => $user->name,
+            'email' => $user->email,
+            'password' => bcrypt(Str::random(13)),
+            'role' => strtoupper($role),
+            'created_at' => now(),
+        ]);
+
+        if ($newUser->role === 'ORGANIZER') {
+            $organizer = new Organizer([
+                'user_id' => $newUser->id,
+            ]);
+
+            $organizer->save();
+        } elseif ($newUser->role === 'PARTICIPANT') {
+            $participant = new Participant([
+                'user_id' => $newUser->id,
+            ]);
+
+            $participant->save();
+        }
+
+        $newUser->email_verified_at = now();
+
+        if ($type === 'google') {
+            $newUser->google_id = $user->id;
+        } elseif ($type === 'steam') {
+            $newUser->steam_id = $user->id;
+        }
+
+        $newUser->save();
+        Auth::login($newUser);
+
+        return ['finduser' => $newUser, 'error' => null];
+    }
+
+    private function generateToken()
+    {
+        return Str::random(64);
+    }
 }

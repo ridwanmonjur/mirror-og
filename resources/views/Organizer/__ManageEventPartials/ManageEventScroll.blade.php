@@ -5,7 +5,7 @@
         $stylesEventStatus = bladeEventStatusStyleMapping($status);
         $stylesEventStatus .= 'padding-top: -150px; ';
         $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
-        $tier = $event->tier ? $event->tier->eventTier : null;
+        $tier = $event->tier ? $event->tier?->eventTier : null;
         $eventTierLower = bladeEventTowerLowerClass($tier);
         
         $dateStartArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
@@ -15,7 +15,7 @@
 
         $eventTierLowerImg = bladeEventTierImage($tier);
         $eventBannerImg = bladeImageNull($event->eventBanner);
-        $bladeEventGameImage = bladeImageNull($event->game ? $event->game->gameIcon : null);
+        $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
         
         $eventId = $event->id;
         $toolTip = '<b>Event ID: </b>' . $eventId . '<br>';
@@ -63,7 +63,7 @@
                             @foreach ($eventList as $index => $eventDetail)
                                 @if ($index == 0)
                                     <span>
-                                        {{ $event->acceptedMembersCount }}/{{ $event->tier->tierTeamSlot ?? 'Not Available' }}
+                                        {{ $event->acceptedMembersCount }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}
                                     </span>
                                 @endif
                             @endforeach
@@ -91,7 +91,7 @@
                         </svg>
                         &nbsp;
                         @if ($event->tier)
-                            <span>RM {{ $event->tier->tierPrizePool ?? 'No Prize' }} Prize Pool</span>
+                            <span>RM {{ $event->tier?->tierPrizePool ?? 'No Prize' }} Prize Pool</span>
                         @else
                             <span>Select event tier</span>
                         @endif
@@ -105,7 +105,7 @@
                         </svg>
                         &nbsp;
                         @if ($event->tier)
-                            <span>RM {{ $event->tier->tierEntryFee ?? 'Free' }} Entry Fees</span>
+                            <span>RM {{ $event->tier?->tierEntryFee ?? 'Free' }} Entry Fees</span>
                         @else
                             <span>Entry fee not available</span>
                         @endif

@@ -37,32 +37,31 @@ class ParticipantCheckoutController extends Controller
 
             if (is_null($event->tier)) {
                 return $this->showErrorOrganizer(
-                    "Event with id: $id has no event tier chosen",
+                    "Event with id: {$id} has no event tier chosen",
                     ['edit' => true, 'id' => $id]
                 );
-            } else {
-                $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
-                    'customer' => $user->stripe_customer_id,
-                ]);
-
-                return view('Participant.CheckoutEvent', [
-                    'teamId' => $request->teamId,
-                    'amount' => $request->amount,
-                    'teamName' => $request->teamName,
-                    'joinEventId' => $request->joinEventId,
-                    'memberId' => $request->memberId,
-                    'event' => $event,
-                    'mappingEventState' => EventDetail::mappingEventStateResolve(),
-                    'isUser' => $isUserSameAsAuth,
-                    'livePreview' => 1,
-                    'paymentMethods' => $paymentMethods,
-                ]);
             }
+            $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
+                'customer' => $user->stripe_customer_id,
+            ]);
+
+            return view('Participant.CheckoutEvent', [
+                'teamId' => $request->teamId,
+                'amount' => $request->amount,
+                'teamName' => $request->teamName,
+                'joinEventId' => $request->joinEventId,
+                'memberId' => $request->memberId,
+                'event' => $event,
+                'mappingEventState' => EventDetail::mappingEventStateResolve(),
+                'isUser' => $isUserSameAsAuth,
+                'livePreview' => 1,
+                'paymentMethods' => $paymentMethods,
+            ]);
         } catch (ModelNotFoundException|UnauthorizedException $e) {
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             return $this->showErrorOrganizer(
-                "Event not retrieved with id: $id"
+                "Event not retrieved with id: {$id}"
             );
         }
     }
@@ -74,14 +73,16 @@ class ParticipantCheckoutController extends Controller
             $user = $request->get('user');
             $userId = $user->id;
             $status = $request->get('redirect_status');
-            if ($status == 'succeeded' && $request->has('payment_intent_client_secret')) {
+            if ($status === 'succeeded' && $request->has('payment_intent_client_secret')) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
                 if ($paymentIntent['amount'] > 0 &&
-                    $paymentIntent['amount_received'] == $paymentIntent['amount']
+                    $paymentIntent['amount_received'] === $paymentIntent['amount']
                 ) {
                     $transaction = PaymentTransaction::createTransaction(
-                        $intentId, 'SUCCESS', $paymentIntent['amount'] / 100
+                        $intentId,
+                        'SUCCESS',
+                        $paymentIntent['amount'] / 100
                     );
 
                     ParticipantPayment::create([
@@ -96,11 +97,11 @@ class ParticipantCheckoutController extends Controller
                     $event = EventDetail::select(['id', 'event_tier_id'])
                         ->where('id', $joinEvent->event_details_id)
                         ->with('tier')->first();
-                    $total = (float) $event->tier->tierEntryFee * (float) $event->tier->tierTeamSlot;
+                    $total = (float) $event->tier?->tierEntryFee * (float) $event->tier?->tierTeamSlot;
                     $participantPaymentSum = ParticipantPayment::select(['join_events_id', 'id', 'payment_amount'])
                         ->where('join_events_id', $joinEvent->id)
                         ->sum('payment_amount');
-                    if ($total == $participantPaymentSum) {
+                    if ($total !== 0 && $total === $participantPaymentSum) {
                         $joinEvent->payment_status = 'completed';
                         $joinEvent->save();
                     }
@@ -116,7 +117,6 @@ class ParticipantCheckoutController extends Controller
             // return redirect()
             //     ->route('participant.checkout.action', ['id' => $id] )
             //     ->with('errorCheckout', 'Your payment has failed unfortunately!');
-
         } catch (ModelNotFoundException|UnauthorizedException $e) {
             // ERROR
             // TRASACTION ERROR OCCURRED

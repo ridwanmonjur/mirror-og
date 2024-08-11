@@ -16,8 +16,7 @@ class PaymentTransaction extends Model
         string| int $paymentId,
         string $paymentStatus,
         float $paymentAmount
-    ) : ? self 
-    {
+    ): ?self {
         return self::create([
             'payment_id' => $paymentId,
             'payment_status' => $paymentStatus,

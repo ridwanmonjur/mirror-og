@@ -31,49 +31,46 @@ class Discount extends Model
             $fee = self::createNoDiscountFeeObject($fee, $eventTierEntryFee);
 
             return [$fee, 'isDiscountApplied' => false, 'error' => null];
-        } else {
-            $discount = self::whereRaw('coupon = ?', [$couponName])->first();
+        }
+        $discount = self::whereRaw('coupon = ?', [$couponName])->first();
 
-            if (is_null($discount)) {
-                $fee = self::createNoDiscountFeeObject($fee, $eventTierEntryFee);
+        if (is_null($discount)) {
+            $fee = self::createNoDiscountFeeObject($fee, $eventTierEntryFee);
 
-                return [
-                    $fee,
-                    'isDiscountApplied' => false,
-                    'error' => "Sorry, your coupon named $couponName can't be found!",
-                ];
-            }
-
-            $currentDateTime = Carbon::now()->utc();
-            $startTime = generateCarbonDateTime($discount->startDate, $discount->startTime);
-            $endTime = generateCarbonDateTime($discount->endDate, $discount->endTime);
-            $fee['discountId'] = $discount->id;
-            $fee['discountName'] = $discount->name;
-            $fee['discountType'] = $discount->type;
-            $fee['discountAmount'] = $discount->amount;
-
-            if ($startTime < $currentDateTime && $endTime > $currentDateTime && $discount->isEnforced) {
-                $fee['entryFee'] = (float) $eventTierEntryFee * 1000;
-                $fee['totalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
-                $fee['discountFee'] = $discount->type == 'percent' ?
-                    ($discount->amount / 100) * $fee['totalFee'] : $discount->amount;
-                $fee['finalFee'] = $fee['totalFee'] - $fee['discountFee'];
-
-                return [
-                    $fee,
-                    'isDiscountApplied' => true,
-                    'error' => null,
-                ];
-            } else {
-                $fee = self::createNoDiscountFeeObject($fee, $eventTierEntryFee);
-
-                return [
-                    $fee,
-                    'isDiscountApplied' => false,
-                    'error' => 'Your coupon has already expired or is not available right now!',
-                ];
-            }
+            return [
+                $fee,
+                'isDiscountApplied' => false,
+                'error' => "Sorry, your coupon named {$couponName} can't be found!",
+            ];
         }
 
+        $currentDateTime = Carbon::now()->utc();
+        $startTime = generateCarbonDateTime($discount->startDate, $discount->startTime);
+        $endTime = generateCarbonDateTime($discount->endDate, $discount->endTime);
+        $fee['discountId'] = $discount->id;
+        $fee['discountName'] = $discount->name;
+        $fee['discountType'] = $discount->type;
+        $fee['discountAmount'] = $discount->amount;
+
+        if ($startTime < $currentDateTime && $endTime > $currentDateTime && $discount->isEnforced) {
+            $fee['entryFee'] = (float) $eventTierEntryFee * 1000;
+            $fee['totalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
+            $fee['discountFee'] = $discount->type === 'percent' ?
+                $discount->amount / 100 * $fee['totalFee'] : $discount->amount;
+            $fee['finalFee'] = $fee['totalFee'] - $fee['discountFee'];
+
+            return [
+                $fee,
+                'isDiscountApplied' => true,
+                'error' => null,
+            ];
+        }
+        $fee = self::createNoDiscountFeeObject($fee, $eventTierEntryFee);
+
+        return [
+            $fee,
+            'isDiscountApplied' => false,
+            'error' => 'Your coupon has already expired or is not available right now!',
+        ];
     }
 }
