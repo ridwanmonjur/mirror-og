@@ -304,6 +304,9 @@ class EventDetail extends Model
                 $dates = $filter['date[]'];
 
                 if (isset($dates[0]) && isset($dates[1]) && $dates[0] !== '' && $dates[1] !== '') {
+                    $dates[0] = Carbon::createFromFormat('d/m/Y', $dates[0])->format('Y-m-d');
+                    $dates[1] = Carbon::createFromFormat('d/m/Y', $dates[1])->format('Y-m-d');
+                    
                     $query->whereBetween('created_at', [$dates[0], $dates[1]]);
                 }
             }
