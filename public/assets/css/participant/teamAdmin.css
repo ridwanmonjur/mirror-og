@@ -259,9 +259,9 @@
 }
 
 .trophy {
-    width: 30px;
+    width: 60px;
     /* Adjust the size as needed */
-    height: 30px;
+    height: 60px;
     object-fit: cover;
 }
 
@@ -541,10 +541,9 @@
 }
 
 .d-none-until-hover {
-    width: 0;
-    height: 0;
     visibility: hidden;
     overflow: hidden;
+    display: none;
 }
 
 .d-none-until-hover-parent:hover{
@@ -552,8 +551,7 @@
 }
 
 .d-none-until-hover-parent:hover .d-none-until-hover {
-    width: 100%;
-    height: 100%;
+    display: inline-block;
     visibility: visible;
     overflow: visible;
     transition: visibility 5.3s ease;
