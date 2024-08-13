@@ -13,21 +13,21 @@ class Discount extends Model
 
     protected $table = 'organizer_create_event_discounts';
 
-    public static function createNoDiscountFeeObject(array $fee, string $entryFee): array
+    public static function createNoDiscountFeeObject(array $fee, string| null $entryFee): array
     {
         $fee['discountFee'] = 0;
-        $fee['entryFee'] = (float) $entryFee * 1000;
+        $fee['entryFee'] = $entryFee !== null ? (float) $entryFee * 1000 : 0;
         $fee['totalFee'] = $fee['finalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
         $fee['discountId'] = $fee['discountName'] = $fee['discountType'] = $fee['discountAmount'] = null;
 
         return $fee;
     }
 
-    public static function createDiscountFeeObject(string| null $couponName, string $eventTierEntryFee): array
+    public static function createDiscountFeeObject(string| null $couponName, string| null $eventTierEntryFee): array
     {
         $fee = [];
 
-        if (is_null($couponName)) {
+        if (is_null($couponName) || is_null($eventTierEntryFee)) {
             $fee = self::createNoDiscountFeeObject($fee, $eventTierEntryFee);
 
             return [$fee, 'isDiscountApplied' => false, 'error' => null];
