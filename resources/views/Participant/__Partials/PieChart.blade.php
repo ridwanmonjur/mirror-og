@@ -1,11 +1,12 @@
 @php
     $random_int = rand(0, 999);
-    // dd($groupedPaymentsByEvent, $member, $groupedPaymentsByEventAndTeamMember, $joinEvent);  
+    // dd($groupedPaymentsByEvent, $member, $groupedPaymentsByEventAndTeamMember[38], $groupedPaymentsByEventAndTeamMember[38][12], $joinEvent);  
     $total = $joinEvent->tier?->tierEntryFee * 5;
     $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
     $individualContributionTotal = 0;
     $pedning = $total - $exisitngSum;
     $percent = round(($exisitngSum * 100) / $total);
+    $myMemberId = null;
 
     $styles = '--p:' . $percent . '; --c:' . ($isInvited ? 'purple' : 'orange');
 @endphp
@@ -31,6 +32,7 @@
                 <tbody>
                     @foreach($selectTeam->members as $member2)
                         @php
+                            $myMemberId = $myMemberId === null && $member2->user_id === $user->id ?  $member2->id : $myMemberId;
                             $memberContribution = $groupedPaymentsByEventAndTeamMember[$joinEvent->id][$member2->id] ?? 0;
                             $individualContributionTotal += $memberContribution;
                         @endphp
@@ -132,57 +134,67 @@
                 action="{{ route('participant.checkout.action') }}"
             >
                 @csrf
-                <input type="hidden" name="teamId" value="{{$selectTeam->id}}">
-                <input type="hidden" name="teamName" value="{{$selectTeam->teamName}}">
-                <input type="hidden" name="joinEventId" value="{{$joinEvent->id}}">
-                <input type="hidden" name="id" value="{{$joinEvent->event_details_id}}">
-                <input type="hidden" name="memberId" value="{{$member->id}}">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="mx-auto text-center">
-                            <div class="pie animate no-round" style="{{ $styles }}">{{ $percent }}%</div>
-                            <p> Total Entry Fee: <u>RM {{ $total }} </u></p>
-                            <span>Paid: <u class="text-success">RM {{ $exisitngSum }}</u>
-                                <span>Pending: <u style="color: red;">RM {{ $pedning }} </u> <span></p>
-                        </div>
-                        <div class="text-center input-group w-75 mx-auto">
-                            <span class="input-group-text bg-primary text-light" id="inputGroup-sizing-sm">RM </span>
-                            <input data-joinEventId="{{ $joinEvent->id }}" 
-                                data-pending-amount="{{ $pedning }}"
-                                data-total-amount="{{ $total }}"
-                                data-existing-amount="{{ $exisitngSum }}" data-modal-id="{{ $random_int }}"
-                                name="amount" class="form-control" type="text" default="00.00" value="00.00"
-                                oninput="moveCursorToEnd(this); updateInput(this);"
-                                onkeydown="moveCursorToEnd(this); keydown(this); ">
-                            <span data-joinEventId="{{ $joinEvent->id }}" 
-                                dota-pending-amount="{{ $pedning }}"
-                                data-total-amount="{{ $total }}"
-                                data-existing-amount="{{ $exisitngSum }}" data-modal-id="{{ $random_int }}"
-                                onclick="resetInput(this);" style="background-color: transparent;"
-                                class="input-group-text cursor-pointer border-0 button-close">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                                    <path
-                                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-                                </svg>
-                            </span>
-                        </div>
-                        <br>
-                        <p class="text-center"><u>Selected Amount: RM <span class="putAmountClass">00.00 </span> </u>
-                        </p>
-                        <br>
-                        <div class="mx-auto text-center">
-                            <button 
-                                type="submit"
-                                class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button">Proceed to
-                                payment</button>
-                            <br>
-                            <button type="button" data-bs-dismiss="modal"
-                                class="mt-2 btn oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
+                @if ($myMemberId === null) 
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="mx-auto text-center">
+                                <p> Error occurred! </p> 
+                            </div>
                         </div>
                     </div>
-                </div>
+                @else
+                    <input type="hidden" name="teamId" value="{{$selectTeam->id}}">
+                    <input type="hidden" name="teamName" value="{{$selectTeam->teamName}}">
+                    <input type="hidden" name="joinEventId" value="{{$joinEvent->id}}">
+                    <input type="hidden" name="id" value="{{$joinEvent->event_details_id}}">
+                    <input type="hidden" name="memberId" value="{{$myMemberId}}">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="mx-auto text-center">
+                                <div class="pie animate no-round" style="{{ $styles }}">{{ $percent }}%</div>
+                                <p> Total Entry Fee: <u>RM {{ $total }} </u></p>
+                                <span>Paid: <u class="text-success">RM {{ $exisitngSum }}</u>
+                                    <span>Pending: <u style="color: red;">RM {{ $pedning }} </u> <span></p>
+                            </div>
+                            <div class="text-center input-group w-75 mx-auto">
+                                <span class="input-group-text bg-primary text-light" id="inputGroup-sizing-sm">RM </span>
+                                <input data-joinEventId="{{ $joinEvent->id }}" 
+                                    data-pending-amount="{{ $pedning }}"
+                                    data-total-amount="{{ $total }}"
+                                    data-existing-amount="{{ $exisitngSum }}" data-modal-id="{{ $random_int }}"
+                                    name="amount" class="form-control" type="text" default="00.00" value="00.00"
+                                    oninput="moveCursorToEnd(this); updateInput(this);"
+                                    onkeydown="moveCursorToEnd(this); keydown(this); ">
+                                <span data-joinEventId="{{ $joinEvent->id }}" 
+                                    dota-pending-amount="{{ $pedning }}"
+                                    data-total-amount="{{ $total }}"
+                                    data-existing-amount="{{ $exisitngSum }}" data-modal-id="{{ $random_int }}"
+                                    onclick="resetInput(this);" style="background-color: transparent;"
+                                    class="input-group-text cursor-pointer border-0 button-close">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                        <path
+                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <br>
+                            <p class="text-center"><u>Selected Amount: RM <span class="putAmountClass">00.00 </span> </u>
+                            </p>
+                            <br>
+                            <div class="mx-auto text-center">
+                                <button 
+                                    type="submit"
+                                    class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button">Proceed to
+                                    payment</button>
+                                <br>
+                                <button type="button" data-bs-dismiss="modal"
+                                    class="mt-2 btn oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </form>
             <br>
         </div>

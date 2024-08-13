@@ -30,6 +30,8 @@
         </form>
         <a class="d-none" id="manageRosterUrl" href="{{route('participant.roster.manage', ['id' => $eventId, 'teamId' => $selectTeam->id, 'redirect' => 'true' ] ) }}"> </a>
         <a class="d-none" id="manageRegistrationUrl" href="{{route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $eventId ] ) }}"> </a>
+        <a class="d-none" id="eventUrl" href="{{route('participant.event.view', ['id' => $eventId ] ) }}"> </a>
+
         <div class="time-line-box mx-auto" id="timeline-box">
             <div class="swiper-container text-center">
                 <div class="swiper-wrapper">
@@ -82,25 +84,23 @@
             @if (!$isRedirect)
                 <br>
                 @if (session('successMessage'))
-                    <div class="text-success text-center">{{session('successMessage')}}</div>
-                    <br>
+                    <div class="text-success text-center">{{session('successMessage')}}</div><br>
                 @elseif (session('errorMessage'))
-                    <div class="text-red text-center">{{session('errorMessage')}}</div>
-                    <br>
+                    <div class="text-red text-center">{{session('errorMessage')}}</div><br>
                 @else
                     <br>
                 @endif
-                <div class="tab-size"><b>Outstanding Registrations</b></div>
-                <br> <br>
+                <div class="tab-size"><b>Outstanding Registrations</b></div><br> <br>
             @endif
             <div @class(["event-carousel-styles" => !$isRedirect, "mx-5 px-5"])>
-                @foreach ($joinEvents as $key => $joinEvent)
+
+                @foreach ($joinEvents as $joinEvent)
                     @if ($isRedirect) 
                         <div class="text-center">
                             <h5><u>Event Registration</u></h5>
                             <p>You can pay now, or complete payment later...</p>
                         </div>
-                    @else 
+                    @else  
                         @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
                     @endif
                     @include('Participant.__Partials.PieChart', ['isInvited' => false])
@@ -108,7 +108,7 @@
             </div>
         </div>
         @if (!$isRedirect)
-            <div id="Overview">
+            <div id="Invitation">
                 <br><br>
                 <div class="tab-size"><b>Event Invitations</b></div>
                 <br> <br>
@@ -131,8 +131,8 @@
                 <button type="button"
                     class="btn border-dark rounded-pill py-2 px-4" onclick="document.getElementById('manageRosterUrl')?.click();"> Back </button>
                 <button type="button" 
-                    class="btn btn-primary text-light rounded-pill py-2 px-4"
-                    onclick="document.getElementById('manageRegistrationUrl')?.click();"> Next > </button>
+                    class="btn btn-success text-dark rounded-pill py-2 px-4"
+                    onclick="document.getElementById('eventUrl')?.click();">  View Event  </button>
             </div>
         @else 
             <br><br><br><br><br><br>

@@ -62,12 +62,13 @@ class OrganizerEventController extends Controller
 
         $joinEventDetailsMap = $results->pluck('accepted_members_count', 'event_details_id');
         foreach ($eventList as $event) {
-            if ($joinEventDetailsMap->has($event->id)) {
+            if (isset($joinEventDetailsMap[$event->id])) {
                 $event->acceptedMembersCount = $joinEventDetailsMap[$event->id];
             } else {
                 $event->acceptedMembersCount = 0;
             }
         }
+
 
         $outputArray = compact(
             'eventList',
