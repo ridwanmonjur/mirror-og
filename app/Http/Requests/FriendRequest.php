@@ -22,20 +22,20 @@ class FriendRequest extends FormRequest
     public function rules()
     {
         return [
-            'addUserId' => 'nullable|exists:users,id',
-            'updateUserId' => 'nullable|exists:users,id',
+            'addUserId' => 'nullable',
+            'updateUserId' => 'nullable',
             'updateStatus' => 'nullable|in:pending,accepted,rejected,left',
-            'deleteUserId' => 'nullable|exists:users,id',
+            'deleteUserId' => 'nullable',
         ];
     }
 
     public function messages()
     {
         return [
-            'addUserId.exists' => 'The selected user id, :value is invalid.',
-            'updateUserId.exists' => 'The selected id, :value is invalid for updating a friend.',
+            'addUserId.nullable' => 'The selected user id, :value is invalid.',
+            'updateUserId.nullable' => 'The selected id, :value is invalid for updating a friend.',
             'update.status.in' => 'The selected status, :value is invalid for updating a friend.',
-            'deleteUserId.exists' => 'The selected id, :value is invalid for deleting a friend.',
+            'deleteUserId.nullable' => 'The selected id, :value is invalid for deleting a friend.',
         ];
     }
 }

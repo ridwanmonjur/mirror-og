@@ -191,7 +191,9 @@ class JoinEvent extends Model
             $joinEvents = $query->where('event_details_id', $eventId)->get();
             $invitedEvents = null;
         } else {
+            // dd("bye");
             $joinEvents = $query->whereNotIn('event_details_id', $invitationListIds)->with($withClause)->get();
+            // dd($joinEvents);
             $invitedEvents = static::where('team_id', $teamId)
                 ->whereIn('event_details_id', $invitationListIds)->with($withClause)
                 ->get();

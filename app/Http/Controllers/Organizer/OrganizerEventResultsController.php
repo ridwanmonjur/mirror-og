@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizer;
 use App\Http\Controllers\Controller;
 use App\Jobs\HandleResults;
 use App\Models\Achievements;
+use App\Models\ActivityLogs;
 use App\Models\Award;
 use App\Models\AwardResults;
 use App\Models\EventDetail;
@@ -228,6 +229,8 @@ class OrganizerEventResultsController extends Controller
             if ($row) {
                 DB::table('achievements')->where('id', $achievementId)->delete();
             }
+
+            $activityLog = new ActivityLogs();
             dispatch(new HandleResults('DeleteAchievement', [
                 'subject_type' => User::class,
                 'object_type' => Achievements::class,
