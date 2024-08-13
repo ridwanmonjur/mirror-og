@@ -148,6 +148,7 @@
         <br>
         <div>
             <div>Event</div>
+            <div class="ms-3">Event: <span id="eventName">{{ $event->eventName }}</span></div>
             <div class="ms-3">Game: <span id="paymentType">{{ $event->game?->gameTitle }}</span></div>
             <div class="ms-3">Type: <span id="paymentType">{{ $event->type?->eventType }}</span></div>
             <div class="ms-3">Tier: <span id="paymentTier">{{ $event->tier?->eventTier }}</span></div>

@@ -34,7 +34,7 @@
             </button>
         </div>
 
-        <div class="tab-content pb-4 outer-tab d-none" id="Overview">
+        <div class="tab-content pb-4 outer-tab" id="Overview">
             <br><br>
             <div class="d-flex justify-content-center"><b>Recent Events</b></div>
             <br> <br>
@@ -71,19 +71,24 @@
                 <div class="showcase col-12 col-lg-6">
                     <div><b>Showcase</b></div>
                     <br>
-                    <div @class(["showcase-box d-none-until-hover-parent" , 
-                            "d-flex justify-content-between flex-wrap" => !isset($awardList[2])
-                    ])>
-                        <div>
+                    <div class="showcase-box d-none-until-hover-parent row">
+                        <div @class([
+                            "col-6",
+                            "col-12" => isset($awardList[2])
+                        ])>
                             <p>Events Joined: {{ $totalEventsCount }}</p>
                             <p>Wins: {{ $wins }}</p>
                             <p>Win Streak: {{ $streak }}</p>
                         </div>
-                        <div class="d-none-until-hover">
-                            <div class="d-flex justify-content-between w-100 h-100">
+                        <div @class([
+                            "d-none-until-hover",
+                            "col-6",
+                            "col-12" => isset($awardList[2])
+                        ])>
+                            <div class="d-flex justify-content-between">
                                 @foreach ($awardList as $award)
                                     <div>
-                                        <img src="{{ '/' . 'storage/' . $award->awards_image }} " alt="Trophy" class="trophy me-2">
+                                        <img src="{{ '/' . 'storage/' . $award->awards_image }} " width="100" height="100" alt="Trophy" class="me-2">
                                     </div>
                                 @endforeach
                             </div>
@@ -92,7 +97,7 @@
                 </div>
 
                 <div class="achievements col-12 col-lg-6">
-                    <div><b>Achievements</b></div>
+                    <div><b>Achievements</b></div><br>
                     @if (!isset($achievementList[0]))
                         <ul class="achievement-list mt-4">
                             <p>No achievements available</p>
@@ -120,7 +125,7 @@
             </div>
         </div>
 
-        <div class="tab-content pb-4 outer-tab" id="Members">
+        <div class="tab-content pb-4 outer-tab d-none" id="Members">
             @include('Participant.__Partials.TeamManagementMemberView')
         </div>
 
