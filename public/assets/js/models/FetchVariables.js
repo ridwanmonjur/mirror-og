@@ -1,7 +1,7 @@
 // ManageEventFetchProcessor
 class FetchVariables {
     constructor(formId = null, formKeys = []) {
-        this.sortType = 'desc';
+        this.sortType = 'asc';
         this.sortKey = '';
         this.filter = {};
         this.search = null;

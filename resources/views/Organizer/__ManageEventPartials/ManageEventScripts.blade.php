@@ -21,7 +21,7 @@
                 .then((response) => response.json())
                 .then((response) => {
                     
-                    if (response.html == '') {
+                    if (!response.html || response.html === '') {
                         noMoreDataElement.classList.remove('d-none');
                         noMoreDataElement.style.display = 'flex';
                         noMoreDataElement.style.justifyContent = 'center';
@@ -59,7 +59,7 @@
         })
             .then((response) => response.json())
             .then((response) => {
-                if (response.html == '') {
+                if (!response.html || response.html === '') {
                     scrollingPaginationElement.innerHTML = "";
                     noMoreDataElement.classList.remove('d-none');
                     noMoreDataElement.style.display = 'flex';
@@ -90,8 +90,8 @@
                 if (startDateInput) startDateInput.value = _date1;
                 let endDateInput = document.getElementById('endDate');
                 if (endDateInput) endDateInput.value = _date2;
-                deleteTagByNameValue('startDate', _date1);
-                deleteTagByNameValue('endDate', _date2);
+                let tag = document.querySelector(".durationDate");
+                tag?.remove();
                 addFilterTags(`Date: ${_date1} - ${_date2}`, 'durationDate', `${_date1}${_date2}`);
                 console.log({isPickerShown});
                 fetchSearchSortFiter();
@@ -132,9 +132,6 @@
         "SORT_KEY" : 'sortKey'
     }
 
-    function stopPropagation(event) {
-        event.stopPropagation();
-    }
 
     function toggleDropdown(id) {
         
@@ -157,20 +154,17 @@
 
         let params = new URLSearchParams(window.location.search);
 
-        if (!params) params = {}
-
-        params.page = 1;
-
         ENDPOINT = "{{ route('event.search.view') }}";
 
         let body = {
-            ...params,
+            page: params.get('page') ?? 1,
             filter: fetchVariables.getFilter(),
             sort: { 
                 [fetchVariables.getSortKey()] : fetchVariables.getSortType()
             },
             userId: Number("{{ $user->id }}"),
-            search: fetchVariables.getSearch()
+            search: fetchVariables.getSearch(),
+            status: params.get('status')
         }
 
         loadByPost(ENDPOINT, body);     
@@ -240,7 +234,10 @@
         let sortByTitleId = document.getElementById('sortByTitleId');
         sortByTitleId.textContent = title;
         fetchVariables.setSortKey(key);
-        fetchVariables.setSortType(sortType);  
+        fetchVariables.setSortType(sortType); 
+        let elementView = document.querySelector(`.${sortType}-sort-icon`);
+        elementView?.classList.remove("d-none");
+        elementView?.classList.add("d-inline"); 
         fetchSearchSortFiter();
         fetchVariables.visualize();
     }
@@ -248,24 +245,24 @@
     function setFetchSortType(event) {
         let sortType = fetchVariables.getSortType();
         let sortKey = fetchVariables.getSortKey();
-
-        if (sortType && sortKey != "") {
-            if (sortType == SORT_CONSTANTS['ASC']) {
-                sortType = SORT_CONSTANTS['NONE'];
-            } else if (sortType == SORT_CONSTANTS['DESC']) {
-                sortType = SORT_CONSTANTS['ASC'];
-            } else {
-                sortType = SORT_CONSTANTS['DESC'];
-            }
-        } else { 
-           toggleDropdown('dropdownSortButton');
-           return;
+        if (sortType === SORT_CONSTANTS['ASC']) {
+            sortType = SORT_CONSTANTS['DESC'];
+        } else if (sortType === SORT_CONSTANTS['DESC']) {
+            sortType = SORT_CONSTANTS['NONE'];
+        } else {
+            sortType = SORT_CONSTANTS['ASC'];
         }
 
-        let element = document.getElementById("insertSortTypeIcon"); 
-        let cloneNode = document.querySelector(`.${sortType}-sort-icon`).cloneNode(true);
-        element.insertBefore(cloneNode, element.firstChild);
-        event.currentTarget.remove();
+        let parentElement = document.getElementById("insertSortTypeIcon"); 
+        let childElements = parentElement.children;
+
+        for (let i = 0; i < childElements.length; i++) {
+            childElements[i]?.classList.add("d-none");
+        }
+        
+        let elementView = document.querySelector(`.${sortType}-sort-icon`);
+        elementView?.classList.remove("d-none");
+        elementView?.classList.add("d-inline");      
         fetchVariables.setSortType(sortType);   
         fetchSearchSortFiter();
         fetchVariables.visualize();  
@@ -291,7 +288,7 @@
         const nextSearch = inputElement.nextElementSibling;
 
         if (nextSearch) {
-            if (String(inputValue).trim() === '') {
+            if (inputValue === null || inputValue === undefined || String(inputValue).trim() === '') {
                 nextSearch.classList.add('d-none');
             } else {
                 nextSearch.classList.remove('d-none')

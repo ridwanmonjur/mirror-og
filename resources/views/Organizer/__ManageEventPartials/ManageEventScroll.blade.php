@@ -26,9 +26,9 @@
         $toolTip .= '<b>Published date: </b>' . $datePublishedArray['timePart'] . ' on ' . $datePublishedArray['combinedStr'] ;    
     @endphp
 
-    <div class="{{ 'rounded-box rounded-box-' . $eventTierLower }} " style="padding-bottom: 2px;">
+    <div class="{{ 'rounded-box rounded-box-' . $eventTierLower }}" style="margin-bottom: 2.15rem;">
         <div class="centered-absolute-game-tier">
-            <img src="{{ $eventTierLowerImg }}" width="70" height="70" style="object-fit: cover;">
+            <img src="{{ $eventTierLowerImg }}" width="70" height="70" class="object-fit-cover">
         </div>
         <div class="{{ 'card-image card-image-' . $eventTierLower }}">
             <img width="100%" height="auto" {!! trustedBladeHandleImageFailure() !!} src="{{ $eventBannerImg }}" alt="">
@@ -61,7 +61,7 @@
                         @endphp --}}
                         @if ($event->tier)
                             @foreach ($eventList as $index => $eventDetail)
-                                @if ($index == 0)
+                                @if ($index === 0)
                                     <span>
                                         {{ $event->acceptedMembersCount }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}
                                     </span>
@@ -168,7 +168,7 @@
                             </svg>
                         </a>
                         <a class="m-0 p-0" >
-                            <button onclick=""
+                            <button 
                                 class="m-0 p-0" 
                                 style="background-color: transparent; outline: none; border: none;"
                                 type="button" data-bs-toggle="modal" data-bs-target="#shareModal">
@@ -182,14 +182,14 @@
                             <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5"/>
                             </svg>
                         </a>
-                        @if ($status != 'ONGOING')
+                        @if ($status !== 'ONGOING')
                             <a class="m-0 p-0"  href="{{ route('event.edit', $event->id) }}">
                                 <svg onclick="goToEditScreen()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
                                 <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
                                 </svg>
                             </a>
                         @endif
-                    @elseif ($status == "PENDING")
+                    @elseif ($status === "PENDING")
                         <a class="m-0 p-0"  href="{{ route('organizer.checkout.view', $event->id) }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
                             <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
