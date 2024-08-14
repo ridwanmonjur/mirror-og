@@ -34,19 +34,26 @@ class TeamMemberCreatedListener
                     if ($event->teamMember->actor === 'team') {
                         $action = 'invited';
                         $userNotification = [
-                            'text' => '<span class="notification-gray"> The team'
-                                .' <span class="notification-black">'.$teamName
-                                .'</span> has invited you'
-                                .' to join them.</span>',
+                            'text' => <<<HTML
+                                <span class="notification-gray">
+                                    The team 
+                                    <span class="notification-black">{$teamName}</span> 
+                                    has invited you to join them.
+                                </span>
+                                HTML,
                             'subject' => 'Invitation to join a team',
                         ];
                     } else {
                         $action = 'pending';
                         $teamCreatorNotification = [
-                            'text' => '<span class="notification-gray"> The user'
-                                .' <span class="notification-black">'.$userName.'</span> has invited you'
-                                .' to join your team , '.$teamName
-                                .'</span></span>',
+                            'text' => <<<HTML
+                                <span class="notification-gray">
+                                    The user 
+                                    <span class="notification-black">{$userName}</span> 
+                                    has invited you to join your team, 
+                                    <span class="notification-black">{$teamName}</span>.
+                                </span>
+                                HTML,
                             'subject' => 'Requesting to join this team',
                         ];
                     }

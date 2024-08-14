@@ -17,14 +17,6 @@ class ChangePositionStrategy
     public function handle($parameters)
     {
         try {
-            // dispatch(new HandleResults('ChangePosition', [
-            //     'subject_type' => User::class,
-            //     'object_type' => EventJoinResults::class,
-            //     'subject_id' => $user->id,
-            //     'object_id' => $existingRowId,
-            //     'action' => 'Position',
-            //     'teamName' => $request->teamName
-            // ]));
             Log::info('ChangePositions===========>');
             Log::info($parameters);
             $emoji = [1 => '🥇', 2 => '🥈'];
@@ -90,14 +82,6 @@ class AddAwardStrategy
     {
         try {
             Log::info('AddAwardStrategy===========>');
-            // dispatch(new HandleResults('AddAward', [
-            //     'subject_type' => User::class,
-            //     'object_type' => AwardResults::class,
-            //     'subject_id' => $user->id,
-            //     'object_id' => $rowId,
-            //     'action' => 'Position',
-            //     'teamName' => $request->teamName
-            // ]));
             $notificationX = new Notifications();
             $activityLogX = new ActivityLogs();
             $notificationLog = <<<HTML
@@ -138,12 +122,6 @@ class AddAchievementStrategy
     {
         try {
             Log::info('AddAchievementStrategy===========>');
-            // 'subject_type' => User::class,
-            // 'object_type' => Achievements::class,
-            // 'subject_id' => $user->id,
-            // 'object_id' => $rowId,
-            // 'action' => 'Position',
-            // 'teamName' => $request->teamName
             $notificationX = new Notifications();
             $activityLogX = new ActivityLogs();
             $notificationLog = <<<HTML
@@ -184,14 +162,6 @@ class DeleteAwardStrategy
     {
         try {
             Log::info('DeleteAwardStrategy===========>');
-            // dispatch(new HandleResults('DeleteAward', [
-            //     'subject_type' => User::class,
-            //     'object_type' => AwardResults::class,
-            //     'subject_id' => $user->id,
-            //     'object_id' => $row->id,
-            //     'action' => 'Position',
-            //     'teamName' => $request->teamName
-            // ]));
             $activityLogX = new ActivityLogs();
             $activityLogX->findActivityLog($parameters)->delete();
             $notificationX = new Notifications();
@@ -208,14 +178,6 @@ class DeleteAchievementStrategy
     {
         try {
             Log::info('DeleteAchievementStrategy===========>');
-            // dispatch(new HandleResults('DeleteAchievement', [
-            //     'subject_type' => User::class,
-            //     'object_type' => AwardResults::class,
-            //     'subject_id' => $user->id,
-            //     'object_id' => $row->id,
-            //     'action' => 'Position',
-            //     'teamName' => $request->teamName
-            // ]));
             $activityLogX = new ActivityLogs();
             $activityLogX->findActivityLog($parameters)->delete();
             $notificationX = new Notifications();

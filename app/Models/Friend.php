@@ -26,6 +26,7 @@ class Friend extends Model
         return $this->belongsTo(User::class, 'user2_id', 'id');
     }
 
+
     public static function checkFriendship(string|int $userProfileId, string|int $logged_user_id): ?self
     {
         return self::where(function ($query) use ($userProfileId, $logged_user_id) {

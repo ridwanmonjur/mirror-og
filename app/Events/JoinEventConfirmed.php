@@ -15,7 +15,7 @@ class JoinEventConfirmed
 
     public $memberNotification;
 
-    public $organizerNotificatio;
+    public $organizerNotification;
 
     public $memberList;
 
@@ -31,7 +31,7 @@ class JoinEventConfirmed
         $this->memberList ??= $parameters['memberList'];
         $this->organizerList ??= $parameters['organizerList'];
         $this->memberNotification ??= $parameters['memberNotification'];
-        $this->organizerNotificatio ??= $parameters['organizerNotification'];
+        $this->organizerNotification ??= $parameters['organizerNotification'];
         $this->allEventLogs ??= $parameters['allEventLogs'];
     }
 

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Participant;
 
+use App\Events\JoinEventConfirmed;
 use App\Http\Controllers\Controller;
+use App\Jobs\HandleFollows;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\Like;
@@ -17,6 +19,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\UnauthorizedException;
 
@@ -137,13 +140,13 @@ class ParticipantEventController extends Controller
         $organizer = User::findOrFail($organizerId);
 
         if ($existingFollow) {
-            // dispatch(new HandleFollows('Unfollow', [
-            //     'subject_type' => User::class,
-            //     'object_type' => User::class,
-            //     'subject_id' => $userId,
-            //     'object_id' => $organizerId,
-            //     'action' => 'Follow',
-            // ]));
+            dispatch(new HandleFollows('Unfollow', [
+                'subject_type' => User::class,
+                'object_type' => User::class,
+                'subject_id' => $userId,
+                'object_id' => $organizerId,
+                'action' => 'Follow',
+            ]));
 
             $existingFollow->delete();
 
@@ -214,6 +217,8 @@ class ParticipantEventController extends Controller
             $isFollowing = OrganizerFollow::getIsFollowing($user_id, $userIds);
             ['joinEvents' => $joinEvents, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents]
                 = JoinEvent::processEvents($joinEvents, $isFollowing);
+
+            // dd($joinEvents);
 
             return view(
                 'Participant.RegistrationManagement',
@@ -287,7 +292,7 @@ class ParticipantEventController extends Controller
             }
 
             $selectTeam = Team::getTeamAndMembersByTeamId($teamId);
-            // dd($selectTeam);
+            
             $event = EventDetail::with(['user' => function ($query) {
                 $query->select('id', 'name', 'email');
             },
@@ -298,12 +303,12 @@ class ParticipantEventController extends Controller
             if ($selectTeam && $isAlreadyMember) {
                 [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs]
                     = $selectTeam->processTeamRegistration($user, $event, true);
-                // Event::dispatch(new JoinEventConfirmed(
-                //     compact(
-                //         'memberList', 'organizerList', 'memberNotification',
-                //         'organizerNotification', 'allEventLogs'
-                //     )
-                // ));
+                Event::dispatch(new JoinEventConfirmed(
+                    compact(
+                        'memberList', 'organizerList', 'memberNotification',
+                        'organizerNotification', 'allEventLogs'
+                    )
+                ));
 
                 DB::commit();
 
@@ -370,12 +375,13 @@ class ParticipantEventController extends Controller
                 ]);
                 [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs]
                     = $selectTeam->processTeamRegistration($user, $event, true);
-                // event(new JoinEventConfirmed(
-                //     compact(
-                //         'memberList', 'organizerList', 'memberNotification',
-                //         'organizerNotification', 'allEventLogs'
-                //     )
-                // ));
+                
+                    event(new JoinEventConfirmed(
+                    compact(
+                        'memberList', 'organizerList', 'memberNotification',
+                        'organizerNotification', 'allEventLogs'
+                    )
+                ));
                 DB::commit();
 
                 return view('Participant.EventNotify', compact('id', 'selectTeam'));
@@ -400,6 +406,11 @@ class ParticipantEventController extends Controller
     public function confirmOrCancel(Request $request)
     {
         try {
+            // 1. request must have teamId and eventId
+            // 2. refactor ? with if
+            // 3. get team by id and event by id
+            // 4. Team::cancelTeamRegistration($event);
+            
             $successMessage = $request->join_status === 'confirmed' ? 'Your registration is now successfully confirmed!'
                 : 'Your registration is now successfully canceled.';
 

@@ -275,23 +275,34 @@ class Team extends Model
 
         if ($isNewTeam) {
             $memberList = [];
-            $memberNotification['text'] = '<span class="notification-gray"> You have created a new team named'
-                .' <span class="notification-black">'.$this->teamName.'</span> and joined'
-                .' <span class="notification-black">'.$event->user->name.' \'s </span> event'
-                .' <span class="notification-blue">'.$event->eventName.' </span>.'
-                .'</span>';
+            $memberNotification['text'] = <<<HTML
+                <span class="notification-gray">
+                    You have created a new team named 
+                    <span class="notification-black">{$this->teamName}</span> 
+                    and joined 
+                    <span class="notification-black">{$event->user->name}'s</span> event 
+                    <span class="notification-blue">{$event->eventName}</span>.
+                </span>
+                HTML;
+
             foreach ($teamMembers as $member) {
                 $memberList[] = $member->user;
                 $allEventLogs[] = [
                     'action' => 'join',
+                    'created_at' => now(),
+                    'updated_at' => now(),
                     'subject_id' => $member->user->id,
-                    'subject_type' => '\App\Models\User',
-                    'log' => '<span class="notification-gray"> You have joined'
-                    .' <span class="notification-black">'.$event->user->name.' \'s </span> event'
-                    .' <span class="notification-blue">'.$event->eventName.' </span>.'
-                    .'</span>',
+                    'subject_type' => User::class,
+                    'log' => <<<HTML
+                        <span class="notification-gray">
+                            You have joined 
+                            <span class="notification-black">{$event->user->name}'s</span> event 
+                            <span class="notification-blue">{$event->eventName}</span>.
+                        </span>
+                        HTML,
                 ];
             }
+            
             $rosterCaptain = $teamMembers[0];
         } else {
             $memberList = $memberNotification = [];
@@ -301,18 +312,25 @@ class Team extends Model
                     'action' => 'join',
                     'subject_id' => $member->user->id,
                     'subject_type' => '\App\Models\User',
-                    'log' => '<span class="notification-gray"> You have joined'
-                    .' <span class="notification-black">'.$event->user->name.' \'s </span> event'
-                    .' <span class="notification-blue">'.$event->eventName.' </span>.'
-                    .'</span>',
-                ];
+                    'log' => <<<HTML
+                        <span class="notification-gray">
+                            You have joined 
+                            <span class="notification-black">{$event->user->name}'s</span> event 
+                            <span class="notification-blue">{$event->eventName}</span>.
+                        </span>
+                        HTML,
+                    ];
             }
-
-            $memberNotification['text'] = '<span class="notification-gray">You have selected a team named'
-                .' <span class="notification-black">'.$this->teamName.'</span> and joined'
-                .' <span class="notification-black">'.$event->user->name.' \'s </span> event'
-                .' <span class="notification-blue">'.$event->eventName.' </span>.'
-                .'</span>';
+            
+            $memberNotification['text'] = <<<HTML
+            <span class="notification-gray">
+                You have selected a team named 
+                <span class="notification-black">{$this->teamName}</span> 
+                and joined 
+                <span class="notification-black">{$event->user->name}'s</span> event 
+                <span class="notification-blue">{$event->eventName}</span>.
+            </span>
+            HTML;
             $rosterCaptain = TeamMember::where('team_id', $this->id)
                 ->where('user_id', $user->id)->first();
         }
@@ -344,9 +362,88 @@ class Team extends Model
             'teams_id' => $this->id,
         ]);
 
-        // $memberNotification, $organizerNotificatio => $text, $data, $links, $user
         return [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs];
     }
+
+    public function cancelTeamRegistration($event)
+    {
+        // $userId = $user->id;
+        $teamMembers = $this->members;
+        $allEventLogs = [];
+        $memberNotification = [
+            'subject' => 'Team '.$this->teamName.' leaving Event: '. $event->eventName,
+            'links' => [
+                [
+                    'name' => 'View Team',
+                    'url' => route('public.team.view', ['id' => $this->id]),
+                ],
+                [
+                    'name' => 'View Event',
+                    'url' => route('public.event.view', ['id' => $event->id]),
+                ],
+            ],
+        ];
+
+        
+        $memberList = $memberNotification = [];
+        foreach ($teamMembers as $member) {
+            $memberList[] = $member->user;
+            $allEventLogs[] = [
+                'action' => 'leave',
+                'subject_id' => $member->user->id,
+                'subject_type' => '\App\Models\User',
+                'log' => <<<HTML
+                    <span class="notification-gray">
+                        You have left 
+                        <span class="notification-black">{$event->user->name}'s</span> event 
+                        <span class="notification-blue">{$event->eventName}</span>.
+                    </span>
+                    HTML,
+            ];
+        }
+        
+        $memberNotification['text'] = <<<HTML
+            <span class="notification-gray">
+                Your team named 
+                <span class="notification-black">{$this->teamName}</span> 
+                has left 
+                <span class="notification-black">{$event->user->name}'s</span> event 
+                <span class="notification-blue">{$event->eventName}</span>.
+            </span>
+            HTML;
+       
+        $organizerList = [$event->user];
+
+        $organizerNotification = [
+            'subject' => 'Team '.$this->teamName.' leaving Event: '.$event->eventName,
+            'text' => ucfirst($this->teamName).' has left your event '.$event->eventName.'!',
+            'links' => [
+                [
+                    'name' => 'Visit team',
+                    'url' => route('event.index', ['id' => $event->id]),
+                ],
+            ],
+        ];
+
+        $joinEvent = JoinEvent::where([
+            'team_id' => $this->id,
+            'event_details_id' => $event->id,
+        ])->first;
+        
+        // RosterMember::where([
+        //     'join_events_id' => $joinEvent->id,
+        // ])->delete();
+
+        // RosterMember::bulkCreateRosterMembers($joinEvent->id, $teamMembers);
+        // RosterCaptain::where([
+        //     'join_events_id' => $joinEvent->id,
+        //     'teams_id' => $this->id,
+        // ])->delete();
+
+        $joinEvent->delete();
+        return [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs];
+    }
+
 
     public function uploadTeamBanner($request)
     {

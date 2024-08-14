@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FriendRequest;
 use App\Http\Requests\LikeRequest;
 use App\Http\Requests\UpdateParticipantsRequest;
+use App\Models\ActivityLogs;
 use App\Models\EventInvitation;
 use App\Models\Friend;
 use App\Models\JoinEvent;
@@ -163,7 +164,7 @@ class ParticipantController extends Controller
             // dispatch(new HandleFollows('Unlike', [
             //     'subject_type' => User::class,
             //     'object_type' => User::class,
-            //     'subject_id' => $userId,
+            //     'subject_id' => $user->id,
             //     'object_id' => $organizerId,
             //     'action' => 'Unlike',
             // ]));
@@ -202,11 +203,16 @@ class ParticipantController extends Controller
 
     public function updateFriend(FriendRequest $request)
     {
+        $FRIEND_ACTION = "friend";
         $user = $request->attributes->get('user');
         $validatedData = $request->validated();
+        $activityLog = new ActivityLogs();
         if (array_key_exists('deleteUserId', $validatedData)) {
             $friend = Friend::checkFriendship($validatedData['deleteUserId'], $user->id);
             $friend?->deleteOrFail();
+
+            User::where($request->input('deleteUserId'))->select("id")->firstOrFail();;
+            
 
             session()->flash('successMessage', 'Your request has been deleted.');
 
@@ -214,12 +220,31 @@ class ParticipantController extends Controller
         }
         if (array_key_exists('addUserId', $validatedData)) {
             try {
-                Friend::create([
+                $addUser = User::where($request->input('addUserId'))
+                    ->select("id")->firstOrFail();
+                $friend = Friend::create([
                     'user1_id' => $user->id,
                     'user2_id' => intval($validatedData['addUserId']),
                     'status' => 'pending',
                     'actor_id' => $user->id,
                 ]);
+
+                $activityLog->createActivityLogs([
+                    'subject_type' => User::class,
+                    'subject_id' => [$user->id, intval($validatedData['addUserId'])],
+                    'object_type' => Friend::class,
+                    'object_id' => $friend->id,
+                    'action' => $FRIEND_ACTION,
+                    'log' =>  <<<HTML
+                    <span class="notification-gray">
+                        You and  
+                        <span class="notification-black">{$event->user->name}'s</span> event 
+                        <span class="notification-blue">{$event->eventName}</span>.
+                    </span>
+                    HTML,
+                    'image' => $addUser->id,
+                ]);
+
 
                 session()->flash('successMessage', 'Successfully created a friendship');
 
@@ -237,6 +262,7 @@ class ParticipantController extends Controller
             }
         } else {
             try {
+                $updateUser = User::where($request->input('updateUserId'))->select(['id', 'userBanner', 'name']);
                 $friend = Friend::checkFriendship($validatedData['updateUserId'], $user->id)->firstOrFail();
                 $status = $validatedData['updateStatus'];
                 $isPermitted = $status === 'left';
@@ -258,6 +284,30 @@ class ParticipantController extends Controller
                     'actor_id' => $user->id,
                     'status' => $status,
                 ]);
+
+                if ($$status === 'left') {
+                    $activityLog->findActivityLog([
+                        'subject_type' => User::class,
+                        'subject_id' => [$user->id, $updateUser->id],
+                        'object_type' => Friend::class,
+                        'object_id' => $friend->id,
+                        'action' => $FRIEND_ACTION,
+                    ])->delete();
+                }
+
+                if ($$status === 'accepted') {
+                    $activityLog->createActivityLogs([
+                        'subject_type' => User::class,
+                        'subject_id' => [$user->id, $updateUser->id],
+                        'object_type' => Friend::class,
+                        'object_id' => $friend->id,
+                        'action' => $FRIEND_ACTION,
+                        'logs' => [
+                            '',
+                            ''
+                        ]
+                    ]);
+                }
 
                 $message = [
                     'left' => 'Successfully removed friendship.',

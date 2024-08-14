@@ -12,8 +12,7 @@ class ActivityLogs extends Model
 {
     use HasFactory;
     protected $fillable = ['action', 'subject_id', 'subject_type',
-        'object_id', 'object_type', 'log', 'image',
-        'created_at', 'updated_at',
+        'object_id', 'object_type', 'log', 
     ];
 
     protected $table = 'activity_logs';
@@ -46,31 +45,21 @@ class ActivityLogs extends Model
     {
         Log::info('hit createActivityLogs');
         Log::info($parameters['subject_id']);
-        if (is_array($parameters['subject_id'])) {
-            $data = [];
-            foreach ($parameters['subject_id'] as $subjectId) {
-                $data[] = [
-                    'subject_type' => $parameters['subject_type'],
-                    'object_type' => $parameters['object_type'],
-                    'subject_id' => $subjectId,
-                    'object_id' => $parameters['object_id'],
-                    'action' => $parameters['action'],
-                    'log' => $parameters['log'],
-                    'image' => $parameters['image'],
-                ];
-            }
-
-            ActivityLogs::insert($data);
-        } else {
-            ActivityLogs::create([
+        $data = [];
+        $isLogArray = is_array($parameters['log']); 
+        foreach ($parameters['subject_id'] as $index => $subjectId) {
+            $data[] = [
                 'subject_type' => $parameters['subject_type'],
                 'object_type' => $parameters['object_type'],
-                'subject_id' => $parameters['subject_id'],
+                'subject_id' => $subjectId,
                 'object_id' => $parameters['object_id'],
                 'action' => $parameters['action'],
-                'log' => $parameters['log'],
-                'image' => $parameters['image'],
-            ]);
+                'log' => $isLogArray? $parameters['log'][$index] : $parameters['log'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
         }
+
+        ActivityLogs::insert($data);
     }
 }

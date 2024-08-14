@@ -5,9 +5,9 @@
     <br>
     @if (isset($totalItems[0]))
         @foreach($totalItems as $totalItem)
-            <div wire:key="$totalItem->id" class="tab-size mx-auto">
+            <div wire:key="$totalItem->id" class="tab-size mb-3 mx-auto">
                 <span class="me-1"> {!! $totalItem->log !!} </span>
-                <span class="notification-gray">{{ Carbon::parse($totalItem->created_at)->diffForHumans() }}</span>
+                <span style="color: #565656;">{{ Carbon::parse($totalItem->created_at)->diffForHumans() }}</span>
             </div>
         @endforeach
     @else
