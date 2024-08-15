@@ -269,38 +269,39 @@ class ParticipantController extends Controller
                         'object_type' => Friend::class,
                         'object_id' => $friend->id,
                         'action' => $FRIEND_ACTION,
-                        'log' =>  [<<<HTML
-                        <a href="/view/participant/$updateUser->id" alt="Friend Image link"> 
-                            <img class="object-fit-cover rounded-circle me-2" 
-                                width='30' height='30'  
-                                src="/storage/$updateUser->userBanner" 
-                                onerror="this.src='/assets/images/404.png';"
-                            >
-                        </a>
-                        <span class="notification-gray me-2">
-                            You and  
-                            <a href="/view/participant/$updateUser->id" alt="Friend link"> 
-                                <span class="notification-blue">{$updateUser->name}</span>  
-                            </a>
-                            are friends.
-                        </span>
-                        HTML,
-                        <<<HTML
-                            <a href="/view/participant/$user->id" alt="Friend Image link">
-                                <img class="object-fit-cover rounded-circle me-2" 
-                                    width='30' height='30'  
-                                    src="/storage/$user->userBanner" 
-                                    onerror="this.src='/assets/images/404.png';"
-                                >
-                            </a>
-                            <span class="notification-gray">
-                                You and 
-                                <a href="/view/participant/$user->id" alt="Friend link">  
-                                    <span class="notification-blue">{$user->name}</span>  
-                                        are friends.
-                                    </span>
+                        'log' => [
+                            <<<HTML
+                                <a href="/view/participant/{$updateUser->id}" alt="Friend Image link"> 
+                                    <img class="object-fit-cover rounded-circle me-2" 
+                                        width="30" height="30"  
+                                        src="/storage/{$updateUser->userBanner}" 
+                                        alt="Profile picture of {$updateUser->name}"
+                                        onerror="this.src='/assets/images/404.png';">
                                 </a>
-                            HTML
+                                <span class="notification-gray me-2">
+                                    You and  
+                                    <a href="/view/participant/{$updateUser->id}" alt="Friend link"> 
+                                        <span class="notification-blue">{$updateUser->name}</span>  
+                                    </a>
+                                    are friends.
+                                </span>
+                            HTML,
+                            <<<HTML
+                                <a href="/view/participant/{$user->id}" alt="Friend Image link">
+                                    <img class="object-fit-cover rounded-circle me-2" 
+                                        width="30" height="30"  
+                                        src="/storage/{$user->userBanner}" 
+                                        alt="Profile picture of {$user->name}"
+                                        onerror="this.src='/assets/images/404.png';">
+                                </a>
+                                <span class="notification-gray">
+                                    You and 
+                                    <a href="/view/participant/{$user->id}" alt="Friend link">  
+                                        <span class="notification-blue">{$user->name}</span>  
+                                    </a>
+                                    are friends.
+                                </span>
+                            HTML,
                         ],
                     ]);
                 }
@@ -366,10 +367,11 @@ class ParticipantController extends Controller
                     'object_id' => $follow->id,
                     'action' => $PARTICIPANT_FOLLOW_ACTION,
                     'log' =>  <<<HTML
-                    <a href="/view/participant/$updateUser->id" alt="Follow Image link"> 
+                    <a href="/view/participant/{$updateUser->id}" alt="Follow Image link"> 
                         <img class="object-fit-cover rounded-circle me-2" 
                             width='30' height='30'  
-                            src="/storage/$updateUser->userBanner" 
+                            alt="Profile picture of {$user->name}"
+                            src="/storage/{$updateUser->userBanner}" 
                             onerror="this.src='/assets/images/404.png';"
                         >
                     </a>

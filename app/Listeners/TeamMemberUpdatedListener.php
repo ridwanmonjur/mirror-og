@@ -48,6 +48,7 @@ class TeamMemberUpdatedListener
                                 <img src="/storage/$teamBanner" 
                                     onerror="this.src='/assets/images/404.png';"
                                     class="object-fit-cover rounded-circle me-2"
+                                    width="30" height="30"
                                     alt="Team View"
                                 >
                             </a>
@@ -65,6 +66,7 @@ class TeamMemberUpdatedListener
                                     <img src="/storage/$teamBanner" 
                                         onerror="this.src='/assets/images/404.png';"
                                         class="object-fit-cover rounded-circle me-2"
+                                        width="30" height="30"
                                         alt="Team View"
                                     >
                                 </a>
@@ -83,6 +85,7 @@ class TeamMemberUpdatedListener
                         $userLog = <<<HTML
                             <a href="/view/team/$teamId" alt="Team View">
                                 <img src="/storage/$teamBanner" 
+                                    width="30" height="30"    
                                     onerror="this.src='/assets/images/404.png';"
                                     class="object-fit-cover rounded-circle me-2"
                                     alt="Team View"
@@ -127,6 +130,7 @@ class TeamMemberUpdatedListener
                         $userLog = <<<HTML
                             <a href="/view/team/$teamId" alt="Team View">
                                 <img src="/storage/$teamBanner" 
+                                    width="30" height="30"
                                     onerror="this.src='/assets/images/404.png';"
                                     class="object-fit-cover rounded-circle me-2"
                                     alt="Team View"
@@ -144,6 +148,7 @@ class TeamMemberUpdatedListener
                             'text' => <<<HTML
                                 <a href="/view/team/$teamId" alt="Team View">
                                     <img src="/storage/$teamBanner" 
+                                        width="30" height="30"
                                         onerror="this.src='/assets/images/404.png';"
                                         class="object-fit-cover rounded-circle me-2"
                                         alt="Team View"
@@ -161,7 +166,9 @@ class TeamMemberUpdatedListener
                     } else {
                         $userLog = <<<HTML
                             <a href="/view/team/$teamId" alt="Team View">
-                                <img src="/storage/$teamBanner" 
+                                <img 
+                                    width="30" height="30"
+                                    src="/storage/$teamBanner" 
                                     onerror="this.src='/assets/images/404.png';"
                                     class="object-fit-cover rounded-circle me-2"
                                     alt="Team View"
@@ -210,6 +217,7 @@ class TeamMemberUpdatedListener
                         'text' => <<<HTML
                             <a href="/view/team/$teamId" alt="Team View">
                                 <img src="/storage/$teamBanner" 
+                                    width="30" height="30"
                                     onerror="this.src='/assets/images/404.png';"
                                     class="object-fit-cover rounded-circle me-2"
                                     alt="Team View"
@@ -230,7 +238,8 @@ class TeamMemberUpdatedListener
                                 <a href="/view/participant/$userId" 
                                     alt="User link"
                                 > 
-                                    <img class="object-fit-cover rounded-circle me-2" 
+                                    <img 
+                                        class="object-fit-cover rounded-circle me-2" 
                                         width='30' height='30'  
                                         src="/storage/$userBanner" 
                                         onerror="this.src='/assets/images/404.png';"

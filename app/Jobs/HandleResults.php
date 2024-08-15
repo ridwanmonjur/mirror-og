@@ -48,6 +48,7 @@ class ChangePositionStrategy
                 <span>
                     <a href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image" 
+                            width="30" height="30"
                             onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Event View"
@@ -119,6 +120,7 @@ class AddAwardStrategy
                 <span>
                 <a href="/event/$teamId" alt="Team View">
                     <img src="/storage/$image" 
+                        width="30" height="30"
                         onerror="this.src='/assets/images/404.png';"
                         class="object-fit-cover rounded-circle me-2"
                         alt="Event View"
@@ -136,6 +138,7 @@ class AddAwardStrategy
                 <span>
                     <a href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image" 
+                            width="30" height="30"
                             onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Event View"
@@ -186,6 +189,7 @@ class AddAchievementStrategy
                 <span>
                     <a href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image" 
+                            width="30" height="30"
                             onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Event View"
@@ -205,7 +209,8 @@ class AddAchievementStrategy
             $activityLog = <<<HTML
                 <span>
                     <a href="/event/$teamId" alt="Team View">
-                        <img src="/storage/$image" 
+                        <img src="/storage/$image"
+                            width="30" height="30" 
                             onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Event View"
