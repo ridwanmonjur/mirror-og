@@ -33,5 +33,28 @@
 
 // Variables
 /*! purgecss start ignore */
+.notification-black {
+    color: black;
+}
+
+.notification-gray {
+    color: black;
+}
+
+.notification-blue {
+    color: #43A4D7;
+}
+
+.notification-gold {
+    color: goldenrod;
+}
+
+.notification-container-not-read {
+    font-weight: 600;
+}
+
+.notification-container-read {
+    font-weight: 400;
+}
 @import "css-ripple-effect/dist/ripple.min.css";
 /*! purgecss end ignore */

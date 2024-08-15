@@ -40,7 +40,7 @@
                                     class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle"
                                 >
                                     {{-- Mark all as read --}}
-                                    I{{-- {{ $notification->object_type->getImage()  }} --}}
+                                    {{-- {{ $notification->object_type->getImage()  }} --}}
                                 </div>
                                 <span style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 0.9375rem;" class="text-start ms-2 my-1">
                                     {!! $notification->data['data'] !!}
