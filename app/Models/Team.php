@@ -278,7 +278,7 @@ class Team extends Model
             $memberNotification['text'] = <<<HTML
                 <a href="/view/team/$this->id" alt="Team View">
                     <img src="/storage/$this->teamBanner" 
-                        onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                        onerror="this.src='/assets/images/404.png';"
                         class="object-fit-cover rounded-circle me-2"
                         alt="Team View"
                     >
@@ -309,7 +309,7 @@ class Team extends Model
                     'log' => <<<HTML
                         <a href="/view/team/$this->id" alt="Team View">
                             <img src="/storage/$this->teamBanner" 
-                                onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                onerror="this.src='/assets/images/404.png';"
                                 class="object-fit-cover rounded-circle me-2"
                                 alt="Team View"
                             >
@@ -339,7 +339,7 @@ class Team extends Model
                     'log' => <<<HTML
                         <a href="/view/team/$this->id" alt="Team View">
                             <img src="/storage/$this->teamBanner" 
-                                onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                onerror="this.src='/assets/images/404.png';"
                                 class="object-fit-cover rounded-circle me-2"
                                 alt="Team View"
                             >
@@ -360,7 +360,7 @@ class Team extends Model
             $memberNotification['text'] = <<<HTML
             <a href="/view/team/$this->id" alt="Team View">
                 <img src="/storage/$this->teamBanner" 
-                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                    onerror="this.src='/assets/images/404.png';"
                     class="object-fit-cover rounded-circle me-2"
                     alt="Team View"
                 >
@@ -462,7 +462,7 @@ class Team extends Model
         $memberNotification['text'] = <<<HTML
             <a href="/view/team/$this->id" alt="Team View">
                 <img src="/storage/$this->teamBanner" 
-                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                    onerror="this.src='/assets/images/404.png';"
                     class="object-fit-cover rounded-circle me-2"
                     alt="Team View"
                 >

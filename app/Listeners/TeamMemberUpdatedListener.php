@@ -46,7 +46,7 @@ class TeamMemberUpdatedListener
                         $userLog = <<<HTML
                             <a href="/view/team/$teamId" alt="Team View">
                                 <img src="/storage/$teamBanner" 
-                                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    onerror="this.src='/assets/images/404.png';"
                                     class="object-fit-cover rounded-circle me-2"
                                     alt="Team View"
                                 >
@@ -63,7 +63,7 @@ class TeamMemberUpdatedListener
                             'text' => <<<HTML
                                 <a href="/view/team/$teamId" alt="Team View">
                                     <img src="/storage/$teamBanner" 
-                                        onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                        onerror="this.src='/assets/images/404.png';"
                                         class="object-fit-cover rounded-circle me-2"
                                         alt="Team View"
                                     >
@@ -83,7 +83,7 @@ class TeamMemberUpdatedListener
                         $userLog = <<<HTML
                             <a href="/view/team/$teamId" alt="Team View">
                                 <img src="/storage/$teamBanner" 
-                                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    onerror="this.src='/assets/images/404.png';"
                                     class="object-fit-cover rounded-circle me-2"
                                     alt="Team View"
                                 >
@@ -104,7 +104,7 @@ class TeamMemberUpdatedListener
                                     <img class="object-fit-cover rounded-circle me-2" 
                                         width='30' height='30'  
                                         src="/storage/$userBanner" 
-                                        onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                        onerror="this.src='/assets/images/404.png';"
                                     >
                                 </a>
                                 <span class="notification-gray">
@@ -127,7 +127,7 @@ class TeamMemberUpdatedListener
                         $userLog = <<<HTML
                             <a href="/view/team/$teamId" alt="Team View">
                                 <img src="/storage/$teamBanner" 
-                                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    onerror="this.src='/assets/images/404.png';"
                                     class="object-fit-cover rounded-circle me-2"
                                     alt="Team View"
                                 >
@@ -144,7 +144,7 @@ class TeamMemberUpdatedListener
                             'text' => <<<HTML
                                 <a href="/view/team/$teamId" alt="Team View">
                                     <img src="/storage/$teamBanner" 
-                                        onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                        onerror="this.src='/assets/images/404.png';"
                                         class="object-fit-cover rounded-circle me-2"
                                         alt="Team View"
                                     >
@@ -162,7 +162,7 @@ class TeamMemberUpdatedListener
                         $userLog = <<<HTML
                             <a href="/view/team/$teamId" alt="Team View">
                                 <img src="/storage/$teamBanner" 
-                                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    onerror="this.src='/assets/images/404.png';"
                                     class="object-fit-cover rounded-circle me-2"
                                     alt="Team View"
                                 >
@@ -183,7 +183,7 @@ class TeamMemberUpdatedListener
                                     <img class="object-fit-cover rounded-circle me-2" 
                                         width='30' height='30'  
                                         src="/storage/$userBanner" 
-                                        onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                        onerror="this.src='/assets/images/404.png';"
                                     >
                                 </a>
                                 <span class="notification-gray">
@@ -210,7 +210,7 @@ class TeamMemberUpdatedListener
                         'text' => <<<HTML
                             <a href="/view/team/$teamId" alt="Team View">
                                 <img src="/storage/$teamBanner" 
-                                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    onerror="this.src='/assets/images/404.png';"
                                     class="object-fit-cover rounded-circle me-2"
                                     alt="Team View"
                                 >
@@ -233,7 +233,7 @@ class TeamMemberUpdatedListener
                                     <img class="object-fit-cover rounded-circle me-2" 
                                         width='30' height='30'  
                                         src="/storage/$userBanner" 
-                                        onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                        onerror="this.src='/assets/images/404.png';"
                                     >
                                 </a>
                                 <span class="notification-gray">

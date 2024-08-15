@@ -274,7 +274,7 @@ class ParticipantController extends Controller
                             <img class="object-fit-cover rounded-circle me-2" 
                                 width='30' height='30'  
                                 src="/storage/$updateUser->userBanner" 
-                                onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
+                                onerror="this.src='/assets/images/404.png';"
                             >
                         </a>
                         <span class="notification-gray me-2">
@@ -290,7 +290,7 @@ class ParticipantController extends Controller
                                 <img class="object-fit-cover rounded-circle me-2" 
                                     width='30' height='30'  
                                     src="/storage/$user->userBanner" 
-                                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    onerror="this.src='/assets/images/404.png';"
                                 >
                             </a>
                             <span class="notification-gray">

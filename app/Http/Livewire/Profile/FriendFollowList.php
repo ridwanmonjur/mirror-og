@@ -21,6 +21,8 @@ class FriendFollowList extends Component
     public $page = 1;
 
     public $propertyName = 'followeeUser';
+    protected $paginationTheme = 'bootstrap';
+
 
     public function mount($userId, $currentTab)
     {

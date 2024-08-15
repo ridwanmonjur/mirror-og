@@ -48,7 +48,7 @@ class ChangePositionStrategy
                 <span>
                     <a href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image" 
-                            onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                            onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Event View"
                         >
@@ -119,7 +119,7 @@ class AddAwardStrategy
                 <span>
                 <a href="/event/$teamId" alt="Team View">
                     <img src="/storage/$image" 
-                        onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                        onerror="this.src='/assets/images/404.png';"
                         class="object-fit-cover rounded-circle me-2"
                         alt="Event View"
                     >
@@ -136,7 +136,7 @@ class AddAwardStrategy
                 <span>
                     <a href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image" 
-                            onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                            onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Event View"
                         >
@@ -186,7 +186,7 @@ class AddAchievementStrategy
                 <span>
                     <a href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image" 
-                            onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                            onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Event View"
                         >
@@ -206,7 +206,7 @@ class AddAchievementStrategy
                 <span>
                     <a href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image" 
-                            onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                            onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Event View"
                         >
