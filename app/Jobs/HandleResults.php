@@ -19,23 +19,46 @@ class ChangePositionStrategy
         try {
             Log::info('ChangePositions===========>');
             Log::info($parameters);
-            $emoji = [1 => '🥇', 2 => '🥈'];
+            [
+                'teamId' => $teamId,
+                'image' => $image,
+            ] = $parameters;
+
+            $emojiMap = [1 => '🥇 (1st position)', 2 => '🥈 (2nd position)'];
             $activityLogX = new ActivityLogs();
             $notificationX = new Notifications();
-            $positionString = bladeOrdinalPrefix($parameters['position']);
+            $positionString = intval(bladeOrdinalPrefix($parameters['position']));
+            if (isset($emojiMap[$parameters['position']])) {
+                $positionString = $emojiMap[$parameters['position']];
+            }
+
             $foundLogs = $activityLogX->findActivityLog($parameters)->get();
             $foundNotifications = $notificationX->findNotifications($parameters)->get();
             $notificationLog = <<<HTML
-                <span class="notification-gray"> You achieved 
-                {$positionString} position the team, 
-                <span class="notification-black">{$parameters['teamName']}</span>. 
+                <span>
+                    <span class="notification-gray"> You achieved 
+                    {$positionString} position in the team,
+                    <a href="/event/$teamId" alt="Team Link">
+                        <span class="notification-blue">{$parameters['teamName']}</span>
+                    </a>. 
                 </span>
             HTML;
 
             $activityLog = <<<HTML
-            <span class="notification-gray"> You achieved {$positionString}
-                position in the team, <span class="notification-black">{$parameters['teamName']}</span>.
-            </span>
+                <span>
+                    <a href="/event/$teamId" alt="Team View">
+                        <img src="/storage/$image" 
+                            onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                            class="object-fit-cover rounded-circle me-2"
+                            alt="Event View"
+                        >
+                    </a>
+                    <span class="notification-gray"> You achieved 
+                    {$positionString} position in the team,
+                    <a href="/event/$teamId" alt="Team Link">
+                        <span class="notification-blue">{$parameters['teamName']}</span>
+                    </a>. 
+                </span>
             HTML;
             Log::info($activityLog);
             Log::info($foundLogs);
@@ -81,6 +104,11 @@ class AddAwardStrategy
     public function handle($parameters)
     {
         try {
+            [
+                'teamId' => $teamId,
+                'image' => $image,
+            ] = $parameters;
+
             Log::info('AddAwardStrategy===========>');
             $notificationX = new Notifications();
             $activityLogX = new ActivityLogs();
@@ -88,11 +116,36 @@ class AddAwardStrategy
                 <span class="notification-gray"> You achieved {$parameters['award']} in the team, 
                     <span class="notification-black">{$parameters['teamName']}</span>.
                 </span>
+                <span>
+                <a href="/event/$teamId" alt="Team View">
+                    <img src="/storage/$image" 
+                        onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                        class="object-fit-cover rounded-circle me-2"
+                        alt="Event View"
+                    >
+                </a>
+                <span class="notification-gray"> You achieved 
+                {$parameters['award']} position in the team,
+                <a href="/event/$teamId" alt="Team Link">
+                    <span class="notification-blue">{$parameters['teamName']}</span>
+                </a>. 
+            </span>
             HTML;
 
             $activityLog = <<<HTML
-                <span class="notification-gray"> You achieved {$parameters['award']} in the team, 
-                    <span class="notification-black">{$parameters['teamName']}</span>.
+                <span>
+                    <a href="/event/$teamId" alt="Team View">
+                        <img src="/storage/$image" 
+                            onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                            class="object-fit-cover rounded-circle me-2"
+                            alt="Event View"
+                        >
+                    </a>
+                    <span class="notification-gray"> You achieved 
+                    {$parameters['award']} position in the team,
+                    <a href="/event/$teamId" alt="Team Link">
+                        <span class="notification-blue">{$parameters['teamName']}</span>
+                    </a>. 
                 </span>
             HTML;
 
@@ -121,16 +174,49 @@ class AddAchievementStrategy
     public function handle($parameters)
     {
         try {
+            [
+                'teamId' => $teamId,
+                'image' => $image,
+            ] = $parameters;
+            
             Log::info('AddAchievementStrategy===========>');
             $notificationX = new Notifications();
             $activityLogX = new ActivityLogs();
             $notificationLog = <<<HTML
+                <span>
+                    <a href="/event/$teamId" alt="Team View">
+                        <img src="/storage/$image" 
+                            onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                            class="object-fit-cover rounded-circle me-2"
+                            alt="Event View"
+                        >
+                    </a>
+                    <span class="notification-gray"> You achieved 
+                    {$parameters['award']} position in the team,
+                    <a href="/event/$teamId" alt="Team Link">
+                        <span class="notification-blue">{$parameters['teamName']}</span>
+                    </a>. 
+                </span>
                 <span class="notification-gray"> You achieved {$parameters['achievement']} in the team, 
                     <span class="notification-black">{$parameters['teamName']}</span>.
                 </span>
             HTML;
 
             $activityLog = <<<HTML
+                <span>
+                    <a href="/event/$teamId" alt="Team View">
+                        <img src="/storage/$image" 
+                            onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                            class="object-fit-cover rounded-circle me-2"
+                            alt="Event View"
+                        >
+                    </a>
+                    <span class="notification-gray"> You achieved 
+                    {$parameters['award']} position in the team,
+                    <a href="/event/$teamId" alt="Team Link">
+                        <span class="notification-blue">{$parameters['teamName']}</span>
+                    </a>. 
+                </span>
                 <span class="notification-gray"> You achieved {$parameters['achievement']} in the team, 
                     <span class="notification-black">{$parameters['teamName']}</span>.
                 </span>

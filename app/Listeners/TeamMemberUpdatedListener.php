@@ -17,16 +17,24 @@ class TeamMemberUpdatedListener
     public function handle(TeamMemberUpdated $event)
     {
         try {
+            $event->teamMember->load([
+                'team:id,teamName,creator_id',  
+                'user:id,name,userBanner'  
+            ]);
+
             $teamName = $event->teamMember->team->teamName;
+            $teamId = $event->teamMember->team->id;
+            $teamBanner = $event->teamMember->teamBanner;
             $user = $event->teamMember->user;
             $userName = $user->name;
-            $photo = $user->userBanner;
             $userId = $user->id;
+            $userBanner = $user->userBanner;
             $status = $event->teamMember->status;
             $teamCreatorNotification = $userNotification = $action = $userLog = null;
             $links = [];
             $hostname = config('app.url');
             $routeName = "{$hostname}participant/team/{$event->teamMember->team_id}/manage";
+            
             $links = [
                 ['name' => 'View Team', 'url' => $routeName],
             ];
@@ -36,16 +44,34 @@ class TeamMemberUpdatedListener
                     if ($event->teamMember->actor === 'team') {
                         $action = 'accepted';
                         $userLog = <<<HTML
-                            <span class="notification-gray">
+                            <a href="/view/team/$teamId" alt="Team View">
+                                <img src="/storage/$teamBanner" 
+                                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    class="object-fit-cover rounded-circle me-2"
+                                    alt="Team View"
+                                >
+                            </a>
+                            <span class="notification-gray me-2">
                                 You joined the team, 
-                                <span class="notification-black">{$teamName}</span>.
+                                <a href="/view/team/$teamId" alt="Team View">
+                                    <span class="notification-blue">{$teamName}</span>
+                                </a>.
                             </span>
                             HTML;
 
                         $userNotification = [
                             'text' => <<<HTML
-                                <span class="notification-gray">
-                                    <span class="notification-black">{$teamName}</span> 
+                                <a href="/view/team/$teamId" alt="Team View">
+                                    <img src="/storage/$teamBanner" 
+                                        onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                        class="object-fit-cover rounded-circle me-2"
+                                        alt="Team View"
+                                    >
+                                </a>
+                                <span class="notification-gray me-2">
+                                <a href="/view/team/$teamId" alt="Team View">
+                                    <span class="notification-blue">{$teamName}</span>
+                                </a>
                                     has accepted you to join their team.
                                 </span>
                                 HTML,
@@ -55,18 +81,40 @@ class TeamMemberUpdatedListener
                         $action = 'accepted';
 
                         $userLog = <<<HTML
+                            <a href="/view/team/$teamId" alt="Team View">
+                                <img src="/storage/$teamBanner" 
+                                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    class="object-fit-cover rounded-circle me-2"
+                                    alt="Team View"
+                                >
+                            </a>
                             <span class="notification-gray">
                                 You joined the team, 
-                                <span class="notification-black">{$teamName}</span>.
+                                <a href="/view/team/$teamId" alt="Team View">
+                                    <span class="notification-blue">{$teamName}</span>
+                                </a>.
                             </span>
                             HTML;
                         
                         $teamCreatorNotification = [
                             'text' => <<<HTML
+                                <a href="/view/participant/$userId" 
+                                    alt="User link"
+                                > 
+                                    <img class="object-fit-cover rounded-circle me-2" 
+                                        width='30' height='30'  
+                                        src="/storage/$userBanner" 
+                                        onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    >
+                                </a>
                                 <span class="notification-gray">
-                                    <span class="notification-black">{$userName}</span> 
+                                    <a href="/view/team/$teamId" alt="Team View">
+                                        <span class="notification-blue">{$userName}</span>
+                                    </a>
                                     has joined your team 
-                                    <span class="notification-black">{$teamName}</span>.
+                                    <a href="/view/team/$teamId" alt="Team View">
+                                        <span class="notification-blue">{$teamName}</span>
+                                    </a>
                                 </span>
                                 HTML,
                             'subject' => 'Invited member joining this team',
@@ -77,36 +125,78 @@ class TeamMemberUpdatedListener
                     $action = 'left';
                     if ($event->teamMember->actor === 'team') {
                         $userLog = <<<HTML
+                            <a href="/view/team/$teamId" alt="Team View">
+                                <img src="/storage/$teamBanner" 
+                                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    class="object-fit-cover rounded-circle me-2"
+                                    alt="Team View"
+                                >
+                            </a>
                             <span class="notification-gray">
                                 You left the team, 
-                                <span class="notification-black">{$teamName}</span>.
+                                <a href="/view/team/$teamId" alt="Team View">
+                                    <span class="notification-blue">{$teamName}</span>
+                                </a>.
                             </span>
                             HTML;
 
                         $userNotification = [
                             'text' => <<<HTML
+                                <a href="/view/team/$teamId" alt="Team View">
+                                    <img src="/storage/$teamBanner" 
+                                        onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                        class="object-fit-cover rounded-circle me-2"
+                                        alt="Team View"
+                                    >
+                                </a>
                                 <span class="notification-gray">
                                     You have been removed from this team 
-                                    <span class="notification-black">{$teamName}</span>.
+                                    <a href="/view/team/$teamId" alt="Team View">
+                                        <span class="notification-blue">{$teamName}</span>
+                                    </a>.
                                 </span>
                                 HTML,
                             'subject' => 'Removal from team',
                         ];
                     } else {
                         $userLog = <<<HTML
+                            <a href="/view/team/$teamId" alt="Team View">
+                                <img src="/storage/$teamBanner" 
+                                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    class="object-fit-cover rounded-circle me-2"
+                                    alt="Team View"
+                                >
+                            </a>
                             <span class="notification-gray">
                                 You left the team, 
-                                <span class="notification-black">{$teamName}</span>.
+                                <a href="/view/team/$teamId" alt="Team View">
+                                    <span class="notification-blue">{$teamName}</span>
+                                </a>.
                             </span>
                             HTML;
 
                         $teamCreatorNotification = [
                             'text' => <<<HTML
+                                <a href="/view/participant/$userId" 
+                                    alt="User link"
+                                > 
+                                    <img class="object-fit-cover rounded-circle me-2" 
+                                        width='30' height='30'  
+                                        src="/storage/$userBanner" 
+                                        onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    >
+                                </a>
                                 <span class="notification-gray">
                                     The user, 
-                                    <span class="notification-black">{$userName}</span> 
+                                    <a href="/view/participant/$userId" 
+                                        alt="User link"
+                                    > 
+                                    <span class="notification-blue">{$userName}</span> 
+                                    </a>
                                     has left your team, 
-                                    <span class="notification-black">{$teamName}</span>.
+                                    <a href="/view/team/$teamId" alt="Team View">
+                                        <span class="notification-blue">{$teamName}</span>
+                                    </a>.
                                 </span>
                                 HTML,
                             'subject' => 'Leaving the team',
@@ -118,8 +208,17 @@ class TeamMemberUpdatedListener
                     if ($event->teamMember->actor === 'team') {
                         $userNotification = [
                         'text' => <<<HTML
+                            <a href="/view/team/$teamId" alt="Team View">
+                                <img src="/storage/$teamBanner" 
+                                    onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    class="object-fit-cover rounded-circle me-2"
+                                    alt="Team View"
+                                >
+                            </a>
                             <span class="notification-gray">
-                                <span class="notification-black">{$teamName}</span> 
+                                <a href="/view/team/$teamId" alt="Team View">
+                                    <span class="notification-blue">{$teamName}</span>
+                                </a>
                                 has rejected your request to join this team!
                             </span>
                             HTML,
@@ -128,11 +227,26 @@ class TeamMemberUpdatedListener
                     } else {
                         $teamCreatorNotification = [
                             'text' => <<<HTML
+                                <a href="/view/participant/$userId" 
+                                    alt="User link"
+                                > 
+                                    <img class="object-fit-cover rounded-circle me-2" 
+                                        width='30' height='30'  
+                                        src="/storage/$userBanner" 
+                                        onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                                    >
+                                </a>
                                 <span class="notification-gray">
                                     The user, 
+                                    <a href="/view/participant/$userId" 
+                                        alt="User link"
+                                    > 
                                     <span class="notification-black">{$userName}</span> 
+                                    </a>
                                     has rejected the invitation to your team, 
-                                    <span class="notification-black">{$teamName}</span>.
+                                    <a href="/view/team/$teamId" alt="Team View">
+                                        <span class="notification-blue">{$teamName}</span>
+                                    </a>.
                                 </span>
                                 HTML,
                             'subject' => 'Failed to recruit into your team',

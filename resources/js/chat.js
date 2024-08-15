@@ -44,8 +44,8 @@ const chatUserName = document.querySelector(".chat-user-name");
 const fetchFirebaseUsersInputRoute = document.querySelector("#fetchFirebaseUsersInput");
 const viewUserProfileInput = document.querySelector("#viewUserProfile");
 const loggedUserProfileInput = document.querySelector("#loggedUserProfile");
-let loggedUserProfile = JSON.parse(loggedUserProfileInput?.value);
-let viewUserProfile = JSON.parse(viewUserProfileInput?.value);
+let loggedUserProfile = JSON.parse(loggedUserProfileInput?.value ?? "[]");
+let viewUserProfile = JSON.parse(viewUserProfileInput?.value ?? "[]");
 let fetchFirebaseUsersRoute = fetchFirebaseUsersInputRoute?.value;
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

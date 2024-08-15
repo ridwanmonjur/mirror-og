@@ -583,4 +583,5 @@
 
 </body>
 @include('Participant.__ProfilePartials.Scripts')
+@livewireScripts
 </html>
