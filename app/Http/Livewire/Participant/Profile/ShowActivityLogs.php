@@ -29,10 +29,10 @@ class ShowActivityLogs extends Component
 
     public function loadActivityLogs()
     {
-        $perPage = 10;
+        $perPage = 1;
         $activityLogsQuery = ActivityLogs::where('subject_id', $this->userId)
             ->where('subject_type', User::class);
-            Log::info("==========> Duration: " . $this->duration);
+            Log::info("==========> Duration: {$this->duration} Page: {$this->page}");
         if ($this->duration === 'new') {
             $activityLogsQuery->whereDate('created_at', Carbon::today());
         } elseif ($this->duration === 'recent') {
@@ -42,35 +42,15 @@ class ShowActivityLogs extends Component
         }
 
         $activityLogs = $activityLogsQuery->paginate($perPage, ['*'], 'page', $this->page);
-        Log::info("===========> Activity Logs:" . $activityLogs . "\n");
+        Log::info("===========> Activity Logs:" . $activityLogs->hasMorePages() . "\n");
 
         $this->hasMore = $activityLogs->hasMorePages();
-        $this->totalItems = $activityLogs->items();
+        $this->totalItems = array_merge($this->totalItems, $activityLogs->items());
         $this->loadedItems += $perPage;
+        $this->page+=1;
     }
 
-    public function loadMore()
-    {
-        $perPage = 10;
-        $this->page++;
-        $newItemsQuery = ActivityLogs::where('subject_id', $this->userId)
-            ->where('subject_type', User::class);
-        if ($this->duration === 'new') {
-            $newItemsQuery->whereDate('created_at', Carbon::today());
-        } elseif ($this->duration === 'recent') {
-            $newItemsQuery->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::today()]);
-        } elseif ($this->duration === 'older') {
-            $newItemsQuery->where('created_at', '<', Carbon::now()->subWeek()->startOfWeek());
-        }
-
-        $newItems = $newItemsQuery->paginate($perPage, ['*'], 'page', $this->page)->items();
-        $this->totalItems = [
-            ...$this->totalItems,
-            ...$newItems,
-        ];
-
-        $this->loadedItems += $perPage;
-    }
+    
 
     public function render()
     {

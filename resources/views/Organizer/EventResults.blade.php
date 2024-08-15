@@ -638,7 +638,7 @@
         }
 
          async function deleteAchievementsAction() {
-            const url = "{{ route('event.achievements.destroy', ['id' => $event->id, 'achievementId' => ':id']) }}"
+            const url = "{{ route('event.achievements.destroy', ['achievementId' => ':id']) }}"
                 .replace(':id', achievementToDeleteId)
 
             fetchData(url,

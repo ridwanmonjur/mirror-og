@@ -64,11 +64,11 @@ Route::group(['prefix' => 'organizer'], function () {
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'check-jwt-permission:organizer|admin'], function () {
             Route::post('events/search', [OrganizerEventController::class, 'search'])->name('event.search.view');
+            Route::delete('/event/achievements/{achievementId}', [OrganizerEventResultsController::class, 'destroyAchievements'])->name('event.achievements.destroy');
             Route::post('/event/{id}/results', [OrganizerEventResultsController::class, 'store'])->name('event.results.store');
             Route::post('/event/{id}/awards', [OrganizerEventResultsController::class, 'storeAward'])->name('event.awards.store');
             Route::delete('/event/{id}/awards/{awardId}', [OrganizerEventResultsController::class, 'destroyAward'])->name('event.awards.destroy');
             Route::post('/event/{id}/achievements', [OrganizerEventResultsController::class, 'storeAchievements'])->name('event.achievements.store');
-            Route::delete('/event/{id}/achievements/{achievementId}', [OrganizerEventResultsController::class, 'destroyAchievements'])->name('event.achievements.destroy');
             Route::put('notifications/{id}/read', [AuthController::class, 'markAsRead'])->name('organizer.notifications.read');
             Route::put('notifications/read', [AuthController::class, 'markAllAsRead'])->name('organizer.notifications.readAll');
             Route::post('/profile', [OrganizerController::class, 'editProfile'])->name('organizer.profile.update');

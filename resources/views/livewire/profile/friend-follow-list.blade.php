@@ -40,7 +40,10 @@
                 </tbody>
             </table>
         @endif
-        {{ $data->links() }}
+        <br>
+        <div style="max-width: 80%; margin: auto;">
+            {{ $data->links() }}
+        </div>
     </div>
 @else
     <span class="d-none"> </span>

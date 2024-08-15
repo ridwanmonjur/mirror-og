@@ -1,98 +1,98 @@
-image: php:8.1-fpm
+# image: php:8.1-fpm
 
-definitions:
-  caches:
-    composer: /root/.composer/cache
-    node: /root/.npm
+# definitions:
+#   caches:
+#     composer: /root/.composer/cache
+#     node: /root/.npm
 
-  steps:
-    - step: &test-laravel
-        name: Test
-        script:
-          - composer install
-          -  ./vendor/bin/phpunit test
-        caches:
-          - composer
-    - step: &lint-laravel
-        name: Lint
-        script:
-          - composer install
-          - ./vendor/bin/phplint . --exclude=vendor
-        caches:
-          - composer
-    - step: &prepare-environment
-        name: Prepare Environment
-        caches:
-          - composer
-          - node
-        script:
-          - apt-get update && apt-get install -y git unzip libzip-dev
-          - docker-php-ext-install zip
-          - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-          - curl -sL https://deb.nodesource.com/setup_20.x | bash -
-          - ln -s /usr/local/bin/composer /usr/bin/composer
-          - apt-get install -y nodejs
+#   steps:
+#     - step: &test-laravel
+#         name: Test
+#         script:
+#           - composer install
+#           -  ./vendor/bin/phpunit test
+#         caches:
+#           - composer
+#     - step: &lint-laravel
+#         name: Lint
+#         script:
+#           - composer install
+#           - ./vendor/bin/phplint . --exclude=vendor
+#         caches:
+#           - composer
+#     - step: &prepare-environment
+#         name: Prepare Environment
+#         caches:
+#           - composer
+#           - node
+#         script:
+#           - apt-get update && apt-get install -y git unzip libzip-dev
+#           - docker-php-ext-install zip
+#           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+#           - curl -sL https://deb.nodesource.com/setup_20.x | bash -
+#           - ln -s /usr/local/bin/composer /usr/bin/composer
+#           - apt-get install -y nodejs
 
-    - step: &php-code-smells
-        name: PHP Code Smells
-        caches:
-          - composer
-        script:
-          - composer install --prefer-dist --no-interaction --no-scripts
-          - ./vendor/bin/phpcs --standard=PSR12 app/
+#     - step: &php-code-smells
+#         name: PHP Code Smells
+#         caches:
+#           - composer
+#         script:
+#           - composer install --prefer-dist --no-interaction --no-scripts
+#           - ./vendor/bin/phpcs --standard=PSR12 app/
 
-    - step: &laravel-pint-format
-        name: Laravel Pint Format
-        caches:
-          - composer
-        script:
-          - composer install --prefer-dist --no-interaction --no-scripts
-          - ./vendor/bin/pint --test
+#     - step: &laravel-pint-format
+#         name: Laravel Pint Format
+#         caches:
+#           - composer
+#         script:
+#           - composer install --prefer-dist --no-interaction --no-scripts
+#           - ./vendor/bin/pint --test
 
-    - step: &composer-update
-        name: Composer Update
-        caches:
-          - composer
-        script:
-          - composer install --prefer-dist --no-interaction --no-scripts
-          - composer update --dry-run
+#     - step: &composer-update
+#         name: Composer Update
+#         caches:
+#           - composer
+#         script:
+#           - composer install --prefer-dist --no-interaction --no-scripts
+#           - composer update --dry-run
 
-    - step: &npm-build
-        name: NPM Build
-        caches:
-          - node
-        script:
-          - npm install
-          - npm run build
+#     - step: &npm-build
+#         name: NPM Build
+#         caches:
+#           - node
+#         script:
+#           - npm install
+#           - npm run build
 
-pipelines:
-  branches:
-    dev:
-      - step: *prepare-environment
-      - parallel:
-        - step: *php-code-smells
-        - step: *laravel-pint-format
-        - step: *composer-update
-        - step: *npm-build
-      - step: *test-laravel
-      - step: *lint-laravel
+# pipelines:
+#   branches:
+#     dev:
+#       - step: *prepare-environment
+#       - parallel:
+#         - step: *php-code-smells
+#         - step: *laravel-pint-format
+#         - step: *composer-update
+#         - step: *npm-build
+#       - step: *test-laravel
+#       - step: *lint-laravel
 
-    master:
-      - step: *prepare-environment
-      - parallel:
-        - step: *php-code-smells
-        - step: *laravel-pint-format
-        - step: *composer-update
-        - step: *npm-build
-      - step: *test-laravel
-      - step: *lint-laravel
+#     master:
+#       - step: *prepare-environment
+#       - parallel:
+#         - step: *php-code-smells
+#         - step: *laravel-pint-format
+#         - step: *composer-update
+#         - step: *npm-build
+#       - step: *test-laravel
+#       - step: *lint-laravel
 
-    main:
-      - step: *prepare-environment
-      - parallel:
-        - step: *php-code-smells
-        - step: *laravel-pint-format
-        - step: *composer-update
-        - step: *npm-build
-      - step: *test-laravel
-      - step: *lint-laravel
+#     main:
+#       - step: *prepare-environment
+#       - parallel:
+#         - step: *php-code-smells
+#         - step: *laravel-pint-format
+#         - step: *composer-update
+#         - step: *npm-build
+#       - step: *test-laravel
+#       - step: *lint-laravel

@@ -12,21 +12,29 @@ class FriendFollowList extends Component
 {
     use WithPagination;
 
-    public $userId = 0;
+    public $userId;
 
-    public $currentTab = 'Follower';
+    public $currentTab;
 
     public $name = 0;
 
     public $page = 1;
 
     public $propertyName = 'followeeUser';
+    protected $paginationTheme = 'bootstrap';
+
+
+    public function mount($userId, $currentTab)
+    {
+        $this->userId = $userId;
+        $this->currentTab = $currentTab;
+    }
 
     public function initData()
     {
         $propertyName = null;
         if ($this->name === 'Follow') {
-            $propertyName = 'followeeUser';
+            $propertyName = 'followerUser';
             $data = ParticipantFollow::where('participant_followee', $this->userId)
                 ->with($propertyName)
                 ->paginate($this->page, ['*'], $propertyName);
@@ -36,7 +44,7 @@ class FriendFollowList extends Component
             return $data;
         }
         if ($this->name === 'Following') {
-            $propertyName = 'followerUser';
+            $propertyName = 'followeeUser';
             $data = ParticipantFollow::where('participant_follower', $this->userId)
                 ->with($propertyName)
                 ->paginate($this->page, ['*'], $propertyName);
@@ -65,8 +73,9 @@ class FriendFollowList extends Component
                 ->paginate($this->page, ['*'], $propertyName);
 
             $data->getCollection()->transform(function ($friend) {
-                $friend->relatedUser = $friend->user1_id !== $this->userId ? $friend->user1 : $friend->user2;
-
+                if ($this->userId) {
+                    $friend->relatedUser = $friend->user1_id != $this->userId ? $friend->user1 : $friend->user2;
+                }
                 return $friend;
             });
 

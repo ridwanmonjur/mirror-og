@@ -48,22 +48,7 @@ class OrganizerEventResultsController extends Controller
      */
     public function store(Request $request)
     {
-        $memberUserIds = Team::where('teamName', $request->teamName)
-            ->select('id', 'teamName')
-            ->with(['members' => function ($q) {
-                $q
-                    ->where('status', 'accepted')
-                    ->select('id', 'user_id', 'team_id', 'status')
-                    ->with(['user' => function ($q) {
-                        $q->select('id');
-                    },
-                    ]);
-            },
-            ])
-            ->first()
-            ->members
-            ->pluck('user.id')
-            ->toArray();
+        [$team, $memberUserIds] = Team::getResultsTeamMemberIds($request->team_id);
 
         $joinEventsId = $request->join_events_id;
         $joinEvent = JoinEvent::where('id', $request->join_events_id)->first();
@@ -89,6 +74,7 @@ class OrganizerEventResultsController extends Controller
             'object_id' => $joinEventsId,
             'action' => 'Position',
             'eventId' => $joinEvent->event_details_id,
+            'teamId' => $team->id,
             'teamName' => $request->teamName,
             'image' => $request->teamBanner,
             'position' => intval($request->position),
@@ -128,6 +114,7 @@ class OrganizerEventResultsController extends Controller
                     'eventId' => $request->input('event_details_id'),
                     'award' => $request->award,
                     'teamName' => $team->teamName,
+                    'teamId' => $team->id,
                     'image' => $team->teamBanner,
                 ]));
 
@@ -175,6 +162,7 @@ class OrganizerEventResultsController extends Controller
                     'achievement' => $request->title,
                     'eventId' => $request->input('event_details_id'),
                     'teamName' => $team->teamName,
+                    'teamId' => $team->id,
                     'image' => $team->teamBanner,
                 ]));
 
@@ -219,7 +207,7 @@ class OrganizerEventResultsController extends Controller
         }
     }
 
-    public function destroyAchievements(Request $request, $id, $achievementId)
+    public function destroyAchievements(Request $request, $achievementId)
     {
         try {
             $row = DB::table('achievements')->where('id', $achievementId)->first();
@@ -230,7 +218,6 @@ class OrganizerEventResultsController extends Controller
                 DB::table('achievements')->where('id', $achievementId)->delete();
             }
 
-            $activityLog = new ActivityLogs();
             dispatch(new HandleResults('DeleteAchievement', [
                 'subject_type' => User::class,
                 'object_type' => Achievements::class,

@@ -16,6 +16,11 @@ class TeamMemberCreatedListener
     public function handle(TeamMemberCreated $event)
     {
         try {
+            $event->teamMember->load([
+                'team:id,teamName,creator_id',  
+                'user:id,name,userBanner'  
+            ]);
+
             $teamName = $event->teamMember->team->teamName;
             $user = $event->teamMember->user;
             $userName = $user->name;

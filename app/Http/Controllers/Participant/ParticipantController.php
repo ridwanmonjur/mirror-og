@@ -161,14 +161,6 @@ class ParticipantController extends Controller
             ->first();
 
         if ($existingLike) {
-            // dispatch(new HandleFollows('Unlike', [
-            //     'subject_type' => User::class,
-            //     'object_type' => User::class,
-            //     'subject_id' => $user->id,
-            //     'object_id' => $organizerId,
-            //     'action' => 'Unlike',
-            // ]));
-
             $existingLike->delete();
 
             return response()->json([
@@ -182,18 +174,6 @@ class ParticipantController extends Controller
             'event_id' => $validatedData['event_id'],
         ]);
 
-        // dispatch(new HandleFollows('Like', [
-            //     'subject_type' => User::class,
-            //     'object_type' => User::class,
-            //     'subject_id' => $userId,
-            //     'object_id' => $organizerId,
-            //     'action' => 'Like',
-            //     'log' => '<span class="notification-gray"> User'
-            //     . ' <span class="notification-black">' . $user->name . '</span> started following '
-            //     . ' <span class="notification-black">' . $organizer->name . '.</span> '
-            //     . '</span>'
-        // ]));
-
         return response()->json([
             'success' => true,
             'message' => 'Successfully liked the event',
@@ -203,7 +183,6 @@ class ParticipantController extends Controller
 
     public function updateFriend(FriendRequest $request)
     {
-        $FRIEND_ACTION = "friend";
         $user = $request->attributes->get('user');
         $validatedData = $request->validated();
         $activityLog = new ActivityLogs();
@@ -211,8 +190,7 @@ class ParticipantController extends Controller
             $friend = Friend::checkFriendship($validatedData['deleteUserId'], $user->id);
             $friend?->deleteOrFail();
 
-            User::where($request->input('deleteUserId'))->select("id")->firstOrFail();;
-            
+            User::where('id', $request->input('deleteUserId'))->select("id")->firstOrFail();;
 
             session()->flash('successMessage', 'Your request has been deleted.');
 
@@ -220,7 +198,7 @@ class ParticipantController extends Controller
         }
         if (array_key_exists('addUserId', $validatedData)) {
             try {
-                $addUser = User::where($request->input('addUserId'))
+                User::where('id', $request->input('addUserId'))
                     ->select("id")->firstOrFail();
                 $friend = Friend::create([
                     'user1_id' => $user->id,
@@ -229,23 +207,6 @@ class ParticipantController extends Controller
                     'actor_id' => $user->id,
                 ]);
 
-                $activityLog->createActivityLogs([
-                    'subject_type' => User::class,
-                    'subject_id' => [$user->id, intval($validatedData['addUserId'])],
-                    'object_type' => Friend::class,
-                    'object_id' => $friend->id,
-                    'action' => $FRIEND_ACTION,
-                    'log' =>  <<<HTML
-                    <span class="notification-gray">
-                        You and  
-                        <span class="notification-black">{$event->user->name}'s</span> event 
-                        <span class="notification-blue">{$event->eventName}</span>.
-                    </span>
-                    HTML,
-                    'image' => $addUser->id,
-                ]);
-
-
                 session()->flash('successMessage', 'Successfully created a friendship');
 
                 return back();
@@ -253,7 +214,7 @@ class ParticipantController extends Controller
                 if ($e->getCode() === '23000' || $e->getCode() === 1062) {
                     $errorMessage = 'You have had a previous friend request!';
                 } else {
-                    $errorMessage = 'Your request to this participant failed!';
+                    $errorMessage = $e->getMessage();
                 }
 
                 session()->flash('errorMessage', $errorMessage);
@@ -261,9 +222,15 @@ class ParticipantController extends Controller
                 return back();
             }
         } else {
+            DB::beginTransaction();
+            $FRIEND_ACTION = "friend";
+
             try {
-                $updateUser = User::where($request->input('updateUserId'))->select(['id', 'userBanner', 'name']);
-                $friend = Friend::checkFriendship($validatedData['updateUserId'], $user->id)->firstOrFail();
+                // dd($request->input('updateUserId'));
+                $updateUser = User::where('id', $request->input('updateUserId'))
+                    ->select(['id', 'userBanner', 'name'])
+                    ->firstOrFail();
+                $friend = Friend::checkFriendship($validatedData['updateUserId'], $user->id);
                 $status = $validatedData['updateStatus'];
                 $isPermitted = $status === 'left';
                 if (! $isPermitted) {
@@ -285,7 +252,7 @@ class ParticipantController extends Controller
                     'status' => $status,
                 ]);
 
-                if ($$status === 'left') {
+                if ($status === 'left') {
                     $activityLog->findActivityLog([
                         'subject_type' => User::class,
                         'subject_id' => [$user->id, $updateUser->id],
@@ -295,19 +262,49 @@ class ParticipantController extends Controller
                     ])->delete();
                 }
 
-                if ($$status === 'accepted') {
+                if ($status === 'accepted') {
                     $activityLog->createActivityLogs([
                         'subject_type' => User::class,
                         'subject_id' => [$user->id, $updateUser->id],
                         'object_type' => Friend::class,
                         'object_id' => $friend->id,
                         'action' => $FRIEND_ACTION,
-                        'logs' => [
-                            '',
-                            ''
-                        ]
+                        'log' =>  [<<<HTML
+                        <a href="/view/participant/$updateUser->id" alt="Friend Image link"> 
+                            <img class="object-fit-cover rounded-circle me-2" 
+                                width='30' height='30'  
+                                src="/storage/$updateUser->userBanner" 
+                                onerror="this.src='/assets/images/404.png';"
+                            >
+                        </a>
+                        <span class="notification-gray me-2">
+                            You and  
+                            <a href="/view/participant/$updateUser->id" alt="Friend link"> 
+                                <span class="notification-blue">{$updateUser->name}</span>  
+                            </a>
+                            are friends.
+                        </span>
+                        HTML,
+                        <<<HTML
+                            <a href="/view/participant/$user->id" alt="Friend Image link">
+                                <img class="object-fit-cover rounded-circle me-2" 
+                                    width='30' height='30'  
+                                    src="/storage/$user->userBanner" 
+                                    onerror="this.src='/assets/images/404.png';"
+                                >
+                            </a>
+                            <span class="notification-gray">
+                                You and 
+                                <a href="/view/participant/$user->id" alt="Friend link">  
+                                    <span class="notification-blue">{$user->name}</span>  
+                                        are friends.
+                                    </span>
+                                </a>
+                            HTML
+                        ],
                     ]);
                 }
+                DB::commit();
 
                 $message = [
                     'left' => 'Successfully removed friendship.',
@@ -319,6 +316,7 @@ class ParticipantController extends Controller
 
                 return back();
             } catch (Exception $e) {
+                DB::rollBack();
                 return $this->showErrorParticipant($e->getMessage());
             }
         }
@@ -326,45 +324,75 @@ class ParticipantController extends Controller
 
     public function followParticipant(Request $request)
     {
+        $PARTICIPANT_FOLLOW_ACTION = "participant_follow";
+
         $user = $request->attributes->get('user');
         $userId = $user->id;
         $participantId = $request->participant_id;
         $existingFollow = ParticipantFollow::checkFollow($user->id, $participantId);
-
+        $activityLog = new ActivityLogs();
         if ($existingFollow) {
-            // dispatch(new HandleFollows('Unfollow', [
-            //     'subject_type' => User::class,
-            //     'object_type' => User::class,
-            //     'subject_id' => $userId,
-            //     'object_id' => $organizerId,
-            //     'action' => 'Follow',
-            // ]));
-
+            $activityLog->findActivityLog([
+                'subject_type' => User::class,
+                'subject_id' => $user->id,
+                'object_type' => ParticipantFollow::class,
+                'object_id' => $existingFollow->id,
+                'action' => $PARTICIPANT_FOLLOW_ACTION,
+            ])->delete();
+           
             $existingFollow->delete();
 
             $message = 'Successfully unfollowed the participant';
+            session()->flash('successMessage', $message);
+            return back();
         } else {
-            ParticipantFollow::create([
-                'participant_follower' => $userId,
-                'participant_followee' => $participantId,
-            ]);
+            DB::beginTransaction();
+            
+            try {
+                $updateUser = User::where('id', $participantId)
+                        ->select(['id', 'userBanner', 'name'])
+                        ->firstOrFail();
 
-            $message = 'Successfully followed the participant';
-            // dispatch(new HandleFollows('Unfollow', [
-            //     'subject_type' => User::class,
-            //     'object_type' => User::class,
-            //     'subject_id' => $userId,
-            //     'object_id' => $organizerId,
-            //     'action' => 'Follow',
-            //     'log' => '<span class="notification-gray"> User'
-            //     . ' <span class="notification-black">' . $user->name . '</span> started following '
-            //     . ' <span class="notification-black">' . $organizer->name . '.</span> '
-            //     . '</span>'
-            // ]));
+                $follow = ParticipantFollow::create([
+                    'participant_follower' => $userId,
+                    'participant_followee' => $participantId,
+                ]);
+
+                $message = 'Successfully followed the participant';
+                $activityLog->createActivityLogs([
+                    'subject_type' => User::class,
+                    'subject_id' => [$user->id],
+                    'object_type' => ParticipantFollow::class,
+                    'object_id' => $follow->id,
+                    'action' => $PARTICIPANT_FOLLOW_ACTION,
+                    'log' =>  <<<HTML
+                    <a href="/view/participant/$updateUser->id" alt="Follow Image link"> 
+                        <img class="object-fit-cover rounded-circle me-2" 
+                            width='30' height='30'  
+                            src="/storage/$updateUser->userBanner" 
+                            onerror="this.src='/assets/images/404.png';"
+                        >
+                    </a>
+                    <span class="notification-gray me-2">
+                        You started  following another player,
+                        <a href="/view/participant/$updateUser->id" alt="Follow link"> 
+                            <span class="notification-blue">{$updateUser->name}</span>  
+                        </a>.
+                    </span>
+                    HTML,
+
+                ]); 
+                DB::commit();
+
+                session()->flash('successMessage', $message);
+                return back();
+            } catch (Exception $e) {
+                DB::rollBack();
+                session()->flash('errorMessage', $e->getMessage());
+            }
         }
 
-        session()->flash('successMessage', $message);
-        return back();
+       
     }
 
     private function viewProfile(Request $request, $logged_user_id, $userProfile, $isOwnProfile = true)

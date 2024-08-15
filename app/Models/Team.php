@@ -276,12 +276,25 @@ class Team extends Model
         if ($isNewTeam) {
             $memberList = [];
             $memberNotification['text'] = <<<HTML
+                <a href="/view/team/$this->id" alt="Team View">
+                    <img src="/storage/$this->teamBanner" 
+                        onerror="this.src='/assets/images/404.png';"
+                        class="object-fit-cover rounded-circle me-2"
+                        alt="Team View"
+                    >
+                </a>
                 <span class="notification-gray">
                     You have created a new team named 
-                    <span class="notification-black">{$this->teamName}</span> 
+                    <a href="/view/team/$this->id" alt="Team View">
+                        <span class="notification-blue">{$this->teamName}</span>
+                    </a>
                     and joined 
-                    <span class="notification-black">{$event->user->name}'s</span> event 
-                    <span class="notification-blue">{$event->eventName}</span>.
+                    <a href="/view/organizer/$event->user->id" alt="Organizer View">
+                        <span class="notification-blue">{$event->user->name}'s</span>
+                    </a>
+                    <a href="/event/$event->id" alt="Event View">
+                        <span class="notification-blue">{$event->eventName}</span>
+                    </a>.
                 </span>
                 HTML;
 
@@ -294,10 +307,21 @@ class Team extends Model
                     'subject_id' => $member->user->id,
                     'subject_type' => User::class,
                     'log' => <<<HTML
+                        <a href="/view/team/$this->id" alt="Team View">
+                            <img src="/storage/$this->teamBanner" 
+                                onerror="this.src='/assets/images/404.png';"
+                                class="object-fit-cover rounded-circle me-2"
+                                alt="Team View"
+                            >
+                        </a>
                         <span class="notification-gray">
                             You have joined 
-                            <span class="notification-black">{$event->user->name}'s</span> event 
-                            <span class="notification-blue">{$event->eventName}</span>.
+                            <a href="/view/organizer/$event->user->id" alt="Organizer View">
+                                <span class="notification-blue">{$event->user->name}'s</span>
+                            </a>
+                            <a href="/event/$event->id" alt="Event View">
+                                <span class="notification-blue">{$event->eventName}</span>
+                            </a>.
                         </span>
                         HTML,
                 ];
@@ -313,22 +337,46 @@ class Team extends Model
                     'subject_id' => $member->user->id,
                     'subject_type' => '\App\Models\User',
                     'log' => <<<HTML
+                        <a href="/view/team/$this->id" alt="Team View">
+                            <img src="/storage/$this->teamBanner" 
+                                onerror="this.src='/assets/images/404.png';"
+                                class="object-fit-cover rounded-circle me-2"
+                                alt="Team View"
+                            >
+                        </a>
                         <span class="notification-gray">
                             You have joined 
-                            <span class="notification-black">{$event->user->name}'s</span> event 
-                            <span class="notification-blue">{$event->eventName}</span>.
+                            <a href="/view/organizer/$event->user->id" alt="Organizer View">
+                                <span class="notification-blue">{$event->user->name}'s</span>
+                            </a>
+                            <a href="/event/$event->id" alt="Event View">
+                                <span class="notification-blue">{$event->eventName}</span>
+                            </a>.
                         </span>
                         HTML,
                     ];
             }
             
             $memberNotification['text'] = <<<HTML
+            <a href="/view/team/$this->id" alt="Team View">
+                <img src="/storage/$this->teamBanner" 
+                    onerror="this.src='/assets/images/404.png';"
+                    class="object-fit-cover rounded-circle me-2"
+                    alt="Team View"
+                >
+            </a>
             <span class="notification-gray">
                 You have selected a team named 
-                <span class="notification-black">{$this->teamName}</span> 
+                <a href="/view/team/$this->id" alt="Team View">
+                    <span class="notification-black">{$this->teamName}</span> 
+                </a>
                 and joined 
-                <span class="notification-black">{$event->user->name}'s</span> event 
-                <span class="notification-blue">{$event->eventName}</span>.
+                <a href="/view/organizer/$event->user->id" alt="Organizer View">
+                    <span class="notification-blue">{$event->user->name}'s</span>
+                </a>
+                <a href="/event/$event->id" alt="Event View">
+                    <span class="notification-blue">{$event->eventName}</span>
+                </a>.
             </span>
             HTML;
             $rosterCaptain = TeamMember::where('team_id', $this->id)
@@ -394,21 +442,42 @@ class Team extends Model
                 'subject_type' => '\App\Models\User',
                 'log' => <<<HTML
                     <span class="notification-gray">
-                        You have left 
-                        <span class="notification-black">{$event->user->name}'s</span> event 
-                        <span class="notification-blue">{$event->eventName}</span>.
-                    </span>
+
+                        <a href="/view/team/$this->id" alt="Team View">
+                            <span class="notification-black">{$this->teamName}</span> 
+                        </a>
+                        <span class="notification-gray">
+                            has left
+                            <a href="/view/organizer/$event->user->id" alt="Organizer View">
+                                <span class="notification-blue">{$event->user->name}'s</span>
+                            </a>
+                            <a href="/event/$event->id" alt="Event View">
+                                <span class="notification-blue">{$event->eventName}</span>
+                            </a>
+                        </span>.
                     HTML,
             ];
         }
         
         $memberNotification['text'] = <<<HTML
+            <a href="/view/team/$this->id" alt="Team View">
+                <img src="/storage/$this->teamBanner" 
+                    onerror="this.src='/assets/images/404.png';"
+                    class="object-fit-cover rounded-circle me-2"
+                    alt="Team View"
+                >
+            </a>
             <span class="notification-gray">
-                Your team named 
-                <span class="notification-black">{$this->teamName}</span> 
-                has left 
-                <span class="notification-black">{$event->user->name}'s</span> event 
-                <span class="notification-blue">{$event->eventName}</span>.
+                <a href="/view/team/$this->id" alt="Team View">
+                    <span class="notification-black">{$this->teamName}</span> 
+                </a>
+                has left
+                <a href="/view/organizer/$event->user->id" alt="Organizer View">
+                    <span class="notification-blue">{$event->user->name}'s</span>
+                </a>
+                <a href="/event/$event->id" alt="Event View">
+                    <span class="notification-blue">{$event->eventName}</span>
+                </a>.
             </span>
             HTML;
        
