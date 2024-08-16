@@ -2,8 +2,8 @@
     $countUnread = $user->unreadNotifications->count();
 @endphp
 
-<div class="ms-2 dropdown" data-reference="parent" data-bs-auto-close="outside" data-bs-offset="-80,-80">
-    <a href="#" role="button" class="btn position-relative" id="dropdownMenuLinkNotification" data-bs-toggle="dropdown"
+<div class="ms-2 dropdown" data-reference="parent"  data-bs-offset="-80,-80">
+    <a href="#" role="button" class="btn position-relative" id="dropdownMenuLinkNotification" data-bs-auto-close="outside" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt="">
         @if ($countUnread!=0)
@@ -12,7 +12,7 @@
     </a>
 
     @if (isset($user->notifications[0]))
-        <div class="dropdown-menu fs-7 py-0" style="position: absolute; left: -300px; width: 400px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLinkNotification">
+        <div class="dropdown-menu fs-7 py-0" data-bs-auto-close="outside" style="position: absolute; left: -300px; width: 400px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLinkNotification">
             <div class="position-relative">
                 <div class="pt-2 pb-1 d-flex justify-content-around">
                     <a href="" class="btn btn-link"> <u> Notifications Page</u> </a>
@@ -36,12 +36,21 @@
                             ])
                         >
                             <div class="d-flex justify-content-start align-items-center pt-2">
-                                <div style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
-                                    class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle"
-                                >
-                                    {{-- Mark all as read --}}
-                                    {{-- {{ $notification->object_type->getImage()  }} --}}
-                                </div>
+                                @if (isset($notification->data['image']))    
+                                    <img 
+                                        src="{{'/storage' .'/' . $notification->data['image']}}"
+                                        alt= "Notification"
+                                        width="45" height="45"
+                                        onerror="this.onerror=null; this.src='/assets/404.png';"
+                                        class="object-fit-cover rounded-circle"
+                                    >
+                                @else
+                                    <div style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
+                                        class="d-flex justify-content-center align-items-center text-light rounded-circle random-bg-circle"
+                                    >
+                                        {{ $notification->type[0] }}
+                                    </div>
+                                @endif
                                 <span style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 0.9375rem;" class="text-start ms-2 my-1">
                                     {!! $notification->data['data'] !!}
                                 </span>
@@ -64,9 +73,7 @@
                                     </button>
                                 @else
                                     <a role="button" class="border-bottom-primary border-bottom btn btn-link btn-sm mark-read" onclick="setNotificationReadById(event, '{{$notification->id}}', {{$loop->index}})">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
-                                            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
-                                            </svg>
+                                       
                                         <span>Mark Read</span>
                                     </a>
                                 @endif

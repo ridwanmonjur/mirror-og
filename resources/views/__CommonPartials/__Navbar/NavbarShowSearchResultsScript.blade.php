@@ -50,7 +50,7 @@
     }
   
     window.onclick = function(event) {
-      if (!event.target.matches('.oceans-gaming-default-button')) {
+      if (!event.target?.matches('.oceans-gaming-default-button')) {
         var dropdowns = document.getElementsByClassName("team-dropdown-content");
         for (var i = 0; i < dropdowns.length; i++) {
           var openDropdown = dropdowns[i];
@@ -60,6 +60,25 @@
         }
       }
     }
+    function applyRandomColorsAndShapes() {
+      const circles = document.querySelectorAll('.random-bg-circle');
+      console.log({circles})
 
+      circles.forEach(circle => {
+          const randomColor = getRandomColorBg();
+          circle.style.backgroundColor = randomColor;
+      });
+    }
+
+    function getRandomColorBg() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    applyRandomColorsAndShapes();
     
 </script>
