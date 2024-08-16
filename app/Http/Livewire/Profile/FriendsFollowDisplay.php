@@ -11,7 +11,7 @@ class FriendsFollowDisplay extends Component
 
     public $userProfile = null;
 
-    public $userId = 0;
+    public $userId;
 
     protected $paginationTheme = 'bootstrap';
 

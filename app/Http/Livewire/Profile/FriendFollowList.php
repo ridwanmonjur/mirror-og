@@ -53,9 +53,10 @@ class FriendFollowList extends Component
 
             return $data;
         }
+
         if ($this->name === 'OrgFollow') {
             $propertyName = 'participantUser';
-            $data = OrganizerFollow::where('participant_followee', $this->userId)
+            $data = OrganizerFollow::where('organizer_user_id', $this->userId)
                 ->with($propertyName)
                 ->paginate($this->page, ['*'], $propertyName);
 

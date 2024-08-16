@@ -10,11 +10,12 @@
     </div>
     <br>
     <div class="tabs">
-        <button id="FollowBtn" 
-            @class(["tab-button py-2 outer-tab", "tab-button-active" => $currentTab == 'Follow'])
-            wire:click="setTab('Follow')">Followers
-        </button>
+        
         @if ($userProfile->role != 'ORGANIZER')
+            <button id="FollowBtn" 
+                @class(["tab-button py-2 outer-tab", "tab-button-active" => $currentTab == 'Follow'])
+                wire:click="setTab('Follow')">Followers
+            </button>
             <button id="FollowingBtn"
             @class(["tab-button py-2 outer-tab", "tab-button-active" => $currentTab == 'Following'])
                 wire:click="setTab('Following')">
@@ -25,19 +26,30 @@
                 wire:click="setTab('Friends')">
                 Friends
             </button>
+        @else   
+            <button id="OrgFollowBtn" 
+                @class(["tab-button py-2 outer-tab", "tab-button-active" => $currentTab == 'OrgFollow'])
+                wire:click="setTab('OrgFollow')">Followers
+            </button>
         @endif
     </div>
     <br>
     <div>
-        @livewire("profile.friend-follow-list", [
-            'userId' => $userId, 'name' => 'Follow', 'currentTab' => $currentTab
-        ], key($currentTab . 'Follow'))
-        @livewire("profile.friend-follow-list", [
-            'userId' => $userId, 'name' => 'Following', 'currentTab' => $currentTab
-        ], key($currentTab . 'Following'))
-        @livewire("profile.friend-follow-list", [
-            'userId' => $userId, 'name' => 'Friends', 'currentTab' => $currentTab
-        ], key($currentTab . 'Friends'))
+        @if ($userProfile->role != 'ORGANIZER')
+            @livewire("profile.friend-follow-list", [
+                'userId' => $userId, 'name' => 'Follow', 'currentTab' => $currentTab
+            ], key($currentTab . 'Follow'))
+            @livewire("profile.friend-follow-list", [
+                'userId' => $userId, 'name' => 'Following', 'currentTab' => $currentTab
+            ], key($currentTab . 'Following'))
+            @livewire("profile.friend-follow-list", [
+                'userId' => $userId, 'name' => 'Friends', 'currentTab' => $currentTab
+            ], key($currentTab . 'Friends'))
+        @else
+            @livewire("profile.friend-follow-list", [
+                'userId' => $userId, 'name' => 'OrgFollow', 'currentTab' => $currentTab
+            ], key($currentTab . 'OrgFollow'))
+        @endif
     </div>
                    
  </div>
