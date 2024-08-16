@@ -20,7 +20,7 @@
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
 
-    <div>
+    <div class="ps-4">
         <h1>Responsive Tournament Bracket</h1>
         <h2>Ice hockey at the 1998 Winter Olympics – Men's tournament</h2>
         <div class="tournament-bracket tournament-bracket--rounded">
