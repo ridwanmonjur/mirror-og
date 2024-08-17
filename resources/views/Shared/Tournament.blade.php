@@ -15,7 +15,7 @@
 </head>
 @php
     use Carbon\Carbon;
-    $matchesCount = 8; // 4, 8, 16
+    $matchesCount = 16; // 8, 16, 32
 
     $matches32 = [
         ['team' => 'Canada', 'code' => 'CAN'],
@@ -57,11 +57,11 @@
         $quarterfinals[] = [
             'team1' => $matches32[$i]['team'],
             'team1Code' => $matches32[$i]['code'],
-            'team1Score' => rand(1, 5), 
+            'team1Score' => rand(1, 5),
             'team2' => $matches32[$i+1]['team'],
             'team2Code' => $matches32[$i+1]['code'],
-            'team2Score' => rand(1, 5), 
-            'date' => '1998-02-18', 
+            'team2Score' => rand(1, 5),
+            'date' => '1998-02-18',
         ];
     }
 
@@ -70,37 +70,53 @@
         $semifinals[] = [
             'team1' => $quarterfinals[$i]['team1'],
             'team1Code' => $quarterfinals[$i]['team1Code'],
-            'team1Score' => rand(1, 5), 
+            'team1Score' => rand(1, 5),
             'team2' => $quarterfinals[$i+1]['team1'],
             'team2Code' => $quarterfinals[$i+1]['team1Code'],
-            'team2Score' => rand(1, 5), 
-            'date' => '1998-02-20', 
+            'team2Score' => rand(1, 5),
+            'date' => '1998-02-20',
         ];
     }
 
     $semifinals2 = [];
-    if ($matchesCount/4 !== 2) {
+    if ($matchesCount/4 > 2 ) {
         for ($i = 0; $i < $matchesCount/4; $i += 2) {
-        $semifinals2[] = [
-            'team1' => $quarterfinals[$i]['team1'],
-            'team1Code' => $quarterfinals[$i]['team1Code'],
-            'team1Score' => rand(1, 5), 
-            'team2' => $quarterfinals[$i+1]['team1'],
-            'team2Code' => $quarterfinals[$i+1]['team1Code'],
-            'team2Score' => rand(1, 5), 
-            'date' => '1998-02-20', 
-        ];
+            $semifinals2[] = [
+                'team1' => $quarterfinals[$i]['team1'],
+                'team1Code' => $quarterfinals[$i]['team1Code'],
+                'team1Score' => rand(1, 5),
+                'team2' => $quarterfinals[$i+1]['team1'],
+                'team2Code' => $quarterfinals[$i+1]['team1Code'],
+                'team2Score' => rand(1, 5),
+                'date' => '1998-02-20',
+            ];
+        }
     }
-    } 
+
+
+    $semifinals3 = [];
+    if ($matchesCount/8 > 2) {
+        for ($i = 0; $i < $matchesCount/8; $i += 2) {
+            $semifinals3[] = [
+                'team1' => $quarterfinals[$i]['team1'],
+                'team1Code' => $quarterfinals[$i]['team1Code'],
+                'team1Score' => rand(1, 5),
+                'team2' => $quarterfinals[$i+1]['team1'],
+                'team2Code' => $quarterfinals[$i+1]['team1Code'],
+                'team2Score' => rand(1, 5),
+                'date' => '1998-02-20',
+            ];
+        }
+    }
 
     $gold = [
         [
             'team1' => $semifinals[0]['team1'],
             'team1Code' => $semifinals[0]['team1Code'],
-            'team1Score' => rand(1, 5), 
-            'team2' => $semifinals[0]['team2'], 
+            'team1Score' => rand(1, 5),
+            'team2' => $semifinals[0]['team2'],
             'team2Code' => $semifinals[0]['team2Code'],
-            'team2Score' => rand(1, 5), 
+            'team2Score' => rand(1, 5),
             'date' => '1998-02-22',
             'medal' => 'gold'
         ]
@@ -111,6 +127,7 @@
         'quarterfinals' => $quarterfinals,
         'semifinals' => $semifinals,
         'semifinals2' => $semifinals2,
+        'semifinals3' => $semifinals3,
         'gold' => $gold,
     ];
 @endphp
@@ -126,63 +143,75 @@
                 <h3 class="tournament-bracket__round-title">Quarterfinals</h3>
                 <ul class="tournament-bracket__list">
                     @foreach ($matches['quarterfinals'] as $match)
-                        <li class="tournament-bracket__item">
                             <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
                                 :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
-                        </li>
                     @endforeach
                 </ul>
             </div>
 
             <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                <h3 class="tournament-bracket__round-title">Semifinals</h3>
+                <h3 class="tournament-bracket__round-title">Semifinals 1</h3>
                 <ul class="tournament-bracket__list">
                     @foreach ($matches['semifinals'] as $match)
-                        <li class="tournament-bracket__item">
                             <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
                                 :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
-                        </li>
                     @endforeach
                 </ul>
             </div>
             @if (isset($matches['semifinals2'][0]))
                 <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                    <h3 class="tournament-bracket__round-title">Semifinals</h3>
+                    <h3 class="tournament-bracket__round-title">Semifinals 2</h3>
                     <ul class="tournament-bracket__list">
                         @foreach ($matches['semifinals2'] as $match)
-                            <li class="tournament-bracket__item">
                                 <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
                                     :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
-                            </li>
                         @endforeach
                     </ul>
                 </div>
             @endif
-            <div class="tournament-bracket__round tournament-bracket__round--bronze">
+             @if (isset($matches['semifinals3'][0]))
+                <div class="tournament-bracket__round tournament-bracket__round--semifinals">
+                    <h3 class="tournament-bracket__round-title">Semifinals  3</h3>
+                    <ul class="tournament-bracket__list">
+                        @foreach ($matches['semifinals3'] as $match)
+                                <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
+                                    :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <div class="tournament-bracket__round tournament-bracket__round--gold">
                 <h3 class="tournament-bracket__round-title">Gold medal game</h3>
                 <ul class="tournament-bracket__list">
                     @foreach ($matches['gold'] as $match)
-                        <li class="tournament-bracket__item">
                             <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
                                 :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" :medal="$match['medal']" />
-                        </li>
                     @endforeach
                 </ul>
             </div>
 
-            <div class="tournament-bracket__round tournament-bracket__round--bronze">
-                <h3 class="tournament-bracket__round-title">Bronze medal game</h3>
-                <ul class="tournament-bracket__list">
-                    {{-- @foreach ($matches['bronze'] as $match)
-                        <li class="tournament-bracket__item">
-                            <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                                :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" :medal="$match['medal']" />
-                        </li>
-                    @endforeach --}}
-                </ul>
+            <div class="tournament-bracket__round tournament-bracket__round--gold">
+                
             </div> 
         </div>
 
         </main>
-        <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+    <script>
+        var bracketItemList = document.querySelectorAll('.codeCANcode.tournament-bracket__item');
+        bracketItemList.forEach(item => {
+            item.classList.add('special-item-right'); // Use 'item' instead of 'bracketItem'
+        });
+
+        var bracketMatchList = document.querySelectorAll('.codeCANcode.tournament-bracket__match');
+        bracketItemList.forEach(item => {
+            console.log({hi: true});
+            item.classList.add('special-item2');
+            item.style.setProperty('--border-color', 'red');   
+
+        });
+
+
+
+    </script>        
+    <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
 </body>
