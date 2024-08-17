@@ -76,6 +76,7 @@
 <script>
   function submitForm(event) {
         event.preventDefault(); 
+        document.querySelector('.flash-message').innerHTML = '';
         const formData = new FormData(event.target);
         fetch( event.target.action, {
             method: 'POST',

@@ -28,7 +28,7 @@ body {
     min-height: 100vh;
 }
 ul.tournament-bracket__list{
-    padding-left: 0px !important;
+    padding-left: 1px !important;
 }
 .container {
     width: 90%;
@@ -107,7 +107,7 @@ h2 {
    }
 }
 .tournament-bracket__round:last-child .tournament-bracket__list {
-    border: 0;
+    /* border: 0; */
 }
 .tournament-bracket__item {
     display: flex;
@@ -180,10 +180,7 @@ h2 {
     .tournament-bracket__round:last-child .tournament-bracket__item::after {
         display: none;
    }
-    .tournament-bracket__round:nth-last-child(2) .tournament-bracket__item::after {
-        border-radius: 0;
-        border-right: 0;
-   }
+
 }
 @media (min-width: 72em) {
     .tournament-bracket__item {
