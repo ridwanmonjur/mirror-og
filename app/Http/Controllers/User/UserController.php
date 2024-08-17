@@ -93,7 +93,7 @@ class UserController extends Controller
         }
     }
 
-    public function showStats($id, Request $request)
+    public function showStats($id)
     {
         return view('Shared.PlayerProfileStats', ['userId' => $id]);
     }

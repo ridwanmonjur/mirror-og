@@ -50,6 +50,7 @@
                 </h3>
             </u>
         </div>
+        
             @livewire('profile.friends-follow-display', ['userId' => $userId]) 
         </div>
         <br>
