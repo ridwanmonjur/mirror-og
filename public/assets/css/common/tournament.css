@@ -102,12 +102,12 @@ h2 {
     .tournament-bracket__list {
         margin-bottom: 0;
         padding-bottom: 0;
-        border-right: 1px dashed #e5e5e5;
+        /* border-right: 1px dashed #e5e5e5; */
         border-bottom: 0;
    }
 }
 .tournament-bracket__round:last-child .tournament-bracket__list {
-    /* border: 0; */
+    border: 0;
 }
 .tournament-bracket__item {
     display: flex;
