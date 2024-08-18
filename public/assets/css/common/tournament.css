@@ -1,20 +1,26 @@
 *, *::before, *::after {
     box-sizing: border-box;
 }
-html {
-    font-size: 15px;
+
+:root {
+    --border-color: #9e9e9e; /* Default border color */
+    --element-width: 1em;    /* Default width */
+    --element-height: 10%;   /* Default height */
 }
-@media (min-width: 38em) {
+html {
+    font-size: 13px;
+}
+@media (min-width: 608px) {
     html {
         font-size: 14px;
    }
 }
-@media (min-width: 52em) {
+@media (min-width:  832px) {
     html {
         font-size: 15px;
    }
 }
-@media (min-width: 72em) {
+@media (min-width: 1152px) {
     html {
         font-size: 16px;
    }
@@ -27,9 +33,28 @@ body {
     color: #2E4B59;
     min-height: 100vh;
 }
+
 ul.tournament-bracket__list{
     padding-left: 1px !important;
 }
+
+caption.tournament-bracket__caption {
+    padding: 0 !important;
+    margin: 0! important;
+}
+
+.special-item-right::after , .special-item-right::before {
+    border-color: red !important; 
+}
+
+
+.special-item-right:nth-child(odd)::after, .special-item-right:nth-child(odd)::before {
+    border-color: red !important; 
+}
+
+
+
+
 .container {
     width: 90%;
     min-width: 18em;
@@ -62,7 +87,7 @@ h2 {
     display: flex;
     flex-direction: column;
 }
-@media (min-width: 38em) {
+@media (min-width: 608px) {
     .tournament-bracket {
         flex-direction: row;
    }
@@ -92,13 +117,13 @@ h2 {
     margin-bottom: 2em;
     transition: padding 0.2s ease-in-out, margin 0.2s ease-in-out;
 }
-@media (max-width: 24em) {
+@media (max-width: 384px) {
     .tournament-bracket__list {
         padding-bottom: 1em;
         margin-bottom: 1em;
    }
 }
-@media (min-width: 38em) {
+@media (min-width: 608px) {
     .tournament-bracket__list {
         margin-bottom: 0;
         padding-bottom: 0;
@@ -129,7 +154,7 @@ h2 {
 .tournament-bracket__item::after {
     transition: width 0.2s linear;
 }
-@media (max-width: 24em) {
+@media (max-width: 384px) {
     .tournament-bracket__item {
         width: 100%;
    }
@@ -138,7 +163,7 @@ h2 {
         margin-right: 0;
    }
 }
-@media (min-width: 38em) {
+@media (min-width: 608px) {
     .tournament-bracket__item {
         padding: 0.5em 1em;
         width: 100%;
@@ -155,6 +180,9 @@ h2 {
         height: 45%;
         border-right: 2px solid #9e9e9e;
    }
+    .tournament-bracket__item.red::after {
+        border-right: 2px solid red !important;
+    }
     .tournament-bracket__item:nth-child(odd)::after {
         top: 50%;
         border-top: 2px solid #9e9e9e;
@@ -182,7 +210,7 @@ h2 {
    }
 
 }
-@media (min-width: 72em) {
+@media (min-width: 1152px) {
     .tournament-bracket__item {
         padding: 0.5em 1.5em;
    }
@@ -208,12 +236,12 @@ h2 {
 .tournament-bracket__match::before, .tournament-bracket__match::after {
     transition: all 0.2s linear;
 }
-@media (max-width: 24em) {
+@media (max-width: 384px) {
     .tournament-bracket__match {
         padding: 0.75em 0.5em;
    }
 }
-@media (min-width: 38em) {
+@media (min-width: 608px) {
     .tournament-bracket__match::before, .tournament-bracket__match::after {
         position: absolute;
         left: 0;
@@ -223,10 +251,13 @@ h2 {
         width: 1em;
         height: 10%;
         border-left: 2px solid #9e9e9e;
-   }
+
+    }
+
     .tournament-bracket__match::before {
         bottom: 50%;
-        border-bottom: 2px solid #9e9e9e;
+        border-left: 2px solid var(--border-color);
+
         transform: translate(0,1px);
    }
     .tournament-bracket--rounded .tournament-bracket__match::before {
@@ -234,14 +265,14 @@ h2 {
    }
     .tournament-bracket__match::after {
         top: 50%;
-        border-top: 2px solid #9e9e9e;
+        border-top: 2px solid var(--border-color);
         transform: translate(0,-1px);
    }
     .tournament-bracket--rounded .tournament-bracket__match::after {
         border-top-left-radius: 0.6em;
    }
 }
-@media (min-width: 72em) {
+@media (min-width: 1152px) {
     .tournament-bracket__match::before, .tournament-bracket__match::after {
         width: 1.5em;
    }
@@ -261,6 +292,16 @@ h2 {
 .tournament-bracket__round:last-child .tournament-bracket__match::after {
     display: none;
 }
+
+tournament-bracket__round:last-child .tournament-bracket__list {
+    border: 0;
+}
+
+.tournament-bracket__round:nth-last-child(2) .tournament-bracket__item::after {
+    border-radius: 0;
+    border-right: 0;
+}
+
 .tournament-bracket__round:first-child .tournament-bracket__match::before, .tournament-bracket__round:first-child .tournament-bracket__match::after {
     display: none;
 }
@@ -273,7 +314,7 @@ h2 {
     text-align: center;
     padding: 0.2em 0.1em;
 }
-@media (min-width: 38em) {
+@media (min-width: 608px) {
     .tournament-bracket__content::after {
         order: 1;
    }
@@ -283,7 +324,7 @@ h2 {
     order: 0;
     text-align: right;
 }
-@media (min-width: 38em) and (max-width: 52em) {
+@media (min-width: 608px) and (max-width: 832px) {
     .tournament-bracket__content .tournament-bracket__team:first-child {
         align-items: flex-end;
    }
@@ -292,12 +333,12 @@ h2 {
     order: 2;
     justify-content: flex-end;
 }
-@media (min-width: 24em) {
+@media (min-width: 384px) {
     .tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__country {
         order: 0;
    }
 }
-@media (min-width: 38em) and (max-width: 52em) {
+@media (min-width: 608px) and (max-width: 832px) {
     .tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__country {
         flex-direction: column-reverse;
         align-items: flex-end;
@@ -306,7 +347,7 @@ h2 {
 .tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__score {
     order: 0;
 }
-@media (min-width: 24em) {
+@media (min-width: 384px) {
     .tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__score {
         order: 2;
    }
@@ -316,17 +357,17 @@ h2 {
     order: 2;
     text-align: left;
 }
-@media (min-width: 38em) and (max-width: 52em) {
+@media (min-width: 608px) and (max-width: 832px) {
     .tournament-bracket__content .tournament-bracket__team:last-child {
         align-items: flex-start;
    }
 }
-@media (min-width: 38em) {
+@media (min-width: 608px) {
     .tournament-bracket__content .tournament-bracket__team:last-child .tournament-bracket__country {
         justify-content: flex-start;
    }
 }
-@media (min-width: 38em) and (max-width: 52em) {
+@media (min-width: 608px) and (max-width: 832px) {
     .tournament-bracket__content .tournament-bracket__team:last-child .tournament-bracket__country {
         align-items: flex-start;
    }
@@ -348,12 +389,12 @@ h2 {
     flex-direction: row-reverse;
     justify-content: space-between;
 }
-@media (min-width: 24em) {
+@media (min-width: 384px) {
     .tournament-bracket__team {
         flex-direction: column-reverse;
    }
 }
-@media (min-width: 38em) {
+@media (min-width: 608px) {
     .tournament-bracket__team {
         flex-direction: column-reverse;
    }
@@ -364,12 +405,12 @@ h2 {
     margin-top: 0.5em;
     align-items: center;
 }
-@media (max-width: 24em) {
+@media (max-width: 384px) {
     .tournament-bracket__country {
         margin-top: 0;
    }
 }
-@media (min-width: 38em) and (max-width: 52em) {
+@media (min-width: 608px) and (max-width: 832px) {
     .tournament-bracket__country {
         display: flex;
         flex-direction: column;
@@ -388,12 +429,12 @@ h2 {
     cursor: help;
     transition: padding 0.2s ease-in-out;
 }
-@media (max-width: 24em) {
+@media (max-width: 384px) {
     .tournament-bracket__code {
         padding: 0 0.25em;
    }
 }
-@media (min-width: 38em) and (max-width: 52em) {
+@media (min-width: 608px) and (max-width: 832px) {
     .tournament-bracket__code {
         padding: 0;
    }
@@ -415,11 +456,11 @@ h2 {
     border-bottom: 0.075em solid transparent;
     font-size: 0.95rem;
     background-color: #F5F5F5;
-    border-color: black;
+    border-color: #9e9e9e;
 }
 .tournament-bracket__team--winner .tournament-bracket__number {
     background-color: #FFF176;
-    border-color: black;
+    border-color: #9e9e9e;
 }
 .tournament-bracket__medal {
     padding: 0 0.5em;
