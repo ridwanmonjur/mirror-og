@@ -1,6 +1,7 @@
+<li class="tournament-bracket__item code{{ $team1Code }}code code{{ $team2Code }}code">
 <div>
     <!-- Happiness is not something readymade. It comes from your own actions. - Dalai Lama -->
-</div><div class="tournament-bracket__match" tabindex="0">
+</div><div class="tournament-bracket__match  code{{ $team1Code }}code code{{ $team2Code }}code" tabindex="0">
     <table class="tournament-bracket__table">
         <caption class="tournament-bracket__caption">
             <time datetime="{{ $date }}">{{ \Carbon\Carbon::parse($date)->format('d F Y') }}</time>
@@ -35,3 +36,4 @@
         </tbody>
     </table>
 </div>
+</li>
