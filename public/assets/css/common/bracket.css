@@ -376,6 +376,19 @@ tournament-bracket__round:last-child .tournament-bracket__list {
 .tournament-bracket__table {
     width: 100%;
 }
+
+.tournament-bracket__display{
+    display: none;
+}
+
+@media (min-width: 608px) {
+    .tournament-bracket__table {
+        display: none;
+   }
+   .tournament-bracket__display{
+        display: block;
+    }
+}
 .tournament-bracket__caption {
     font-size: 0.8rem;
     color: #BDBDBD;

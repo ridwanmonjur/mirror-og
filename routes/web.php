@@ -21,6 +21,9 @@ Route::get('/', [AuthController::class, 'showLandingPage'])->name('landing.view'
 Route::get('/hello', function () {
     return view('Shared.Tournament');
 });
+Route::get('/hello2', function () {
+    return view('Shared.Bracket');
+});
 // Forget, reset password
 Route::get('/forget-password', [AuthController::class, 'createForget'])->name('user.forget.view');
 Route::get('/reset-password/{token}', [AuthController::class, 'createReset'])->name('user.reset.view');
@@ -155,6 +158,7 @@ Route::group(['prefix' => 'organizer'], function () {
             // Organizer home
             Route::get('/home', [OrganizerEventController::class, 'home'])->name('organizer.home.view');
             Route::get('/event/{id}/results', [OrganizerEventResultsController::class, 'index'])->name('event.results.index');
+            Route::get('/event/{id}/brackets', [OrganizerEventResultsController::class, 'index'])->name('event.brackets.index');
             // Event manage
             Route::resource('/event', OrganizerEventController::class, [
                 'index' => 'event.index',
