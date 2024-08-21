@@ -232,4 +232,11 @@ class OrganizerEventResultsController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
         }
     }
+
+    public function bracket(Request $request, $id)
+    {
+        return view('Shared.Tournament', ['id' => $id]);
+    }
+
+    
 }

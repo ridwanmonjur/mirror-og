@@ -51,7 +51,7 @@
             </u>
         </div>
         
-            @livewire('profile.friends-follow-display', ['userId' => $userId]) 
+            @livewire('shared.profile.friends-follow-display', ['userId' => $userId]) 
         </div>
         <br>
         

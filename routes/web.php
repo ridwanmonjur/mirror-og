@@ -158,7 +158,7 @@ Route::group(['prefix' => 'organizer'], function () {
             // Organizer home
             Route::get('/home', [OrganizerEventController::class, 'home'])->name('organizer.home.view');
             Route::get('/event/{id}/results', [OrganizerEventResultsController::class, 'index'])->name('event.results.index');
-            Route::get('/event/{id}/brackets', [OrganizerEventResultsController::class, 'index'])->name('event.brackets.index');
+            Route::get('/event/{id}/brackets', [OrganizerEventResultsController::class, 'bracket'])->name('event.brackets.index');
             // Event manage
             Route::resource('/event', OrganizerEventController::class, [
                 'index' => 'event.index',
