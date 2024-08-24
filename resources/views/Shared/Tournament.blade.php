@@ -359,7 +359,7 @@
 
             <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                 <h3 class="tournament-bracket__round-title">Gold 2</h3>
-                <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
+                <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                     @foreach ($matches['goldLower'] as $match)
                         <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
                             :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" :medal="$match['medal']" />
