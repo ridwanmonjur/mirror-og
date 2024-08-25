@@ -30,13 +30,13 @@
 
 .tournament-bracket__box {
     display: flex;
-    border: 2px solid var(--border2-color); 
+    border: 1px solid var(--border2-color); 
     justify-content: space-between;
     align-items: center;
 }
 
 .tournament-bracket__box:nth-child(even) {
-    margin-top: -1px;
+    /* margin-top: -1px; */
 }
 
 
@@ -57,7 +57,7 @@ body {
 }
 
 ul.tournament-bracket__list{
-    padding-left: 1px !important;
+    padding-left: 2px !important;
 }
 
 caption.tournament-bracket__caption {
@@ -100,7 +100,7 @@ h2 {
     width: 1px;
     height: 1px;
     padding: 0;
-    margin: -1px;
+    /* margin: -1px; */
     overflow: hidden;
     clip: rect(0,0,0,0);
     border: 0;
@@ -203,18 +203,18 @@ h2 {
         display: block;
         width: var(--line-width);
         height: 45%;
-        border-right: 2px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
    }
    .tournament-bracket__joined-odd-list .tournament-bracket__item::after {
         border-right: 0px solid var(--border-color);
    }
     .tournament-bracket__item.red::after {
-        border-right: 2px solid red !important;
+        border-right: 1px solid red !important;
     }
     .tournament-bracket__item:nth-child(odd)::after {
         top: 50%;
-        border-top: 2px solid var(--border2-color);
-        transform: translateY(-1px);
+        border-top: 1px solid var(--border2-color);
+        /* transform: translateY(-1px); */
    }
     .tournament-bracket--rounded .tournament-bracket__item:nth-child(odd)::after {
         border-top-right-radius: 0.6em;
@@ -224,7 +224,7 @@ h2 {
     }
     .tournament-bracket__item:nth-child(even)::after {
         bottom: 50%;
-        border-bottom: 2px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
         transform: translateY(1px);
    }
     .tournament-bracket--rounded .tournament-bracket__item:nth-child(even)::after {
@@ -284,7 +284,7 @@ h2 {
         display: block;
         width: var(--line-width);
         height: 10%;
-        border-left: 2px solid var(--border2-color);
+        border-left: 1px solid var(--border2-color);
     }
 
     .tournament-bracket__joined-even-list .tournament-bracket__match::before {
@@ -301,7 +301,7 @@ h2 {
 
     .tournament-bracket__match::before {
         bottom: 50%;
-        border-left: 2px solid var(--border-color);
+        border-left: 1px solid var(--border-color);
 
         transform: translate(0,1px);
    }
@@ -313,8 +313,8 @@ h2 {
     }
     .tournament-bracket__match::after {
         top: 50%;
-        border-top: 2px solid var(--border-color);
-        transform: translate(0,-1px);
+        border-top: 1px solid var(--border-color);
+        /* transform: translate(0,-1px); */
    }
     .tournament-bracket--rounded .tournament-bracket__match::after {
         border-top-left-radius: 0.6em;

@@ -15,7 +15,7 @@
 </head>
 @php
     use Carbon\Carbon;
-    $matchesCount = 32; // 8, 16, 32
+    $matchesCount = 16; // 8, 16, 32
     $quarterfinalsLower 
         = $semifinals 
         = $semifinals2 
