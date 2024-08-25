@@ -1,5 +1,5 @@
-<li class="tournament-bracket__item code{{ $team1Code }}code">
-    <div class="tournament-bracket__match  code{{ $team1Code }}code " tabindex="0">
+<li class="tournament-bracket__item code{{ $team1Code }}code code{{ $team2Code }}code">
+    <div class="tournament-bracket__match  code{{ $team1Code }}code code{{ $team2Code }}code" tabindex="0">
         <table class="tournament-bracket__table mx-auto">
 
             <thead class="sr-only">
@@ -31,24 +31,20 @@
                 </tr>
             </tbody>
         </table>
-        <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative"
-            style="white-space: nowrap;">
-            <div
-                class="d-flex border border-dark justify-content-between align-content-center tournament-bracket__team--winner">
-                <span class="py-1 text-center"> {{ $team1Code }} </span>
+        <div 
+            class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative"
+        >
+            <div class="tournament-bracket__box code{{ $team1Code }}code">
+                <span>{{ $team1Code }}</span>
                 {{-- <span class="tournament-bracket__number">{{ $team1Score }}</span> --}}
             </div>
-            <div class="d-flex border border-dark justify-content-between align-content-center">
-                <span class="py-1 text-center"> {{ $team2Code }} </span>
+            <div class="tournament-bracket__box code{{ $team2Code }}code">
+                <span>{{ $team2Code }}</span>
                 {{-- <span class="tournament-bracket__number">{{ $team2Score }}</span> --}}
             </div>
-            <small class="position-absolute"
-                style="top: 5px; left: 120%; z-index:  99; background-color: rgb(242, 239, 239, 0.9);"> Winner to U1
-            </small>
-            <small class="position-absolute"
-                style="bottom: 5px; left: 120%;  z-index:  99; background-color: rgb(242, 239, 239, 0.9);"> Loser to U2
-            </small>
 
+            <small class="position-absolute winner-label">Winner to U1</small>
+            <small class="position-absolute loser-label">Loser to U2</small>
         </div>
     </div>
 </li>

@@ -15,7 +15,7 @@
 </head>
 @php
     use Carbon\Carbon;
-    $matchesCount = 16; // 8, 16, 32
+    $matchesCount = 32; // 8, 16, 32
     $quarterfinalsLower 
         = $semifinals 
         = $semifinals2 
@@ -390,18 +390,22 @@
     <script>
         var bracketItemList = document.querySelectorAll('.codeCANcode.tournament-bracket__item');
         bracketItemList.forEach(item => {
-            item.classList.add('special-item-right'); // Use 'item' instead of 'bracketItem'
+            item.classList.add('special-item-right'); 
         });
+        
 
         var bracketMatchList = document.querySelectorAll('.codeCANcode.tournament-bracket__match');
         bracketItemList.forEach(item => {
             console.log({hi: true});
             item.classList.add('special-item2');
             item.style.setProperty('--border-color', 'red');   
-
         });
 
-
+        var bracketBoxList = document.querySelectorAll('.codeCANcode .tournament-bracket__box.codeCANcode');
+        bracketBoxList.forEach(item => {
+            console.log({hi: true});
+            item.style.setProperty('--border2-color', 'red');   
+        });
 
     </script>        
     <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
