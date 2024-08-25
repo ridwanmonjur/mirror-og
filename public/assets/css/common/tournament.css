@@ -180,7 +180,7 @@ h2 {
         transform: translateY(-1px);
    }
     .tournament-bracket--rounded .tournament-bracket__item:nth-child(odd)::after {
-        border-top-right-radius: 0em;
+        border-top-right-radius: 0.6em;
    }
    .tournament-bracket__joined-odd-list .tournament-bracket__item:nth-child(odd)::after {
         border-top-right-radius: 0em !important;
@@ -191,7 +191,7 @@ h2 {
         transform: translateY(1px);
    }
     .tournament-bracket--rounded .tournament-bracket__item:nth-child(even)::after {
-        border-bottom-right-radius: 0em;
+        border-bottom-right-radius: 0.6em;
    }
    
    .tournament-bracket__joined-odd-list .tournament-bracket__item:nth-child(even)::after {
@@ -269,7 +269,7 @@ h2 {
         transform: translate(0,1px);
    }
     .tournament-bracket--rounded .tournament-bracket__match::before {
-        border-bottom-left-radius: 0em;
+        border-bottom-left-radius: 0.6em;
    }
    .tournament-bracket__joined-odd-list .tournament-bracket--rounded .tournament-bracket__match::before {
         border-bottom-left-radius: 0em !important;
@@ -280,7 +280,7 @@ h2 {
         transform: translate(0,-1px);
    }
     .tournament-bracket--rounded .tournament-bracket__match::after {
-        border-top-left-radius: 0em;
+        border-top-left-radius: 0.6em;
    }
 
    .tournament-bracket__joined-even-list .tournament-bracket--rounded .tournament-bracket__match::after {
