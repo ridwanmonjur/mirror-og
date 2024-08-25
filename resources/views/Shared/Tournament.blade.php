@@ -214,7 +214,7 @@
         'semifinals3Lower' => $semifinals3Lower,
         'semifinals2Lower' => $semifinals2Lower,
         'semifinals4Lower' => $semifinals4Lower,
-                'semifinals5Lower' => $semifinals5Lower,
+        'semifinals5Lower' => $semifinals5Lower,
         'gold' => $gold,
         'goldLower' => $goldLower,
     ];
@@ -230,7 +230,8 @@
                 <ul class="tournament-bracket__list">
                     @foreach ($matches['quarterfinals'] as $match)
                         <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
+                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" 
+                        />
                     @endforeach
                 </ul>
             </div>
@@ -240,7 +241,8 @@
                 <ul class="tournament-bracket__list">
                     @foreach ($matches['semifinals'] as $match)
                         <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
+                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" 
+                        />
                     @endforeach
                 </ul>
             </div>
@@ -250,7 +252,8 @@
                     <ul class="tournament-bracket__list">
                         @foreach ($matches['semifinals2'] as $match)
                             <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                                :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
+                                :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" 
+                            />
                         @endforeach
                     </ul>
                 </div>
@@ -261,7 +264,8 @@
                     <ul class="tournament-bracket__list">
                         @foreach ($matches['semifinals3Lower'] as $match)
                             <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                                :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
+                                :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" 
+                            />
                         @endforeach
                     </ul>
                 </div>
@@ -271,7 +275,8 @@
                 <ul class="tournament-bracket__list">
                     @foreach ($matches['gold'] as $match)
                         <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" :medal="$match['medal']" />
+                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" :medal="$match['medal']" 
+                        />
                     @endforeach
                 </ul>
             </div>
@@ -287,7 +292,8 @@
                 <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                     @foreach ($matches['quarterfinalsLower'] as $match)
                         <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
+                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" 
+                        />
                     @endforeach
                 </ul>
             </div>
@@ -297,7 +303,8 @@
                 <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                     @foreach ($matches['semifinalsLower'] as $match)
                         <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
+                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" 
+                        />
                     @endforeach
                 </ul>
             </div>
@@ -307,7 +314,8 @@
                     <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                         @foreach ($matches['semifinals2'] as $match)
                             <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                                :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
+                                :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" 
+                            />
                         @endforeach
                     </ul>
                 </div>
@@ -318,7 +326,8 @@
                     <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                         @foreach ($matches['semifinals2Lower'] as $match)
                             <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                                :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
+                                :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" 
+                            />
                         @endforeach
                     </ul>
                 </div>
@@ -328,8 +337,9 @@
                     <h3 class="tournament-bracket__round-title">Semifinals  4</h3>
                     <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                         @foreach ($matches['semifinals4Lower'] as $match)
-                                <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                                    :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" :medal="$match['medal']" />
+                            <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
+                                :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" :medal="$match['medal']" 
+                            />
                         @endforeach
                     </ul>
                 </div>
@@ -340,8 +350,9 @@
                     <h3 class="tournament-bracket__round-title">Semifinals  4</h3>
                     <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                         @foreach ($matches['semifinals5Lower'] as $match)
-                                <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                                    :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" :medal="$match['medal']" />
+                            <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
+                                :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" :medal="$match['medal']" 
+                            />
                         @endforeach
                     </ul>
                 </div>
@@ -352,7 +363,8 @@
                 <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                     @foreach ($matches['gold'] as $match)
                         <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" :medal="$match['medal']" />
+                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" :medal="$match['medal']" 
+                        />
                     @endforeach
                 </ul>
             </div>
@@ -363,7 +375,8 @@
                 <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                     @foreach ($matches['goldLower'] as $match)
                         <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
-                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" :medal="$match['medal']" />
+                            :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" :medal="$match['medal']" 
+                        />
                     @endforeach
                 </ul>
             </div>
