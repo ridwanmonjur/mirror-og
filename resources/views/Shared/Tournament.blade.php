@@ -15,7 +15,7 @@
 </head>
 @php
     use Carbon\Carbon;
-    $matchesCount = 32; // 8, 16, 32
+    $matchesCount = 16; // 8, 16, 32
     $quarterfinalsLower 
         = $semifinals 
         = $semifinals2 
@@ -24,6 +24,7 @@
         = $semifinals2Lower 
         = $semifinals3Lower 
         = $semifinals4Lower 
+        = $semifinals5Lower 
         = $goldLower 
         = [];
     
@@ -76,7 +77,7 @@
 
     
 
-    for ($i = 1; $i < $matchesCount/2; $i += 2) {
+    for ($i = 0; $i < $matchesCount/2; $i += 2) {
         $quarterfinalsLower[] = [
             'team1' => $matches32[$i]['team'],
             'team1Code' => $matches32[$i]['code'],
@@ -285,7 +286,7 @@
                 <h3 class="tournament-bracket__round-title">Quarterfinals</h3>
                 <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                     @foreach ($matches['quarterfinalsLower'] as $match)
-                        <x-bracket-double-elimination-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
+                        <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
                             :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
                     @endforeach
                 </ul>
@@ -295,7 +296,7 @@
                 <h3 class="tournament-bracket__round-title">Semifinals 1</h3>
                 <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                     @foreach ($matches['semifinalsLower'] as $match)
-                        <x-bracket-double-elimination-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
+                        <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
                             :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
                     @endforeach
                 </ul>
@@ -305,7 +306,7 @@
                     <h3 class="tournament-bracket__round-title">Semifinals 2</h3>
                     <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                         @foreach ($matches['semifinals2'] as $match)
-                            <x-bracket-double-elimination-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
+                            <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
                                 :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
                         @endforeach
                     </ul>
@@ -316,7 +317,7 @@
                     <h3 class="tournament-bracket__round-title">Semifinals  3</h3>
                     <ul class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                         @foreach ($matches['semifinals2Lower'] as $match)
-                            <x-bracket-double-elimination-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
+                            <x-bracket-item :team1="$match['team1']" :team1Code="$match['team1Code']" :team1Score="$match['team1Score']" :team2="$match['team2']"
                                 :team2Code="$match['team2Code']" :team2Score="$match['team2Score']" :date="$match['date']" />
                         @endforeach
                     </ul>
