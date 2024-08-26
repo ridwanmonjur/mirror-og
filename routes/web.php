@@ -13,14 +13,13 @@ use App\Http\Controllers\Participant\ParticipantRosterController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Livewire\Shared\Brackets\BracketUpdateList;
 use Illuminate\Support\Facades\Route;
 
 /* THIS IS THE UNSIGNED VIEW */
 // Home
 Route::get('/', [AuthController::class, 'showLandingPage'])->name('landing.view');
-Route::get('/hello', function () {
-    return view('Shared.Tournament');
-});
+
 // Forget, reset password
 Route::get('/forget-password', [AuthController::class, 'createForget'])->name('user.forget.view');
 Route::get('/reset-password/{token}', [AuthController::class, 'createReset'])->name('user.reset.view');
@@ -155,6 +154,7 @@ Route::group(['prefix' => 'organizer'], function () {
             // Organizer home
             Route::get('/home', [OrganizerEventController::class, 'home'])->name('organizer.home.view');
             Route::get('/event/{id}/results', [OrganizerEventResultsController::class, 'index'])->name('event.results.index');
+            Route::get('/event/{id}/brackets', BracketUpdateList::class)->name('event.brackets.index');
             // Event manage
             Route::resource('/event', OrganizerEventController::class, [
                 'index' => 'event.index',

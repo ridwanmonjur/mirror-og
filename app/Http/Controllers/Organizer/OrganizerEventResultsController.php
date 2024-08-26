@@ -232,4 +232,5 @@ class OrganizerEventResultsController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
         }
     }
+
 }

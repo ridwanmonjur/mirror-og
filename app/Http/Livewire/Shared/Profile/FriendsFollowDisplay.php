@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Profile;
+namespace App\Http\Livewire\Shared\Profile;
 
 use App\Models\User;
 use Livewire\Component;
@@ -30,6 +30,6 @@ class FriendsFollowDisplay extends Component
 
     public function render()
     {
-        return view('livewire.profile.friends-follow-display');
+        return view('livewire.shared.profile.friends-follow-display');
     }
 }

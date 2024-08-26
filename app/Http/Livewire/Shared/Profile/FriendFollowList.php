@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Profile;
+namespace App\Http\Livewire\Shared\Profile;
 
 use App\Models\Friend;
 use App\Models\OrganizerFollow;
@@ -88,7 +88,7 @@ class FriendFollowList extends Component
 
     public function render()
     {
-        return view('livewire.profile.friend-follow-list', [
+        return view('livewire.shared.profile.friend-follow-list', [
             'data' => $this->initData(),
             'currentTab' => $this->currentTab,
         ]);

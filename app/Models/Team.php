@@ -244,7 +244,7 @@ class Team extends Model
                 },
                 ]
             )->first();
-
+                
         $memberUserIds = $team
             ->members
             ->pluck('user.id')

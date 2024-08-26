@@ -141,6 +141,8 @@
                                                                         value="{{ $joinEventAndTeam->teamBanner }}">
                                                                     <input type="hidden" name="id"
                                                                         value="{{ $joinEventAndTeam->id1 }}">
+                                                                    <input type="hidden" name="team_id"
+                                                                        value="{{ $joinEventAndTeam->team_id }}">
                                                                 </div>
                                                                 <br>
                                                                 <button type="submit"
@@ -548,6 +550,7 @@
                         'join_events_id': joinEventId,
                         'position': joinEventPosition,
                         'teamName': formData.get('teamName'),
+                        'team_id': formData.get('team_id'),
                         'eventName': formData.get('eventName'),
                         'teamBanner': formData.get('teamBanner'),
                         'creator_id': formData.get('creator_id')

@@ -5,11 +5,12 @@ namespace App\Listeners;
 use App\Events\JoinEventConfirmed;
 use App\Models\ActivityLogs;
 use App\Notifications\EventJoinNotification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Throwable;
 
-class JoinEventConfirmation
+class JoinEventConfirmation implements ShouldQueue
 {
     /**
      * Create the event listener.

@@ -36,17 +36,17 @@
     <br>
     <div>
         @if ($userProfile->role != 'ORGANIZER')
-            @livewire("profile.friend-follow-list", [
+            @livewire("shared.profile.friend-follow-list", [
                 'userId' => $userId, 'name' => 'Follow', 'currentTab' => $currentTab
             ], key($currentTab . 'Follow'))
-            @livewire("profile.friend-follow-list", [
+            @livewire("shared.profile.friend-follow-list", [
                 'userId' => $userId, 'name' => 'Following', 'currentTab' => $currentTab
             ], key($currentTab . 'Following'))
-            @livewire("profile.friend-follow-list", [
+            @livewire("shared.profile.friend-follow-list", [
                 'userId' => $userId, 'name' => 'Friends', 'currentTab' => $currentTab
             ], key($currentTab . 'Friends'))
         @else
-            @livewire("profile.friend-follow-list", [
+            @livewire("shared.profile.friend-follow-list", [
                 'userId' => $userId, 'name' => 'OrgFollow', 'currentTab' => $currentTab
             ], key($currentTab . 'OrgFollow'))
         @endif

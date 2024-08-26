@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\VerifyUserMail;
+use App\Mail\ResetPasswordMail;
 use App\Models\EventDetail;
 use App\Models\Organizer;
 use App\Models\Participant;
@@ -235,17 +237,11 @@ class AuthController extends Controller
 
         DB::table('password_reset_tokens')->updateOrInsert(['email' => $request->email], ['token' => $token, 'expires_at' => Carbon::now()->addDay()]);
 
-        Mail::send(
-            'Email.reset',
-            [
-                'token' => $token,
-                'imageLogo' => public_path('assets/images/logo-default.png'),
-            ],
-            function ($message) use ($email) {
-                $message->to($email);
-                $message->subject('Reset Password');
-            }
-        );
+        Mail::to($email)->queue(new ResetPasswordMail(
+            public_path('assets/images/logo-default.png'), 
+            $token
+        ));
+
 
         return back()->with('success', 'Password reset link sent. Please check your email.');
     }
@@ -301,11 +297,7 @@ class AuthController extends Controller
         $user->email_verified_token = $token;
         $user->save();
 
-        Mail::send('Email.verify', ['token' => $token], function ($message) use ($email) {
-            $message->to($email);
-            $message->subject('Verify your email');
-        });
-
+        Mail::to($user->email)->queue(new VerifyUserMail($user, $token));
         return redirect()
             ->back()
             ->with('success', 'Verification email has been sent. Please check your inbox.');
@@ -392,10 +384,7 @@ class AuthController extends Controller
                 $participant->save();
             }
 
-            Mail::send('Email.verify', ['token' => $token], function ($message) use ($user) {
-                $message->to($user->email);
-                $message->subject('Email verification');
-            });
+            Mail::to($user->email)->queue(new VerifyUserMail($user, $token));
 
             DB::commit();
 

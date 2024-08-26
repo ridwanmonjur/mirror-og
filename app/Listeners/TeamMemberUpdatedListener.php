@@ -8,9 +8,10 @@ use App\Models\Notifications;
 use App\Models\TeamMember;
 use App\Models\User;
 use Exception;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class TeamMemberUpdatedListener
+class TeamMemberUpdatedListener implements ShouldQueue
 {
     public $teamMember;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Profile;
+namespace App\Http\Livewire\Shared\Profile;
 
 use App\Models\Friend;
 use App\Models\ParticipantFollow;
@@ -22,7 +22,7 @@ class ParticipantFriendsFollowsCount extends Component
 
     public function render()
     {
-        return view('livewire.profile.participant-friends-follows-count');
+        return view('livewire.shared.profile.participant-friends-follows-count');
     }
 
     public function mount()

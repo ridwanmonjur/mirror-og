@@ -327,13 +327,13 @@
                             </span>
                         </div>
                         <div class="mt-4 my-2 text-wrap">
-                            @livewire('profile.participant-friends-follows-count', [
+                            @livewire('shared.profile.participant-friends-follows-count', [
                                 'userId' => $userProfile->id, 'name' => 'follower' 
                             ])
-                            @livewire('profile.participant-friends-follows-count', [
+                            @livewire('shared.profile.participant-friends-follows-count', [
                                 'userId' => $userProfile->id, 'name' => 'followee' 
                             ])
-                            @livewire('profile.participant-friends-follows-count', [
+                            @livewire('shared.profile.participant-friends-follows-count', [
                                 'userId' => $userProfile->id, 'name' => 'friend' 
                             ])
                         </div>
