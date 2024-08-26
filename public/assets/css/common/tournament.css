@@ -14,7 +14,6 @@
 .winner-label,
 .loser-label {
     left: 120%;
-    z-index: 99;
     background-color: var(--translucent-bg);
     padding: 1px 3px;
     font-size: 12px;
@@ -251,7 +250,6 @@ h2 {
     border: 1px solid transparent;
     border-radius: 0.1em;
     outline: none;
-    cursor: pointer;
     transition: padding 0.2s ease-in-out, border 0.2s linear;
 }
 .tournament-bracket__joined-even-list .tournament-bracket__match, 
@@ -479,7 +477,6 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     text-transform: uppercase;
     border: 0;
     text-decoration: none;
-    cursor: help;
     transition: padding 0.2s ease-in-out;
 }
 @media (max-width: 384px) {
