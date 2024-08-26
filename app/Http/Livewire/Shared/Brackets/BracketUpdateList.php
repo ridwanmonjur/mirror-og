@@ -24,7 +24,7 @@ class BracketUpdateList extends Component
     public function render()
     {
         $matchesUpperCount = intval($this->event->tier->tierTeamSlot); 
-        $valuesMap = ['Tournament ' => 'doubleElimination', 'League' => 'doubleElimination'];
+        $valuesMap = ['Tournament' => 'doubleElimination', 'League' => 'doubleElimination'];
         $tournamentType = $this->event->type->eventType;
         $bracketData = new BracketData;
         $bracketList = $bracketData->getData($matchesUpperCount)[$valuesMap[$tournamentType]];

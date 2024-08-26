@@ -49,7 +49,7 @@ INSERT INTO `event_tier` (`id`, `eventTier`, `tierIcon`, `tierTeamSlot`, `tierPr
 (3, 'Dolphin', 'images/event_details/dolphin.png', '64', '15000', '30', NULL);
 
 INSERT INTO `event_type` (`id`, `eventType`, `eventDefinitions`) VALUES
-(1, 'Tournament ', "You\'ll play a series of contests between a number of competitors that will result in teams getting disqualified based on results and points, till you get the final prize."),
+(1, 'Tournament', "You\'ll play a series of contests between a number of competitors that will result in teams getting disqualified based on results and points, till you get the final prize."),
 (2, 'League', 'The winner is decided by the highest win/ loss/ draw ratio among the participants.');
 
 INSERT INTO `organizer_create_event_discounts` (`name`,`coupon`,`type`,`amount`, `startDate`, `endDate`, `startTime`, `endTime`, `isEnforced`) VALUES
