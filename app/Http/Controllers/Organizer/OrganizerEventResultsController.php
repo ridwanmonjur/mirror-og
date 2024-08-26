@@ -233,10 +233,4 @@ class OrganizerEventResultsController extends Controller
         }
     }
 
-    public function bracket(Request $request, $id)
-    {
-        return view('Shared.Tournament', ['id' => $id]);
-    }
-
-    
 }

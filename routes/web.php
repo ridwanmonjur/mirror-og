@@ -19,9 +19,6 @@ use Illuminate\Support\Facades\Route;
 /* THIS IS THE UNSIGNED VIEW */
 // Home
 Route::get('/', [AuthController::class, 'showLandingPage'])->name('landing.view');
-Route::get('/hello', function () {
-    return view('Shared.Tournament');
-});
 
 // Forget, reset password
 Route::get('/forget-password', [AuthController::class, 'createForget'])->name('user.forget.view');

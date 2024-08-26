@@ -6,49 +6,58 @@
             <div class="tournament-bracket tournament-bracket--rounded">
                 <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                     <h3 class="tournament-bracket__round-title">Round 1</h3>
-                    <ul class="tournament-bracket__list">
+                    <div class="tournament-bracket__list">
                         @foreach ($bracketList['upperBracket']['eliminator1'] as $bracket)
-                            <livewire:shared.brackets.bracket-update-item :bracket="$bracket" />
+                            @livewire('shared.brackets.bracket-update-first-item', 
+                                ['bracket' => $bracket], 
+                                key('upperBracket' . 'eliminator1' . $loop->index)
+                            )
+
                         @endforeach
-                    </ul>
+                    </div>
                 </div>
 
-                <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                    <h3 class="tournament-bracket__round-title">Round 2</h3>
-                    <ul class="tournament-bracket__list">
-                        @foreach ($bracketList['upperBracket']['eliminator2'] as $bracket)
-                            <livewire:shared.brackets.bracket-update-item :bracket="$bracket" />
-                        @endforeach
-                    </ul>
-                </div>
-                @if (isset($bracketList['upperBracket']['eliminator3']))
-                    <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                        <h3 class="tournament-bracket__round-title">Round 3</h3>
-                        <ul class="tournament-bracket__list">
-                            @foreach ($bracketList['upperBracket']['eliminator3'] as $bracket)
-                                <livewire:shared.brackets.bracket-update-item :bracket="$bracket" />
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                @if (isset($bracketList['upperBracket']['eliminator4']))
-                    <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                        <h3 class="tournament-bracket__round-title">Round 4</h3>
-                        <ul class="tournament-bracket__list">
-                            @foreach ($bracketList['upperBracket']['eliminator4'] as $bracket)
-                                <livewire:shared.brackets.bracket-update-item :bracket="$bracket" />
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <div class="tournament-bracket__round tournament-bracket__round--gold">
-                    <h3 class="tournament-bracket__round-title">Pre-final</h3>
-                    <ul class="tournament-bracket__list">
-                        @foreach ($bracketList['upperBracket']['prefinals'] as $bracket)
-                            <livewire:shared.brackets.bracket-update-item :bracket="$bracket" />
-                        @endforeach
-                    </ul>
-                </div>
+               <div class="tournament-bracket__round tournament-bracket__round--semifinals">
+    <h3 class="tournament-bracket__round-title">Round 2</h3>
+    <div class="tournament-bracket__list">
+        @foreach ($bracketList['upperBracket']['eliminator2'] as $bracket)
+            @livewire('shared.brackets.bracket-update-item', ['bracket' => $bracket], 
+            key('upperBracket'. 'eliminator2'. $loop->index))
+        @endforeach
+    </div>
+</div>
+
+@if (isset($bracketList['upperBracket']['eliminator3']))
+    <div class="tournament-bracket__round tournament-bracket__round--semifinals">
+        <h3 class="tournament-bracket__round-title">Round 3</h3>
+        <div class="tournament-bracket__list">
+            @foreach ($bracketList['upperBracket']['eliminator3'] as $bracket)
+                @livewire('shared.brackets.bracket-update-item', ['bracket' => $bracket], key($loop->index. 'upperBracket'. 'eliminator3'))
+            @endforeach
+        </div>
+    </div>
+@endif
+
+@if (isset($bracketList['upperBracket']['eliminator4']))
+    <div class="tournament-bracket__round tournament-bracket__round--semifinals">
+        <h3 class="tournament-bracket__round-title">Round 4</h3>
+        <div class="tournament-bracket__list">
+            @foreach ($bracketList['upperBracket']['eliminator4'] as $bracket)
+                @livewire('shared.brackets.bracket-update-item', ['bracket' => $bracket], key($loop->index. 'upperBracket'. 'eliminator4'))
+            @endforeach
+        </div>
+    </div>
+@endif
+
+<div class="tournament-bracket__round tournament-bracket__round--gold">
+    <h3 class="tournament-bracket__round-title">Pre-final</h3>
+    <div class="tournament-bracket__list">
+        @foreach ($bracketList['upperBracket']['prefinals'] as $bracket)
+            @livewire('shared.brackets.bracket-update-item', ['bracket' => $bracket], key($loop->index. 'upperBracket'. 'prefinals'))
+        @endforeach
+    </div>
+</div>
+
 
                 <div class="tournament-bracket__round tournament-bracket__round--gold">
 
@@ -58,92 +67,104 @@
             <div class="tournament-bracket tournament-bracket--rounded">
                 <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                     <h3 class="tournament-bracket__round-title">Round 1</h3>
-                    <ul
+                    <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                         @foreach ($bracketList['lowerBracket']['eliminator1'] as $bracket)
-                            <livewire:shared.brackets.bracket-update-item :bracket="$bracket" />
+                            <livewire:shared.brackets.bracket-update-first-item :bracket="$bracket"
+                                :wire:key="'lowerBracket'. 'eliminator1'. $loop->index" 
+                            />
                         @endforeach
-                    </ul>
+                    </div>
                 </div>
 
                 <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                     <h3 class="tournament-bracket__round-title">Round 2</h3>
-                    <ul
+                    <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                         @foreach ($bracketList['lowerBracket']['eliminator2'] as $bracket)
-                            <livewire:shared.brackets.bracket-update-item :bracket="$bracket" />
+                            <livewire:shared.brackets.bracket-update-item :bracket="$bracket" 
+                            :wire:key="'lowerBracket'. 'eliminator2'. $loop->index" 
+                            />
                         @endforeach
-                    </ul>
+                    </div>
                 </div>
 
                 @if (isset($bracketList['lowerBracket']['eliminator3']))
                     <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                         <h3 class="tournament-bracket__round-title">Round 3</h3>
-                        <ul
+                        <div
                             class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                             @foreach ($bracketList['lowerBracket']['eliminator3'] as $bracket)
-                                <livewire:shared.brackets.bracket-update-item :bracket="$bracket" />
+                                <livewire:shared.brackets.bracket-update-item :bracket="$bracket"
+                                :wire:key="$loop->index. 'lowerBracket'. 'eliminator3'"  
+                                />
                             @endforeach
-                        </ul>
+                        </div>
                     </div>
                 @endif
 
                 @if (isset($bracketList['lowerBracket']['eliminator4']))
                     <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                         <h3 class="tournament-bracket__round-title">Round 4</h3>
-                        <ul
+                        <div
                             class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                             @foreach ($bracketList['lowerBracket']['eliminator4'] as $bracket)
-                                <livewire:shared.brackets.bracket-update-item :bracket="$bracket" />
+                                <livewire:shared.brackets.bracket-update-item :bracket="$bracket"
+                                :wire:key="$loop->index. 'lowerBracket'. 'eliminator4'"  
+                                />
                             @endforeach
-                        </ul>
+                        </div>
                     </div>
                 @endif
 
                 @if (isset($bracketList['lowerBracket']['eliminator5']))
                     <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                         <h3 class="tournament-bracket__round-title">Round 5</h3>
-                        <ul
+                        <div
                             class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                             @foreach ($bracketList['lowerBracket']['eliminator5'] as $bracket)
-                                <livewire:shared.brackets.bracket-update-item :bracket="$bracket" />
+                                <livewire:shared.brackets.bracket-update-item :bracket="$bracket"
+                                :wire:key="$loop->index. 'lowerBracket'. 'eliminator5'"  
+                                />
                             @endforeach
-                        </ul>
+                        </div>
                     </div>
                 @endif
 
                 @if (isset($bracketList['lowerBracket']['eliminator6']))
                     <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                         <h3 class="tournament-bracket__round-title">Round 6</h3>
-                        <ul
+                        <div
                             class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                             @foreach ($bracketList['lowerBracket']['eliminator6'] as $bracket)
-                                <livewire:shared.brackets.bracket-update-item :bracket="$bracket" />
+                                <livewire:shared.brackets.bracket-update-item :bracket="$bracket"
+                                :wire:key="$loop->index. 'lowerBracket'. 'eliminator6'"  
+                                />
                             @endforeach
-                        </ul>
+                        </div>
                     </div>
                 @endif
 
 
                 <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                     <h3 class="tournament-bracket__round-title">Pre-final 1</h3>
-                    <ul
+                    <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                         @foreach ($bracketList['lowerBracket']['prefinals1'] as $bracket)
                             <livewire:shared.brackets.bracket-update-item :bracket="$bracket" />
                         @endforeach
-                    </ul>
+                    </div>
                 </div>
 
 
                 <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                     <h3 class="tournament-bracket__round-title">Pre-final 2</h3>
-                    <ul
+                    <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                         @foreach ($bracketList['lowerBracket']['prefinals2'] as $bracket)
                             <livewire:shared.brackets.bracket-update-item :bracket="$bracket" />
                         @endforeach
-                    </ul>
+                    </div>
                 </div>
 
                 <div class="tournament-bracket__round tournament-bracket__round--gold">

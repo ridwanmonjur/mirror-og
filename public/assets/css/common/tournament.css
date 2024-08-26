@@ -5,8 +5,8 @@
 :root {
     --border-color: black;
     --border2-color: black;
-    --element-width: 160px;
-    --line-width: 80px;   
+    --element-width: 140px;
+    --line-width: 70px;   
     --element-height: 10%;  
     --translucent-bg: rgba(236, 235, 235, 0.6);
 }
@@ -53,7 +53,7 @@ body {
     background-position: center;
 }
 
-ul.tournament-bracket__list{
+.tournament-bracket__list{
     padding-left: 2px !important;
 }
 
@@ -515,15 +515,21 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     background-color: #FFF176;
     border-color: var(--border2-color);
 }
-.tournament-bracket__medal {
-    padding: 0 0.5em;
+
+.d-none-until-hover, .d-none-until-hover-parent:hover .d-none-when-hover  {
+    visibility: hidden;
+    overflow: hidden;
+    display: none;
 }
-.tournament-bracket__medal--gold {
-    color: #FFD700;
+
+.d-none-until-hover-parent:hover{
+    cursor: pointer;
 }
-.tournament-bracket__medal--silver {
-    color: #C0C0C0;
+
+.d-none-until-hover-parent:hover .d-none-until-hover {
+    display: inline-block;
+    visibility: visible;
+    overflow: visible;
+    transition: visibility 5.3s ease;
 }
-.tournament-bracket__medal--bronze {
-    color: #CD7F32;
-}
+
