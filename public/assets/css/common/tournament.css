@@ -13,10 +13,15 @@
 
 .winner-label,
 .loser-label {
-    left: 120%;
+    left: 110%;
     background-color: var(--translucent-bg);
     padding: 1px 3px;
     font-size: 12px;
+}
+
+.winner-label svg,
+.loser-label svg {
+    margin-top: 5px;
 }
 
 .winner-label {

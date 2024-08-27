@@ -77,7 +77,14 @@
                     </svg>
                 </span>
             </small>
-            <small class="position-absolute loser-label ">
+             <small @class([
+                "position-absolute loser-label",
+                "d-none-until-hover" => !$bracket['loserNext']
+            ])
+                 @style([
+                    "left: 100%;" => !$bracket['loserNext']
+                ])
+            >
                 @if ($bracket['loserNext'])
                     <span class="d-none-when-hover">Loser to {{ $bracket['loserNext'] }} </span>
                 @endif

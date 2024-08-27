@@ -11,11 +11,13 @@ class BracketData
             'doubleElimination' => [
                 'finals' => [
                     'finals' => [
-                        'team1Position' => 'G1',
-                        'team2Position' => 'G2',
-                        'order' => 1,
-                        'winnerNext' => null,
-                        'loserNext' => null,
+                        [
+                            'team1Position' => 'G1',
+                            'team2Position' => 'G2',
+                            'order' => 1,
+                            'winnerNext' => null,
+                            'loserNext' => null,
+                        ]
                     ], 
                 ],
                 'upperBracket' => [
@@ -484,11 +486,13 @@ class BracketData
             'doubleElimination' => [
                 'finals' => [
                     'finals' => [
-                        'team1Position' => 'G1',
-                        'team2Position' => 'G2',
-                        'order' => 1,
-                        'winnerNext' => null,
-                        'loserNext' => null,
+                        [
+                            'team1Position' => 'G1',
+                            'team2Position' => 'G2',
+                            'order' => 1,
+                            'winnerNext' => null,
+                            'loserNext' => null,
+                        ]
                     ], 
                 ],
                 'upperBracket' => [
@@ -727,11 +731,13 @@ class BracketData
             'doubleElimination' => [
                 'finals' => [
                     'finals' => [
-                        'team1Position' => 'G1',
-                        'team2Position' => 'G2',
-                        'order' => 1,
-                        'winnerNext' => null,
-                        'loserNext' => null,
+                        [
+                            'team1Position' => 'G1',
+                            'team2Position' => 'G2',
+                            'order' => 1,
+                            'winnerNext' => null,
+                            'loserNext' => null,
+                        ]
                     ], 
                 ],
                 'upperBracket' => [
