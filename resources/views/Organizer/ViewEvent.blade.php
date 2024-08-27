@@ -38,7 +38,7 @@
             @endif
             <div>
                 <div style="padding-left: 20px;padding-right:20px;">
-                    <div class="mx-2 position-relative">
+                    <div class="mx-2 position-relative rounded-banner-parent">
 
                         <div class="d-flex justify-content-center d-lg-none">
                             <img class="image-at-top" {!! trustedBladeHandleImageFailureResize() !!} src="{{ $eventTierLowerImg }}" width="75" height="65">

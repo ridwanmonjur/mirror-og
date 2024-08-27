@@ -59,7 +59,7 @@
             <div> </div>
             <div>
                 <div>
-                    <div class="mx-2 position-relative">
+                    <div class="mx-2 position-relative rounded-banner-parent">
                         <div class="d-flex justify-content-center d-lg-none">
                             <img class="image-at-top" src="{{ $eventTierLowerImg }}" {!! trustedBladeHandleImageFailureResize() !!}
                                 width="120" height="90">
@@ -165,7 +165,7 @@
                                         value="{{ $event?->user_id }}">
                                     @guest
                                         <button
-                                            class="ripple"
+                                            class=""
                                             type="button"
                                             onclick="reddirectToLoginWithIntened('{{route('public.event.view', ['id'=> $event->id])}}')"
                                             id="followButton"
@@ -176,14 +176,14 @@
                                     @auth
                                         @if ($user->role == 'PARTICIPANT')
                                             <button 
-                                                class="ripple"
+                                                class=""
                                                 type="submit" id="followButton"
                                                 style="background-color: {{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                                                 {{ $user && $user->isFollowing ? 'Following' : 'Follow' }}
                                             </button>
                                         @else
                                             <button 
-                                                class="ripple"
+                                                class=""
                                                 type="button"
                                                 onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
                                                 id="followButton"
@@ -203,13 +203,13 @@
                             <br>
                             <div>
                                 <div class="tab">
-                                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ripple' }}"
+                                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ' }}"
                                         onclick="openTab(event, 'Overview')">Overview</button>
-                                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ripple' }}"
+                                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
                                         onclick="openTab(event, 'Bracket')">Bracket</button>
-                                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ripple' }}"
+                                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
                                         onclick="openTab(event, 'Teams')">Teams</button>
-                                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ripple' }}"
+                                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
                                         onclick="openTab(event, 'Result')">Result</button>
                                 </div>
                                 <br>
@@ -247,7 +247,7 @@
                         <form method="POST" name="joinForm" action="{{ route('participant.event.selectOrCreateTeam.redirect', ['id' => $event->id]) }}">
                             @csrf
                             @if ($existingJoint)
-                                <button type="button" class="oceans-gaming-default-button ripple" disabled>
+                                <button type="button" class="oceans-gaming-default-button " disabled>
                                     <span>Joined</span>
                                 </button>
                                 <br><br>
@@ -257,20 +257,20 @@
                                     <button 
                                         type="button"
                                         onclick="reddirectToLoginWithIntened('{{route('public.event.view', ['id'=> $event->id])}}')"
-                                        class="oceans-gaming-default-button ripple">
+                                        class="oceans-gaming-default-button ">
                                         <span>Join</span>
                                     </button>
                                 @endguest
                                 @auth
                                     @if ($user->role == "PARTICIPANT")
-                                        <button type="submit" class="oceans-gaming-default-button ripple">
+                                        <button type="submit" class="oceans-gaming-default-button ">
                                             <span>Join</span>
                                         </button>
                                     @else
                                         <button 
 
                                             onclick="toastWarningAboutRole(this, 'Participants can join only!');"
-                                            type="button" class="oceans-gaming-default-button ripple"
+                                            type="button" class="oceans-gaming-default-button "
                                         >
                                             <span>Join</span>
                                         </button>

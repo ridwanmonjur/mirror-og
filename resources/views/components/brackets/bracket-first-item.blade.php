@@ -14,8 +14,8 @@
             $bracket['team2Code'] = "N/A";
         }
 
-        $bracket['team1Score'] = $bracket['team1Score'] ?? 'N/A';
-        $bracket['team2Score'] = $bracket['team2Score'] ?? 'N/A';
+        $bracket['team1Score'] = $bracket['team1Score'] ?? '0';
+        $bracket['team2Score'] = $bracket['team2Score'] ?? '0';
         $bracket['winnerNext'] = $bracket['winnerNext'] ?? 'N/A';
         $bracket['loserNext'] = $bracket['loserNext'] ?? null;
         $bracket['team1PositionMobile'] = $bracket['team1Position'];
@@ -75,7 +75,14 @@
                     </svg>
                 </span>
             </small>
-            <small class="position-absolute loser-label">
+             <small @class([
+                "position-absolute loser-label",
+                "d-none-until-hover" => !$bracket['loserNext']
+            ])
+                @style([
+                    "left: 100%;" => !$bracket['loserNext']
+                ])
+            >
                 @if ($bracket['loserNext'])
                     <span class="d-none-when-hover">Loser to {{ $bracket['loserNext'] }} </span>
                 @endif
