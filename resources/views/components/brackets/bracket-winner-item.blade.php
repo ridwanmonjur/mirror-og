@@ -1,7 +1,7 @@
-<div class="tournament-bracket tournament-bracket--rounded col-xl-4 col-xxl-6 align-items-start">
+<div class="tournament-bracket tournament-bracket--rounded col-lg-3 col-xl-4 col-xxl-6 align-items-start">
     <div class="tournament-bracket__round  tournament-bracket__round--gold">
         <h3 class="tournament-bracket__round-title">Finals</h3>
-        <br><br><br>
+        <br class="d-none d-lg-block"><br class="d-none d-lg-block"><br>
         <div class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
             <div
                 class="tournament-bracket__item code{{ $bracket['team1Position'] }}code code{{ $bracket['team1Position'] }}code">
@@ -103,7 +103,7 @@
             </div>
         </div>
     </div>
-    <div class="tournament-bracket__round tournament-bracket__round--gold">
+    <div class="tournament-bracket__round tournament-bracket__round--gold d-none d-lg-block">
         <h3 class="tournament-bracket__round-title" style="visibility: hidden;">random</h3>
         <br><br><br>
         <div class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
@@ -147,7 +147,7 @@
                         </tbody>
                     </table>
                     <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
-                        style="z-index: 999; top: 50%; left: -45%">
+                        style="z-index: 999; top: 50%; left: -50%">
                         <div class="tournament-bracket__box code{{ $bracket['team1Code'] }}code px-2 py-2">
                             <span><b>?</b></span>
                         </div>

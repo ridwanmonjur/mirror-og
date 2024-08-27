@@ -110,7 +110,7 @@ h2 {
     display: flex;
     flex-direction: column;
 }
-@media (min-width: 608px) {
+@media (min-width: 1000px) {
     .tournament-bracket {
         flex-direction: row;
    }
@@ -146,7 +146,7 @@ h2 {
         margin-bottom: 1em;
    }
 }
-@media (min-width: 608px) {
+@media (min-width: 1000px) {
     .tournament-bracket__list {
         margin-bottom: 0;
         padding-bottom: 0;
@@ -189,7 +189,7 @@ h2 {
         margin-right: 0;
    }
 }
-@media (min-width: 608px) {
+@media (min-width: 1000px) {
     .tournament-bracket__item {
         padding: 0.5em 1em;
         width: 100%;
@@ -270,12 +270,14 @@ h2 {
 .tournament-bracket__match::before, .tournament-bracket__match::after {
     transition: all 0.2s linear;
 }
-@media (max-width: 384px) {
+@media (min-width: 384px) {
     .tournament-bracket__match {
         padding: 0.75em 0.5em;
+        max-width: 200px;
+        margin: auto;
    }
 }
-@media (min-width: 608px) {
+@media (min-width: 1000px) {
     .tournament-bracket__match::before, .tournament-bracket__match::after {
         position: absolute;
         left: 0;
@@ -356,7 +358,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     text-align: center;
     padding: 0.2em 0.1em;
 }
-@media (min-width: 608px) {
+@media (min-width: 1000px) {
     .tournament-bracket__content::after {
         order: 1;
    }
@@ -366,7 +368,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     order: 0;
     text-align: right;
 }
-@media (min-width: 608px) and (max-width: 832px) {
+@media (min-width: 1000px) and (max-width: 1200pxpx) {
     .tournament-bracket__content .tournament-bracket__team:first-child {
         align-items: flex-end;
    }
@@ -380,7 +382,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
         order: 0;
    }
 }
-@media (min-width: 608px) and (max-width: 832px) {
+@media (min-width: 1000px) and (max-width: 1200pxpx) {
     .tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__country {
         flex-direction: column-reverse;
         align-items: flex-end;
@@ -399,17 +401,17 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     order: 2;
     text-align: left;
 }
-@media (min-width: 608px) and (max-width: 832px) {
+@media (min-width: 1000px) and (max-width: 1200pxpx) {
     .tournament-bracket__content .tournament-bracket__team:last-child {
         align-items: flex-start;
    }
 }
-@media (min-width: 608px) {
+@media (min-width: 1000px) {
     .tournament-bracket__content .tournament-bracket__team:last-child .tournament-bracket__country {
         justify-content: flex-start;
    }
 }
-@media (min-width: 608px) and (max-width: 832px) {
+@media (min-width: 1000px) and (max-width: 1200pxpx) {
     .tournament-bracket__content .tournament-bracket__team:last-child .tournament-bracket__country {
         align-items: flex-start;
    }
@@ -426,7 +428,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     white-space: nowrap;
 }
 
-@media (min-width: 608px) {
+@media (min-width: 1000px) {
     .tournament-bracket__table {
         display: none;
    }
@@ -450,7 +452,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
         flex-direction: column-reverse;
    }
 }
-@media (min-width: 608px) {
+@media (min-width: 1000px) {
     .tournament-bracket__team {
         flex-direction: column-reverse;
    }
@@ -466,7 +468,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
         margin-top: 0;
    }
 }
-@media (min-width: 608px) and (max-width: 832px) {
+@media (min-width: 1000px) and (max-width: 1200pxpx) {
     .tournament-bracket__country {
         display: flex;
         flex-direction: column;
@@ -489,7 +491,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
         padding: 0 0.25em;
    }
 }
-@media (min-width: 608px) and (max-width: 832px) {
+@media (min-width: 1000px) and (max-width: 1200pxpx) {
     .tournament-bracket__code {
         padding: 0;
    }

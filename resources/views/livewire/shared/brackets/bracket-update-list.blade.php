@@ -5,7 +5,7 @@
         <div class="px-4">
             <h5 class="mt-5 mb-4  text-start">Upper bracket</h5>
             <div class="row ">
-                <div class="tournament-bracket tournament-bracket--rounded col-xl-8 col-xxl-6">
+                <div class="tournament-bracket tournament-bracket--rounded col-lg-9 col-xl-8 col-xxl-6">
                     <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                         <h3 class="tournament-bracket__round-title">Round 1</h3>
                         <div class="tournament-bracket__list">
