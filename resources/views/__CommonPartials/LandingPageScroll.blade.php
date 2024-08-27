@@ -18,7 +18,7 @@
                 <img src="{{ $bladeEventGameImage }}" class="logo2 mt-2"
                   onerror="this.onerror=null;this.src='/assets/images/404.png';"   
                 >
-                <button class="event_status_1 ripple" style="@php echo $stylesEventStatus; @endphp">{{ $event->statusResolved() }}
+                <button class="event_status_1" style="@php echo $stylesEventStatus; @endphp">{{ $event->statusResolved() }}
                 </button>
             </div>
             <div class="league_name mt-4">

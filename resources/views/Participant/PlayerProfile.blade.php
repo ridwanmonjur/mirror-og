@@ -86,14 +86,14 @@
                         class="oceans-gaming-default-button oceans-gaming-primary-button px-3 py-2 fs-7"> 
                         Edit Profile
                     </button>
-                    <button 
+                    <a 
                         x-cloak
                         x-show="isEditMode"
                         x-on:click="submitEditProfile(event)"
                         data-url="{{route('participant.profile.update')}}"
-                    class="oceans-gaming-default-button oceans-gaming-transparent-button px-3 py-2 me-3 fs-7"> 
+                        class="oceans-gaming-default-button oceans-gaming-transparent-button simple-button cursor-pointer px-3 py-2 me-3 fs-7"> 
                         Save
-                    </button>
+                    </a>
                     {{-- Close icon --}}
                     <svg 
                         x-cloak

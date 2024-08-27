@@ -123,14 +123,14 @@
                             autocomplete="off"
                             autocomplete="nope"
                         > 
-                        <button 
+                        <a 
                             type="submit"
                             data-url="{{route('organizer.profile.update')}}"
                             x-on:click="submitEditProfile(event);"
                             style="border-color: green;"
-                            class="mt-4 oceans-gaming-default-button oceans-gaming-transparent-button px-3 py-1 me-2 text-success"> 
+                            class="mt-4 oceans-gaming-default-button simple-button cursor-pointer oceans-gaming-transparent-button px-3 py-1 me-2 text-success"> 
                             Save
-                        </button>
+                        </a>
                         <svg 
                         {{-- Close icon --}}
                         x-on:click="isEditMode = false;"

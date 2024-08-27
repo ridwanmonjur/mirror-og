@@ -154,6 +154,25 @@ input[type="submit"]:active {
     
 }
 
+
+.rounded-banner-parent:hover .rounded-banner {
+    animation: grayscale 2s ease-in-out;
+}
+
+@keyframes grayscale {
+    0% {
+        filter: grayscale(1);
+
+    }
+    50% {
+        filter: grayscale(0);
+    }
+    
+    100% {
+        filter: grayscale(0);
+    }
+}
+
 .rounded-box-turtle {
     border-color: #8CCD39;
 }

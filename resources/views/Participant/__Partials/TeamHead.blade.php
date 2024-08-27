@@ -445,12 +445,12 @@
                         autocomplete="off"
                         autocomplete="nope"
                     >
-                    <button 
+                    <a 
                         x-on:click="submitEditProfile(event);"
                         data-url="{{route('participant.team.update')}}"
-                        class="mt-4 oceans-gaming-default-button oceans-gaming-transparent-button px-3 py-1 rounded mx-auto me-3 mb-4"> 
+                        class="mt-4 oceans-gaming-default-button oceans-gaming-transparent-button simple-button px-3 py-1  rounded cursor-pointer  mx-auto me-3 mb-4"> 
                         Save
-                    </button>
+                    </a>
                     {{-- Close icon --}}
                     <svg 
                         style="top: 10px;"
