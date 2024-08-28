@@ -97,5 +97,8 @@ window.loadMessage = () => {
     localStorage.removeItem('tab');
 }
 
+import Swup from 'swup';
+const swup = new Swup();
+
 window.Toast = Toast;
 window.Swal = Swal;

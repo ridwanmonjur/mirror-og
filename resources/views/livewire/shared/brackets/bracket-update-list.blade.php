@@ -178,7 +178,7 @@
 
                 </div>
             </div>
-
+            <br><br><br>
     </main>
     <script>
         var bracketItemList = document.querySelectorAll('.codeCANcode.tournament-bracket__item');

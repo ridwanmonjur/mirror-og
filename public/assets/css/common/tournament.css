@@ -3,8 +3,8 @@
 }
 
 :root {
-    --border-color: black;
-    --border2-color: black;
+    --border-color: rgb(102, 104, 105);
+    --border2-color: rgb(102, 104, 105);
     --element-width: 140px;
     --line-width: 70px;   
     --element-height: 10%;  
@@ -14,9 +14,9 @@
 .winner-label,
 .loser-label {
     left: 110%;
-    background-color: var(--translucent-bg);
     padding: 1px 3px;
     font-size: 12px;
+    color: gray;
 }
 
 .winner-label svg,
@@ -52,7 +52,7 @@
 
 
 body {
-    background-image: url("/assets/images/home.png");
+    background-image: url("/assets/images/event-management-bg.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -74,6 +74,10 @@ caption.tournament-bracket__caption {
 
 .special-item-right:nth-child(odd)::after, .special-item-right:nth-child(odd)::before {
     border-color: red !important; 
+}
+
+.border-style{
+    border-style: dashed !important;
 }
 
 
@@ -139,6 +143,7 @@ h2 {
     border-bottom: 1px dashed var(--border-color);
     padding-bottom: 2em;
     margin-bottom: 2em;
+    color: gray;
     transition: padding 0.2s ease-in-out, margin 0.2s ease-in-out;
 }
 @media (max-width: 384px) {
@@ -205,17 +210,17 @@ h2 {
         display: block;
         width: var(--line-width);
         height: 45%;
-        border-right: 1px solid var(--border-color);
+        border-right: 1px dashed var(--border-color);
    }
    .tournament-bracket__joined-odd-list .tournament-bracket__item::after {
         border-right: 0px solid var(--border-color);
    }
     .tournament-bracket__item.red::after {
-        border-right: 1px solid red !important;
+        border-right: 1px dashed red !important;
     }
     .tournament-bracket__item:nth-child(odd)::after {
         top: 50%;
-        border-top: 1px solid var(--border2-color);
+        border-top: 1px dashed var(--border2-color);
         /* transform: translateY(-1px); */
    }
     .tournament-bracket--rounded .tournament-bracket__item:nth-child(odd)::after {
@@ -226,7 +231,7 @@ h2 {
     }
     .tournament-bracket__item:nth-child(even)::after {
         bottom: 50%;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px dashed var(--border-color);
         transform: translateY(1px);
    }
     .tournament-bracket--rounded .tournament-bracket__item:nth-child(even)::after {
@@ -265,9 +270,7 @@ h2 {
 {
     border-radius: 0em !important;
 }
-.tournament-bracket__match:focus {
-    border-color: #2196F3;
-}
+
 .tournament-bracket__match::before, .tournament-bracket__match::after {
     transition: all 0.2s linear;
 }
@@ -287,14 +290,14 @@ h2 {
         display: block;
         width: var(--line-width);
         height: 10%;
-        border-left: 1px solid var(--border2-color);
+        border-left: 1px dashed var(--border2-color);
     }
 
     .tournament-bracket__joined-even-list .tournament-bracket__match::before {
-        border-left: 0px solid var(--border2-color) !important;
+        border-left: 0px dashed var(--border2-color) !important;
     }
     .tournament-bracket__joined-even-list .tournament-bracket__match::after {
-        border-left: 0px solid var(--border2-color) !important;
+        border-left: 0px dashed var(--border2-color) !important;
     }
 
     .tournament-bracket__match {
@@ -304,7 +307,7 @@ h2 {
 
     .tournament-bracket__match::before {
         bottom: 50%;
-        border-left: 1px solid var(--border-color);
+        border-left: 1px dashed var(--border-color);
 
         transform: translate(0,1px);
    }
@@ -316,7 +319,7 @@ h2 {
     }
     .tournament-bracket__match::after {
         top: 50%;
-        border-top: 1px solid var(--border-color);
+        border-top: 1px dashed var(--border-color);
         /* transform: translate(0,-1px); */
    }
     .tournament-bracket--rounded .tournament-bracket__match::after {
