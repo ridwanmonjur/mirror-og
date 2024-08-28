@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 /* THIS IS THE UNSIGNED VIEW */
 // Home
 Route::get('/', [AuthController::class, 'showLandingPage'])->name('landing.view');
+Route::get('/login', function () {
+    return redirect(route('filament.admin.auth.login'));
+})->name('login');
 
 // Forget, reset password
 Route::get('/forget-password', [AuthController::class, 'createForget'])->name('user.forget.view');
