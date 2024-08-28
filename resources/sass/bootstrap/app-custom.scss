@@ -1,5 +1,13 @@
 /*! purgecss start ignore */
+html.is-changing main {
+    transition: opacity 0.25s;
+    opacity: 1;
+}
 
+html.is-animating main {
+    opacity: 0;
+}
+  
 
 .text-center {
     text-align: center;
