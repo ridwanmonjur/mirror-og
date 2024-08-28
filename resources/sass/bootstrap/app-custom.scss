@@ -1,5 +1,13 @@
 /*! purgecss start ignore */
+html.is-changing main {
+    transition: opacity 0.25s;
+    opacity: 1;
+}
 
+html.is-animating main {
+    opacity: 0;
+}
+  
 
 .text-center {
     text-align: center;
@@ -258,11 +266,6 @@ a:hover {
     color: black !important;
     text-decoration: none !important;
 }
-
-a:hover{
-    padding-left: 2.5px;
-}
-
 
 .colored-toast.swal2-icon {
     margin-right: 10px !important;

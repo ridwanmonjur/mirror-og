@@ -16,14 +16,14 @@
         "@easylogic/colorpicker": "^1.10.11",
         "@popperjs/core": "^2.11.8",
         "@pqina/pintura": "^8.x",
+        "@swup/a11y-plugin": "^5.0.0",
+        "@swup/head-plugin": "^2.2.0",
         "alpinejs": "^3.13.10",
         "bootstrap": "^5.0.2",
-        "css-ripple-effect": "^1.0.5",
         "file-upload-with-preview": "^6.0.2",
         "firebase": "^10.12.3",
         "sass-loader": "^14.2.1",
-        "skeleton-elements": "^4.0.1",
         "sweetalert2": "^11.10.8",
-        "webkul-micron": "^1.1.6"
+        "swup": "^4.7.0"
     }
 }

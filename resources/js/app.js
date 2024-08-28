@@ -1,10 +1,18 @@
- import Swal from 'sweetalert2'
+// import Swup from 'swup';
+// import SwupHeadPlugin from '@swup/head-plugin';
+// import SwupA11yPlugin from '@swup/a11y-plugin';
+
+// new Swup({
+//     plugins: [new SwupHeadPlugin(), new SwupA11yPlugin()]
+// });
+
+
+import Swal from 'sweetalert2'
  import * as Popper from '@popperjs/core'
  window.Popper = Popper
  import * as bootstrap from 'bootstrap'
- window.bootstrap = bootstrap
-
-
+ window.bootstrap = bootstrap;
+ 
 window.loadBearerHeader = function() {
     return {
         credentials: 'include'
@@ -96,6 +104,7 @@ window.loadMessage = () => {
     localStorage.removeItem('message');
     localStorage.removeItem('tab');
 }
+
 
 window.Toast = Toast;
 window.Swal = Swal;

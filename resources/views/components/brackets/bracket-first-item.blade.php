@@ -60,10 +60,10 @@
             </tbody>
         </table>
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent" style="z-index: 999;">
-            <div class="tournament-bracket__box code{{ $bracket['team1Code'] }}code">
+            <div class="tournament-bracket__box code{{ $bracket['team1Code'] }}code bg-light">
                 <span >{{ $bracket['team1Position'] }}</span>
             </div>
-            <div class="tournament-bracket__box code{{ $bracket['team2Code'] }}code">
+            <div class="tournament-bracket__box code{{ $bracket['team2Code'] }}code bg-light">
                 <span >{{ $bracket['team2Position'] }}</span>
             </div>
             <small class="position-absolute winner-label ">
