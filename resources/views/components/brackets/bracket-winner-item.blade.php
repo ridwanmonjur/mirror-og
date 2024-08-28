@@ -1,6 +1,5 @@
 <div class="tournament-bracket tournament-bracket--rounded  col-lg-3 col-xl-4 col-xxl-6 align-items-start">
     <div class="tournament-bracket__round  tournament-bracket__round--gold">
-        <h3 class="tournament-bracket__round-title">Finals</h3>
         <br class="d-none d-lg-block"><br class="d-none d-lg-block"><br>
         <div class="tournament-bracket__list tournament-bracket__joined-list  tournament-bracket__joined-odd-list">
             <div
@@ -104,7 +103,6 @@
         </div>
     </div>
     <div class="tournament-bracket__round tournament-bracket__round--gold d-none d-lg-block">
-        <h3 class="tournament-bracket__round-title" style="visibility: hidden;">random</h3>
         <br><br><br>
         <div class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
             <div
@@ -166,7 +164,6 @@
                 </div>
             </div>
             <div class="tournament-bracket__round tournament-bracket__round--gold">
-                <h3 class="tournament-bracket__round-title" style="visibility: hidden;">yyy</h3>
                 <br><br><br>
                 <div class="tournament-bracket__list">
                     <div class="tournament-bracket__round tournament-bracket__round--gold">

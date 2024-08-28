@@ -7,7 +7,6 @@
             <div class="row ">
                 <div class="tournament-bracket tournament-bracket--rounded col-lg-9 col-xl-8 col-xxl-6">
                     <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
-                        <h3 class="tournament-bracket__round-title">Round 1</h3>
                         <div class="tournament-bracket__list">
                             @foreach ($bracketList['upperBracket']['eliminator1'] as $bracket)
                                 <x-brackets.bracket-first-item :bracket="$bracket"
@@ -18,7 +17,6 @@
                     </div>
 
                     <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                        <h3 class="tournament-bracket__round-title">Round 2</h3>
                         <div class="tournament-bracket__list">
                             @foreach ($bracketList['upperBracket']['eliminator2'] as $bracket)
                                 <x-brackets.bracket-item :bracket="$bracket"
@@ -30,7 +28,6 @@
 
                     @if (isset($bracketList['upperBracket']['eliminator3']))
                         <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                            <h3 class="tournament-bracket__round-title">Round 3</h3>
                             <div class="tournament-bracket__list">
                                 @foreach ($bracketList['upperBracket']['eliminator3'] as $bracket)
                                     <x-brackets.bracket-item :bracket="$bracket"
@@ -43,7 +40,6 @@
 
                     @if (isset($bracketList['upperBracket']['eliminator4']))
                         <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                            <h3 class="tournament-bracket__round-title">Round 4</h3>
                             <div class="tournament-bracket__list">
                                 @foreach ($bracketList['upperBracket']['eliminator4'] as $bracket)
                                     <x-brackets.bracket-item :bracket="$bracket"
@@ -55,7 +51,6 @@
                     @endif
 
                     <div class="tournament-bracket__round tournament-bracket__round--gold">
-                        <h3 class="tournament-bracket__round-title">Pre-final</h3>
                         <div class="tournament-bracket__list">
                             @foreach ($bracketList['upperBracket']['prefinals'] as $bracket)
                                 <x-brackets.bracket-item :bracket="$bracket"
@@ -79,7 +74,6 @@
             <h5 class="mt-5 mb-4 text-start">Lower bracket</h5>
             <div class="tournament-bracket tournament-bracket--rounded">
                 <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
-                    <h3 class="tournament-bracket__round-title">Round 1</h3>
                     <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                         @foreach ($bracketList['lowerBracket']['eliminator1'] as $bracket)
@@ -90,7 +84,6 @@
                 </div>
 
                 <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                    <h3 class="tournament-bracket__round-title">Round 2</h3>
                     <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                         @foreach ($bracketList['lowerBracket']['eliminator2'] as $bracket)
@@ -102,7 +95,6 @@
 
                 @if (isset($bracketList['lowerBracket']['eliminator3']))
                     <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                        <h3 class="tournament-bracket__round-title">Round 3</h3>
                         <div
                             class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                             @foreach ($bracketList['lowerBracket']['eliminator3'] as $bracket)
@@ -115,7 +107,6 @@
 
                 @if (isset($bracketList['lowerBracket']['eliminator4']))
                     <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                        <h3 class="tournament-bracket__round-title">Round 4</h3>
                         <div
                             class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                             @foreach ($bracketList['lowerBracket']['eliminator4'] as $bracket)
@@ -128,7 +119,6 @@
 
                 @if (isset($bracketList['lowerBracket']['eliminator5']))
                     <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                        <h3 class="tournament-bracket__round-title">Round 5</h3>
                         <div
                             class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                             @foreach ($bracketList['lowerBracket']['eliminator5'] as $bracket)
@@ -141,7 +131,6 @@
 
                 @if (isset($bracketList['lowerBracket']['eliminator6']))
                     <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                        <h3 class="tournament-bracket__round-title">Round 6</h3>
                         <div
                             class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                             @foreach ($bracketList['lowerBracket']['eliminator6'] as $bracket)
@@ -154,7 +143,6 @@
 
 
                 <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                    <h3 class="tournament-bracket__round-title">Pre-final 1</h3>
                     <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                         @foreach ($bracketList['lowerBracket']['prefinals1'] as $bracket)
@@ -165,7 +153,6 @@
 
 
                 <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                    <h3 class="tournament-bracket__round-title">Pre-final 2</h3>
                     <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                         @foreach ($bracketList['lowerBracket']['prefinals2'] as $bracket)
