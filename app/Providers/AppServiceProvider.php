@@ -11,6 +11,7 @@ use App\Listeners\TeamMemberUpdatedListener;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Opcodes\LogViewer\Facades\LogViewer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        LogViewer::auth(function ($request) {
+            return $request->user()
+                && in_array($request->user()->email, [
+                    'mjrrdn@gmail.com',
+                    'mjrrdnasm@gmail.com',
+                ]);
+        });
+
         Event::listen(
             JoinEventConfirmed::class,
             JoinEventConfirmation::class,
