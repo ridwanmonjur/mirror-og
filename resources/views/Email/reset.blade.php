@@ -8,8 +8,6 @@
 @endsection
 
 @push('head')
-    <link rel="stylesheet" href="path/to/your/custom.css">
-    <script src="path/to/your/custom.js"></script>
 @endpush
 @section('emailTitle')
     {{ 'Reset Password Link' }}
@@ -18,15 +16,15 @@
     <tr>
         <td style="padding: 0; text-align: center;">
             <table width="600" border="0" cellspacing="0" cellpadding="0"
-                style="background-color: white; margin: 0 auto; padding: 0 20px; border-radius: 10px;">
+                style="background-color: white; margin: 0 auto; padding: 0; border-radius: 10px;">
                 <tr>
-                    <td style="padding: 0 20px; text-align: left; color: #333333;">
+                    <td style="padding: 0 0px; text-align: left; color: #333333;">
                         <p>Hi,</p>
                         <p>You recently requested to reset your password for your account. Click the button below to reset
                             it.</p>
                         <p style="text-align: center;">
                             <a href="{{ route('user.reset.view', $token) }}"
-                                style="display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: {{$secondaryColor}}; text-decoration: none; border-radius: 5px;">
+                                style="display: inline-block; padding: 10px 20px; font-size: 18px; color: white; background-color: {{$secondaryColor}}; text-decoration: none; border-radius: 5px;">
                                 Reset Password
                             </a>
                         </p>

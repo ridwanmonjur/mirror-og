@@ -37,7 +37,7 @@ class ResetPasswordMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('Email.verify')->with([
+        return $this->view('Email.reset')->with([
             'token' => $this->token,
             'image' => $this->image,
         ]);
