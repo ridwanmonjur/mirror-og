@@ -120,3 +120,10 @@ bash```
 php artisan migrate:rollback --path=/database/migrations/2024_02_13_150411_create_captains_table.php
 php artisan migrate
 bash```
+
+ php artisan horizon:install
+ 
+ php artisan vendor:publish --tag=log-viewer-assets --force
+
+
+

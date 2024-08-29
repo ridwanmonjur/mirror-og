@@ -10,29 +10,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
-    <link rel="stylesheet" href="./default.css">
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" /> -->
     <meta name="x-apple-disable-message-reformatting">
     <title></title>
-    <!--[if mso]>
-    <noscript>
-        <xml>
-        <o:OfficeDocumentSettings>
-            <o:PixelsPerInch>96</o:PixelsPerInch>
-        </o:OfficeDocumentSettings>
-        </xml>
-    </noscript>
-    <![endif]-->
     <style>
-        table,
-        td,
-        div,
-        h1,
-        p {
-            font-family: Arial, sans-serif;
+        html, body {
+            font-size: 16px;
+        }
+        h1, p, table {
+            text-align: justify;
+            font-size: 1rem;
         }
     </style>
+   
     @stack('head')
 </head>
 
@@ -43,10 +32,10 @@
         <tr>
             <td align="center" style="padding:0;">
                 <table role="presentation"
-                    style="width:min(90vw, 602px);border-collapse:collapse;border:1px solid {{$primaryColor}};border-spacing:0;text-align:left;">
-                    <tr style="border-bottom: 0px solid {{$primaryColor}}; ">
+                    style="width:min(90vw, 602px);border-collapse:collapse;border:0;border-spacing:0;text-align:left;">
+                    <tr style="border-bottom: 0;">
                         <td align="start" style="padding: 0 0 10px 0;">
-                            <img src="{{$message->embed(public_path('assets/images/logo-default.png'))}}" alt="" width="300"
+                            <img src="{{$message->embed(public_path('assets/images/logo-default.png'))}}" alt="" width="150"
                                     style="height:auto;display:block;" />
                             {{-- <img src="{{ asset('assets/images/logo-default.png') }}" alt="" width="300"
                                 style="height:auto;display:block;" /> --}}
@@ -64,7 +53,7 @@
                     <tr >
                     {{-- <tr style="background-image: url({{ asset('assets/images/auth/email-bg.png') }});"> --}}
                         <td style="padding: 0px 0px 0 0px; width: 100%; color: black;">
-                            <h1 style="vertical-align: bottom; margin-top: -10px; padding: 0px 0 0px 40px; z-index: 99;">@yield('title')
+                            <h1 style="vertical-align: bottom; margin-top: -10px; padding: 0px 0 0px 20px; z-index: 99;">@yield('title')
                             </h1>
                         </td>
                     </tr>
@@ -77,13 +66,13 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:30px;background:{{$primaryColor}};">
+                        <td style="padding:20px;background:{{$primaryColor}};">
                             <table role="presentation"
-                                style="width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;">
+                                style="width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:11.5px;font-family:Arial,sans-serif;">
                                 <tr>
                                     <td style="padding:0;width:50%;" align="left">
                                         <p
-                                            style="margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;">
+                                            style="margin:0;font-size:11.5px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;">
                                             &reg; Kuala Lumpur, Malaysia 2024<br /><a href="http://www.example.com"
                                                 style="color:#ffffff;text-decoration:underline;">Unsubscribe</a>
                                         </p>
