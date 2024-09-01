@@ -144,7 +144,7 @@
                                     "popover-box px-3 py-3 ",
                                     "ms-5" => $status === "ENDED"
                                 ],
-                            ) style="margin-bottom: -30px; border: 1px dotted gray; background: #F8F6EF;">
+                            ) style="margin-bottom: -10px; border: 1px dotted gray; background: #F8F6EF;">
                                 <a class="px-2 py-1 text-light me-3 btn btn-primary d-inline popover-box popover-body" href="{{ route('event.matches.index', ['id' => $event->id]) }}">
                                     <small> Matches </small>
                                 </a>
@@ -153,7 +153,7 @@
                                 </a>
                             </div>
                         </div>
-                        <button class="popover-button btn btn-link">
+                        <button class="popover-button mt-2  mb-2 btn btn-link">
                             <u> Results </u>
                         </button>
                         @else
