@@ -2,6 +2,17 @@
 <script src="https://cdn.jsdelivr.net/npm/litepicker@2.0/dist/litepicker.min.js"></script>
 
  <script>
+    addOnLoad(()=> {
+        const parentElements = document.querySelectorAll(".popover-parent");
+        parentElements.forEach(parent => {
+            const contentElement = parent.querySelector(".popover-content");
+            const parentElement = parent.querySelector(".popover-button");
+            if (contentElement) {
+                window.addPopover(parentElement, contentElement);
+            }
+        });
+    })
+    
     
     function infinteLoadMoreByPost(ENDPOINT, body) {
         let noMoreDataElement = document.querySelector('.no-more-data');

@@ -131,23 +131,30 @@
                         &nbsp;
                         <span>{{ $event->type?->eventType ?? 'Choose a type' }}</span>
                     </div>
-                    <div class="d-flex justify-content-around">
+                    <div class="d-flex justify-content-around popover-parent">
                         @if (!in_array($status, ['PENDING', 'DRAFT'])) 
                             @if ($status != "ENDED")
-                                <a class="m-0 mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.invitation.index', $event->id) }}">
+                                <a class="m-0 btn mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.invitation.index', $event->id) }}">
                                     <span> <u> Invite </u> </span>
                                 </a>
                         @endif    
-                        <div class="popover-content" style="display: none;">
-                            <a class="m-0 mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.matches.index', ['id' => $event->id]) }}">
-                                <span> <u> Matches </u> </span>
-                            </a>
-                            <a class="m-0 mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.awards.index', ['id' => $event->id ]) }}">
-                                <span> <u> Awards </u> </span>
-                            </a>
+                        <div class="popover-content d-none" >
+                            <div @class(
+                                [
+                                    "popover-box px-3 py-3 ",
+                                    "ms-5" => $status === "ENDED"
+                                ],
+                            ) style="margin-bottom: -30px; border: 1px dotted gray; background: #F8F6EF;">
+                                <a class="px-2 py-1 text-light me-3 btn btn-primary d-inline popover-box popover-body" href="{{ route('event.matches.index', ['id' => $event->id]) }}">
+                                    <small> Matches </small>
+                                </a>
+                                <a class="px-2 py-1 text-light btn btn-primary d-inline popover-box popover-body" href="{{ route('event.awards.index', ['id' => $event->id ]) }}">
+                                    <small> Awards </small>
+                                </a>
+                            </div>
                         </div>
-                        <button class="popover-button" class="btn btn-primary">
-                            Results
+                        <button class="popover-button btn btn-link">
+                            <u> Results </u>
                         </button>
                         @else
                             <div class="d-flex justify-content-center align-items-center my-2 py-2">
