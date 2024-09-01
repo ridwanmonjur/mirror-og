@@ -138,12 +138,17 @@
                                     <span> <u> Invite </u> </span>
                                 </a>
                         @endif    
-                            <a class="m-0 mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.brackets.index', ['id' => $event->id]) }}">
-                                <span> <u> Brackets </u> </span>
-                                </a>
-                            <a class="m-0 mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.results.index', ['id' => $event->id ]) }}">
-                                <span> <u> Results </u> </span>
-                                </a>
+                        <div class="popover-content" style="display: none;">
+                            <a class="m-0 mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.matches.index', ['id' => $event->id]) }}">
+                                <span> <u> Matches </u> </span>
+                            </a>
+                            <a class="m-0 mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.awards.index', ['id' => $event->id ]) }}">
+                                <span> <u> Awards </u> </span>
+                            </a>
+                        </div>
+                        <button class="popover-button" class="btn btn-primary">
+                            Results
+                        </button>
                         @else
                             <div class="d-flex justify-content-center align-items-center my-2 py-2">
                                 <span> <i>Event is now {{strtolower($status)}}. </i> </span>

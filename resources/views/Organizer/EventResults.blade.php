@@ -535,7 +535,7 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('event.results.index', ['id' => $event->id]) }}";
+                        let currentUrl = "{{ route('event.awards.index', ['id' => $event->id]) }}";
                         reloadUrl(currentUrl, responseData.message, 'PositionBtn');
                     } else {
                         toastError(responseData.message);
@@ -569,7 +569,7 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('event.results.index', ['id' => $event->id]) }}";
+                        let currentUrl = "{{ route('event.awards.index', ['id' => $event->id]) }}";
                         reloadUrl(currentUrl, responseData.message, 'AwardsBtn');
                     } else {
                         toastError(responseData.message)
@@ -599,7 +599,7 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('event.results.index', ['id' => $event->id]) }}";
+                        let currentUrl = "{{ route('event.awards.index', ['id' => $event->id]) }}";
                         reloadUrl(currentUrl, responseData.message, 'AchievementsBtn');
                     } else {
                         toastError(responseData.message)
@@ -626,7 +626,7 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('event.results.index', ['id' => $event->id]) }}";
+                        let currentUrl = "{{ route('event.awards.index', ['id' => $event->id]) }}";
                         reloadUrl(currentUrl, responseData.message, 'AwardsBtn');
                     } else {
                         toastError(responseData.message);
@@ -647,7 +647,7 @@
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
-                        let currentUrl = "{{ route('event.results.index', ['id' => $event->id]) }}";
+                        let currentUrl = "{{ route('event.awards.index', ['id' => $event->id]) }}";
                         reloadUrl(currentUrl, responseData.message, 'AchievementsBtn');
                     } else {
                         toastError(responseData.message);
