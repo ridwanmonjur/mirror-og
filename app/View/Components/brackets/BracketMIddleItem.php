@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class BracketItem extends Component
+class BracketMIddleItem extends Component
 {
     public $bracket = null;
 
@@ -19,6 +19,6 @@ class BracketItem extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.brackets.bracket-item');
+        return view('components.brackets.bracket-middle-item');
     }
 }

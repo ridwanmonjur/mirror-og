@@ -19,7 +19,7 @@
                     <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                         <div class="tournament-bracket__list">
                             @foreach ($bracketList['upperBracket']['eliminator2'] as $bracket)
-                                <x-brackets.bracket-item :bracket="$bracket"
+                                <x-brackets.bracket-middle-item :bracket="$bracket"
                                     :wire:key="'upperBracket'. 'eliminator2'. $loop->index" 
                                 />
                             @endforeach
@@ -30,7 +30,7 @@
                         <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                             <div class="tournament-bracket__list">
                                 @foreach ($bracketList['upperBracket']['eliminator3'] as $bracket)
-                                    <x-brackets.bracket-item :bracket="$bracket"
+                                    <x-brackets.bracket-middle-item :bracket="$bracket"
                                         :wire:key="'upperBracket'. 'eliminator3'. $loop->index" 
                                     />
                                 @endforeach
@@ -42,7 +42,7 @@
                         <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                             <div class="tournament-bracket__list">
                                 @foreach ($bracketList['upperBracket']['eliminator4'] as $bracket)
-                                    <x-brackets.bracket-item :bracket="$bracket"
+                                    <x-brackets.bracket-middle-item :bracket="$bracket"
                                         :wire:key="'upperBracket'. 'eliminator4'. $loop->index" 
                                     />
                                 @endforeach
@@ -53,7 +53,7 @@
                     <div class="tournament-bracket__round tournament-bracket__round--gold">
                         <div class="tournament-bracket__list">
                             @foreach ($bracketList['upperBracket']['prefinals'] as $bracket)
-                                <x-brackets.bracket-item :bracket="$bracket"
+                                <x-brackets.bracket-middle-item :bracket="$bracket"
                                     :wire:key="'upperBracket'. 'prefinals'. $loop->index" 
                                 />
                             @endforeach
@@ -87,7 +87,7 @@
                     <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                         @foreach ($bracketList['lowerBracket']['eliminator2'] as $bracket)
-                            <x-brackets.bracket-item :bracket="$bracket"
+                            <x-brackets.bracket-middle-item :bracket="$bracket"
                                 :wire:key="'lowerBracket'. 'eliminator2'. $loop->index" />
                         @endforeach
                     </div>
@@ -98,7 +98,7 @@
                         <div
                             class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                             @foreach ($bracketList['lowerBracket']['eliminator3'] as $bracket)
-                                <x-brackets.bracket-item :bracket="$bracket"
+                                <x-brackets.bracket-middle-item :bracket="$bracket"
                                     :wire:key="$loop->index. 'lowerBracket'. 'eliminator3'" />
                             @endforeach
                         </div>
@@ -110,7 +110,7 @@
                         <div
                             class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                             @foreach ($bracketList['lowerBracket']['eliminator4'] as $bracket)
-                                <x-brackets.bracket-item :bracket="$bracket"
+                                <x-brackets.bracket-middle-item :bracket="$bracket"
                                     :wire:key="$loop->index. 'lowerBracket'. 'eliminator4'" />
                             @endforeach
                         </div>
@@ -122,7 +122,7 @@
                         <div
                             class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                             @foreach ($bracketList['lowerBracket']['eliminator5'] as $bracket)
-                                <x-brackets.bracket-item :bracket="$bracket"
+                                <x-brackets.bracket-middle-item :bracket="$bracket"
                                     :wire:key="$loop->index. 'lowerBracket'. 'eliminator5'" />
                             @endforeach
                         </div>
@@ -134,7 +134,7 @@
                         <div
                             class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                             @foreach ($bracketList['lowerBracket']['eliminator6'] as $bracket)
-                                <x-brackets.bracket-item :bracket="$bracket"
+                                <x-brackets.bracket-middle-item :bracket="$bracket"
                                     :wire:key="$loop->index. 'lowerBracket'. 'eliminator6'" />
                             @endforeach
                         </div>
@@ -146,7 +146,7 @@
                     <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                         @foreach ($bracketList['lowerBracket']['prefinals1'] as $bracket)
-                            <x-brackets.bracket-item :bracket="$bracket" />
+                            <x-brackets.bracket-middle-item :bracket="$bracket" />
                         @endforeach
                     </div>
                 </div>
@@ -156,7 +156,7 @@
                     <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                         @foreach ($bracketList['lowerBracket']['prefinals2'] as $bracket)
-                            <x-brackets.bracket-item :bracket="$bracket" />
+                            <x-brackets.bracket-middle-item :bracket="$bracket" />
                         @endforeach
                     </div>
                 </div>
