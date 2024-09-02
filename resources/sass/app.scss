@@ -58,28 +58,15 @@
 }
 
 .dropdown-menu {
-    animation: 1s slideup;
+    animation: 1s modalDropdownAnimate;
   }
 
   .modal-body {
-    animation: 1s slideupLot;
+    animation: 1s modalDropdownAnimate;
   }
 
-  @keyframes slideupLot {
-    0% {
-        transform: translateY(-20%);
-        width: 95%;
-        height: 95%;
-    }
-
-    100% {
-      transform: translateY(0);
-      width: 100%;
-      height: 100%;
-    }
-  }
   
-  @keyframes slideup {
+  @keyframes modalDropdownAnimate {
     0% {
         scale: 1.05;
     }
