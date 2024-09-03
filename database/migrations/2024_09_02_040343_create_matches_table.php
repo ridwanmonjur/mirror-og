@@ -25,7 +25,6 @@ return new class extends Migration
             $table->string('loser_next_position')->nullable();
             $table->unsignedInteger('team1_points')->default(0);
             $table->unsignedInteger('team2_points')->default(0);
-            $table->string('event')->nullable();
             $table->enum('match_type', ['league', 'tournament']);
             $table->string('stage_name')->nullable();
             $table->string('inner_stage_name')->nullable();
@@ -35,6 +34,7 @@ return new class extends Migration
 
             $table->foreign('team1_id')->references('id')->on('teams');
             $table->foreign('team2_id')->references('id')->on('teams');
+            $table->foreignId('event_details_id')->constrained('event_details')->onDelete('cascade');
         });
     }
 

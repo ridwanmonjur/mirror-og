@@ -3,6 +3,15 @@
     <main>
         @include('__CommonPartials.NavbarGoToSearchPage')
         <div class="px-4">
+            @livewire(
+                "shared.brackets.bracket-first-items-update-modal"
+            )
+            @livewire(
+                "shared.brackets.bracket-middle-items-update-modal"
+            )
+            @livewire(
+                "shared.brackets.bracket-winner-items-update-modal"
+            )
             <h5 class="mt-5 mb-4  text-start">Upper bracket</h5>
             <div class="row ">
                 <div class="tournament-bracket tournament-bracket--rounded col-lg-9 col-xl-8 col-xxl-6">
