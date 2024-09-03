@@ -1,4 +1,4 @@
-<div class="tournament-bracket__item code{{ $bracket['team1Position'] }}code code{{ $bracket['team1Position'] }}code">
+<div class="tournament-bracket__item code{{ $bracket['team1_position'] }}code code{{ $bracket['team1_position'] }}code">
     @php
         if (isset($bracket['team1Code'])) {
             $bracket['team1Display'] = true;
@@ -16,19 +16,19 @@
 
         $bracket['team1Score'] = $bracket['team1Score'] ?? '0';
         $bracket['team2Score'] = $bracket['team2Score'] ?? '0';
-        $bracket['winnerNext'] = $bracket['winnerNext'] ?? 'N/A';
-        $bracket['loserNext'] = $bracket['loserNext'] ?? null;
+        $bracket['winner_next_position'] = $bracket['winner_next_position'] ?? 'N/A';
+        $bracket['loser_next_position'] = $bracket['loser_next_position'] ?? null;
 
-        if (!$bracket['team1Position']) {
-            $bracket['team1Position'] = '';
+        if (!$bracket['team1_position']) {
+            $bracket['team1_position'] = '';
         }
 
-        if (!$bracket['team2Position']) {
-            $bracket['team2Position'] = '';
+        if (!$bracket['team2_position']) {
+            $bracket['team2_position'] = '';
         }
     @endphp
 
-    <div class="tournament-bracket__match code{{ $bracket['team1Position'] }}code code{{ $bracket['team1Position'] }}code"
+    <div class="tournament-bracket__match code{{ $bracket['team1_position'] }}code code{{ $bracket['team1_position'] }}code"
         tabindex="0">
         <table class="tournament-bracket__table mx-auto">
             <thead class="sr-only">
@@ -41,7 +41,7 @@
                 <tr class="tournament-bracket__team tournament-bracket__team--winner">
                     <td class="tournament-bracket__country">
                         <abbr class="tournament-bracket__code"
-                            title="{{ $bracket['team1Position'] }}">{{ $bracket['team1Position'] }}</abbr>
+                            title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }}</abbr>
                     </td>
                     <td class="tournament-bracket__score">
                         <span class="tournament-bracket__number">{{ $bracket['team1Score'] }}</span>
@@ -50,7 +50,7 @@
                 <tr class="tournament-bracket__team">
                     <td class="tournament-bracket__country">
                         <abbr class="tournament-bracket__code"
-                            title="{{ $bracket['team2Position'] }}">{{ $bracket['team2Position'] }}</abbr>
+                            title="{{ $bracket['team2_position'] }}">{{ $bracket['team2_position'] }}</abbr>
                     </td>
                     <td class="tournament-bracket__score">
                         <span class="tournament-bracket__number">{{ $bracket['team2Score'] }}</span>
@@ -60,13 +60,13 @@
         </table>
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent" style="z-index: 999;">
             <div class="tournament-bracket__box code{{ $bracket['team1Code'] }}code">
-                <span>{{ $bracket['team1Position'] }}</span>
+                <span>{{ $bracket['team1_position'] }}</span>
             </div>
             <div class="tournament-bracket__box code{{ $bracket['team2Code'] }}code">
-                <span>{{ $bracket['team2Position'] }}</span>
+                <span>{{ $bracket['team2_position'] }}</span>
             </div>
             <small class="position-absolute winner-label">
-                <span class="d-none-when-hover">Winner to {{ $bracket['winnerNext'] }} </span>
+                <span class="d-none-when-hover">Winner to {{ $bracket['winner_next_position'] }} </span>
                 <span class="d-none-until-hover"
                     data-bs-toggle="modal" data-bs-target="#middleMatchModal"
                 >
@@ -81,14 +81,14 @@
             </small>
              <small @class([
                 "position-absolute loser-label",
-                "d-none-until-hover" => !$bracket['loserNext']
+                "d-none-until-hover" => !$bracket['loser_next_position']
             ])
                  @style([
-                    "left: 100%;" => !$bracket['loserNext']
+                    "left: 100%;" => !$bracket['loser_next_position']
                 ])
             >
-                @if ($bracket['loserNext'])
-                    <span class="d-none-when-hover">Loser to {{ $bracket['loserNext'] }} </span>
+                @if ($bracket['loser_next_position'])
+                    <span class="d-none-when-hover">Loser to {{ $bracket['loser_next_position'] }} </span>
                 @endif
 
                 <span class="d-none-until-hover"

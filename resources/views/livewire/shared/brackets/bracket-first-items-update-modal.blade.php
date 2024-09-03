@@ -6,7 +6,7 @@
 
                 <form class="">
 
-                    <input type="hidden" id="event" name="event" disabled placeholder=" ">
+                    <input type="hidden" id="event_details_id" name="event_details_id" disabled placeholder=" " value="{{$event->id}}">
                     <input type="hidden" id="match_type" name="match_type" placeholder=" " required>
                     <input type="hidden" id="stage_name" name="stage_name" placeholder=" ">
                     <input type="hidden" id="inner_stage_name" name="inner_stage_name" placeholder=" ">
@@ -66,8 +66,19 @@
                                     Choose Team 2
                                 </span>
                                 <select class="form-select" id="team2_id" name="team2_id" required>
-                                    <!-- Options go here -->
+                                    @foreach ($teamList as $team)
+                                        <option value="{{ $team->id }}">
+                                         <img src="/storage/$team->teamBanner" 
+                                                width="30" height="30"
+                                                onerror="this.src='/assets/images/404.png';"
+                                                class="object-fit-cover rounded-circle me-2"
+                                                alt="Team View"
+                                            >
+                                           <span> {{ $team->teamName }} </span>
+                                        </option>
+                                    @endforeach
                                 </select>
+
                             </div>
                         </div>
 

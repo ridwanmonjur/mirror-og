@@ -105,6 +105,8 @@ window.loadMessage = () => {
     localStorage.removeItem('tab');
 }
 
-
+// import 'use-bootstrap-select/dist/use-bootstrap-select.css'
+// import UseBootstrapSelect from 'use-bootstrap-select'
+// window.UseBootstrapSelect = UseBootstrapSelect;
 window.Toast = Toast;
 window.Swal = Swal;

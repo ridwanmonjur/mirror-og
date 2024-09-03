@@ -3,15 +3,16 @@
     <main>
         @include('__CommonPartials.NavbarGoToSearchPage')
         <div class="px-4">
-            @livewire(
-                "shared.brackets.bracket-first-items-update-modal"
-            )
-            @livewire(
+            @livewire('shared.brackets.bracket-first-items-update-modal', [
+                'event' => $event,
+                'teamList' => $teamList
+            ])
+            {{-- @livewire(
                 "shared.brackets.bracket-middle-items-update-modal"
             )
             @livewire(
                 "shared.brackets.bracket-winner-items-update-modal"
-            )
+            ) --}}
             <h5 class="mt-5 mb-4  text-start">Upper bracket</h5>
             <div class="row ">
                 <div class="tournament-bracket tournament-bracket--rounded col-lg-9 col-xl-8 col-xxl-6">
@@ -19,8 +20,7 @@
                         <div class="tournament-bracket__list">
                             @foreach ($bracketList['upperBracket']['eliminator1'] as $bracket)
                                 <x-brackets.bracket-first-item :bracket="$bracket"
-                                    :wire:key="'upperBracket'. 'eliminator1'. $loop->index" 
-                                />
+                                    :wire:key="'upperBracket'. 'eliminator1'. $loop->index" />
                             @endforeach
                         </div>
                     </div>
@@ -29,8 +29,7 @@
                         <div class="tournament-bracket__list">
                             @foreach ($bracketList['upperBracket']['eliminator2'] as $bracket)
                                 <x-brackets.bracket-middle-item :bracket="$bracket"
-                                    :wire:key="'upperBracket'. 'eliminator2'. $loop->index" 
-                                />
+                                    :wire:key="'upperBracket'. 'eliminator2'. $loop->index" />
                             @endforeach
                         </div>
                     </div>
@@ -40,8 +39,7 @@
                             <div class="tournament-bracket__list">
                                 @foreach ($bracketList['upperBracket']['eliminator3'] as $bracket)
                                     <x-brackets.bracket-middle-item :bracket="$bracket"
-                                        :wire:key="'upperBracket'. 'eliminator3'. $loop->index" 
-                                    />
+                                        :wire:key="'upperBracket'. 'eliminator3'. $loop->index" />
                                 @endforeach
                             </div>
                         </div>
@@ -52,8 +50,7 @@
                             <div class="tournament-bracket__list">
                                 @foreach ($bracketList['upperBracket']['eliminator4'] as $bracket)
                                     <x-brackets.bracket-middle-item :bracket="$bracket"
-                                        :wire:key="'upperBracket'. 'eliminator4'. $loop->index" 
-                                    />
+                                        :wire:key="'upperBracket'. 'eliminator4'. $loop->index" />
                                 @endforeach
                             </div>
                         </div>
@@ -63,22 +60,19 @@
                         <div class="tournament-bracket__list">
                             @foreach ($bracketList['upperBracket']['prefinals'] as $bracket)
                                 <x-brackets.bracket-middle-item :bracket="$bracket"
-                                    :wire:key="'upperBracket'. 'prefinals'. $loop->index" 
-                                />
+                                    :wire:key="'upperBracket'. 'prefinals'. $loop->index" />
                             @endforeach
                         </div>
                     </div>
                     <div class="tournament-bracket__round tournament-bracket__round--gold">
                     </div>
                 </div>
-                
+
                 @foreach ($bracketList['finals']['finals'] as $bracket)
                     <x-brackets.bracket-winner-item :bracket="$bracket"
-                        :wire:key="'upperBracket'. 'eliminator1'. $loop->index" 
-                    />
-                        
+                        :wire:key="'upperBracket'. 'eliminator1'. $loop->index" />
                 @endforeach
-            
+
             </div>
             <h5 class="mt-5 mb-4 text-start">Lower bracket</h5>
             <div class="tournament-bracket tournament-bracket--rounded">
@@ -176,6 +170,7 @@
             </div>
             <br><br><br>
     </main>
+    
     <script>
         var bracketItemList = document.querySelectorAll('.codeCANcode.tournament-bracket__item');
         bracketItemList.forEach(item => {
@@ -183,7 +178,7 @@
         });
 
 
-        var bracketMatchList = document.querySelectorAll('.codeCANcode.tournament-bracket__match');
+        var bracketteamList = document.querySelectorAll('.codeCANcode.tournament-bracket__match');
         bracketItemList.forEach(item => {
             console.log({
                 hi: true
@@ -199,5 +194,49 @@
             });
             item.style.setProperty('--border2-color', 'red');
         });
+
+        function fillModalInputs(event) {
+            event.stopPropagation();
+            const button = event.currentTarget;
+            console.log({
+                button
+            });
+            console.log({
+                button
+            });
+            console.log({
+                button
+            });
+            console.log({
+                button
+            });
+
+            const dataset = button.dataset;
+            const modalElement = document.getElementById('firstMatchModal');
+
+            const inputs = modalElement.querySelectorAll('input, select, textarea');
+
+            inputs.forEach(input => {
+                const inputName = input.getAttribute('name');
+                console.log({dataset, inputName, value: dataset[inputName]});
+                if (dataset[inputName] !== undefined) {
+                    input.value = dataset[inputName];
+                }
+            });
+
+
+            console.log({inputs});
+
+            let modal = bootstrap.Modal.getInstance(modalElement);
+
+            if (modal) {
+                modal.show();
+            } else {
+                modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            };
+        }
+
+            new SlimSelect(document.getElementById('team2_id'));
     </script>
 @endsection

@@ -11,7 +11,7 @@
                 window.addPopover(parentElement, contentElement);
             }
         });
-    })
+    });
     
     
     function infinteLoadMoreByPost(ENDPOINT, body) {

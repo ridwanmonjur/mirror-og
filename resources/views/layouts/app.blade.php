@@ -7,6 +7,8 @@
     <title>Tournament Demo</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+ <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
+    <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet">
     @include('__CommonPartials.HeadIcon')
     <style>
 

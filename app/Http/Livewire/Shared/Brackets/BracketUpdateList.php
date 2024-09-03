@@ -37,38 +37,38 @@ class BracketUpdateList extends Component
         $valuesMap = ['Tournament' => 'doubleElimination', 'League' => 'doubleElimination'];
         $tournamentType = $this->event->type->eventType;
         $bracketData = new BracketData;
-        $bracketList = $bracketData->getData($matchesUpperCount)[$valuesMap[$tournamentType]];
-        // $this->event->matches->each(function ($match) use (&$bracketList) {
+        $tournamentTypeFinal = $valuesMap[$tournamentType];
+        $bracketList = $bracketData->getData($matchesUpperCount)[$tournamentTypeFinal];
+        $this->event->matches->each(function ($match) use (&$bracketList) {
+            $bracketList[$match->tournamentTypeFinal][$match->stage_name][$match->inner_stage_name][$match->order]['team1_position'] = 
+                $match->team1_position ?? null;
+            $bracketList[$match->tournamentTypeFinal][$match->stage_name][$match->inner_stage_name][$match->order]['team2_position'] = 
+                $match->team2_position ?? null;
+            $bracketList[$match->tournamentTypeFinal][$match->stage_name][$match->inner_stage_name][$match->order]['team1_id'] = 
+                $match->team1_position ?? null;
+            $bracketList[$match->tournamentTypeFinal][$match->stage_name][$match->inner_stage_name][$match->order]['team2_id'] = 
+                $match->team2_position ?? null;
+        });
         
-        //     switch ($match->type) {
-        //         case 'finals':
-        //             $bracketList['doubleElimination']['finals']['finals'][] = $match;
-        //             break;
-        //         case 'eliminator1':
-        //             $bracketList['doubleElimination']['upperBracket']['eliminator1'][] = $match;
-        //             break;
-        //     }
-        // });
+        if (empty($matchesArray['doubleElimination']['finals']['finals'])) {
+            $bracketList['doubleElimination']['finals']['finals'][] = [
+                'team1_position' => 'G1',
+                'team2_position' => 'G2',
+                'order' => 1,
+                'winner_next_position' => null,
+                'loser_next_position' => null,
+            ];
+        }
         
-        // if (empty($matchesArray['doubleElimination']['finals']['finals'])) {
-        //     $bracketList['doubleElimination']['finals']['finals'][] = [
-        //         'team1Position' => 'G1',
-        //         'team2Position' => 'G2',
-        //         'order' => 1,
-        //         'winnerNext' => null,
-        //         'loserNext' => null,
-        //     ];
-        // }
-        
-        // if (empty($matchesArray['doubleElimination']['upperBracket']['eliminator1'])) {
-        //     $bracketList['doubleElimination']['upperBracket']['eliminator1'][] = [
-        //         'team1Position' => '',
-        //         'team2Position' => '',
-        //         'order' => 1,
-        //         'winnerNext' => 'U1',
-        //         'loserNext' => 'L1',
-        //     ];
-        // }
+        if (empty($matchesArray['doubleElimination']['upperBracket']['eliminator1'])) {
+            $bracketList['doubleElimination']['upperBracket']['eliminator1'][] = [
+                'team1_position' => '',
+                'team2_position' => '',
+                'order' => 1,
+                'winner_next_position' => 'U1',
+                'loser_next_position' => 'L1',
+            ];
+        }
         return view('livewire.shared.brackets.bracket-update-list', [
             'matchesUpperCount' => $matchesUpperCount,
             'bracketList' => $bracketList
