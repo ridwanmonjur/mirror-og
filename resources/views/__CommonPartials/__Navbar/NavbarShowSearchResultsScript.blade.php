@@ -65,8 +65,10 @@
       console.log({circles})
 
       circles.forEach(circle => {
+        if (!circle.style.backgroundColor) {
           const randomColor = getRandomColorBg();
           circle.style.backgroundColor = randomColor;
+        }
       });
     }
 

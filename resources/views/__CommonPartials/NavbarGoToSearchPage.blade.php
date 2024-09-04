@@ -212,5 +212,32 @@
                 throw new Error('Error occurred');
             });
     }
+
+    document.getElementById('load-more').addEventListener('click', function() {
+        let baseUrl = event.target.getAttribute('data-url');
+        let cursor = event.target.getAttribute('data-cursor');
+        
+        let url = `${baseUrl}?cursor=${cursor}`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-type': 'application/json',  
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector('.notifications-list-container').innerHTML+= data?.html ?? '';
+                applyRandomColorsAndShapes();
+                let nextPageUrl = data.nextPageUrl;
+                if (nextPageUrl) {
+                    this.setAttribute('data-cursor', nextPageUrl);
+                } else {
+                    this.style.display = 'none';
+                }
+            });
+    });
+
 </script>
 @endauth

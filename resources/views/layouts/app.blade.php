@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tournament Demo</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
- <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
-    <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet">
+ 
     @include('__CommonPartials.HeadIcon')
     <style>
 
@@ -18,6 +18,7 @@
 <body>
     @yield('content')
     @livewireScripts
+    <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
     <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
 </body>
 </html>
