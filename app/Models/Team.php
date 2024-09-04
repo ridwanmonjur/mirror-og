@@ -278,22 +278,22 @@ class Team extends Model
             $memberNotification['text'] = <<<HTML
                 <a href="/view/team/{$this->id}">
                     <img src="/storage/{$this->teamBanner}" 
-                        width="30" height="30"
+                        width="45" height="45"
                         onerror="this.src='/assets/images/404.png';"
                         class="object-fit-cover rounded-circle me-2"
                         alt="Team banner for {$this->teamName}">
                 </a>
                 <span class="notification-gray">
-                    You have created a new team named 
-                    <a href="/view/team/{$this->id}">
-                        <span class="notification-blue">{$this->teamName}</span>
-                    </a>
-                    and joined 
+                    You have joined 
                     <a href="/view/organizer/{$event->user->id}">
                         <span class="notification-blue">{$event->user->name}'s</span>
                     </a>
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
+                    </a>
+                    with a team named 
+                    <a href="/view/team/{$this->id}">
+                        <span class="notification-blue">{$this->teamName}</span>
                     </a>.
                 </span>
             HTML;
@@ -363,7 +363,7 @@ class Team extends Model
                     <img src="/storage/{$this->teamBanner}" 
                         onerror="this.src='/assets/images/404.png';"
                         class="object-fit-cover rounded-circle me-2"
-                        width="30" height="30" 
+                        width="45" height="45" 
                         alt="Team banner for {$this->teamName}">
                 </a>
                 <span class="notification-gray">
@@ -392,8 +392,8 @@ class Team extends Model
             'text' => ucfirst($this->teamName).' has joined your event '.$event->eventName.'!',
             'links' => [
                 [
-                    'name' => 'Visit team',
-                    'url' => route('event.index', ['id' => $event->id]),
+                    'name' => 'Visit Event',
+                    'url' => route('public.event.view', ['id' => $event->id]),
                 ],
             ],
         ];
@@ -465,7 +465,7 @@ class Team extends Model
                 <img src="/storage/{$this->teamBanner}" 
                     onerror="this.src='/assets/images/404.png';"
                     class="object-fit-cover rounded-circle me-2"
-                    width="30" height="30" 
+                    width="45" height="45" 
                     alt="Team banner for {$this->teamName}">
             </a>
             <span class="notification-gray">
@@ -489,8 +489,8 @@ class Team extends Model
             'text' => ucfirst($this->teamName).' has left your event '.$event->eventName.'!',
             'links' => [
                 [
-                    'name' => 'Visit team',
-                    'url' => route('event.index', ['id' => $event->id]),
+                    'name' => 'Visit Event',
+                    'url' => route('public.event.view', ['id' => $event->id]),
                 ],
             ],
         ];

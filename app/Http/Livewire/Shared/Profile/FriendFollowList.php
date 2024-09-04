@@ -18,7 +18,7 @@ class FriendFollowList extends Component
 
     public $name = 0;
 
-    public $page = 1;
+    public $page = 5;
 
     public $propertyName = 'followeeUser';
 

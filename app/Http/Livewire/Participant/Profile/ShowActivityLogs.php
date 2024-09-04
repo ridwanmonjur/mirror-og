@@ -29,7 +29,7 @@ class ShowActivityLogs extends Component
 
     public function loadActivityLogs()
     {
-        $perPage = 1;
+        $perPage = 5;
         $activityLogsQuery = ActivityLogs::where('subject_id', $this->userId)
             ->where('subject_type', User::class);
             Log::info("==========> Duration: {$this->duration} Page: {$this->page}");
