@@ -90,7 +90,18 @@
             </tbody>
         </table>
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
-            style="z-index: 999;">
+            style="z-index: 999;"
+            data-match_type="tournament" {{-- get props --}} data-stage_name="" {{-- get props --}}
+            data-inner_stage_name="" data-order="{{ $bracket['order'] }}"
+            data-team1_id="{{ $bracket['team1_id'] }}" data-team2_id="{{ $bracket['team2_id'] }}"
+            data-team1_score="{{ $bracket['team1_score'] }}" data-team2_score="{{ $bracket['team2_score'] }}"
+            data-team1_position="{{ $bracket['team1_position'] }}"
+            data-team2_position="{{ $bracket['team2_position'] }}"
+            data-winner_id="{{ $bracket['winner_id'] }}" data-status="{{ $bracket['status'] }}"
+            data-result="{{ $bracket['result'] }}"
+            data-winner_next_position="{{ $bracket['winner_next_position'] }}"
+            data-loser_next_position="{{ $bracket['loser_next_position'] }}"
+        >
             <div class="tournament-bracket__box code{{ $bracket['team1Code'] }}code bg-light">
                 <span>{{ $bracket['team1_position'] }}</span>
             </div>
@@ -119,20 +130,8 @@
                     <span class="d-none-when-hover">Loser to {{ $bracket['loser_next_position'] }} </span>
                 @endif
 
-                <span class="d-none-until-hover" 
-                      onclick="fillModalInputs(event); event.preventDefault();" 
-
-                     data-match_type="tournament" {{-- get props --}}
-                    data-stage_name="" {{-- get props --}} data-inner_stage_name=""
-                    data-order="{{ $bracket['order'] }}" data-team1_id="{{ $bracket['team1_id'] }}"
-                    data-team2_id="{{ $bracket['team2_id'] }}" data-team1_score="{{ $bracket['team1_score'] }}"
-                    data-team2_score="{{ $bracket['team2_score'] }}"
-                    data-team1_position="{{ $bracket['team1_position'] }}"
-                    data-team2_position="{{ $bracket['team2_position'] }}"
-                    data-winner_id="{{ $bracket['winner_id'] }}" data-status="{{ $bracket['status'] }}"
-                    data-result="{{ $bracket['result'] }}"
-                    data-winner_next_position="{{ $bracket['winner_next_position'] }}"
-                    data-loser_next_position="{{ $bracket['loser_next_position'] }}">
+                <span class="d-none-until-hover" onclick="fillModalInputs(event); event.preventDefault();"
+                    >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-pencil-square" viewBox="0 0 16 16">
                         <path

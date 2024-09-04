@@ -7,12 +7,6 @@
                 'event' => $event,
                 'teamList' => $teamList
             ])
-            {{-- @livewire(
-                "shared.brackets.bracket-middle-items-update-modal"
-            )
-            @livewire(
-                "shared.brackets.bracket-winner-items-update-modal"
-            ) --}}
             <h5 class="mt-5 mb-4  text-start">Upper bracket</h5>
             <div class="row ">
                 <div class="tournament-bracket tournament-bracket--rounded col-lg-9 col-xl-8 col-xxl-6">
@@ -195,23 +189,27 @@
             item.style.setProperty('--border2-color', 'red');
         });
 
+        function getParentByClassName(element, targetClassName) {
+            let parent = element.parentElement;
+
+            while (parent && !parent.classList.contains(targetClassName)) {
+                parent = parent.parentElement;
+            }
+
+            return parent;
+        }
+
         function fillModalInputs(event) {
             event.stopPropagation();
+            
             const button = event.currentTarget;
+            let parentWithDataset = getParentByClassName(button, "tournament-bracket__displayLargeScreen");
+        
             console.log({
-                button
-            });
-            console.log({
-                button
-            });
-            console.log({
-                button
-            });
-            console.log({
-                button
+                parentWithDataset, button
             });
 
-            const dataset = button.dataset;
+            const dataset = parentWithDataset.dataset;
             const modalElement = document.getElementById('firstMatchModal');
 
             const inputs = modalElement.querySelectorAll('input, select, textarea');
@@ -237,6 +235,5 @@
             };
         }
 
-            new SlimSelect(document.getElementById('team2_id'));
     </script>
 @endsection

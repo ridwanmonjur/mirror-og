@@ -28,9 +28,15 @@ form span, .form-control, .form-select, form span,
     border-radius: 0 !important;
     font-weight: 500 !important;
 }
-
+.dynamic-select {
+    border: 0px solid gray !important;
+    background-color: white !important;
+    border-bottom: 1px dotted gray !important;
+    border-radius: 0 !important;
+    font-weight: 500 !important;
+}
 input, select {
-    color: gray !important;
+    color: rgb(61, 55, 55) !important;
 }
 
 
