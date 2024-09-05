@@ -288,7 +288,6 @@ class HandleResults implements ShouldQueue
     // Simple Strategy
     public function handle()
     {
-        Log::info($this->parameters);
         $strategyClass = __NAMESPACE__.'\\'.$this->strategy.'Strategy';
 
         if (! class_exists($strategyClass)) {
