@@ -24,3 +24,4 @@
         {{ $line }}
     @endforeach
 @endisset
+@endcomponent

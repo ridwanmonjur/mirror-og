@@ -2,11 +2,10 @@
 
 namespace App\Notifications;
 
-use App\Mail\EventJoinNotificationMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\HtmlString;
 
 class EventJoinNotification extends Notification
 {
@@ -30,18 +29,14 @@ class EventJoinNotification extends Notification
 
     public function toMail($notifiable)
     {
-        // customize this notification
-        // Mail::to($order->customer_email)->send(new OrderConfirmation($order));
         return (new MailMessage())
-        ->success()
-        ->greeting("Hello, there from us, Ocean's Gaming!")
-        ->salutation("Regards, \n Ocean's Gaming")
-        ->subject($this->body['subject'] ?? 'A subject')
-        ->action($this->body['links'][0]['name'], $this->body['links'][0]['url'])
-        ->line($this->body['text']);
-
-
-
+            ->replyTo('mjrrdn@gmail.com')
+            ->success()
+            ->greeting("Welcome and greetings.")
+            ->salutation("Regards, \n Driftwood")
+            ->subject($this->body['subject'] ?? 'A subject')
+            ->action($this->body['links'][0]['name'], $this->body['links'][0]['url'])
+            ->line(new HtmlString ($this->body['text']));
     }
 
     public function toDatabase($notifiable)
