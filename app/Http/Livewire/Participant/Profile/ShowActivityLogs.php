@@ -32,7 +32,6 @@ class ShowActivityLogs extends Component
         $perPage = 5;
         $activityLogsQuery = ActivityLogs::where('subject_id', $this->userId)
             ->where('subject_type', User::class);
-            Log::info("==========> Duration: {$this->duration} Page: {$this->page}");
         if ($this->duration === 'new') {
             $activityLogsQuery->whereDate('created_at', Carbon::today());
         } elseif ($this->duration === 'recent') {

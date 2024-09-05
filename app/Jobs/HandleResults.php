@@ -18,7 +18,6 @@ class ChangePositionStrategy
     {
         try {
             Log::info('ChangePositions===========>');
-            Log::info($parameters);
             [
                 'teamId' => $teamId,
                 'image' => $image,
@@ -61,8 +60,6 @@ class ChangePositionStrategy
                     </a>. 
                 </span>
             HTML;
-            Log::info($activityLog);
-            Log::info($foundLogs);
 
             if (isset($foundLogs[0])) {
                 foreach ($foundLogs as $foundLog) {

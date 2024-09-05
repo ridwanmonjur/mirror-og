@@ -12,7 +12,7 @@
     </a>
 
     @if (isset($user->notifications[0]))
-        <div class="dropdown-menu fs-7 py-0" data-bs-auto-close="outside" style="position: absolute; left: -300px; width: 400px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLinkNotification">
+        <div class="dropdown-menu border rounded  fs-7 py-0" data-bs-auto-close="outside" style="position: absolute; left: -300px; width: 400px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLinkNotification">
             <div class="position-relative">
                 <div class="pt-2 pb-1 d-flex justify-content-around">
                     <a href="" class="btn btn-link"> <u> Notifications Page</u> </a>
@@ -45,7 +45,7 @@
             </div> 
         </div>
     @else
-        <div class="dropdown-menu  text-center py-2" style="position: absolute; left: -300px; width: 300px;" data-bs-auto-close="outside" aria-labelledby="dropdownMenuLinkNotification">
+        <div class="dropdown-menu  border rounded  text-center py-2" style="position: absolute; left: -300px; width: 300px;" data-bs-auto-close="outside" aria-labelledby="dropdownMenuLinkNotification">
             <p class="pt-3 align-middle me-4" style="font-weight: 400;" >
             You have no notifications!
             </p>
@@ -58,7 +58,7 @@
         aria-haspopup="true" aria-expanded="true">
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
     </a>
-    <div class="dropdown-menu fs-7   py-0" style="position: absolute; left: -250px; width: 280px;"
+    <div class="dropdown-menu border rounded  fs-7   py-0" style="position: absolute; left: -250px; width: 280px;"
         aria-labelledby="dropdownMenuLinkSignedIn">
         <div class="border-dark border-2 border-bottom text-center px-2">
             <a class="py-0" href="{{ route( strtolower($user->role) .'.profile.view') }}">

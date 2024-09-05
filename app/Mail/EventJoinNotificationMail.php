@@ -22,8 +22,8 @@ class EventJoinNotificationMail extends Mailable
 
     public function build()
     {
-        return $this->markdown('emails.event_joined')
-            ->replyTo('oceansgamingmy@gmail.com')
+        return $this->markdown('Email.event_joined')
+            ->replyTo('mjrrdn@gmail.com')
             ->subject($this->body['subject'] ?? 'A subject')
             ->with([
                 'greeting' => "Hello, there from us, Ocean's Gaming!",

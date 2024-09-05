@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Mail\EventJoinNotificationMail;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 
@@ -19,8 +20,6 @@ class EventJoinNotification extends Notification
     public function __construct(
         $body
     ) {
-        Log::info('Notification join event ================>');
-        Log::info('Notification join event ================>');
         $this->body = $body;
     }
 
@@ -33,10 +32,15 @@ class EventJoinNotification extends Notification
     {
         // customize this notification
         // Mail::to($order->customer_email)->send(new OrderConfirmation($order));
-        return (new EventJoinNotificationMail($this->body));
+        return (new MailMessage())
+        ->success()
+        ->greeting("Hello, there from us, Ocean's Gaming!")
+        ->salutation("Regards, \n Ocean's Gaming")
+        ->subject($this->body['subject'] ?? 'A subject')
+        ->action($this->body['links'][0]['name'], $this->body['links'][0]['url'])
+        ->line($this->body['text']);
 
 
-            // php artisan make:mail EventJoinNotificationMail --markdown=Email.event-joined.blade.php
 
     }
 
