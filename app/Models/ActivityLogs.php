@@ -44,7 +44,6 @@ class ActivityLogs extends Model
     public function createActivityLogs(array $parameters): void
     {
         Log::info('hit createActivityLogs');
-        Log::info($parameters['subject_id']);
         $data = [];
         $isLogArray = is_array($parameters['log']); 
         foreach ($parameters['subject_id'] as $index => $subjectId) {

@@ -17,7 +17,6 @@ class ChangePositionStrategy
     public function handle($parameters)
     {
         try {
-            Log::info('ChangePositions===========>');
             [
                 'teamId' => $teamId,
                 'image' => $image,
@@ -107,7 +106,6 @@ class AddAwardStrategy
                 'image' => $image,
             ] = $parameters;
 
-            Log::info('AddAwardStrategy===========>');
             $notificationX = new Notifications();
             $activityLogX = new ActivityLogs();
             $notificationLog = <<<HTML
@@ -179,7 +177,6 @@ class AddAchievementStrategy
                 'image' => $image,
             ] = $parameters;
             
-            Log::info('AddAchievementStrategy===========>');
             $notificationX = new Notifications();
             $activityLogX = new ActivityLogs();
             $notificationLog = <<<HTML
@@ -249,7 +246,6 @@ class DeleteAwardStrategy
     public function handle($parameters)
     {
         try {
-            Log::info('DeleteAwardStrategy===========>');
             $activityLogX = new ActivityLogs();
             $activityLogX->findActivityLog($parameters)->delete();
             $notificationX = new Notifications();

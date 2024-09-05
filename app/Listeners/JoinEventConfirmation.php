@@ -24,14 +24,9 @@ class JoinEventConfirmation implements ShouldQueue
      */
     public function handle(JoinEventConfirmed $event): void
     {
-        // $user = $event->user;
-        Log::info('Join event ================>');
-        // TODO: CREATE ACTIVITY
         ActivityLogs::insert($event->allEventLogs);
         Notification::send($event->memberList, new EventJoinNotification($event->memberNotification));
         Notification::send($event->organizerList, new EventJoinNotification($event->organizerNotification));
-        // Blade here
-        //  {{ $notification->data['message'] }}
     }
 
     public function failed(JoinEventConfirmed $event, Throwable $exception): void

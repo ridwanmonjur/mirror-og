@@ -41,7 +41,6 @@ class ShowActivityLogs extends Component
         }
 
         $activityLogs = $activityLogsQuery->paginate($perPage, ['*'], 'page', $this->page);
-        Log::info("===========> Activity Logs:" . $activityLogs->hasMorePages() . "\n");
 
         $this->hasMore = $activityLogs->hasMorePages();
         $this->totalItems = array_merge($this->totalItems, $activityLogs->items());
