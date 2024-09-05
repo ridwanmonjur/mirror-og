@@ -18,8 +18,6 @@ class CopyCookieToAuthorizationHeader
     public function handle(Request $request, Closure $next): Response
     {
         try {
-            Log::info('>>> jwt_cookie');
-            Log::info($request->cookie('jwt_cookie'));
 
             if (! $request->header('Authorization')) {
                 $token = $request->cookie('jwt_cookie');

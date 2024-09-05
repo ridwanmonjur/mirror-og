@@ -265,7 +265,6 @@ class DeleteAchievementStrategy
     public function handle($parameters)
     {
         try {
-            Log::info('DeleteAchievementStrategy===========>');
             $activityLogX = new ActivityLogs();
             $activityLogX->findActivityLog($parameters)->delete();
             $notificationX = new Notifications();

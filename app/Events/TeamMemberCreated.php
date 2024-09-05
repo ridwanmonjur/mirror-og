@@ -15,7 +15,6 @@ class TeamMemberCreated implements ShouldQueue
 
     public function __construct($teamMember)
     {
-        Log::info('TeamMemberCreated ================>');
         $this->teamMember = $teamMember;
     }
 }
