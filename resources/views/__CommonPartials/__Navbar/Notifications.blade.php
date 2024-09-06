@@ -4,23 +4,13 @@
         'notification-container-not-read' => is_null($notification->read_at),
         'notification-container-read' => !is_null($notification->read_at),
     ])>
-        <div class="d-flex justify-content-start align-items-center pt-2">
-            {{-- @if (isset($notification->data['image']))
-                <img src="{{ '/storage' . '/' . $notification->data['image'] }}" alt= "Notification" width="45"
-                    height="45" onerror="this.onerror=null; this.src='/assets/404.png';"
-                    class="object-fit-cover rounded-circle">
-            @else
-                <div style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
-                    class="d-flex justify-content-center align-items-center text-light rounded-circle random-bg-circle">
-                    {{ $notification->type[0] }}
-                </div>
-            @endif --}}
-            <span style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 0.9375rem;"
+        <div class="d-flex justify-content-start align-items-center pt-2 mx-2">
+            <span style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 0.9375rem; text-align: justify !important;"
                 class="text-start ms-2 my-1">
                 {!! $notification->data['data'] !!}
             </span>
         </div>
-        <div class="d-flex justify-content-around align-items-center mt-1 pb-2">
+        <div class="d-flex justify-content-between align-items-center mt-1 pb-2 mx-2">
             <a role="button" href="{{ $notification->data['links'][0]['url'] }}"
                 class="border-bottom-primary border-bottom btn btn-link btn-sm">
                 {{ $notification->data['links'][0]['name'] }}

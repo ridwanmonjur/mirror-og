@@ -24,7 +24,7 @@
                             it.</p>
                         <p style="text-align: center;">
                             <a href="{{ route('user.reset.view', $token) }}"
-                                style="display: inline-block; padding: 10px 20px; font-size: 18px; color: white; background-color: {{$secondaryColor}}; text-decoration: none; border-radius: 5px;">
+                                style="display: inline-block; padding: 10px 20px; font-size: 18px; color: white !important; background-color: {{$secondaryColor}}; text-decoration: none; border-radius: 5px;">
                                 Reset Password
                             </a>
                         </p>

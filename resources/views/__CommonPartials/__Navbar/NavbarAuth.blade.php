@@ -14,8 +14,8 @@
     @if (isset($user->notifications[0]))
         <div class="dropdown-menu border rounded  fs-7 py-0" data-bs-auto-close="outside" style="position: absolute; left: -300px; width: 400px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLinkNotification">
             <div class="position-relative">
-                <div class="pt-2 pb-1 d-flex justify-content-around">
-                    <a href="" class="btn btn-link"> <u> Notifications Page</u> </a>
+                <div class="pt-2 pb-1 d-flex justify-content-between">
+                    <a href="" class="btn btn-link"> </a>
                     <a role="button" onclick="setAllNotificationsRead();" class="btn btn-link">
                         <u>
                             {{-- All checks --}}
@@ -31,7 +31,7 @@
                     $notificationList = $user->notifications()->cursorPaginate($perpage);
                     $nextCursor = $notificationList?->nextCursor();
                 @endphp
-                <div class="notifications-list-container">
+                <div class="notifications-list-container text-justify">
                     @include('__CommonPartials.__Navbar.Notifications')
                 </div>
                 @if ($nextCursor)

@@ -31,6 +31,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
             return in_array($user->email, [
                 'mjrrdn@gmail.com',
                 'mjrrdnasm@gmail.com',
+                env(env('MAIL_CC_ADDRESS'))
             ]);
         });
     }

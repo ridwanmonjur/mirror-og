@@ -2,10 +2,10 @@
 
 namespace App\Notifications;
 
+use App\Mail\EventJoinMail;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\HtmlString;
+use Illuminate\Support\Facades\Log;
 
 class EventJoinNotification extends Notification
 {
@@ -13,9 +13,6 @@ class EventJoinNotification extends Notification
 
     public $body;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct(
         $body
     ) {
@@ -29,40 +26,19 @@ class EventJoinNotification extends Notification
 
     public function toMail($notifiable)
     {
-        return (new MailMessage())
-            ->replyTo('mjrrdn@gmail.com')
-            ->success()
-            ->greeting("Welcome and greetings.")
-            ->salutation("Regards, \n Driftwood")
-            ->subject($this->body['subject'] ?? 'A subject')
-            ->action($this->body['links'][0]['name'], $this->body['links'][0]['url'])
-            ->line(new HtmlString ($this->body['text']));
+        return (new EventJoinMail($this->body))->to($notifiable->email);
     }
 
     public function toDatabase($notifiable)
     {
-        // modify here
+        Log::info(">>>>>>>>>>>>>>>");
+        Log::info($this->body);
         return [
-            'data' => $this->body['text'],
+            'data' => $this->body['textFirstPart'] 
+                . $this->body['text'],
             'title' => $this->body['subject'],
             'links' => $this->body['links'],
-            // Add any additional data you want to store in the database
         ];
     }
 
-    // public function toArray($notifiable)
-    // {
-    //     // modify here
-    //     return [
-    //         'data' => $this->body['text'],
-    //         'subject' => $this->body['subject'],
-    //         'links' =>   $this->body['links']
-    //         // Add any additional data you want to store in the database
-    //     ];
-    // }
-
-    // public function markAsRead(){
-    //     Auth::user()->unreadNotifications->markAsRead();
-    //     return redirect()->back();
-    // }
 }

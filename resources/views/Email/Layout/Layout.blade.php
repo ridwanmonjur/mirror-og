@@ -20,6 +20,10 @@
             text-align: justify;
             font-size: 1rem;
         }
+        a { 
+            color: #43A4D7;
+            text-decoration: none !important;
+        }
     </style>
    
     @stack('head')
@@ -74,7 +78,7 @@
                                         <p
                                             style="margin:0;font-size:11.5px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;">
                                             &reg; Kuala Lumpur, Malaysia 2024<br /><a href="http://www.example.com"
-                                                style="color:#ffffff;text-decoration:underline;">Unsubscribe</a>
+                                                style="color:#ffffff !important;text-decoration:underline;">Unsubscribe</a>
                                         </p>
                                     </td>
                                     <td style="padding:0;width:50%;" align="right">
