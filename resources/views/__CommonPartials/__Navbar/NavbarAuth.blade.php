@@ -36,11 +36,12 @@
                 </div>
                 @if ($nextCursor)
                     <div class="d-flex pagination justify-content-center mx-auto">
-                        <button class="mb-4 btn btn-link text-light btn-sm" id="load-more" 
+                        <button class="btn btn-link text-light btn-sm" id="load-more" 
                             data-url="{{ route('user.notifications.more', ['id' => $user->id]) }}" 
                             data-cursor="{{ $nextCursor ? $nextCursor->encode() : '' }}"
                         > <u>Load More </u></button>
                     </div>
+                    <br>
                 @endif
             </div> 
         </div>
