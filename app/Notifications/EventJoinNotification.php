@@ -31,8 +31,6 @@ class EventJoinNotification extends Notification
 
     public function toDatabase($notifiable)
     {
-        Log::info(">>>>>>>>>>>>>>>");
-        Log::info($this->body);
         return [
             'data' => $this->body['textFirstPart'] 
                 . $this->body['text'],
