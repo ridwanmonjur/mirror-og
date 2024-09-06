@@ -21,6 +21,10 @@ form span, .form-control, .form-select, form span,
 
 }
 
+input:disabled {
+    background-color: white !important;
+}
+
 .input-group-text {
     border: 0px solid gray !important;
     background-color: white !important;

@@ -432,7 +432,7 @@ class BracketData
                             'team2_position' => 'L50',
                             'winner_next_position' => 'L53',
                             'loser_next_position' => null,
-
+                            'order' => 1
                         ], // 1
                         [
                             'team1_position' => 'L51',

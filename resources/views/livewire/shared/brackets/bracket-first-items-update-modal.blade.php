@@ -27,10 +27,10 @@
                                         </svg>
                                         Choose Team 1
                                     </span>
-                                    <select class="form-select" id="team1_id" name="team1_id" required  data-dynamic-select>
-                                        @foreach ($teamList as $team)
+                                    <select style="min-width: 450px;" class="form-select" id="team1_id" name="team1_id" required  data-dynamic-select>
                                             <option value="">Choose a team</option>
-                                            <option value="{{ $team->id }}"   data-img-width="30px" data-img-height="30px"
+                                        @foreach ($teamList as $team)
+                                            <option  value="{{ $team->id }}"   data-img-width="30px" data-img-height="30px"
                                                 data-img="{{ '/' . 'storage/' . $team->teamBanner}}"
                                             >
                                             <span> {{ $team->teamName }} </span>
@@ -55,7 +55,7 @@
                         <div class="col-12 col-xxl-6 mb-3">
                             <div>
                                 <span class="me-2">Matchup</span>
-                                <input type="text" class=" form-control form-control-sm d-inline "
+                                <input type="text" disabled class=" form-control form-control-sm d-inline "
                                     id="team1_position" name="team1_position" style="max-width: 100px;"
                                     aria-describedby="team1-position-addon" placeholder="">
                             </div>
@@ -105,7 +105,7 @@
                         <div class="col-12 col-xxl-6 mb-3">
                             <div>
                                 <span class="me-2">Matchup</span>
-                                <input type="text" class=" form-control form-control-sm d-inline" id="team2_position"
+                                <input disabled type="text" class=" form-control form-control-sm d-inline" id="team2_position"
                                     name="team2_position" aria-describedby="team2-position-addon"
                                     style="max-width: 100px;" placeholder="">
                             </div>
@@ -171,7 +171,7 @@
                         <div class="col-12 col-xxl-6 col- mb-3">
                             <div class="input-group">
                                 <span class="input-group-text " id="winner-next-addon">Winner's next match</span>
-                                <input type="text" class=" form-control form-control-sm" style="max-width: 100px;" id="winner_next_position"
+                                <input type="text" class=" form-control form-control-sm" disabled style="max-width: 100px;" id="winner_next_position"
                                     name="winner_next_position" aria-describedby="winner-next-addon">
                             </div>
                         </div>
@@ -181,7 +181,7 @@
                             <div class="input-group">
                                 <span class="input-group-text" id="loser-next-addon">Loser's
                                     next match</span>
-                                <input type="text" style="max-width: 100px;" class=" form-control form-control-sm" id="loser_next_position"
+                                <input type="text" style="max-width: 100px;" disabled class=" form-control form-control-sm" id="loser_next_position"
                                     name="loser_next_position" aria-describedby="loser-next-addon">
                             </div>
                         </div>

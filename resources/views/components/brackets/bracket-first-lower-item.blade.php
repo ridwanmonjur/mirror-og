@@ -1,6 +1,6 @@
 <div class="tournament-bracket__item code{{ $bracket['team1_position'] }}code code{{ $bracket['team1_position'] }}code">
     @php
-       $defaultValues = [
+        $defaultValues = [
             'match_type' => 'tournament',
             'stage_name' => '',
             'inner_stage_name' => '',
@@ -57,8 +57,8 @@
         $bracket['team2Score'] = $bracket['team2Score'] ?? '0';
         $bracket['winner_next_position'] = $bracket['winner_next_position'] ?? 'N/A';
         $bracket['loser_next_position'] = $bracket['loser_next_position'] ?? null;
-    @endphp
 
+    @endphp
     <div class="tournament-bracket__match code{{ $bracket['team1_position'] }}code code{{ $bracket['team1_position'] }}code"
         tabindex="0">
         <table class="tournament-bracket__table mx-auto">
@@ -72,7 +72,7 @@
                 <tr class="tournament-bracket__team tournament-bracket__team--winner">
                     <td class="tournament-bracket__country">
                         <abbr class="tournament-bracket__code"
-                            title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }}</abbr>
+                            title="{{ $bracket['team1_positionMobile'] }}">{{ $bracket['team1_positionMobile'] }}</abbr>
                     </td>
                     <td class="tournament-bracket__score">
                         <span class="tournament-bracket__number">{{ $bracket['team1Score'] }}</span>
@@ -81,7 +81,7 @@
                 <tr class="tournament-bracket__team">
                     <td class="tournament-bracket__country">
                         <abbr class="tournament-bracket__code"
-                            title="{{ $bracket['team2_position'] }}">{{ $bracket['team2_position'] }}</abbr>
+                            title="{{ $bracket['team2_positionMobile'] }}">{{ $bracket['team2_positionMobile'] }}</abbr>
                     </td>
                     <td class="tournament-bracket__score">
                         <span class="tournament-bracket__number">{{ $bracket['team2Score'] }}</span>
@@ -89,7 +89,7 @@
                 </tr>
             </tbody>
         </table>
-        <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent" 
+        <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
             style="z-index: 999;"
             data-match_type="tournament" {{-- get props --}} data-stage_name="" {{-- get props --}}
             data-inner_stage_name="" data-order="{{ $bracket['order'] }}"
@@ -102,17 +102,15 @@
             data-winner_next_position="{{ $bracket['winner_next_position'] }}"
             data-loser_next_position="{{ $bracket['loser_next_position'] }}"
         >
-            <div class="tournament-bracket__box code{{ $bracket['team1Code'] }}code">
+            <div class="tournament-bracket__box code{{ $bracket['team1Code'] }}code bg-light">
                 <span>{{ $bracket['team1_position'] }}</span>
             </div>
-            <div class="tournament-bracket__box code{{ $bracket['team2Code'] }}code">
+            <div class="tournament-bracket__box code{{ $bracket['team2Code'] }}code bg-light">
                 <span>{{ $bracket['team2_position'] }}</span>
             </div>
-            <small class="position-absolute winner-label">
+            <small class="position-absolute winner-label ">
                 <span class="d-none-when-hover">Winner to {{ $bracket['winner_next_position'] }} </span>
-                <span class="d-none-until-hover" onclick="fillModalInputs(event); event.preventDefault();"
-                    data-bs-toggle="modal" data-bs-target="#middleMatchModal"
-                >
+                <span class="d-none-until-hover" onclick="fillModalInputs(event); event.preventDefault();">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-pencil-square" viewBox="0 0 16 16">
                         <path
@@ -122,21 +120,18 @@
                     </svg>
                 </span>
             </small>
-             <small @class([
-                "position-absolute loser-label",
-                "d-none-until-hover" => !$bracket['loser_next_position']
-            ])
-                 @style([
-                    "left: 100%;" => !$bracket['loser_next_position']
-                ])
-            >
+            <small @class([
+                'position-absolute loser-label',
+                'd-none-until-hover' => !$bracket['loser_next_position'],
+            ]) @style([
+                'left: 100%;' => !$bracket['loser_next_position'],
+            ])>
                 @if ($bracket['loser_next_position'])
                     <span class="d-none-when-hover">Loser to {{ $bracket['loser_next_position'] }} </span>
                 @endif
 
                 <span class="d-none-until-hover" onclick="fillModalInputs(event); event.preventDefault();"
-                    data-bs-toggle="modal" data-bs-target="#middleMatchModal"
-                >
+                    >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-pencil-square" viewBox="0 0 16 16">
                         <path

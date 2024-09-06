@@ -74,7 +74,7 @@
                     <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                         @foreach ($bracketList['lowerBracket']['eliminator1'] as $bracket)
-                            <x-brackets.bracket-first-item :bracket="$bracket"
+                            <x-brackets.bracket-first-lower-item :bracket="$bracket"
                                 :wire:key="'lowerBracket'. 'eliminator1'. $loop->index" />
                         @endforeach
                     </div>

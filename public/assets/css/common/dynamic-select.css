@@ -39,7 +39,7 @@
     position: absolute;
     top: 100%;
     left: 0;
-    right: 0;
+    right: 100;
     z-index: 999;
     margin-top: 5px;
     padding: 5px;
@@ -83,7 +83,7 @@
   }
 
   .dynamic-select-option {
-    min-width: 400px;
+    min-width: 300px;
 
    }
   .dynamic-select .dynamic-select-header img, .dynamic-select .dynamic-select-option img {

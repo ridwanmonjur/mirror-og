@@ -5,32 +5,63 @@
             <div
                 class="tournament-bracket__item code{{ $bracket['team1_position'] }}code code{{ $bracket['team1_position'] }}code">
                 @php
-                    if (isset($bracket['team1Code'])) {
+                   $defaultValues = [
+                        'match_type' => 'tournament',
+                        'stage_name' => '',
+                        'inner_stage_name' => '',
+                        'team1_id' => '',
+                        'team2_id' => '',
+                        'team1_score' => '0',
+                        'team2_score' => '0',
+                        'team1_position' => '',
+                        'team2_position' => '',
+                        'winner_id' => '',
+                        'status' => '',
+                        'result' => '',
+                        'winner_next_position' => '',
+                        'loser_next_position' => '',
+                        'team1Code' => 'N/A',
+                        'team2Code' => 'N/A',
+                        'winner_next_position' => 'N/A',
+                        'loser_next_position' => null,
+                    ];
+
+                    foreach ($defaultValues as $key => $defaultValue) {
+                        $bracket[$key] = $bracket[$key] ?? $defaultValue;
+                    }
+
+                    if (isset($bracket['team1Code']) && $bracket['team1Code'] !== 'N/A') {
                         $bracket['team1Display'] = true;
                     } else {
                         $bracket['team1Display'] = false;
                         $bracket['team1Code'] = 'N/A';
                     }
 
-                    if (isset($bracket['team2Code'])) {
+                    if (isset($bracket['team2Code']) && $bracket['team2Code'] !== 'N/A') {
                         $bracket['team2Display'] = true;
                     } else {
                         $bracket['team2Display'] = false;
                         $bracket['team2Code'] = 'N/A';
                     }
 
-                    $bracket['team1Score'] = $bracket['team1Score'] ?? 'N/A';
-                    $bracket['team2Score'] = $bracket['team2Score'] ?? 'N/A';
-                    $bracket['winner_next_position'] = $bracket['winner_next_position'] ?? 'N/A';
-                    $bracket['loser_next_position'] = $bracket['loser_next_position'] ?? null;
-
                     if (!$bracket['team1_position']) {
                         $bracket['team1_position'] = '';
+                        $bracket['team1_positionMobile'] = 'TBD';
+                    } else {
+                        $bracket['team1_positionMobile'] = $bracket['team1_position'];
                     }
 
                     if (!$bracket['team2_position']) {
                         $bracket['team2_position'] = '';
+                        $bracket['team2_positionMobile'] = 'TBD';
+                    } else {
+                        $bracket['team2_positionMobile'] = $bracket['team2_position'];
                     }
+
+                    $bracket['team1Score'] = $bracket['team1Score'] ?? '0';
+                    $bracket['team2Score'] = $bracket['team2Score'] ?? '0';
+                    $bracket['winner_next_position'] = $bracket['winner_next_position'] ?? 'N/A';
+                    $bracket['loser_next_position'] = $bracket['loser_next_position'] ?? null;
                 @endphp
 
                 <div class="tournament-bracket__match border-style code{{ $bracket['team1_position'] }}code code{{ $bracket['team1_position'] }}code"
@@ -64,7 +95,18 @@
                         </tbody>
                     </table>
                     <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
-                        style="z-index: 999;">
+                        style="z-index: 999;"
+                        data-match_type="tournament" {{-- get props --}} data-stage_name="" {{-- get props --}}
+                        data-inner_stage_name="" data-order="{{ $bracket['order'] }}"
+                        data-team1_id="{{ $bracket['team1_id'] }}" data-team2_id="{{ $bracket['team2_id'] }}"
+                        data-team1_score="{{ $bracket['team1_score'] }}" data-team2_score="{{ $bracket['team2_score'] }}"
+                        data-team1_position="{{ $bracket['team1_position'] }}"
+                        data-team2_position="{{ $bracket['team2_position'] }}"
+                        data-winner_id="{{ $bracket['winner_id'] }}" data-status="{{ $bracket['status'] }}"
+                        data-result="{{ $bracket['result'] }}"
+                        data-winner_next_position="{{ $bracket['winner_next_position'] }}"
+                        data-loser_next_position="{{ $bracket['loser_next_position'] }}"
+                    >
                         <div class="tournament-bracket__box border-style code{{ $bracket['team1Code'] }}code px-2 py-2">
                             <span>{{ $bracket['team1_position'] }}</span>
                         </div>
@@ -89,7 +131,7 @@
                                 <span class="d-none-when-hover">Loser to {{ $bracket['loser_next_position'] }} </span>
                             @endif
 
-                            <span class="d-none-until-hover"
+                            <span class="d-none-until-hover" onclick="fillModalInputs(event); event.preventDefault();"
                                 data-bs-toggle="modal" data-bs-target="#winnerMatchModal"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
