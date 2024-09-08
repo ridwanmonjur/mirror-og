@@ -142,8 +142,8 @@ nav svg {
 }
 
 .hover-bigger:hover,
-.navbar img:hover,
-nav img:hover,
+.navbar > img:hover,
+nav > img:hover,
 .navbar svg:hover,
 nav svg:hover {
     transform: scale(1.1);
