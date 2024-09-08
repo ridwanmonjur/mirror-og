@@ -91,8 +91,10 @@
         </table>
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
             style="z-index: 999;"
-            data-match_type="tournament" {{-- get props --}} data-stage_name="" {{-- get props --}}
-            data-inner_stage_name="" data-order="{{ $bracket['order'] }}"
+            data-match_type="tournament"  
+            data-stage_name="{{$stageName}}"
+            data-inner_stage_name="{{$innerStageName}}" 
+            data-order="{{ $bracket['order'] }}"
             data-team1_id="{{ $bracket['team1_id'] }}" data-team2_id="{{ $bracket['team2_id'] }}"
             data-team1_score="{{ $bracket['team1_score'] }}" data-team2_score="{{ $bracket['team2_score'] }}"
             data-team1_position="{{ $bracket['team1_position'] }}"
@@ -103,10 +105,10 @@
             data-loser_next_position="{{ $bracket['loser_next_position'] }}"
         >
             <div class="tournament-bracket__box code{{ $bracket['team1Code'] }}code bg-light">
-                <span>{{ $bracket['team1_position'] }}</span>
+                <span></span>
             </div>
             <div class="tournament-bracket__box code{{ $bracket['team2Code'] }}code bg-light">
-                <span>{{ $bracket['team2_position'] }}</span>
+                <span></span>
             </div>
             <small class="position-absolute winner-label ">
                 <span class="d-none-when-hover">Winner to {{ $bracket['winner_next_position'] }} </span>

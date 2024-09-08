@@ -139,7 +139,7 @@
                                 </a>
                         @endif    
                         <div class="popover-content d-none" >
-                            <div class="popover-box px-3 py-3 ms-5" style="margin-bottom: -10px;">
+                            <div class="popover-box px-0 py-0 ms-5" style="margin-bottom: -10px;  background: #F8F6EF;">
                                 <a class="px-2 py-1 text-light me-3 btn btn-primary d-inline popover-box popover-body" href="{{ route('event.matches.index', ['id' => $event->id]) }}">
                                     <small> Matches </small>
                                 </a>
