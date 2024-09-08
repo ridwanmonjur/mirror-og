@@ -42,6 +42,8 @@
                         > <u>Load More </u></button>
                     </div>
                     <br>
+                @else
+                    <br>
                 @endif
             </div> 
         </div>

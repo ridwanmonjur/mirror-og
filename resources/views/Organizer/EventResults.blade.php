@@ -36,12 +36,13 @@
             <div>
                 <div>
                     <div>
-                        <div class="text-start">
-                            <h5 class="card-text-2-lines text-center">
-                                {{ $event->eventName ?? 'No name yet' }}
+                        <div style="border: 3px solid black; background: white !important;" class="text-start tab-size px-4 py-3">
+                            <h5 class="card-text-2-lines mb-4">
+                                Event: {{ $event->eventName ?? 'No name yet' }}
                             </h5>
-                            <p class="text-center"> {{ $event->eventDescription }} </p>
+                            <p class="my-0 mb-3"> Description: {{ $event->eventDescription }} </p>
                         </div>
+                        <br>
                         <div class="tabs">
                             <button id="PositionBtn" class="tab-button py-2  outer-tab tab-button-active"
                                 onclick="showTab(event, 'Position', 'outer-tab')">Position
@@ -57,108 +58,123 @@
                         </div>
                         <div class="tab-content pb-4  outer-tab mx-auto" id="Position">
                             <table class="mx-auto member-table text-start" style="margin-left: 5px;">
-                                <thead class="accepted-member-table text-start">
-                                    <th></th>
-                                    <th class="text-start">
-                                        Team Position
-                                    </th>
-                                    <th class="text-start">
-                                        Team Name
-                                    </th>
-                                    <th class="text-start">
-                                        Team Description
-                                    </th>
-                                    <th class="text-start">
-                                        Team Created
-                                    </th>
-                                </thead>
-                                <tbody class="accepted-member-table text-start">
-                                    @foreach ($joinEventAndTeamList as $key => $joinEventAndTeam)
-                                        <tr class="st">
-                                            <td class="colorless-col px-3">
-                                                <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
-                                                    class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
-                                                    width="20" height="20" fill="currentColor"
-                                                    class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                                                    <path
-                                                        d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                                                </svg>
-                                            </td>
-                                            <td class="coloured-cell text-center px-2">
-                                                {{ $joinEventAndTeam->position ? $joinEventAndTeam->position : '-' }}
-                                            </td>
-                                            <td class="coloured-cell px-3 text-start">
-                                                {{ $joinEventAndTeam->teamName }}
-                                            </td>
-                                            <td class="coloured-cell px-3 text-start">
-                                                {{ $joinEventAndTeam->teamDescription }}
-                                            </td>
-                                            <td class="coloured-cell px-3 text-start">
-                                                {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
-                                            </td>
-                                            <td class="colorless-column px-1 ps-4 text-start"
-                                                style="padding: 0; margin: 0; width: 150px;">
-                                                <svg data-bs-toggle="modal"
-                                                    data-bs-target="{{ '#rank' . $joinEventAndTeam->id1 . '-modal' }}"
-                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
-                                                </svg>
-                                            </td>
-                                        </tr>
-                                        <div class="modal fade" id="{{ 'rank' . $joinEventAndTeam->id1 . '-modal' }}"
-                                            tabindex="-1"
-                                            aria-labelledby="{{ 'rank' . $joinEventAndTeam->id1 . '-modal' . 'label' }}"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-body">
-                                                        <form onsubmit="editCreatePosition(event);">
-                                                            <div class="mx-auto text-center mt-3">
-                                                                <h5> Choose a position for team:
-                                                                    {{ $joinEventAndTeam->teamName }}. </h5>
-                                                                <br>
-                                                                <p> Choose between 1 and
-                                                                    {{ $event->tier?->tierTeamSlot }}</p>
-                                                                <br>
-                                                                <div
-                                                                    class="input-group mb-3 mx-auto d-flex justify-content-center">
-                                                                    <span class="input-group-text bg-primary text-light"
-                                                                        id="basic-addon2">#</span>
-                                                                    <input class="form-control"
-                                                                        style="max-width: 100px !important;"
-                                                                        type="number" name="position" min="1"
-                                                                        max="{{ $event->tier?->tierTeamSlot }}">
-                                                                    <input type="hidden" name="eventName"
-                                                                        value="{{ $event->eventName ?? 'No name yet' }}">
-                                                                    <input type="hidden" name="teamName"
-                                                                        value="{{ $joinEventAndTeam->teamName }}">
-                                                                    <input type="hidden" name="creator_id"
-                                                                        value="{{ $joinEventAndTeam->creator_id }}">
-                                                                    <input type="hidden" name="teamBanner"
-                                                                        value="{{ $joinEventAndTeam->teamBanner }}">
-                                                                    <input type="hidden" name="id"
-                                                                        value="{{ $joinEventAndTeam->id1 }}">
-                                                                    <input type="hidden" name="team_id"
-                                                                        value="{{ $joinEventAndTeam->team_id }}">
+                                
+                                @if (isset($joinEventAndTeamList[0]))
+                                    <thead class="accepted-member-table text-start">
+                                        <th></th>
+                                    
+                                        <th class="text-start">
+                                            Team Name
+                                        </th>
+                                        <th class="text-start">
+                                            Team Description
+                                        </th>
+                                        <th class="text-start" style="width: 150px;">
+                                            Team Created
+                                        </th>
+                                        <th class="text-end" style="width: 120px;">
+                                            Team Position
+                                        </th>
+                                    </thead>
+                                    <tbody class="accepted-member-table text-start">
+                                        @foreach ($joinEventAndTeamList as $key => $joinEventAndTeam)
+                                            <tr class="st">
+                                                <td class="colorless-col px-3">
+                                                    <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
+                                                        class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
+                                                        width="20" height="20" fill="currentColor"
+                                                        class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                                                        <path
+                                                            d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                                                    </svg>
+                                                </td>
+                                                
+                                                <td class="coloured-cell px-3 text-start">
+                                                    <img
+                                                        class="rounded-circle d-inline-block object-fit-cover me-3"
+                                                        src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"
+                                                        {!! trustedBladeHandleImageFailure() !!} 
+                                                        height="40"
+                                                        width="40"
+                                                    > 
+                                                    {{ $joinEventAndTeam->teamName }}
+                                                </td>
+                                                <td class="coloured-cell px-3 text-start">
+                                                    {{ $joinEventAndTeam->teamDescription }}
+                                                </td>
+                                                <td class="coloured-cell px-3 text-start">
+                                                    {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
+                                                </td>
+                                                <td class="coloured-cell text-end px-2">
+                                                    {{ $joinEventAndTeam->position ? $joinEventAndTeam->position : '-' }}
+                                                    &nbsp;&nbsp;
+                                                </td>
+                                                <td class="colorless-column px-1 ps-2 cursor-pointer text-start"
+                                                    style="padding: 0; margin: 0; width: 150px;">
+                                                    <svg data-bs-toggle="modal"
+                                                        data-bs-target="{{ '#rank' . $joinEventAndTeam->id1 . '-modal' }}"
+                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
+                                                    </svg>
+                                                </td>
+                                            </tr>
+                                            <div class="modal fade" id="{{ 'rank' . $joinEventAndTeam->id1 . '-modal' }}"
+                                                tabindex="-1"
+                                                aria-labelledby="{{ 'rank' . $joinEventAndTeam->id1 . '-modal' . 'label' }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body">
+                                                            <form onsubmit="editCreatePosition(event);">
+                                                                <div class="mx-auto text-center mt-3">
+                                                                    <h5> Choose a position for team:
+                                                                        {{ $joinEventAndTeam->teamName }}. </h5>
+                                                                    <br>
+                                                                    <p> Choose between 1 and
+                                                                        {{ $event->tier?->tierTeamSlot }}</p>
+                                                                    <br>
+                                                                    <div
+                                                                        class="input-group mb-3 mx-auto d-flex justify-content-center">
+                                                                        <span class="input-group-text bg-primary text-light"
+                                                                            id="basic-addon2">#</span>
+                                                                        <input class="form-control"
+                                                                            style="max-width: 100px !important;"
+                                                                            type="number" name="position" min="1"
+                                                                            max="{{ $event->tier?->tierTeamSlot }}">
+                                                                        <input type="hidden" name="eventName"
+                                                                            value="{{ $event->eventName ?? 'No name yet' }}">
+                                                                        <input type="hidden" name="teamName"
+                                                                            value="{{ $joinEventAndTeam->teamName }}">
+                                                                        <input type="hidden" name="creator_id"
+                                                                            value="{{ $joinEventAndTeam->creator_id }}">
+                                                                        <input type="hidden" name="teamBanner"
+                                                                            value="{{ $joinEventAndTeam->teamBanner }}">
+                                                                        <input type="hidden" name="id"
+                                                                            value="{{ $joinEventAndTeam->id1 }}">
+                                                                        <input type="hidden" name="team_id"
+                                                                            value="{{ $joinEventAndTeam->team_id }}">
+                                                                    </div>
+                                                                    <br>
+                                                                    <button type="submit"
+                                                                        class="oceans-gaming-default-button me-3">Submit
+                                                                    </button>
+                                                                    <button type="button"
+                                                                        class="oceans-gaming-default-button oceans-gaming-gray-button"
+                                                                        data-bs-dismiss="modal">Close
+                                                                    </button>
                                                                 </div>
-                                                                <br>
-                                                                <button type="submit"
-                                                                    class="oceans-gaming-default-button me-3">Submit
-                                                                </button>
-                                                                <button type="button"
-                                                                    class="oceans-gaming-default-button oceans-gaming-gray-button"
-                                                                    data-bs-dismiss="modal">Close
-                                                                </button>
-                                                            </div>
-                                                        </form>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                    @endforeach
-                                </tbody>
+                                        @endforeach
+                                    </tbody>
+                                @else
+                                    <h5 class="text-center mt-5">  No teams joined yet.</h5>
+                                @endif
                             </table>
                         </div>
                         <div class="tab-content pb-4  outer-tab d-none mx-auto" id="Awards">
@@ -179,67 +195,73 @@
                                 </button>
                             </div>
                             <table class="member-table text-start mx-auto" style="margin-left: -5px;">
-                                <thead class="accepted-member-table text-start">
-                                    <th></th>
-                                    <th class="text-start">
-                                        Award
-                                    </th>
-                                    <th class="text-start">
-                                        Team Name
-                                    </th>
-                                    <th class="text-start">
-                                        Team Description
-                                    </th>
-                                    <th class="text-start">
-                                        Team Created
-                                    </th>
-                                </thead>
-                                <tbody class="accepted-member-table text-start">
-                                    @foreach ($awardAndTeamList as $key => $joinEventAndTeam)
-                                        @if (!is_null($joinEventAndTeam->award_id))
-                                            <tr class="st">
-                                                <td class="colorless-col px-3">
-                                                    <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
-                                                        class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
-                                                        width="20" height="20" fill="currentColor"
-                                                        class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                                                        <path
-                                                            d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                                                    </svg>
-                                                </td>
-                                                <td class="coloured-cell text-center px-2">
-                                                    @if (is_null($joinEventAndTeam->awards_image))
-                                                        No awards
-                                                    @else
-                                                        <img src="{{ '/storage' . '/' . $joinEventAndTeam->awards_image }}"
-                                                            style="object-fit: cover;" width="50px" height="25px">
-                                                    @endif
-                                                    {{ $joinEventAndTeam->awards_title ? $joinEventAndTeam->awards_title : '' }}
-                                                </td>
-                                                <td class="coloured-cell px-3 text-start">
-                                                    {{ $joinEventAndTeam->teamName }}
-                                                </td>
-                                                <td class="coloured-cell px-3 text-start">
-                                                    {{ $joinEventAndTeam->teamDescription }}
-                                                </td>
-                                                <td class="coloured-cell px-3 text-start">
-                                                    {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
-                                                </td>
-                                                <td class="colorless-column px-1 ps-4 text-start">
-                                                    <svg onclick="deleteAward({{ $joinEventAndTeam->results_id }})"
-                                                        xmlns="http://www.w3.org/2000/svg" width="16"
-                                                        height="16" fill="currentColor" class="bi bi-trash"
-                                                        viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                                                        <path
-                                                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                                                    </svg>
-                                                </td>
-                                            </tr>
-                                        @endif
-                                    @endforeach
+                                @if (isset($awardAndTeamList[0]))
+                                    <thead class="accepted-member-table text-start">
+                                        <th></th>
+                                        <th class="text-start">
+                                            Award
+                                        </th>
+                                        <th class="text-start">
+                                            Team Name
+                                        </th>
+                                        <th class="text-start">
+                                            Team Description
+                                        </th>
+                                        <th class="text-end" style="width: 180px;">
+                                            Team Created
+                                        </th>
+                                    </thead>
+                                    <tbody class="accepted-member-table text-start">
+                                        @foreach ($awardAndTeamList as $key => $joinEventAndTeam)
+                                            @if (!is_null($joinEventAndTeam->award_id))
+                                                <tr class="st">
+                                                    <td class="colorless-col px-3">
+                                                        <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
+                                                            class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
+                                                            width="20" height="20" fill="currentColor"
+                                                            class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                                                            <path
+                                                                d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                                                        </svg>
+                                                    </td>
+                                                    <td class="coloured-cell text-center px-2">
+                                                        @if (is_null($joinEventAndTeam->awards_image))
+                                                            No awards
+                                                        @else
+                                                            <img src="{{ '/storage' . '/' . $joinEventAndTeam->awards_image }}"
+                                                                style="object-fit: cover;" width="50px" height="25px">
+                                                        @endif
+                                                        {{ $joinEventAndTeam->awards_title ? $joinEventAndTeam->awards_title : '' }}
+                                                    </td>
+                                                    <td class="coloured-cell px-3 text-start">
+                                                        {{ $joinEventAndTeam->teamName }}
+                                                    </td>
+                                                    <td class="coloured-cell px-3 text-start">
+                                                        {{ $joinEventAndTeam->teamDescription }}
+                                                    </td>
+                                                    <td class="coloured-cell px-3 text-end">
+                                                        {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
+                                                    </td>
+                                                    <td class="colorless-column px-1 ps-4 text-start">
+                                                        <svg onclick="deleteAward({{ $joinEventAndTeam->results_id }})"
+                                                            xmlns="http://www.w3.org/2000/svg" width="16"
+                                                            height="16" fill="currentColor" class="bi bi-trash"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                                            <path
+                                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                                        </svg>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                @else
+                                    <h5 class="text-center mt-3">  No positions joined yet.</h5>
+                                @endif
+                                     
                                     <div class="modal fade" id='award-modal' tabindex="-1"
                                         aria-labelledby={{ 'award-modal-label' }} aria-hidden="true">
                                         <div class="modal-dialog">
@@ -305,7 +327,7 @@
                                             </div>
                                         </div>
                                      </div>
-                                </tbody>
+                               
                             </table>
                         </div>
                         <div class="tab-content pb-4  outer-tab d-none mx-auto" id="Achievements">
@@ -326,73 +348,78 @@
                                 </button>
                             </div>
                             <table class="member-table text-start mx-auto" style="margin-left: -5px;">
-                                <thead class="accepted-member-table text-start">
-                                    <th></th>
-                                    <th class="text-start">
-                                        Achievement
-                                    </th>
-                                    <th class="text-start">
-                                        Description
-                                    </th>
-                                    <th class="text-start">
-                                        Year
-                                    </th>
-                                    <th class="text-start">
-                                        Team Name
-                                    </th>
-                                    <th class="text-start">
-                                        Team Description
-                                    </th>
-                                    <th class="text-start">
-                                        Team Created
-                                    </th>
-                                </thead>
-                                <tbody class="accepted-member-table text-start">
-                                    @foreach ($achievementsAndTeamList as $key => $joinEventAndTeam)
-                                        @if (!is_null($joinEventAndTeam->achievements_id))
-                                            <tr class="st">
-                                                <td class="colorless-col px-3">
-                                                    <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
-                                                        class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
-                                                        width="20" height="20" fill="currentColor"
-                                                        class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                                                        <path
-                                                            d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                                                    </svg>
-                                                </td>
-                                                <td class="coloured-cell text-center px-2"> 
-                                                    {{ $joinEventAndTeam->achievements_title ? $joinEventAndTeam->achievements_title : '' }}
-                                                </td>
-                                                 <td class="coloured-cell px-3 text-start">
-                                                    {{ $joinEventAndTeam->achievements_description }}
-                                                </td>
-                                                <td class="coloured-cell px-3 text-start">
-                                                    {{ \Carbon\Carbon::parse($joinEventAndTeam->achievements_created_at)->format('Y') }}
-                                                </td>
-                                                <td class="coloured-cell px-3 text-start">
-                                                    {{ $joinEventAndTeam->teamName }}
-                                                </td>
-                                                <td class="coloured-cell px-3 text-start">
-                                                    {{ $joinEventAndTeam->teamDescription }}
-                                                </td>
-                                                <td class="coloured-cell px-3 text-start">
-                                                    {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
-                                                </td>
-                                                <td class="colorless-column px-1 ps-4 text-start">
-                                                    <svg onclick="deleteAchievement({{ $joinEventAndTeam->achievements_id }})"
-                                                        xmlns="http://www.w3.org/2000/svg" width="16"
-                                                        height="16" fill="currentColor" class="bi bi-trash"
-                                                        viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                                                        <path
-                                                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                                                    </svg>
-                                                </td>
-                                            </tr>
-                                        @endif
-                                    @endforeach
+                                @if (isset($achievementsAndTeamList[0]))
+                                    <thead class="accepted-member-table text-start">
+                                        <th></th>
+                                        <th class="text-start">
+                                            Achievement
+                                        </th>
+                                        <th class="text-start">
+                                            Description
+                                        </th>
+                                        <th class="text-start">
+                                            Year
+                                        </th>
+                                        <th class="text-start">
+                                            Team Name
+                                        </th>
+                                        <th class="text-start">
+                                            Team Description
+                                        </th>
+                                        <th class="text-end" style="width: 180px;">
+                                            Team Created
+                                        </th>
+                                    </thead>
+                                    <tbody class="accepted-member-table text-start">
+                                        @foreach ($achievementsAndTeamList as $key => $joinEventAndTeam)
+                                            @if (!is_null($joinEventAndTeam->achievements_id))
+                                                <tr class="st">
+                                                    <td class="colorless-col px-3">
+                                                        <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
+                                                            class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
+                                                            width="20" height="20" fill="currentColor"
+                                                            class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                                                            <path
+                                                                d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                                                        </svg>
+                                                    </td>
+                                                    <td class="coloured-cell text-center px-2"> 
+                                                        {{ $joinEventAndTeam->achievements_title ? $joinEventAndTeam->achievements_title : '' }}
+                                                    </td>
+                                                    <td class="coloured-cell px-3 text-start">
+                                                        {{ $joinEventAndTeam->achievements_description }}
+                                                    </td>
+                                                    <td class="coloured-cell px-3 text-start">
+                                                        {{ \Carbon\Carbon::parse($joinEventAndTeam->achievements_created_at)->format('Y') }}
+                                                    </td>
+                                                    <td class="coloured-cell px-3 text-start">
+                                                        {{ $joinEventAndTeam->teamName }}
+                                                    </td>
+                                                    <td class="coloured-cell px-3 text-start">
+                                                        {{ $joinEventAndTeam->teamDescription }}
+                                                    </td>
+                                                    <td class="coloured-cell px-3 text-end">
+                                                        {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
+                                                    </td>
+                                                    <td class="colorless-column px-1 ps-4 text-start">
+                                                        <svg onclick="deleteAchievement({{ $joinEventAndTeam->achievements_id }})"
+                                                            xmlns="http://www.w3.org/2000/svg" width="16"
+                                                            height="16" fill="currentColor" class="bi bi-trash"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                                            <path
+                                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                                        </svg>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                @else
+                                    <h5 class="text-center mt-3">  No achievement given yet.</h5>
+                                @endif
                                     <div class="modal fade" id='achievements-modal' tabindex="-1"
                                         aria-labelledby={{ 'achievements-modal-label' }} aria-hidden="true">
                                         <div class="modal-dialog">

@@ -18,7 +18,6 @@ class FriendFollowList extends Component
 
     public $name = 0;
 
-    public $page = 5;
 
     public $propertyName = 'followeeUser';
 
@@ -32,12 +31,13 @@ class FriendFollowList extends Component
 
     public function initData()
     {
+        $page = 5;
         $propertyName = null;
         if ($this->name === 'Follow') {
             $propertyName = 'followerUser';
             $data = ParticipantFollow::where('participant_followee', $this->userId)
                 ->with($propertyName)
-                ->paginate($this->page, ['*'], $propertyName);
+                ->paginate($page, ['*'], $propertyName);
 
             $this->propertyName = $propertyName;
 
@@ -47,7 +47,7 @@ class FriendFollowList extends Component
             $propertyName = 'followeeUser';
             $data = ParticipantFollow::where('participant_follower', $this->userId)
                 ->with($propertyName)
-                ->paginate($this->page, ['*'], $propertyName);
+                ->paginate($page, ['*'], $propertyName);
 
             $this->propertyName = $propertyName;
 
@@ -58,7 +58,7 @@ class FriendFollowList extends Component
             $propertyName = 'participantUser';
             $data = OrganizerFollow::where('organizer_user_id', $this->userId)
                 ->with($propertyName)
-                ->paginate($this->page, ['*'], $propertyName);
+                ->paginate($page, ['*'], $propertyName);
 
             $this->propertyName = $propertyName;
 
@@ -71,7 +71,7 @@ class FriendFollowList extends Component
             })
                 ->where('status', 'accepted')
                 ->with(['user1', 'user2'])
-                ->paginate($this->page, ['*'], $propertyName);
+                ->paginate($page, ['*'], $propertyName);
 
             $data->getCollection()->transform(function ($friend) {
                 if ($this->userId) {
