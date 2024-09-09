@@ -157,7 +157,9 @@ Route::group(['prefix' => 'organizer'], function () {
             // Organizer home
             Route::get('/home', [OrganizerEventController::class, 'home'])->name('organizer.home.view');
             Route::get('/event/{id}/results', [OrganizerEventResultsController::class, 'index'])->name('event.awards.index');
-            Route::get('/event/{id}/brackets', BracketUpdateList::class)->name('event.matches.index');
+            Route::get('/event/{id}/matches', BracketUpdateList::class)->name('event.matches.index');
+            Route::post('/event/{id}/matches', [OrganizerEventResultsController::class, 'upsertBracket'])->name('event.matches.upsert');
+
             // Event manage
             Route::resource('/event', OrganizerEventController::class, [
                 'index' => 'event.index',

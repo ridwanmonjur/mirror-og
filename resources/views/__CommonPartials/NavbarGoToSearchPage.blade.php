@@ -216,7 +216,8 @@
     document.getElementById('load-more').addEventListener('click', function() {
         let baseUrl = event.target.getAttribute('data-url');
         let cursor = event.target.getAttribute('data-cursor');
-        
+        event.preventDefault();
+        event.stopPropagation();
         let url = `${baseUrl}?cursor=${cursor}`;
 
         fetch(url, {

@@ -1,5 +1,5 @@
 @foreach ($notificationList as $notification)
-    <div data-loop-count="{{ $loop->index }}" @class([
+    <div data-loop-count="{{ $notification->id }}" @class([
         'text-center px-2 border-light border-0 notification-container',
         'notification-container-not-read' => is_null($notification->read_at),
         'notification-container-read' => !is_null($notification->read_at),

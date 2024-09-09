@@ -4,7 +4,8 @@
             <div class="modal-body my-3 px-5 ">
                 <h5 class="mt-2 mb-4"><u>Save and create your matches</u></h5>
 
-                <form class="">
+                <form method="POST" action="{{ route('event.matches.upsert', ['id'=> $event->id]) }}" id="matchForm">
+                    @csrf
 
                     <input type="hidden" id="event_details_id" name="event_details_id" disabled placeholder=" " value="{{$event->id}}">
                     <input type="hidden" id="match_type" name="match_type" placeholder=" " required>
@@ -200,3 +201,39 @@
         </div>
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('matchForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    submitBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.Toast.fire({
+                    icon: 'success',
+                    text: data.message
+                });
+
+            } else {
+                window.toastError('Error saving match: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            window.toastError('An error occurred while saving the match.');
+        });
+    });
+});
+</script>

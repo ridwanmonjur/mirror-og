@@ -40,14 +40,30 @@ class BracketUpdateList extends Component
         $tournamentTypeFinal = $valuesMap[$tournamentType];
         $bracketList = $bracketData->getData($matchesUpperCount)[$tournamentTypeFinal];
         $this->event->matches->each(function ($match) use (&$bracketList) {
-            $bracketList[$match->tournamentTypeFinal][$match->stage_name][$match->inner_stage_name][$match->order]['team1_position'] = 
-                $match->team1_position ?? null;
-            $bracketList[$match->tournamentTypeFinal][$match->stage_name][$match->inner_stage_name][$match->order]['team2_position'] = 
-                $match->team2_position ?? null;
-            $bracketList[$match->tournamentTypeFinal][$match->stage_name][$match->inner_stage_name][$match->order]['team1_id'] = 
-                $match->team1_position ?? null;
-            $bracketList[$match->tournamentTypeFinal][$match->stage_name][$match->inner_stage_name][$match->order]['team2_id'] = 
-                $match->team2_position ?? null;
+            $path = "{$match->tournamentTypeFinal}.{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
+            data_set($this->bracketList, $path, [
+                'id' => $match->id,
+                'event_details_id' => $match->event_details_id,
+                'match_type' => $match->match_type,
+                'stage_name' => $match->stage_name,
+                'inner_stage_name' => $match->inner_stage_name,
+                'order' => $match->order,
+                'team1_id' => $match->team1_id,
+                'team2_id' => $match->team2_id,
+                'team1_score' => $match->team1_score,
+                'team2_score' => $match->team2_score,
+                'team1_position' => $match->team1_position,
+                'team2_position' => $match->team2_position,
+                'winner_id' => $match->winner_id,
+                'status' => $match->status,
+                'result' => $match->result,
+                'winner_next_position' => $match->winner_next_position,
+                'loser_next_position' => $match->loser_next_position,
+                'team1_name' => $match->team1->name ?? null,
+                'team2_name' => $match->team2->name ?? null,
+                'winner_name' => $match->winner->name ?? null,
+            ]);
+            
         });
         
         if (empty($matchesArray['doubleElimination']['finals']['finals'])) {
