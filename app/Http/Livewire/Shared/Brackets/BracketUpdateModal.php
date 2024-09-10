@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Shared\Brackets;
 
 use Livewire\Component;
 
-class BracketFirstItemsUpdateModal extends Component
+class BracketUpdateModal extends Component
 {
 
     public $event;

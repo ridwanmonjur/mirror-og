@@ -566,7 +566,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     border-color: var(--border2-color);
 }
 
-.d-none-until-hover, .d-none-until-hover-parent:hover .d-none-when-hover  {
+.d-none-until-hover, .d-none-until-hover2, .d-none-until-hover-parent:hover .d-none-when-hover {
     visibility: hidden;
     overflow: hidden;
     display: none;
@@ -576,7 +576,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     cursor: pointer;
 }
 
-.d-none-until-hover-parent:hover .d-none-until-hover {
+.d-none-until-hover-parent:hover .d-none-until-hover, .d-none-until-hover2-parent:hover .d-none-until-hover2 {
     display: inline-block;
     visibility: visible;
     overflow: visible;

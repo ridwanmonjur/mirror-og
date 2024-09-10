@@ -7,7 +7,7 @@ use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\Team;
 use App\Models\Matches;
-
+use App\Models\RosterMember;
 use Livewire\Component;
 
 class BracketUpdateList extends Component
@@ -15,17 +15,37 @@ class BracketUpdateList extends Component
     public $id = null;
     public $event = null;
     public $teamList;
+    public $rosterList = null;
 
     public function __construct(string | int | null $id = null) {
         $this->id = $id;
     }
 
     public function mount() {
-        $this->event = EventDetail::with(['tier', 'type', 
-                'joinEvents', 'matches', 'matches.team1', 'matches.team2'
-            ]) 
-            ->select(['id', 'eventBanner', 'eventName', 'eventDescription', 'event_tier_id', 'event_type_id'])
-            ->findOrFail($this->id);
+        $this->event = EventDetail::with([
+            'tier',
+            'type',
+            'joinEvents',
+            'matches',
+            'matches.team1' => function ($query) {
+                $query->select('id', 'teamName', 'teamBanner');
+            },
+            'matches.team1.roster' => function ($query) {
+                $query->select('id', 'team_id', 'join_events_id', 'user_id');
+            },
+            'matches.team1.roster.user' => function ($query) {
+                $query->select('id', 'name', 'userBanner');
+            },
+            'matches.team2' => function ($query) {
+                $query->select('id', 'teamName', 'teamBanner');
+            },
+            'matches.team2.roster' => function ($query) {
+                $query->select('id', 'team_id', 'join_events_id', 'user_id');
+            },
+            'matches.team2.roster.user' => function ($query) {
+                $query->select('id', 'name', 'userBanner');
+            },
+        ])->findOrFail($this->id);
 
         $teamIds = $this->event->joinEvents->pluck('team_id');
         $this->teamList = Team::whereIn('id', $teamIds)->get();
@@ -56,6 +76,8 @@ class BracketUpdateList extends Component
                 'team2_teamBanner' => $match->team2->teamBanner,
                 'team1_teamName' => $match->team1->teamName,
                 'team2_teamName' => $match->team2->teamName,
+                'team1_roster' => $match->team1->roster,
+                'team2_roster' => $match->team2->roster,
                 'team1_score' => $match->team1_score,
                 'team2_score' => $match->team2_score,
                 'team1_position' => $match->team1_position,

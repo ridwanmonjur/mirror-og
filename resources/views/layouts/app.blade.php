@@ -7,7 +7,7 @@
     <title>Tournament Demo</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/js/tippy.js', 'resources/sass/app.scss', 'resources/js/app.js'])
  
     @include('__CommonPartials.HeadIcon')
     <style>

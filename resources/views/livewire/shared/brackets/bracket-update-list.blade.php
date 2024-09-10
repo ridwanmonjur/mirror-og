@@ -198,5 +198,16 @@
             };
         }
 
+        window.onload = () => {
+            const parentElements = document.querySelectorAll(".popover-parent");
+            parentElements.forEach(parent => {
+                const contentElement = parent.querySelector(".popover-content");
+                const parentElement = parent.querySelector(".popover-button");
+                if (contentElement) {
+                    window.addPopover(parentElement, contentElement, 'mouseenter');
+                }
+            });
+        };
+
     </script>
 @endsection

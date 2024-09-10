@@ -31,10 +31,10 @@
                                     <select style="min-width: 450px;" class="form-select" id="team1_id" name="team1_id" required  data-dynamic-select>
                                             <option value="">Choose a team</option>
                                         @foreach ($teamList as $team)
-                                            <option  value="{{ $team->id }}"   data-img-width="30px" data-img-height="30px"
-                                                data-img="{{ '/' . 'storage/' . $team->teamBanner}}"
+                                            <option  value="{{ $team['id'] }}"   data-img-width="30px" data-img-height="30px"
+                                                data-img="{{ '/' . 'storage/' . $team['teamBanner']}}"
                                             >
-                                            <span> {{ $team->teamName }} </span>
+                                            <span> {{ $team['teamName'] }} </span>
                                             </option>
                                         @endforeach
                                     </select>
@@ -83,8 +83,8 @@
                                     <select class="form-select" id="team2_id" name="team2_id" required data-dynamic-select>
                                         <option value="">Choose a team</option>
                                         @foreach ($teamList as $team)
-                                            <option value="{{ $team->id }}"  data-img-width="30px" data-img-height="30px" data-img="{{ '/' . 'storage/' . $team->teamBanner}}">
-                                            <span> {{ $team->teamName }} </span>
+                                            <option value="{{ $team['id'] }}"  data-img-width="30px" data-img-height="30px" data-img="{{ '/' . 'storage/' . $team['teamBanner']}}">
+                                            <span> {{ $team['teamName'] }} </span>
                                             </option>
                                         @endforeach
                                     </select>
@@ -131,8 +131,8 @@
                                         aria-describedby="winner-addon">
                                         <option value="">Choose a team</option>
                                         @foreach ($teamList as $team)
-                                            <option value="{{ $team->id }}"  data-img-width="30px" data-img-height="30px" data-img="{{ '/' . 'storage/' . $team->teamBanner}}">
-                                            <span> {{ $team->teamName }} </span>
+                                            <option value="{{ $team['id'] }}"  data-img-width="30px" data-img-height="30px" data-img="{{ '/' . 'storage/' . $team['teamBanner']}}">
+                                            <span> {{ $team['teamName'] }} </span>
                                             </option>
                                         @endforeach
                                     </select>

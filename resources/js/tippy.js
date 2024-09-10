@@ -1,11 +1,14 @@
 import tippy from 'tippy.js';
-window.addPopover = function (parent, child) {
+
+window.addPopover = function (parent, child, trigger="click") {
     tippy(parent, {
         content: child.innerHTML,
         allowHTML: true,
         placement: 'top',
-        trigger: 'click',
+        trigger,
+        triggerTarget: parent,
         interactive: true,
         theme: 'light',
+        zIndex: 9999,
     });
 }

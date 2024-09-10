@@ -100,7 +100,7 @@ function addOnLoad(newFunction) {
     if (typeof window.onload !== 'function') {
         window.onload = newFunction;
     } else {
-        window.onload = function() {
+        window.onload = () => {
             if (oldOnLoad) {
                 oldOnLoad();
             }
