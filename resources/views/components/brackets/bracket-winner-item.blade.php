@@ -3,7 +3,8 @@
         <br class="d-none d-lg-block"><br class="d-none d-lg-block"><br>
         <div class="tournament-bracket__list tournament-bracket__joined-list  tournament-bracket__joined-odd-list">
             <div
-                class="tournament-bracket__item code{{ $bracket['team1_position'] }}code code{{ $bracket['team1_position'] }}code">
+                class="tournament-bracket__item tournament"
+            >
                 @php
                    $defaultValues = [
                         'match_type' => 'tournament',
@@ -58,14 +59,16 @@
                         $bracket['team2_positionMobile'] = $bracket['team2_position'];
                     }
 
-                    $bracket['team1Score'] = $bracket['team1Score'] ?? '0';
-                    $bracket['team2Score'] = $bracket['team2Score'] ?? '0';
+                    $bracket['team1_score'] = $bracket['team1_score'] ?? '0';
+                    $bracket['team2_score'] = $bracket['team2_score'] ?? '0';
                     $bracket['winner_next_position'] = $bracket['winner_next_position'] ?? 'N/A';
                     $bracket['loser_next_position'] = $bracket['loser_next_position'] ?? null;
                 @endphp
 
-                <div class="tournament-bracket__match border-style code{{ $bracket['team1_position'] }}code code{{ $bracket['team1_position'] }}code"
-                    tabindex="0">
+                <div class="tournament-bracket__match border-style tournament"
+                    tabindex="0"
+                    data-bracket="{{json_encode($bracket)}}"
+                >
                     <table class="tournament-bracket__table mx-auto">
                         <thead class="sr-only">
                             <tr>
@@ -80,7 +83,7 @@
                                         title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }}</abbr>
                                 </td>
                                 <td class="tournament-bracket__score">
-                                    <span class="tournament-bracket__number">{{ $bracket['team1Score'] }}</span>
+                                    <span class="tournament-bracket__number">{{ $bracket['team1_score'] }}</span>
                                 </td>
                             </tr>
                             <tr class="tournament-bracket__team">
@@ -89,29 +92,19 @@
                                         title="{{ $bracket['team2_position'] }}">{{ $bracket['team2_position'] }}</abbr>
                                 </td>
                                 <td class="tournament-bracket__score">
-                                    <span class="tournament-bracket__number">{{ $bracket['team2Score'] }}</span>
+                                    <span class="tournament-bracket__number">{{ $bracket['team2_score'] }}</span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
                         style="z-index: 999;"
-                        data-match_type="tournament"  data-stage_name="{{$stageName}}"
-                        data-inner_stage_name="{{$innerStageName}}"  
-                        data-order="{{ $bracket['order'] }}"
-                        data-team1_id="{{ $bracket['team1_id'] }}" data-team2_id="{{ $bracket['team2_id'] }}"
-                        data-team1_score="{{ $bracket['team1_score'] }}" data-team2_score="{{ $bracket['team2_score'] }}"
-                        data-team1_position="{{ $bracket['team1_position'] }}"
-                        data-team2_position="{{ $bracket['team2_position'] }}"
-                        data-winner_id="{{ $bracket['winner_id'] }}" data-status="{{ $bracket['status'] }}"
-                        data-result="{{ $bracket['result'] }}"
-                        data-winner_next_position="{{ $bracket['winner_next_position'] }}"
-                        data-loser_next_position="{{ $bracket['loser_next_position'] }}"
+                      
                     >
-                        <div class="tournament-bracket__box border-style code{{ $bracket['team1Code'] }}code px-2 py-2">
+                        <div class="tournament-bracket__box border-style tournament px-2 py-2">
                             <span>{{ $bracket['team1_position'] }}</span>
                         </div>
-                        <div class="tournament-bracket__box  border-style code{{ $bracket['team2Code'] }}code px-2 py-2">
+                        <div class="tournament-bracket__box  border-style tournament px-2 py-2">
                             <span>{{ $bracket['team2_position'] }}</span>
                         </div>
                         <small class="position-absolute winner-label d-none-until-hover" style="left: 100%;">
@@ -144,7 +137,7 @@
         <br><br><br>
         <div class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
             <div
-                class="tournament-bracket__item code{{ $bracket['team1_position'] }}code code{{ $bracket['team1_position'] }}code">
+                class="tournament-bracket__item tournament">
                 @php
                     if (isset($bracket['team1Code'])) {
                         $bracket['team1Display'] = true;
@@ -153,7 +146,7 @@
                         $bracket['team1Code'] = 'N/A';
                     }
 
-                    $bracket['team1Score'] = $bracket['team1Score'] ?? 'N/A';
+                    $bracket['team1_score'] = $bracket['team1_score'] ?? 'N/A';
 
                     if (!$bracket['team1_position']) {
                         $bracket['team1_position'] = '';
@@ -161,7 +154,7 @@
 
                 @endphp
 
-                <div class="tournament-bracket__match code{{ $bracket['team1_position'] }}code code{{ $bracket['team1_position'] }}code "
+                <div class="tournament-bracket__match tournament "
                     tabindex="0">
                     <table class="tournament-bracket__table mx-auto">
                         <thead class="sr-only">
@@ -177,14 +170,14 @@
                                         title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }}</abbr>
                                 </td>
                                 <td class="tournament-bracket__score">
-                                    <span class="tournament-bracket__number">{{ $bracket['team1Score'] }}</span>
+                                    <span class="tournament-bracket__number">{{ $bracket['team1_score'] }}</span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
                         style="z-index: 999; top: 50%; left: -50%">
-                        <div class="tournament-bracket__box border-style code{{ $bracket['team1Code'] }}code px-2 py-2">
+                        <div class="tournament-bracket__box border-style tournament px-2 py-2">
                             <span><b>?</b></span>
                         </div>
                     </div>

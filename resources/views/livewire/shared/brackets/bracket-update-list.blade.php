@@ -153,25 +153,28 @@
             event.stopPropagation();
             
             const button = event.currentTarget;
-            let parentWithDataset = getParentByClassName(button, "tournament-bracket__displayLargeScreen");
+            let parentWithDataset = getParentByClassName(button, "tournament-bracket__match");
         
-            console.log({
-                parentWithDataset, button
-            });
 
-            const dataset = parentWithDataset.dataset;
+            const dataset = JSON.parse(parentWithDataset.dataset.bracket);
             const modalElement = document.getElementById('firstMatchModal');
 
             const inputs = modalElement.querySelectorAll('input, select, textarea');
 
             inputs.forEach(input => {
                 const inputName = input.getAttribute('name');
-                console.log({dataset, inputName, value: dataset[inputName]});
                 if (dataset[inputName] !== undefined) {
                     input.value = dataset[inputName];
                 }
             });
 
+            const selectAllItems = modalElement.querySelectorAll("input[name='team1_id'], input[name='team2_id'], input[name='winner_id']");
+            console.log({selectAllItems});
+            for (let selectItem of selectAllItems) {
+                console.log({name: selectItem.name, dataset: dataset, value: dataset[selectItem.name]})
+                selectItem.value = dataset[selectItem.name];
+                
+            }
 
             console.log({inputs});
 

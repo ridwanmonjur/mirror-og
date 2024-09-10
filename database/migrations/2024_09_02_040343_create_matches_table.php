@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('order');
             $table->unsignedBigInteger('team1_id');
             $table->unsignedBigInteger('team2_id');
+            $table->unsignedBigInteger('event_details_id');
             $table->unsignedInteger('team1_score')->default(0);
             $table->unsignedInteger('team2_score')->default(0);
             $table->string('team1_position')->nullable();
@@ -34,7 +35,8 @@ return new class extends Migration
 
             $table->foreign('team1_id')->references('id')->on('teams');
             $table->foreign('team2_id')->references('id')->on('teams');
-            $table->foreignId('event_details_id')->constrained('event_details')->onDelete('cascade');
+            $table->foreign('event_details_id')->references('id')
+                ->on('event_details')->onDelete('cascade');
         });
     }
 

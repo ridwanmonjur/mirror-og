@@ -235,7 +235,7 @@ class OrganizerEventResultsController extends Controller
         }
     }
 
-    public function upsert(MatchUpsertRequest $request)
+    public function upsertBracket(MatchUpsertRequest $request, $id)
     {
         try {
             $validatedData = $request->validated();
@@ -243,11 +243,11 @@ class OrganizerEventResultsController extends Controller
             $match = isset($validatedData['id']) 
                 ? Matches::findOrFail($validatedData['id']) 
                 : new Matches;
-    
             $team1 = Team::findOrFail($validatedData['team1_id']);
             $team2 = Team::findOrFail($validatedData['team2_id']);
-    
+            $event = EventDetail::findOrFail($validatedData['event_details_id']);
             $match->fill($validatedData);
+            $match->event_details_id = $event->id;
             $match->save();
     
             $message = isset($validatedData['id']) 

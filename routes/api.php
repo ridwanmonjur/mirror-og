@@ -67,6 +67,7 @@ Route::group(['prefix' => 'organizer'], function () {
             Route::post('events/search', [OrganizerEventController::class, 'search'])->name('event.search.view');
             Route::delete('/event/achievements/{achievementId}', [OrganizerEventResultsController::class, 'destroyAchievements'])->name('event.achievements.destroy');
             Route::post('/event/{id}/results', [OrganizerEventResultsController::class, 'store'])->name('event.results.store');
+            Route::post('/event/{id}/matches', [OrganizerEventResultsController::class, 'upsertBracket'])->name('event.matches.upsert');
             Route::post('/event/{id}/awards', [OrganizerEventResultsController::class, 'storeAward'])->name('event.awards.store');
             Route::delete('/event/{id}/awards/{awardId}', [OrganizerEventResultsController::class, 'destroyAward'])->name('event.awards.destroy');
             Route::post('/event/{id}/achievements', [OrganizerEventResultsController::class, 'storeAchievements'])->name('event.achievements.store');

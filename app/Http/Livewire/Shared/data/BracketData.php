@@ -8,7 +8,7 @@ class BracketData
     
     if ($membersCount === 32) {
         return [
-            'doubleElimination' => [
+            'tournament' => [
                 'finals' => [
                     'finals' => [
                         [
@@ -483,7 +483,7 @@ class BracketData
 
     if ($membersCount === 16) {
         return [
-            'doubleElimination' => [
+            'tournament' => [
                 'finals' => [
                     'finals' => [
                         [
@@ -728,7 +728,7 @@ class BracketData
 
     if ($membersCount === 8) {
         return [
-            'doubleElimination' => [
+            'tournament' => [
                 'finals' => [
                     'finals' => [
                         [

@@ -34,14 +34,16 @@ class BracketUpdateList extends Component
     public function render()
     {
         $matchesUpperCount = intval($this->event->tier->tierTeamSlot); 
-        $valuesMap = ['Tournament' => 'doubleElimination', 'League' => 'doubleElimination'];
+        $valuesMap = ['Tournament' => 'tournament', 'League' => 'tournament'];
         $tournamentType = $this->event->type->eventType;
         $bracketData = new BracketData;
         $tournamentTypeFinal = $valuesMap[$tournamentType];
         $bracketList = $bracketData->getData($matchesUpperCount)[$tournamentTypeFinal];
-        $this->event->matches->each(function ($match) use (&$bracketList) {
-            $path = "{$match->tournamentTypeFinal}.{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
-            data_set($this->bracketList, $path, [
+        // dd($this->event->matches);
+        $bracketList = $this->event->matches->reduce(function ($bracketList, $match) {
+            $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
+            // dd($path);
+            return data_set($bracketList, $path, [
                 'id' => $match->id,
                 'event_details_id' => $match->event_details_id,
                 'match_type' => $match->match_type,
@@ -50,6 +52,10 @@ class BracketUpdateList extends Component
                 'order' => $match->order,
                 'team1_id' => $match->team1_id,
                 'team2_id' => $match->team2_id,
+                'team1_teamBanner' => $match->team1->teamBanner,
+                'team2_teamBanner' => $match->team2->teamBanner,
+                'team1_teamName' => $match->team1->teamName,
+                'team2_teamName' => $match->team2->teamName,
                 'team1_score' => $match->team1_score,
                 'team2_score' => $match->team2_score,
                 'team1_position' => $match->team1_position,
@@ -63,11 +69,12 @@ class BracketUpdateList extends Component
                 'team2_name' => $match->team2->name ?? null,
                 'winner_name' => $match->winner->name ?? null,
             ]);
-            
-        });
+        }, $bracketList);
+
+        // dd($bracketList["upperBracket"]["eliminator1"]["1"]);
         
-        if (empty($matchesArray['doubleElimination']['finals']['finals'])) {
-            $bracketList['doubleElimination']['finals']['finals'][] = [
+        if (empty($matchesArray['tournament']['finals']['finals'])) {
+            $bracketList['tournament']['finals']['finals'][] = [
                 'team1_position' => 'G1',
                 'team2_position' => 'G2',
                 'order' => 1,
@@ -76,8 +83,8 @@ class BracketUpdateList extends Component
             ];
         }
         
-        if (empty($matchesArray['doubleElimination']['upperBracket']['eliminator1'])) {
-            $bracketList['doubleElimination']['upperBracket']['eliminator1'][] = [
+        if (empty($matchesArray['tournament']['upperBracket']['eliminator1'])) {
+            $bracketList['tournament']['upperBracket']['eliminator1'][] = [
                 'team1_position' => '',
                 'team2_position' => '',
                 'order' => 1,

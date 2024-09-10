@@ -1,6 +1,7 @@
-<div class="tournament-bracket__item code{{ $bracket['team1_position'] }}code code{{ $bracket['team1_position'] }}code">
+<div class="tournament-bracket__item tournament">
     @php
        $defaultValues = [
+            'id' => null,
             'match_type' => 'tournament',
             'stage_name' => '',
             'inner_stage_name' => '',
@@ -53,14 +54,18 @@
             $bracket['team2_positionMobile'] = $bracket['team2_position'];
         }
 
-        $bracket['team1Score'] = $bracket['team1Score'] ?? '0';
-        $bracket['team2Score'] = $bracket['team2Score'] ?? '0';
+        $bracket['team1_score'] = $bracket['team1_score'] ?? '0';
+        $bracket['team2_score'] = $bracket['team2_score'] ?? '0';
         $bracket['winner_next_position'] = $bracket['winner_next_position'] ?? 'N/A';
         $bracket['loser_next_position'] = $bracket['loser_next_position'] ?? null;
     @endphp
 
-    <div class="tournament-bracket__match code{{ $bracket['team1_position'] }}code code{{ $bracket['team1_position'] }}code"
-        tabindex="0">
+    <div class="tournament-bracket__match"
+        tabindex="0"
+        data-team1_position="{{$bracket['team1_position']}}"
+        data-team2_position="{{$bracket['team2_position']}}"
+        data-bracket="{{json_encode($bracket)}}"  
+    >
         <table class="tournament-bracket__table mx-auto">
             <thead class="sr-only">
                 <tr>
@@ -70,44 +75,33 @@
             </thead>
             <tbody class="tournament-bracket__content">
                 <tr class="tournament-bracket__team tournament-bracket__team--winner">
-                    <td class="tournament-bracket__country">
-                        <abbr class="tournament-bracket__code"
-                            title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }}</abbr>
+                    <td class="tournament-bracket__country position-relative {{$bracket['team2_position']}}">
+                        <abbr class="tournament-bracket__code position-absolute"
+                            title="{{ $bracket['team1_positionMobile'] }}">{{ $bracket['team1_position'] }}</abbr>
                     </td>
                     <td class="tournament-bracket__score">
-                        <span class="tournament-bracket__number">{{ $bracket['team1Score'] }}</span>
+                        <span class="tournament-bracket__number">{{ $bracket['team1_score'] }}</span>
                     </td>
                 </tr>
                 <tr class="tournament-bracket__team">
-                    <td class="tournament-bracket__country">
-                        <abbr class="tournament-bracket__code"
-                            title="{{ $bracket['team2_position'] }}">{{ $bracket['team2_position'] }}</abbr>
+                   <td class="tournament-bracket__country position-relative {{$bracket['team2_position']}}">
+                        <abbr class="tournament-bracket__code position-absolute"
+                            title="{{ $bracket['team2_positionMobile'] }}">{{ $bracket['team2_position'] }}</abbr>
                     </td>
                     <td class="tournament-bracket__score">
-                        <span class="tournament-bracket__number">{{ $bracket['team2Score'] }}</span>
+                        <span class="tournament-bracket__number">{{ $bracket['team2_score'] }}</span>
                     </td>
                 </tr>
             </tbody>
         </table>
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent" 
             style="z-index: 999;"
-            data-match_type="tournament"  
-            data-stage_name="{{$stageName}}"
-            data-inner_stage_name="{{$innerStageName}}" 
-            data-order="{{ $bracket['order'] }}"
-            data-team1_id="{{ $bracket['team1_id'] }}" data-team2_id="{{ $bracket['team2_id'] }}"
-            data-team1_score="{{ $bracket['team1_score'] }}" data-team2_score="{{ $bracket['team2_score'] }}"
-            data-team1_position="{{ $bracket['team1_position'] }}"
-            data-team2_position="{{ $bracket['team2_position'] }}"
-            data-winner_id="{{ $bracket['winner_id'] }}" data-status="{{ $bracket['status'] }}"
-            data-result="{{ $bracket['result'] }}"
-            data-winner_next_position="{{ $bracket['winner_next_position'] }}"
-            data-loser_next_position="{{ $bracket['loser_next_position'] }}"
+           
         >
-            <div class="tournament-bracket__box code{{ $bracket['team1Code'] }}code">
+            <div class="tournament-bracket__box {{$bracket['team1_position']}} tournament bg-light">
                 <span>{{ $bracket['team1_position'] }}</span>
             </div>
-            <div class="tournament-bracket__box code{{ $bracket['team2Code'] }}code">
+            <div class="tournament-bracket__box {{$bracket['team2_position']}} tournament bg-light">
                 <span>{{ $bracket['team2_position'] }}</span>
             </div>
             <small class="position-absolute winner-label">

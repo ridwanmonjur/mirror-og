@@ -21,7 +21,7 @@ form span, .form-control, .form-select, form span,
 
 }
 
-input:disabled {
+input:read-only {
     background-color: white !important;
 }
 
@@ -188,7 +188,7 @@ h2 {
     color: gray;
     transition: padding 0.2s ease-in-out, margin 0.2s ease-in-out;
 }
-@media (max-width: 384px) {
+@media (max-width: 600px) {
     .tournament-bracket__list {
         padding-bottom: 1em;
         margin-bottom: 1em;
@@ -228,7 +228,7 @@ h2 {
 .tournament-bracket__item::after {
     transition: width 0.2s linear;
 }
-@media (max-width: 384px) {
+@media (max-width: 600px) {
     .tournament-bracket__item {
         width: 100%;
    }
@@ -316,10 +316,10 @@ h2 {
 .tournament-bracket__match::before, .tournament-bracket__match::after {
     transition: all 0.2s linear;
 }
-@media (min-width: 384px) {
+@media (min-width: 600px) {
     .tournament-bracket__match {
-        padding: 0.75em 0.5em;
-        max-width: 200px;
+        padding: 0.75em 20px;
+        max-width: 250px;
         margin: auto;
    }
 }
@@ -423,7 +423,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     order: 2;
     justify-content: flex-end;
 }
-@media (min-width: 384px) {
+@media (min-width: 600px) {
     .tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__country {
         order: 0;
    }
@@ -437,7 +437,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
 .tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__score {
     order: 0;
 }
-@media (min-width: 384px) {
+@media (min-width: 600px) {
     .tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__score {
         order: 2;
    }
@@ -493,7 +493,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     flex-direction: row-reverse;
     justify-content: space-between;
 }
-@media (min-width: 384px) {
+@media (min-width: 600px) {
     .tournament-bracket__team {
         flex-direction: column-reverse;
    }
@@ -509,7 +509,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     margin-top: 0.5em;
     align-items: center;
 }
-@media (max-width: 384px) {
+@media (max-width: 600px) {
     .tournament-bracket__country {
         margin-top: 0;
    }
@@ -532,7 +532,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     text-decoration: none;
     transition: padding 0.2s ease-in-out;
 }
-@media (max-width: 384px) {
+@media (max-width: 600px) {
     .tournament-bracket__code {
         padding: 0 0.25em;
    }

@@ -7,11 +7,11 @@
                 <form method="POST" action="{{ route('event.matches.upsert', ['id'=> $event->id]) }}" id="matchForm">
                     @csrf
 
-                    <input type="hidden" id="event_details_id" name="event_details_id" disabled placeholder=" " value="{{$event->id}}">
-                    <input type="hidden" id="match_type" name="match_type" placeholder=" " required>
-                    <input type="hidden" id="stage_name" name="stage_name" placeholder=" ">
-                    <input type="hidden" id="inner_stage_name" name="inner_stage_name" placeholder=" ">
-                    <input type="hidden" id="order" name="order" placeholder=" ">
+                    <input type="hidden" id="event_details_id" name="event_details_id"   value="{{$event->id}}">
+                    <input type="hidden" id="match_type" name="match_type"  required>
+                    <input type="hidden" id="stage_name" name="stage_name" >
+                    <input type="hidden" id="inner_stage_name" name="inner_stage_name" >
+                    <input type="hidden" id="order" name="order" >
 
                     <div class="row mb-3">
                         <!-- Team 1 Selection -->
@@ -56,7 +56,7 @@
                         <div class="col-12 col-xxl-6 mb-3">
                             <div>
                                 <span class="me-2">Matchup</span>
-                                <input type="text" disabled class=" form-control form-control-sm d-inline "
+                                <input type="text" readonly class=" form-control form-control-sm d-inline "
                                     id="team1_position" name="team1_position" style="max-width: 100px;"
                                     aria-describedby="team1-position-addon" placeholder="">
                             </div>
@@ -106,7 +106,7 @@
                         <div class="col-12 col-xxl-6 mb-3">
                             <div>
                                 <span class="me-2">Matchup</span>
-                                <input disabled type="text" class=" form-control form-control-sm d-inline" id="team2_position"
+                                <input readonly type="text" class=" form-control form-control-sm d-inline" id="team2_position"
                                     name="team2_position" aria-describedby="team2-position-addon"
                                     style="max-width: 100px;" placeholder="">
                             </div>
@@ -172,7 +172,7 @@
                         <div class="col-12 col-xxl-6 col- mb-3">
                             <div class="input-group">
                                 <span class="input-group-text " id="winner-next-addon">Winner's next match</span>
-                                <input type="text" class=" form-control form-control-sm" disabled style="max-width: 100px;" id="winner_next_position"
+                                <input type="text" class=" form-control form-control-sm" readonly style="max-width: 100px;" id="winner_next_position"
                                     name="winner_next_position" aria-describedby="winner-next-addon">
                             </div>
                         </div>
@@ -182,58 +182,104 @@
                             <div class="input-group">
                                 <span class="input-group-text" id="loser-next-addon">Loser's
                                     next match</span>
-                                <input type="text" style="max-width: 100px;" disabled class=" form-control form-control-sm" id="loser_next_position"
+                                <input type="text" style="max-width: 100px;" readonly class=" form-control form-control-sm" id="loser_next_position"
                                     name="loser_next_position" aria-describedby="loser-next-addon">
                             </div>
                         </div>
                     </div>
-
+                    <br>
+                    <div class="d-flex justify-content-center">
+                        <button id="closeBtn" type="button" class="btn btn-secondary me-3 rounded-pill text-light px-4"
+                            data-bs-dismiss="modal">Close</button>
+                        <button id="submitBtn" type="button" class="btn btn-primary rounded-pill text-light px-4">Save</button>
+                    </div>
                 </form>
 
-                <br>
-                <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-secondary me-3 rounded-pill text-light px-4"
-                        data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary rounded-pill text-light px-4">Save</button>
-                </div>
             </div>
 
         </div>
     </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('matchForm');
     const submitBtn = document.getElementById('submitBtn');
+    const closeBtn = document.getElementById('closeBtn');
 
-    submitBtn.addEventListener('click', function(e) {
-        e.preventDefault();
+
+    submitBtn.addEventListener('click', function(event) {
+        event.preventDefault();
 
         const formData = new FormData(form);
-        
+        let jsonObject = {}
+        for (let [key, value] of formData.entries()) {
+            jsonObject[key] = value;
+        }
+
         fetch(form.action, {
             method: 'POST',
-            body: formData,
+            body: JSON.stringify(jsonObject),
             headers: {
+                'Content-type': 'application/json',  
                 'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                window.Toast.fire({
-                    icon: 'success',
-                    text: data.message
-                });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    let {team1, match, team2} = data.data;
+                    let currentMatchDiv = document.querySelector(`.${match.team1_position}.${match.team2_position}`);
+                    let currentMatch = currentMatchDiv.dataset.bracket;
+                    currentMatch.team1_score = match.team1_score;
+                    currentMatch.team2_score = match.team2_score;
+                    currentMatch.winner_id = match.winner_id;
+                    currentMatch.team1_id = match.team1_id;
+                    currentMatch.team2_id = match.team2_id;
+                    currentMatch.team1 = team1;
+                    currentMatch.team2 = team2;
+                    if (currentMatch.winner_id == team1_id) {
+                        currentMatch.winner = team1;
+                    }
 
-            } else {
-                window.toastError('Error saving match: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            window.toastError('An error occurred while saving the match.');
-        });
+                    if (currentMatch.winner_id == team2_id) {
+                        currentMatch.winner = team2;
+                    }
+
+                    currentMatchDiv.dataset.bracket = JSON.stringify(currentMatch);
+
+                    let tournamentBracketBoxTeam1 = document.querySelector(`.tournament-bracket__box.${match?.team1_position}`);
+                    let tournamentBracketBoxTeam2 = document.querySelector(`.tournament-bracket__box.${match?.team2_position}`);
+                    tournamentBracketBoxTeam1.innerHTML = 
+                        `<img src='/storage/${team1.teamBanner}' 
+                            width="30" height="30"
+                            onerror="this.src='/assets/images/404.png';"
+                            class="position-absolute d-none-when-hover object-fit-cover me-2"
+                            alt="Team View"
+                        >
+                        `
+                        + tournamentBracketBoxTeam1.innerHTML;
+                    tournamentBracketBoxTeam2.innerHTML = 
+                        `<img src='/storage/${team2.teamBanner}'  
+                            width="30" height="30"
+                            onerror="this.src='/assets/images/404.png';"
+                            class="position-absolute d-none-when-hover object-fit-cover me-2"
+                            alt="Team View"
+                        >
+                        `
+                        + tournamentBracketBoxTeam2.innerHTML;
+                    closeBtn.click();
+                    window.Toast.fire({
+                        icon: 'success',
+                        text: data.message
+                    });
+
+                } else {
+                    window.toastError('Error saving match: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.toastError('An error occurred while saving the match.');
+            });
     });
-});
+
 </script>
