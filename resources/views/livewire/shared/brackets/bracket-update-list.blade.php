@@ -3,7 +3,7 @@
     <main>
         @include('__CommonPartials.NavbarGoToSearchPage')
         <div class="px-4">
-            @livewire('shared.brackets.bracket-first-items-update-modal', [
+            @livewire('shared.brackets.bracket-update-modal', [
                 'event' => $event,
                 'teamList' => $teamList
             ])
