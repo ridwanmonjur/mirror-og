@@ -38,7 +38,6 @@ class Notifications extends Model
 
     public function createNotifications(array $parameters): void
     {
-        Log::info('hit createNotifications');
 
         if (is_array($parameters['subject_id'])) {
             $data = [];

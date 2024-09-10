@@ -23,6 +23,7 @@ class ParticipantRosterController extends Controller
                 'user_id' => $request->user_id,
                 'join_events_id' => $request->join_events_id,
                 'team_member_id' => $request->team_member_id,
+                'team_id' => $request->team_id,
             ]);
 
             return response()->json(['success' => true, 'message' => 'Roster status updated to accepted']);

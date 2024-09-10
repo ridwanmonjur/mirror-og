@@ -4,6 +4,9 @@
 @import 'variables';
 @import './bootstrap/bootstrap.css';
 
+
+
+
 // damn, underrated bootstrap responsiveness! amazing goat
 // $utilities: (
 //   // ...
@@ -50,36 +53,23 @@
 }
 
 .notification-container-not-read {
-    font-weight: 600;
+    text-align: justify !important;
 }
 
 .notification-container-read {
-    font-weight: 400;
+    text-align: justify !important;
 }
 
 .dropdown-menu {
-    animation: 1s slideup;
+    animation: 1s modalDropdownAnimate;
   }
 
   .modal-body {
-    animation: 1s slideupLot;
+    animation: 1s modalDropdownAnimate;
   }
 
-  @keyframes slideupLot {
-    0% {
-        transform: translateY(-20%);
-        width: 95%;
-        height: 95%;
-    }
-
-    100% {
-      transform: translateY(0);
-      width: 100%;
-      height: 100%;
-    }
-  }
   
-  @keyframes slideup {
+  @keyframes modalDropdownAnimate {
     0% {
         scale: 1.05;
     }

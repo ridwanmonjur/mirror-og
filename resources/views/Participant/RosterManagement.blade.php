@@ -333,7 +333,8 @@
                     body: JSON.stringify({
                         'user_id' : {{ $user->id }},
                         'join_events_id': {{ $joinEvent->id }},
-                        'team_member_id': memberId
+                        'team_member_id': memberId,
+                        'team_id': {{ $joinEvent->team_id }}
                     })
                 }
             );

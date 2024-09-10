@@ -4,9 +4,11 @@
 <head>
    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tournamnet Demo</title>
+    <title>Tournament Demo</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
+    @vite(['resources/js/tippy.js', 'resources/sass/app.scss', 'resources/js/app.js'])
+ 
     @include('__CommonPartials.HeadIcon')
     <style>
 
@@ -16,6 +18,7 @@
 <body>
     @yield('content')
     @livewireScripts
+    <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
     <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
 </body>
 </html>

@@ -9,9 +9,15 @@ use Illuminate\View\Component;
 class BracketFirstItem extends Component
 {
     public $bracket = null;
+    public $stageName = null;
+    public $innerStageName = null;
+    public $order = null;
 
-    public function __construct($bracket) {
+    public function __construct($bracket, $stageName, $innerStageName, $order) {
         $this->bracket = $bracket;
+        $this->stageName = $stageName;
+        $this->innerStageName = $innerStageName;
+        $this->order = $order;
     }
 
     /**

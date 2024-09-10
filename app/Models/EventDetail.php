@@ -60,6 +60,11 @@ class EventDetail extends Model
         return $this->hasMany(JoinEvent::class, 'event_details_id', 'id');
     }
 
+    public function matches(): HasMany
+    {
+        return $this->hasMany(Matches::class, 'event_details_id', 'id');
+    }
+
     public static function destroyEventBanner(string| null $file): void
     {
         $fileNameInitial = str_replace('images/events/', '', $file);

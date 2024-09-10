@@ -131,19 +131,26 @@
                         &nbsp;
                         <span>{{ $event->type?->eventType ?? 'Choose a type' }}</span>
                     </div>
-                    <div class="d-flex justify-content-around">
+                    <div class="d-flex justify-content-around popover-parent">
                         @if (!in_array($status, ['PENDING', 'DRAFT'])) 
                             @if ($status != "ENDED")
-                                <a class="m-0 mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.invitation.index', $event->id) }}">
+                                <a class="m-0 btn mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.invitation.index', $event->id) }}">
                                     <span> <u> Invite </u> </span>
                                 </a>
                         @endif    
-                            <a class="m-0 mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.brackets.index', ['id' => $event->id]) }}">
-                                <span> <u> Brackets </u> </span>
+                        <div class="popover-content d-none" >
+                            <div class="popover-box px-0 py-0 ms-5" style="margin-bottom: -10px;  background: #F8F6EF;">
+                                <a class="px-2 py-1 text-light me-3 btn btn-primary d-inline popover-box popover-body" href="{{ route('event.matches.index', ['id' => $event->id]) }}">
+                                    <small> Matches </small>
                                 </a>
-                            <a class="m-0 mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.results.index', ['id' => $event->id ]) }}">
-                                <span> <u> Results </u> </span>
+                                <a class="px-2 py-1 text-light btn btn-primary d-inline popover-box popover-body" href="{{ route('event.awards.index', ['id' => $event->id ]) }}">
+                                    <small> Awards </small>
                                 </a>
+                            </div>
+                        </div>
+                        <button class="popover-button   mt-2  mb-2 btn btn-link">
+                            <u> Results </u>
+                        </button>
                         @else
                             <div class="d-flex justify-content-center align-items-center my-2 py-2">
                                 <span> <i>Event is now {{strtolower($status)}}. </i> </span>

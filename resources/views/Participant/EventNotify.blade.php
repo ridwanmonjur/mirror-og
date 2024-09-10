@@ -79,10 +79,13 @@
                     @csrf
                     <input type="hidden" value="{{$id}}" name="eventId">
                     <input type="hidden" value="{{$selectTeam->id}}" name="teamId">
-                    <div class="text-center">
+                    <div class="text-center d-none">
                         <input type="submit" class="choose-payment-method" value="Done">
                     </div>
                 </form>
+                <div class="text-center">
+                    <input onclick="goToViewEvent()" type="submit" class="choose-payment-method" value="Done">
+                </div>
                 <div class="text-center">
                     <button onclick="goToRegistrationScreen()" class="oceans-gaming-default-button oceans-gaming-transparent-button"> See Registration Status </button>
                 </div>
@@ -102,6 +105,10 @@
     <script>
         function goToRegistrationScreen() {
             window.location.href = "{{ route('participant.register.manage', ['id'=> $selectTeam->id]) }}";
+        }
+
+        function goToViewEvent() {
+            window.location.href = "{{ route('public.event.view', ['id'=> $id]) }}";
         }
     </script>
 

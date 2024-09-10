@@ -6,12 +6,14 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class BracketItem extends Component
+class data extends Component
 {
-    public $bracket = null;
-
-    public function __construct($bracket) {
-        $this->bracket = $bracket;
+    /**
+     * Create a new component instance.
+     */
+    public function __construct()
+    {
+        //
     }
 
     /**
@@ -19,6 +21,6 @@ class BracketItem extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.brackets.bracket-item');
+        return view('components.brackets.data');
     }
 }

@@ -31,11 +31,16 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         LogViewer::auth(function ($request) {
-            return $request->user()
+            if (app()->environment('production')) {
+                return $request->user()
                 && in_array($request->user()->email, [
                     'mjrrdn@gmail.com',
                     'mjrrdnasm@gmail.com',
+                    env('MAIL_CC_ADDRESS')
                 ]);
+            }
+
+            return true;
         });
 
         Event::listen(

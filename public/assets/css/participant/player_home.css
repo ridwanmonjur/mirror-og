@@ -48,9 +48,9 @@ main {
     display: block;
 }
 
-.dropdown a:hover {
+/* .dropdown a:hover {
     background-color: #ddd;
-}
+} */
 
 .show {
     display: block;

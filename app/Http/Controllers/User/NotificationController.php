@@ -10,6 +10,16 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
+    public function getMoreNotifications(Request $request, $id) {
+        $user = User::findOrFail($id);
+        $perPage = 3;
+        $notificationList = $user->notifications()->cursorPaginate($perPage);
+        return response()->json([
+            'html' => view('__CommonPartials.__Navbar.Notifications', compact('notificationList'))->render(),
+            'nextPageUrl' => $notificationList->nextCursor()?->encode()
+        ], 200);
+    }
+
     public function markAsRead(Request $request, $id)
     {
         $user = $request->user();

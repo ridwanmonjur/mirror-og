@@ -20,6 +20,10 @@
             text-align: justify;
             font-size: 1rem;
         }
+        a { 
+            color: #43A4D7;
+            text-decoration: none !important;
+        }
     </style>
    
     @stack('head')
@@ -35,7 +39,7 @@
                     style="width:min(90vw, 602px);border-collapse:collapse;border:0;border-spacing:0;text-align:left;">
                     <tr style="border-bottom: 0;">
                         <td align="start" style="padding: 0 0 10px 0;">
-                            <img src="{{$message->embed(public_path('assets/images/logo-default.png'))}}" alt="" width="150"
+                            <img src="{{$message->embed(public_path('assets/images/logo-default.png'))}}" alt="" width="250"
                                     style="height:auto;display:block;" />
                             {{-- <img src="{{ asset('assets/images/logo-default.png') }}" alt="" width="300"
                                 style="height:auto;display:block;" /> --}}
@@ -74,7 +78,7 @@
                                         <p
                                             style="margin:0;font-size:11.5px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;">
                                             &reg; Kuala Lumpur, Malaysia 2024<br /><a href="http://www.example.com"
-                                                style="color:#ffffff;text-decoration:underline;">Unsubscribe</a>
+                                                style="color:#ffffff !important;text-decoration:underline;">Unsubscribe</a>
                                         </p>
                                     </td>
                                     <td style="padding:0;width:50%;" align="right">

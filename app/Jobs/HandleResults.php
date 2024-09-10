@@ -17,8 +17,6 @@ class ChangePositionStrategy
     public function handle($parameters)
     {
         try {
-            Log::info('ChangePositions===========>');
-            Log::info($parameters);
             [
                 'teamId' => $teamId,
                 'image' => $image,
@@ -61,8 +59,6 @@ class ChangePositionStrategy
                     </a>. 
                 </span>
             HTML;
-            Log::info($activityLog);
-            Log::info($foundLogs);
 
             if (isset($foundLogs[0])) {
                 foreach ($foundLogs as $foundLog) {
@@ -110,7 +106,6 @@ class AddAwardStrategy
                 'image' => $image,
             ] = $parameters;
 
-            Log::info('AddAwardStrategy===========>');
             $notificationX = new Notifications();
             $activityLogX = new ActivityLogs();
             $notificationLog = <<<HTML
@@ -182,7 +177,6 @@ class AddAchievementStrategy
                 'image' => $image,
             ] = $parameters;
             
-            Log::info('AddAchievementStrategy===========>');
             $notificationX = new Notifications();
             $activityLogX = new ActivityLogs();
             $notificationLog = <<<HTML
@@ -252,7 +246,6 @@ class DeleteAwardStrategy
     public function handle($parameters)
     {
         try {
-            Log::info('DeleteAwardStrategy===========>');
             $activityLogX = new ActivityLogs();
             $activityLogX->findActivityLog($parameters)->delete();
             $notificationX = new Notifications();
@@ -268,7 +261,6 @@ class DeleteAchievementStrategy
     public function handle($parameters)
     {
         try {
-            Log::info('DeleteAchievementStrategy===========>');
             $activityLogX = new ActivityLogs();
             $activityLogX->findActivityLog($parameters)->delete();
             $notificationX = new Notifications();
@@ -296,7 +288,6 @@ class HandleResults implements ShouldQueue
     // Simple Strategy
     public function handle()
     {
-        Log::info($this->parameters);
         $strategyClass = __NAMESPACE__.'\\'.$this->strategy.'Strategy';
 
         if (! class_exists($strategyClass)) {

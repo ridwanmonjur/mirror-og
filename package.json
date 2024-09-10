@@ -24,6 +24,8 @@
         "firebase": "^10.12.3",
         "sass-loader": "^14.2.1",
         "sweetalert2": "^11.10.8",
-        "swup": "^4.7.0"
+        "swup": "^4.7.0",
+        "tippy.js": "^6.3.7",
+        "use-bootstrap-select": "^2.2.0"
     }
 }

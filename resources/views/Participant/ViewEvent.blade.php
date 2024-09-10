@@ -237,9 +237,7 @@
                     <div class="ps-3">
                         <br>
                         @if (session('errorMessage'))
-                            <br>
-
-                            <div class="error-message">
+                            <div class="error-message mt-0">
                                 {{ session('errorMessage') }}
                             </div>
                         @endif

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MatchUpsertRequest;
 use App\Jobs\HandleResults;
 use App\Models\Achievements;
 use App\Models\ActivityLogs;
@@ -11,6 +12,7 @@ use App\Models\AwardResults;
 use App\Models\EventDetail;
 use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
+use App\Models\Matches;
 use App\Models\Team;
 use App\Models\User;
 use Exception;
@@ -230,6 +232,43 @@ class OrganizerEventResultsController extends Controller
             return response()->json(['success' => true, 'message' => 'Achievement deleted successfully'], 200);
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function upsertBracket(MatchUpsertRequest $request, $id)
+    {
+        try {
+            $validatedData = $request->validated();
+    
+            $match = isset($validatedData['id']) 
+                ? Matches::findOrFail($validatedData['id']) 
+                : new Matches;
+            $team1 = Team::findOrFail($validatedData['team1_id']);
+            $team2 = Team::findOrFail($validatedData['team2_id']);
+            $event = EventDetail::findOrFail($validatedData['event_details_id']);
+            $match->fill($validatedData);
+            $match->event_details_id = $event->id;
+            $match->save();
+    
+            $message = isset($validatedData['id']) 
+                ? 'Match updated successfully' 
+                : 'Match created successfully';
+    
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'match' => $match,
+                    'team1' => $team1,
+                    'team2' => $team2,
+                ],
+                'message' => $message,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'data' => null,
+                'message' => 'An error occurred: ' . $e->getMessage(),
+            ], 500);
         }
     }
 

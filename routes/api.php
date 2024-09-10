@@ -39,6 +39,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/user/firebase', [ChatController::class, 'getFirebaseUsers'])->name('user.firebase.readAll');
         Route::post('/user/{id}/banner', [UserController::class, 'replaceBanner'])->name('participant.userBanner.action');
         Route::post('/user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
+        Route::post('/user/{id}/notifications', [NotificationController::class, 'getMoreNotifications'])->name('user.notifications.more');
         Route::post('/card/intent', [StripeController::class,  'stripeCardIntentCreate'])->name('stripe.stripeCardIntentCreate');
     });
 });
@@ -66,6 +67,7 @@ Route::group(['prefix' => 'organizer'], function () {
             Route::post('events/search', [OrganizerEventController::class, 'search'])->name('event.search.view');
             Route::delete('/event/achievements/{achievementId}', [OrganizerEventResultsController::class, 'destroyAchievements'])->name('event.achievements.destroy');
             Route::post('/event/{id}/results', [OrganizerEventResultsController::class, 'store'])->name('event.results.store');
+            Route::post('/event/{id}/matches', [OrganizerEventResultsController::class, 'upsertBracket'])->name('event.matches.upsert');
             Route::post('/event/{id}/awards', [OrganizerEventResultsController::class, 'storeAward'])->name('event.awards.store');
             Route::delete('/event/{id}/awards/{awardId}', [OrganizerEventResultsController::class, 'destroyAward'])->name('event.awards.destroy');
             Route::post('/event/{id}/achievements', [OrganizerEventResultsController::class, 'storeAchievements'])->name('event.achievements.store');

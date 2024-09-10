@@ -29,10 +29,9 @@ class ShowActivityLogs extends Component
 
     public function loadActivityLogs()
     {
-        $perPage = 1;
+        $perPage = 5;
         $activityLogsQuery = ActivityLogs::where('subject_id', $this->userId)
             ->where('subject_type', User::class);
-            Log::info("==========> Duration: {$this->duration} Page: {$this->page}");
         if ($this->duration === 'new') {
             $activityLogsQuery->whereDate('created_at', Carbon::today());
         } elseif ($this->duration === 'recent') {
@@ -42,7 +41,6 @@ class ShowActivityLogs extends Component
         }
 
         $activityLogs = $activityLogsQuery->paginate($perPage, ['*'], 'page', $this->page);
-        Log::info("===========> Activity Logs:" . $activityLogs->hasMorePages() . "\n");
 
         $this->hasMore = $activityLogs->hasMorePages();
         $this->totalItems = array_merge($this->totalItems, $activityLogs->items());

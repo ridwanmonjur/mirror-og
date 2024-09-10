@@ -6,7 +6,7 @@
         @if (!isset($data[0]))
             <p class="text-center mt-5"> You have no users in this list. </p>
         @else
-            <table style="max-width: 80%; margin: auto;" class="table table-striped bg-white">
+            <table style="max-width: 80%; margin: auto;" class="table table-striped bg-white px-3">
                 <tbody>
                     @foreach ($data as $member)
                         <tr wire:key="{{ $name . $member->id }}" class="st">
@@ -32,7 +32,7 @@
                                 <span>{{ $member->{$propertyName}->email }}</span>
                             </td>
                             <td class="coloured-cell px-3"> {{ $member->{$propertyName}->name }} </td>
-                            <td class="coloured-cell px-3">
+                            <td class="coloured-cell ps-3 text-end">
                                 {{ is_null($member->updated_at) ? '-' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
                         </tr>

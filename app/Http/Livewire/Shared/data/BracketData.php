@@ -8,471 +8,471 @@ class BracketData
     
     if ($membersCount === 32) {
         return [
-            'doubleElimination' => [
+            'tournament' => [
                 'finals' => [
                     'finals' => [
                         [
-                            'team1Position' => 'G1',
-                            'team2Position' => 'G2',
+                            'team1_position' => 'G1',
+                            'team2_position' => 'G2',
                             'order' => 1,
-                            'winnerNext' => null,
-                            'loserNext' => null,
+                            'winner_next_position' => null,
+                            'loser_next_position' => null,
                         ]
                     ], 
                 ],
                 'upperBracket' => [
                     'eliminator1' => [
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W1',
+                            'team2_position' => 'W2',
                             'order' => 1,
-                            'winnerNext' => 'U1',
-                            'loserNext' => 'L1',
+                            'winner_next_position' => 'U1',
+                            'loser_next_position' => 'L1',
                         ], // 1
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W3',
+                            'team2_position' => 'W4',
                             'order' => 2,
-                            'winnerNext' => 'U2',
-                            'loserNext' => 'L2',
+                            'winner_next_position' => 'U2',
+                            'loser_next_position' => 'L2',
                         ], // 2
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W5',
+                            'team2_position' => 'W6',
                             'order' => 3,
-                            'winnerNext' => 'U3',
-                            'loserNext' => 'L3',
+                            'winner_next_position' => 'U3',
+                            'loser_next_position' => 'L3',
                         ], // 3
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W7',
+                            'team2_position' => 'W8',
                             'order' => 4,
-                            'winnerNext' => 'U4',
-                            'loserNext' => 'L4',
+                            'winner_next_position' => 'U4',
+                            'loser_next_position' => 'L4',
                         ], // 4
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W9',
+                            'team2_position' => 'W10',
                             'order' => 5,
-                            'winnerNext' => 'U5',
-                            'loserNext' => 'L6',
+                            'winner_next_position' => 'U5',
+                            'loser_next_position' => 'L6',
                         ], // 5
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W11',
+                            'team2_position' => 'W12',
                             'order' => 6,
-                            'winnerNext' => 'U6',
-                            'loserNext' => 'L6',
+                            'winner_next_position' => 'U6',
+                            'loser_next_position' => 'L6',
                         ], // 6
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W13',
+                            'team2_position' => 'W14',
                             'order' => 7,
-                            'winnerNext' => 'U7',
-                            'loserNext' => 'L7',
+                            'winner_next_position' => 'U7',
+                            'loser_next_position' => 'L7',
                         ], // 7
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W15',
+                            'team2_position' => 'W16',
                             'order' => 8,
-                            'winnerNext' => 'U8',
-                            'loserNext' => 'L8',
+                            'winner_next_position' => 'U8',
+                            'loser_next_position' => 'L8',
                         ], // 8
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W17',
+                            'team2_position' => 'W18',
                             'order' => 9,
-                            'winnerNext' => 'U9',
-                            'loserNext' => 'L9',
+                            'winner_next_position' => 'U9',
+                            'loser_next_position' => 'L9',
                         ], // 9
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W19',
+                            'team2_position' => 'W20',
                             'order' => 10,
-                            'winnerNext' => 'U10',
-                            'loserNext' => 'L10',
+                            'winner_next_position' => 'U10',
+                            'loser_next_position' => 'L10',
                         ], // 10
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W21',
+                            'team2_position' => 'W22',
                             'order' => 11,
-                            'winnerNext' => 'U11',
-                            'loserNext' => 'L11',
+                            'winner_next_position' => 'U11',
+                            'loser_next_position' => 'L11',
                         ], // 11
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W23',
+                            'team2_position' => 'W24',
                             'order' => 12,
-                            'winnerNext' => 'U12',
-                            'loserNext' => 'L12',
+                            'winner_next_position' => 'U12',
+                            'loser_next_position' => 'L12',
                         ], // 12
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W25',
+                            'team2_position' => 'W26',
                             'order' => 13,
-                            'winnerNext' => 'U13',
-                            'loserNext' => 'L13',
+                            'winner_next_position' => 'U13',
+                            'loser_next_position' => 'L13',
                         ], // 13
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W27',
+                            'team2_position' => 'W28',
                             'order' => 14,
-                            'winnerNext' => 'U14',
-                            'loserNext' => 'L14',
+                            'winner_next_position' => 'U14',
+                            'loser_next_position' => 'L14',
                         ], // 14
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W29',
+                            'team2_position' => 'W30',
                             'order' => 15,
-                            'winnerNext' => 'U15',
-                            'loserNext' => 'L15',
+                            'winner_next_position' => 'U15',
+                            'loser_next_position' => 'L15',
                         ], // 15
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W31',
+                            'team2_position' => 'W32',
                             'order' => 16,
-                            'winnerNext' => 'U16',
-                            'loserNext' => 'L16',
+                            'winner_next_position' => 'U16',
+                            'loser_next_position' => 'L16',
                         ], // 16
                     ],
                     'eliminator2' => [
                         [
-                            'team1Position' => 'U1',
-                            'team2Position' => 'U2',
+                            'team1_position' => 'U1',
+                            'team2_position' => 'U2',
                             'order' => 1,
-                            'winnerNext' => 'U17',
-                            'loserNext' => 'L18',
+                            'winner_next_position' => 'U17',
+                            'loser_next_position' => 'L18',
                         ], // 1
                         [
-                            'team1Position' => 'U3',
-                            'team2Position' => 'U4',
+                            'team1_position' => 'U3',
+                            'team2_position' => 'U4',
                             'order' => 2,
-                            'winnerNext' => 'U18',
-                            'loserNext' => 'L20',
+                            'winner_next_position' => 'U18',
+                            'loser_next_position' => 'L20',
                         ], // 2
                         [
-                            'team1Position' => 'U5',
-                            'team2Position' => 'U6',
+                            'team1_position' => 'U5',
+                            'team2_position' => 'U6',
                             'order' => 3,
-                            'winnerNext' => 'U19',
-                            'loserNext' => 'L22',
+                            'winner_next_position' => 'U19',
+                            'loser_next_position' => 'L22',
                         ], // 3
                         [
-                            'team1Position' => 'U7',
-                            'team2Position' => 'U8',
+                            'team1_position' => 'U7',
+                            'team2_position' => 'U8',
                             'order' => 4,
-                            'winnerNext' => 'U20',
-                            'loserNext' => 'L24',
+                            'winner_next_position' => 'U20',
+                            'loser_next_position' => 'L24',
                         ], // 4
                         [
-                            'team1Position' => 'U9',
-                            'team2Position' => 'U10',
+                            'team1_position' => 'U9',
+                            'team2_position' => 'U10',
                             'order' => 5,
-                            'winnerNext' => 'U21',
-                            'loserNext' => 'L26',
+                            'winner_next_position' => 'U21',
+                            'loser_next_position' => 'L26',
                         ], // 5
                         [
-                            'team1Position' => 'U11',
-                            'team2Position' => 'U12',
+                            'team1_position' => 'U11',
+                            'team2_position' => 'U12',
                             'order' => 6,
-                            'winnerNext' => 'U22',
-                            'loserNext' => 'L28',
+                            'winner_next_position' => 'U22',
+                            'loser_next_position' => 'L28',
                         ], // 6
                         [
-                            'team1Position' => 'U13',
-                            'team2Position' => 'U14',
+                            'team1_position' => 'U13',
+                            'team2_position' => 'U14',
                             'order' => 7,
-                            'winnerNext' => 'U23',
-                            'loserNext' => 'L30',
+                            'winner_next_position' => 'U23',
+                            'loser_next_position' => 'L30',
                         ], // 7
                         [
-                            'team1Position' => 'U15',
-                            'team2Position' => 'U16',
+                            'team1_position' => 'U15',
+                            'team2_position' => 'U16',
                             'order' => 8,
-                            'winnerNext' => 'U24',
-                            'loserNext' => 'L32',
+                            'winner_next_position' => 'U24',
+                            'loser_next_position' => 'L32',
                         ], // 8
                     ],
                     'eliminator3' => [
                         [
-                            'team1Position' => 'U17',
-                            'team2Position' => 'U18',
+                            'team1_position' => 'U17',
+                            'team2_position' => 'U18',
                             'order' => 1,
-                            'winnerNext' => 'U25',
-                            'loserNext' => 'L42',
+                            'winner_next_position' => 'U25',
+                            'loser_next_position' => 'L42',
                         ], // 1
                         [
-                            'team1Position' => 'U19',
-                            'team2Position' => 'U20',
+                            'team1_position' => 'U19',
+                            'team2_position' => 'U20',
                             'order' => 2,
-                            'winnerNext' => 'U26',
-                            'loserNext' => 'L44',
+                            'winner_next_position' => 'U26',
+                            'loser_next_position' => 'L44',
                         ], // 2
                         [
-                            'team1Position' => 'U21',
-                            'team2Position' => 'U22',
+                            'team1_position' => 'U21',
+                            'team2_position' => 'U22',
                             'order' => 3,
-                            'winnerNext' => 'U27',
-                            'loserNext' => 'L46',
+                            'winner_next_position' => 'U27',
+                            'loser_next_position' => 'L46',
                         ], // 3
                         [
-                            'team1Position' => 'U23',
-                            'team2Position' => 'U24',
+                            'team1_position' => 'U23',
+                            'team2_position' => 'U24',
                             'order' => 4,
-                            'winnerNext' => 'U28',
-                            'loserNext' => 'L48',
+                            'winner_next_position' => 'U28',
+                            'loser_next_position' => 'L48',
                         ], // 4
                     ],
                     'eliminator4' => [
                         [
-                            'team1Position' => 'U25',
-                            'team2Position' => 'U26',
+                            'team1_position' => 'U25',
+                            'team2_position' => 'U26',
                             'order' => 1,
-                            'winnerNext' => 'U29',
-                            'loserNext' => 'L54',
+                            'winner_next_position' => 'U29',
+                            'loser_next_position' => 'L54',
                         ], // 1
                         [
-                            'team1Position' => 'U27',
-                            'team2Position' => 'U28',
+                            'team1_position' => 'U27',
+                            'team2_position' => 'U28',
                             'order' => 2,
-                            'winnerNext' => 'U30',
-                            'loserNext' => 'L56',
+                            'winner_next_position' => 'U30',
+                            'loser_next_position' => 'L56',
                         ], // 2
                     ],
                     'prefinals' => [
                         [
-                            'team1Position' => 'U29',
-                            'team2Position' => 'U30',
+                            'team1_position' => 'U29',
+                            'team2_position' => 'U30',
                             'order' => 1,
-                            'winnerNext' => 'G1',
-                            'loserNext' => 'L60',
+                            'winner_next_position' => 'G1',
+                            'loser_next_position' => 'L60',
                         ], // 1
                     ],
                 ],
                 'lowerBracket' => [
                     'eliminator1' => [
                         [
-                            'team1Position' => 'L1',
-                            'team2Position' => 'L2',
+                            'team1_position' => 'L1',
+                            'team2_position' => 'L2',
                             'order' => 1,
-                            'winnerNext' => 'L17',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L17',
+                            'loser_next_position' => null,
                         ], // 1
                         [
-                            'team1Position' => 'L3',
-                            'team2Position' => 'L4',
+                            'team1_position' => 'L3',
+                            'team2_position' => 'L4',
                             'order' => 2,
-                            'winnerNext' => 'L19',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L19',
+                            'loser_next_position' => null,
                         ], // 2
                         [
-                            'team1Position' => 'L5',
-                            'team2Position' => 'L6',
+                            'team1_position' => 'L5',
+                            'team2_position' => 'L6',
                             'order' => 3,
-                            'winnerNext' => 'L21',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L21',
+                            'loser_next_position' => null,
                         ], // 3
                         [
-                            'team1Position' => 'L7',
-                            'team2Position' => 'L8',
+                            'team1_position' => 'L7',
+                            'team2_position' => 'L8',
                             'order' => 4,
-                            'winnerNext' => 'L23',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L23',
+                            'loser_next_position' => null,
                         ], // 4
                         [
-                            'team1Position' => 'L9',
-                            'team2Position' => 'L10',
+                            'team1_position' => 'L9',
+                            'team2_position' => 'L10',
                             'order' => 5,
-                            'winnerNext' => 'L25',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L25',
+                            'loser_next_position' => null,
                         ], // 5
                         [
-                            'team1Position' => 'L11',
-                            'team2Position' => 'L12',
+                            'team1_position' => 'L11',
+                            'team2_position' => 'L12',
                             'order' => 6,
-                            'winnerNext' => 'L27',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L27',
+                            'loser_next_position' => null,
                         ], // 6
                         [
-                            'team1Position' => 'L13',
-                            'team2Position' => 'L14',
+                            'team1_position' => 'L13',
+                            'team2_position' => 'L14',
                             'order' => 7,
-                            'winnerNext' => 'L29',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L29',
+                            'loser_next_position' => null,
                         ], // 7
                         [
-                            'team1Position' => 'L15',
-                            'team2Position' => 'L16',
+                            'team1_position' => 'L15',
+                            'team2_position' => 'L16',
                             'order' => 8,
-                            'winnerNext' => 'L31',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L31',
+                            'loser_next_position' => null,
                         ], // 8
                     ],
                     'eliminator2' => [
                         [
-                            'team1Position' => 'L17',
-                            'team2Position' => 'L18',
-                            'winnerNext' => 'L33',
-                            'loserNext' => null,
+                            'team1_position' => 'L17',
+                            'team2_position' => 'L18',
+                            'winner_next_position' => 'L33',
+                            'loser_next_position' => null,
                             'order' => 1,
                         ], // 1
                         [
-                            'team1Position' => 'L19',
-                            'team2Position' => 'L20',
-                            'winnerNext' => 'L34',
-                            'loserNext' => null,
+                            'team1_position' => 'L19',
+                            'team2_position' => 'L20',
+                            'winner_next_position' => 'L34',
+                            'loser_next_position' => null,
                             'order' => 2
                         ], // 2
                         [
-                            'team1Position' => 'L21',
-                            'team2Position' => 'L22',
-                            'winnerNext' => 'L35',
-                            'loserNext' => null,
+                            'team1_position' => 'L21',
+                            'team2_position' => 'L22',
+                            'winner_next_position' => 'L35',
+                            'loser_next_position' => null,
                             'order' => 3
                         ], // 3
                         [
-                            'team1Position' => 'L23',
-                            'team2Position' => 'L24',
-                            'winnerNext' => 'L36',
-                            'loserNext' => null,
+                            'team1_position' => 'L23',
+                            'team2_position' => 'L24',
+                            'winner_next_position' => 'L36',
+                            'loser_next_position' => null,
                             'order' => 4
                         ], // 4
                         [
-                            'team1Position' => 'L25',
-                            'team2Position' => 'L26',
-                            'winnerNext' => 'L37',
-                            'loserNext' => null,
+                            'team1_position' => 'L25',
+                            'team2_position' => 'L26',
+                            'winner_next_position' => 'L37',
+                            'loser_next_position' => null,
                             'order' => 5
                         ], // 5
                         [
-                            'team1Position' => 'L27',
-                            'team2Position' => 'L28',
-                            'winnerNext' => 'L38',
-                            'loserNext' => null,
+                            'team1_position' => 'L27',
+                            'team2_position' => 'L28',
+                            'winner_next_position' => 'L38',
+                            'loser_next_position' => null,
                             'order' => 6
                         ], // 6
                         [
-                            'team1Position' => 'L29',
-                            'team2Position' => 'L30',
-                            'winnerNext' => 'L39',
-                            'loserNext' => null,
+                            'team1_position' => 'L29',
+                            'team2_position' => 'L30',
+                            'winner_next_position' => 'L39',
+                            'loser_next_position' => null,
                             'order' => 7
                         ], // 7
                         [
-                            'team1Position' => 'L31',
-                            'team2Position' => 'L32',
-                            'winnerNext' => 'L40',
-                            'loserNext' => null,
+                            'team1_position' => 'L31',
+                            'team2_position' => 'L32',
+                            'winner_next_position' => 'L40',
+                            'loser_next_position' => null,
                             'order' => 8
                         ], // 8
                     ],
                     'eliminator3' => [
                         [
-                            'team1Position' => 'L33',
-                            'team2Position' => 'L34',
-                            'winnerNext' => 'L41',
-                            'loserNext' => null,
+                            'team1_position' => 'L33',
+                            'team2_position' => 'L34',
+                            'winner_next_position' => 'L41',
+                            'loser_next_position' => null,
                             'order' => 1,
                         ], // 1
                         [
-                            'team1Position' => 'L35',
-                            'team2Position' => 'L36',
-                            'winnerNext' => 'L43',
-                            'loserNext' => null,
+                            'team1_position' => 'L35',
+                            'team2_position' => 'L36',
+                            'winner_next_position' => 'L43',
+                            'loser_next_position' => null,
                             'order' => 2
                         ], // 2
                         [
-                            'team1Position' => 'L37',
-                            'team2Position' => 'L38',
-                            'winnerNext' => 'L45',
-                            'loserNext' => null,
+                            'team1_position' => 'L37',
+                            'team2_position' => 'L38',
+                            'winner_next_position' => 'L45',
+                            'loser_next_position' => null,
                             'order' => 3
                         ], // 3
                         [
-                            'team1Position' => 'L39',
-                            'team2Position' => 'L40',
-                            'winnerNext' => 'L47',
-                            'loserNext' => null,
+                            'team1_position' => 'L39',
+                            'team2_position' => 'L40',
+                            'winner_next_position' => 'L47',
+                            'loser_next_position' => null,
                             'order' => 4
                         ], // 4
                     ],
                     'eliminator4' => [
                         [
-                            'team1Position' => 'L41',
-                            'team2Position' => 'L42',
-                            'winnerNext' => 'L49',
-                            'loserNext' => null,
+                            'team1_position' => 'L41',
+                            'team2_position' => 'L42',
+                            'winner_next_position' => 'L49',
+                            'loser_next_position' => null,
                             'order' => 1,
                         ], // 1
                         [
-                            'team1Position' => 'L43',
-                            'team2Position' => 'L44',
-                            'winnerNext' => 'L50',
-                            'loserNext' => null,
+                            'team1_position' => 'L43',
+                            'team2_position' => 'L44',
+                            'winner_next_position' => 'L50',
+                            'loser_next_position' => null,
                             'order' => 2,
                         ], // 2
                         [
-                            'team1Position' => 'L45',
-                            'team2Position' => 'L46',
-                            'winnerNext' => 'L51',
-                            'loserNext' => null,
+                            'team1_position' => 'L45',
+                            'team2_position' => 'L46',
+                            'winner_next_position' => 'L51',
+                            'loser_next_position' => null,
                             'order' => 3
                         ], // 3
                         [
-                            'team1Position' => 'L47',
-                            'team2Position' => 'L48',
-                            'winnerNext' => 'L52',
-                            'loserNext' => null,
+                            'team1_position' => 'L47',
+                            'team2_position' => 'L48',
+                            'winner_next_position' => 'L52',
+                            'loser_next_position' => null,
                             'order' => 4
                         ], // 4
                     ],
                     'eliminator5' => [
                         [
-                            'team1Position' => 'L49',
-                            'team2Position' => 'L50',
-                            'winnerNext' => 'L53',
-                            'loserNext' => null,
-
+                            'team1_position' => 'L49',
+                            'team2_position' => 'L50',
+                            'winner_next_position' => 'L53',
+                            'loser_next_position' => null,
+                            'order' => 1
                         ], // 1
                         [
-                            'team1Position' => 'L51',
-                            'team2Position' => 'L52',
-                            'winnerNext' => 'L55',
-                            'loserNext' => null,
+                            'team1_position' => 'L51',
+                            'team2_position' => 'L52',
+                            'winner_next_position' => 'L55',
+                            'loser_next_position' => null,
                             'order' => 2,
                         ], // 2
                     ],
                     'eliminator6' => [
                         [
-                            'team1Position' => 'L53',
-                            'team2Position' => 'L54',
-                            'winnerNext' => 'L57',
-                            'loserNext' => null,
+                            'team1_position' => 'L53',
+                            'team2_position' => 'L54',
+                            'winner_next_position' => 'L57',
+                            'loser_next_position' => null,
                             'order' => 1,
                         ], // 1
                         [
-                            'team1Position' => 'L55',
-                            'team2Position' => 'L56',
-                            'winnerNext' => 'L58',
-                            'loserNext' => null,
+                            'team1_position' => 'L55',
+                            'team2_position' => 'L56',
+                            'winner_next_position' => 'L58',
+                            'loser_next_position' => null,
                             'order' => 2,
                         ], // 2
                     ],
                     'prefinals1' => [
                         [
-                            'team1Position' => 'L57',
-                            'team2Position' => 'L58',
-                            'winnerNext' => 'L59',
-                            'loserNext' => null,
+                            'team1_position' => 'L57',
+                            'team2_position' => 'L58',
+                            'winner_next_position' => 'L59',
+                            'loser_next_position' => null,
                             'order' => 1,
                         ], // 1
                     ],
                     'prefinals2' => [
                         [
-                            'team1Position' => 'L59',
-                            'team2Position' => 'L60',
-                            'winnerNext' => 'G2',
-                            'loserNext' => null,
+                            'team1_position' => 'L59',
+                            'team2_position' => 'L60',
+                            'winner_next_position' => 'G2',
+                            'loser_next_position' => null,
                             'order' => 1,
                         ], // 1
                     ],
@@ -483,241 +483,241 @@ class BracketData
 
     if ($membersCount === 16) {
         return [
-            'doubleElimination' => [
+            'tournament' => [
                 'finals' => [
                     'finals' => [
                         [
-                            'team1Position' => 'G1',
-                            'team2Position' => 'G2',
+                            'team1_position' => 'G1',
+                            'team2_position' => 'G2',
                             'order' => 1,
-                            'winnerNext' => null,
-                            'loserNext' => null,
+                            'winner_next_position' => null,
+                            'loser_next_position' => null,
                         ]
                     ], 
                 ],
                 'upperBracket' => [
                     'eliminator1' => [
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W1',
+                            'team2_position' => 'W2',
                             'order' => 1,
-                            'winnerNext' => 'U1',
-                            'loserNext' => 'L1',
+                            'winner_next_position' => 'U1',
+                            'loser_next_position' => 'L1',
                         ], // 1
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W3',
+                            'team2_position' => 'W4',
                             'order' => 2,
-                            'winnerNext' => 'U2',
-                            'loserNext' => 'L2',
+                            'winner_next_position' => 'U2',
+                            'loser_next_position' => 'L2',
                         ], // 2
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W5',
+                            'team2_position' => 'W6',
                             'order' => 3,
-                            'winnerNext' => 'U3',
-                            'loserNext' => 'L3',
+                            'winner_next_position' => 'U3',
+                            'loser_next_position' => 'L3',
                         ], // 3
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W7',
+                            'team2_position' => 'W8',
                             'order' => 4,
-                            'winnerNext' => 'U4',
-                            'loserNext' => 'L4',
+                            'winner_next_position' => 'U4',
+                            'loser_next_position' => 'L4',
                         ], // 4
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W9',
+                            'team2_position' => 'W10',
                             'order' => 5,
-                            'winnerNext' => 'U5',
-                            'loserNext' => 'L6',
+                            'winner_next_position' => 'U5',
+                            'loser_next_position' => 'L6',
                         ], // 5
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W11',
+                            'team2_position' => 'W12',
                             'order' => 6,
-                            'winnerNext' => 'U6',
-                            'loserNext' => 'L6',
+                            'winner_next_position' => 'U6',
+                            'loser_next_position' => 'L6',
                         ], // 6
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W13',
+                            'team2_position' => 'W14',
                             'order' => 7,
-                            'winnerNext' => 'U7',
-                            'loserNext' => 'L7',
+                            'winner_next_position' => 'U7',
+                            'loser_next_position' => 'L7',
                         ], // 7
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W15',
+                            'team2_position' => 'W16',
                             'order' => 8,
-                            'winnerNext' => 'U8',
-                            'loserNext' => 'L8',
+                            'winner_next_position' => 'U8',
+                            'loser_next_position' => 'L8',
                         ], // 8
                     ],
                     'eliminator2' => [
                         [
-                            'team1Position' => 'U1',
-                            'team2Position' => 'U2',
+                            'team1_position' => 'U1',
+                            'team2_position' => 'U2',
                             'order' => 1,
-                            'winnerNext' => 'U9',
-                            'loserNext' => 'L10',
+                            'winner_next_position' => 'U9',
+                            'loser_next_position' => 'L10',
                         ], // 1
                         [
-                            'team1Position' => 'U3',
-                            'team2Position' => 'U4',
+                            'team1_position' => 'U3',
+                            'team2_position' => 'U4',
                             'order' => 2,
-                            'winnerNext' => 'U10',
-                            'loserNext' => 'L12',
+                            'winner_next_position' => 'U10',
+                            'loser_next_position' => 'L12',
                         ], // 2
                         [
-                            'team1Position' => 'U5',
-                            'team2Position' => 'U6',
+                            'team1_position' => 'U5',
+                            'team2_position' => 'U6',
                             'order' => 3,
-                            'winnerNext' => 'U11',
-                            'loserNext' => 'L14',
+                            'winner_next_position' => 'U11',
+                            'loser_next_position' => 'L14',
                         ], // 3
                         [
-                            'team1Position' => 'U7',
-                            'team2Position' => 'U8',
+                            'team1_position' => 'U7',
+                            'team2_position' => 'U8',
                             'order' => 4,
-                            'winnerNext' => 'U12',
-                            'loserNext' => 'L16',
+                            'winner_next_position' => 'U12',
+                            'loser_next_position' => 'L16',
                         ], // 4
                     ],
                     'eliminator3' => [
                         [
-                            'team1Position' => 'U9',
-                            'team2Position' => 'U10',
+                            'team1_position' => 'U9',
+                            'team2_position' => 'U10',
                             'order' => 1,
-                            'winnerNext' => 'U13',
-                            'loserNext' => 'L22',
+                            'winner_next_position' => 'U13',
+                            'loser_next_position' => 'L22',
                         ], // 1
                         [
-                            'team1Position' => 'U11',
-                            'team2Position' => 'U12',
+                            'team1_position' => 'U11',
+                            'team2_position' => 'U12',
                             'order' => 2,
-                            'winnerNext' => 'U14',
-                            'loserNext' => 'L24',
+                            'winner_next_position' => 'U14',
+                            'loser_next_position' => 'L24',
                         ], // 2
                     ],
                     'prefinals' => [
                         [
-                            'team1Position' => 'U13',
-                            'team2Position' => 'U14',
+                            'team1_position' => 'U13',
+                            'team2_position' => 'U14',
                             'order' => 1,
-                            'winnerNext' => 'G1',
-                            'loserNext' => 'L28',
+                            'winner_next_position' => 'G1',
+                            'loser_next_position' => 'L28',
                         ], // 1
                     ],
                 ],
                 'lowerBracket' => [
                     'eliminator1' => [
                         [
-                            'team1Position' => 'L1',
-                            'team2Position' => 'L2',
+                            'team1_position' => 'L1',
+                            'team2_position' => 'L2',
                             'order' => 1,
-                            'winnerNext' => 'L9',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L9',
+                            'loser_next_position' => null,
                         ], // 1
                         [
-                            'team1Position' => 'L3',
-                            'team2Position' => 'L4',
+                            'team1_position' => 'L3',
+                            'team2_position' => 'L4',
                             'order' => 2,
-                            'winnerNext' => 'L10',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L10',
+                            'loser_next_position' => null,
                         ], // 2
                         [
-                            'team1Position' => 'L5',
-                            'team2Position' => 'L6',
+                            'team1_position' => 'L5',
+                            'team2_position' => 'L6',
                             'order' => 3,
-                            'winnerNext' => 'L11',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L11',
+                            'loser_next_position' => null,
                         ], // 3
                         [
-                            'team1Position' => 'L7',
-                            'team2Position' => 'L8',
+                            'team1_position' => 'L7',
+                            'team2_position' => 'L8',
                             'order' => 4,
-                            'winnerNext' => 'L12',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L12',
+                            'loser_next_position' => null,
                         ], // 4
                     ],
                     'eliminator2' => [
                         [
-                            'team1Position' => 'L9',
-                            'team2Position' => 'L10',
-                            'winnerNext' => 'L17',
-                            'loserNext' => null,
+                            'team1_position' => 'L9',
+                            'team2_position' => 'L10',
+                            'winner_next_position' => 'L17',
+                            'loser_next_position' => null,
                             'order' => 1,
                         ], // 1
                         [
-                            'team1Position' => 'L11',
-                            'team2Position' => 'L12',
-                            'winnerNext' => 'L18',
-                            'loserNext' => null,
+                            'team1_position' => 'L11',
+                            'team2_position' => 'L12',
+                            'winner_next_position' => 'L18',
+                            'loser_next_position' => null,
                             'order' => 2
                         ], // 2
                         [
-                            'team1Position' => 'L13',
-                            'team2Position' => 'L14',
-                            'winnerNext' => 'L19',
-                            'loserNext' => null,
+                            'team1_position' => 'L13',
+                            'team2_position' => 'L14',
+                            'winner_next_position' => 'L19',
+                            'loser_next_position' => null,
                             'order' => 3
                         ], // 3
                         [
-                            'team1Position' => 'L15',
-                            'team2Position' => 'L16',
-                            'winnerNext' => 'L20',
-                            'loserNext' => null,
+                            'team1_position' => 'L15',
+                            'team2_position' => 'L16',
+                            'winner_next_position' => 'L20',
+                            'loser_next_position' => null,
                             'order' => 4
                         ], // 4
                     ],
                     'eliminator3' => [
                         [
-                            'team1Position' => 'L17',
-                            'team2Position' => 'L18',
-                            'winnerNext' => 'L21',
-                            'loserNext' => null,
+                            'team1_position' => 'L17',
+                            'team2_position' => 'L18',
+                            'winner_next_position' => 'L21',
+                            'loser_next_position' => null,
                             'order' => 1,
                         ], // 1
                         [
-                            'team1Position' => 'L19',
-                            'team2Position' => 'L20',
-                            'winnerNext' => 'L23',
-                            'loserNext' => null,
+                            'team1_position' => 'L19',
+                            'team2_position' => 'L20',
+                            'winner_next_position' => 'L23',
+                            'loser_next_position' => null,
                             'order' => 2
                         ], // 2
                     ],
                     'eliminator4' => [
                         [
-                            'team1Position' => 'L21',
-                            'team2Position' => 'L22',
-                            'winnerNext' => 'L25',
-                            'loserNext' => null,
+                            'team1_position' => 'L21',
+                            'team2_position' => 'L22',
+                            'winner_next_position' => 'L25',
+                            'loser_next_position' => null,
                             'order' => 1,
                         ], // 1
                         [
-                            'team1Position' => 'L23',
-                            'team2Position' => 'L24',
-                            'winnerNext' => 'L26',
-                            'loserNext' => null,
+                            'team1_position' => 'L23',
+                            'team2_position' => 'L24',
+                            'winner_next_position' => 'L26',
+                            'loser_next_position' => null,
                             'order' => 2,
                         ], // 2
                     ],
                     'prefinals1' => [
                         [
-                            'team1Position' => 'L25',
-                            'team2Position' => 'L26',
-                            'winnerNext' => 'L53',
-                            'loserNext' => null,
+                            'team1_position' => 'L25',
+                            'team2_position' => 'L26',
+                            'winner_next_position' => 'L53',
+                            'loser_next_position' => null,
                             'order' => 1,
                         ], // 1
                     ],
                     'prefinals2' => [
                         [
-                            'team1Position' => 'L27',
-                            'team2Position' => 'L28',
-                            'winnerNext' => 'L27',
-                            'loserNext' => null,
+                            'team1_position' => 'L27',
+                            'team2_position' => 'L28',
+                            'winner_next_position' => 'L27',
+                            'loser_next_position' => null,
                             'order' => 1,
                         ], // 1
                     ],
@@ -728,123 +728,123 @@ class BracketData
 
     if ($membersCount === 8) {
         return [
-            'doubleElimination' => [
+            'tournament' => [
                 'finals' => [
                     'finals' => [
                         [
-                            'team1Position' => 'G1',
-                            'team2Position' => 'G2',
+                            'team1_position' => 'G1',
+                            'team2_position' => 'G2',
                             'order' => 1,
-                            'winnerNext' => null,
-                            'loserNext' => null,
+                            'winner_next_position' => null,
+                            'loser_next_position' => null,
                         ]
                     ], 
                 ],
                 'upperBracket' => [
                     'eliminator1' => [
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W1',
+                            'team2_position' => 'W2',
                             'order' => 1,
-                            'winnerNext' => 'U1',
-                            'loserNext' => 'L1',
+                            'winner_next_position' => 'U1',
+                            'loser_next_position' => 'L1',
                         ], // 1
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W3',
+                            'team2_position' => 'W4',
                             'order' => 2,
-                            'winnerNext' => 'U2',
-                            'loserNext' => 'L2',
+                            'winner_next_position' => 'U2',
+                            'loser_next_position' => 'L2',
                         ], // 2
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W5',
+                            'team2_position' => 'W6',
                             'order' => 3,
-                            'winnerNext' => 'U3',
-                            'loserNext' => 'L3',
+                            'winner_next_position' => 'U3',
+                            'loser_next_position' => 'L3',
                         ], // 3
                         [
-                            'team1Position' => '',
-                            'team2Position' => '',
+                            'team1_position' => 'W7',
+                            'team2_position' => 'W8',
                             'order' => 4,
-                            'winnerNext' => 'U4',
-                            'loserNext' => 'L4',
+                            'winner_next_position' => 'U4',
+                            'loser_next_position' => 'L4',
                         ], // 4
                     ],
                     'eliminator2' => [
                         [
-                            'team1Position' => 'U1',
-                            'team2Position' => 'U2',
+                            'team1_position' => 'U1',
+                            'team2_position' => 'U2',
                             'order' => 1,
-                            'winnerNext' => 'U5',
-                            'loserNext' => 'L6',
+                            'winner_next_position' => 'U5',
+                            'loser_next_position' => 'L6',
                         ], // 1
                         [
-                            'team1Position' => 'U3',
-                            'team2Position' => 'U4',
+                            'team1_position' => 'U3',
+                            'team2_position' => 'U4',
                             'order' => 2,
-                            'winnerNext' => 'U6',
-                            'loserNext' => 'L8',
+                            'winner_next_position' => 'U6',
+                            'loser_next_position' => 'L8',
                         ], // 2
                     ],
                     'prefinals' => [
                         [
-                            'team1Position' => 'U5',
-                            'team2Position' => 'U6',
+                            'team1_position' => 'U5',
+                            'team2_position' => 'U6',
                             'order' => 1,
-                            'winnerNext' => 'G1',
-                            'loserNext' => 'L12',
+                            'winner_next_position' => 'G1',
+                            'loser_next_position' => 'L12',
                         ], // 1
                     ],
                 ],
                 'lowerBracket' => [
                     'eliminator1' => [
                         [
-                            'team1Position' => 'L1',
-                            'team2Position' => 'L2',
+                            'team1_position' => 'L1',
+                            'team2_position' => 'L2',
                             'order' => 1,
-                            'winnerNext' => 'L5',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L5',
+                            'loser_next_position' => null,
                         ], // 1
                         [
-                            'team1Position' => 'L3',
-                            'team2Position' => 'L4',
+                            'team1_position' => 'L3',
+                            'team2_position' => 'L4',
                             'order' => 2,
-                            'winnerNext' => 'L7',
-                            'loserNext' => null,
+                            'winner_next_position' => 'L7',
+                            'loser_next_position' => null,
                         ], // 2
                     ],
                     'eliminator2' => [
                         [
-                            'team1Position' => 'L5',
-                            'team2Position' => 'L6',
-                            'winnerNext' => 'L9',
+                            'team1_position' => 'L5',
+                            'team2_position' => 'L6',
+                            'winner_next_position' => 'L9',
                             'order' => 1,
-                            'loserNext' => null,
+                            'loser_next_position' => null,
                         ], // 1
                         [
-                            'team1Position' => 'L7',
-                            'team2Position' => 'L8',
-                            'winnerNext' => 'L10',
+                            'team1_position' => 'L7',
+                            'team2_position' => 'L8',
+                            'winner_next_position' => 'L10',
                             'order' => 2,
-                            'loserNext' => null,
+                            'loser_next_position' => null,
                         ], // 2
                     ],
                     'prefinals1' => [
                         [
-                            'team1Position' => 'L9',
-                            'team2Position' => 'L10',
-                            'winnerNext' => 'L11',
-                            'loserNext' => null,
+                            'team1_position' => 'L9',
+                            'team2_position' => 'L10',
+                            'winner_next_position' => 'L11',
+                            'loser_next_position' => null,
                             'order' => 1
                         ], // 1
                     ],
                     'prefinals2' => [
                         [
-                            'team1Position' => 'L11',
-                            'team2Position' => 'L12',
-                            'winnerNext' => 'G2',
-                            'loserNext' => null,
+                            'team1_position' => 'L11',
+                            'team2_position' => 'L12',
+                            'winner_next_position' => 'G2',
+                            'loser_next_position' => null,
                             'order' => 1,
                         ], // 1
                     ],

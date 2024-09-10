@@ -3,150 +3,99 @@
     <main>
         @include('__CommonPartials.NavbarGoToSearchPage')
         <div class="px-4">
+            @livewire('shared.brackets.bracket-update-modal', [
+                'event' => $event,
+                'teamList' => $teamList
+            ])
             <h5 class="mt-5 mb-4  text-start">Upper bracket</h5>
             <div class="row ">
                 <div class="tournament-bracket tournament-bracket--rounded col-lg-9 col-xl-8 col-xxl-6">
                     <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                         <div class="tournament-bracket__list">
-                            @foreach ($bracketList['upperBracket']['eliminator1'] as $bracket)
+                            @foreach ($bracketList['upperBracket']['eliminator1'] as $order => $bracket)
                                 <x-brackets.bracket-first-item :bracket="$bracket"
-                                    :wire:key="'upperBracket'. 'eliminator1'. $loop->index" 
-                                />
+                                    :stageName="'upperBracket'"
+                                    :innerStageName="'eliminator1'"
+                                    :order="$order"
+                                    :wire:key="'upperBracket'. 'eliminator1'. $loop->index" />
                             @endforeach
                         </div>
                     </div>
 
-                    <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                        <div class="tournament-bracket__list">
-                            @foreach ($bracketList['upperBracket']['eliminator2'] as $bracket)
-                                <x-brackets.bracket-item :bracket="$bracket"
-                                    :wire:key="'upperBracket'. 'eliminator2'. $loop->index" 
-                                />
-                            @endforeach
-                        </div>
-                    </div>
+                   @php
+                        $upperBracketRounds = [
+                            'eliminator2' => 'semifinals',
+                            'eliminator3' => 'semifinals',
+                            'eliminator4' => 'semifinals',
+                            'prefinals' => 'gold',
+                        ];
+                    @endphp
 
-                    @if (isset($bracketList['upperBracket']['eliminator3']))
-                        <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                            <div class="tournament-bracket__list">
-                                @foreach ($bracketList['upperBracket']['eliminator3'] as $bracket)
-                                    <x-brackets.bracket-item :bracket="$bracket"
-                                        :wire:key="'upperBracket'. 'eliminator3'. $loop->index" 
-                                    />
-                                @endforeach
+                    @foreach ($upperBracketRounds as $stage => $roundClass)
+                        @if (isset($bracketList['upperBracket'][$stage]))
+                            <div class="tournament-bracket__round tournament-bracket__round--{{ $roundClass }}">
+                                <div class="tournament-bracket__list">
+                                    @foreach ($bracketList['upperBracket'][$stage] as $order => $bracket)
+                                        <x-brackets.bracket-middle-item :bracket="$bracket"
+                                            :stageName="'upperBracket'"
+                                            :innerStageName="$stage"
+                                            :order="$order"
+                                            :wire:key="'upperBracket'. $stage. $loop->index" />
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
-                    @endif
+                        @endif
+                    @endforeach
 
-                    @if (isset($bracketList['upperBracket']['eliminator4']))
-                        <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                            <div class="tournament-bracket__list">
-                                @foreach ($bracketList['upperBracket']['eliminator4'] as $bracket)
-                                    <x-brackets.bracket-item :bracket="$bracket"
-                                        :wire:key="'upperBracket'. 'eliminator4'. $loop->index" 
-                                    />
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-
-                    <div class="tournament-bracket__round tournament-bracket__round--gold">
-                        <div class="tournament-bracket__list">
-                            @foreach ($bracketList['upperBracket']['prefinals'] as $bracket)
-                                <x-brackets.bracket-item :bracket="$bracket"
-                                    :wire:key="'upperBracket'. 'prefinals'. $loop->index" 
-                                />
-                            @endforeach
-                        </div>
-                    </div>
                     <div class="tournament-bracket__round tournament-bracket__round--gold">
                     </div>
                 </div>
-                
-                @foreach ($bracketList['finals']['finals'] as $bracket)
+
+                @foreach ($bracketList['finals']['finals'] as $order => $bracket)
                     <x-brackets.bracket-winner-item :bracket="$bracket"
-                        :wire:key="'upperBracket'. 'eliminator1'. $loop->index" 
-                    />
-                        
+                        :stageName="'finals'"
+                        :innerStageName="'finals'"
+                        :order="$order"
+                        :wire:key="'upperBracket'. 'eliminator1'. $loop->index" />
                 @endforeach
-            
+
             </div>
             <h5 class="mt-5 mb-4 text-start">Lower bracket</h5>
             <div class="tournament-bracket tournament-bracket--rounded">
-                <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
-                    <div
-                        class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
-                        @foreach ($bracketList['lowerBracket']['eliminator1'] as $bracket)
-                            <x-brackets.bracket-first-item :bracket="$bracket"
-                                :wire:key="'lowerBracket'. 'eliminator1'. $loop->index" />
-                        @endforeach
-                    </div>
-                </div>
+                @php
+                    $rounds = [
+                        'eliminator1' => 'tournament-bracket__joined-odd-list',
+                        'eliminator2' => 'tournament-bracket__joined-even-list',
+                        'eliminator3' => 'tournament-bracket__joined-odd-list',
+                        'eliminator4' => 'tournament-bracket__joined-even-list',
+                        'eliminator5' => 'tournament-bracket__joined-odd-list',
+                        'eliminator6' => 'tournament-bracket__joined-even-list',
+                    ];
+                @endphp
 
-                <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                    <div
-                        class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
-                        @foreach ($bracketList['lowerBracket']['eliminator2'] as $bracket)
-                            <x-brackets.bracket-item :bracket="$bracket"
-                                :wire:key="'lowerBracket'. 'eliminator2'. $loop->index" />
-                        @endforeach
-                    </div>
-                </div>
-
-                @if (isset($bracketList['lowerBracket']['eliminator3']))
-                    <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                        <div
-                            class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
-                            @foreach ($bracketList['lowerBracket']['eliminator3'] as $bracket)
-                                <x-brackets.bracket-item :bracket="$bracket"
-                                    :wire:key="$loop->index. 'lowerBracket'. 'eliminator3'" />
-                            @endforeach
+                @foreach ($rounds as $stage => $listClass)
+                    @if (isset($bracketList['lowerBracket'][$stage]))
+                        <div class="tournament-bracket__round tournament-bracket__round--semifinals">
+                            <div class="tournament-bracket__list {{ $listClass }}">
+                                @foreach ($bracketList['lowerBracket'][$stage] as $order => $bracket)
+                                    <x-brackets.bracket-middle-item :bracket="$bracket"
+                                        :stageName="'lowerBracket'" :innerStageName="$stage"
+                                        :order="$order"
+                                        :wire:key="'lowerBracket'. $stage. $loop->index" />
+                                @endforeach
+                            </div>
                         </div>
-                    </div>
-                @endif
-
-                @if (isset($bracketList['lowerBracket']['eliminator4']))
-                    <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                        <div
-                            class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
-                            @foreach ($bracketList['lowerBracket']['eliminator4'] as $bracket)
-                                <x-brackets.bracket-item :bracket="$bracket"
-                                    :wire:key="$loop->index. 'lowerBracket'. 'eliminator4'" />
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-
-                @if (isset($bracketList['lowerBracket']['eliminator5']))
-                    <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                        <div
-                            class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
-                            @foreach ($bracketList['lowerBracket']['eliminator5'] as $bracket)
-                                <x-brackets.bracket-item :bracket="$bracket"
-                                    :wire:key="$loop->index. 'lowerBracket'. 'eliminator5'" />
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-
-                @if (isset($bracketList['lowerBracket']['eliminator6']))
-                    <div class="tournament-bracket__round tournament-bracket__round--semifinals">
-                        <div
-                            class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
-                            @foreach ($bracketList['lowerBracket']['eliminator6'] as $bracket)
-                                <x-brackets.bracket-item :bracket="$bracket"
-                                    :wire:key="$loop->index. 'lowerBracket'. 'eliminator6'" />
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
+                    @endif
+                @endforeach
 
 
                 <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                     <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
-                        @foreach ($bracketList['lowerBracket']['prefinals1'] as $bracket)
-                            <x-brackets.bracket-item :bracket="$bracket" />
+                        @foreach ($bracketList['lowerBracket']['prefinals1'] as $order => $bracket)
+                            <x-brackets.bracket-middle-item :bracket="$bracket"  :order="$order"
+                                :stageName="'lowerBracket'" :innerStageName="'prefinals1'"
+                            />
                         @endforeach
                     </div>
                 </div>
@@ -155,8 +104,10 @@
                 <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                     <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
-                        @foreach ($bracketList['lowerBracket']['prefinals2'] as $bracket)
-                            <x-brackets.bracket-item :bracket="$bracket" />
+                        @foreach ($bracketList['lowerBracket']['prefinals2'] as $order => $bracket)
+                            <x-brackets.bracket-middle-item :bracket="$bracket"  :order="$order"
+                                :stageName="'lowerBracket'" :innerStageName="'prefinals2'"
+                            />
                         @endforeach
                     </div>
                 </div>
@@ -167,6 +118,7 @@
             </div>
             <br><br><br>
     </main>
+    
     <script>
         var bracketItemList = document.querySelectorAll('.codeCANcode.tournament-bracket__item');
         bracketItemList.forEach(item => {
@@ -174,7 +126,7 @@
         });
 
 
-        var bracketMatchList = document.querySelectorAll('.codeCANcode.tournament-bracket__match');
+        var bracketteamList = document.querySelectorAll('.codeCANcode.tournament-bracket__match');
         bracketItemList.forEach(item => {
             console.log({
                 hi: true
@@ -190,5 +142,72 @@
             });
             item.style.setProperty('--border2-color', 'red');
         });
+
+        function getParentByClassName(element, targetClassName) {
+            let parent = element.parentElement;
+
+            while (parent && !parent.classList.contains(targetClassName)) {
+                parent = parent.parentElement;
+            }
+
+            return parent;
+        }
+
+        function fillModalInputs(event) {
+            event.stopPropagation();
+            
+            const button = event.currentTarget;
+            let parentWithDataset = getParentByClassName(button, "tournament-bracket__match");
+        
+
+            let dataset = JSON.parse(parentWithDataset.dataset.bracket);
+            const stageName = parentWithDataset.dataset.stage_name;
+            const innerStageName = parentWithDataset.dataset.inner_stage_name;
+            const order = parentWithDataset.dataset.order;
+            dataset.stage_name = stageName;
+            dataset.inner_stage_name = innerStageName;
+            dataset.order = order;
+            const modalElement = document.getElementById('firstMatchModal');
+
+            const inputs = modalElement.querySelectorAll('input, select, textarea');
+
+            inputs.forEach(input => {
+                const inputName = input.getAttribute('name');
+                if (dataset[inputName] !== undefined) {
+                    input.value = dataset[inputName];
+                }
+            });
+
+            const selectAllItems = modalElement.querySelectorAll("input[name='team1_id'], input[name='team2_id'], input[name='winner_id']");
+            console.log({selectAllItems});
+            for (let selectItem of selectAllItems) {
+                console.log({name: selectItem.name, dataset: dataset, value: dataset[selectItem.name]})
+                selectItem.value = dataset[selectItem.name];
+                
+            }
+
+            console.log({inputs});
+
+            let modal = bootstrap.Modal.getInstance(modalElement);
+
+            if (modal) {
+                modal.show();
+            } else {
+                modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            };
+        }
+
+        window.onload = () => {
+            const parentElements = document.querySelectorAll(".popover-parent");
+            parentElements.forEach(parent => {
+                const contentElement = parent.querySelector(".popover-content");
+                const parentElement = parent.querySelector(".popover-button");
+                if (contentElement) {
+                    window.addPopover(parentElement, contentElement, 'mouseenter');
+                }
+            });
+        };
+
     </script>
 @endsection

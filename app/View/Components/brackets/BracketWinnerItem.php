@@ -8,12 +8,16 @@ use Illuminate\View\Component;
 
 class BracketWinnerItem extends Component
 {
-    /**
-     * Create a new component instance.
-     */
-    public function __construct()
-    {
-        //
+    public $bracket = null;
+    public $stageName = null;
+    public $innerStageName = null;
+    public $order = null;
+
+    public function __construct($bracket, $stageName, $innerStageName, $order) {
+        $this->bracket = $bracket;
+        $this->stageName = $stageName;
+        $this->innerStageName = $innerStageName;
+        $this->order = $order;
     }
 
     /**
