@@ -37,9 +37,9 @@
                 <div>
                     <div>
                         <div style="border: 3px solid black; background: white !important;" class="text-start tab-size px-4 py-3">
-                            <h5 class="card-text-2-lines mb-4">
+                            <p class="card-text-2-lines mb-4 mt-2">
                                 Event: {{ $event->eventName ?? 'No name yet' }}
-                            </h5>
+                            </p>
                             <p class="my-0 mb-3"> Description: {{ $event->eventDescription }} </p>
                         </div>
                         <br>
@@ -173,7 +173,7 @@
                                         @endforeach
                                     </tbody>
                                 @else
-                                    <h5 class="text-center mt-5">  No teams joined yet.</h5>
+                                    <p class="text-center mt-5">  No teams joined yet.</p>
                                 @endif
                             </table>
                         </div>
@@ -259,7 +259,7 @@
                                         @endforeach
                                     </tbody>
                                 @else
-                                    <h5 class="text-center mt-3">  No positions joined yet.</h5>
+                                    <p class="text-center mt-3">  No positions joined yet.</p>
                                 @endif
                                      
                                     <div class="modal fade" id='award-modal' tabindex="-1"
@@ -418,7 +418,7 @@
                                         @endforeach
                                     </tbody>
                                 @else
-                                    <h5 class="text-center mt-3">  No achievement given yet.</h5>
+                                    <p class="text-center mt-3">  No achievement given yet.</p>
                                 @endif
                                     <div class="modal fade" id='achievements-modal' tabindex="-1"
                                         aria-labelledby={{ 'achievements-modal-label' }} aria-hidden="true">

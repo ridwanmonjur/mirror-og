@@ -67,6 +67,9 @@
     <div class="tournament-bracket__match tournament {{$bracket['team1_position']}} {{$bracket['team2_position']}}"
         tabindex="0"
         data-bracket="{{json_encode($bracket)}}"
+        data-stage_name="{{$stageName}}"
+        data-inner_stage_name="{{$innerStageName}}"
+        data-order="{{$order}}"
     >
         <table class="tournament-bracket__table mx-auto">
             <thead class="sr-only">
@@ -78,13 +81,12 @@
             <tbody class="tournament-bracket__content">
                 <tr class="tournament-bracket__team tournament-bracket__team--winner">
                     <td class="tournament-bracket__country {{$bracket['team2_position']}}">
-                      
                         <abbr class="tournament-bracket__code me-2"
                             title="{{ $bracket['team1_positionMobile'] }}">{{ $bracket['team1_position'] }}
                         </abbr>
                           @if ($bracket['team1_id'])
                             <img src="/storage/{{$bracket['team1_teamBanner']}}" 
-                                width="30" height="30"
+                                width="100%" height="30"
                                 onerror="this.src='/assets/images/404.png';"
                                 class="object-fit-cover"
                                 alt="Team View"
@@ -101,7 +103,7 @@
                             title="{{ $bracket['team2_positionMobile'] }}">{{ $bracket['team2_position'] }}</abbr>
                         @if ($bracket['team2_id'])
                             <img src="/storage/{{$bracket['team2_teamBanner']}}" 
-                                width="30" height="30"
+                                width="100%" height="30"
                                 onerror="this.src='/assets/images/404.png';"
                                 class="object-fit-cover me-2"
                                 alt="Team View"
@@ -123,7 +125,7 @@
                 
                 @if ($bracket['team1_id'])
                     <img src="/storage/{{$bracket['team1_teamBanner']}}" 
-                        width="30" height="30"
+                        width="100%" height="30"
                         onerror="this.src='/assets/images/404.png';"
                         class="position-absolute d-none-when-hover object-fit-cover me-2"
                         alt="Team View"
@@ -134,7 +136,7 @@
             <div class="tournament-bracket__box position-relative {{$bracket['team2_position']}} tournament bg-light">
                 @if ($bracket['team2_id'])
                     <img src="/storage/{{$bracket['team2_teamBanner']}}" 
-                        width="30" height="30"
+                        width="100%" height="30"
                         onerror="this.src='/assets/images/404.png';"
                         class="position-absolute d-none-when-hover object-fit-cover me-2"
                         alt="Team View"

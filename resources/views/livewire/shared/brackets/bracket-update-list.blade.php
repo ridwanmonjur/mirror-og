@@ -12,10 +12,11 @@
                 <div class="tournament-bracket tournament-bracket--rounded col-lg-9 col-xl-8 col-xxl-6">
                     <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                         <div class="tournament-bracket__list">
-                            @foreach ($bracketList['upperBracket']['eliminator1'] as $bracket)
+                            @foreach ($bracketList['upperBracket']['eliminator1'] as $order => $bracket)
                                 <x-brackets.bracket-first-item :bracket="$bracket"
                                     :stageName="'upperBracket'"
                                     :innerStageName="'eliminator1'"
+                                    :order="$order"
                                     :wire:key="'upperBracket'. 'eliminator1'. $loop->index" />
                             @endforeach
                         </div>
@@ -34,11 +35,12 @@
                         @if (isset($bracketList['upperBracket'][$stage]))
                             <div class="tournament-bracket__round tournament-bracket__round--{{ $roundClass }}">
                                 <div class="tournament-bracket__list">
-                                    @foreach ($bracketList['upperBracket'][$stage] as $bracket)
+                                    @foreach ($bracketList['upperBracket'][$stage] as $order => $bracket)
                                         <x-brackets.bracket-middle-item :bracket="$bracket"
                                             :stageName="'upperBracket'"
-                                            :innerStageName="'{{ $stage }}'"
-                                            :wire:key="'upperBracket'. '{{ $stage }}'. $loop->index" />
+                                            :innerStageName="$stage"
+                                            :order="$order"
+                                            :wire:key="'upperBracket'. $stage. $loop->index" />
                                     @endforeach
                                 </div>
                             </div>
@@ -49,10 +51,11 @@
                     </div>
                 </div>
 
-                @foreach ($bracketList['finals']['finals'] as $bracket)
+                @foreach ($bracketList['finals']['finals'] as $order => $bracket)
                     <x-brackets.bracket-winner-item :bracket="$bracket"
                         :stageName="'finals'"
                         :innerStageName="'finals'"
+                        :order="$order"
                         :wire:key="'upperBracket'. 'eliminator1'. $loop->index" />
                 @endforeach
 
@@ -74,10 +77,11 @@
                     @if (isset($bracketList['lowerBracket'][$stage]))
                         <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                             <div class="tournament-bracket__list {{ $listClass }}">
-                                @foreach ($bracketList['lowerBracket'][$stage] as $bracket)
+                                @foreach ($bracketList['lowerBracket'][$stage] as $order => $bracket)
                                     <x-brackets.bracket-middle-item :bracket="$bracket"
                                         :stageName="'lowerBracket'" :innerStageName="$stage"
-                                        :wire:key="'lowerBracket'. '{{ $stage }}'. $loop->index" />
+                                        :order="$order"
+                                        :wire:key="'lowerBracket'. $stage. $loop->index" />
                                 @endforeach
                             </div>
                         </div>
@@ -88,8 +92,8 @@
                 <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                     <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
-                        @foreach ($bracketList['lowerBracket']['prefinals1'] as $bracket)
-                            <x-brackets.bracket-middle-item :bracket="$bracket" 
+                        @foreach ($bracketList['lowerBracket']['prefinals1'] as $order => $bracket)
+                            <x-brackets.bracket-middle-item :bracket="$bracket"  :order="$order"
                                 :stageName="'lowerBracket'" :innerStageName="'prefinals1'"
                             />
                         @endforeach
@@ -100,8 +104,8 @@
                 <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                     <div
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
-                        @foreach ($bracketList['lowerBracket']['prefinals2'] as $bracket)
-                            <x-brackets.bracket-middle-item :bracket="$bracket" 
+                        @foreach ($bracketList['lowerBracket']['prefinals2'] as $order => $bracket)
+                            <x-brackets.bracket-middle-item :bracket="$bracket"  :order="$order"
                                 :stageName="'lowerBracket'" :innerStageName="'prefinals2'"
                             />
                         @endforeach
@@ -156,7 +160,13 @@
             let parentWithDataset = getParentByClassName(button, "tournament-bracket__match");
         
 
-            const dataset = JSON.parse(parentWithDataset.dataset.bracket);
+            let dataset = JSON.parse(parentWithDataset.dataset.bracket);
+            const stageName = parentWithDataset.dataset.stage_name;
+            const innerStageName = parentWithDataset.dataset.inner_stage_name;
+            const order = parentWithDataset.dataset.order;
+            dataset.stage_name = stageName;
+            dataset.inner_stage_name = innerStageName;
+            dataset.order = order;
             const modalElement = document.getElementById('firstMatchModal');
 
             const inputs = modalElement.querySelectorAll('input, select, textarea');

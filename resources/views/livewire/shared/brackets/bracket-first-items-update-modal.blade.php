@@ -245,27 +245,27 @@
                     }
 
                     currentMatchDiv.dataset.bracket = JSON.stringify(currentMatch);
-
+                    // can't update table so not done
                     let tournamentBracketBoxTeam1 = document.querySelector(`.tournament-bracket__box.${match?.team1_position}`);
                     let tournamentBracketBoxTeam2 = document.querySelector(`.tournament-bracket__box.${match?.team2_position}`);
                     tournamentBracketBoxTeam1.innerHTML = 
                         `<img src='/storage/${team1.teamBanner}' 
-                            width="30" height="30"
+                            width="100%" height="30"
                             onerror="this.src='/assets/images/404.png';"
-                            class="position-absolute d-none-when-hover object-fit-cover me-2"
+                            class="position-absolute d-none-when-hover object-fit-cover"
                             alt="Team View"
                         >
-                        `
-                        + tournamentBracketBoxTeam1.innerHTML;
+                        <span>${ match.team1_position }</span>
+                        `;
                     tournamentBracketBoxTeam2.innerHTML = 
                         `<img src='/storage/${team2.teamBanner}'  
-                            width="30" height="30"
+                            width="100%" height="30"
                             onerror="this.src='/assets/images/404.png';"
-                            class="position-absolute d-none-when-hover object-fit-cover me-2"
+                            class="position-absolute d-none-when-hover object-fit-cover"
                             alt="Team View"
                         >
-                        `
-                        + tournamentBracketBoxTeam2.innerHTML;
+                         <span>${ match.team2_position }</span>
+                        `;
                     closeBtn.click();
                     window.Toast.fire({
                         icon: 'success',

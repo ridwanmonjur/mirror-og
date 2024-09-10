@@ -60,11 +60,12 @@
         $bracket['loser_next_position'] = $bracket['loser_next_position'] ?? null;
     @endphp
 
-    <div class="tournament-bracket__match"
+    <div class="tournament-bracket__match {{$bracket['team1_position']}} {{$bracket['team2_position']}}"
         tabindex="0"
-        data-team1_position="{{$bracket['team1_position']}}"
-        data-team2_position="{{$bracket['team2_position']}}"
         data-bracket="{{json_encode($bracket)}}"  
+        data-stage_name="{{$stageName}}"
+        data-inner_stage_name="{{$innerStageName}}"
+        data-order="{{$order}}"
     >
         <table class="tournament-bracket__table mx-auto">
             <thead class="sr-only">
@@ -94,14 +95,30 @@
                 </tr>
             </tbody>
         </table>
-        <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent" 
+        <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative d-none-when-hover-parent d-none-until-hover-parent" 
             style="z-index: 999;"
            
         >
-            <div class="tournament-bracket__box {{$bracket['team1_position']}} tournament bg-light">
+            <div class="tournament-bracket__box position-relative {{$bracket['team1_position']}} tournament bg-light">
+                @if ($bracket['team1_id'])
+                    <img src="/storage/{{$bracket['team1_teamBanner']}}" 
+                        width="100%" height="30"
+                        onerror="this.src='/assets/images/404.png';"
+                        class="position-absolute d-none-when-hover object-fit-cover me-2"
+                        alt="Team View"
+                    >
+                @endif
                 <span>{{ $bracket['team1_position'] }}</span>
             </div>
-            <div class="tournament-bracket__box {{$bracket['team2_position']}} tournament bg-light">
+            <div class="tournament-bracket__box position-relative {{$bracket['team2_position']}} tournament bg-light">
+                @if ($bracket['team2_id'])
+                    <img src="/storage/{{$bracket['team2_teamBanner']}}" 
+                        width="100%" height="30"
+                        onerror="this.src='/assets/images/404.png';"
+                        class="position-absolute d-none-when-hover object-fit-cover me-2"
+                        alt="Team View"
+                    >
+                @endif
                 <span>{{ $bracket['team2_position'] }}</span>
             </div>
             <small class="position-absolute winner-label">
