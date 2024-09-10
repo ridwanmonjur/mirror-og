@@ -35,6 +35,11 @@ class Team extends Model
         return $this->hasMany(TeamMember::class);
     }
 
+    public function roster(): HasMany
+    {
+        return $this->hasMany(RosterMember::class);
+    }
+
     public function awards(): HasMany
     {
         return $this->hasMany(AwardResults::class, 'join_events_id', 'id');
@@ -448,7 +453,7 @@ class Team extends Model
             'event_details_id' => $event->id,
         ]);
 
-        RosterMember::bulkCreateRosterMembers($joinEvent->id, $teamMembers);
+        RosterMember::bulkCreateRosterMembers($joinEvent->id, $teamMembers, $this->id);
         RosterCaptain::insert([
             'team_member_id' => $rosterCaptain->id,
             'join_events_id' => $joinEvent->id,

@@ -6,25 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
+   /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::table('roster_members', function (Blueprint $table) {
-            $table->foreignId('team_member_id')
-                ->constrained('team_members')
-                ->nullable();
+            $table->unsignedBigInteger('team_id');
+            $table->foreign('team_id')->references('id')->on('teams');
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::table('roster_members', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('team_member_id');
+            $table->dropForeign(['team_id']);
+            $table->dropColumn('team_id');
         });
     }
 };
