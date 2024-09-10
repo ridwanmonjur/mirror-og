@@ -148,7 +148,7 @@
                                 </a>
                             </div>
                         </div>
-                        <button class="popover-parent   mt-2  mb-2 btn btn-link">
+                        <button class="popover-button   mt-2  mb-2 btn btn-link">
                             <u> Results </u>
                         </button>
                         @else

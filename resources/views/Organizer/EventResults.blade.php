@@ -66,9 +66,7 @@
                                         <th class="text-start">
                                             Team Name
                                         </th>
-                                        <th class="text-start">
-                                            Team Description
-                                        </th>
+                                        
                                         <th class="text-start" style="width: 150px;">
                                             Team Created
                                         </th>
@@ -100,9 +98,7 @@
                                                     > 
                                                     {{ $joinEventAndTeam->teamName }}
                                                 </td>
-                                                <td class="coloured-cell px-3 text-start">
-                                                    {{ $joinEventAndTeam->teamDescription }}
-                                                </td>
+                                               
                                                 <td class="coloured-cell px-3 text-start">
                                                     {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
                                                 </td>
@@ -204,9 +200,7 @@
                                         <th class="text-start">
                                             Team Name
                                         </th>
-                                        <th class="text-start">
-                                            Team Description
-                                        </th>
+                                     
                                         <th class="text-end" style="width: 180px;">
                                             Team Created
                                         </th>
@@ -225,7 +219,7 @@
                                                                 d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
                                                         </svg>
                                                     </td>
-                                                    <td class="coloured-cell text-center px-2">
+                                                    <td class="coloured-cell text-start px-2">
                                                         @if (is_null($joinEventAndTeam->awards_image))
                                                             No awards
                                                         @else
@@ -237,9 +231,7 @@
                                                     <td class="coloured-cell px-3 text-start">
                                                         {{ $joinEventAndTeam->teamName }}
                                                     </td>
-                                                    <td class="coloured-cell px-3 text-start">
-                                                        {{ $joinEventAndTeam->teamDescription }}
-                                                    </td>
+                                                    
                                                     <td class="coloured-cell px-3 text-end">
                                                         {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
                                                     </td>
@@ -363,9 +355,7 @@
                                         <th class="text-start">
                                             Team Name
                                         </th>
-                                        <th class="text-start">
-                                            Team Description
-                                        </th>
+                                       
                                         <th class="text-end" style="width: 180px;">
                                             Team Created
                                         </th>
@@ -396,9 +386,7 @@
                                                     <td class="coloured-cell px-3 text-start">
                                                         {{ $joinEventAndTeam->teamName }}
                                                     </td>
-                                                    <td class="coloured-cell px-3 text-start">
-                                                        {{ $joinEventAndTeam->teamDescription }}
-                                                    </td>
+                                                    
                                                     <td class="coloured-cell px-3 text-end">
                                                         {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
                                                     </td>
