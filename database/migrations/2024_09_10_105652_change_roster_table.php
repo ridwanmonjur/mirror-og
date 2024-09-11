@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-   /**
+    /**
      * Run the migrations.
      *
      * @return void
@@ -14,8 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::table('roster_members', function (Blueprint $table) {
-            $table->unsignedBigInteger('team_id');
+            $table->unsignedBigInteger('team_id')->nullable();
             $table->foreign('team_id')->references('id')->on('teams');
+        });
+
+        // Remove nullable constraint
+        Schema::table('roster_members', function (Blueprint $table) {
+            $table->unsignedBigInteger('team_id')->nullable(false)->change();
         });
     }
 
