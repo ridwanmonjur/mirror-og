@@ -203,7 +203,7 @@
                 const contentElement = parent.querySelector(".popover-content");
                 const parentElement = parent.querySelector(".popover-button");
                 if (contentElement) {
-                    window.addPopover(parentElement, contentElement, 'click');
+                    window.addPopover(parentElement, contentElement, 'mouseenter');
                 }
             });
         };
