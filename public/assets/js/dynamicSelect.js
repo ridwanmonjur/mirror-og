@@ -180,5 +180,63 @@ class DynamicSelect {
         return this.options.height;
     }
 
+    _createOptionsHTML() {
+        let optionsHTML = '';
+        for (let i = 0; i < this.data.length; i++) {
+            let optionWidth = 100 / this.columns;
+            let optionContent = '';
+            if (this.data[i].html) {
+                optionContent = this.data[i].html;
+            } else {
+                optionContent = `
+                    ${this.data[i].img ? `<img onerror="this.src='/assets/images/404.png';"
+                        src="${this.data[i].img}" alt="${this.data[i].text}" class="${this.data[i].imgWidth && this.data[i].imgHeight ? 'object-fit-cover' : ''}" style="${this.data[i].imgWidth ? 'width:' + this.data[i].imgWidth + ';' : ''}${this.data[i].imgHeight ? 'height:' + this.data[i].imgHeight + ';' : ''}">` : ''}
+                    ${this.data[i].text ? '<span class="dynamic-select-option-text">' + this.data[i].text + '</span>' : ''}
+                `;
+            }
+            optionsHTML += `
+                <div class="dynamic-select-option${this.data[i].value == this.selectedValue ? ' dynamic-select-selected' : ''}${this.data[i].text || this.data[i].html ? '' : ' dynamic-select-no-text'}" data-value="${this.data[i].value}" style="width:${optionWidth}%;${this.height ? 'height:' + this.height + ';' : ''}">
+                    ${optionContent}
+                </div>
+            `;
+        }
+        return optionsHTML;
+    }
+
+    updateSelectElement(dataValue) {
+        const selectedData = this.data.find(item => item.value == dataValue);
+        console.log({selectedData, data: this.data, dataValue});
+        if (selectedData) {
+            this.data.forEach(item => item.selected = (item.value == dataValue));
+
+            let optionsHTML = this._createOptionsHTML();
+            this.element.querySelector('.dynamic-select-options').innerHTML = optionsHTML;
+
+            this.element.querySelector('input').value = dataValue;
+
+            const headerContent = selectedData.html || `
+                ${selectedData.img ? `<img onerror="this.src='/assets/images/404.png';"
+                    src="${selectedData.img}" alt="${selectedData.text}" class="${selectedData.imgWidth && selectedData.imgHeight ? 'object-fit-cover' : ''}" style="${selectedData.imgWidth ? 'width:' + selectedData.imgWidth + ';' : ''}${selectedData.imgHeight ? 'height:' + selectedData.imgHeight + ';' : ''}">` : ''}
+                ${selectedData.text ? '<span class="dynamic-select-option-text">' + selectedData.text + '</span>' : ''}
+            `;
+            this.element.querySelector('.dynamic-select-header').innerHTML = headerContent;
+
+            this._eventHandlers();
+
+            this.options.onChange(dataValue, selectedData.text, this.element.querySelector(`.dynamic-select-option[data-value="${dataValue}"]`));
+        } else {
+            this.element.querySelector('input').value = '';
+            this.element.querySelector('.dynamic-select-header').innerHTML = `<span class="dynamic-select-header-placeholder">${this.placeholder}</span>`;
+        }
+    }
+
 }
-document.querySelectorAll('[data-dynamic-select]').forEach(select => new DynamicSelect(select));
+
+/*
+
+let selectMap = {};
+document.querySelectorAll('[data-dynamic-select]').forEach(select => {
+    selectMap[select.name] = new DynamicSelect(select);
+});
+
+*/

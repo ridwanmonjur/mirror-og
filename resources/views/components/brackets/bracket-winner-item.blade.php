@@ -100,17 +100,9 @@
                         </tbody>
                     </table>
                     <div class="text-center popover-parent   mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
-                        style="z-index: 99;">
+                    >
                         <div class="popover-content d-none-until-hover position-absolute"
                             style="top: -25px; left: 0px;">
-                            <div class="popover-box px-0 py-0 ms-5" style="margin-bottom: -10px;  background: #F8F6EF;">
-                                <a class="px-2 py-1 text-light me-3 btn btn-primary d-inline popover-box popover-body">
-                                    <small> Matches </small>
-                                </a>
-                                <a class="px-2 py-1 text-light btn btn-primary d-inline popover-box popover-body">
-                                    <small> Awards </small>
-                                </a>
-                            </div>
                         </div>
                         <div
                             class="tournament-bracket__box border-style   {{ $bracket['team2_position'] }} tournament px-2 py-2">
