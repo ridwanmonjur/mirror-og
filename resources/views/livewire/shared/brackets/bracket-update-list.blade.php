@@ -158,7 +158,7 @@
             
             const button = event.currentTarget;
             let parentWithDataset = getParentByClassName(button, "tournament-bracket__match");
-        
+            
 
             let dataset = JSON.parse(parentWithDataset.dataset.bracket);
             const stageName = parentWithDataset.dataset.stage_name;
@@ -178,15 +178,14 @@
                 }
             });
 
-            const selectAllItems = modalElement.querySelectorAll("input[name='team1_id'], input[name='team2_id'], input[name='winner_id']");
-            console.log({selectAllItems});
-            for (let selectItem of selectAllItems) {
-                console.log({name: selectItem.name, dataset: dataset, value: dataset[selectItem.name]})
-                selectItem.value = dataset[selectItem.name];
-                
-            }
+            console.log({selectMap, dataset});
+            console.log({selectMap, dataset});
+            console.log({selectMap, dataset});
+            console.log({selectMap, dataset});
 
-            console.log({inputs});
+            ['result', 'status', 'team1_id', 'team2_id', 'winner_id'].forEach((selectName)=> {
+                selectMap[selectName]?.updateSelectElement(dataset[selectName]);
+            })
 
             let modal = bootstrap.Modal.getInstance(modalElement);
 
@@ -204,11 +203,15 @@
                 const contentElement = parent.querySelector(".popover-content");
                 const parentElement = parent.querySelector(".popover-button");
                 if (contentElement) {
-                    window.addPopover(parentElement, contentElement, 'mouseenter');
+                    window.addPopover(parentElement, contentElement, 'click');
                 }
             });
         };
         
+        let selectMap = {};
+        document.querySelectorAll('[data-dynamic-select]').forEach(select => {
+            selectMap[select.name] = new DynamicSelect(select);
+        });
 
     </script>
 @endsection

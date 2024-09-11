@@ -204,7 +204,7 @@
     const form = document.getElementById('matchForm');
     const submitBtn = document.getElementById('submitBtn');
     const closeBtn = document.getElementById('closeBtn');
-
+    
 
     submitBtn.addEventListener('click', function(event) {
         event.preventDefault();
@@ -228,14 +228,17 @@
                 if (data.success) {
                     let {team1, match, team2} = data.data;
                     let currentMatchDiv = document.querySelector(`.${match.team1_position}.${match.team2_position}`);
-                    let currentMatch = currentMatchDiv.dataset.bracket;
+                    let currentMatch = JSON.parse(currentMatchDiv.dataset.bracket);
                     currentMatch.team1_score = match.team1_score;
                     currentMatch.team2_score = match.team2_score;
                     currentMatch.winner_id = match.winner_id;
                     currentMatch.team1_id = match.team1_id;
                     currentMatch.team2_id = match.team2_id;
-                    currentMatch.team1 = team1;
-                    currentMatch.team2 = team2;
+                    currentMatch.result= match.result;
+                    currentMatch.status= match.status;
+
+                    currentMatch.team1_teamBanner = team1.teamBanner;
+                    currentMatch.team2_teamBanner = team2.teamBanner;
                     if (currentMatch.winner_id == team1_id) {
                         currentMatch.winner = team1;
                     }

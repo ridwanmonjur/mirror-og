@@ -83,7 +83,7 @@
                             title="{{ $bracket['team1_positionMobile'] }}">{{ $bracket['team1_position'] }}
                         </abbr>
                         @if ($bracket['team1_id'])
-                            <img src="/storage/{{ $bracket['team1_teamBanner'] }}" width="100%" height="30"
+                            <img src="/storage/{{ $bracket['team1_teamBanner'] }}" width="100%" height= "25"
                                 onerror="this.src='/assets/images/404.png';" class="object-fit-cover" alt="Team View">
                         @endif
                     </td>
@@ -96,7 +96,7 @@
                         <abbr class="tournament-bracket__code"
                             title="{{ $bracket['team2_positionMobile'] }}">{{ $bracket['team2_position'] }}</abbr>
                         @if ($bracket['team2_id'])
-                            <img src="/storage/{{ $bracket['team2_teamBanner'] }}" width="100%" height="30"
+                            <img src="/storage/{{ $bracket['team2_teamBanner'] }}" width="100%" height= "25"
                                 onerror="this.src='/assets/images/404.png';" class="object-fit-cover me-2"
                                 alt="Team View">
                         @endif
@@ -111,9 +111,9 @@
 
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative  ">
             <div
-                class="tournament-bracket__box -parent popover-parent position-relative {{ $bracket['team1_position'] }} tournament bg-light">
+                class="tournament-bracket__box  popover-parent position-relative {{ $bracket['team1_position'] }} tournament bg-light">
                 <div class="popover-content d-none"
-                    style="top: 100%; left: 100%; opacity: 1; z-index: 999 !important;">
+                    style=" opacity: 1; z-index: 999 !important;">
                     <div class="popover-box px-5 py-2" style="margin-bottom: -10px; background: white !important;">
                         <img src="/storage/{{ $bracket['team1_teamBanner'] }}" alt="Team Banner" width="100"
                             height="100" class="mb-3" onerror="this.src='/assets/images/404.png';">
@@ -122,7 +122,7 @@
                             <ul class="list-group">
                                 @foreach ($bracket['team1_roster'] as $roster)
                                     <li class="d-flex align-items-center">
-                                        <img width="30" height="30" onerror="this.src='/assets/images/404.png';"
+                                        <img width= "25" height= "25" onerror="this.src='/assets/images/404.png';"
                                             src="/storage/{{ $roster->user->userBanner }}" alt="User Banner"
                                             class="mb-2 rounded-circle object-fit-cover me-3">
                                         {{ $roster->user->name }}
@@ -135,40 +135,45 @@
                     </div>
                 </div>
                 @if ($bracket['team1_id'])
-                    <img src="/storage/{{ $bracket['team1_teamBanner'] }}" width="100%" height="30"
+                    <img src="/storage/{{ $bracket['team1_teamBanner'] }}" width="100%" height= "25"
                         onerror="this.src='/assets/images/404.png';"
                         class="popover-button position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
                         style="z-index: 99;">
-                    <span ></span>
-                @else
-                     <span ></span>
                 @endif
+                <span ></span>
+
             </div>
             <div
-                class="tournament-bracket__box -parent popover-parent position-relative {{ $bracket['team2_position'] }} tournament bg-light">
+                class="tournament-bracket__box  popover-parent position-relative {{ $bracket['team2_position'] }} tournament bg-light">
                 <div class="popover-content d-none">
-                    <div class="popover-box px-5 py-2" style="margin-bottom: -10px; background: white !important;">
-                        <img src="/storage/{{ $bracket['team2_teamBanner'] }}" alt="Team Banner" width="100"
-                            height="100" class="mb-3" onerror="this.src='/assets/images/404.png';">
-                        <br><small>{{$bracket['team2_position']}} </small>
-                        @if ($bracket['team1_roster'])
-                            <ul class="list-group">
-                                @foreach ($bracket['team2_roster'] as $roster)
-                                    <li class="d-flex align-items-center">
-                                        <img width="30" height="30" onerror="this.src='/assets/images/404.png';"
-                                            src="/storage/{{ $roster->user->userBanner }}" alt="User Banner"
-                                            class="mb-2 rounded-circle object-fit-cover me-3">
-                                        {{ $roster->user->name }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @else
-                            <p class="text-muted">The team roster is empty or not available.</p>
-                        @endif
+                    <div class="popover-box row justify-content-center px-2 pt-5 pb-2" style="min-width: 400px; background: white !important;">
+                        <div class="col-12 col-lg-6 text-end">
+                            <div class="text-end">
+                                <img src="/storage/{{ $bracket['team2_teamBanner'] }}" alt="Team Banner" width="100"
+                                    height="100" class="mb-1 " onerror="this.src='/assets/images/404.png';">
+                            </div>
+                            <br><small>{{$bracket['team2_position']}} </small>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            @if ($bracket['team1_roster'])
+                                <ul class="d-block ms-0 ps-0">
+                                    @foreach ($bracket['team2_roster'] as $roster)
+                                        <li class="d-inline">
+                                            <img width= "25" height= "25" onerror="this.src='/assets/images/404.png';"
+                                                src="/storage/{{ $roster->user->userBanner }}" alt="User Banner"
+                                                class="mb-2 rounded-circle object-fit-cover me-3">
+                                            {{ $roster->user->name }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <p class="text-muted">The team roster is empty or not available.</p>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 @if ($bracket['team2_id'])
-                    <img src="/storage/{{ $bracket['team1_teamBanner'] }}" width="100%" height="30"
+                    <img src="/storage/{{ $bracket['team1_teamBanner'] }}" width="100%" height= "25"
                         onerror="this.src='/assets/images/404.png';"
                         class="popover-button position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
                         style="z-index: 99;">
@@ -180,7 +185,7 @@
             <small class="position-absolute winner-label ">
                 <span class="d-none-until-hover2" onclick="fillModalInputs(event); event.preventDefault();">
                     <svg 
-                        
+                        style="z-index: 999;"
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-pencil-square" viewBox="0 0 16 16">
                         <path

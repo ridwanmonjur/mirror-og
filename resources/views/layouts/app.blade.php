@@ -16,9 +16,9 @@
 </head>
 
 <body>
+    <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
     @yield('content')
     @livewireScripts
-    <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
     <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
 </body>
 </html>

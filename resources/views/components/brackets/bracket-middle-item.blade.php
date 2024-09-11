@@ -97,9 +97,9 @@
         </table>
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative  ">
             <div
-                class="tournament-bracket__box -parent popover-parent position-relative {{ $bracket['team1_position'] }} tournament bg-light">
+                class="tournament-bracket__box  popover-parent position-relative {{ $bracket['team1_position'] }} tournament bg-light">
                 <div class="popover-content d-none"
-                    style="top: 100%; left: 100%; opacity: 1; z-index: 999 !important;">
+                    style=" opacity: 1; z-index: 999 !important;">
                     <div class="popover-box px-5 py-2" style="margin-bottom: -10px; background: white !important;">
                         <img src="/storage/{{ $bracket['team1_teamBanner'] }}" alt="Team Banner" width="100"
                             height="100" class="mb-3" onerror="this.src='/assets/images/404.png';">
@@ -125,13 +125,11 @@
                         onerror="this.src='/assets/images/404.png';"
                         class="popover-button position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
                         style="z-index: 99;">
-                    <span ></span>
-                @else
-                     <span ></span>
                 @endif
+                <span >{{$bracket['team2_position']}}</span>
             </div>
             <div
-                class="tournament-bracket__box -parent popover-parent position-relative {{ $bracket['team2_position'] }} tournament bg-light">
+                class="tournament-bracket__box  popover-parent position-relative {{ $bracket['team2_position'] }} tournament bg-light">
                 <div class="popover-content d-none">
                     <div class="popover-box px-5 py-2" style="margin-bottom: -10px; background: white !important;">
                         <img src="/storage/{{ $bracket['team2_teamBanner'] }}" alt="Team Banner" width="100"
@@ -158,15 +156,14 @@
                         onerror="this.src='/assets/images/404.png';"
                         class="popover-button position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
                         style="z-index: 99;">
-                    <span></span>
-                @else
-                     <span ></span>
                 @endif
+                    
+                <span >{{$bracket['team2_position']}}</span>
             </div>
             <small class="position-absolute winner-label ">
                 <span class="d-none-until-hover2" onclick="fillModalInputs(event); event.preventDefault();">
                     <svg 
-                        
+                        style="z-index: 999;"
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-pencil-square" viewBox="0 0 16 16">
                         <path
