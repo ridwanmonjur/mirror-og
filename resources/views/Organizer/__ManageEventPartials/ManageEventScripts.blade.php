@@ -3,16 +3,20 @@
 
  <script>
     addOnLoad(()=> {
+        addTippy();
+    });
+
+    function addTippy() {
         const parentElements = document.querySelectorAll(".popover-parent");
         parentElements.forEach(parent => {
             const contentElement = parent.querySelector(".popover-content");
             const parentElement = parent.querySelector(".popover-button");
             if (contentElement) {
-                window.addPopover(parentElement, contentElement);
+                window.addPopover(parentElement, contentElement, 'click');
             }
         });
-    });
-    
+    }
+
     
     function infinteLoadMoreByPost(ENDPOINT, body) {
         let noMoreDataElement = document.querySelector('.no-more-data');
@@ -40,6 +44,8 @@
                     } else {
                         scrollingPaginationElement.innerHTML += response.html ;
                     }
+
+                    addTippy();
                 })
                 .catch(function (error) {
 
@@ -79,6 +85,8 @@
                 } else {
                     scrollingPaginationElement.innerHTML = response.html;
                 }
+
+                addTippy();
             })
             .catch(function (error) {
                 scrollingPaginationElement.innerHTML = "Work in Progress!";
