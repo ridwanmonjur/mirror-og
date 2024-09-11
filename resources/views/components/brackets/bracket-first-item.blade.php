@@ -111,13 +111,13 @@
 
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative  ">
             <div
-                class="tournament-bracket__box d-none-until-hover-parent popover-parent position-relative {{ $bracket['team1_position'] }} tournament bg-light">
-                <div class="popover-content d-none-until-hover position-absolute"
+                class="tournament-bracket__box -parent popover-parent position-relative {{ $bracket['team1_position'] }} tournament bg-light">
+                <div class="popover-content d-none"
                     style="top: 100%; left: 100%; opacity: 1; z-index: 999 !important;">
                     <div class="popover-box px-5 py-2" style="margin-bottom: -10px; background: white !important;">
                         <img src="/storage/{{ $bracket['team1_teamBanner'] }}" alt="Team Banner" width="100"
                             height="100" class="mb-3" onerror="this.src='/assets/images/404.png';">
-
+                        <br><small>{{$bracket['team1_position']}} </small>
                         @if ($bracket['team1_roster'])
                             <ul class="list-group">
                                 @foreach ($bracket['team1_roster'] as $roster)
@@ -137,19 +137,20 @@
                 @if ($bracket['team1_id'])
                     <img src="/storage/{{ $bracket['team1_teamBanner'] }}" width="100%" height="30"
                         onerror="this.src='/assets/images/404.png';"
-                        class="position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
+                        class="popover-button position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
                         style="z-index: 99;">
+                    <span ></span>
+                @else
+                     <span ></span>
                 @endif
-                <span class="popover-button"></span>
             </div>
             <div
-                class="tournament-bracket__box d-none-until-hover-parent popover-parent position-relative {{ $bracket['team2_position'] }} tournament bg-light">
-                <div class="popover-content d-none-until-hover position-absolute"
-                    style="top: 100%; left: 100%; opacity: 1; z-index: 999 !important;">
+                class="tournament-bracket__box -parent popover-parent position-relative {{ $bracket['team2_position'] }} tournament bg-light">
+                <div class="popover-content d-none">
                     <div class="popover-box px-5 py-2" style="margin-bottom: -10px; background: white !important;">
                         <img src="/storage/{{ $bracket['team2_teamBanner'] }}" alt="Team Banner" width="100"
                             height="100" class="mb-3" onerror="this.src='/assets/images/404.png';">
-
+                        <br><small>{{$bracket['team2_position']}} </small>
                         @if ($bracket['team1_roster'])
                             <ul class="list-group">
                                 @foreach ($bracket['team2_roster'] as $roster)
@@ -167,16 +168,20 @@
                     </div>
                 </div>
                 @if ($bracket['team2_id'])
-                    <img src="/storage/{{ $bracket['team2_teamBanner'] }}" width="100%" height="30"
+                    <img src="/storage/{{ $bracket['team1_teamBanner'] }}" width="100%" height="30"
                         onerror="this.src='/assets/images/404.png';"
-                        class="position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
+                        class="popover-button position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
                         style="z-index: 99;">
+                    <span ></span>
+                @else
+                     <span></span>
                 @endif
-                <span class="popover-button"></span>
             </div>
             <small class="position-absolute winner-label ">
                 <span class="d-none-until-hover2" onclick="fillModalInputs(event); event.preventDefault();">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    <svg 
+                        
+                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-pencil-square" viewBox="0 0 16 16">
                         <path
                             d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
@@ -189,7 +194,7 @@
             </small>
             <small @class([
                 'position-absolute loser-label',
-                'd-none-until-hover' => !$bracket['loser_next_position'],
+                'd-none' => !$bracket['loser_next_position'],
             ]) @style([
                 'left: 100%;' => !$bracket['loser_next_position'],
             ])>

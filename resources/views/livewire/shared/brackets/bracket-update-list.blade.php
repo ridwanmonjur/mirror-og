@@ -197,7 +197,7 @@
                 modal.show();
             };
         }
-
+        
         window.onload = () => {
             const parentElements = document.querySelectorAll(".popover-parent");
             parentElements.forEach(parent => {
@@ -208,6 +208,7 @@
                 }
             });
         };
+        
 
     </script>
 @endsection

@@ -199,7 +199,7 @@
 
         </div>
     </div>
-</div>
+
 <script>
     const form = document.getElementById('matchForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -283,3 +283,4 @@
     });
 
 </script>
+</div>
