@@ -25,30 +25,39 @@ class BracketUpdateList extends Component
         $this->event = EventDetail::with([
             'tier',
             'type',
-            'joinEvents',
-            'matches',
-            'matches.team1' => function ($query) {
-                $query->select('id', 'teamName', 'teamBanner');
-            },
-            'matches.team1.roster' => function ($query) {
-                $query->select('id', 'team_id', 'join_events_id', 'user_id');
-            },
-            'matches.team1.roster.user' => function ($query) {
-                $query->select('id', 'name', 'userBanner');
-            },
-            'matches.team2' => function ($query) {
-                $query->select('id', 'teamName', 'teamBanner');
-            },
-            'matches.team2.roster' => function ($query) {
-                $query->select('id', 'team_id', 'join_events_id', 'user_id');
-            },
-            'matches.team2.roster.user' => function ($query) {
-                $query->select('id', 'name', 'userBanner');
+            'joinEvents.team' => function ($query) {
+                $query->select('teams.id', 'teamName', 'teamBanner');
             },
         ])->findOrFail($this->id);
+        
+        $joinEventIds = $this->event->joinEvents->pluck('id');
+        
+        $this->event->load([
+            'joinEvents.team.roster' => function ($query) use ($joinEventIds) {
+                $query->select('id', 'team_id', 'join_events_id', 'user_id')
+                      ->whereIn('join_events_id', $joinEventIds);
+            },
+            'joinEvents.team.roster.user' => function ($query) {
+                $query->select('id', 'name', 'userBanner');
+            },
+            'matches',
+        ]);
 
-        $teamIds = $this->event->joinEvents->pluck('team_id');
-        $this->teamList = Team::whereIn('id', $teamIds)->get();
+        $teamMap = collect();
+        $this->event->joinEvents->each(function ($joinEvent) use (&$teamMap) {
+                $teamMap[$joinEvent->team->id] = $joinEvent->team;
+        });
+
+
+        $matchTeamIds = collect();
+        $this->event->matches->each(function ($match) use ($teamMap, &$matchTeamIds) {
+            $match->team1 = $teamMap->get($match->team1_id);
+            $match->team2 = $teamMap->get($match->team2_id);
+            $matchTeamIds->push($match->team1_id, $match->team2_id);
+        });
+        $matchTeamIds = $matchTeamIds->unique();
+
+        $this->teamList = Team::whereIn('id', $matchTeamIds)->get();
     }
 
     public function render()
