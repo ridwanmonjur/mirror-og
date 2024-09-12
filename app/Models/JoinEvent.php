@@ -17,10 +17,6 @@ class JoinEvent extends Model
 
     protected $table = 'join_events';
 
-    public function eventDetail(): BelongsTo
-    {
-        return $this->belongsTo(EventDetail::class);
-    }
 
     public function user(): BelongsTo
     {
@@ -37,9 +33,9 @@ class JoinEvent extends Model
         return $this->belongsTo(EventDetail::class, 'event_details_id', 'id');
     }
 
-    public function teams(): HasMany
+    public function team(): BelongsTo
     {
-        return $this->hasMany(Team::class, 'team_id');
+        return $this->belongsTo(Team::class, 'team_id', 'id');
     }
 
     public function members(): HasMany
