@@ -1,4 +1,7 @@
 @php
+    $perpage = 4;
+    $notificationList = $user->notifications()->cursorPaginate($perpage);
+    $nextCursor = $notificationList?->nextCursor();
     $countUnread = $user->unreadNotifications->count();
 @endphp
 
@@ -11,7 +14,7 @@
         @endif
     </a>
 
-    @if (isset($user->notifications[0]))
+    @if (isset($notificationList[0]))
         <div class="dropdown-menu border rounded  fs-7 py-0" data-bs-auto-close="outside" style="position: absolute; left: -300px; width: 400px; max-height: 60vh; overflow-y: scroll;" aria-labelledby="dropdownMenuLinkNotification">
             <div class="position-relative">
                 <div class="pt-2 pb-1 d-flex justify-content-between">
@@ -27,9 +30,7 @@
                     </a>
                 </div> 
                 @php
-                    $perpage = 4;
-                    $notificationList = $user->notifications()->cursorPaginate($perpage);
-                    $nextCursor = $notificationList?->nextCursor();
+                    
                 @endphp
                 <div class="notifications-list-container text-justify">
                     @include('__CommonPartials.__Navbar.Notifications')
