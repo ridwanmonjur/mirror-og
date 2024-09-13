@@ -120,7 +120,7 @@
                     paymentAmount: paymentProcessor.getPaymentAmount(),
                     email: "{{ $user->email }}",
                     name: "{{ $user->name }}",
-                    stripeCustomerId: "{{ $user->stripe_customer_id }}",
+                    stripe_customer_id: "{{ $user->stripe_customer_id }}",
                     metadata : {
                         eventId: "{{ $event->id }}"
                     }
