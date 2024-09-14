@@ -285,6 +285,7 @@ class OrganizerEventController extends Controller
             $eventDetail = EventDetail::storeLogic($eventDetail, $request);
             $eventDetail->user_id = $request->get('user')->id;
             $eventDetail->save();
+            $eventDetail->makeSignupTables();
 
             if ($request->livePreview === 'true') {
                 return redirect('organizer/event/'.$eventDetail->id.'/live');
@@ -296,7 +297,7 @@ class OrganizerEventController extends Controller
         } catch (TimeGreaterException|EventChangeException $e) {
             return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
-            return back()->with('error', 'Something went wrong with saving data!');
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -316,6 +317,7 @@ class OrganizerEventController extends Controller
             if ($status === 'ENDED') {
                 return $this->showErrorOrganizer("Event has already ended id: {$id}");
             }
+
             if (! in_array($status, ['UPCOMING', 'DRAFT', 'SCHEDULED', 'PENDING'])) {
                 return $this->showErrorOrganizer("Event has already gone live for id: {$id}");
             }
@@ -356,6 +358,7 @@ class OrganizerEventController extends Controller
                 $eventDetail = EventDetail::storeLogic($eventDetail, $request);
                 $eventDetail->user_id = $request->get('user')->id;
                 $eventDetail->save();
+                $eventDetail->makeSignupTables();
 
                 if ($request->livePreview === 'true') {
                     return redirect('organizer/event/'.$eventDetail->id.'/live');
@@ -369,7 +372,7 @@ class OrganizerEventController extends Controller
         } catch (TimeGreaterException|EventChangeException $e) {
             return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
-            return back()->with('error', 'Something went wrong with saving data!');
+            return back()->with('error', $e->getMessage());
         }
     }
 

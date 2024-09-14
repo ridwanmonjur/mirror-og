@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\UnauthorizedException;
 
@@ -354,6 +355,31 @@ class EventDetail extends Model
             });
 
         return $eventListQuery;
+    }
+
+    public function makeSignupTables(): void {
+        if (!is_null($this->event_tier_id) && !is_null($this->event_type_id)) {
+            $signupValues = DB::table('event_tier_type_signup_dates')
+                ->where('tier_id', $this->event_tier_id)
+                ->where('type_id', $this->event_type_id)
+                ->first();
+            
+            if ($signupValues) {
+                $startDateTime = Carbon::parse($this->startDate . ' ' . $this->startTime);
+                
+                $insertData = [
+                    'event_id' => $this->id,
+                    'signup_open' => $startDateTime->copy()->subDays($signupValues->signup_open),
+                    'signup_close' => $startDateTime->copy()->subDays($signupValues->signup_close),
+                    'normal_signup_start_advanced_close' => $startDateTime->copy()->subDays($signupValues->normal_signup_start_advanced_close)
+                ];
+                
+                DB::table('event_signup_dates')->updateOrInsert(
+                    ['event_id' => $this->id],
+                    $insertData
+                );
+            }
+        }
     }
 
     public static function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
