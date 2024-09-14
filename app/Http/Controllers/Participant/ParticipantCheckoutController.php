@@ -7,6 +7,7 @@ use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\ParticipantPayment;
 use App\Models\PaymentTransaction;
+use App\Models\RosterMember;
 use App\Models\StripePayment;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -34,11 +35,21 @@ class ParticipantCheckoutController extends Controller
             $user->stripe_customer_id = $user->organizer()->value('stripe_customer_id');
             $event = EventDetail::findOrFail($id);
             $isUserSameAsAuth = true;
+            $isRosterMember = RosterMember::where([
+                'user_id' => $user->id,
+                'join_events_id' => $request->joinEventId,
+                'team_id' => $request->teamId,
+            ])->exists();
+
+            if (!$isRosterMember) {
+                return $this->showErrorParticipant(
+                    "You are a member of {$request->teamName}, but not a member of this event's roster.",
+                );
+            }
 
             if (is_null($event->tier)) {
-                return $this->showErrorOrganizer(
+                return $this->showErrorParticipant(
                     "Event with id: {$id} has no event tier chosen",
-                    ['edit' => true, 'id' => $id]
                 );
             }
             $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
@@ -57,12 +68,8 @@ class ParticipantCheckoutController extends Controller
                 'livePreview' => 1,
                 'paymentMethods' => $paymentMethods,
             ]);
-        } catch (ModelNotFoundException|UnauthorizedException $e) {
-            return $this->showErrorOrganizer($e->getMessage());
-        } catch (Exception $e) {
-            return $this->showErrorOrganizer(
-                "Event not retrieved with id: {$id}"
-            );
+        }  catch (Exception $e) {
+            return $this->showErrorParticipant($e->getMessage());
         }
     }
 
@@ -73,11 +80,18 @@ class ParticipantCheckoutController extends Controller
             $user = $request->get('user');
             $userId = $user->id;
             $status = $request->get('redirect_status');
-            if ($status === 'succeeded' && $request->has('payment_intent_client_secret')) {
+            if (
+                ($status === 'succeeded' || $status === "requires_capture") 
+                && $request->has('payment_intent_client_secret')
+            ) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
                 if ($paymentIntent['amount'] > 0 &&
-                    $paymentIntent['amount_received'] === $paymentIntent['amount']
+                    (
+                        $paymentIntent['amount_capturable'] === $paymentIntent['amount']
+                        ||
+                        $paymentIntent['amount_received'] === $paymentIntent['amount']
+                    )
                 ) {
                     $transaction = PaymentTransaction::createTransaction(
                         $intentId,
@@ -97,14 +111,15 @@ class ParticipantCheckoutController extends Controller
                     $event = EventDetail::select(['id', 'event_tier_id'])
                         ->where('id', $joinEvent->event_details_id)
                         ->with('tier')->first();
-                    $total = (float) $event->tier?->tierEntryFee * (float) $event->tier?->tierTeamSlot;
+                    $total = (float) $event->tier?->tierEntryFee ;
                     $participantPaymentSum = ParticipantPayment::select(['join_events_id', 'id', 'payment_amount'])
                         ->where('join_events_id', $joinEvent->id)
                         ->sum('payment_amount');
-                    if ($total !== 0 && $total === $participantPaymentSum) {
+                    if ($total !== 0.00 && $total === (float) $participantPaymentSum) {
                         $joinEvent->payment_status = 'completed';
                         $joinEvent->save();
                     }
+                    
 
                     DB::commit();
 

@@ -35,17 +35,19 @@ class BracketUpdateList extends Component
         $this->event->load([
             'joinEvents.team.roster' => function ($query) use ($joinEventIds) {
                 $query->select('id', 'team_id', 'join_events_id', 'user_id')
-                      ->whereIn('join_events_id', $joinEventIds);
-            },
-            'joinEvents.team.roster.user' => function ($query) {
-                $query->select('id', 'name', 'userBanner');
+                      ->whereIn('join_events_id', $joinEventIds)
+                      ->with(['user' => function ($query) {
+                            $query->select('id', 'name', 'userBanner');
+                        }]);
             },
             'matches',
         ]);
 
         $teamMap = collect();
-        $this->event->joinEvents->each(function ($joinEvent) use (&$teamMap) {
-                $teamMap[$joinEvent->team->id] = $joinEvent->team;
+        $teamList = collect();
+        $this->event->joinEvents->each(function ($joinEvent) use (&$teamList, &$teamMap) {
+            $teamMap[$joinEvent->team->id] = $joinEvent->team;
+            $teamList->push($joinEvent->team);
         });
 
 
@@ -55,9 +57,8 @@ class BracketUpdateList extends Component
             $match->team2 = $teamMap->get($match->team2_id);
             $matchTeamIds->push($match->team1_id, $match->team2_id);
         });
-        $matchTeamIds = $matchTeamIds->unique();
 
-        $this->teamList = Team::whereIn('id', $matchTeamIds)->get();
+        $this->teamList = $teamList;
     }
 
     public function render()
@@ -101,6 +102,9 @@ class BracketUpdateList extends Component
                 'winner_name' => $match->winner->name ?? null,
             ]);
         }, $bracketList);
+        
+
+        // dd($bracketList);
 
         // dd($bracketList["upperBracket"]["eliminator1"]["1"]);
         

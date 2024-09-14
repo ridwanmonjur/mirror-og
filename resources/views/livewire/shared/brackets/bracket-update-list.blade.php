@@ -159,7 +159,6 @@
             const button = event.currentTarget;
             let parentWithDataset = getParentByClassName(button, "tournament-bracket__match");
             
-
             let dataset = JSON.parse(parentWithDataset.dataset.bracket);
             const stageName = parentWithDataset.dataset.stage_name;
             const innerStageName = parentWithDataset.dataset.inner_stage_name;

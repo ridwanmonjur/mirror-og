@@ -6,7 +6,7 @@
 
                 <form method="POST" action="{{ route('event.matches.upsert', ['id'=> $event->id]) }}" id="matchForm">
                     @csrf
-
+                    <input type="hidden" id="id" name="id" >
                     <input type="hidden" id="event_details_id" name="event_details_id"   value="{{$event->id}}">
                     <input type="hidden" id="match_type" name="match_type"  required>
                     <input type="hidden" id="stage_name" name="stage_name" >
@@ -229,6 +229,7 @@
                     let {team1, match, team2} = data.data;
                     let currentMatchDiv = document.querySelector(`.${match.team1_position}.${match.team2_position}`);
                     let currentMatch = JSON.parse(currentMatchDiv.dataset.bracket);
+                    currentMatch.id = match.id;
                     currentMatch.team1_score = match.team1_score;
                     currentMatch.team2_score = match.team2_score;
                     currentMatch.winner_id = match.winner_id;

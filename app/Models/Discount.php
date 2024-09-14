@@ -13,29 +13,29 @@ class Discount extends Model
 
     protected $table = 'organizer_create_event_discounts';
 
-    public static function createNoDiscountFeeObject(array $fee, string| null $entryFee): array
+    public static function createNoDiscountFeeObject(array $fee, string| null $eventPrizePool): array
     {
         $fee['discountFee'] = 0;
-        $fee['entryFee'] = $entryFee !== null ? (float) $entryFee * 1000 : 0;
+        $fee['entryFee'] = $eventPrizePool !== null ? (float) $eventPrizePool : 0.0;
         $fee['totalFee'] = $fee['finalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
         $fee['discountId'] = $fee['discountName'] = $fee['discountType'] = $fee['discountAmount'] = null;
 
         return $fee;
     }
 
-    public static function createDiscountFeeObject(string| null $couponName, string| null $eventTierEntryFee): array
+    public static function createDiscountFeeObject(string| null $couponName, string| null $eventPrizePool): array
     {
         $fee = [];
 
-        if (is_null($couponName) || is_null($eventTierEntryFee)) {
-            $fee = self::createNoDiscountFeeObject($fee, $eventTierEntryFee);
+        if (is_null($couponName) || is_null($eventPrizePool)) {
+            $fee = self::createNoDiscountFeeObject($fee, $eventPrizePool);
 
             return [$fee, 'isDiscountApplied' => false, 'error' => null];
         }
         $discount = self::whereRaw('coupon = ?', [$couponName])->first();
 
         if (is_null($discount)) {
-            $fee = self::createNoDiscountFeeObject($fee, $eventTierEntryFee);
+            $fee = self::createNoDiscountFeeObject($fee, $eventPrizePool);
 
             return [
                 $fee,
@@ -53,7 +53,7 @@ class Discount extends Model
         $fee['discountAmount'] = $discount->amount;
 
         if ($startTime < $currentDateTime && $endTime > $currentDateTime && $discount->isEnforced) {
-            $fee['entryFee'] = (float) $eventTierEntryFee * 1000;
+            $fee['entryFee'] = (float) $eventPrizePool * 1000;
             $fee['totalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
             $fee['discountFee'] = $discount->type === 'percent' ?
                 $discount->amount / 100 * $fee['totalFee'] : $discount->amount;
@@ -65,7 +65,7 @@ class Discount extends Model
                 'error' => null,
             ];
         }
-        $fee = self::createNoDiscountFeeObject($fee, $eventTierEntryFee);
+        $fee = self::createNoDiscountFeeObject($fee, $eventPrizePool);
 
         return [
             $fee,

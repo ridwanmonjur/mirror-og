@@ -48,11 +48,13 @@ class OrganizerEventController extends Controller
         $eventList = $eventListQuery
             ->with(['tier', 'type', 'game'])
             ->where('user_id', $user->id)
+            ->withCount(['joinEvents' => function ($q) {
+                $q->where('join_status', 'confirmed');
+            }])
             ->paginate($count);
 
         $joinTeamIds = [];
 
-        $acceptedMembersCount = [];
         $results = DB::table('join_events')
             ->select('join_events.event_details_id', DB::raw('COUNT(team_members.id) as accepted_members_count'))
             ->join('team_members', 'join_events.team_id', '=', 'team_members.team_id')
@@ -61,13 +63,7 @@ class OrganizerEventController extends Controller
             ->get();
 
         $joinEventDetailsMap = $results->pluck('accepted_members_count', 'event_details_id');
-        foreach ($eventList as $event) {
-            if (isset($joinEventDetailsMap[$event->id])) {
-                $event->acceptedMembersCount = $joinEventDetailsMap[$event->id];
-            } else {
-                $event->acceptedMembersCount = 0;
-            }
-        }
+       
 
 
         $outputArray = compact(
@@ -95,9 +91,11 @@ class OrganizerEventController extends Controller
         $eventList = $eventListQuery
             ->where('event_details.user_id', $userId)
             ->with(['tier', 'type', 'game'])
+            ->withCount(['joinEvents' => function ($q) {
+                $q->where('join_status', 'confirmed');
+            }])
             ->paginate($count);
 
-        $acceptedMembersCount = [];
         $results = DB::table('join_events')
             ->select('join_events.event_details_id', DB::raw('COUNT(team_members.id) as accepted_members_count'))
             ->join('team_members', 'join_events.team_id', '=', 'team_members.team_id')
@@ -106,13 +104,7 @@ class OrganizerEventController extends Controller
             ->get();
 
         $joinEventDetailsMap = $results->pluck('accepted_members_count', 'event_details_id');
-        foreach ($eventList as $event) {
-            if ($joinEventDetailsMap->has($event->id)) {
-                $event->acceptedMembersCount = $joinEventDetailsMap[$event->id];
-            } else {
-                $event->acceptedMembersCount = 0;
-            }
-        }
+        
 
         $mappingEventState = EventDetail::mappingEventStateResolve();
         $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
@@ -170,20 +162,12 @@ class OrganizerEventController extends Controller
             $event = EventDetail::findEventWithRelationsAndThrowError(
                 $userId,
                 $request->id,
-                ['joinEvents' => function ($query) {
-                    $query->with(['members' => function ($query) {
-                        $query->where('status', 'accepted');
-                    },
-                    ]);
-                },
-                ],
-                null
+                [],
+                ['joinEvents' => function ($q) {
+                    $q->where('join_status', 'confirmed');
+                }]
             );
 
-            $event->acceptedMembersCount = 0;
-            foreach ($event->joinEvents as $joinEvent) {
-                $event->acceptedMembersCount += $joinEvent->members->count();
-            }
 
             $outputArray = compact(
                 'event',
@@ -218,10 +202,7 @@ class OrganizerEventController extends Controller
                 null
             );
 
-            $event->acceptedMembersCount = 0;
-            foreach ($event->joinEvents as $joinEvent) {
-                $event->acceptedMembersCount += $joinEvent->members->count();
-            }
+           
 
             $isUserSameAsAuth = true;
         } catch (ModelNotFoundException|UnauthorizedException $e) {
@@ -246,24 +227,12 @@ class OrganizerEventController extends Controller
             $event = EventDetail::findEventWithRelationsAndThrowError(
                 $userId,
                 $id,
-                ['joinEvents' => function ($query) {
-                    $query->with(['members' => function ($query) {
-                        $query->where('status', 'accepted');
-                    },
-                    ]);
-                },
-                ],
-                null
+                [],
+                ['joinEvents' => function ($q) {
+                    $q->where('join_status', 'confirmed');
+                }]
+
             );
-
-            // dd($event);
-
-            $event->acceptedMembersCount = 0;
-            foreach ($event->joinEvents as $joinEvent) {
-                $event->acceptedMembersCount += $joinEvent->members->count();
-            }
-
-            // dd($event);
 
             return view('Organizer.ViewEvent', [
                 'event' => $event,
@@ -285,6 +254,7 @@ class OrganizerEventController extends Controller
             $eventDetail = EventDetail::storeLogic($eventDetail, $request);
             $eventDetail->user_id = $request->get('user')->id;
             $eventDetail->save();
+            $eventDetail->makeSignupTables();
 
             if ($request->livePreview === 'true') {
                 return redirect('organizer/event/'.$eventDetail->id.'/live');
@@ -296,7 +266,7 @@ class OrganizerEventController extends Controller
         } catch (TimeGreaterException|EventChangeException $e) {
             return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
-            return back()->with('error', 'Something went wrong with saving data!');
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -316,6 +286,7 @@ class OrganizerEventController extends Controller
             if ($status === 'ENDED') {
                 return $this->showErrorOrganizer("Event has already ended id: {$id}");
             }
+
             if (! in_array($status, ['UPCOMING', 'DRAFT', 'SCHEDULED', 'PENDING'])) {
                 return $this->showErrorOrganizer("Event has already gone live for id: {$id}");
             }
@@ -356,6 +327,7 @@ class OrganizerEventController extends Controller
                 $eventDetail = EventDetail::storeLogic($eventDetail, $request);
                 $eventDetail->user_id = $request->get('user')->id;
                 $eventDetail->save();
+                $eventDetail->makeSignupTables();
 
                 if ($request->livePreview === 'true') {
                     return redirect('organizer/event/'.$eventDetail->id.'/live');
@@ -369,7 +341,7 @@ class OrganizerEventController extends Controller
         } catch (TimeGreaterException|EventChangeException $e) {
             return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
-            return back()->with('error', 'Something went wrong with saving data!');
+            return back()->with('error', $e->getMessage());
         }
     }
 

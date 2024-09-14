@@ -1,7 +1,6 @@
 @php
     $random_int = rand(0, 999);
-    // dd($groupedPaymentsByEvent, $member, $groupedPaymentsByEventAndTeamMember[38], $groupedPaymentsByEventAndTeamMember[38][12], $joinEvent);  
-    $total = $joinEvent->tier?->tierEntryFee * 5;
+    $total = $joinEvent->tier?->tierEntryFee;
     $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
     $individualContributionTotal = 0;
     $pedning = $total - $exisitngSum;
@@ -108,11 +107,11 @@
                 @csrf
                 <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
                 <input type="hidden" name="join_status" value="canceled">
-                <button type="button" onclick="submitConfirmCancelForm('Confirm canceling this event?')" class="mt-2 btn bg-success py-2 rounded-pill">
+                <button type="button" style="background-color: red;" onclick="submitConfirmCancelForm('Confirm canceling this event?')" class="mt-2 btn py-2 text-light rounded-pill">
                     Cancel Registration
                 </button> 
                 <br>
-                <p class="text-success">Your registration is confirmed!</p>
+                <p class="text-success mt-2">Your registration is confirmed!</p>
             </form>
         @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "canceled")
                <button
@@ -131,6 +130,7 @@
         aria-labelledby={{ '#payModal' . $random_int . 'Label' }} aria-hidden="true">
         <div class="modal-dialog">
             <form method="POST"
+                onsubmit="validateAmount(event)"
                 action="{{ route('participant.checkout.action') }}"
             >
                 @csrf
@@ -186,6 +186,7 @@
                             <div class="mx-auto text-center">
                                 <button 
                                     type="submit"
+                                    onclick=""
                                     class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button">Proceed to
                                     payment</button>
                                 <br>
@@ -202,6 +203,39 @@
 </div>
 
 <script>
+     
+
+      function validateAmount(event) {
+        event.preventDefault();
+        let minimumAmount = 5;
+        const form = event.target;
+        
+        const amountInput = form.querySelector('input[name="amount"]');
+        const pendingAmount = parseFloat(amountInput.dataset.pendingAmount);
+        const totalAmount = parseFloat(amountInput.dataset.totalAmount);
+        const existingAmount = parseFloat(amountInput.dataset.existingAmount);
+        let inputAmount = parseFloat(amountInput.value);
+        if (inputAmount < minimumAmount) {
+            toastError("Minmum amount must be greater than 5 RM.");
+            return;
+        }
+
+        inputAmount = Math.max(inputAmount, 4);
+
+        const newPendingAmount = pendingAmount - (inputAmount - existingAmount);
+        if (newPendingAmount < minimumAmount) {
+            inputAmount = existingAmount + (pendingAmount - 4);
+        }
+
+        if (newPendingAmount <= minimumAmount && parseFloat(newPendingAmount) !== 0.0) {
+            toastError("You need to pay either the complete remaining fee, or 5RM less than the remaining fee.");
+            return;
+        }
+
+        form.submit();
+    }
+
+
     function approveTeam(memberId) {
         window.dialogOpen('Continue with approval?', ()=>  {
 

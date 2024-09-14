@@ -328,7 +328,7 @@
                                     <line x1="6" y1="20" x2="6" y2="14"></line>
                                 </svg>
                                 &nbsp;
-                                <span style="position: relative; top: 5px;">{{ $event->acceptedMembersCount }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}</span>
+                                <span style="position: relative; top: 5px;">{{ $event->join_events_count }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}</span>
                             </div>
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"

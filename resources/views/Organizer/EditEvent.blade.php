@@ -13,16 +13,21 @@
                         @include('Organizer.__CreateEditPartials.EditEventHiddenForm', ['event' => $event])
                         @include('Organizer.__CreateEditPartials.CreateEventTimelineBox')
                         @if (session()->has('error'))
-                            @include('Organizer.__CreateEditPartials.EditEventStepOne', [
+                            @include('Organizer.__CreateEditPartials.EditEventTimelineWelcome', [
                                 'error' => session()->get('error'),
                             ])
                         @else
-                            @include('Organizer.__CreateEditPartials.EditEventStepOne')
+                            @include('Organizer.__CreateEditPartials.EditEventTimelineWelcome')
                         @endif
+                        @include('Organizer.__CreateEditPartials.EditEventStepOne')
                         @include('Organizer.__CreateEditPartials.CreateEventForm', ['event' => $event])
                         @if (session()->has('success'))
                             @include('Organizer.__CreateEditPartials.CreateEventSuccess')
                         @endif
+                    </form>
+                    <form onkeydown="return event.key != 'Enter';" id="cancelEvent" method="POST"
+                        action="{{ route('event.updateForm', $event->id) }}"
+                    >
                     </form>
                 </div>
             </div>
