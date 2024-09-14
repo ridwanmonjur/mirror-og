@@ -186,7 +186,7 @@
                             <div class="mx-auto text-center">
                                 <button 
                                     type="submit"
-                                    onclick=""
+                                    
                                     class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button">Proceed to
                                     payment</button>
                                 <br>
