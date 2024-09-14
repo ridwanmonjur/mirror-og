@@ -1,4 +1,4 @@
-<div id="step-1" class="">
+<div id="step-1" class="d-none">
     <div id="invisible-until-loaded" class="welcome text-center" style="margin-bottom: -60px !important;">
         @if (isset($error))
             <p style="color:#EF4444;">{{ $error }}</p>
