@@ -1,6 +1,6 @@
 @php
     $random_int = rand(0, 999);
-    $total = $joinEvent->tier?->tierEntryFee * 5;
+    $total = $joinEvent->tier?->tierEntryFee;
     $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
     $individualContributionTotal = 0;
     $pedning = $total - $exisitngSum;
@@ -107,11 +107,11 @@
                 @csrf
                 <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
                 <input type="hidden" name="join_status" value="canceled">
-                <button type="button" onclick="submitConfirmCancelForm('Confirm canceling this event?')" class="mt-2 btn bg-success py-2 rounded-pill">
+                <button type="button" style="background-color: red;" onclick="submitConfirmCancelForm('Confirm canceling this event?')" class="mt-2 btn py-2 text-light rounded-pill">
                     Cancel Registration
                 </button> 
                 <br>
-                <p class="text-success">Your registration is confirmed!</p>
+                <p class="text-success mt-2">Your registration is confirmed!</p>
             </form>
         @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "canceled")
                <button

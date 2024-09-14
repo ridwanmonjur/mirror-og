@@ -52,7 +52,7 @@ class OrganizerCheckoutController extends Controller
                 'customer' => $user->stripe_customer_id,
             ]);
             [$fee, $isDiscountApplied, $error] = array_values(
-                Discount::createDiscountFeeObject($request->coupon, $event->tier?->tierEntryFee)
+                Discount::createDiscountFeeObject($request->coupon, $event->tier?->tierPrizePool)
             );
 
             if ($isDiscountApplied) {

@@ -36,10 +36,10 @@ class ParticipantCheckoutController extends Controller
             $event = EventDetail::findOrFail($id);
             $isUserSameAsAuth = true;
 
+
             if (is_null($event->tier)) {
-                return $this->showErrorOrganizer(
+                return $this->showErrorParticipant(
                     "Event with id: {$id} has no event tier chosen",
-                    ['edit' => true, 'id' => $id]
                 );
             }
             $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
@@ -59,9 +59,9 @@ class ParticipantCheckoutController extends Controller
                 'paymentMethods' => $paymentMethods,
             ]);
         } catch (ModelNotFoundException|UnauthorizedException $e) {
-            return $this->showErrorOrganizer($e->getMessage());
+            return $this->showErrorParticipant($e->getMessage());
         } catch (Exception $e) {
-            return $this->showErrorOrganizer(
+            return $this->showErrorParticipant(
                 "Event not retrieved with id: {$id}"
             );
         }
@@ -105,14 +105,15 @@ class ParticipantCheckoutController extends Controller
                     $event = EventDetail::select(['id', 'event_tier_id'])
                         ->where('id', $joinEvent->event_details_id)
                         ->with('tier')->first();
-                    $total = (float) $event->tier?->tierEntryFee * (float) $event->tier?->tierTeamSlot;
+                    $total = (float) $event->tier?->tierEntryFee ;
                     $participantPaymentSum = ParticipantPayment::select(['join_events_id', 'id', 'payment_amount'])
                         ->where('join_events_id', $joinEvent->id)
                         ->sum('payment_amount');
-                    if ($total !== 0 && $total === $participantPaymentSum) {
+                    if ($total !== 0.00 && $total === (float) $participantPaymentSum) {
                         $joinEvent->payment_status = 'completed';
                         $joinEvent->save();
                     }
+                    
 
                     DB::commit();
 
