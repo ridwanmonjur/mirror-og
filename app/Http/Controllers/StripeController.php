@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 use App\Models\StripePayment;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
 
 class StripeController extends Controller
 {

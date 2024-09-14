@@ -110,7 +110,7 @@
 
     async function initializeStripeCardPayment() {
         try {
-            const response = await fetch("{{ route('stripe.stripeCardIntentCreate') }}", {
+            const response = await fetch("{{ route('stripe.stripeCardIntentCreateIntentWithHold') }}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

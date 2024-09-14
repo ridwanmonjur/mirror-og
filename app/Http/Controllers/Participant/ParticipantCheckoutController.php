@@ -8,6 +8,7 @@ use App\Models\JoinEvent;
 use App\Models\ParticipantPayment;
 use App\Models\PaymentTransaction;
 use App\Models\StripePayment;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -73,11 +74,18 @@ class ParticipantCheckoutController extends Controller
             $user = $request->get('user');
             $userId = $user->id;
             $status = $request->get('redirect_status');
-            if ($status === 'succeeded' && $request->has('payment_intent_client_secret')) {
+            if (
+                ($status === 'succeeded' || $status === "requires_capture") 
+                && $request->has('payment_intent_client_secret')
+            ) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
                 if ($paymentIntent['amount'] > 0 &&
-                    $paymentIntent['amount_received'] === $paymentIntent['amount']
+                    (
+                        $paymentIntent['amount_capturable'] === $paymentIntent['amount']
+                        ||
+                        $paymentIntent['amount_received'] === $paymentIntent['amount']
+                    )
                 ) {
                     $transaction = PaymentTransaction::createTransaction(
                         $intentId,

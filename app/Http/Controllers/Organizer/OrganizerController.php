@@ -81,17 +81,14 @@ class OrganizerController extends Controller
                         }
                     }
                 }
-                // Update user profile
                 User::where('id', $user->id)->first()->fill($validatedData['userProfile'])->save();
 
-                // Update or create organizer
                 $organizer = isset($validatedData['organizer']['id'])
                     ? Organizer::findOrFail($validatedData['organizer']['id'])
                     : new Organizer();
 
                 $organizer->user_id = $user->id;
 
-                // Trim trailing slashes from links
                 $links = ['website_link', 'instagram_link', 'twitter_link', 'facebook_link'];
                 foreach ($links as $link) {
                     if (isset($validatedData['organizer'][$link])) {
