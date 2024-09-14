@@ -52,6 +52,61 @@ INSERT INTO `event_type` (`id`, `eventType`, `eventDefinitions`) VALUES
 (1, 'Tournament', "You\'ll play a series of contests between a number of competitors that will result in teams getting disqualified based on results and points, till you get the final prize."),
 (2, 'League', 'The winner is decided by the highest win/ loss/ draw ratio among the participants.');
 
+-- Starfish Tier (ID: 1)
+-- TOURNAMENT (type_id: 1)
+INSERT INTO event_tier_type_signup_dates (tier_id, type_id, signup_open, signup_close, normal_signup_start_advanced_close) 
+VALUES (1, 1, 17, 3, 7);
+
+-- LEAGUE (type_id: 2)
+INSERT INTO event_tier_type_signup_dates (tier_id, type_id, signup_open, signup_close, normal_signup_start_advanced_close) 
+VALUES (1, 2, 28, 3, 7);
+
+-- Turtle Tier (ID: 2)
+-- TOURNAMENT (type_id: 1)
+INSERT INTO event_tier_type_signup_dates (tier_id, type_id, signup_open, signup_close, normal_signup_start_advanced_close) 
+VALUES (2, 1, 28, 3, 7);
+
+-- LEAGUE (type_id: 2)
+INSERT INTO event_tier_type_signup_dates (tier_id, type_id, signup_open, signup_close, normal_signup_start_advanced_close) 
+VALUES (2, 2, 42, 3, 7);
+
+-- Dolphin Tier (ID: 3)
+INSERT INTO event_tier_type_signup_dates (tier_id, type_id, signup_open, signup_close, normal_signup_start_advanced_close) 
+VALUES (3, 1, 42, 3, 7);
+
+-- LEAGUE (type_id: 2)
+INSERT INTO event_tier_type_signup_dates (tier_id, type_id, signup_open, signup_close, normal_signup_start_advanced_close) 
+VALUES (3, 2, 56, 3, 7);
+
+INSERT INTO event_signup_dates (event_id, signup_open, signup_close, normal_signup_start_advanced_close)
+SELECT 
+    ed.id AS event_id,
+    DATE_SUB(
+        TIMESTAMP(ed.startDate, ed.startTime), 
+        INTERVAL etsd.signup_open DAY
+    ) AS signup_open,
+    DATE_SUB(
+        TIMESTAMP(ed.startDate, ed.startTime), 
+        INTERVAL etsd.signup_close DAY
+    ) AS signup_close,
+	DATE_SUB(
+        TIMESTAMP(ed.startDate, ed.startTime), 
+        INTERVAL etsd.normal_signup_start_advanced_close DAY
+    ) AS normal_signup_start_advanced_close
+FROM 
+    event_details ed
+JOIN 
+    event_tier_type_signup_dates etsd 
+    ON ed.event_tier_id = etsd.tier_id 
+    AND ed.event_type_id = etsd.type_id
+WHERE 
+    ed.event_tier_id IS NOT NULL
+    AND ed.event_type_id IS NOT NULL
+ON DUPLICATE KEY UPDATE
+    signup_open = VALUES(signup_open),
+	normal_signup_start_advanced_close = VALUES(normal_signup_start_advanced_close),
+    signup_close = VALUES(signup_close);
+
 INSERT INTO `organizer_create_event_discounts` (`name`,`coupon`,`type`,`amount`, `startDate`, `endDate`, `startTime`, `endTime`, `isEnforced`) VALUES
 	 ('JAN_50','50_PERCENT','percent',50.0,'2024-01-13','2027-01-13','20:57:00','20:57:00',1),
 	 ('JAN_25','25_PERCENT','percent',25.0,'2024-01-13','2027-01-13','20:57:00','20:57:00',1),
