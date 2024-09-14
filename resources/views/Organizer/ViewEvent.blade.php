@@ -194,7 +194,7 @@
                                     &nbsp;
                                     @if ($event->tier)
                                         <span style="position: relative; top: 5px;">
-                                            {{ $event->acceptedMembersCount }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}
+                                            {{ $event->join_events_count }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}
                                         </span>
                                     @else
                                         <span>No event tier chosen</span>

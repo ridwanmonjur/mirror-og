@@ -21,7 +21,6 @@ class EventDetail extends Model
 {
     use HasFactory;
 
-    public $acceptedMembersCount = 0;
 
     protected $table = 'event_details';
 
@@ -490,7 +489,7 @@ class EventDetail extends Model
         string| int $userId,
         string| int $id,
         array| null $relations = null,
-        string | null $relationCount = null
+        string | null | array $relationCount = null
     ): EventDetail {
         $relations ??= ['type', 'tier', 'game'];
         $eventQuery = self::with($relations);

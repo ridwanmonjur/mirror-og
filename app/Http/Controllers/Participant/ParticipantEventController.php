@@ -58,20 +58,15 @@ class ParticipantEventController extends Controller
             $user = Auth::user();
             $userId = $user && $user->id ? $user->id : null;
             $event = EventDetail::with(
-                ['game', 'type', 'joinEvents' => function ($query) {
-                    $query->with(['members' => function ($query) {
-                        $query->where('status', 'accepted');
-                    },
-                    ]);
-                },
-                ],
+                ['game', 'type' ]
+                ,
                 null
-            )->find($id);
-
-            $event->acceptedMembersCount = 0;
-            foreach ($event->joinEvents as $joinEvent) {
-                $event->acceptedMembersCount += $joinEvent->members->count();
-            }
+            )
+                ->withCount(['joinEvents' => function ($q) {
+                    $q->where('join_status', 'confirmed');
+                }])
+                ->find($id);
+           
             if (! $event) {
                 throw new ModelNotFoundException("Event not found by id: {$id}");
             }
