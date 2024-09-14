@@ -7,8 +7,8 @@ use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\ParticipantPayment;
 use App\Models\PaymentTransaction;
+use App\Models\RosterMember;
 use App\Models\StripePayment;
-use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -35,7 +35,17 @@ class ParticipantCheckoutController extends Controller
             $user->stripe_customer_id = $user->organizer()->value('stripe_customer_id');
             $event = EventDetail::findOrFail($id);
             $isUserSameAsAuth = true;
+            $isRosterMember = RosterMember::where([
+                'user_id' => $user->id,
+                'join_events_id' => $request->joinEventId,
+                'team_id' => $request->teamId,
+            ])->exists();
 
+            if (!$isRosterMember) {
+                return $this->showErrorParticipant(
+                    "You are a member of {$request->teamName}, but not a member of this event's roster.",
+                );
+            }
 
             if (is_null($event->tier)) {
                 return $this->showErrorParticipant(
@@ -58,12 +68,8 @@ class ParticipantCheckoutController extends Controller
                 'livePreview' => 1,
                 'paymentMethods' => $paymentMethods,
             ]);
-        } catch (ModelNotFoundException|UnauthorizedException $e) {
+        }  catch (Exception $e) {
             return $this->showErrorParticipant($e->getMessage());
-        } catch (Exception $e) {
-            return $this->showErrorParticipant(
-                "Event not retrieved with id: {$id}"
-            );
         }
     }
 

@@ -227,7 +227,7 @@
             inputAmount = existingAmount + (pendingAmount - 4);
         }
 
-        if (newPendingAmount <= minimumAmount) {
+        if (newPendingAmount <= minimumAmount && parseFloat(newPendingAmount) !== 0.0) {
             toastError("You need to pay either the complete remaining fee, or 5RM less than the remaining fee.");
             return;
         }
