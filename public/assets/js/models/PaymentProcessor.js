@@ -3,7 +3,7 @@ class PaymentProcessor {
         this.isPaymentSelected = false;
         this.paymentType = null;
         this.paymentElement = null;
-        this.paymentAmount = paymentAmount;
+        this.paymentAmount = Number(paymentAmount);
     }
 
     getPaymentAmount() {

@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
     @include('__CommonPartials.HeadIcon')
+    <style>
+        #Field-nameInput, #Field-addressLine2Input {
+            width: 50% !important;
+            display: inline !important;
+        }
+    </style>
 </head>
 
 <body>

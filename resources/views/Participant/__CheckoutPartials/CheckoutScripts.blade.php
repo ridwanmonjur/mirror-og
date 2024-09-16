@@ -25,7 +25,8 @@
         parent.classList.toggle("squared-box");
         element.classList.toggle("rounded-box");
     }
-    let paymentProcessor = new PaymentProcessor({{ $amount }});
+    let amount = "{{ $amount }}";
+    let paymentProcessor = new PaymentProcessor( amount );
 
     function onChoosePayment(event, type, element) {
         let target = event.currentTarget;
@@ -215,7 +216,7 @@
         mode: 'billing',
         blockPoBox: true,
         fields: {
-            phone: 'always',
+            phone: 'never',
         },
     };
 

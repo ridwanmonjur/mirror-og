@@ -4,7 +4,8 @@
     $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
     $individualContributionTotal = 0;
     $pedning = $total - $exisitngSum;
-    $percent = round(($exisitngSum * 100) / $total);
+    $percentReal = ($exisitngSum * 100) / $total;
+    $percent = floor($percentReal);
     $myMemberId = null;
 
     $styles = '--p:' . $percent . '; --c:' . ($isInvited ? 'purple' : 'orange');
@@ -62,13 +63,13 @@
                     @endforeach
                    <tr style="border-collapse: seperate !important; border-spacing: 0 1em !important;">
                             <td class="pe-3 pb-2">
-                               
+                               Total paid
                             </td>
                             <td class="pe-3 pb-2">
                                 RM {{$exisitngSum}}
                             </td>
                             <td class="pe-2 pb-2">
-                               100%
+                               {{ $percentReal }}%
                             </td>
                             <td class="ps-3 pe-2 pb-2">
                                 
