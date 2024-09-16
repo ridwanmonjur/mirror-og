@@ -115,7 +115,7 @@ class ParticipantCheckoutController extends Controller
                     $participantPaymentSum = ParticipantPayment::select(['join_events_id', 'id', 'payment_amount'])
                         ->where('join_events_id', $joinEvent->id)
                         ->sum('payment_amount');
-                    if ($total !== 0.00 && $total === (float) $participantPaymentSum) {
+                    if (($total - (float) $participantPaymentSum) < 0.05) {
                         $joinEvent->payment_status = 'completed';
                         $joinEvent->save();
                     }

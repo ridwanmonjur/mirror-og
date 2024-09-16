@@ -224,6 +224,10 @@
         inputAmount = Math.max(inputAmount, 4);
 
         const newPendingAmount = pendingAmount - (inputAmount - existingAmount);
+         if (amountInput > totalAmount) {
+            toastError("This fee is too much.");
+            return;
+        }
         if (newPendingAmount < minimumAmount) {
             inputAmount = existingAmount + (pendingAmount - 4);
         }
