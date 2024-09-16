@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Participant;
 
-use App\Events\JoinEventConfirmed;
+use App\Events\JoinEventSignuped;
 use App\Http\Controllers\Controller;
 use App\Jobs\HandleFollows;
 use App\Models\EventDetail;
@@ -297,8 +297,8 @@ class ParticipantEventController extends Controller
 
             if ($selectTeam && $isAlreadyMember) {
                 [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs]
-                    = $selectTeam->processTeamRegistration($user, $event, false);
-                Event::dispatch(new JoinEventConfirmed(
+                    = $selectTeam->processTeamRegistration($user, $event);
+                Event::dispatch(new JoinEventSignuped(
                     compact(
                         'memberList', 'organizerList', 'memberNotification',
                         'organizerNotification', 'allEventLogs'
@@ -369,9 +369,9 @@ class ParticipantEventController extends Controller
                 },
                 ]);
                 [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs]
-                    = $selectTeam->processTeamRegistration($user, $event, true);
+                    = $selectTeam->processTeamRegistration($user, $event);
                 
-                    event(new JoinEventConfirmed(
+                    event(new JoinEventSignuped(
                     compact(
                         'memberList', 'organizerList', 'memberNotification',
                         'organizerNotification', 'allEventLogs'
@@ -401,22 +401,27 @@ class ParticipantEventController extends Controller
     public function confirmOrCancel(Request $request)
     {
         try {
-            // 1. request must have teamId and eventId
-            // 2. refactor ? with if
-            // 3. get team by id and event by id
-            // 4. Team::cancelTeamRegistration($event);
+            $isToBeConfirmed = $request->join_status === 'confirmed';
             
-            $successMessage = $request->join_status === 'confirmed' ? 'Your registration is now successfully confirmed!'
+            $successMessage = $isToBeConfirmed ? 'Your registration is now successfully confirmed!'
                 : 'Your registration is now successfully canceled.';
 
-            $joinEvent = JoinEvent::where('id', $request->join_event_id)->select(['id', 'join_status', 'payment_status'])->firstOrFail();
-
+            $joinEvent = JoinEvent::findOrFail( $request->join_event_id);
+            $team = Team::findOrFail( $joinEvent->team_id);
+            $event = EventDetail::findOrFail($joinEvent->event_details_id);
+            // $isPermitted = true;
             $isPermitted = $joinEvent->payment_status === 'completed' &&
                 ($request->join_status === 'confirmed' || $request->join_status === 'canceled');
 
             if ($isPermitted) {
                 $joinEvent->join_status = $request->join_status;
                 $joinEvent->save();
+
+                if ($isToBeConfirmed ) {
+                    $team->confirmTeamRegistration($event);
+                } else {
+                    $team->cancelTeamRegistration($event);
+                }
                 // dd($joinEvent, $request);
             } else {
                 return back()->with('errorMessage', 'Error operation not permitted.');

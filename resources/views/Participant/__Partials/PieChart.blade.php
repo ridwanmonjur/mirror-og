@@ -98,17 +98,17 @@
                 <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
                 <input type="hidden" name="join_status" value="confirmed">
                 <button type="button" 
-                    onclick="submitConfirmCancelForm('Confirm registering this event?')" 
+                    onclick="submitConfirmCancelForm('Confirm registering this event?', 'confirmRegistration')" 
                     class="mt-2 btn bg-success py-2 rounded-pill">
                     Confirm Registration
                 </button>
             </form>
         @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "confirmed")
-            <form action="{{route('participant.confirmOrCancel.action')}}" id="confirmRegistration" method="POST">
+            <form action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
                 @csrf
                 <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
                 <input type="hidden" name="join_status" value="canceled">
-                <button type="button" style="background-color: red;" onclick="submitConfirmCancelForm('Confirm canceling this event?')" class="mt-2 btn py-2 text-light rounded-pill">
+                <button type="button" style="background-color: red;" onclick="submitConfirmCancelForm('Confirm canceling this event?', 'cancelRegistration')" class="mt-2 btn py-2 text-light rounded-pill">
                     Cancel Registration
                 </button> 
                 <br>
@@ -206,7 +206,7 @@
 <script>
      
 
-      function validateAmount(event) {
+    function validateAmount(event) {
         event.preventDefault();
         let minimumAmount = 5;
         const form = event.target;

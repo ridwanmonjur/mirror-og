@@ -6,10 +6,8 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use ReflectionObject;
-use ReflectionProperty;
 
-class JoinEventConfirmed
+class JoinEventSignuped
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -33,25 +31,6 @@ class JoinEventConfirmed
         $this->memberNotification ??= $parameters['memberNotification'];
         $this->organizerNotification ??= $parameters['organizerNotification'];
         $this->allEventLogs ??= $parameters['allEventLogs'];
-    }
-
-    public function __toString()
-    {
-        $reflection = new ReflectionObject($this);
-        $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE);
-
-        $string = static::class.' {';
-        foreach ($properties as $property) {
-            $property->setAccessible(true);
-            $propertyName = $property->getName();
-            $propertyValue = $property->getValue($this);
-            $stringValue = is_object($propertyValue) ? $propertyValue->__toString() : var_export($propertyValue, true);
-            $string .= "{$propertyName}: {$stringValue}, ";
-        }
-
-        $string = rtrim($string, ', ').'}';
-
-        return $string;
     }
 
     /**
