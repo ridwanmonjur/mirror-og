@@ -158,6 +158,28 @@
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
         try {
+            const { complete, value: addressValue } = await addressElement.getValue();
+
+             if (!complete) {
+                    toastError("Please fill the complete address");
+                return;
+            }
+
+
+            const billingDetails = {
+                address: {
+                    city: addressValue.city,
+                    country: addressValue.country,
+                    line1: addressValue.line1,
+                    line2: addressValue.line2,
+                    postal_code: addressValue.postal_code,
+                    state: addressValue.state
+                },
+                name: addressValue.name,
+                email: addressValue.email,
+                phone: addressValue.phone
+            };
+
             const {
                 error
             } = await stripe.confirmPayment({
@@ -165,9 +187,7 @@
                 confirmParams: {
                     return_url: "{{ route('organizer.checkout.transition', ['id' => $event->id]) }}",
                     payment_method_data: {
-                        billing_details: {
-                            email: "{{ $user->email }}",
-                        }
+                        billing_details: billingDetails
                     }
                 }
             });

@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Events\JoinEventConfirmed;
+use App\Events\JoinEventSignuped;
 use App\Events\TeamMemberCreated;
 use App\Events\TeamMemberUpdated;
-use App\Listeners\JoinEventConfirmation;
+use App\Listeners\JoinEventSignupListener;
 use App\Listeners\TeamMemberCreatedListener;
 use App\Listeners\TeamMemberUpdatedListener;
 use Illuminate\Pagination\Paginator;
@@ -44,8 +44,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Event::listen(
-            JoinEventConfirmed::class,
-            JoinEventConfirmation::class,
+            JoinEventSignuped::class,
+            JoinEventSignupListener::class,
         );
 
         Event::listen(

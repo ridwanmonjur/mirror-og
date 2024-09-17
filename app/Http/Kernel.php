@@ -2,7 +2,7 @@
 
 namespace App\Http;
 
-use App\Console\Commands\CheckEvents;
+// use App\Console\Commands\CheckEvents;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -76,12 +76,12 @@ class Kernel extends HttpKernel
         'prevent-back-history' => \App\Http\Middleware\PreventBackHistory::class,
     ];
 
-    protected $commands = [
-        CheckEvents::class,
-    ];
+    // protected $commands = [
+    //     CheckEvents::class,
+    // ];
 
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('events:check')->daily();
+        // $schedule->command('events:check')->daily();
     }
 }

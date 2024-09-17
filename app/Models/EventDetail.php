@@ -45,6 +45,11 @@ class EventDetail extends Model
         return $this->belongsTo(EventTier::class, 'event_tier_id');
     }
 
+    public function eventTier(): BelongsTo
+    {
+        return $this->belongsTo(EventTier::class, 'event_tier_id');
+    }
+
     public function type(): BelongsTo
     {
         return $this->belongsTo(EventType::class, 'event_type_id');
@@ -160,6 +165,27 @@ class EventDetail extends Model
         return 'UPCOMING';
     }
 
+    public function getRegistrationStatus(): string
+    {
+        $signupDates = DB::table('event_signup_dates')
+            ->where('event_id', $this->id)
+            ->first();
+
+        if (!$signupDates) {
+            return 'closed';
+        }
+
+        $now = Carbon::now();
+
+        if ($now->between($signupDates->signup_open, $signupDates->normal_signup_start_advanced_close)) {
+            return 'early';
+        } elseif ($now->between($signupDates->normal_signup_start_advanced_close, $signupDates->signup_close)) {
+            return 'normal';
+        } else {
+            return 'closed';
+        }
+    }
+
     public function fixTimeToRemoveSeconds(string| null $time): string| null
     {
         if ($time === null) {
@@ -187,9 +213,14 @@ class EventDetail extends Model
         return config('constants.mappingEventState');
     }
 
-    public function eventTier(): BelongsTo
+    public function getRegistrationState(string| null $date, string| null $time): ?string
     {
-        return $this->belongsTo(EventTier::class, 'event_tier_id');
+        if ($date === null || $time === null) {
+            return null;
+        }
+
+        return Carbon::createFromFormat('Y-m-d H:i', $date.' '.$this->fixTimeToRemoveSeconds($time))
+            ->utc();
     }
 
     public static function generateOrganizerPartialQueryForFilter(Request $request)

@@ -33,8 +33,10 @@ return new class extends Migration
             $table->string('result')->nullable();
             $table->timestamps();
 
-            $table->foreign('team1_id')->references('id')->on('teams');
-            $table->foreign('team2_id')->references('id')->on('teams');
+            $table->foreign('team1_id')->references('id')->on('teams')
+                ->onDelete('cascade');
+            $table->foreign('team2_id')->references('id')->on('teams')
+                ->onDelete('cascade');
             $table->foreign('event_details_id')->references('id')
                 ->on('event_details')->onDelete('cascade');
         });

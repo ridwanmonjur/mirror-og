@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('roster_members', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('join_events_id')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('join_events_id');
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->timestamps();
 

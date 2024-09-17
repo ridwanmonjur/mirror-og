@@ -1,3 +1,4 @@
+
 <script src="https://js.stripe.com/v3/"></script>
 <script src="{{ asset('/assets/js/organizer/event_creation/event_create.js') }}"></script>
 <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
@@ -25,7 +26,8 @@
         parent.classList.toggle("squared-box");
         element.classList.toggle("rounded-box");
     }
-    let paymentProcessor = new PaymentProcessor({{ $amount }});
+    let amount = "{{ $amount }}";
+    let paymentProcessor = new PaymentProcessor( amount );
 
     function onChoosePayment(event, type, element) {
         let target = event.currentTarget;
@@ -160,6 +162,28 @@
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
         try {
+            const addressElement = elements.getElement('address');
+            const { complete, value: addressValue } = await addressElement.getValue();
+
+             if (!complete) {
+                    toastError("Please fill the complete address");
+                return;
+            }
+
+            const billingDetails = {
+                address: {
+                    city: addressValue.city,
+                    country: addressValue.country,
+                    line1: addressValue.line1,
+                    line2: addressValue.line2,
+                    postal_code: addressValue.postal_code,
+                    state: addressValue.state
+                },
+                name: addressValue.name,
+                email: addressValue.email,
+                phone: addressValue.phone
+            };
+
             const {
                 error
             } = await stripe.confirmPayment({
@@ -167,9 +191,7 @@
                 confirmParams: {
                     return_url: "{{ route('participant.checkout.transition') }}",
                     payment_method_data: {
-                        billing_details: {
-                            email: "{{ $user->email }}",
-                        }
+                        billing_details: billingDetails
                     }
                 }
             });
@@ -215,7 +237,7 @@
         mode: 'billing',
         blockPoBox: true,
         fields: {
-            phone: 'always',
+            phone: 'never',
         },
     };
 

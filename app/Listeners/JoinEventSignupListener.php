@@ -2,13 +2,13 @@
 
 namespace App\Listeners;
 
-use App\Events\JoinEventConfirmed;
+use App\Events\JoinEventSignuped;
 use App\Models\ActivityLogs;
 use App\Notifications\EventJoinNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 
-class JoinEventConfirmation implements ShouldQueue
+class JoinEventSignupListener implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -20,10 +20,10 @@ class JoinEventConfirmation implements ShouldQueue
     /**
      * Handle the event.
      */
-    public function handle(JoinEventConfirmed $event): void
+    public function handle(JoinEventSignuped $event): void
     {
         ActivityLogs::insert($event->allEventLogs);
-        // Notification::send($event->memberList, new EventJoinNotification($event->memberNotification));
+        Notification::send($event->memberList, new EventJoinNotification($event->memberNotification));
         Notification::send($event->organizerList, new EventJoinNotification($event->organizerNotification));
     }
 

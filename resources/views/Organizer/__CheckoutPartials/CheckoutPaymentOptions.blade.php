@@ -1,22 +1,21 @@
-<div class="row px-5 my-2" id="payment-discount-view">
+<div class="row px-5 mb-2" id="payment-discount-view">
     <div class="d-none d-lg-block px-3">
     </div>
     <div class="col-12 col-xl-8 px-3">
-        <h4>Payment Method</h4>
+        <h5 class="my-0">Payment Method</h5>
         @if (session('errorCheckout'))
             <div class="text-red my-2">
                 {{ session('errorCheckout') }}
             </div>
         @endif
-        <br>
+        {{-- <br> --}}
 
         <div id="payment-element-view">
             {{-- <div class="text-center" onclick="changeScreen();"> Close </div> --}}
             <div id="cardLogoId" class="payment-element-children-view">
                 <form method="POST" onsubmit="finalizeStripeCardPayment(event);">
                     <input type="hidden" name="user_id" value="{{ $event->userId }}" />
-                    <small style="color: gray;">Please don't reload or leave this page until you see a success/ failed notification.</small>
-                    <br><br>
+                    <br>
                     <div id="spinner-element" class="d-flex justify-content-center mt-5">
                         <div class="spinner-border text-primary" role="status">
                             <br><br>
@@ -31,10 +30,12 @@
                         <div class="col-12 col-lg-6">
                             <div id="card-element" class="my-2"> </div>
                             <div class="d-none d-lg-block">
-                                <br><br><br><br>
+
+                                <br><br><br><br> <br><br>
                             </div>
                             <div class="d-flex justify-content-center my-3 d-none" id="submit-button-element">
                                 <button class="oceans-gaming-default-button" type="submit"> Submit </button>
+                               
                             </div>
                         </div>
                     </div>
