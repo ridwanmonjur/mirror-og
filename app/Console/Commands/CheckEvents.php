@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\EventDetail;
 use App\Models\Task;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -30,31 +31,45 @@ class CheckEvents extends Command
      */
     public function handle()
     {
-        $twoMonthsAgo = Carbon::now()->subMonths(2);
-        Task::where('created_at', '<', $twoMonthsAgo)->delete();
-        // TODO delete parent table too
-        DB::table('monitored_scheduled_task_log_items')->where('created_at', '<', $twoMonthsAgo)->delete();
-
         $today = Carbon::now();
-        $twoWeeksAgo = $today->subWeeks(2);
-        $todayDate = $today->toDateString();
-        $todayTime = $today->toTimeString();
+        $taskName = 'events:check';
+        $id = $this->logEntry($today, $taskName);
+        try{
+            $twoMonthsAgo = Carbon::now()->subMonths(2);
 
-        $launchEvents = EventDetail::whereDate('launch_date', $todayDate)
-            ->whereTime('launch_time', '<=', $todayDate)
-            ->select(['id'])
-            ->get();
+            DB::table('monitored_scheduled_tasks')->where('last_started_at', '<', $twoMonthsAgo)->delete();
+            Task::where('created_at', '<', $twoMonthsAgo)->delete();
+            DB::table(table: 'monitored_scheduled_task_log_items')->where('created_at', '<', $twoMonthsAgo)->delete();
+            
+            $id = $this->logEntry($today, $taskName);
 
-        $endEvents = EventDetail::whereDate('end_date', $todayDate)
-            ->select(['id'])
-            ->get();
+            $twoWeeksAgo = $today->subWeeks(2);
+            $todayDate = $today->toDateString();
+            $todayTime = $today->toTimeString();
 
-        $registrationOverEvents = EventDetail::where('launch_date', '<=', $twoWeeksAgo)
-            ->get();
+            $launchEvents = EventDetail::whereDate('launch_date', $todayDate)
+                ->whereTime('launch_time', '<=', $todayDate)
+                ->select(['id', 'launch_time', 'launch_time'])
+                ->get();
 
-        $this->createTask($launchEvents, 'launch', $todayTime, $todayDate);
-        $this->createTask($endEvents, 'ended', $todayTime, $todayDate);
-        $this->createTask($registrationOverEvents, 'registration_over', $todayTime, $todayDate);
+            $endEvents = EventDetail::whereDate('end_date', $todayDate)
+                ->select(['id', 'end_date'])
+                ->get();
+
+            $registrationOverEvents = EventDetail::where('launch_date', '<=', $twoWeeksAgo)
+                ->select(['id', 'launch_date'])
+                ->get();
+
+            $this->createTask($launchEvents, 'launch', $todayTime, $todayDate);
+            $this->createTask($endEvents, 'ended', $todayTime, $todayDate);
+            $this->createTask($registrationOverEvents, 'registration_over', $todayTime, $todayDate);
+                
+            $now = Carbon::now();
+            $this->logExit($id, $now, $taskName);
+        } catch (Exception $e) {
+            $this->logError($id, $e->getMessage());
+        }
+
     }
 
     private function createTask($eventList, $taskName, $actionTime, $actionDate)
@@ -71,5 +86,56 @@ class CheckEvents extends Command
         }
 
         Task::insert($tasksData);
+    }
+
+    private function logEntry($today, $taskName) {
+        $id = DB::transaction(function () use ($taskName, $today) {
+            $record = DB::table('monitored_scheduled_tasks')
+                ->where('name', $taskName)
+                ->where('type', 'Daily cron check')
+                ->whereDate('created_at', $today->toDateString())
+                ->first();
+        
+            if ($record) {
+                DB::table('monitored_scheduled_tasks')
+                    ->where('id', $record->id)
+                    ->update([
+                        'last_started_at' => $today,
+                        'updated_at' => $today,
+                    ]);
+                return $record->id;
+            } else {
+                return DB::table('monitored_scheduled_tasks')->insertGetId([
+                    'name' => $taskName,
+                    'type' => 'Daily cron check',
+                    'created_at' => $today,
+                    'cron_expression' => '0 0 * * *',
+                    'last_started_at' => $today,
+                    'updated_at' => $today,
+                ]);
+            }
+        });
+        return $id;
+    }
+
+    private function logExit($id, $now, $task) {
+        DB::table('monitored_scheduled_tasks')
+            ->where('id', $id)
+            ->update(
+                [
+                    'last_started_at' => $now,
+                    'updated_at' => $now,
+                ]
+            );
+    }
+
+    private function logError ($id, $errorMsg) {
+        DB::table('monitored_scheduled_task_log_items')->insert([
+            'monitored_scheduled_task_id' => $id, 
+            'type' => "Error", 
+            'logs' => $errorMsg, 
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

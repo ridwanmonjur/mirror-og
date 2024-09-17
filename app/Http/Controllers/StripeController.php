@@ -7,6 +7,7 @@ use App\Models\PaymentIntent;
 use App\Models\StripePayment;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StripeController extends Controller
 {
@@ -20,6 +21,7 @@ class StripeController extends Controller
     public function stripeCardIntentCreate(Request $request)
     {
         try {
+            DB::beginTransaction();
             $paymentIntentStatus = 'created';
             $customerStatus = 'created';
             $willCreateNewPaymentIntent = true;
@@ -70,13 +72,14 @@ class StripeController extends Controller
                     'status' => $paymentIntentStripe->status,
                 ];
         
-                $paymentIntentDB = PaymentIntent::updateOrCreate($paymentIntentDBBody);
+                $paymentIntentDB = PaymentIntent::insert($paymentIntentDBBody);
             } else {
                 $paymentIntentStatus = 'retrieved';
 
                 $this->stripeClient->updatePaymentIntent($paymentIntentStripe->id, $paymentIntentStripeBody);
 
                 $paymentIntentDB->update([
+                    'customer_id' => $customer->id,
                     'status' => $paymentIntentStripe->status,
                     'amount' => $request->paymentAmount,
                 ]);
@@ -99,8 +102,11 @@ class StripeController extends Controller
                 $user->save();
             }
 
+            DB::commit();
+
             return response()->json($responseData);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status' => 'error',
                 'retrieved' => $isEmptyStripeCustomerId,
