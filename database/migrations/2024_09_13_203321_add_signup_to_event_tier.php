@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('event_signup_dates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId(column: 'event_id')->constrained('event_details');
+            $table->foreignId( 'event_id')->constrained('event_details');
             $table->dateTime('signup_open');
             $table->dateTime('normal_signup_start_advanced_close');
             $table->dateTime('signup_close');
@@ -21,7 +21,7 @@ return new class extends Migration
         });
         Schema::create('event_tier_type_signup_dates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId(column: 'tier_id')->constrained('event_tier');
+            $table->foreignId('tier_id')->constrained('event_tier');
             $table->foreignId('type_id')->constrained('event_type');
             $table->integer('signup_open');
             $table->integer('signup_close');

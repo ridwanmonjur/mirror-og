@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaymentIntent;
 use App\Models\StripePayment;
 use Exception;
 use Illuminate\Http\Request;
@@ -19,45 +20,80 @@ class StripeController extends Controller
     public function stripeCardIntentCreate(Request $request)
     {
         try {
-            $customer = null;
-            $user = $request->attributes->get('user');
-            $isEmptyStripeCustomerId = empty($request->stripe_customer_id);
+            $paymentIntentStatus = 'created';
+            $customerStatus = 'created';
+            $willCreateNewPaymentIntent = true;
+            $user = auth()->user()?->fresh();
+            $isEmptyStripeCustomerId = empty($user->stripe_customer_id);
             if ($isEmptyStripeCustomerId) {
                 $customer = $this->stripeClient->createStripeCustomer($request->name, $request->email);
             } else {
-                $customer = $this->stripeClient->retrieveStripeCustomer($request->stripe_customer_id);
+                $customerStatus = 'retrieved';
+                $customer = $this->stripeClient->retrieveStripeCustomer($user->stripe_customer_id);
             }
+
+            $paymentIntentDB = PaymentIntent::where([
+                'user_id' => $user->id,
+                'status' => 'requires_payment_method'
+            ])->first();
+
+            $paymentIntentStripe = $paymentIntentDB?->payment_intent_id ?
+                $this->stripeClient->retrieveStripePaymentByPaymentId($paymentIntentDB?->payment_intent_id)
+                : null;
+            
+            $willCreateNewPaymentIntent = ! ($paymentIntentDB && $paymentIntentStripe 
+                && $paymentIntentStripe?->status === 'requires_payment_method');
 
             $routeName = $request->route()->getName();
+            $paymentIntentStripeBody = [
+                'amount' => $request->paymentAmount * 100,
+                'metadata' => $request->metadata,
+            ];
+
             if ($routeName === "stripe.stripeCardIntentCreateIntentWithHold") {
-                $paymentIntent = $this->stripeClient->createPaymentIntent([
-                    'customer' => $customer->id,
-                    'amount' => $request->paymentAmount * 100,
-                    'capture_method' => 'manual',
-                    // just 2 lines of code
-                    // 'payment_method_options' => [
-                    //     'card' => ['request_extended_authorization' => 'if_available'],
-                    // ],
-                    'metadata' => $request->metadata,
-                ]);
+                $paymentIntentStripeBody['capture_method'] = 'manual' ;
             } else {
-                $paymentIntent = $this->stripeClient->createPaymentIntent([
-                    'customer' => $customer->id,
-                    'amount' => $request->paymentAmount * 100,
-                    'payment_method_types' => ['card'],
-                    'metadata' => $request->metadata,
+                $paymentIntentStripeBody['capture_method'] = 'automatic_async' ;
+            }
+            
+            if ($willCreateNewPaymentIntent) {
+                $paymentIntentStripeBody['customer'] = $customer->id;
+                $paymentIntentDB?->delete();
+
+                $paymentIntentStripe = $this->stripeClient->createPaymentIntent($paymentIntentStripeBody);
+                
+                $paymentIntentDBBody = [
+                    'user_id' => $user->id,
+                    'customer_id' => $customer->id,
+                    'payment_intent_id' => $paymentIntentStripe->id,
+                    'amount' => $request->paymentAmount,
+                    'status' => $paymentIntentStripe->status,
+                ];
+        
+                $paymentIntentDB = PaymentIntent::updateOrCreate($paymentIntentDBBody);
+            } else {
+                $paymentIntentStatus = 'retrieved';
+
+                $this->stripeClient->updatePaymentIntent($paymentIntentStripe->id, $paymentIntentStripeBody);
+
+                $paymentIntentDB->update([
+                    'status' => $paymentIntentStripe->status,
+                    'amount' => $request->paymentAmount,
                 ]);
             }
-
-            
 
             $responseData = [
                 'status' => 'success',
                 'message' => 'Payment intent creation successful',
                 'data' => [
-                    'client_secret' => $paymentIntent->client_secret,
+                    'client_secret' => $paymentIntentStripe->client_secret,
+                    'customer_status' => $customerStatus,
+                    'payment_status' => $paymentIntentStatus,
+                    'customer'=> $customer,
+                    'payment_intent' => $paymentIntentStripe
                 ],
             ];
+
             if ($isEmptyStripeCustomerId) { 
                 $user->stripe_customer_id = $customer->id;
                 $user->save();
@@ -69,7 +105,13 @@ class StripeController extends Controller
                 'status' => 'error',
                 'retrieved' => $isEmptyStripeCustomerId,
                 'message' => $e->getMessage(),
-                'data' => null,
+                'data' => [
+                    'client_secret' => null,
+                    'customer_status' => $customerStatus,
+                    'payment_status' => $paymentIntentStatus,
+                    'customer'=> $customer,
+                    'payment_intent' => $paymentIntentStripe
+                ],
             ]);
         }
     }

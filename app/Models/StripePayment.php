@@ -74,6 +74,17 @@ class StripePayment
         return null;
     }
 
+    public function updatePaymentIntent(string $id, array $array): PaymentIntent
+    {
+        return $this->stripeClient->paymentIntents->update($id, $array);
+    }
+
+    public function updateStripeCustomer(string $id, array $values): ?Customer
+    {
+        return $this->stripeClient->customers->update($id, $values);
+    }
+
+
     public function finalizeStripeInvoice(string| int | null $invoiceId): ?Invoice
     {
         if ($invoiceId) {

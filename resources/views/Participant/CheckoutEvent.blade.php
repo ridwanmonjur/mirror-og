@@ -1,3 +1,6 @@
+{{-- @php
+    dd($user);
+@endphp --}}
 <!DOCTYPE html>
 <html lang="en">
 

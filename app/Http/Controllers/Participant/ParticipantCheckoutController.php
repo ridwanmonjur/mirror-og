@@ -86,6 +86,7 @@ class ParticipantCheckoutController extends Controller
             ) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
+                // $this->stripeClient->updateStripeCustomer($paymentIntent->customer, )
                 if ($paymentIntent['amount'] > 0 &&
                     (
                         $paymentIntent['amount_capturable'] === $paymentIntent['amount']
