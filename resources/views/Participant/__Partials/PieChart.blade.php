@@ -4,7 +4,7 @@
     $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
     $individualContributionTotal = 0;
     $pedning = $total - $exisitngSum;
-    $percentReal = ($exisitngSum * 100) / $total;
+    $percentReal = round(($exisitngSum * 100) / $total, 2);
     $percent = floor($percentReal);
     $myMemberId = null;
 

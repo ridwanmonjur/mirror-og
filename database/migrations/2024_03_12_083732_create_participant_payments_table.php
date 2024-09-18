@@ -24,7 +24,7 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->string('payment_id');
+            $table->string('payment_id')->nullable();
             $table->string('payment_request_id')->nullable;
             $table->string('payment_status');
         });

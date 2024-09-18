@@ -112,7 +112,7 @@
 
     async function initializeStripeCardPayment() {
         try {
-            const response = await fetch("{{ route('stripe.stripeCardIntentCreateIntentWithHold') }}", {
+            const response = await fetch("{{ route('stripe.stripeCardIntentCreate') }}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -123,10 +123,13 @@
                     email: "{{ $user->email }}",
                     name: "{{ $user->name }}",
                     stripe_customer_id: "{{ $user->stripe_customer_id }}",
+                    role: "PARTICIPANT",
                     metadata : {
                         joinEventId: "{{ $joinEventId }}",
                         memberId: "{{ $memberId }}",
-                        teamId: "{{ $teamId }}"
+                        teamId: "{{ $teamId }}",
+                        eventId: "{{ $event->id }}",
+                        eventType: "{{ $event->getRegistrationStatus() }}"
                     }
                 })
             });
