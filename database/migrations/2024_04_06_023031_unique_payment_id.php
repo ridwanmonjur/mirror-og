@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('all_payment_transactions', function (Blueprint $table) {
+        Schema::table('payment_transactions', function (Blueprint $table) {
             $table->dropColumn(['discount_amount']);
             $table->dropColumn('updated_at');
         });

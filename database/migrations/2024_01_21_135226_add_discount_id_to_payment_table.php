@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreign(columns: 'system_discount_id')->references('id')->on('organizer_create_event_discounts');
             $table->foreign(columns: 'user_discount_id')->references('id')->on('user_discounts');
 
+
             $table->double('payment_amount')->nullable();
             $table->double('discount_amount')->nullable();
         });
