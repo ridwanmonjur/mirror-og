@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('payment_transactions', function (Blueprint $table) {
+        Schema::table('all_payment_transactions', function (Blueprint $table) {
             $table->dropColumn(['discount_amount']);
             $table->dropColumn('updated_at');
         });
@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('payment_transactions', function (Blueprint $table) {
+        Schema::table('all_payment_transactions', function (Blueprint $table) {
             $table->double('discount_amount')->nullable();
             $table->timestamp('updated_at')->useCurrent();
         });
