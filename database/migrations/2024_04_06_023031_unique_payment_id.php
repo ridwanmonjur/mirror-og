@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('all_payment_transactions', function (Blueprint $table) {
+        Schema::table('payment_transactions', function (Blueprint $table) {
             $table->double('discount_amount')->nullable();
             $table->timestamp('updated_at')->useCurrent();
         });

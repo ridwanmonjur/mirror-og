@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('all_payment_transactions', function (Blueprint $table) {
-            $table->unsignedBigInteger('discount_id')->nullable();
-            $table->foreign('discount_id')->references('id')->on('organizer_create_event_discounts');
+        Schema::table('payment_transactions', function (Blueprint $table) {
+            $table->unsignedBigInteger(column: 'system_discount_id')->nullable();
+            $table->unsignedBigInteger(column: 'user_discount_id')->nullable();
+            
+            $table->foreign(columns: 'system_discount_id')->references('id')->on('organizer_create_event_discounts');
+            $table->foreign(columns: 'user_discount_id')->references('id')->on('user_discounts');
+
             $table->double('payment_amount')->nullable();
             $table->double('discount_amount')->nullable();
         });
@@ -24,7 +28,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('all_payment_transactions', function (Blueprint $table) {
+        Schema::table('payment_transactions', function (Blueprint $table) {
             //
         });
     }

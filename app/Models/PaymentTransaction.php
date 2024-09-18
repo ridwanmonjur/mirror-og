@@ -10,7 +10,7 @@ class PaymentTransaction extends Model
 
     protected $fillable = ['payment_id', 'payment_status', 'payment_amount'];
 
-    protected $table = 'all_payment_transactions';
+    protected $table = 'payment_transactions';
 
     public static function createTransaction(
         string| int $paymentId,
