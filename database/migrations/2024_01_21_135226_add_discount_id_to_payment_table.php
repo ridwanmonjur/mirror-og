@@ -3,34 +3,49 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        Schema::table('payment_transactions', function (Blueprint $table) {
-            $table->unsignedBigInteger(column: 'system_discount_id')->nullable();
-            $table->unsignedBigInteger(column: 'user_discount_id')->nullable();
+        if (Schema::hasTable('payment_transactions') || Schema::hasTable('all_payment_transactions')) {
+            $tableName = Schema::hasTable('payment_transactions') ? 'payment_transactions' : 'all_payment_transactions';
             
-            $table->foreign(columns: 'system_discount_id')->references('id')->on('organizer_create_event_discounts');
-            $table->foreign(columns: 'user_discount_id')->references('id')->on('user_discounts');
-
-
-            $table->double('payment_amount')->nullable();
-            $table->double('discount_amount')->nullable();
-        });
+            Schema::rename($tableName, 'all_transaction_details');
+            
+            Schema::table('all_transaction_details', function (Blueprint $table) {
+                if (Schema::hasColumn('all_transaction_details', 'payment_request_id')) {
+                    $table->dropColumn('payment_request_id');
+                }
+                
+                if (Schema::hasColumn('all_transaction_details', 'discount_id') && !Schema::hasColumn('all_transaction_details', 'system_discount_id')) {
+                    $table->renameColumn('discount_id', 'system_discount_id');
+                }
+                
+                if (!Schema::hasColumn('all_transaction_details', 'user_discount_id')) {
+                    $table->unsignedBigInteger('user_discount_id')->nullable();
+                    $table->foreign('user_discount_id')->references('id')->on('user_discounts');
+                }
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::table('payment_transactions', function (Blueprint $table) {
-            //
-        });
+        if (Schema::hasTable('all_transaction_details')) {
+            Schema::table('all_transaction_details', function (Blueprint $table) {
+                if (Schema::hasColumn('all_transaction_details', 'user_discount_id')) {
+                    $table->dropForeign(['user_discount_id']);
+                    $table->dropColumn('user_discount_id');
+                }
+                
+                if (Schema::hasColumn('all_transaction_details', 'system_discount_id')) {
+                    $table->renameColumn('system_discount_id', 'discount_id');
+                }
+                
+                $table->unsignedBigInteger('payment_request_id')->nullable();
+            });
+            
+            Schema::rename('all_transaction_details', 'payment_transactions');
+        }
     }
 };
