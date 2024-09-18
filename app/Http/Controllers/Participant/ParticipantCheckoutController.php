@@ -94,9 +94,14 @@ class ParticipantCheckoutController extends Controller
                         $paymentIntent['amount_received'] === $paymentIntent['amount']
                     )
                 ) {
+
+                    $isManualCaptureMethod = isset($paymentIntent['metadata'])
+                    && isset($paymentIntent['metadata']['eventType'])
+                    && $paymentIntent['metadata']['eventType'] === "normal";
+
                     $transaction = PaymentTransaction::createTransaction(
                         $intentId,
-                        'SUCCESS',
+                        $isManualCaptureMethod ? 'SUCCESS' : 'TO_CAPTURE',
                         $paymentIntent['amount'] / 100
                     );
 

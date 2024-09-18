@@ -117,6 +117,7 @@
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
                 body: JSON.stringify({
+                    role: "ORGANIZER",
                     paymentAmount: paymentProcessor.getPaymentAmount(),
                     email: "{{ $user->email }}",
                     name: "{{ $user->name }}",

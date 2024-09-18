@@ -25,6 +25,14 @@ class StripeController extends Controller
             $paymentIntentStatus = 'created';
             $customerStatus = 'created';
             $willCreateNewPaymentIntent = true;
+            $isParticipant = $request->role === "PARTICIPANT";
+            $isManualCaptureMethod = false;
+            if ($isParticipant) {
+                $isManualCaptureMethod = isset($request['metadata'])
+                    && isset($request['metadata']['eventType'])
+                    && $request['metadata']['eventType'] === "normal";
+            }
+
             $user = auth()->user()?->fresh();
             $isEmptyStripeCustomerId = empty($user->stripe_customer_id);
             if ($isEmptyStripeCustomerId) {
@@ -52,7 +60,7 @@ class StripeController extends Controller
                 'metadata' => $request->metadata,
             ];
 
-            if ($routeName === "stripe.stripeCardIntentCreateIntentWithHold") {
+            if ($isManualCaptureMethod) {
                 $paymentIntentStripeBody['capture_method'] = 'manual' ;
             } else {
                 $paymentIntentStripeBody['capture_method'] = 'automatic_async' ;
