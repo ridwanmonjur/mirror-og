@@ -21,4 +21,9 @@ class ParticipantPayment extends Model
     {
         return $this->belongsTo(TeamMember::class);
     }
+
+    public function transaction(): BelongsTo
+    {
+        return $this->belongsTo(PaymentTransaction::class, 'payment_id', 'id');
+    }
 }

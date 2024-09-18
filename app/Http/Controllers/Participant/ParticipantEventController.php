@@ -9,6 +9,7 @@ use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\Like;
 use App\Models\OrganizerFollow;
+use App\Models\PaymentTransaction;
 use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\TeamMember;

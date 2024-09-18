@@ -2,7 +2,7 @@
 
 namespace App\Http;
 
-// use App\Console\Commands\CheckEvents;
+// use App\Console\Commands\CreateTasks;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -77,7 +77,7 @@ class Kernel extends HttpKernel
     ];
 
     // protected $commands = [
-    //     CheckEvents::class,
+    //     CreateTasks::class,
     // ];
 
     protected function schedule(Schedule $schedule)
