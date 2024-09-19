@@ -7,10 +7,10 @@ return new class extends Migration
 {
     public function up()
     {
-        if (Schema::hasTable('payment_transactions') || Schema::hasTable('all_payment_transactions')) {
-            $tableName = Schema::hasTable('payment_transactions') ? 'payment_transactions' : 'all_payment_transactions';
+        if (Schema::hasTable('payment_transactions') || Schema::hasTable('all_payment_details')) {
+            $tableName = Schema::hasTable('payment_transactions') ? 'payment_transactions' : 'all_payment_details';
             
-            Schema::rename($tableName, 'all_transaction_details');
+            Schema::rename($tableName, 'all_payment_transactions');
             
             Schema::table('all_transaction_details', function (Blueprint $table) {
                 if (Schema::hasColumn('all_transaction_details', 'payment_request_id')) {

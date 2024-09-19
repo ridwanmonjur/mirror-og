@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -22,7 +23,7 @@ return new class extends Migration
             $table->double('coupon_amount')->nullable();
             $table->double('released_amount')->nullable();
             if (Schema::hasColumn('all_payment_transactions', 'user_discount_id')) {
-                $table->dropForeign(['user_discount_id']);
+                DB::statement('ALTER TABLE all_payment_transactions DROP FOREIGN KEY IF EXISTS `all_payment_transactions_user_discount_id_foreign`');
                 $table->dropColumn('user_discount_id');
             }
         });
