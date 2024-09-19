@@ -159,6 +159,8 @@
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
         try {
+            let addressElement = elements.getElement('address');
+
             const { complete, value: addressValue } = await addressElement.getValue();
 
              if (!complete) {

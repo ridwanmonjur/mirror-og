@@ -2,12 +2,15 @@
 
 namespace App\Providers;
 
+use App\Console\Commands\RespondTasks;
 use App\Events\JoinEventSignuped;
 use App\Events\TeamMemberCreated;
 use App\Events\TeamMemberUpdated;
 use App\Listeners\JoinEventSignupListener;
 use App\Listeners\TeamMemberCreatedListener;
 use App\Listeners\TeamMemberUpdatedListener;
+use App\Models\StripePayment;
+use App\Services\PaymentService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
@@ -18,12 +21,12 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    // public function register(): void
-    // {
-    //     $this->app->bind('path.public', function() {
-    //         return base_path('../public_html');
-    //      });
-    // }
+    public function register(): void
+    {
+        $this->app->bind(PaymentService::class, function ($app) {
+            return new PaymentService($app->make(StripePayment::class));
+        });
+    }
 
     /**
      * Bootstrap any application services.

@@ -2,7 +2,9 @@
 
 namespace App\Http;
 
-// use App\Console\Commands\CheckEvents;
+// use App\Console\Commands\CreateTasks;
+
+use App\Console\Commands\RespondTasks;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -76,12 +78,14 @@ class Kernel extends HttpKernel
         'prevent-back-history' => \App\Http\Middleware\PreventBackHistory::class,
     ];
 
-    // protected $commands = [
-    //     CheckEvents::class,
-    // ];
+    protected $commands = [
+        RespondTasks::class,
+    ];
 
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('events:check')->daily();
+        $schedule->command('tasks:create')->daily();
+        $schedule->command('tasks:respond')->everyThirtyMinutes();
+
     }
 }

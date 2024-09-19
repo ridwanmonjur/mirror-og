@@ -9,10 +9,10 @@ RENAME TO payment_transactions;
 -- FOREIGN KEY (child_id) REFERENCES parent_table(id)
 -- ON DELETE CASCADE;
 
--- ALTER TABLE participant_payments
--- ADD CONSTRAINT payment_transactions
--- FOREIGN KEY (payment_id) REFERENCES payment_transactions(id)
--- ON DELETE CASCADE;
+ALTER TABLE all_payment_transactions
+ADD CONSTRAINT fk_payment_transactions
+FOREIGN KEY (payment_id) REFERENCES payment_transactions(id)
+ON DELETE CASCADE;
 
 ALTER TABLE table_name
 DROP COLUMN payment_request_id;

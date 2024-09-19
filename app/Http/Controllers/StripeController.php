@@ -28,10 +28,15 @@ class StripeController extends Controller
             $isParticipant = $request->role === "PARTICIPANT";
             $isManualCaptureMethod = false;
             if ($isParticipant) {
+                $eventType = $request['metadata']['eventType'];
                 $isManualCaptureMethod = isset($request['metadata'])
                     && isset($request['metadata']['eventType'])
-                    && $request['metadata']['eventType'] === "normal";
+                    && $eventType === "normal";
             }
+
+            // if ($isParticipant && $eventType === "closed") {
+                // TODO THROW ERROR NOW'S TOO EARLY OR TOO LATE TO REGISTER
+            // } 
 
             $user = auth()->user()?->fresh();
             $isEmptyStripeCustomerId = empty($user->stripe_customer_id);
@@ -54,7 +59,6 @@ class StripeController extends Controller
             $willCreateNewPaymentIntent = ! ($paymentIntentDB && $paymentIntentStripe 
                 && $paymentIntentStripe?->status === 'requires_payment_method');
 
-            $routeName = $request->route()->getName();
             $paymentIntentStripeBody = [
                 'amount' => $request->paymentAmount * 100,
                 'metadata' => $request->metadata,

@@ -53,6 +53,11 @@ class JoinEvent extends Model
         return $this->hasMany(EventJoinResults::class, 'join_events_id', 'id');
     }
 
+    public function payments(): HasMany
+    {
+        return $this->hasMany(ParticipantPayment::class, 'join_events_id', 'id');
+    }
+
     public static function getJoinEventsForTeam(int|string $team_id): Builder
     {
         return self::where('team_id', $team_id)

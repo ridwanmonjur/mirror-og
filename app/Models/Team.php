@@ -503,8 +503,60 @@ class Team extends Model
         Notification::send($organizerList, new EventConfirmNotification($organizerNotification));
     }
 
-    public function cancelTeamRegistration($event)
+    public function cancelTeamRegistration(EventDetail $event, array $discountsByUserAndType, bool $isTeamCancelee = true)
     {
+        if ($isTeamCancelee) {
+            $data['subject'] = 'Team '.$this->teamName.' canceled registration for Event: '.$event->eventName;
+            $data['refundString'] = 'half of';
+            $data['cacnelOrgHtml'] = <<<HTML
+                <span>
+                    Team   
+                        <a href="/view/team/{$this->id}">
+                            <span class="notification-black">{$this->teamName}</span> 
+                        </a> has canceled registration for
+                        your
+                        <a href="/event/{$event->id}">
+                            <span class="notification-blue">{$event->eventName}</span>
+                        </a>.
+                </span>
+                HTML;
+            $data['cacnelMemeberHtml'] = <<<HTML
+                <span>
+                    Team   
+                        <a href="/view/team/{$this->id}">
+                            <span class="notification-black">{$this->teamName}</span> 
+                        </a> has canceled registration for
+                    <a href="/view/organizer/{$event->user->id}">
+                        <span class="notification-blue">{$event->user->name}'s</span>
+                    </a>
+                    <a href="/event/{$event->id}">
+                        <span class="notification-blue">{$event->eventName}</span>
+                    </a>.
+                </span>
+            HTML;
+        } else {
+            $data['subject'] = 'Organizer has '. 'canceled the Event: '.$event->eventName;
+            $data['refundString'] = '';
+            $data['cacnelOrgHtml'] = <<<HTML
+                <span>
+                    <span class="notification-black">You have canceled your </span>    
+                    <a href="/event/{$event->id}">
+                        <span class="notification-blue">{$event->eventName}</span>
+                    </a>.
+                </span>
+                HTML;
+            $data['cacnelMemeberHtml'] = <<<HTML
+                <span>
+                    Organizer   
+                    <a href="/view/organizer/{$event->user->id}">
+                        <span class="notification-black">{$event->user->name}</span> 
+                    </a> has canceled the event: <a href="/event/{$event->id}">
+                        <span class="notification-blue">{$event->eventName}</span>
+                    </a>.
+                </span>
+            HTML;
+        }
+
         $teamBannerUrl = 
             $this->teamBanner ? 
             Storage::path($this->teamBanner) : 
@@ -513,7 +565,7 @@ class Team extends Model
         $teamMembers = $this->members;
         $memberNotificationDefault = [
             'team' => ['id' => $this],
-            'subject' => 'Team '.$this->teamName.' canceling registration for Event: '.$event->eventName,
+            'subject' => $data['subject'],
             'links' => [
                 [
                     'name' => 'View Team',
@@ -529,7 +581,28 @@ class Team extends Model
        
         $memberList = $memberNotification = [];
         foreach ($teamMembers as $member) {
-            $memberList[] = $member->user;
+            $user = $member->user;
+            $memberList[] = $user;
+            $discount = $discountsByUserAndType[$member->user_id];
+            $discountText = '';
+
+            $issetReleasedAmount = isset($discount['released_amount']) && $discount['released_amount'] > 0;
+            $issetCouponedAmount = isset($discount['couponed_amount']) && $discount['couponed_amount'] > 0;    
+            if ($isTeamCancelee && ( $issetReleasedAmount || $issetCouponedAmount)) {
+                $dicountText = "You have been returned {$data['refundString']} of your contribution: ";
+                if ($issetReleasedAmount) {
+                    $dicountText .= "RM {$discount['released_amount']} in bank refunds" ;
+                }
+                
+                if ($issetReleasedAmount > 0 && $issetCouponedAmount) {
+                    $discountText .= " &";
+                }
+
+                if ($issetCouponedAmount) {
+                    $discountText .= " RM {$discount['couponed_amount']} in coupons.";
+                }
+            }
+
             $memberNotification['banner'] = $teamBannerUrl;
             $memberNotification['team'] = $memberNotificationDefault['team'];
             $memberNotification['subject'] = $memberNotificationDefault['subject'];
@@ -546,24 +619,16 @@ class Team extends Model
 
             $memberNotification['text'] = <<<HTML
                 <span class="notification-gray">
-                    Your team   
-                    <a href="/view/team/{$this->id}">
-                        <span class="notification-black">{$this->teamName}</span> 
-                    </a> has canceled registration for
-                    <a href="/view/organizer/{$event->user->id}">
-                        <span class="notification-blue">{$event->user->name}'s</span>
-                    </a>
-                    <a href="/event/{$event->id}">
-                        <span class="notification-blue">{$event->eventName}</span>
-                    </a>.
-                </span>
+                    {$data['cacnelMemeberHtml']}
+                    <br> {$discountText}
+                </span> 
             HTML;
         }
 
         $organizerList = [$event->user];
 
         $organizerNotification = [
-            'subject' => 'Team '.$this->teamName.' canceled registration for Event: '.$event->eventName,
+            'subject' => $data['subject'],
             'team' => ['id' => $this->id],
             'banner' => $teamBannerUrl,
             'textFirstPart' => <<<HTML
@@ -575,17 +640,10 @@ class Team extends Model
                         alt="Team banner for {$this->teamName}">
                 </a>
             HTML,
-            'text' => <<<HTML
+            'text' =>  <<<HTML
                 <span class="notification-gray">
-                    <a href="/view/team/{$this->id}">
-                        <span class="notification-black">{$this->teamName}</span> 
-                    </a> has canceled registration for
-                    <a href="/view/organizer/{$event->user->id}">
-                        <span class="notification-blue">{$event->user->name}'s</span>
-                    </a>
-                    <a href="/event/{$event->id}">
-                        <span class="notification-blue">{$event->eventName}</span>
-                    </a>.
+                    {$data['cacnelOrgHtml']}
+                    <br>The system has refunded {$data['refundString']} the registration fees in refunds and coupons.
                 </span>
             HTML,
             'links' => [

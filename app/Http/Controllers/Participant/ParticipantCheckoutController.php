@@ -94,14 +94,9 @@ class ParticipantCheckoutController extends Controller
                         $paymentIntent['amount_received'] === $paymentIntent['amount']
                     )
                 ) {
-
-                    $isManualCaptureMethod = isset($paymentIntent['metadata'])
-                    && isset($paymentIntent['metadata']['eventType'])
-                    && $paymentIntent['metadata']['eventType'] === "normal";
-
                     $transaction = PaymentTransaction::createTransaction(
                         $intentId,
-                        $isManualCaptureMethod ? 'SUCCESS' : 'TO_CAPTURE',
+                        $paymentIntent['status'],
                         $paymentIntent['amount'] / 100
                     );
 
@@ -126,7 +121,6 @@ class ParticipantCheckoutController extends Controller
                         $joinEvent->save();
                     }
                     
-
                     DB::commit();
 
                     return redirect()
@@ -134,19 +128,14 @@ class ParticipantCheckoutController extends Controller
                         ->with('errorCheckout', 'Your payment has failed unfortunately!');
                 }
             }
+            return $this->showErrorParticipant('Your payment has failed unfortunately!');
 
-            // return redirect()
-            //     ->route('participant.checkout.action', ['id' => $id] )
-            //     ->with('errorCheckout', 'Your payment has failed unfortunately!');
         } catch (ModelNotFoundException|UnauthorizedException $e) {
-            // ERROR
-            // TRASACTION ERROR OCCURRED
             DB::rollBack();
 
             return $this->showErrorParticipant($e->getMessage());
         } catch (Exception $e) {
-            // ERROR
-            // TRANSACTION ERROR OCCURRED
+          
             DB::rollBack();
 
             return $this->showErrorParticipant($e->getMessage());
