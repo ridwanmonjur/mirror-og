@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\EventDetail;
-use App\Models\ParticipantPayment;
 use App\Models\PaymentTransaction;
 use App\Models\StripePayment;
 use App\Models\Task;
@@ -12,6 +10,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Stripe\StripeClient;
 
 class RespondTasks extends Command
 {
@@ -32,16 +31,13 @@ class RespondTasks extends Command
 
     protected $description = 'Respond tasks in the database';
 
-    private $stripeClient;
-
-    public function __construct(StripePayment $stripeClient)
-    {
-        $this->stripeClient = $stripeClient;
-    }
 
     /**
      * Execute the console command.
      */
+    public function handle(){
+        $this->getTodayTasksByName();
+    }
 
     public function getTodayTasksByName()
     {
@@ -59,7 +55,7 @@ class RespondTasks extends Command
             $paymentData = DB::table('event_details')
                 ->join('join_events', 'event_details.id', '=', 'join_events.event_details_id')
                 ->join('participant_payments', 'join_events.id', '=', 'participant_payments.join_events_id')
-                ->join('all_payment_transactions', first: 'all_payment_transactions.id', '=', 'participant_payments.payment_id')
+                ->join('all_payment_transactions',  'all_payment_transactions.id', '=', 'participant_payments.payment_id')
                 ->whereIn('event_details.id', $eventIdList)
                 ->where('all_payment_transactions.payment_status', 'requires_capture')
                 ->select('all_payment_transactions.payment_id', 'all_payment_transactions.id')
@@ -75,7 +71,8 @@ class RespondTasks extends Command
             $updatedPayments = [];
             foreach ($resultList as $item) {
                 try {
-                    $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($item['payment_id']);
+                    $stripe = new StripePayment();
+                    $paymentIntent = $stripe->retrieveStripePaymentByPaymentId($item['payment_id']);
 
                     if ($paymentIntent->status === 'requires_capture') {
                         $capturedPayment = $paymentIntent->capture();

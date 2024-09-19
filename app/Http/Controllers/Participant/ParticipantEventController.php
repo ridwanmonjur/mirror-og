@@ -14,6 +14,7 @@ use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\TeamMember;
 use App\Models\User;
+use App\Services\PaymentService;
 use ErrorException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -26,6 +27,14 @@ use Illuminate\Validation\UnauthorizedException;
 
 class ParticipantEventController extends Controller
 {
+
+    private $paymentService;
+
+    public function __construct(PaymentService $paymentService)
+    {
+        $this->paymentService = $paymentService;
+    }
+
     public function home(Request $request)
     {
         if (Session::has('intended')) {
@@ -418,10 +427,13 @@ class ParticipantEventController extends Controller
                 $joinEvent->join_status = $request->join_status;
                 $joinEvent->save();
 
-                if ($isToBeConfirmed ) {
+                if ($isToBeConfirmed) {
                     $team->confirmTeamRegistration($event);
                 } else {
-                    $team->cancelTeamRegistration($event);
+                    $discountsByUserAndType = 
+                        $this->paymentService->refundPaymentsForEvents([$event->id], 0.5);
+
+                    $team->cancelTeamRegistration($event, $discountsByUserAndType );
                 }
                 // dd($joinEvent, $request);
             } else {

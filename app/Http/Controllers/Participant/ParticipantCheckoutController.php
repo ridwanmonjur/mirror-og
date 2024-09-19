@@ -128,10 +128,8 @@ class ParticipantCheckoutController extends Controller
                         ->with('errorCheckout', 'Your payment has failed unfortunately!');
                 }
             }
+            return $this->showErrorParticipant('Your payment has failed unfortunately!');
 
-            return redirect()
-                ->route('participant.checkout.action', ['id' => $id] )
-                ->with('errorCheckout', 'Your payment has failed unfortunately!');
         } catch (ModelNotFoundException|UnauthorizedException $e) {
             DB::rollBack();
 

@@ -43,7 +43,7 @@ trait TasksTrait
         DB::table('monitored_scheduled_tasks')
             ->where('id', $id)
             ->update([
-                'last_started_at' => $now,
+                'last_ended_at' => $now,
                 'updated_at' => $now,
             ]);
     }

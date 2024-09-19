@@ -47,22 +47,17 @@ class CreateTasks extends Command
             $todayDate = $today->toDateString();
             $todayTime = $today->toTimeString();
 
-            $launchEvents = EventDetail::whereDate('launch_date', $todayDate)
-                ->whereTime('launch_time', '<=', $todayDate)
-                ->select(['id', 'launch_time', 'launch_time'])
+            $launchEvents = EventDetail::whereDate('sub_action_public_date', $todayDate)
+                ->whereTime('sub_action_public_time', '<=', $todayDate)
+                ->select(['id', 'sub_action_public_date', 'sub_action_public_time'])
                 ->get();
 
-            $endEvents = EventDetail::whereDate('end_date', $todayDate)
-                ->select(['id', 'end_date'])
-                ->get();
-
-            $registrationOverEvents = EventDetail::where('launch_date', '<=', $twoWeeksAgo)
-                ->select(['id', 'launch_date'])
+            $endEvents = EventDetail::whereDate('endDate', $todayDate)
+                ->select(['id', 'endDate'])
                 ->get();
 
             $this->createTask($launchEvents, 'launch', $todayTime, $todayDate);
             $this->createTask($endEvents, 'ended', $todayTime, $todayDate);
-            $this->createTask($registrationOverEvents, 'registration_over', $todayTime, $todayDate);
                 
             $now = Carbon::now();
             $this->logExit($id, $now);
