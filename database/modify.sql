@@ -2,7 +2,7 @@
 -- RENAME TO new_table_name;
 
 ALTER TABLE payment_transactions 
-RENAME TO payment_transactions;
+RENAME TO all_payment_transactions;
 
 -- ALTER TABLE child_table
 -- ADD CONSTRAINT fk_parent
