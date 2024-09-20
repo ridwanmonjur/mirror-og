@@ -88,6 +88,7 @@ class StripeController extends Controller
             } else {
                 $paymentIntentStatus = 'retrieved';
 
+
                 $this->stripeClient->updatePaymentIntent($paymentIntentStripe->id, $paymentIntentStripeBody);
 
                 $paymentIntentDB->update([
@@ -98,7 +99,7 @@ class StripeController extends Controller
             }
 
             $responseData = [
-                'status' => 'success',
+                'success' => 'true',
                 'message' => 'Payment intent creation successful',
                 'data' => [
                     'client_secret' => $paymentIntentStripe->client_secret,
@@ -120,7 +121,7 @@ class StripeController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 'error',
+                'success' => 'false',
                 'retrieved' => $isEmptyStripeCustomerId,
                 'message' => $e->getMessage(),
                 'data' => [

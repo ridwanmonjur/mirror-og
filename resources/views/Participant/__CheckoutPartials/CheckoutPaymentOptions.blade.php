@@ -1,4 +1,61 @@
 <div class="row px-5 mb-2" id="payment-discount-view">
+    <div class="modal fade" id="discountModal" tabindex="-1"
+        aria-labelledby="#discountModal" aria-hidden="true">
+        @php
+            $isDiscountWallet = is_null($discount_wallet);
+        @endphp
+        <div class="modal-dialog">
+            <form 
+                data-redirect_url="{{route('participant.register.manage', ['id' => $teamId])}}"
+                method="POST"
+                onsubmit="handleSubmit(event);"
+                id="discountPaymentForm"
+            >
+                @csrf
+                    <div class="modal-content">
+                        <div class="modal-body py-4 px-5">
+                            <h5 class="mt-4 mb-0">Pay using your previous discount coupons!</h5>
+                            <small> Avoid paying for this event by using refunds and coupons from previous events.</small>
+                            <br><br>
+                            @if ($isDiscountWallet)
+                                <br> <br>
+                                <p class="text-center">Ooops, no coupons </p> 
+                            @else
+                             <p> 
+                                You have <span class="text-success" id="wallet_amount">RM {{$discount_wallet->amount}}</span> of discounts to apply towards this event.
+                            </p>
+                            <div class="text-center mx-auto input-group mt-4 w-75">
+                                <input type="hidden" id="payment_amount_input" name="payment_amount" value="{{ $amount }}">
+                                <input type="hidden" id="member_id" name="member_id" value="{{ $memberId }}">
+                                <input type="hidden" id="joinEventId" name="joinEventId" value="{{ $joinEventId }}">
+                                <input type="hidden" id="payment_intent_id" name="payment_intent_id"> 
+                                <br>
+                                <span class="input-group-text bg-primary text-light" id="inputGroup-sizing-sm">RM </span>
+                                <input 
+                                    onchange="validateInput(this);"
+                                    data-amount="{{$amount}}"
+                                    data-wallet="{{$discount_wallet->amount}}"
+                                    name="discount_applied_amount" class="form-control text-auto" type="number" placeholder="0.00"
+                                >
+                            </div>
+                            <br>
+                            <div class="mx-auto text-center">
+                                <button 
+                                    type="submit"
+                                    class="mt-2 ms-4 btn rounded-pill text-dark px-4 py-2 btn-success">Apply towards
+                                    payment
+                                </button>
+                                <button type="button" data-bs-dismiss="modal"
+                                    class="mt-2 ms-4 py-2 btn oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+            </form>
+            <br>
+        </div>
+    </div>
+
     <div class="d-none d-lg-block px-3">
     </div>
     <div class="col-12 col-xl-8 px-3">
@@ -28,14 +85,29 @@
                             <div id="address-element" class="my-2"> </div>
                         </div>
                         <div class="col-12 col-lg-6">
+                            <div id="discount-element" class="mt-3 d-none">
+                                @if ($isDiscountWallet) 
+                                    You have no discount to apply.
+                                @else
+                                    <span> 
+                                        You have RM {{$discount_wallet->amount}} of discounts to apply towards this event.
+                                    </span>
+                                    <a 
+                                         data-bs-toggle="modal"
+                                        data-bs-target="#discountModal"
+                                        class="my-0 btn btn-link py-0" style="color: #43A4D7 !important" type="button"
+                                    > 
+                                        <u> Apply </u> 
+                                    </a>
+                                @endif
+                            </div>
                             <div id="card-element" class="my-2"> </div>
                             <div class="d-none d-lg-block">
 
-                                <br><br><br><br> <br><br>
+                                <br><br><br><br>
                             </div>
                             <div class="d-flex justify-content-center my-3 d-none" id="submit-button-element">
                                 <button class="oceans-gaming-default-button" type="submit"> Submit </button>
-                               
                             </div>
                         </div>
                     </div>
@@ -159,7 +231,7 @@
             <div class="flexbox w-75">
                 <h5> TOTAL </h5>
                 <h5 id="paymentTotal">RM
-                    <span class="transform-number me-1">{{ $amount }} </span>
+                    <span id="actualPaymentTable" class="transform-number me-1">{{ $amount }} </span>
                 </h5>
             </div>
             <div class="d-flex justify-content-center w-75">
