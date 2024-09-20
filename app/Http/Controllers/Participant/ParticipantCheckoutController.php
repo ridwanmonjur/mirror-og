@@ -29,17 +29,22 @@ class ParticipantCheckoutController extends Controller
     {
         session()->forget(['successMessageCoupon',  'errorMessageCoupon']);
         $id = $request->id;
-        // dd($id);
+
         try {
             $user = $request->get('user');
             $user->stripe_customer_id = $user->organizer()->value('stripe_customer_id');
+            $discount_wallet = DB::table('user_discounts')
+                ->where('user_id', $user->id)->first();
             $event = EventDetail::findOrFail($id);
             $isUserSameAsAuth = true;
-            $isRosterMember = RosterMember::where([
+            $rosterMember = RosterMember::where([
                 'user_id' => $user->id,
                 'join_events_id' => $request->joinEventId,
                 'team_id' => $request->teamId,
-            ])->exists();
+            ])
+                ->first();
+
+            $isRosterMember = $rosterMember !== null;
 
             if (!$isRosterMember) {
                 return $this->showErrorParticipant(
@@ -63,6 +68,7 @@ class ParticipantCheckoutController extends Controller
                 'joinEventId' => $request->joinEventId,
                 'memberId' => $request->memberId,
                 'event' => $event,
+                'discount_wallet' => $discount_wallet,
                 'mappingEventState' => EventDetail::mappingEventStateResolve(),
                 'isUser' => $isUserSameAsAuth,
                 'livePreview' => 1,
@@ -70,6 +76,98 @@ class ParticipantCheckoutController extends Controller
             ]);
         }  catch (Exception $e) {
             return $this->showErrorParticipant($e->getMessage());
+        }
+    }
+
+    public function discountCheckout(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $newAmount = (float) $request->payment_amount - (float) $request->discount_applied_amount ;
+            $isNewAmountZero = $newAmount < 0.05;
+            $user = $request->get('user');
+            $userId = $user->id;
+            $walletAmount = 0;
+            $userDiscount = DB::table('user_discounts')
+                ->where('user_id', $user->id)->first();
+
+            if ($userDiscount) {
+                $walletAmount = $userDiscount->amount - $request->discount_applied_amount;
+                DB::table('user_discounts')
+                    ->where('user_id', $user->id)
+                    ->update(
+                        ['amount' => $walletAmount]
+                    );
+            } else {
+                throw new Exception("Discount doesn't exist!");
+            }
+
+            if (!$isNewAmountZero) {
+                $stripePaymentIntent =
+                    $this->stripeClient->retrieveStripePaymentByPaymentId($request?->payment_intent_id);
+                
+                $this->stripeClient->updatePaymentIntent($stripePaymentIntent->id, [
+                    'amount' => $newAmount * 100,
+                ]);
+            }
+           
+            $transaction = new PaymentTransaction([
+                'payment_id' => null,
+                'payment_status' => 'succeeded_applied_discount',
+                'payment_amount' => $request->discount_applied_amount
+            ]);
+
+            $transaction->save();
+
+            ParticipantPayment::create([
+                'team_members_id' => $request->member_id,
+                'user_id' => $userId,
+                'join_events_id' => $request->joinEventId,
+                'payment_amount' => $request->payment_amount,
+                'payment_id' => $transaction->id,
+            ]);
+            
+            if ($isNewAmountZero) {
+                $joinEvent = JoinEvent::select('id', 'event_details_id', 'payment_status')
+                    ->findOrFail($request->joinEventId);
+                $joinEvent->payment_status = 'completed';
+                $joinEvent->save();
+                $message = "Discount applied successfully. You have completed this payment.";
+            } else {
+                $message = "Discount applied. You have RM {$newAmount} to pay.";
+            }
+            
+            DB::commit();
+
+            session()->flash('message', 'Discount applied successfully');
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'data' => [
+                    'wallet_amount' => $walletAmount,
+                    'transaction_id' => $transaction->id,
+                    'new_amount' => $newAmount,
+                    'is_payment_completed' => $isNewAmountZero
+                ]
+            ], 200);
+            
+        } catch (ModelNotFoundException|UnauthorizedException $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 401);
+        } catch (Exception $e) {
+          
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+
         }
     }
 
