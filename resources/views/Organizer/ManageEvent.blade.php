@@ -96,9 +96,6 @@
                     let svgElement = event.target.closest('svg');
                     if (!svgElement) return;
                     let eventUrl = svgElement.dataset.url;
-                    console.log({eventUrl});
-                    console.log({eventUrl});
-                    console.log({eventUrl});
 
                     Swal.fire({
                         title: "Are you sure?",
@@ -111,7 +108,7 @@
                         confirmButtonText: "Oops, no..."
                     })
                     .then((result) => {
-                        if (result.isConfirmed) {
+                        if (result.isDismissed) {
                             fetch(eventUrl, {
                                 method: 'POST',
                                 headers: {
@@ -122,26 +119,29 @@
                             .then(response => response.json())
                             .then(data => {
                                 if (data.success) {
-                                    Swal.fire(
-                                        'Cancelled!',
-                                        'Event has been cancelled.',
-                                        'success'
-                                    );
+                                    Swal.fire({
+                                        title: 'Cancelled!',
+                                        text: 'Event has been cancelled.',
+                                        icon: 'success',
+                                        confirmButtonColor: "#43A4D7",
+                                    });
                                     location.reload();
                                 } else {
-                                    Swal.fire(
-                                        'Error!',
-                                        'Failed to cancel the event.',
-                                        'error'
-                                    );
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: 'Failed to cancel the event.',
+                                        icon: 'error',
+                                        confirmButtonColor: "#43A4D7",
+                                    });
                                 }
                             })
                             .catch((error) => {
-                                Swal.fire(
-                                    'Error!',
-                                    'Something went wrong!',
-                                    'error'
-                                );
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Something went wrong!',
+                                    icon: 'error',
+                                    confirmButtonColor: "#43A4D7",
+                                });
                             });
                         }
                     });
