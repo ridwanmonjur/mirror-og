@@ -7,7 +7,7 @@
     <div class="offcanvas-body">
         
         <form id="updateBgColorRequest" class="d-inline" method="POST" enctype="multipart/form-data"
-            action="{{ route('user.userBackground.action', ['id' => $userProfile->id]) }}">
+            action="{{ route('user.userBackground.action', ['id' => $selectTeam->id]) }}">
             @csrf
             <div class="d-flex justify-content-between text-justify pb-2">
                 <div>
@@ -36,10 +36,10 @@
             </div>
             
             <br>
-            <input type="hidden" name="backgroundColor" value="{{ $userProfile->profile?->backgroundColor }}">
-            <input type="hidden" name="backgroundGradient" value="{{ $userProfile->profile?->backgroundGradient }}">
-             <input type="hidden" name="frameColor" value="{{ $userProfile->profile?->frameColor }}">
-            <input type="hidden" name="fontColor" value="{{ $userProfile->profile?->fontColor }}">
+            <input type="hidden" name="backgroundColor" value="{{ $selectTeam->profile?->backgroundColor }}">
+            <input type="hidden" name="backgroundGradient" value="{{ $selectTeam->profile?->backgroundGradient }}">
+             <input type="hidden" name="frameColor" value="{{ $selectTeam->profile?->frameColor }}">
+            <input type="hidden" name="fontColor" value="{{ $selectTeam->profile?->fontColor }}">
             <div class="accordion" id="accordionExample">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-headingOne">
@@ -199,7 +199,7 @@
                             <label class="upload-label">
                                 <div class="circle-container">
                                     <div class="uploaded-image"
-                                        style="background-image: url({{ '/storage' . '/' . $userProfile->userBanner }} ); background-size: cover; 
+                                        style="background-image: url({{ '/storage' . '/' . $selectTeam->teamBanner }} ); background-size: cover; 
                                             background-repeat: no-repeat; background-position: center; {{ $frameStyles }}">
                                     </div>
                                 </div>

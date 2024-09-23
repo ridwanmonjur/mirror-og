@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     @include('__CommonPartials.HeadIcon')
+
     @vite([
         'resources/sass/app.scss', 
         'resources/js/app.js', 
@@ -19,7 +20,6 @@
         'resources/js/file-edit.js',
         'resources/sass/file-edit.scss',
         'resources/js/colorpicker.js',
-        'resources/js/chat.js',
         'resources/sass/colorpicker.scss',
     ])
     <link rel="stylesheet" href="{{ asset('/assets/css/chat/inpage-message.css') }}">
@@ -56,10 +56,11 @@
                 "background-size: cover; background-repeat: no-repeat;"
             ])
         >
-            @if(!$isOwnProfile) 
-            @else
+            @if($isOwnProfile) 
                 <input type="hidden" id="userBannerInput" value="{{ $userProfile->userBanner }}">
-                <input type="hidden" id="backgroundColorInput" value="{{ $userProfile->backgroundColor }}">
+                <input type="hidden" id="backgroundColorInput" value="{{ $userProfile->profile?->backgroundColor }}">
+                <input type="hidden" id="fontColorInput" value="{{ $userProfile->profile?->fontColor }}">
+
             @endif
             <input type="hidden" id="games_data_input" value="{{ $userProfile->participant?->games_data ?? json_encode([]) }}">
             <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant?->getRegionDetails()) }}">
@@ -91,7 +92,7 @@
                         x-show="isEditMode"
                         x-on:click="submitEditProfile(event)"
                         data-url="{{route('participant.profile.update')}}"
-                        class="oceans-gaming-default-button oceans-gaming-transparent-button simple-button cursor-pointer px-3 py-2 me-3 fs-7"> 
+                        class="oceans-gaming-default-button oceans-gaming-transparent-button btn simple-button cursor-pointer px-3 py-2 me-3 fs-7"> 
                         Save
                     </a>
                     {{-- Close icon --}}

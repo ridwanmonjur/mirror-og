@@ -2,6 +2,8 @@
 
 <script>
     var backgroundBanner = document.getElementById("backgroundBanner")
+    let backgroundColorInputValue = document.getElementById('backgroundColorInput')?.value;
+    let fontColorInputValue = document.getElementById('fontColorInput')?.value;
 
     var mediaQueryList = window.matchMedia("(min-width: 600px)");
 
@@ -256,10 +258,7 @@
                     const data = await response.json();
                         
                     if (data.success) {
-                        Toast.fire({
-                            icon: 'success',
-                            text: 'Updated the player successfully!'
-                        })
+                        
                         let currentUrl = window.location.href;
                         if (currentUrl.includes('?')) {
                             currentUrl = currentUrl.split('?')[0];
@@ -279,12 +278,19 @@
             },
          
             init() {
-                this.fetchCountries();
                 var backgroundStyles = "<?php echo $backgroundStyles; ?>";
                 var fontStyles = "<?php echo $fontStyles; ?>";
                 var banner = document.getElementById('backgroundBanner');
                 banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-               
+                this.$watch('isEditMode', value => {
+                    if (value) {
+                         banner.style.color = 'white';
+                        banner.style.backgroundColor = '#D3D3D3';
+                    } else {
+                        banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
+                       
+                    }
+                });
                 
                 this.$watch('participant.birthday', value => {
                     const today = new Date();
@@ -296,6 +302,9 @@
                        this.participant.age--;
                     }
                 });
+
+                this.fetchCountries();
+
             }
 
         }})

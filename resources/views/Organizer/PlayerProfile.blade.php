@@ -58,8 +58,8 @@
             > 
                  <div class="d-flex justify-content-end py-0 my-0 mb-2">
                     <button 
-                        data-bs-toggle="modal"
-                        data-bs-target="#profileModal"
+                     data-bs-toggle="offcanvas"
+                        data-bs-target="#profileDrawer"
                         x-cloak
                         x-show="isEditMode"
                         {{-- onclick="document.getElementById('backgroundInput').click();" --}}
@@ -585,6 +585,7 @@
     </main>
 
 </body>
+@livewireScripts
 <script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
 <script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/js/intlTelInput.min.js"></script>
@@ -661,12 +662,21 @@
             },
             isCountriesFetched: false ,
              init() {
-                this.fetchCountries();
                 var backgroundStyles = "<?php echo $backgroundStyles; ?>";
                 var fontStyles = "<?php echo $fontStyles; ?>";
                 var banner = document.getElementById('backgroundBanner');
                 banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-               
+                this.$watch('isEditMode', value => {
+                    if (value) {
+                        banner.style.color = 'black';
+                        banner.style.backgroundColor = '#D3D3D3';
+                    } else {
+                        banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
+                        
+                    }
+                });
+                
+                this.fetchCountries();
             },
             fetchCountries () {
                 return fetch('/countries')
