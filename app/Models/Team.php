@@ -539,7 +539,7 @@ class Team extends Model
             $data['refundString'] = 'all';
             $data['cacnelOrgHtml'] = <<<HTML
                 <span>
-                    <span class="notification-black">You have canceled your </span>    
+                    <span class="notification-black">You have canceled your event </span>    
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
                     </a>.
