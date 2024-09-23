@@ -123,7 +123,7 @@ class ParticipantCheckoutController extends Controller
                 'team_members_id' => $request->member_id,
                 'user_id' => $userId,
                 'join_events_id' => $request->joinEventId,
-                'payment_amount' => $request->payment_amount,
+                'payment_amount' =>  $request->discount_applied_amount,
                 'payment_id' => $transaction->id,
             ]);
             
@@ -202,7 +202,7 @@ class ParticipantCheckoutController extends Controller
                         'team_members_id' => $paymentIntent['metadata']['memberId'],
                         'user_id' => $userId,
                         'join_events_id' => $paymentIntent['metadata']['joinEventId'],
-                        'payment_amount' => (float) $paymentIntent['amount'] / 100,
+                        'payment_amount' => (float) $paymentIntent['amount'],
                         'payment_id' => $transaction->id,
                     ]);
 

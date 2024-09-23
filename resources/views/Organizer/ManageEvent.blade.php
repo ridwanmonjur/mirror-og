@@ -91,6 +91,63 @@
             <div class="no-more-data d-none mb-3" style="margin-top: 50px;" ></div>
 
             <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+            <script>
+                function cancelEvent(event) {
+                    let svgElement = event.target.closest('svg');
+                    if (!svgElement) return;
+                    let eventUrl = svgElement.dataset.url;
+                    console.log({eventUrl});
+                    console.log({eventUrl});
+                    console.log({eventUrl});
+
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#43A4D7",
+                        cancelButtonColor: "#d33",
+                        cancelButtonText: "Cancel Event",
+                        confirmButtonText: "Oops, no..."
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(eventUrl, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Content-Type': 'application/json',
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire(
+                                        'Cancelled!',
+                                        'Event has been cancelled.',
+                                        'success'
+                                    );
+                                    location.reload();
+                                } else {
+                                    Swal.fire(
+                                        'Error!',
+                                        'Failed to cancel the event.',
+                                        'error'
+                                    );
+                                }
+                            })
+                            .catch((error) => {
+                                Swal.fire(
+                                    'Error!',
+                                    'Something went wrong!',
+                                    'error'
+                                );
+                            });
+                        }
+                    });
+                }
+
+            </script>
             @include('Organizer.__ManageEventPartials.ManageEventScripts')
         </div>
     </main>
