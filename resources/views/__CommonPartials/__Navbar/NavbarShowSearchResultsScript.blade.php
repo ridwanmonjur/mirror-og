@@ -1,3 +1,4 @@
+<script src="{{ asset('/assets/js/responsiveTable.js') }}"></script>
 
 <script>
     function toggleDropdown() {

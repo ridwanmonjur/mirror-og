@@ -57,7 +57,7 @@
                             </button>
                         </div>
                         <div class="tab-content pb-4  outer-tab mx-auto" id="Position">
-                            <table class="mx-auto member-table text-start" style="margin-left: 5px;">
+                            <table class="mx-auto member-table table-responsive  text-start" style="margin-left: 5px;">
                                 
                                 @if (isset($joinEventAndTeamList[0]))
                                     <thead class="accepted-member-table text-start">
@@ -190,7 +190,7 @@
                                     </span>
                                 </button>
                             </div>
-                            <table class="member-table text-start mx-auto" style="margin-left: -5px;">
+                            <table class="member-table table-responsive  text-start mx-auto" style="margin-left: -5px;">
                                 @if (isset($awardAndTeamList[0]))
                                     <thead class="accepted-member-table text-start">
                                         <th></th>
@@ -339,7 +339,7 @@
                                     </span>
                                 </button>
                             </div>
-                            <table class="member-table text-start mx-auto" style="margin-left: -5px;">
+                            <table class="member-table table-responsive  text-start mx-auto" style="margin-left: -5px;">
                                 @if (isset($achievementsAndTeamList[0]))
                                     <thead class="accepted-member-table text-start">
                                         <th></th>

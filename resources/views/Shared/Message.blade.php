@@ -108,7 +108,7 @@
                         </div>
                         <br>
                         <div> 
-                            <table class="table">
+                            <table class="table table-responsive ">
                                 <thead>
                                     <tr>
                                         <th scope="col"></th>

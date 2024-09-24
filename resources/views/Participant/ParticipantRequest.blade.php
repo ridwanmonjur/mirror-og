@@ -127,7 +127,7 @@
             </h5>
             <div class="mt-3 pt-3">
                 @if (isset($pendingTeamAndMemberList[0]))
-                    <table class="member-table mx-auto">
+                    <table class="member-table table-responsive  mx-auto">
                         <tbody class="pending-member-table">
                             @foreach ($pendingTeamAndMemberList as $teamAndMember)
                                 <tr class="st" id="tr-{{ $teamAndMember->team_id }}">

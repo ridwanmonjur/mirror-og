@@ -231,7 +231,7 @@
                 </span> 
             </div>
         </div>
-        <table class="member-table" id="member-table-body">
+        <table class="member-table table-responsive " id="member-table table-responsive -body">
             <input id="membersJson" type="hidden" value="{{json_encode($selectTeam->members)}}">
             <input id="captainJson" type="hidden" value="{{json_encode($captain)}}">
             <tbody>
