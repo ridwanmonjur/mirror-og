@@ -20,7 +20,7 @@
     </div>
     <div @class(["popover__content" => !$isRedirect, "d-none" => $isRedirect, "pt-0"])>
         <p class="popover__message  pt-0">
-            <table class="align-start px-3 mx-3 table-responsive ">
+            <table class="align-start px-3 mx-3 responsive ">
                 <thead>
                     <tr>
                         <th class="pe-3 pb-2">Participant</th>

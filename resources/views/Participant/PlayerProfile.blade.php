@@ -489,7 +489,7 @@
              <br>
             <div class="tab-size"><b>Current Teams</b></div>
             @if (isset($teamList[0]))
-                <table id="current_teams" class="member-table table-responsive  table-responsive">
+                <table id="current_teams" class="member-table responsive  table-responsive">
                     <thead>
                         <tr>
                             <th> </th>
@@ -535,7 +535,7 @@
             <div class="tab-size"><b>Past Teams</b></div>
 
             @if (isset($pastTeam[0]))
-                <table id="past_teams" class="member-table table-responsive  table-responsive">
+                <table id="past_teams" class="member-table responsive  table-responsive">
                     <thead>
                         <tr>
                             <th> </th>
@@ -582,8 +582,7 @@
     </main>
 
     <script>
-        new ResponsiveTable('#current_teams', 'stack', '1000px');
-        new ResponsiveTable('#past_teams', 'stack', '1000px');
+    
     </script>
 </body>
 @include('Participant.__ProfilePartials.Scripts')

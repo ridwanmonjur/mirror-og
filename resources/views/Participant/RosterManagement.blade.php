@@ -114,7 +114,7 @@
                 from {{$teamMembersCount}} available team member{{bladePluralPrefix($teamMembersCount)}}.
             </p>
             @if (isset($teamMembers[0]))
-                <table class="member-table table-responsive ">
+                <table class="member-table responsive ">
                     <br>
                     <tbody>
                         @foreach ($teamMembers as $member)

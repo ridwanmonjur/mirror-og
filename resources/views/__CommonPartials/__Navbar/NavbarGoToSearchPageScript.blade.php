@@ -1,4 +1,3 @@
-<script src="{{ asset('/assets/js/responsiveTable.js') }}"></script>
 <script>
     function toggleDropdown() {
         document.querySelector("#myDropdown").classList.toggle("d-none")
