@@ -282,15 +282,7 @@
                 var fontStyles = "<?php echo $fontStyles; ?>";
                 var banner = document.getElementById('backgroundBanner');
                 banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-                this.$watch('isEditMode', value => {
-                    if (value) {
-                         banner.style.color = 'white';
-                        banner.style.backgroundColor = '#D3D3D3';
-                    } else {
-                        banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-                       
-                    }
-                });
+               
                 
                 this.$watch('participant.birthday', value => {
                     const today = new Date();

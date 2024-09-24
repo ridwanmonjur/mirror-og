@@ -22,7 +22,7 @@
                 </button>
             </div>
             <div class="league_name mt-4">
-                <b>{{ $event->eventName }}</b> <br>
+                <p class="ms-0 mb-0 p-0"><b>{{ $event->eventName }}</b></p>
                 <small>{{ $event->venue ?? 'South East Asia' }}</small>
             </div>
             <div class="trophy_caption mt-4">
