@@ -24,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('event_details', function (Blueprint $table) {
             Schema::disableForeignKeyConstraints();
+            $table->dropForeign('event_details_payment_transaction_id_foreign');
 
             $table->dropColumn('payment_transaction_id');
 

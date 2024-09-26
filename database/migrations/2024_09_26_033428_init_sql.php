@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,9 +12,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('all_payment_transactions', function (Blueprint $table) {
-            $table->dropColumn('updated_at');
-        });
+        $sql = file_get_contents(database_path('data.sql'));
+        DB::unprepared($sql);
     }
 
     /**
@@ -21,8 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('all_payment_transactions', function (Blueprint $table) {
-            $table->timestamp('updated_at')->useCurrent();
-        });
+        //
     }
 };

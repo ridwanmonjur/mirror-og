@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\EventDetail;
 use App\Models\Task;
-use App\Traits\TasksTrait;
+use App\Console\Commands\PrinterLoggerTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class CreateTasks extends Command 
 {
-    use TasksTrait;
+    use PrinterLoggerTrait;
     /**
      * The name and signature of the console command.
      *

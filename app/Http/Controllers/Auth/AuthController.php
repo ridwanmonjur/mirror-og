@@ -462,7 +462,7 @@ class AuthController extends Controller
                     'route' => route($userRole.'.home.view'),
                     'token' => null,
                     'success' => true,
-                ], 200);
+                ], 201);
             }
             throw new ErrorException('The email or password you entered is incorrect!');
         } catch (QueryException $e) {

@@ -28,8 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('event_tier', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('user_id');
-        });
+        Schema::dropIfExists('event_tier');
     }
 };

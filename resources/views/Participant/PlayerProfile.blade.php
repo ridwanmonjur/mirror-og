@@ -231,6 +231,7 @@
                                         x-model="participant.domain"
                                     > 
                                 </span>
+                                <br> <br> <br> 
                                 <span>
                                     <svg
                                         class="align-middle"

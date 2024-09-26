@@ -1,6 +1,6 @@
 @php
     $perpage = 4;
-    $notificationList = $user->notifications()->cursorPaginate($perpage);
+    $notificationList = $user->notifications()?->cursorPaginate($perpage);
     $nextCursor = $notificationList?->nextCursor();
     $countUnread = $user->unreadNotifications->count();
 @endphp

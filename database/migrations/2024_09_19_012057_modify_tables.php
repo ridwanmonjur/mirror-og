@@ -29,7 +29,7 @@ return new class extends Migration
             }
 
             if (Schema::hasColumn('all_payment_transactions', 'user_discount_id')) {
-                DB::statement('ALTER TABLE all_payment_transactions DROP FOREIGN KEY IF EXISTS `all_payment_transactions_user_discount_id_foreign`');
+                $table->dropForeign('all_payment_transactions_user_discount_id_foreign');
                 $table->dropColumn('user_discount_id');
             }
         });
