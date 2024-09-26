@@ -23,7 +23,7 @@
 
     <main class="main2">
         <div class="tabs">
-            <button class="tab-button outer-tab tab-button-active px-3"
+            <button class="tab-button outer-tab py-2 tab-button-active px-3"
                 onclick="showTab(event, 'Overview')">Overview</button>
             <button class="tab-button outer-tab px-3 py-2" onclick="showTab(event, 'Members', 'outer-tab')">Members</button>
             <button class="tab-button outer-tab px-3 py-2" onclick="showTab(event, 'Active Rosters', 'outer-tab')">Active
@@ -140,6 +140,7 @@
                 <p class="text-center">
                     Team {{ $selectTeam->teamName }} has no active rosters
                 </p>
+                <br><br><br>
             @else
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $joinCount }} roster{{ bladePluralPrefix($joinCount) }}</p>
@@ -168,7 +169,8 @@
         <div class="tab-content pb-4  outer-tab d-none" id="Roster History">
             <br><br>
             @if (!isset($joinEventsHistory[0]))
-                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history</p>
+                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history </p>
+                <br> <br><br> 
             @else
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $historyCount }} roster{{ bladePluralPrefix($historyCount) }}</p>

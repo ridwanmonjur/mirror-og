@@ -129,6 +129,7 @@ main {
     padding: 15px 25px;
     flex-grow: 1;
     max-width: 25vw;
+    min-width: 150px;
     /* Increased padding */
     border: none;
     border-bottom: 2px solid transparent;

@@ -16,7 +16,6 @@
     @php
         use Carbon\Carbon;
     @endphp
-    <br> <br>
     @if (isset($id))
         <div class="mb-2 text-success mx-auto text-center">
             You have joined this event successfully!

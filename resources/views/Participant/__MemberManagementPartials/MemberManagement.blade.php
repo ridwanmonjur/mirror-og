@@ -9,14 +9,14 @@
         </span>
         <a
             href="{{ route('participant.event.view', ['id' => $eventId]) }}">
-            <button class="oceans-gaming-default-button oceans-gaming-gray-button ms-2 me-2" type="submit" style="display: inline !important;">
+            <button class="oceans-gaming-default-button btn bg-success text-dark btn-success ms-2 me-2" type="submit" style="display: inline !important;">
                 View Event
             </button>
         </a>
    
         <a
             href="{{ route('participant.team.manage', ['id' => $eventId]) }}">
-            <button class="oceans-gaming-default-button oceans-gaming-gray-button ms-2 me-2" type="submit" style="display: inline !important;">
+            <button class="oceans-gaming-default-button btn ms-2 me-2" type="submit" style="display: inline !important;">
                 Manage Team
             </button>
         </a>
@@ -51,8 +51,8 @@
         {{ $teamMembersProcessed['accepted']['count'] }} accepted member{{bladePluralPrefix($teamMembersProcessed['accepted']['count'])}}
         and {{ $teamMembersProcessed['left']['count'] }} removed member{{bladePluralPrefix($teamMembersProcessed['left']['count'])}}
     </p>
-    <div class="cont mt-3 pt-3">
-        <table class="tab-size member-table responsive ">
+    <div class="cont mt-3 pt-3 tab-size">
+        <table class=" member-table responsive ">
             <tbody class="accepted-member-table">
                 @if ($teamMembersProcessed['accepted']['count'] != 0)
                     @foreach ($teamMembersProcessed['accepted']['members'] as $member)
@@ -112,7 +112,7 @@
         {{ $teamMembersProcessed['pending']['count'] }} invited and
         and {{ $teamMembersProcessed['rejected']['count'] }} rejected member{{bladePluralPrefix($teamMembersProcessed['rejected']['count'])}}
     </p>
-    <div class="cont mt-3 pt-3">
+    <div class="cont mt-3 pt-3 tab-size">
         <table class="member-table responsive ">
             <tbody class="pending-member-table">
                 @if ($teamMembersProcessed['pending']['count'] != 0 || 
@@ -414,8 +414,8 @@
         <input type="hidden" id ="membersUrl" value="{{route('user.teams.index', ['type' => 'team'])}}">
     </form>
 
-    <section class="featured-events scrolling-pagination">
-        <table class="member-table responsive " id="member-table responsive -body">
+    <section class="featured-events scrolling-pagination tab-size">
+        <table class="member-table responsive " id="member-table-body">
             <tbody>
             </tbody>
         </table>
