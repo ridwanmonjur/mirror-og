@@ -124,7 +124,7 @@
             <h5 class="text-center mx-auto mt-2">
                 View your sent team requests.
             </h5>
-            <div class="mt-3 pt-3">
+            <div class="mt-3 pt-3 tab-size">
                 @if (isset($pendingTeamAndMemberList[0]))
                     <table class="member-table responsive  mx-auto">
                         <caption>Table Caption</caption>
