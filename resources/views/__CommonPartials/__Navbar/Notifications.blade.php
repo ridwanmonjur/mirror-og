@@ -5,7 +5,7 @@
         'notification-container-read' => !is_null($notification->read_at),
     ])>
         <div class="d-flex justify-content-start align-items-center pt-2 mx-2">
-            <span style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 0.9375rem; text-align: justify !important;"
+            <span style="text-overflow: ellipsis; overflow: hidden; word-wrap: break-word; font-size: 0.9375rem; text-align: left !important;"
                 class="text-start ms-2 my-1">
                 {!! $notification->data['data'] !!}
             </span>

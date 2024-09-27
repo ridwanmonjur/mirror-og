@@ -3,6 +3,12 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito:wght@400;500;600&display=swap');
 @import 'variables';
 @import './bootstrap/bootstrap.css';
+@import 'tippy.js/dist/tippy.css';
+@import 'tippy.js/themes/light.css';
+
+  .tippy-box[data-theme~='light'] {
+    background-color: #F8F7F0;
+  }
 
   table.responsive {
     // border: 1px solid #ccc;

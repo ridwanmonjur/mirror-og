@@ -15,6 +15,10 @@ return new class extends Migration
             $table->foreignId('team_member_id')
                 ->constrained('team_members')
                 ->onDelete('cascade');
+
+            $table->foreignId('team_id')
+                ->constrained('teams')
+                ->onDelete('cascade');
         });
     }
 
@@ -24,7 +28,13 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('roster_members', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('team_member_id');
+            if (Schema::hasColumn('roster_members', 'team_member_id')) {
+                $table->dropConstrainedForeignId('team_member_id');
+            }
+            
+            if (Schema::hasColumn('roster_members', 'team_id')) {
+                $table->dropConstrainedForeignId('team_id');
+            }
         });
     }
 };

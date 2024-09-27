@@ -156,10 +156,11 @@
 
                 paymentElement.mount("#card-element");
                 addressElement.mount("#address-element");
-                document.getElementById('payment_intent_id').value = paymenntIntentId;
-                document.getElementById('discount-element').classList.remove('d-none');
-                document.getElementById('submit-button-element').classList.remove('d-none');
-                document.getElementById('payment-summary').classList.remove('d-none');
+                let paymentIntentInput =  document.getElementById('payment_intent_id');
+                if (paymentIntentInput) paymentIntentInput.value = paymenntIntentId;
+                document.getElementById('discount-element')?.classList.remove('d-none');
+                document.getElementById('submit-button-element')?.classList.remove('d-none');
+                document.getElementById('payment-summary')?.classList.remove('d-none');
                 
             } else {
                 window.toastError(json.message);

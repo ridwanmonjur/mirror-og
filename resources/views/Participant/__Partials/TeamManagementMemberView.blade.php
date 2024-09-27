@@ -590,7 +590,7 @@
                         <span>${member?.status} ${member?.updated_at ? member.updated_at: ''} </span>
                     </td>
                     <td class="flag-cell coloured-cell px-3 fs-4">
-                        <span>${member?.user?.participant?.region_flag ? member?.user?.participant?.region_flag : '🚫'} </span>
+                        <span>${member?.user?.participant?.region_flag ? member?.user?.participant?.region_flag : '✈︎'} </span>
                     </td>
                 </tr>
             `;

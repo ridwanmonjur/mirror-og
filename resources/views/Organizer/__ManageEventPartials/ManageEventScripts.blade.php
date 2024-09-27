@@ -9,7 +9,7 @@
     function addTippy() {
         const parentElements = document.querySelectorAll(".popover-parent");
         parentElements.forEach(parent => {
-            const contentElement = parent.querySelector(".popover-content");
+            const contentElement = parent.querySelector(".popover-content2");
             const parentElement = parent.querySelector(".popover-button");
             if (contentElement) {
                 window.addPopover(parentElement, contentElement, 'click');

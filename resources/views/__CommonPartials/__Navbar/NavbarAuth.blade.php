@@ -32,7 +32,7 @@
                 @php
                     
                 @endphp
-                <div class="notifications-list-container text-justify">
+                <div class="notifications-list-container ">
                     @include('__CommonPartials.__Navbar.Notifications')
                 </div>
                 @if ($nextCursor)
