@@ -31,6 +31,38 @@ class AccessUserTest extends TestCase
             ]);
     }
 
+    public function test_user_cannot_login_with_incorrect_credentials()
+    {
+        User::createOrFirst([
+            'email' => 'test2@example.com',
+            'password' => bcrypt('password123'),
+            'role' => 'ORGANIZER'
+        ]);
+
+        User::createOrFirst([
+            'email' => 'test3@example.com',
+            'password' => bcrypt('password123'),
+            'role' => 'PARTICIPANT'
+        ]);
+
+        $response = $this->post('/participant/signin', [
+            'email' => 'test2@example.com',
+            'password' => 'wrongpassword',
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertGuest();
+
+        $response = $this->post('/organizer/signin', [
+            'email' => 'test3@example.com',
+            'password' => 'wrongpassword',
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertGuest();
+
+    }
+
     public function test_participant_can_login_successfully()
     {
         $user = User::factory()->create([
@@ -114,5 +146,39 @@ class AccessUserTest extends TestCase
                 'success' => false,
                 'message' => 'Invalid Role for Organizer',
             ]);
+    }
+
+
+    public function test_user_can_login_with_correct_credentials()
+    {
+        $user = User::createOrFirst([
+            'email' => 'test2@example.com',
+            'password' => bcrypt('password123'),
+            'role' => 'ORGANIZER'
+        ]);
+
+        $this->post('/organizer/signin', [
+            'email' => 'test2@example.com',
+            'password' => 'password123',
+        ]);
+
+        $this->assertAuthenticatedAs($user);
+        $this->get('/logout');
+        $this->assertGuest();
+
+        $user = User::createOrFirst([
+            'email' => 'test3@example.com',
+            'password' => bcrypt('password123'),
+            'role' => 'PARTICIPANT'
+        ]);
+
+        $this->post('/participant/signin', [
+            'email' => 'test3@example.com',
+            'password' => 'password123',
+        ]);
+
+        $this->assertAuthenticatedAs($user);
+        $this->get('/logout');
+        $this->assertGuest();
     }
 }
