@@ -220,7 +220,7 @@
             </div>
         </div>
         <div class="tabs px-5" x-cloak x-show="!isEditMode">
-            <button class="tab-button  outer-tab tab-button-active"
+            <button class="tab-button  outer-tab py-2 tab-button-active"
                 onclick="showTab(event, 'Overview', 'outer-tab')">Overview</button>
             <button class="tab-button outer-tab" onclick="showTab(event, 'Events', 'outer-tab')">Events</button>
         </div>
@@ -285,6 +285,7 @@
                 <p class="tab-size">
                     This profile has no active events
                 </p>
+                <br><br><br>
             @else
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>

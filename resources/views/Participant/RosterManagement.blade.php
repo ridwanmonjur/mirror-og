@@ -108,7 +108,7 @@
             $rosterMembersCount = $rosterMembers->count();
             $teamMembersCount = $teamMembers->count();
         @endphp
-        <div>
+        <div class="tab-size">
             <p class="text-center mx-auto">Team {{ $selectTeam->teamName }} has
                 {{ $rosterMembersCount }} accepted roster member{{bladePluralPrefix($rosterMembersCount)}}
                 from {{$teamMembersCount}} available team member{{bladePluralPrefix($teamMembersCount)}}.

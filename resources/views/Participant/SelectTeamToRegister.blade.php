@@ -133,7 +133,7 @@
                     </p>
 
                     <div class="text-center">
-                        <button id="selectTeamButtonId" form="selectTeam" disabled class="oceans-gaming-default-button" type="submit">
+                        <button id="selectTeamButtonId" form="selectTeam" disabled style="max-width: 100%;" class="oceans-gaming-default-button" type="submit">
                             Confirm Team and Notify
                         </button>
                     </div>

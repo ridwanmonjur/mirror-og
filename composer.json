@@ -28,6 +28,7 @@
         "doctrine/dbal": "^3.6",
         "fakerphp/faker": "^1.9.1",
         "larastan/larastan": "^2.0",
+        "laravel/dusk": "^8.2",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "laravel/ui": "^4.2",

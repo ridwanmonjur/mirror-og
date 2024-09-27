@@ -16,7 +16,6 @@
     @php
         use Carbon\Carbon;
     @endphp
-    <br> <br>
     @if (isset($id))
         <div class="mb-2 text-success mx-auto text-center">
             You have joined this event successfully!
@@ -125,7 +124,7 @@
             <h5 class="text-center mx-auto mt-2">
                 View your sent team requests.
             </h5>
-            <div class="mt-3 pt-3">
+            <div class="mt-3 pt-3 tab-size">
                 @if (isset($pendingTeamAndMemberList[0]))
                     <table class="member-table responsive  mx-auto">
                         <caption>Table Caption</caption>

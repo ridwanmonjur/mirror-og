@@ -22,7 +22,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('join_events', function (Blueprint $table) {
-            $table->dropColumn('payment_status');
+            if (Schema::hasColumn('join_events', 'payment_status')) {
+                $table->dropColumn('payment_status');
+            }
         });
     }
 };

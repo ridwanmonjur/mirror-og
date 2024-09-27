@@ -1,6 +1,0 @@
-I WANT TO TRY TO TEST
-
-I am on page 'http://localhost:8000/organizer/event/create' 
-I click 'Continue' 
-I see 'Create an event'
-

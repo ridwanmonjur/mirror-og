@@ -92,8 +92,11 @@
                 @endif
                 <div class="tab-size"><b>Outstanding Registrations</b></div><br> <br>
             @endif
+            
+            @if (!isset($joinEvents[0]))
+                <p class="tab-size text-start mx-auto ">No events available</p>
+            @else
             <div @class(["event-carousel-styles" => !$isRedirect, "mx-5 px-5"])>
-
                 @foreach ($joinEvents as $joinEvent)
                     @if ($isRedirect) 
                         <div class="text-center">
@@ -106,6 +109,8 @@
                     @include('Participant.__Partials.PieChart', ['isInvited' => false])
                 @endforeach
             </div>
+
+            @endif
         </div>
         @if (!$isRedirect)
             <div id="Invitation">
@@ -114,7 +119,7 @@
                 <br> <br>
                 <div class="position-relative d-flex justify-content-center">
                     @if (!isset($invitedEvents[0]))
-                        <p>No events available</p>
+                        <p class="tab-size text-start mx-auto">No events available</p>
                     @else
                         <div class="event-carousel-styles mx-5 px-5">
                             @foreach ($invitedEvents as $key => $joinEvent)

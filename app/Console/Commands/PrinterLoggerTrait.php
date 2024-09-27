@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Traits;
+namespace App\Console\Commands;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
-trait TasksTrait
+trait PrinterLoggerTrait
 {
     private function logEntry(Carbon $today, string $commandName): int
     {

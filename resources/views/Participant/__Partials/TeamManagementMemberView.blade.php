@@ -19,7 +19,7 @@
     <input type="hidden" name="sortType" id="sortType" value="">
 
     @if($counTeamMembers > 0)
-        <div class="tab-size d-flex justify-content-between flex-wrap tab-size mt-3 pt-3">
+        <div class="tab-size 3 d-flex justify-content-between flex-wrap tab-size mt-3 pt-3">
             
             <div class="mb-2">
                <span class="cursor-pointer me-4" onclick="
@@ -231,13 +231,19 @@
                 </span> 
             </div>
         </div>
-        <table class="member-table responsive " id="member-table responsive -body">
-            <input id="membersJson" type="hidden" value="{{json_encode($selectTeam->members)}}">
-            <input id="captainJson" type="hidden" value="{{json_encode($captain)}}">
-            <tbody>
-                    
-            </tbody>
-        </table>
+        <div class="tab-size">
+            <table class="member-table responsive " id="member-table-body">
+                <input id="membersJson" type="hidden" value="{{json_encode($selectTeam->members)}}">
+                <input id="captainJson" type="hidden" value="{{json_encode($captain)}}">
+                <tbody>
+                        
+                </tbody>
+            </table>
+        </div>
+    @else
+        <div class="tab-size">
+            No items available
+        </div>
     @endif
     </form>
 </div>
@@ -553,7 +559,7 @@
         
         for (member of filteredSortedMembers) {
             bodyHtml+=`
-                <tr class="st px-3">
+                <tr class="st px-0">
                     <td class="colorless-col">
                         <svg 
                             onclick="redirectToProfilePage('${member.user_id}');"
@@ -564,7 +570,7 @@
                                 d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
                         </svg>
                     </td>
-                    <td class="coloured-cell px-3">
+                    <td class="coloured-cell px-2">
                         <div class="player-info">
                                 <div class="${!captainJson || member.id != captainJson?.team_member_id && 'd-none'} player-image">
                                 </div>
@@ -580,11 +586,11 @@
                     <td class="coloured-cell px-3">
                         <span>${member?.user?.email}</span>
                     </td>
-                    <td class="coloured-cell px-3">
+                    <td class="coloured-cell px-0">
                         <span>${member?.status} ${member?.updated_at ? member.updated_at: ''} </span>
                     </td>
                     <td class="flag-cell coloured-cell px-3 fs-4">
-                        <span>${member?.user?.participant?.region_flag}</span>
+                        <span>${member?.user?.participant?.region_flag ? member?.user?.participant?.region_flag : '🚫'} </span>
                     </td>
                 </tr>
             `;

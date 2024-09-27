@@ -231,6 +231,7 @@
                                         x-model="participant.domain"
                                     > 
                                 </span>
+                                <br> <br> <br> 
                                 <span>
                                     <svg
                                         class="align-middle"
@@ -458,6 +459,7 @@
                 <p class="tab-size">
                     This profile has no active events
                 </p>
+                <br><br><br>
             @else
                 <div id="activeRostersForm" class="tex-center mx-auto">
                     <br>
@@ -488,8 +490,9 @@
         <div class="tab-content pb-4  outer-tab d-none" id="Teams">
              <br>
             <div class="tab-size"><b>Current Teams</b></div>
+            <div class="tab-size pt-4">
             @if (isset($teamList[0]))
-                <table id="current_teams" class="member-table responsive  table-responsive">
+                <table id="current_teams" class="member-table responsive  ">
                     <thead>
                         <tr>
                             <th> </th>
@@ -501,7 +504,7 @@
                     <tbody>
                         @foreach($teamList as $team)
                             <tr class="st">
-                                <td class="py-0 px-0 mx-0"> 
+                                <td style="width: 60px !important;" class="py-0 px-0 mx-0"> 
                                     <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
                                          <svg class="gear-icon-btn"
                                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -531,11 +534,12 @@
             @else
                 <div class="tab-size pt-3">No current teams</div>
             @endif
+            </div>
             <br> 
             <div class="tab-size"><b>Past Teams</b></div>
-
+            <div class="tab-size pt-4">
             @if (isset($pastTeam[0]))
-                <table id="past_teams" class="member-table responsive  table-responsive">
+                <table id="past_teams" class="member-table responsive  ">
                     <thead>
                         <tr>
                             <th> </th>
@@ -547,7 +551,7 @@
                     <tbody>
                         @foreach($pastTeam as $team)
                             <tr class="st">
-                                <td class="py-0 px-0 mx-0"> 
+                                <td style="width: 60px !important;" class="py-0 px-0 mx-0"> 
                                     <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
                                          <svg class="gear-icon-btn"
                                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -577,6 +581,7 @@
             @else
                 <div class="tab-size pt-3">No past teams</div>
             @endif
+            </div>
         </div>
 
     </main>

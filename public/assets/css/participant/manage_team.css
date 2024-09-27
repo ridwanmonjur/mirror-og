@@ -21,5 +21,6 @@
 
 .main2 {
     background-image: url("/assets/images/event-creation-bg.png");
-
+    background-repeat: repeat-y;
+    background-size: 100vw 150vh;
 }

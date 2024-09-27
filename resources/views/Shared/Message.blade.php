@@ -107,7 +107,7 @@
                             </div>
                         </div>
                         <br>
-                        <div> 
+                        <div class="tab-size"> 
                             <table class="table responsive ">
                                 <thead>
                                     <tr>

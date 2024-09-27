@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\PaymentTransaction;
 use App\Models\StripePayment;
 use App\Models\Task;
-use App\Traits\TasksTrait;
+use App\Console\Commands\PrinterLoggerTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
@@ -14,7 +14,7 @@ use Stripe\StripeClient;
 
 class RespondTasks extends Command
 {
-    use TasksTrait;
+    use PrinterLoggerTrait;
 
     /**
      * The name and signature of the console command.

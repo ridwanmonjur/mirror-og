@@ -19,9 +19,9 @@ input[type="time"] {
 
 .breadcrumb-top {
     position: absolute;
-    margin-left: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
     top: 15vh;
-    width: 100vw;
 }
 
 .back-next button {
