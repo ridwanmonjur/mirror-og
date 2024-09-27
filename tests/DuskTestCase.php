@@ -35,6 +35,7 @@ abstract class DuskTestCase extends BaseTestCase
             '--disable-search-engine-choice-screen',
             '--disable-gpu',
             '--headles',
+            '--disable-software-rasterizer',
             '--disable-dev-shm-usage',
         ]);
 
