@@ -4,7 +4,73 @@
 @import 'variables';
 @import './bootstrap/bootstrap.css';
 
+  table.responsive {
+    // border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    // margin-top:150px;
+  }
 
+  table.responsive thead { display: table-column; }
+
+  
+//   table.responsive caption {
+//     font-size: 1.5em;
+//     margin: .25em 0 .75em;
+//   }
+  
+  table.responsive tr {
+    // background: #f8f8f8;
+    // border: 1px solid #ddd;
+    // padding: .35em;
+  }
+  
+  table.responsive th, table.responsive td {
+    // padding: .625em;
+    text-align: left;
+  }
+  
+//   table.responsive th {
+    // font-size: 1em;
+//     letter-spacing: .1em;
+//     text-transform: uppercase;
+//   }
+  
+  table.responsive td img { text-align: left; }
+  @media screen and (max-width: 600px) {
+  
+    table.responsive { border: 0; }
+    
+    table.responsive caption { 
+        font-size: 1.3em; 
+    }
+    
+    table.responsive thead { display: none; }
+    
+    table.responsive tr {
+        // border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em;
+    }
+    
+    table.responsive td {
+        // border-bottom: 1px solid #ddd;
+        display: block;
+        // font-size: .8em;
+        text-align: left;
+    }
+    
+    table.responsive td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    table.responsive td:last-child { border-bottom: 0; }
+}
 
 
 // damn, underrated bootstrap responsiveness! amazing goat

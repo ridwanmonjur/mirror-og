@@ -23,7 +23,7 @@
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
 
-    <main class="ps-5">
+    <main class="px-2">
         <br>
         <div class="ms-5">
             <u>
@@ -56,8 +56,9 @@
                                 Achievements
                             </button>
                         </div>
-                        <div class="tab-content pb-4  outer-tab mx-auto" id="Position">
-                            <table class="mx-auto member-table text-start" style="margin-left: 5px;">
+                        <br>
+                        <div class="tab-content pb-4 tab-size outer-tab mx-auto" id="Position">
+                            <table class="mx-auto member-table responsive" style="margin-left: 5px;">
                                 
                                 @if (isset($joinEventAndTeamList[0]))
                                     <thead class="accepted-member-table text-start">
@@ -70,14 +71,14 @@
                                         <th class="text-start" style="width: 150px;">
                                             Team Created
                                         </th>
-                                        <th class="text-end" style="width: 120px;">
+                                        <th class="text-start" style="width: 120px;">
                                             Team Position
                                         </th>
                                     </thead>
                                     <tbody class="accepted-member-table text-start">
                                         @foreach ($joinEventAndTeamList as $key => $joinEventAndTeam)
                                             <tr class="st">
-                                                <td class="colorless-col px-3">
+                                                <td class="colorless-col px-0">
                                                     <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
                                                         class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
                                                         width="20" height="20" fill="currentColor"
@@ -88,7 +89,7 @@
                                                     </svg>
                                                 </td>
                                                 
-                                                <td class="coloured-cell px-3 text-start">
+                                                <td class="coloured-cell px-2 text-start">
                                                     <img
                                                         class="rounded-circle d-inline-block object-fit-cover me-3"
                                                         src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"
@@ -99,15 +100,15 @@
                                                     {{ $joinEventAndTeam->teamName }}
                                                 </td>
                                                
-                                                <td class="coloured-cell px-3 text-start">
+                                                <td class="coloured-cell px-2 text-start">
                                                     {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
                                                 </td>
-                                                <td class="coloured-cell text-end px-2">
+                                                <td class="coloured-cell text-start px-2">
                                                     {{ $joinEventAndTeam->position ? $joinEventAndTeam->position : '-' }}
                                                     &nbsp;&nbsp;
                                                 </td>
-                                                <td class="colorless-column px-1 ps-2 cursor-pointer text-start"
-                                                    style="padding: 0; margin: 0; width: 150px;">
+                                                <td class="colorless-column px-2 cursor-pointer text-start"
+                                                >
                                                     <svg data-bs-toggle="modal"
                                                         data-bs-target="{{ '#rank' . $joinEventAndTeam->id1 . '-modal' }}"
                                                         xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -173,7 +174,7 @@
                                 @endif
                             </table>
                         </div>
-                        <div class="tab-content pb-4  outer-tab d-none mx-auto" id="Awards">
+                        <div class="tab-content tab-size outer-tab d-none mx-auto" id="Awards">
                             <div class="mx-auto member-table d-flex justify-content-center">
                                 <button data-bs-toggle="modal" data-bs-target="{{ '#award' . '-modal' }}"
                                     class="oceans-gaming-default-button">
@@ -190,8 +191,9 @@
                                     </span>
                                 </button>
                             </div>
-                            <table class="member-table text-start mx-auto" style="margin-left: -5px;">
-                                @if (isset($awardAndTeamList[0]))
+                            <br>
+                            @if (isset($awardAndTeamList[0]))
+                                <table class="member-table responsive   mx-auto">
                                     <thead class="accepted-member-table text-start">
                                         <th></th>
                                         <th class="text-start">
@@ -201,15 +203,14 @@
                                             Team Name
                                         </th>
                                      
-                                        <th class="text-end" style="width: 180px;">
+                                        <th class="text-start" style="width: 180px;">
                                             Team Created
                                         </th>
                                     </thead>
                                     <tbody class="accepted-member-table text-start">
                                         @foreach ($awardAndTeamList as $key => $joinEventAndTeam)
-                                            @if (!is_null($joinEventAndTeam->award_id))
                                                 <tr class="st">
-                                                    <td class="colorless-col px-3">
+                                                    <td class="colorless-col px-0">
                                                         <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
                                                             class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
                                                             width="20" height="20" fill="currentColor"
@@ -228,14 +229,14 @@
                                                         @endif
                                                         {{ $joinEventAndTeam->awards_title ? $joinEventAndTeam->awards_title : '' }}
                                                     </td>
-                                                    <td class="coloured-cell px-3 text-start">
+                                                    <td class="coloured-cell px-2 text-start">
                                                         {{ $joinEventAndTeam->teamName }}
                                                     </td>
                                                     
-                                                    <td class="coloured-cell px-3 text-end">
+                                                    <td class="coloured-cell px-2 text-start">
                                                         {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
                                                     </td>
-                                                    <td class="colorless-column px-1 ps-4 text-start">
+                                                    <td class="colorless-column px-1  text-start">
                                                         <svg onclick="deleteAward({{ $joinEventAndTeam->results_id }})"
                                                             xmlns="http://www.w3.org/2000/svg" width="16"
                                                             height="16" fill="currentColor" class="bi bi-trash"
@@ -247,82 +248,81 @@
                                                         </svg>
                                                     </td>
                                                 </tr>
-                                            @endif
                                         @endforeach
                                     </tbody>
-                                @else
-                                    <p class="text-center mt-3">  No positions joined yet.</p>
-                                @endif
+                                </table>
+                            @else
+                                <p class="text-center mt-3">  No positions joined yet.</p>
+                            @endif
+
                                      
-                                    <div class="modal fade" id='award-modal' tabindex="-1"
-                                        aria-labelledby={{ 'award-modal-label' }} aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <form onsubmit="addAward(event);">
-                                                    <div class="modal-body modal-body-overflow scrollbarline pe-4">
-                                                        <div class="mx-auto text-center mt-3">
-                                                            <h5> Choose an award and team </h5>
-                                                            <br>
-                                                            <div>
-                                                                <input type="hidden" name="eventName"
-                                                                    value="{{ $event->eventName ?? 'No name yet' }}">
-                                                                
-                                                                <label class="form-check-label fw-bold">
-                                                                    Choose team
-                                                                </label>
-                                                                <select class="form-select mx-auto" name="teamId"
-                                                                    aria-label="Select Team"
-                                                                    style="max-width: 200px !important;">
-                                                                    @foreach ($joinEventAndTeamList as $joinEventAndTeam)
-                                                                        <option
-                                                                            value="{{ $joinEventAndTeam->team_id }}">
-                                                                            {{ $joinEventAndTeam->teamName }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                            <br>
-                                                            <label class="form-check-label fw-bold">
-                                                                Choose award
-                                                            </label>
-                                                            <div
-                                                                class="d-flex flex-row justify-content-start ps-2 pe-5 mt-0">
-                                                                @foreach ($awardList as $award)
-                                                                    <div
-                                                                        class="form-check mx-auto justify-content-start px-2">
-                                                                        <input
-                                                                            class="form-check-input text-center mx-auto"
-                                                                            type="radio" name="awardId"
-                                                                            value="{{ $award->id }}">
-                                                                        <input type="hidden" name="awardName"
-                                                                            value="{{ $award->title }}">
-                                                                        <span> {{ $award->title }} </span>
-                                                                        <label class="form-check-label"
-                                                                            for="awardId">
-                                                                            <img src="{{ '/storage' . '/' . $award->image }}"
-                                                                                width="150"
-                                                                                style="object-fit: cover;"> </span>
-                                                                        </label>
-                                                                    </div>
-                                                                @endforeach
-                                                            </div>
-                                                            <br>
-                                                            <button type="submit"
-                                                                class="oceans-gaming-default-button">Submit
-                                                            </button>
-                                                            <button type="button"
-                                                                class="oceans-gaming-default-button oceans-gaming-gray-button"
-                                                                data-bs-dismiss="modal">Close
-                                                            </button>
-                                                        </div>
+                            <div class="modal fade" id='award-modal' tabindex="-1"
+                                aria-labelledby={{ 'award-modal-label' }} aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form onsubmit="addAward(event);">
+                                            <div class="modal-body modal-body-overflow scrollbarline pe-4">
+                                                <div class="mx-auto text-center mt-3">
+                                                    <h5> Choose an award and team </h5>
+                                                    <br>
+                                                    <div>
+                                                        <input type="hidden" name="eventName"
+                                                            value="{{ $event->eventName ?? 'No name yet' }}">
+                                                        
+                                                        <label class="form-check-label fw-bold">
+                                                            Choose team
+                                                        </label>
+                                                        <select class="form-select mx-auto" name="teamId"
+                                                            aria-label="Select Team"
+                                                            style="max-width: 200px !important;">
+                                                            @foreach ($joinEventAndTeamList as $joinEventAndTeam)
+                                                                <option
+                                                                    value="{{ $joinEventAndTeam->team_id }}">
+                                                                    {{ $joinEventAndTeam->teamName }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
-                                                </form>
+                                                    <br>
+                                                    <label class="form-check-label fw-bold">
+                                                        Choose award
+                                                    </label>
+                                                    <div
+                                                        class="d-flex flex-row justify-content-start ps-2 pe-5 mt-0">
+                                                        @foreach ($awardList as $award)
+                                                            <div
+                                                                class="form-check mx-auto justify-content-start px-2">
+                                                                <input
+                                                                    class="form-check-input text-center mx-auto"
+                                                                    type="radio" name="awardId"
+                                                                    value="{{ $award->id }}">
+                                                                <input type="hidden" name="awardName"
+                                                                    value="{{ $award->title }}">
+                                                                <span> {{ $award->title }} </span>
+                                                                <label class="form-check-label"
+                                                                    for="awardId">
+                                                                    <img src="{{ '/storage' . '/' . $award->image }}"
+                                                                        width="150"
+                                                                        style="object-fit: cover;"> </span>
+                                                                </label>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                    <br>
+                                                    <button type="submit"
+                                                        class="oceans-gaming-default-button">Submit
+                                                    </button>
+                                                    <button type="button"
+                                                        class="oceans-gaming-default-button oceans-gaming-gray-button"
+                                                        data-bs-dismiss="modal">Close
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                     </div>
-                               
-                            </table>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="tab-content pb-4  outer-tab d-none mx-auto" id="Achievements">
+                        <div class="tab-content tab-size pb-4  outer-tab d-none mx-auto" id="Achievements">
                             <div class="mx-auto member-table d-flex justify-content-center">
                                 <button data-bs-toggle="modal" data-bs-target="{{ '#achievements-modal' }}"
                                     class="oceans-gaming-default-button">
@@ -339,7 +339,8 @@
                                     </span>
                                 </button>
                             </div>
-                            <table class="member-table text-start mx-auto" style="margin-left: -5px;">
+                            <br>
+                            <table class="member-table responsive   mx-auto" >
                                 @if (isset($achievementsAndTeamList[0]))
                                     <thead class="accepted-member-table text-start">
                                         <th></th>
@@ -356,15 +357,14 @@
                                             Team Name
                                         </th>
                                        
-                                        <th class="text-end" style="width: 180px;">
+                                        <th class="text-start" style="width: 180px;">
                                             Team Created
                                         </th>
                                     </thead>
                                     <tbody class="accepted-member-table text-start">
                                         @foreach ($achievementsAndTeamList as $key => $joinEventAndTeam)
-                                            @if (!is_null($joinEventAndTeam->achievements_id))
-                                                <tr class="st">
-                                                    <td class="colorless-col px-3">
+                                                <tr class="st py-3">
+                                                    <td class="colorless-col px-2">
                                                         <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
                                                             class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
                                                             width="20" height="20" fill="currentColor"
@@ -377,20 +377,20 @@
                                                     <td class="coloured-cell text-center px-2"> 
                                                         {{ $joinEventAndTeam->achievements_title ? $joinEventAndTeam->achievements_title : '' }}
                                                     </td>
-                                                    <td class="coloured-cell px-3 text-start">
+                                                    <td class="coloured-cell px-2 text-start">
                                                         {{ $joinEventAndTeam->achievements_description }}
                                                     </td>
-                                                    <td class="coloured-cell px-3 text-start">
+                                                    <td class="coloured-cell px-2 text-start">
                                                         {{ \Carbon\Carbon::parse($joinEventAndTeam->achievements_created_at)->format('Y') }}
                                                     </td>
-                                                    <td class="coloured-cell px-3 text-start">
+                                                    <td class="coloured-cell px-2 text-start">
                                                         {{ $joinEventAndTeam->teamName }}
                                                     </td>
                                                     
-                                                    <td class="coloured-cell px-3 text-end">
+                                                    <td class="coloured-cell px-2 text-start">
                                                         {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
                                                     </td>
-                                                    <td class="colorless-column px-1 ps-4 text-start">
+                                                    <td class="colorless-column px-1 ps-2 pt-2 text-start">
                                                         <svg onclick="deleteAchievement({{ $joinEventAndTeam->achievements_id }})"
                                                             xmlns="http://www.w3.org/2000/svg" width="16"
                                                             height="16" fill="currentColor" class="bi bi-trash"
@@ -402,7 +402,6 @@
                                                         </svg>
                                                     </td>
                                                 </tr>
-                                            @endif
                                         @endforeach
                                     </tbody>
                                 @else

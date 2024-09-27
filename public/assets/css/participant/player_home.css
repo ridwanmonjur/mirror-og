@@ -115,9 +115,10 @@ main {
 
 .event {
     position: relative;
+    margin: auto;
     margin-bottom: 40px;
     min-height: 470px;
-    width: min(360px, 95vw);
+    width: min(360px, 80vw);
     background: transparent;
     border: 2px solid rgb(82, 159, 23);
     border-radius: 40px;
@@ -184,6 +185,11 @@ main {
 
 #smaller {
     font-size: smaller;
+}
+
+
+.league_name p{
+    font-size: 1.0rem;
 }
 
 .hamburger-menu {
@@ -271,7 +277,7 @@ main {
 
 .league_name {
     text-align: left;
-    padding-left: 20px;
+    padding: 0 20px;
 }
 
 .cover {
@@ -338,6 +344,14 @@ footer {
 /* Mobile styles */
 
 @media (max-width: 560px) {
+    .league_name p{
+        font-size: 1.15rem;
+    }
+
+    .league_name small{
+        font-size: 1.00rem;
+    }
+
     .featured-events {
         grid-template-columns: 1fr;
         margin: 0 5vw;
@@ -346,6 +360,14 @@ footer {
 
 
 @media (min-width: 560px) and (max-width: 800px) {
+    .league_name p{
+        font-size: 1.15rem;
+    }
+
+    .league_name small{
+        font-size: 1.00rem;
+    }
+
     .nav__sect1 {
         justify-content: space-between;
         padding: 0 10px;

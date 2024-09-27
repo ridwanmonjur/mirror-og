@@ -52,7 +52,7 @@
         and {{ $teamMembersProcessed['left']['count'] }} removed member{{bladePluralPrefix($teamMembersProcessed['left']['count'])}}
     </p>
     <div class="cont mt-3 pt-3">
-        <table class="tab-size member-table">
+        <table class="tab-size member-table responsive ">
             <tbody class="accepted-member-table">
                 @if ($teamMembersProcessed['accepted']['count'] != 0)
                     @foreach ($teamMembersProcessed['accepted']['members'] as $member)
@@ -113,7 +113,7 @@
         and {{ $teamMembersProcessed['rejected']['count'] }} rejected member{{bladePluralPrefix($teamMembersProcessed['rejected']['count'])}}
     </p>
     <div class="cont mt-3 pt-3">
-        <table class="member-table">
+        <table class="member-table responsive ">
             <tbody class="pending-member-table">
                 @if ($teamMembersProcessed['pending']['count'] != 0 || 
                         $teamMembersProcessed['rejected']['count'] != 0 
@@ -415,7 +415,7 @@
     </form>
 
     <section class="featured-events scrolling-pagination">
-        <table class="member-table" id="member-table-body">
+        <table class="member-table responsive " id="member-table responsive -body">
             <tbody>
             </tbody>
         </table>

@@ -29,7 +29,6 @@ class PaymentService
             ->get()
             ->toArray();
         
-
         $updatedPayments = [];
         $summedDiscounts = [];
         $updatedDiscounts = [];
@@ -96,6 +95,9 @@ class PaymentService
             }
         }
 
+        // dd($paymentData, $updatedDiscounts,$summedDiscounts);
+
+
         if (!empty($updatedPayments)) {
             DB::beginTransaction();
             try {
@@ -136,6 +138,10 @@ class PaymentService
                 Log::error("PaymentCaptureService Error - Bulk update failed: " . $e->getMessage());
             }
         }
+
+        $paymentData = DB::table('join_events')
+            ->whereIn('event_details_id', $eventIdList)     
+            ->update(['join_status' => 'canceled']);
         return $summedDiscounts;
     }
 }

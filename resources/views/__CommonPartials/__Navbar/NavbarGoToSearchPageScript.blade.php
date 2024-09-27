@@ -1,4 +1,3 @@
-
 <script>
     function toggleDropdown() {
         document.querySelector("#myDropdown").classList.toggle("d-none")

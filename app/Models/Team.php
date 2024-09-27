@@ -507,7 +507,7 @@ class Team extends Model
     {
         if ($isTeamCancelee) {
             $data['subject'] = 'Team '.$this->teamName.' canceled registration for Event: '.$event->eventName;
-            $data['refundString'] = 'half of';
+            $data['refundString'] = 'half';
             $data['cacnelOrgHtml'] = <<<HTML
                 <span>
                     Team   
@@ -536,10 +536,10 @@ class Team extends Model
             HTML;
         } else {
             $data['subject'] = 'Organizer has '. 'canceled the Event: '.$event->eventName;
-            $data['refundString'] = '';
+            $data['refundString'] = 'all';
             $data['cacnelOrgHtml'] = <<<HTML
                 <span>
-                    <span class="notification-black">You have canceled your </span>    
+                    <span class="notification-black">You have canceled your event </span>    
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
                     </a>.
@@ -588,20 +588,22 @@ class Team extends Model
 
             $issetReleasedAmount = isset($discount['released_amount']) && $discount['released_amount'] > 0;
             $issetCouponedAmount = isset($discount['couponed_amount']) && $discount['couponed_amount'] > 0;    
-            if ($isTeamCancelee && ( $issetReleasedAmount || $issetCouponedAmount)) {
-                $dicountText = "You have been returned {$data['refundString']} of your contribution: ";
+            if ( $issetReleasedAmount || $issetCouponedAmount ) {
+                $discountText = "You have been returned {$data['refundString']} of your contribution: ";
+                
                 if ($issetReleasedAmount) {
-                    $dicountText .= "RM {$discount['released_amount']} in bank refunds" ;
+                    $discountText .= "RM {$discount['released_amount']} in bank refunds" ;
                 }
                 
-                if ($issetReleasedAmount > 0 && $issetCouponedAmount) {
+                if ($issetReleasedAmount && $issetCouponedAmount) {
                     $discountText .= " &";
                 }
-
+            
                 if ($issetCouponedAmount) {
                     $discountText .= " RM {$discount['couponed_amount']} in coupons.";
                 }
             }
+            
 
             $memberNotification['banner'] = $teamBannerUrl;
             $memberNotification['team'] = $memberNotificationDefault['team'];
@@ -657,11 +659,6 @@ class Team extends Model
         Notification::send($memberList, new EventCancelNotification($memberNotification));
         Notification::send($organizerList, new EventCancelNotification($organizerNotification));
         
-        // RosterMember::where([
-        //     'join_events_id' => $joinEvent->id,
-        //     'team_id' => $this->id
-        // ])
-        //     ->delete();
     }
 
 

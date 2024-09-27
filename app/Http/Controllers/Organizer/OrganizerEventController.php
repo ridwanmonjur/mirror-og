@@ -9,19 +9,30 @@ use App\Models\EventCategory;
 use App\Models\EventDetail;
 use App\Models\EventTier;
 use App\Models\EventType;
+use App\Models\JoinEvent;
 use App\Models\Organizer;
+use App\Models\Team;
 use App\Models\User;
+use App\Services\PaymentService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\View\View;
 
 class OrganizerEventController extends Controller
 {
+    private $paymentService;
+
+    public function __construct(PaymentService $paymentService)
+    {
+        $this->paymentService = $paymentService;
+    }
+
     public function home()
     {
         if (Session::has('intended')) {
@@ -348,15 +359,37 @@ class OrganizerEventController extends Controller
     public function destroy($id)
     {
         try {
-            $event = EventDetail::find($id);
-            EventDetail::destroyEventBanner($event->eventBanner);
-            $event->delete();
+            $event = EventDetail::findOrFail($id); 
+            $teamIdList = JoinEvent::where('event_details_id', $id)->pluck('team_id'); // No need for get() before pluck
 
-            return redirect('organizer/event');
-        } catch (ModelNotFoundException|UnauthorizedException $e) {
-            return $this->showErrorOrganizer($e->getMessage());
+            $teamList = Team::whereIn('id', $teamIdList)->get();
+            $teamList->each(function (Team $team) use ($event, $id) {
+                $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$id], 0);
+                $team->cancelTeamRegistration($event, $discountsByUserAndType, false);
+            });
+
+            // $event->deleteEventBanner(); 
+            // $event->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Event deleted successfully',
+            ]);
+        } catch (ModelNotFoundException | UnauthorizedException $e) {
+            Log::error('Failed to delete event: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
         } catch (Exception $e) {
-            return $this->showErrorOrganizer('Failed to delete event!');
+            Log::error('General exception in event deletion: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
         }
+
     }
-}
+};

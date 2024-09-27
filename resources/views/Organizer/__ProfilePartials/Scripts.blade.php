@@ -60,7 +60,7 @@
             localStorage.setItem('message', errorInput.value);
         }
 
-        window.fileUploadPreviewById('file-upload-preview-1');
+        // window.fileUploadPreviewById('file-upload-preview-1');
 
           window.createGradientPicker(document.getElementById('div-gradient-picker'),
             (gradient) => {
@@ -107,9 +107,6 @@
                 }
             }, (data)=> {
                 if (backgroundBanner) {
-                    console.log({data: data.data})
-                    console.log({data: data.data})
-                    console.log({data: data.data})
                     backgroundBanner.style.backgroundImage = `url(/storage/${data.data.backgroundBanner})`;
                     backgroundBanner.style.background = 'auto';
                 }

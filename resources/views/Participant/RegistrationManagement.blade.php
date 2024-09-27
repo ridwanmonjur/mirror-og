@@ -141,9 +141,10 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        function submitConfirmCancelForm(text, id) {
+        function submitConfirmCancelForm(event, text, id) {
+            let form = event.target.dataset.form;
             window.dialogOpen(text, ()=> {
-                document.getElementById(id).submit();
+                document.querySelector(`#${id}.${form}`).submit();
             }, null)
         }
         let registrationPaymentModalMap = {}; 

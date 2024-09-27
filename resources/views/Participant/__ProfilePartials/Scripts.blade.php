@@ -2,6 +2,8 @@
 
 <script>
     var backgroundBanner = document.getElementById("backgroundBanner")
+    let backgroundColorInputValue = document.getElementById('backgroundColorInput')?.value;
+    let fontColorInputValue = document.getElementById('fontColorInput')?.value;
 
     var mediaQueryList = window.matchMedia("(min-width: 600px)");
 
@@ -256,10 +258,7 @@
                     const data = await response.json();
                         
                     if (data.success) {
-                        Toast.fire({
-                            icon: 'success',
-                            text: 'Updated the player successfully!'
-                        })
+                        
                         let currentUrl = window.location.href;
                         if (currentUrl.includes('?')) {
                             currentUrl = currentUrl.split('?')[0];
@@ -279,7 +278,6 @@
             },
          
             init() {
-                this.fetchCountries();
                 var backgroundStyles = "<?php echo $backgroundStyles; ?>";
                 var fontStyles = "<?php echo $fontStyles; ?>";
                 var banner = document.getElementById('backgroundBanner');
@@ -296,6 +294,9 @@
                        this.participant.age--;
                     }
                 });
+
+                this.fetchCountries();
+
             }
 
         }})
