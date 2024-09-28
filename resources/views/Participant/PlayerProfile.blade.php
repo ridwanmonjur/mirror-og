@@ -212,7 +212,7 @@
                                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
                                     <template x-if="countries">
-                                        <select x-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;" class="d-inline form-control"  data-placeholder="Select a country" x-model="participant.region"> 
+                                        <select x-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;" class="d-inline form-select"  data-placeholder="Select a country" x-model="participant.region"> 
                                     </template>
                                 </span>
                                 <span class="me-3">

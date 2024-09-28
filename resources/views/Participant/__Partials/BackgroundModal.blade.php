@@ -36,6 +36,7 @@
             </div>
             
             <br>
+            <input type="hidden" name="teamId" value="{{ $selectTeam->id }}">
             <input type="hidden" name="backgroundColor" value="{{ $selectTeam->profile?->backgroundColor }}">
             <input type="hidden" name="backgroundGradient" value="{{ $selectTeam->profile?->backgroundGradient }}">
              <input type="hidden" name="frameColor" value="{{ $selectTeam->profile?->frameColor }}">
