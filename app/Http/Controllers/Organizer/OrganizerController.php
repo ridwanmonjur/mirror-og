@@ -92,7 +92,10 @@ class OrganizerController extends Controller
                 $links = ['website_link', 'instagram_link', 'twitter_link', 'facebook_link'];
                 foreach ($links as $link) {
                     if (isset($validatedData['organizer'][$link])) {
-                        $validatedData['organizer'][$link] = rtrim($validatedData['organizer'][$link], '/');
+                        $url = $validatedData['organizer'][$link];
+                        $url = rtrim($url, '/');
+                        $url = preg_replace('#^https?://#', '', $url);
+                        $validatedData['organizer'][$link] = $url;
                     }
                 }
 
