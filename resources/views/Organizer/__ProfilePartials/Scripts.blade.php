@@ -1,5 +1,5 @@
 <script>
-    const backgroundBanner = document.getElementById("backgroundBanner")
+    let backgroundBanner = document.getElementById("backgroundBanner")
     let colorOrGradient = null; 
     function applyBackground(event, colorOrGradient) {
         document.querySelectorAll('.color-active').forEach(element => {
@@ -60,6 +60,19 @@
             localStorage.setItem('message', errorInput.value);
         }
 
+         window.setupFileInputEditor('#changeBackgroundBanner', (file) => {
+            if (file) {
+                var cachedImage = URL.createObjectURL(file);
+                document.getElementById('backgroundBanner').style.backgroundImage = `url(${cachedImage})`;
+                document.querySelectorAll(".cursive-font").forEach((cursiveElement) => {
+                    cursiveElement.style.backgroundImage = `url(${cachedImage})` ;
+                    cursiveElement.style.background = 'auto' ;
+                });
+                document.querySelector("input[name='backgroundColor']").value = null;
+                document.querySelector("input[name='backgroundGradient']").value = null;
+            }
+        });
+
         // window.fileUploadPreviewById('file-upload-preview-1');
 
           window.createGradientPicker(document.getElementById('div-gradient-picker'),
@@ -79,6 +92,14 @@
             (color) => {
                 document.querySelector("input[name='fontColor']").value = color;
                 document.getElementById('backgroundBanner').style.color = color;
+                backgroundBanner.querySelectorAll('.form-control').forEach((element) => {
+                    element.style.color = color;
+                });
+
+                backgroundBanner.querySelectorAll('.followCounts').forEach((element) => {
+                    element.style.color = color;
+                    element.style.fill = color;
+                });
             }
         );
 

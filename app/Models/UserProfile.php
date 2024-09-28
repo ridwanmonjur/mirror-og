@@ -32,7 +32,7 @@ class UserProfile extends Model
         }
 
         if (isset($this->fontColor)) {
-            $fontStyles = "color: {$this->fontColor};";
+            $fontStyles = "color: {$this->fontColor}; fill: {$this->fontColor};";
         }
 
         if (isset($this->frameColor)) {
