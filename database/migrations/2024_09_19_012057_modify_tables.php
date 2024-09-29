@@ -23,6 +23,10 @@ return new class extends Migration
             if (!Schema::hasColumn('all_payment_transactions', 'coupon_amount')) {
                 $table->double('coupon_amount')->nullable();
             }
+
+            if (!Schema::hasColumn('all_payment_transactions', 'payment_amount')) {
+                $table->double('payment_amount');
+            }
         
             if (!Schema::hasColumn('all_payment_transactions', 'released_amount')) {
                 $table->double('released_amount')->nullable();
@@ -57,6 +61,7 @@ return new class extends Migration
             $tableName = 'all_payment_transactions';
             $this->dropColumnIfExists($table, $tableName, 'coupon_amount');
             $this->dropColumnIfExists($table, $tableName, 'released_amount');
+            $this->dropColumnIfExists($table, $tableName, 'payment_amount');
 
             if (!Schema::hasColumn('all_payment_transactions', 'user_discount_id')) {
                 $table->unsignedBigInteger('user_discount_id')->nullable();

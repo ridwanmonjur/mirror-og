@@ -195,7 +195,7 @@ class User extends Authenticatable implements FilamentUser
         return asset('storage/'.$fileName);
     }
 
-    public function uploadBackgroundBanner(Request $request, UserProfile $profile): ?string
+    public function uploadBackgroundBanner(Request $request, UserProfile | TeamProfile $profile): ?string
     {
         $file = $request->file('backgroundBanner');
         $fileNameInitial = 'userBanner-'.time().'.'.$file->getClientOriginalExtension();

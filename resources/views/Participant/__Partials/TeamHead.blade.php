@@ -9,6 +9,8 @@
         'resources/sass/file-upload-preview.scss',
         'resources/js/colorpicker.js',
         'resources/sass/colorpicker.scss',
+        'resources/js/file-edit.js',
+        'resources/sass/file-edit.scss',
     ])
 
 </head>
@@ -58,7 +60,6 @@
         "background-size: cover; background-repeat: no-repeat; min-height: 35vh;" 
     ])
 >    
-    @include('Participant.__Partials.BackgroundModal')
     
     <input type="hidden" id="teamData" value="{{json_encode($selectTeam)}}">
     <input type="file" id="backgroundInput" class="d-none"> 
@@ -134,7 +135,7 @@
                                 xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                                 <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                             </svg>
-                            <select x-on:change="changeFlagEmoji" id="select2-country" style="width: 150px;" class="d-inline form-control"  data-placeholder="Select a country" x-model="country"> 
+                            <select x-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;" class="d-inline form-select"  data-placeholder="Select a country" x-model="country"> 
                             </select>
                         </span>
                     </div>
@@ -278,6 +279,7 @@
         </div>
     </div>
 </main>
+    @include('Participant.__Partials.BackgroundModal')
 
 <script>
         let teamData = JSON.parse(document.getElementById('teamData').value);
@@ -288,7 +290,7 @@
                 select2: null,
                 isEditMode: false, 
                 ...teamData,
-                isEditMode: false, 
+                country: teamData?.country,
                 errorMessage: '', 
                 isCountriesFetched: false,
                 countries: 
@@ -312,17 +314,19 @@
                         if (data?.data) {
                             this.isCountriesFetched = true;
                             this.countries = data.data;
-
-                            const choices2 = document.getElementById('select2-country');
+                            
+                            const choices2 = document.getElementById('select2-country3');
                             let countriesHtml = "<option value=''>Choose a country</option>";
+
                             data?.data.forEach((value) => {
                                 countriesHtml +=`
                                     <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
                                 `;
                             });
-                            console.log({countriesHtml});
+                            console.log({c: this.country});
                             choices2.innerHTML = countriesHtml;
-                            choices2.selected = this.country;
+                            let option = choices2.querySelector(`option[value='${this.country}']`);
+                            option.selected = true;
                         } else {
                             this.errorMessage = "Failed to get data!";
                         }
@@ -380,7 +384,9 @@
                     console.log({backgroundStyles, fontStyles})
                     var banner = document.getElementById('backgroundBanner');
                     banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-                 
+                    banner.querySelectorAll('.form-control').forEach((element) => {
+                        element.style.cssText += fontStyles;
+                    });
                 }
             })
     )});
@@ -448,9 +454,19 @@
     }
 
     let newFunction = function() {
-        if (oldOnLoad) {
-            oldOnLoad();
-        }
+         window.setupFileInputEditor('#changeBackgroundBanner', (file) => {
+            if (file) {
+                var cachedImage = URL.createObjectURL(file);
+                document.getElementById('backgroundBanner').style.backgroundImage = `url(${cachedImage})`;
+                document.querySelectorAll(".cursive-font").forEach((cursiveElement) => {
+                    cursiveElement.style.backgroundImage = `url(${cachedImage})` ;
+                    cursiveElement.style.background = 'auto' ;
+                });
+                document.querySelector("input[name='backgroundColor']").value = null;
+                document.querySelector("input[name='backgroundGradient']").value = null;
+            }
+        });
+
         localStorage.setItem('isInited', "false");
         
         if (successInput) {
@@ -463,7 +479,7 @@
 
         // const bgUploadPreview = window.fileUploadPreviewById('file-upload-preview-1');
 
-        window.createGradientPicker(document.getElementById('div-gradient-picker'),
+          window.createGradientPicker(document.getElementById('div-gradient-picker'),
             (gradient) => {
                 chooseGradient(null, gradient);
             }
@@ -479,7 +495,17 @@
         window.createColorPicker(document.getElementById('div-font-color-picker-with-bg'), 
             (color) => {
                 document.querySelector("input[name='fontColor']").value = color;
-                document.getElementById('backgroundBanner').style.color = color;
+                let backgroundBanner2 = document.getElementById('backgroundBanner');
+                backgroundBanner2.style.color = color;
+                document.querySelectorAll(".cursive-font").forEach((cursiveElement) => {
+                    cursiveElement.style.color = color;
+                });
+
+                backgroundBanner.querySelectorAll('.form-control').forEach((element) => {
+                    element.style.color = color;
+                });
+
+                document.getElementById('team-name').color = color;
             }
         );
 
@@ -514,7 +540,7 @@
         window.loadMessage(); 
     }
 
-    const oldOnLoad = window.onload;
+    let oldOnLoad = window.onload;
     if (typeof window.onload !== 'function') {
         window.onload = newFunction;
     } else {
@@ -552,12 +578,12 @@
         }
     }
     
-    const uploadButton = document.getElementById("upload-button");
-    const uploadButton2 = document.getElementById("upload-button2");
-    const imageUpload = document.getElementById("image-upload");
-    const uploadedImageList = document.getElementsByClassName("uploaded-image");
-    const uploadedImage = uploadedImageList[0];
-    const backgroundBanner = document.getElementById("backgroundBanner")
+    let uploadButton = document.getElementById("upload-button");
+    let uploadButton2 = document.getElementById("upload-button2");
+    let imageUpload = document.getElementById("image-upload");
+    let uploadedImageList = document.getElementsByClassName("uploaded-image");
+    let uploadedImage = uploadedImageList[0];
+    let backgroundBanner = document.getElementById("backgroundBanner")
    
     uploadButton2.addEventListener("click", function() {
         imageUpload.click();

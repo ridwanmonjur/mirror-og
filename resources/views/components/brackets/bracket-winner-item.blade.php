@@ -3,29 +3,7 @@
         <br class="d-none d-lg-block"><br class="d-none d-lg-block"><br>
         <div class="tournament-bracket__list tournament-bracket__joined-list  tournament-bracket__joined-odd-list">
             <div class="tournament-bracket__item tournament">
-                @php
-                    $defaultValues = [
-                        'match_type' => 'tournament',
-                        'stage_name' => '',
-                        'inner_stage_name' => '',
-                        'team1_id' => '',
-                        'team2_id' => '',
-                        'team1_score' => '0',
-                        'team2_score' => '0',
-                        'team1_position' => '',
-                        'team2_position' => '',
-                        'team1_roster' => null,
-                        'team2_roster' => null,
-                        'winner_id' => '',
-                        'status' => '',
-                        'result' => '',
-                        'winner_next_position' => '',
-                        'loser_next_position' => '',
-                        'team1Code' => 'N/A',
-                        'team2Code' => 'N/A',
-                        'winner_next_position' => 'N/A',
-                        'loser_next_position' => null,
-                    ];
+            @php
 
                     foreach ($defaultValues as $key => $defaultValue) {
                         $bracket[$key] = $bracket[$key] ?? $defaultValue;

@@ -13,7 +13,6 @@ use App\Http\Controllers\Participant\ParticipantRosterController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\UserController;
-use App\Http\Livewire\Shared\Brackets\BracketUpdateList;
 use Illuminate\Support\Facades\Route;
 
 /* THIS IS THE UNSIGNED VIEW */
@@ -104,7 +103,6 @@ Route::group(['prefix' => 'participant'], function () {
             Route::get('/team/{id}/manage/member', [ParticipantTeamController::class, 'teamMemberManagement'])->name('participant.member.manage');
             Route::get('/team/{id}/manage', [ParticipantTeamController::class, 'teamManagement'])->name('participant.team.manage');
             Route::get('/team/{id}/register', [ParticipantEventController::class, 'registrationManagement'])->name('participant.register.manage');
-            Route::get('/team/{id}/temp', [ParticipantEventController::class, 'getTemp']);
 
             Route::post('/team/roster/approve', [ParticipantRosterController::class, 'approveRosterMember'])->name('participant.roster.approve');
             Route::post('/team/roster/disapprove', [ParticipantRosterController::class, 'disapproveRosterMember'])->name('participant.roster.disapprove');
@@ -158,7 +156,7 @@ Route::group(['prefix' => 'organizer'], function () {
             // Organizer home
             Route::get('/home', [OrganizerEventController::class, 'home'])->name('organizer.home.view');
             Route::get('/event/{id}/results', [OrganizerEventResultsController::class, 'index'])->name('event.awards.index');
-            Route::get('/event/{id}/matches', BracketUpdateList::class)->name('event.matches.index');
+            Route::get('/event/{id}/matches', [OrganizerEventResultsController::class, 'viewMatches'])->name('event.matches.index');
 
             // Event manage
             Route::resource('/event', OrganizerEventController::class, [

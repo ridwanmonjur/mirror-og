@@ -43,9 +43,9 @@ INSERT INTO `event_categories` (`id`, `gameTitle`, `gameIcon`, `eventDefinitions
 
 
 INSERT INTO `event_tier` (`id`, `eventTier`, `tierIcon`, `tierTeamSlot`, `tierPrizePool`, `tierEntryFee`, `user_id`) VALUES
-(1, 'Starfish', 'images/event_details/starfish.png', '16', '5000', '10', NULL),
-(2, 'Turtle', 'images/event_details/turtle.png', '32', '10000', '20', NULL),
-(3, 'Dolphin', 'images/event_details/dolphin.png', '64', '15000', '30', NULL);
+(1, 'Starfish', 'images/event_details/starfish.png', '8', '5000', '10', NULL),
+(2, 'Turtle', 'images/event_details/turtle.png', '16', '10000', '20', NULL),
+(3, 'Dolphin', 'images/event_details/dolphin.png', '32', '15000', '30', NULL);
 
 INSERT INTO `event_type` (`id`, `eventType`, `eventDefinitions`) VALUES
 (1, 'Tournament', "You\'ll play a series of contests between a number of competitors that will result in teams getting disqualified based on results and points, till you get the final prize."),

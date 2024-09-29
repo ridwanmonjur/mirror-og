@@ -1,7 +1,5 @@
-@section('content')
 
-    <main>
-        @include('__CommonPartials.NavbarGoToSearchPage')
+   
         <div class="px-4">
             @livewire('shared.brackets.bracket-update-modal', [
                 'event' => $event,
@@ -17,6 +15,7 @@
                                     :stageName="'upperBracket'"
                                     :innerStageName="'eliminator1'"
                                     :order="$order"
+                                    :defaultValues="$defaultValues"
                                     :wire:key="'upperBracket'. 'eliminator1'. $loop->index" />
                             @endforeach
                         </div>
@@ -40,6 +39,7 @@
                                             :stageName="'upperBracket'"
                                             :innerStageName="$stage"
                                             :order="$order"
+                                            :defaultValues="$defaultValues"
                                             :wire:key="'upperBracket'. $stage. $loop->index" />
                                     @endforeach
                                 </div>
@@ -56,6 +56,7 @@
                         :stageName="'finals'"
                         :innerStageName="'finals'"
                         :order="$order"
+                        :defaultValues="$defaultValues"
                         :wire:key="'upperBracket'. 'eliminator1'. $loop->index" />
                 @endforeach
 
@@ -81,6 +82,7 @@
                                     <x-brackets.bracket-middle-item :bracket="$bracket"
                                         :stageName="'lowerBracket'" :innerStageName="$stage"
                                         :order="$order"
+                                        :defaultValues="$defaultValues"
                                         :wire:key="'lowerBracket'. $stage. $loop->index" />
                                 @endforeach
                             </div>
@@ -94,7 +96,7 @@
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
                         @foreach ($bracketList['lowerBracket']['prefinals1'] as $order => $bracket)
                             <x-brackets.bracket-middle-item :bracket="$bracket"  :order="$order"
-                                :stageName="'lowerBracket'" :innerStageName="'prefinals1'"
+                                :stageName="'lowerBracket'" :innerStageName="'prefinals1'" :defaultValues="$defaultValues"
                             />
                         @endforeach
                     </div>
@@ -106,7 +108,7 @@
                         class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                         @foreach ($bracketList['lowerBracket']['prefinals2'] as $order => $bracket)
                             <x-brackets.bracket-middle-item :bracket="$bracket"  :order="$order"
-                                :stageName="'lowerBracket'" :innerStageName="'prefinals2'"
+                                :stageName="'lowerBracket'" :innerStageName="'prefinals2'" :defaultValues="$defaultValues"
                             />
                         @endforeach
                     </div>
@@ -177,11 +179,6 @@
                 }
             });
 
-            console.log({selectMap, dataset});
-            console.log({selectMap, dataset});
-            console.log({selectMap, dataset});
-            console.log({selectMap, dataset});
-
             ['result', 'status', 'team1_id', 'team2_id', 'winner_id'].forEach((selectName)=> {
                 selectMap[selectName]?.updateSelectElement(dataset[selectName]);
             })
@@ -213,4 +210,3 @@
         });
 
     </script>
-@endsection

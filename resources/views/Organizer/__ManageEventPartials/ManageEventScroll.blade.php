@@ -136,14 +136,18 @@
                                     <span> <u> Invite </u> </span>
                                 </a>
                         @endif    
-                        <div class="popover-content d-none" >
-                            <div class="popover-box px-0 py-0 ms-5" style="margin-bottom: -10px;  background: #F8F6EF;">
-                                <a class="px-2 py-1 text-light me-3 btn btn-primary d-inline popover-box popover-body" href="{{ route('event.matches.index', ['id' => $event->id]) }}">
+                        <div class="popover-content2 d-none" style="z-index: 999 !important;">
+                            <div class="popover-box py-3" style="z-index: 999 !important;">
+                                <a class="px-2 py-1 text-light me-3 btn btn-primary d-inline"  href="{{ route('event.matches.index', ['id' => $event->id, 'eventType'=> $event->type->eventType]) }}">
                                     <small> Matches </small>
                                 </a>
-                                <a class="px-2 py-1 text-light btn btn-primary d-inline popover-box popover-body" href="{{ route('event.awards.index', ['id' => $event->id ]) }}">
+                                <a class="px-2 py-1 text-light me-3 btn btn-primary d-inline " href="{{ route('event.matches.index', ['id' => $event->id]) }}">
+                                    <small> Disputes </small>
+                                </a>
+                                <a class="px-2 py-1 text-light btn btn-primary d-inline" href="{{ route('event.awards.index', ['id' => $event->id ]) }}">
                                     <small> Awards </small>
                                 </a>
+                                
                             </div>
                         </div>
                         <button class="popover-button   mt-2  mb-2 btn btn-link">

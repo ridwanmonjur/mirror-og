@@ -518,33 +518,6 @@ tr:nth-child(even) .colored-cell {
      margin-right: 20px !important;
 }
 
-.rainbow-hue{
-    position: relative;
-    border-radius: 50%;
-    background: linear-gradient(in hsl longer hue 45deg, red 0 0);
-    width: 35px;
-    height: 30px;
-}
 
-.rainbow-hue::after {
-    cursor: pointer;
-    position: absolute;
-    content: "+";
-    font-size: 1.25rem;
-    font-weight: bold;
-    text-align: center;
-    margin:  auto;
-    width: 100%;
-    color: white;
-    outline: 4px solid white;
-    outline-offset: -5px;
-    border: 3px solid gray;
-    border-radius: 50%;
 
-}
-
-.cursive-font {
-    text-align: center;
-    font-family: 'Dancing Script', cursive;
-}
 

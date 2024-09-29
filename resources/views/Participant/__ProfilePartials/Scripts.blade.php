@@ -224,14 +224,14 @@
                         const choices2 = document.getElementById('select2-country3');
 
                          let countriesHtml = "<option value=''>Choose a country</option>";
-                            data?.data.forEach((value) => {
-                                countriesHtml +=`
-                                    <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
-                                `;
-                            });
-                            console.log({countriesHtml});
-                            choices2.innerHTML = countriesHtml;
-                            choices2.selected = this.participant.region;
+                        data?.data.forEach((value) => {
+                            countriesHtml +=`
+                                <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
+                            `;
+                        });
+                        console.log({p: this.participant.region});
+                        choices2.innerHTML = countriesHtml;
+                        choices2.selected = this.participant.region;
                     } else {
                         this.errorMessage = "Failed to get data!";
                     }
