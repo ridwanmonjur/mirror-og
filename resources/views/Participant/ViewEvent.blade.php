@@ -13,6 +13,10 @@
         'resources/js/lightgallery.js',
         'resources/sass/lightgallery.scss',
     ])
+      <title>Tournament Matches 2</title>
+    <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
+    <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
 </head>
 
 @php
@@ -220,7 +224,10 @@
 
                                 <div id="Bracket" class="tabcontent">
                                     <h5><u>Bracket</u></h5>
-                                    <p>Bracket is the capital of France.</p>
+                                     @livewire('shared.brackets.bracket-report-list', [
+                                        'eventId' => $event->id,
+                                        'eventType' => $event->type->eventType
+                                    ])
                                 </div>
 
                                 <div id="Teams" class="tabcontent">

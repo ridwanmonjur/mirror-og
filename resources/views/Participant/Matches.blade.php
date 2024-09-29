@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
     @vite(['resources/js/tippy.js', 'resources/sass/app.scss', 'resources/js/app.js'])
+    <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
     @include('__CommonPartials.HeadIcon')
     <style>
     </style>
 </head>
 
 <body>
-    <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
     <main>
         @include('__CommonPartials.NavbarGoToSearchPage')
         {{-- {{$id}}
