@@ -61,7 +61,6 @@ class BracketUpdateList extends Component
             $teamList->push($joinEvent->team);
         });
 
-
         $matchTeamIds = collect();
         $this->event->matches->each(function ($match) use ($teamMap, &$matchTeamIds) {
             $match->team1 = $teamMap->get($match->team1_id);
@@ -78,6 +77,33 @@ class BracketUpdateList extends Component
             return '<div>Hi</div>';
         }
 
+        $defaultValues = [
+            'id' => null,
+            'match_type' => 'tournament',
+            'stage_name' => '',
+            'inner_stage_name' => '',
+            'team1_id' => '',
+            'team1_teamName' => '',
+            'team1_teamBanner' => null,
+            'team1_score' => '0',
+            'team1_roster' => null,
+            'team2_id' => '',
+            'team2_score' => '0',
+            'team1_position' => '',
+            'team2_position' => '',
+            'team2_teamName' => '',
+            'team2_teamBanner' => null,
+            'team2_roster' => null,
+            'winner_id' => '',
+            'status' => 'Upcoming',
+            'result' => '',
+            'winner_next_position' => '',
+            'loser_next_position' => '',
+            'team1Code' => 'N/A',
+            'team2Code' => 'N/A',
+            'winner_next_position' => 'N/A',
+            'loser_next_position' => null,
+        ];
 
         $matchesUpperCount = intval($this->event->tier->tierTeamSlot); 
         $valuesMap = ['Tournament' => 'tournament', 'League' => 'tournament'];
@@ -86,10 +112,9 @@ class BracketUpdateList extends Component
         $tournamentTypeFinal = $valuesMap[$tournamentType];
         
         $bracketList = $bracketData->getData($matchesUpperCount)[$tournamentTypeFinal];
-        // dd($this->event->matches);
         $bracketList = $this->event->matches->reduce(function ($bracketList, $match) {
             $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
-            // dd($path);
+
             return data_set($bracketList, $path, [
                 'id' => $match->id,
                 'event_details_id' => $match->event_details_id,
@@ -143,7 +168,8 @@ class BracketUpdateList extends Component
 
         return view('livewire.shared.brackets.bracket-update-list', [
             'matchesUpperCount' => $matchesUpperCount,
-            'bracketList' => $bracketList
+            'bracketList' => $bracketList,
+            'defaultValues' => $defaultValues
         ]);
     }
 }

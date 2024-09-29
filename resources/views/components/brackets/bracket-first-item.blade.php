@@ -1,33 +1,6 @@
 <div class="tournament-bracket__item tournament  d-none-until-hover2-parent">
     @php
-        $defaultValues = [
-            'id' => null,
-            'match_type' => 'tournament',
-            'stage_name' => '',
-            'inner_stage_name' => '',
-            'team1_id' => '',
-            'team1_teamName' => '',
-            'team1_teamBanner' => null,
-            'team1_score' => '0',
-            'team1_roster' => null,
-            'team2_id' => '',
-            'team2_score' => '0',
-            'team1_position' => '',
-            'team2_position' => '',
-            'team2_teamName' => '',
-            'team2_teamBanner' => null,
-            'team2_roster' => null,
-            'winner_id' => '',
-            'status' => '',
-            'result' => '',
-            'winner_next_position' => '',
-            'loser_next_position' => '',
-            'team1Code' => 'N/A',
-            'team2Code' => 'N/A',
-            'winner_next_position' => 'N/A',
-            'loser_next_position' => null,
-        ];
-
+        
         foreach ($defaultValues as $key => $defaultValue) {
             $bracket[$key] = $bracket[$key] ?? $defaultValue;
         }
@@ -112,7 +85,7 @@
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative  ">
             <div
                 class="tournament-bracket__box  popover-parent position-relative {{ $bracket['team1_position'] }} tournament bg-light"
-                                style="width: 32px; height: 27px;"
+                                style="width: 32px; height: 28px;"
             >
                 <div class="popover-content d-none"
                     style=" opacity: 1; z-index: 999 !important;">
@@ -120,7 +93,7 @@
                         <div class="col-12 col-lg-5 text-end">
                             <div class="text-end">
                                 <img src="/storage/{{ $bracket['team1_teamBanner'] }}" alt="Team Banner" width="100%"
-                                    height="100%" class="mb-1 " onerror="this.src='/assets/images/404.png';">
+                                    height="100%" onerror="this.src='/assets/images/404.png';">
                             </div>
                             <small>{{$bracket['team1_position']}} </small>
                         </div>
@@ -154,14 +127,14 @@
             </div>
             <div
                 class="tournament-bracket__box  popover-parent position-relative {{ $bracket['team2_position'] }} tournament bg-light"
-                style="width: 32px; height: 27px;"
+                style="width: 32px; height: 28px;"
             >
                 <div class="popover-content d-none">
                     <div class="popover-box row justify-content-start px-2 pt-2 pb-2" style="min-width: 400px; background: white !important;">
                         <div class="col-12 col-lg-5 text-end">
                             <div class="text-end">
                                 <img src="/storage/{{ $bracket['team2_teamBanner'] }}" alt="Team Banner" width="100%"
-                                    height="100%" class="mb-1 " onerror="this.src='/assets/images/404.png';">
+                                    height="100%" onerror="this.src='/assets/images/404.png';">
                             </div>
                             <small>{{$bracket['team2_position']}} </small>
                         </div>

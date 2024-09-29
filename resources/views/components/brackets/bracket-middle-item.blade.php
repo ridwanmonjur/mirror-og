@@ -1,30 +1,5 @@
 <div class="tournament-bracket__item tournament  d-none-until-hover2-parent">
     @php
-        $defaultValues = [
-            'id' => null,
-            'match_type' => 'tournament',
-            'stage_name' => '',
-            'inner_stage_name' => '',
-            'team1_id' => '',
-            'team2_id' => '',
-            'team1_score' => '0',
-            'team2_score' => '0',
-            'team1_position' => '',
-            'team2_position' => '',
-            'team1_roster' => null,
-            'team1_teamBanner' => null,
-            'team2_roster' => null,
-            'team2_teamBanner' => null,
-            'winner_id' => '',
-            'status' => '',
-            'result' => '',
-            'winner_next_position' => '',
-            'loser_next_position' => '',
-            'team1Code' => 'N/A',
-            'team2Code' => 'N/A',
-            'winner_next_position' => 'N/A',
-            'loser_next_position' => null,
-        ];
 
         foreach ($defaultValues as $key => $defaultValue) {
             $bracket[$key] = $bracket[$key] ?? $defaultValue;
