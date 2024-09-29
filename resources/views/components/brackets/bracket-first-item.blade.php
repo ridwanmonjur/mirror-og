@@ -111,7 +111,9 @@
 
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative  ">
             <div
-                class="tournament-bracket__box  popover-parent position-relative {{ $bracket['team1_position'] }} tournament bg-light">
+                class="tournament-bracket__box  popover-parent position-relative {{ $bracket['team1_position'] }} tournament bg-light"
+                                style="width: 32px; height: 27px;"
+            >
                 <div class="popover-content d-none"
                     style=" opacity: 1; z-index: 999 !important;">
                      <div class="popover-box row justify-content-start px-2 pt-2 pb-2" style="min-width: 400px; background: white !important;">
@@ -151,7 +153,9 @@
 
             </div>
             <div
-                class="tournament-bracket__box  popover-parent position-relative {{ $bracket['team2_position'] }} tournament bg-light">
+                class="tournament-bracket__box  popover-parent position-relative {{ $bracket['team2_position'] }} tournament bg-light"
+                style="width: 32px; height: 27px;"
+            >
                 <div class="popover-content d-none">
                     <div class="popover-box row justify-content-start px-2 pt-2 pb-2" style="min-width: 400px; background: white !important;">
                         <div class="col-12 col-lg-5 text-end">

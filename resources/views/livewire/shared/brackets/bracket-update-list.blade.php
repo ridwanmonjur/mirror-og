@@ -1,7 +1,5 @@
-@section('content')
 
-    <main>
-        @include('__CommonPartials.NavbarGoToSearchPage')
+   
         <div class="px-4">
             @livewire('shared.brackets.bracket-update-modal', [
                 'event' => $event,
@@ -177,11 +175,6 @@
                 }
             });
 
-            console.log({selectMap, dataset});
-            console.log({selectMap, dataset});
-            console.log({selectMap, dataset});
-            console.log({selectMap, dataset});
-
             ['result', 'status', 'team1_id', 'team2_id', 'winner_id'].forEach((selectName)=> {
                 selectMap[selectName]?.updateSelectElement(dataset[selectName]);
             })
@@ -213,4 +206,3 @@
         });
 
     </script>
-@endsection

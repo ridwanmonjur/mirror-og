@@ -235,6 +235,15 @@ class OrganizerEventResultsController extends Controller
         }
     }
 
+    public function viewMatches(Request $request, $id) {
+        $eventType = $request->query('eventType');
+        return view('Participant.Matches', compact(
+            'id',
+            'eventType',
+        ));
+    }
+
+
     public function upsertBracket(MatchUpsertRequest $request, $id)
     {
         try {

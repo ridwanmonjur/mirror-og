@@ -12,23 +12,34 @@ use Livewire\Component;
 
 class BracketUpdateList extends Component
 {
-    public $id = null;
+    public $eventId = null;
     public $event = null;
     public $teamList;
     public $rosterList = null;
+    public $componentEventType = 'Tournament';
+    public $isWrongType = false;
 
-    public function __construct(string | int | null $id = null) {
-        $this->id = $id;
-    }
+    public function __construct(
+            string | int  $eventId,
+        ) {
+            $this->eventId = $eventId;
+        }
 
     public function mount() {
-        $this->event = EventDetail::with([
+        $this->event = EventDetail::with(['type'])->findOrFail($this->eventId);
+
+        if ($this->event->type->eventType !== $this->componentEventType) {
+            $this->isWrongType = true;
+            return;
+        }
+
+        $this->event->load([
             'tier',
             'type',
             'joinEvents.team' => function ($query) {
                 $query->select('teams.id', 'teamName', 'teamBanner');
             },
-        ])->findOrFail($this->id);
+        ]);
         
         $joinEventIds = $this->event->joinEvents->pluck('id');
         
@@ -63,11 +74,17 @@ class BracketUpdateList extends Component
 
     public function render()
     {
+        if ($this->isWrongType) {
+            return '<div>Hi</div>';
+        }
+
+
         $matchesUpperCount = intval($this->event->tier->tierTeamSlot); 
         $valuesMap = ['Tournament' => 'tournament', 'League' => 'tournament'];
         $tournamentType = $this->event->type->eventType;
         $bracketData = new BracketData;
         $tournamentTypeFinal = $valuesMap[$tournamentType];
+        
         $bracketList = $bracketData->getData($matchesUpperCount)[$tournamentTypeFinal];
         // dd($this->event->matches);
         $bracketList = $this->event->matches->reduce(function ($bracketList, $match) {
@@ -103,10 +120,6 @@ class BracketUpdateList extends Component
             ]);
         }, $bracketList);
         
-
-        // dd($bracketList);
-
-        // dd($bracketList["upperBracket"]["eliminator1"]["1"]);
         
         if (empty($matchesArray['tournament']['finals']['finals'])) {
             $bracketList['tournament']['finals']['finals'][] = [
@@ -127,6 +140,7 @@ class BracketUpdateList extends Component
                 'loser_next_position' => 'L1',
             ];
         }
+
         return view('livewire.shared.brackets.bracket-update-list', [
             'matchesUpperCount' => $matchesUpperCount,
             'bracketList' => $bracketList

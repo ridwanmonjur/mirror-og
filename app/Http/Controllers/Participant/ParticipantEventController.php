@@ -271,14 +271,7 @@ class ParticipantEventController extends Controller
         return view('Participant.CreateTeamToRegister', compact('id'));
     }
 
-    public function getTemp(Request $request, $id)
-    {
-        $teamId = $request->input('selectedTeamId');
-        $selectTeam = Team::findOrFail($id);
-        // teamId
-        $id = 1;
-        return view('Participant.EventNotify', compact('id', 'selectTeam'));
-    }
+   
 
     public function selectTeamToJoinEvent(Request $request, $id)
     {
