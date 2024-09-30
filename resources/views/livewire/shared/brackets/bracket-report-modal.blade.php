@@ -249,6 +249,16 @@
                     }
 
                     currentMatchDiv.dataset.bracket = JSON.stringify(currentMatch);
+
+                    const parentElements = currentMatchDiv.querySelectorAll(".popover-parent");
+                    parentElements.forEach(parent => {
+                        const contentElement = parent.querySelector(".popover-content");
+                        const parentElement = parent.querySelector(".popover-button");
+                        if (contentElement) {
+                            window.addPopover(parentElement, contentElement, 'mouseenter');
+                        }
+                    });
+
                     // can't update table so not done
                     let tournamentBracketBoxTeam1 = document.querySelector(`.tournament-bracket__box.${match?.team1_position}`);
                     let tournamentBracketBoxTeam2 = document.querySelector(`.tournament-bracket__box.${match?.team2_position}`);

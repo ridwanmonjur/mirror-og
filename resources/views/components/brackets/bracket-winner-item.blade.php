@@ -1,4 +1,4 @@
-<div class="tournament-bracket tournament-bracket--rounded  col-lg-3 col-xl-4 col-xxl-6 align-items-start">
+<div class="tournament-bracket tournament-bracket--rounded  col-lg-7 align-items-start">
     <div class="tournament-bracket__round  tournament-bracket__round--gold">
         <br class="d-none d-lg-block"><br class="d-none d-lg-block"><br>
         <div class="tournament-bracket__list tournament-bracket__joined-list  tournament-bracket__joined-odd-list">

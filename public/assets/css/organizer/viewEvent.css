@@ -29,10 +29,9 @@
     margin-bottom: 5px;
 }
 
-main, .bg-main {
+main{
     width: 100%;
     min-height: 115vh;
-    height: max-content;
     display: block !important;
     padding: 0px 5px;
     align-items: center;

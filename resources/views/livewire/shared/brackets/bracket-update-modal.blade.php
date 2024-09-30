@@ -249,28 +249,26 @@
                     }
 
                     currentMatchDiv.dataset.bracket = JSON.stringify(currentMatch);
+                    const parentElements = currentMatchDiv.querySelectorAll(".popover-parent");
+                    console.log({parentElements});
+                    
                     // can't update table so not done
-                    let tournamentBracketBoxTeam1 = document.querySelector(`.tournament-bracket__box.${match?.team1_position}`);
-                    let tournamentBracketBoxTeam2 = document.querySelector(`.tournament-bracket__box.${match?.team2_position}`);
-                    tournamentBracketBoxTeam1.innerHTML = 
-                        `<img src='/storage/${team1.teamBanner}' 
-                            width="100%" height="30"
-                            onerror="this.src='/assets/images/404.png';"
-                            class="position-absolute d-none-when-hover object-fit-cover"
-                            alt="Team View"
-                        >
-                        <span>${ match.team1_position }</span>
-                        `;
-                    tournamentBracketBoxTeam2.innerHTML = 
-                        `<img src='/storage/${team2.teamBanner}'  
-                            width="100%" height="30"
-                            onerror="this.src='/assets/images/404.png';"
-                            class="position-absolute d-none-when-hover object-fit-cover"
-                            alt="Team View"
-                        >
-                         <span>${ match.team2_position }</span>
-                        `;
+                    let imgs = currentMatchDiv.querySelectorAll(`.tournament-bracket__box img.popover-button`);
+                    console.log({imgs});
+                    let tournamentBracketBoxTeam1Img = imgs[0];
+                    let tournamentBracketBoxTeam2Img = imgs[1];
+                    
+                    tournamentBracketBoxTeam1Img.src = `/storage/${team1.teamBanner}`;
+                    tournamentBracketBoxTeam2Img.src = `/storage/${team2.teamBanner}'`; 
                     closeBtn.click();
+                    parentElements.forEach(parent => {
+                        const contentElement = parent.querySelector(".popover-content");
+                        const parentElement = parent.querySelector(".popover-button");
+                        console.log({contentElement, parentElement});
+                        if (contentElement) {
+                            window.addPopover(parentElement, contentElement, 'mouseenter');
+                        }
+                    });
                     window.Toast.fire({
                         icon: 'success',
                         text: data.message

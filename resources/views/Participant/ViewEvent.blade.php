@@ -7,13 +7,8 @@
     <title>View Event</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/viewEvent.css') }}">
     @include('__CommonPartials.HeadIcon')
-    @vite([
-        'resources/sass/app.scss', 
-        'resources/js/app.js', 
-        'resources/js/lightgallery.js',
-        'resources/sass/lightgallery.scss',
-    ])
-      <title>Tournament Matches 2</title>
+    @vite(['resources/js/tippy.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/lightgallery.js', 'resources/sass/lightgallery.scss'])
+    <title>Tournament Matches 2</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
     <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
@@ -31,7 +26,7 @@
     $eventBannerImg = bladeImageNull($event->eventBanner);
 @endphp
 
-<body>
+<body style="background: none; ">
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
         <br class="d-none-at-desktop">
@@ -87,15 +82,14 @@
                     <div class="card-text">
                         <div>
                             <br>
-                            <div  class="d-flex justify-content-between flex-wrap align-items-start pb-3">
-                                <h5
-                                    class="text-truncated w-75"
-                                    >
+                            <div class="d-flex justify-content-between flex-wrap align-items-start pb-3">
+                                <h5 class="text-truncated w-75">
                                     {{ $event->eventName ?? 'No name yet' }}
                                 </h5>
                                 <div>
                                     <div>
-                                        <form class="d-inline" method="POST" action="{{route('participant.events.like')}}" id="likesForm">
+                                        <form class="d-inline" method="POST"
+                                            action="{{ route('participant.events.like') }}" id="likesForm">
                                             @auth
                                                 <input type="hidden" name="event_id" value="{{$event->id}}">
                                                 <input type="hidden" name="user_id" value="{{$user->id}}">
@@ -154,7 +148,9 @@
                                     <div class="card-organizer">
                                         <p style="display: inline;"><u>
                                                 {{ $event?->user?->organizer?->companyName ?? 'Add' }} </u> </p>
-                                        <p class="small-text" id="followCount" data-count="{{ $followersCount }}"> <i> {{ $followersCount }} {{ $followersCount == 1  ? 'follower' : 'followers' }} </i> </p>
+                                        <p class="small-text" id="followCount" data-count="{{ $followersCount }}">
+                                            <i> {{ $followersCount }}
+                                                {{ $followersCount == 1 ? 'follower' : 'followers' }} </i> </p>
                                     </div>
                                 </div>
 
@@ -179,16 +175,12 @@
                                     @endguest
                                     @auth
                                         @if ($user->role == 'PARTICIPANT')
-                                            <button 
-                                                class=""
-                                                type="submit" id="followButton"
+                                            <button class="" type="submit" id="followButton"
                                                 style="background-color: {{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                                                 {{ $user && $user->isFollowing ? 'Following' : 'Follow' }}
                                             </button>
                                         @else
-                                            <button 
-                                                class=""
-                                                type="button"
+                                            <button class="" type="button"
                                                 onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
                                                 id="followButton"
                                                 style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
@@ -199,46 +191,13 @@
                                 </form>
                             </div>
                             <br>
-                            <div >
+                            <div>
                                 <h5> <u> {{ $combinedStr }} </u> </h5>
                                 <h5> <u> {{ strtoupper($timePart) }} </u> </h5>
                             </div>
-                           
+
                             <br>
-                            <div>
-                                <div class="tab">
-                                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ' }}"
-                                        onclick="openTab(event, 'Overview')">Overview</button>
-                                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
-                                        onclick="openTab(event, 'Bracket')">Bracket</button>
-                                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
-                                        onclick="openTab(event, 'Teams')">Teams</button>
-                                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
-                                        onclick="openTab(event, 'Result')">Result</button>
-                                </div>
-                                <br>
-                                <div id="Overview" class="tabcontent" style="display: block;">
-                                    <h5><u>About this event</u></h5>
-                                    <p>{{ $event->eventDescription ?? 'Not added description yet' }} </p>
-                                </div>
 
-                                <div id="Bracket" class="tabcontent">
-                                    <h5><u>Bracket</u></h5>
-                                     @livewire('shared.brackets.bracket-report-list', [
-                                        'eventId' => $event->id,
-                                        'eventType' => $event->type->eventType
-                                    ])
-                                </div>
-
-                                <div id="Teams" class="tabcontent">
-                                    <h5><u>Teams</u></h5>
-                                    <p>Teams tab.</p>
-                                </div>
-                                <div id="Result" class="tabcontent">
-                                    <h5><u>Result</u></h5>
-                                    <p>Result tab.</p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="ps-3">
@@ -267,7 +226,7 @@
                                     </button>
                                 @endguest
                                 @auth
-                                    @if ($user->role == "PARTICIPANT")
+                                    @if ($user->role == 'PARTICIPANT')
                                         <button type="submit" class="oceans-gaming-default-button ">
                                             <span>Join</span>
                                         </button>
@@ -353,20 +312,83 @@
                 </div>
                 <div> </div>
 
-            </div>
         </div>
         
+    </div>
+    <div class="grid-container">
+            <div></div>
+            <div>
+                <div class="tab ms-0 position-relative" style="width: 60vw;">
+                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ' }}"
+                        onclick="openTab(event, 'Overview'); restoreBodyHeight();">Overview</button>
+                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
+                        onclick="openTab(event, 'Bracket'); increaseBodyHeight();">Bracket</button>
+                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
+                        onclick="openTab(event, 'Teams'); restoreBodyHeight();">Teams</button>
+                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
+                        onclick="openTab(event, 'Result'); restoreBodyHeight();">Result</button>
+                </div>
+                <br>
+                <div id="Overview" class="tabcontent" style="display: block;">
+                    <h5><u>About this event</u></h5>
+                    <p>{{ $event->eventDescription ?? 'Not added description yet' }} </p>
+                </div>
+
+                <div id="Bracket" class="tabcontent">
+                    <h5><u>Bracket</u></h5>
+                    @include('Participant.__Partials.BracketReport')
+
+                </div>
+
+                <div id="Teams" class="tabcontent">
+                    <h5><u>Teams</u></h5>
+                    <p>Teams tab.</p>
+                </div>
+                <div id="Result" class="tabcontent">
+                    <h5><u>Result</u></h5>
+                    <p>Result tab.</p>
+                </div>
+            </div>
+            <div></div>
         </div>
-        <br>
     </main>
     @stack('script')
-    
+
     <script>
-        
+        function increaseBodyHeight () {
+            main.style.height = bodyHeight + bracketListHeight + 'px';
+            // main.style.width = bracketListWidth + 'px';
+            document.body.style.height = bodyHeight + bracketListHeight + 'px';
+            // document.body.style.width = bodyWidth + bracketListWidth + 'px';
+            
+            console.log({main});
+        }
+
+        function restoreBodyHeight () {
+            main.style.height = bodyHeight + 'px';
+            document.body.style.height = bodyHeight  + 'px';
+        }
+
+        let main = document.getElementsByTagName('main')[0];
+        let body = document.getElementsByTagName('body')[0];
+        body.style.width = '100vw';
+        main.style.width = '100vw';
+
+        let bracket = document.getElementById('Bracket');
+        let bracketList = document.querySelector('#bracket-list');
+        bracket.style.display = 'block';
+        let bracketListHeight = bracketList.getBoundingClientRect().height;
+        let bracketListWidth = bracketList.getBoundingClientRect().width;
+
+        let bodyHeight = main.offsetHeight;
+        let bodyWidth = main.offsetWidth;
+        bracket.style.display = 'none';
+
+
         function reddirectToLoginWithIntened(route) {
             route = encodeURIComponent(route);
             let url = "{{ route('participant.signin.view') }}";
-            url+= `?url=${route}`;
+            url += `?url=${route}`;
             window.location.href = url;
         }
 
@@ -388,7 +410,7 @@
             let likesForm = document.getElementById('likesForm');
             let formData = new FormData(likesForm);
             likesButton.style.setProperty('pointer-events', 'none');
-    
+
             try {
                 let jsonObject = {}
                 for (let [key, value] of formData.entries()) {
@@ -426,7 +448,7 @@
                     </svg>`;
                     likesCount.classList.remove('text-primary');
                 }
-                
+
                 likesButton.style.setProperty('pointer-events', 'auto');
                 if (count == 1) {
                     likesCount.innerHTML = '1';
@@ -450,7 +472,7 @@
             let form = this;
             let formData = new FormData(form);
             followButton.style.setProperty('pointer-events', 'none');
-    
+
             try {
                 let jsonObject = {}
                 for (let [key, value] of formData.entries()) {
@@ -483,7 +505,7 @@
                     followButton.style.backgroundColor = '#43A4D7';
                     followButton.style.color = 'white';
                 }
-                
+
                 followButton.style.setProperty('pointer-events', 'auto');
                 if (count == 1) {
                     followCount.innerHTML = '<i> 1 follower </i>';
@@ -498,9 +520,7 @@
                 toastError('Error occured.', error);
             }
         });
-
-      
     </script>
-    
+
 
 </html>
