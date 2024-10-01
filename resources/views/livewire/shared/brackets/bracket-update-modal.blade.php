@@ -254,13 +254,68 @@
                     
                     // can't update table so not done
                     let imgs = currentMatchDiv.querySelectorAll(`.tournament-bracket__box img.popover-button`);
-                    console.log({imgs});
-                    let tournamentBracketBoxTeam1Img = imgs[0];
-                    let tournamentBracketBoxTeam2Img = imgs[1];
+                    let smalls = currentMatchDiv.querySelectorAll(`.tournament-bracket__box small.replace_me_with_image`);
                     
-                    tournamentBracketBoxTeam1Img.src = `/storage/${team1.teamBanner}`;
-                    tournamentBracketBoxTeam2Img.src = `/storage/${team2.teamBanner}'`; 
+                    for (let index=0; index <2; index++) {
+                        let banner = index ? team2.teamBanner : team1.teamBanner;
+
+                        if (imgs[index]) {
+                            imgs[index].src =  `/storage/${banner}`;
+                        } else {
+                            let small = smalls[index];
+                             if (small) {
+                                let img = document.createElement('img');
+                                small.parentElement.replaceChild(img, small);
+                                img.src = `/storage/${banner}`;
+                                img.style.width = '100%';
+                                img.height = '25';
+                                 img.onerror = function() {
+                                    this.src='/assets/images/404.png';
+                                };
+
+                                img.className = 'popover-button position-absolute d-none-when-hover object-fit-cover me-2';
+                                img.alt = 'Team View';
+                                img.style.zIndex = '99';
+                                console.log({img})
+                            }
+                        }
+                    }
+                   
                     closeBtn.click();
+
+                    const bracketBoxList = currentMatchDiv.querySelectorAll(`.tournament-bracket__box`);
+                    let popoverImgs = currentMatchDiv.querySelectorAll('.popover-content-img');
+                    let index = 0;
+                    bracketBoxList.forEach(bracketBox => {
+                        let banner = index ? team2.teamBanner : team1.teamBanner;
+                        let roster = index ? team2.roster : team1.roster;
+                        popoverImgs[index].src = `/storage/${banner}`;
+
+                        const rosterContainer = bracketBox.querySelector('.popover-box .col-12.col-lg-7');
+                        if (rosterContainer && roster) {
+                            if (Array.isArray(roster) && roster[0] !== undefined) {
+                                let rosterHtml = '<ul class="d-block ms-0 ps-0">';
+                                roster.forEach(rosterItem => {
+                                    rosterHtml += `
+                                        <li class="d-inline">
+                                            <img width="25" height="25" onerror="this.src='/assets/images/404.png';"
+                                                src="/storage/${rosterItem.user.userBanner}" alt="User Banner"
+                                                class="mb-2 rounded-circle object-fit-cover me-3">
+                                            ${rosterItem.user.name}
+                                        </li>
+                                        <br>
+                                    `;
+                                });
+                                rosterHtml += '</ul>';
+                                rosterContainer.innerHTML = rosterHtml;
+                            } else {
+                                rosterContainer.innerHTML = '<p class="text-muted">The team roster is empty.</p>';
+                            }
+                        }
+
+                        index++;
+                    });
+
                     parentElements.forEach(parent => {
                         const contentElement = parent.querySelector(".popover-content");
                         const parentElement = parent.querySelector(".popover-button");

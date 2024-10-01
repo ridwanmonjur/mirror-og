@@ -74,7 +74,7 @@ class BracketUpdateList extends Component
     public function render()
     {
         if ($this->isWrongType) {
-            return '<div>Hi</div>';
+            return '<div>Hi, wrong tourney type</div>';
         }
 
         $defaultValues = [

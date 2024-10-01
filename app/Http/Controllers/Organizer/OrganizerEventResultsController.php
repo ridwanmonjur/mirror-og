@@ -254,11 +254,27 @@ class OrganizerEventResultsController extends Controller
                 : new Matches;
             $team1 = Team::findOrFail($validatedData['team1_id']);
             $team2 = Team::findOrFail($validatedData['team2_id']);
+            if ($team1->id === $team2->id) {
+                throw new Exception("Same teams can't be provided!");
+            }
             $event = EventDetail::findOrFail($validatedData['event_details_id']);
             $match->fill($validatedData);
             $match->event_details_id = $event->id;
             $match->save();
-    
+
+            $joinEventId = JoinEvent::where('event_details_id', $event->id)
+                ->whereIn('team_id', [$team1->id, $team2->id])
+                ->get()
+                ->pluck(value: 'id');
+
+            $team1->load(['roster' => function($query) use ($joinEventId) {
+                $query->whereIn('join_events_id', $joinEventId)->with('user');
+            }]);
+            
+            $team2->load(['roster' => function($query) use ($joinEventId) {
+                $query->whereIn('join_events_id', $joinEventId)->with('user');
+            }]);
+
             $message = isset($validatedData['id']) 
                 ? 'Match updated successfully' 
                 : 'Match created successfully';

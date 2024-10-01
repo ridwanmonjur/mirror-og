@@ -1,0 +1,39 @@
+@props(['bracket'])
+ <table class="tournament-bracket__table mx-auto">
+     <thead class="sr-only">
+         <tr>
+             <th>Country</th>
+             <th>Score</th>
+         </tr>
+     </thead>
+     <tbody class="tournament-bracket__content">
+         <tr class="tournament-bracket__team tournament-bracket__team--winner">
+             <td class="tournament-bracket__country {{ $bracket['team2_position'] }}">
+                 <abbr class="tournament-bracket__code me-2"
+                     title="{{ $bracket['team1_positionMobile'] }}">{{ $bracket['team1_position'] }}
+                 </abbr>
+                 @if ($bracket['team1_id'])
+                     <img src="/storage/{{ $bracket['team1_teamBanner'] }}" width="100%" height= "25"
+                         onerror="this.src='/assets/images/404.png';" class="object-fit-cover" alt="Team View">
+                 @endif
+             </td>
+             <td class="tournament-bracket__score mb-2">
+                 <span class="tournament-bracket__number">{{ $bracket['team1_score'] }}</span>
+             </td>
+         </tr>
+         <tr class="tournament-bracket__team">
+             <td class="tournament-bracket__country  {{ $bracket['team2_position'] }}">
+                 <abbr class="tournament-bracket__code"
+                     title="{{ $bracket['team2_positionMobile'] }}">{{ $bracket['team2_position'] }}</abbr>
+                 @if ($bracket['team2_id'])
+                     <img src="/storage/{{ $bracket['team2_teamBanner'] }}" width="100%" height= "25"
+                         onerror="this.src='/assets/images/404.png';" class="object-fit-cover me-2" alt="Team View">
+                 @endif
+
+             </td>
+             <td class="tournament-bracket__score mb-2">
+                 <span class="tournament-bracket__number">{{ $bracket['team2_score'] }}</span>
+             </td>
+         </tr>
+     </tbody>
+ </table>
