@@ -44,10 +44,10 @@
         data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}">
         <x-brackets.bracket-table :bracket="$bracket" />
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative  ">
-            <x-brackets.bracket-first-item-popover :position="$bracket['team1_position']" :teamBanner="$bracket['team1_teamBanner']" :teamId="$bracket['team1_id']"
+            <x-brackets.bracket-middle-desktop-item-plus-popover :position="$bracket['team1_position']" :teamBanner="$bracket['team1_teamBanner']" :teamId="$bracket['team1_id']"
                 :roster="$bracket['team1_roster']" />
 
-            <x-brackets.bracket-first-item-popover :position="$bracket['team2_position']" :teamBanner="$bracket['team2_teamBanner']" :teamId="$bracket['team2_id']"
+            <x-brackets.bracket-middle-desktop-item-plus-popover :position="$bracket['team2_position']" :teamBanner="$bracket['team2_teamBanner']" :teamId="$bracket['team2_id']"
                 :roster="$bracket['team2_roster']" />
 
             <small class="position-absolute winner-label ">

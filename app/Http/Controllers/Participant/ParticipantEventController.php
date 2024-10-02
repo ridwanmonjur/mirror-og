@@ -158,41 +158,14 @@ class ParticipantEventController extends Controller
                 $matchTeamIds->push($match->team1_id, $match->team2_id);
             });
     
-            $defaultValues = [
-                'id' => null,
-                'match_type' => 'tournament',
-                'stage_name' => '',
-                'inner_stage_name' => '',
-                'team1_id' => '',
-                'team1_teamName' => '',
-                'team1_teamBanner' => null,
-                'team1_score' => '0',
-                'team1_roster' => null,
-                'team2_id' => '',
-                'team2_score' => '0',
-                'team1_position' => '',
-                'team2_position' => '',
-                'team2_teamName' => '',
-                'team2_teamBanner' => null,
-                'team2_roster' => null,
-                'winner_id' => '',
-                'status' => 'Upcoming',
-                'result' => '',
-                'winner_next_position' => '',
-                'loser_next_position' => '',
-                'team1Code' => 'N/A',
-                'team2Code' => 'N/A',
-                'winner_next_position' => 'N/A',
-                'loser_next_position' => null,
-            ];
+            $defaultValues = BracketData::DEFAULT_VALUES;
     
             $matchesUpperCount = intval($event->tier->tierTeamSlot); 
             $valuesMap = ['Tournament' => 'tournament', 'League' => 'tournament'];
             $tournamentType = $event->type->eventType;
-            $bracketData = new BracketData;
             $tournamentTypeFinal = $valuesMap[$tournamentType];
             
-            $bracketList = $bracketData->getData($matchesUpperCount)[$tournamentTypeFinal];
+            $bracketList = BracketData::BRACKET_DATA[$matchesUpperCount][$tournamentTypeFinal];
             $bracketList = $event->matches->reduce(function ($bracketList, $match) {
                 $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
     
