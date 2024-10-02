@@ -159,12 +159,11 @@ class ParticipantEventController extends Controller
             });
     
             $defaultValues = BracketData::DEFAULT_VALUES;
-    
             $matchesUpperCount = intval($event->tier->tierTeamSlot); 
             $valuesMap = ['Tournament' => 'tournament', 'League' => 'tournament'];
             $tournamentType = $event->type->eventType;
             $tournamentTypeFinal = $valuesMap[$tournamentType];
-            
+            $previousValues = BracketData::PREV_VALUES[(int)($matchesUpperCount)];
             $bracketList = BracketData::BRACKET_DATA[$matchesUpperCount][$tournamentTypeFinal];
             $bracketList = $event->matches->reduce(function ($bracketList, $match) {
                 $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
@@ -229,7 +228,8 @@ class ParticipantEventController extends Controller
                 'likesCount' => $likesCount, 
                 'followersCount' => $followersCount, 
                 'user' => $user, 
-                'existingJoint' => $existingJoint
+                'existingJoint' => $existingJoint,
+                'previousValues' => $previousValues
                 ]
             );
         } catch (Exception $e) {

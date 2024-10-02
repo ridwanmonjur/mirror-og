@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
     <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
+    <script src="{{ asset('/assets/js/shared/tournament.js') }}"></script>
+
 </head>
 
 @php

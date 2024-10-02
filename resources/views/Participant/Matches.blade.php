@@ -25,6 +25,8 @@
         ])
         @livewireScripts
         <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+    <script src="{{ asset('/assets/js/shared/tournament.js') }}"></script>
+
     </main>
 </body>
 </html>

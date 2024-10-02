@@ -1,4 +1,4 @@
-<div class="tournament-bracket__item tournament first-item d-none-until-hover2-parent">
+<div class="tournament-bracket__item tournament  d-none-until-hover2-parent">
     @php
 
         foreach ($defaultValues as $key => $defaultValue) {
@@ -39,16 +39,30 @@
         $bracket['loser_next_position'] = $bracket['loser_next_position'] ?? null;
 
     @endphp
-    <div class="tournament-bracket__match tournament {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }}"
+    <div class="tournament-bracket__match tournament first-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }}"
         tabindex="0" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
-        data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}">
+        data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}"
+        data-item-type="first"
+    >
         <x-brackets.bracket-table :bracket="$bracket" />
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative  ">
+
             <x-brackets.bracket-first-item-popover :position="$bracket['team1_position']" :teamBanner="$bracket['team1_teamBanner']" :teamId="$bracket['team1_id']"
                 :roster="$bracket['team1_roster']" />
 
             <x-brackets.bracket-first-item-popover :position="$bracket['team2_position']" :teamBanner="$bracket['team2_teamBanner']" :teamId="$bracket['team2_id']"
                 :roster="$bracket['team2_roster']" />
+            
+            <x-brackets.bracket-middle-item-popover
+                :position1="$bracket['team1_position']"
+                :teamBanner1="$bracket['team1_teamBanner']"
+                :teamId1="$bracket['team1_id']"
+                :score1="$bracket['team1_score']"
+                :position2="$bracket['team2_position']"
+                :teamBanner2="$bracket['team2_teamBanner']"
+                :teamId2="$bracket['team2_id']"
+                :score2="$bracket['team2_score']"
+            />
 
             <small class="position-absolute winner-label ">
                 <span class="d-none-until-hover2" onclick="fillModalInputs(event); event.preventDefault();">

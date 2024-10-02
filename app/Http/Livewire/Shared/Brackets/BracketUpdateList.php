@@ -78,13 +78,13 @@ class BracketUpdateList extends Component
         }
 
         $defaultValues = BracketData::DEFAULT_VALUES;
-
         $matchesUpperCount = intval($this->event->tier->tierTeamSlot); 
         $valuesMap = ['Tournament' => 'tournament', 'League' => 'tournament'];
         $tournamentType = $this->event->type->eventType;
         $tournamentTypeFinal = $valuesMap[$tournamentType];
         
         $bracketList = BracketData::BRACKET_DATA[(int)($matchesUpperCount)][$tournamentTypeFinal];
+        $previousValues = BracketData::PREV_VALUES[(int)($matchesUpperCount)];
         $bracketList = $this->event->matches->reduce(function ($bracketList, $match) {
             $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
 
@@ -142,7 +142,8 @@ class BracketUpdateList extends Component
         return view('livewire.shared.brackets.bracket-update-list', [
             'matchesUpperCount' => $matchesUpperCount,
             'bracketList' => $bracketList,
-            'defaultValues' => $defaultValues
+            'defaultValues' => $defaultValues,
+            'previousValues' => $previousValues
         ]);
     }
 }

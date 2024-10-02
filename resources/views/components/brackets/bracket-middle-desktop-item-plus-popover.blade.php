@@ -9,7 +9,7 @@
     'teamId2',
     'score2',
 ])
- <div class="popover-content d-none" style="opacity: 1; z-index: 999 !important;">
+ <div class="{{'popover-middle-content d-none ' . $position1 . ' ' . $position2 }}" style="opacity: 1; z-index: 999 !important;">
     <div class="popover-box row justify-content-start px-2 pt-2 pb-2" style="min-width: 400px; background: white !important;">
         <div class="col-12 col-lg-5 text-end">
             <div class="text-end">
@@ -32,7 +32,8 @@
     </div>
 </div>
 <div
-    class="tournament-bracket__box  position-relative mx-auto {{ $position1 }} {{ $position2 }} tournament bg-light"
+    class="tournament-bracket__box  position-relative mx-auto popover-button tournament bg-light"
+    data-position="{{$position1}}"
     style="width: 35px; height: 28px;"
 >
     @if ($teamId1)
@@ -48,8 +49,8 @@
     <span></span>
 </div>
 <div
-    class="tournament-bracket__box  position-relative mx-auto {{ $position1 }} {{ $position2 }} tournament bg-light"
-    style="width: 35px; height: 28px;"
+    class="tournament-bracket__box  position-relative mx-auto popover-button tournament bg-light"
+    style="width: 35px; height: 28px;" data-position="{{$position2}}"
 >
     @if ($teamId2)
         <img src="{{ asset('storage/' . $teamBanner2) }}" width="100%" height="25"

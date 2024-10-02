@@ -84,6 +84,7 @@ class BracketReportList extends Component
         $tournamentTypeFinal = $valuesMap[$tournamentType];
 
         $bracketList = BracketData::BRACKET_DATA[(int)($matchesUpperCount)][$tournamentTypeFinal];
+        $previousValues = BracketData::PREV_VALUES[(int)($matchesUpperCount)];
 
         $bracketList = $this->event->matches->reduce(function ($bracketList, $match) {
             $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
@@ -142,7 +143,8 @@ class BracketReportList extends Component
         return view('livewire.shared.brackets.bracket-report-list', [
             'matchesUpperCount' => $matchesUpperCount,
             'bracketList' => $bracketList,
-            'defaultValues' => $defaultValues
+            'defaultValues' => $defaultValues,
+            'previousValues' => $previousValues
         ]);
     }
 }

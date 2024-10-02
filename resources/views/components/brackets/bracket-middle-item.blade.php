@@ -1,5 +1,5 @@
 
-<div class="tournament-bracket__item tournament middle-item d-none-until-hover2-parent">
+<div class="tournament-bracket__item tournament d-none-until-hover2-parent">
     @php
 
         foreach ($defaultValues as $key => $defaultValue) {
@@ -40,12 +40,14 @@
         $bracket['loser_next_position'] = $bracket['loser_next_position'] ?? null;
     @endphp
 
-    <div class="tournament-bracket__match {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} popover-parent "
+    <div class="tournament-bracket__match  middle-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} popover-parent "
         tabindex="0" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
-        data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}">
+        data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}"
+        data-item-type="middle"
+    >
         <x-brackets.bracket-table :bracket="$bracket" />
 
-        <div class="text-center mx-auto tournament-bracket__displayLargeScreen popover-button position-relative  ">
+        <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative  ">
             <x-brackets.bracket-middle-desktop-item-plus-popover
                 :position1="$bracket['team1_position']"
                 :teamBanner1="$bracket['team1_teamBanner']"
