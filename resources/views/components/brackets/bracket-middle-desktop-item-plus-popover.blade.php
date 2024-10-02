@@ -1,52 +1,62 @@
 <!-- tournament-bracket-box.blade.php -->
 @props([
-    'position',
-    'teamBanner',
-    'teamId',
-    'roster' => []
+    'position1',
+    'teamBanner1',
+    'teamId1',
+    'score1',
+    'position2',
+    'teamBanner2',
+    'teamId2',
+    'score2',
 ])
-
-<div
-    class="tournament-bracket__box popover-parent position-relative mx-auto {{ $position }} tournament bg-light"
-    style="width: 35px; height: 28px;"
->
-    <div class="popover-content d-none" style="opacity: 1; z-index: 999 !important;">
-        <div class="popover-box row justify-content-start px-2 pt-2 pb-2" style="min-width: 400px; background: white !important;">
-            <div class="col-12 col-lg-5 text-end">
-                <div class="text-end">
-                    <img src="{{ asset('storage/' . $teamBanner) }}" alt="Team Banner" width="100%"
-                        height="100%" onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                        class="popover-content-img"
-                    >
-                </div>
-                <small>{{ $position }}</small>
+ <div class="popover-content d-none" style="opacity: 1; z-index: 999 !important;">
+    <div class="popover-box row justify-content-start px-2 pt-2 pb-2" style="min-width: 400px; background: white !important;">
+        <div class="col-12 col-lg-5 text-end">
+            <div class="text-end">
+                <img src="{{ asset('storage/' . $teamBanner1) }}" alt="Team Banner" width="100%"
+                    height="100%" onerror="this.src='{{ asset('assets/images/404.png') }}';"
+                    class="popover-content-img"
+                >
             </div>
-            <div class="col-12 col-lg-7">
-                @if (isset($roster[0]))
-                    <ul class="d-block ms-0 ps-0">
-                        @foreach ($roster as $rosterItem)
-                            <li class="d-inline">
-                                <img width="25" height="25" onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                                    src="{{ asset('storage/' . $rosterItem->user->userBanner) }}" alt="User Banner"
-                                    class="mb-2 rounded-circle object-fit-cover me-3">
-                                {{ $rosterItem->user->name }}
-                            </li>
-                            <br>
-                        @endforeach
-                    </ul>
-                @else
-                    <p class="text-muted">The team roster is empty.</p>
-                @endif
+            <small>{{ $position1 }}</small>
+        </div>
+        <div class="col-12 col-lg-7">
+            <div class="text-end">
+                <img src="{{ asset('storage/' . $teamBanner2) }}" alt="Team Banner" width="100%"
+                    height="100%" onerror="this.src='{{ asset('assets/images/404.png') }}';"
+                    class="popover-content-img"
+                >
             </div>
+            <small>{{ $position2 }}</small>
         </div>
     </div>
-    @if ($teamId)
-        <img src="{{ asset('storage/' . $teamBanner) }}" width="100%" height="25"
+</div>
+<div
+    class="tournament-bracket__box  position-relative mx-auto {{ $position1 }} {{ $position2 }} tournament bg-light"
+    style="width: 35px; height: 28px;"
+>
+    @if ($teamId1)
+        <img src="{{ asset('storage/' . $teamBanner1) }}" width="100%" height="25"
             onerror="this.src='{{ asset('assets/images/404.png') }}';"
-            class="popover-button position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
+            class=" position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
             style="z-index: 99;">
     @else 
-        <small class="ms-1 replace_me_with_image">{{$position}}</small>
+        <small class="ms-1 replace_me_with_image">{{$position1}}</small>
      @endif
     <span></span>
+     
+    <span></span>
+</div>
+<div
+    class="tournament-bracket__box  position-relative mx-auto {{ $position1 }} {{ $position2 }} tournament bg-light"
+    style="width: 35px; height: 28px;"
+>
+    @if ($teamId2)
+        <img src="{{ asset('storage/' . $teamBanner2) }}" width="100%" height="25"
+            onerror="this.src='{{ asset('assets/images/404.png') }}';"
+            class="position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
+            style="z-index: 99;">
+    @else 
+        <small class="ms-1 replace_me_with_image">{{$position2}}</small>
+     @endif
 </div>

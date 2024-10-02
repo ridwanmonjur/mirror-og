@@ -226,8 +226,12 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    let isUpperBracketFirstRound = false;
                     let {team1, match, team2} = data.data;
                     let currentMatchDiv = document.querySelector(`.${match.team1_position}.${match.team2_position}`);
+                    if (match.type==="upperBracket" && match.inner_stage_name === "eliminator1") {
+                        isUpperBracketFirstRound = true;
+                    }
                     let currentMatch = JSON.parse(currentMatchDiv.dataset.bracket);
                     currentMatch.id = match.id;
                     currentMatch.team1_score = match.team1_score;
@@ -249,6 +253,7 @@
                     }
 
                     currentMatchDiv.dataset.bracket = JSON.stringify(currentMatch);
+                    
                     const parentElements = currentMatchDiv.querySelectorAll(".popover-parent");
                     console.log({parentElements});
                     
@@ -259,7 +264,7 @@
                     for (let index=0; index <2; index++) {
                         let banner = index ? team2.teamBanner : team1.teamBanner;
 
-                        if (imgs[index]) {
+                        if (imgs[index] && 'src' in imgs[index]) {
                             imgs[index].src =  `/storage/${banner}`;
                         } else {
                             let small = smalls[index];
@@ -289,7 +294,8 @@
                     bracketBoxList.forEach(bracketBox => {
                         let banner = index ? team2.teamBanner : team1.teamBanner;
                         let roster = index ? team2.roster : team1.roster;
-                        popoverImgs[index].src = `/storage/${banner}`;
+                        let currentImg = popoverImgs[index];
+                        if (currentImg && 'src' in currentImg) currentImg.src = `/storage/${banner}`;
 
                         const rosterContainer = bracketBox.querySelector('.popover-box .col-12.col-lg-7');
                         if (rosterContainer && roster) {
@@ -316,14 +322,18 @@
                         index++;
                     });
 
-                    parentElements.forEach(parent => {
-                        const contentElement = parent.querySelector(".popover-content");
-                        const parentElement = parent.querySelector(".popover-button");
-                        console.log({contentElement, parentElement});
-                        if (contentElement) {
-                            window.addPopover(parentElement, contentElement, 'mouseenter');
-                        }
-                    });
+                    if (isUpperBracketFirstRound) {
+                        parentElements.forEach(parent => {
+                            const contentElement = parent.querySelector(".popover-content");
+                            const parentElement = parent.querySelector(".popover-button");
+                            console.log({contentElement, parentElement});
+                            if (contentElement) {
+                                window.addPopover(parentElement, contentElement, 'mouseenter');
+                            }
+                        });
+                    } else {
+                        
+                    }
                     window.Toast.fire({
                         icon: 'success',
                         text: data.message
