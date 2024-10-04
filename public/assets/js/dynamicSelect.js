@@ -1,9 +1,4 @@
-/*
- * Created by David Adams
- * https://codeshack.io/dynamic-select-images-html-javascript/
- * 
- * Released under the MIT license
- */
+
 class DynamicSelect {
 
     constructor(element, options = {}) {
@@ -205,7 +200,6 @@ class DynamicSelect {
 
     updateSelectElement(dataValue) {
         const selectedData = this.data.find(item => item.value == dataValue);
-        console.log({selectedData, data: this.data, dataValue});
         if (selectedData) {
             this.data.forEach(item => item.selected = (item.value == dataValue));
 

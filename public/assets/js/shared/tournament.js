@@ -1,5 +1,4 @@
-let previousValues = JSON.parse(document.getElementById('previousValues')?.value ?? '[]');
-console.log({element: document.getElementById('previousValues' )});   
+let previousValues = JSON.parse(document.getElementById('previousValues')?.value);
 var bracketItemList = document.querySelectorAll('.codeCANcode.tournament-bracket__item');
 bracketItemList.forEach(item => {
     item.classList.add('special-item-right');
@@ -8,18 +7,13 @@ bracketItemList.forEach(item => {
 
 var bracketteamList = document.querySelectorAll('.codeCANcode.tournament-bracket__match');
 bracketItemList.forEach(item => {
-    console.log({
-        hi: true
-    });
     item.classList.add('special-item2');
     item.style.setProperty('--border-color', 'red');
 });
 
 var bracketBoxList = document.querySelectorAll('.codeCANcode .tournament-bracket__box.codeCANcode');
 bracketBoxList.forEach(item => {
-    console.log({
-        hi: true
-    });
+   
     item.style.setProperty('--border2-color', 'red');
 });
 
@@ -82,16 +76,23 @@ window.onload = () => {
     });
 
     const parentSecondElements = document.querySelectorAll(".middle-item");
-    console.log({parentSecondElements});
     parentSecondElements?.forEach(parent => {
         const triggers = parent.querySelectorAll(".popover-button");
-        triggers.forEach((trigger) =>{
+        triggers.forEach((trigger, index) =>{
             let triggerPositionId = trigger.dataset.position;
             let triggerParentsPositionIds = previousValues[triggerPositionId];
+            
             if (triggerParentsPositionIds && Array.isArray(triggerParentsPositionIds)) {
                 let triggerClassName = '.popover-middle-content.' + triggerParentsPositionIds.join(".");
                 let contentElement = document.querySelector(triggerClassName);
-                console.log({triggerParentsPositionIds, triggerClassName, contentElement});
+                if (index === 1) {
+                    console.log({
+                        triggerPositionId,
+                        id: previousValues[triggerPositionId],
+                        triggerClassName,
+                        contentElement
+                    });
+                }
                 window.addPopover(trigger, contentElement, 'mouseenter');
             } 
        })

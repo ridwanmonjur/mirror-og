@@ -47,11 +47,22 @@
         <x-brackets.bracket-table :bracket="$bracket" />
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative  ">
 
-            <x-brackets.bracket-first-item-popover :position="$bracket['team1_position']" :teamBanner="$bracket['team1_teamBanner']" :teamId="$bracket['team1_id']"
-                :roster="$bracket['team1_roster']" />
+            <x-brackets.bracket-first-item-popover 
+                :position="$bracket['team1_position']" 
+                :teamBanner="$bracket['team1_teamBanner']" 
+                :teamId="$bracket['team1_id']"
+                :teamName="$bracket['team1_teamName']"
+                :roster="$bracket['team1_roster']" 
+            />
 
-            <x-brackets.bracket-first-item-popover :position="$bracket['team2_position']" :teamBanner="$bracket['team2_teamBanner']" :teamId="$bracket['team2_id']"
-                :roster="$bracket['team2_roster']" />
+            <x-brackets.bracket-first-item-popover 
+                :position="$bracket['team2_position']" 
+                :teamBanner="$bracket['team2_teamBanner']" 
+                :teamId="$bracket['team2_id']"
+                :roster="$bracket['team2_roster']" 
+                :teamName="$bracket['team2_teamName']"
+
+                />
             
             <x-brackets.bracket-middle-item-popover
                 :position1="$bracket['team1_position']"
@@ -60,8 +71,13 @@
                 :score1="$bracket['team1_score']"
                 :position2="$bracket['team2_position']"
                 :teamBanner2="$bracket['team2_teamBanner']"
+                :teamName2="$bracket['team2_teamName']"
                 :teamId2="$bracket['team2_id']"
                 :score2="$bracket['team2_score']"
+                :teamName1="$bracket['team1_teamName']"
+                :winner_next_position="$bracket['winner_next_position']"
+                :loser_next_position="$bracket['loser_next_position']"
+                :status="$bracket['status']"
             />
 
             <small class="position-absolute winner-label ">

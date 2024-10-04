@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
     <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
-    <script src="{{ asset('/assets/js/shared/tournament.js') }}"></script>
 
 </head>
 
@@ -338,6 +337,8 @@
 
                 <div id="Bracket" class="tabcontent">
                     <h5><u>Bracket</u></h5>
+                        <input type="hidden" id="previousValues" value="{{ json_encode($previousValues) }}">
+
                     @include('Participant.__Partials.BracketReport')
 
                 </div>
@@ -524,5 +525,6 @@
         });
     </script>
 
+    <script src="{{ asset('/assets/js/shared/tournament.js') }}"></script>
 
 </html>

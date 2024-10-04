@@ -334,11 +334,17 @@ Alpine.data('alpineDataComponent', function () {
                     room['otherRoomMember'] = roomUserIdMap[room['otherRoomMemberId']];
                 }
                 this.roomUserIdMap = {...roomUserIdMap };
-               
+                if (isInitialDataFetched) {
+                    this.oldRooms.unshift(rooms[0]);
+                    await this.getMessages(rooms[0]['id']);
+                    this.currentRoom = rooms[0].id;
+                    return;
+                } else {
                     for (let room of rooms) {
                         await this.getMessages(room['id']);
                     }
                     this.oldRooms = [...rooms];
+                }
                 isInitialDataFetched = true;
                 await this.startChat();
             });
@@ -346,12 +352,11 @@ Alpine.data('alpineDataComponent', function () {
             this.roomSnapshot = subscribeToRoomSnapshot;
         },
         async handleScrollChat() {
-            let id =  this.currentRoom;
-            
             if (!this.messages[id] || !this.messages[id][0]) {
                 return;
             }
 
+            let id =  this.currentRoom;
             let q = query(
                 collection(db, `room/${id}/message`),
                 orderBy("createdAt", "desc")
@@ -424,18 +429,19 @@ Alpine.data('alpineDataComponent', function () {
             );
 
             let isInitialDataFetched = false;
-            let prevCreatedAt = null;
 
 
-            q = query(q, limit(10));
+            q = query(q, limit(20));
 
             let subscribeToChat = onSnapshot(q, {
                 includeMetadata: true,
             }, async (snapshot) => {
                 let results = [];
+                let prevCreatedAt = null;
                 let length = 0;
                 snapshot.docChanges().forEach(async (change) => {
                     if (change.type === "added") {
+
                         let objectDoc = {
                             id: change.doc.id,
                             ...change.doc.data(),
@@ -452,14 +458,11 @@ Alpine.data('alpineDataComponent', function () {
                         }
 
                         objectDoc['sender'] = Alpine.raw(this.roomUserIdMap)[objectDoc['senderId']];
-                        let currentDate = objectDoc['createdAt'].toDate();
-                        objectDoc['createdAtDate'] = currentDate;
-
-
+                        objectDoc['createdAtDate'] = objectDoc['createdAt'].toDate();
                         if (length) {
-                            if (currentDate?.getDate() != prevCreatedAt?.getDate() 
-                                || currentDate ?.getMonth() != prevCreatedAt?.getMonth()
-                                || currentDate?.getYear() != prevCreatedAt?.getYear()
+                            if (objectDoc['createdAtDate']?.getDate() !== prevCreatedAt?.getDate() 
+                                || objectDoc['createdAtDate'] ?.getMonth() !== prevCreatedAt?.getMonth()
+                                || objectDoc['createdAtDate'] ?.getYear() !== prevCreatedAt?.getYear()
                             ) {
                                 objectDoc['isLastDateShow'] = true;
                                 objectDoc['lastDate'] = prevCreatedAt;
@@ -468,7 +471,6 @@ Alpine.data('alpineDataComponent', function () {
 
                         prevCreatedAt = objectDoc['createdAtDate'];
                         length++;
-                       
                         if (isInitialDataFetched) {
                             results.push(objectDoc);
                         } else {
@@ -477,16 +479,15 @@ Alpine.data('alpineDataComponent', function () {
                     }
 
                 });
-
-                
-
+                this.messagesLength[id] = length;
+            
                 if (isInitialDataFetched) {
-                    
-                        // results[0]['isLastDateShow'] = true;
-                        // results[0]['lastDate'] = results[0]['createdAtDate'];
+                    if (length) {
+                        results[0]['isLastDateShow'] = true;
+                        results[0]['lastDate'] = results[0]['createdAtDate'];
                         // init views
+                    }
                 } else {
-                       
                     // let messsages = this.messages[this.currentRoom]; 
                 
                     // const element = document.querySelector(`[data-identity-for-read="${this.currentRoom}"]`);
@@ -510,9 +511,12 @@ Alpine.data('alpineDataComponent', function () {
     
                 }
 
-                this.messagesLength[id] = this.messagesLength[id] ? this.messagesLength[id] + length: length;
                 
-                this.messages[id] = [...(this.messages[id] || []), ...results];
+                if (id in this.messages) {
+                    this.messages[id] = this.messages[id].concat(results);
+                } else {
+                    this.messages[id] = results;
+                } 
                 
                 if (this.currentRoom == id) {
                     appendMessages(results, length);
@@ -556,8 +560,7 @@ Alpine.data('alpineDataComponent', function () {
                 const element = e.target;
                 const scrollTop = element.scrollTop;
 
-                if (scrollTop < 100 && scrollTop < (element.oldScroll ?? Infinity)) {
-                    this.handleScrollChat()
+                if (scrollTop <= 100 && element.oldScroll < scrollTop) {
                 }
 
                 element.oldScroll = scrollTop;
@@ -576,10 +579,7 @@ Alpine.data('alpineDataComponent', function () {
                 chatMessages.innerHTML = '';
                 let length =  this.messagesLength[this.currentRoom];
                 let messsages = this.messages[this.currentRoom]; 
-                if (isNaN(length))  {
-                    return;
-                } 
-
+                
                 const element = document.querySelector(`[data-identity-for-read="${this.currentRoom}"]`);
                 let lastMsgInBatch = messsages[length-1];
                 if (lastMsgInBatch && lastMsgInBatch?.senderId != loggedUserProfile?.id && !lastMsgInBatch.isRead) {

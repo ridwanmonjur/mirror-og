@@ -1,4 +1,11 @@
-
+@props([
+    'bracket',
+    'tournament',
+    'defaultValues',
+    'stageName',
+    'innerStageName',
+    'order'
+])
 <div class="tournament-bracket__item tournament d-none-until-hover2-parent">
     @php
 
@@ -48,7 +55,22 @@
         <x-brackets.bracket-table :bracket="$bracket" />
 
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative  ">
-            <x-brackets.bracket-middle-desktop-item-plus-popover
+         <x-brackets.bracket-middle-item-popover
+                :position1="$bracket['team1_position']"
+                :teamBanner1="$bracket['team1_teamBanner']"
+                :teamId1="$bracket['team1_id']"
+                :score1="$bracket['team1_score']"
+                :position2="$bracket['team2_position']"
+                :teamBanner2="$bracket['team2_teamBanner']"
+                :teamName2="$bracket['team2_teamName']"
+                :teamId2="$bracket['team2_id']"
+                :score2="$bracket['team2_score']"
+                :teamName1="$bracket['team1_teamName']"
+                :winner_next_position="$bracket['winner_next_position']"
+                :loser_next_position="$bracket['loser_next_position']"
+                :status="$bracket['status']"
+            />
+            <x-brackets.bracket-middle-desktop-item
                 :position1="$bracket['team1_position']"
                 :teamBanner1="$bracket['team1_teamBanner']"
                 :teamId1="$bracket['team1_id']"
@@ -57,6 +79,7 @@
                 :teamBanner2="$bracket['team2_teamBanner']"
                 :teamId2="$bracket['team2_id']"
                 :score2="$bracket['team2_score']"
+               
             />
            
             <small class="position-absolute winner-label ">
@@ -76,7 +99,6 @@
             </small>
             <small @class([
                 'position-absolute loser-label',
-                'd-none' => !$bracket['loser_next_position'],
             ]) @style([
                 'left: 100%;' => !$bracket['loser_next_position'],
             ])>

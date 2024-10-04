@@ -1,13 +1,14 @@
+{{-- @php
+    dd($previousValues);
+@endphp --}}
 <div id="bracket-list" class="position-absolute" style="overflow-x: visible; overflow-y: visible;">
     @livewire('shared.brackets.bracket-update-modal', [
         'event' => $event,
         'teamList' => $teamList,
     ])
-                <input type="hidden" id="previousValues" value="{{json_encode($previousValues)}}">
-
-    <h5 class=" text-start">Upper bracket</h5>
+    <h5 class="mt-5 mb-4  text-start">Upper bracket</h5>
     <div class="row ">
-        <div class="tournament-bracket tournament-bracket--rounded col-lg-5">
+        <div class="tournament-bracket tournament-bracket--rounded col-lg-9 col-xl-8 col-xxl-6">
             <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                 <div class="tournament-bracket__list">
                     @foreach ($bracketList['upperBracket']['eliminator1'] as $order => $bracket)
@@ -88,6 +89,7 @@
             </div>
         </div>
 
+
         <div class="tournament-bracket__round tournament-bracket__round--semifinals">
             <div class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
                 @foreach ($bracketList['lowerBracket']['prefinals2'] as $order => $bracket)
@@ -101,6 +103,7 @@
 
         </div>
     </div>
+
     <br><br><br>
 
 </div>
