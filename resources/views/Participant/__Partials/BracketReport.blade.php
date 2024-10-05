@@ -6,9 +6,9 @@
         'event' => $event,
         'teamList' => $teamList,
     ])
-    <h5 class="mt-5 mb-4  text-start">Upper bracket</h5>
-    <div class="row ">
-        <div class="tournament-bracket tournament-bracket--rounded col-lg-9 col-xl-8 col-xxl-6">
+    <h5 class=" mb-2 text-start">Upper bracket</h5>
+    <div class="row mb-2">
+        <div class="tournament-bracket tournament-bracket--rounded col-12 col-xxl-6">
             <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                 <div class="tournament-bracket__list">
                     @foreach ($bracketList['upperBracket']['eliminator1'] as $order => $bracket)
@@ -30,7 +30,7 @@
 
             @foreach ($upperBracketRounds as $stage => $roundClass)
                 @if (isset($bracketList['upperBracket'][$stage]))
-                    <div class="tournament-bracket__round tournament-bracket__round--{{ $roundClass }}">
+                    <div class="tournament-bracket__round mb-2 tournament-bracket__round--{{ $roundClass }}">
                         <div class="tournament-bracket__list">
                             @foreach ($bracketList['upperBracket'][$stage] as $order => $bracket)
                                 <x-brackets.bracket-middle-item :bracket="$bracket" :stageName="'upperBracket'" :innerStageName="$stage"
@@ -42,7 +42,7 @@
                 @endif
             @endforeach
 
-            <div class="tournament-bracket__round tournament-bracket__round--gold">
+            <div class="tournament-bracket__round tournament-bracket__round--gold mt-2">
             </div>
         </div>
 
@@ -52,7 +52,7 @@
         @endforeach
 
     </div>
-    <h5 class="mt-5 mb-4 text-start">Lower bracket</h5>
+    <h5 class="mb-2 text-start">Lower bracket</h5>
     <div class="tournament-bracket tournament-bracket--rounded">
         @php
             $rounds = [
@@ -99,7 +99,7 @@
             </div>
         </div>
 
-        <div class="tournament-bracket__round tournament-bracket__round--gold">
+        <div class="tournament-bracket__round tournament-bracket__round--gold mt-2">
 
         </div>
     </div>

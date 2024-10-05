@@ -319,7 +319,7 @@
     <div class="grid-container">
             <div></div>
             <div>
-                <div class="tab ms-0 position-relative" style="width: 60vw;">
+                <div class="tab ms-0 position-relative" style="width: max(60vw, 95%); left: min(2%, 10px); top:20px;">
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ' }}"
                         onclick="openTab(event, 'Overview'); restoreBodyHeight();">Overview</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
@@ -336,8 +336,7 @@
                 </div>
 
                 <div id="Bracket" class="tabcontent">
-                    <h5><u>Bracket</u></h5>
-                        <input type="hidden" id="previousValues" value="{{ json_encode($previousValues) }}">
+                    <input type="hidden" id="previousValues" value="{{ json_encode($previousValues) }}">
 
                     @include('Participant.__Partials.BracketReport')
 

@@ -13,8 +13,8 @@
                      title="{{ $bracket['team1_positionMobile'] }}">{{ $bracket['team1_position'] }}
                  </abbr>
                  @if ($bracket['team1_id'])
-                     <img src="/storage/{{ $bracket['team1_teamBanner'] }}" width="100%" height= "25"
-                         onerror="this.src='/assets/images/404.png';" class="object-fit-cover" alt="Team View">
+                     <img src="/storage/{{ $bracket['team1_teamBanner'] }}" width="40" height= "40"
+                         onerror="this.src='/assets/images/404.png';" class="object-fit-cover border border-primary rounded-circle" alt="Team View">
                  @endif
              </td>
              <td class="tournament-bracket__score mb-2">
@@ -26,8 +26,8 @@
                  <abbr class="tournament-bracket__code"
                      title="{{ $bracket['team2_positionMobile'] }}">{{ $bracket['team2_position'] }}</abbr>
                  @if ($bracket['team2_id'])
-                     <img src="/storage/{{ $bracket['team2_teamBanner'] }}" width="100%" height= "25"
-                         onerror="this.src='/assets/images/404.png';" class="object-fit-cover me-2" alt="Team View">
+                     <img src="/storage/{{ $bracket['team2_teamBanner'] }}" width="40" height= "40"
+                         onerror="this.src='/assets/images/404.png';" class="object-fit-cover border border-primary rounded-circle me-2" alt="Team View">
                  @endif
 
              </td>

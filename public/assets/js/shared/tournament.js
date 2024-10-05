@@ -41,7 +41,6 @@ function fillModalInputs(event) {
     dataset.inner_stage_name = innerStageName;
     dataset.order = order;
     const modalElement = document.getElementById('firstMatchModal');
-
     const inputs = modalElement.querySelectorAll('input, select, textarea');
 
     inputs.forEach(input => {
@@ -49,6 +48,12 @@ function fillModalInputs(event) {
         if (dataset[inputName] !== undefined) {
             input.value = dataset[inputName];
         }
+    });
+
+    ['team1_position', 'team2_position', 'winner_next_position', 'loser_next_position'].forEach((element)=> {
+        let id2 = `${element}_label`;
+        console.log({id2});
+        document.getElementById(id2).innerText = dataset[element];
     });
 
     ['result', 'status', 'team1_id', 'team2_id', 'winner_id'].forEach((selectName)=> {
@@ -85,14 +90,7 @@ window.onload = () => {
             if (triggerParentsPositionIds && Array.isArray(triggerParentsPositionIds)) {
                 let triggerClassName = '.popover-middle-content.' + triggerParentsPositionIds.join(".");
                 let contentElement = document.querySelector(triggerClassName);
-                if (index === 1) {
-                    console.log({
-                        triggerPositionId,
-                        id: previousValues[triggerPositionId],
-                        triggerClassName,
-                        contentElement
-                    });
-                }
+               
                 window.addPopover(trigger, contentElement, 'mouseenter');
             } 
        })

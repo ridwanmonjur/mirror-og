@@ -2,7 +2,7 @@
     <div class="modal-dialog " style="min-width: 50vw;">
         <div class="modal-content " style="background-color: #F5F4ED !important; ">
             <div class="modal-body my-3 px-5 ">
-                <h5 class="mt-2 mb-4"><u>Save and create your matches</u></h5>
+                <h5 class="mt-2 mb-2"><u>Save and create your matches</u></h5>
 
                 <form method="POST" action="{{ route('event.matches.upsert', ['id'=> $event->id]) }}" id="matchForm">
                     @csrf

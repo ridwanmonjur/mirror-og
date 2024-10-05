@@ -405,13 +405,15 @@ tournament-bracket__round:last-child .tournament-bracket__list {
 }
 .tournament-bracket__content::after {
     content: ':';
-    width: var(--line-width);
     text-align: center;
+    width: 10px;
     padding: 0.2em 0.1em;
 }
 @media (min-width: 1000px) {
     .tournament-bracket__content::after {
         order: 1;
+        width: var(--line-width);
+
    }
 }
 .tournament-bracket__content .tournament-bracket__team:first-child {
