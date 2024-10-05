@@ -14,6 +14,10 @@
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
+    <input type="hidden" id="register_route" value="{{ route('participant.register.manage', ['id' => ':id']) }}">
+
+    <input type="hidden" id="event_view_route" value="{{ route('public.event.view', ['id' => ':id']) }}">
+
         {{-- Hidden urls --}}
         <a class="d-none" id="manageRosterUrl" href="{{route('participant.roster.manage', ['id' => $id, 'teamId' => $selectTeam->id, 'redirect' => 'true' ] ) }}"> </a>
         <a class="d-none" id="manageRegistrationUrl" href="{{route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $id ] ) }}"> </a>
@@ -102,15 +106,8 @@
             > Next > </button>
         </div>
     </main>
-    <script>
-        function goToRegistrationScreen() {
-            window.location.href = "{{ route('participant.register.manage', ['id'=> $selectTeam->id]) }}";
-        }
-
-        function goToViewEvent() {
-            window.location.href = "{{ route('public.event.view', ['id'=> $id]) }}";
-        }
-    </script>
+    <script src="{{ asset('/assets/js/participant/EventNotify.js') }}"></script>
+    
 
 </body>
 

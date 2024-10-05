@@ -3,6 +3,7 @@
 @include('__CommonPartials.NavbarGoToSearchPage')
 
     <main>
+        <input type="hidden" id="home_view_route" value="{{ route('participant.home.view') }}">
         <br><br><br><br>
         <div class="text-center" >
             <div >
@@ -21,11 +22,7 @@
             </button>
 
         </div>
-        <script>
-            const goToHomeScreen = () => {
-                window.location.href = "{{route('participant.home.view') }}";
-            }
-        </script>
+        <script src="{{ asset('/assets/js/participant/EventNotFound.js') }}"></script>
         
 
     </main>

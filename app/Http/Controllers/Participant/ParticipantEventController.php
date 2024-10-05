@@ -542,23 +542,5 @@ class ParticipantEventController extends Controller
         }
     }
 
-    public function showSuccess(Request $request)
-    {
-        // try {
-        //     $user = $request->get('user');
-        //     $userId = $user->id;
-
-        // } catch (ModelNotFoundException|UnauthorizedException $e) {
-        //     return $this->showErrorOrganizer($e->getMessage());
-        // } catch (Exception $e) {
-        //     return $this->showErrorOrganizer("Event can't be retieved with id: $id");
-        // }
-
-        // return view('Participant.RegistrationSuccess', [
-        //     'event' => $event,
-        //     'mappingEventState' => EventDetail::mappingEventStateResolve(),
-        //     'isUser' => $isUserSameAsAuth,
-        //     'livePreview' => 1,
-        // ]);
-    }
+  
 }
