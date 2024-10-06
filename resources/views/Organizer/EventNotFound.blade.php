@@ -3,6 +3,9 @@
 @include('__CommonPartials.NavbarGoToSearchPage')
 
     <main>
+        <input type="hidden" id="manage_event_route" value="{{ route('event.index') }}">
+        <input type="hidden" id="edit_event_route" value="{{ route('event.edit', ['id' => $id]) }}">
+
         <br><br><br><br>
         <div class="text-center" >
             <div >
@@ -24,17 +27,8 @@
                 </button>
             @endif
         </div>
-        <script>
-            const goToManageScreen = () => {
-                window.location.href = "{{route('event.index') }}";
-            }
-            
-            const goToEditScreen = () => {
-                let url = "{{ route('event.edit', $id ?? -1 ) }}";
-                window.location.href = url;
-            }
-        </script>
-        
+        <script src="{{ asset('/assets/js/organizer/EventNotFound.js') }}"></script>
+
 
     </main>
 </body>
