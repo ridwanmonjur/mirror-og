@@ -61,7 +61,7 @@
                             <span>{{ $bracket['team2_position'] }}</span>
                         </div>
                         <small class="position-absolute winner-label d-none-until-hover" style="left: 100%;">
-                            <span class="d-none-until-hover" onclick="fillModalInputs(event); event.preventDefault();"
+                            <span class="d-none-until-hover" onclick="updateModal(event); event.preventDefault();"
                                 data-bs-toggle="modal" data-bs-target="#winnerMatchModal">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                     fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">

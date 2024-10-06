@@ -27,7 +27,7 @@ function getParentByClassName(element, targetClassName) {
     return parent;
 }
 
-function fillModalInputs(event) {
+function updateModal(event) {
     event.stopPropagation();
     
     const button = event.currentTarget;
