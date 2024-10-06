@@ -17,12 +17,12 @@
 <body>
     <main>
         @include('__CommonPartials.NavbarGoToSearchPage')
+        <input type="hidden" id="previousValues" value="{{json_encode($previousValues)}}">
         {{-- {{$id}}
         {{$eventType}} --}}
-        @livewire('shared.brackets.bracket-update-list', [
-            'eventId' => $id,
-            'eventType' => $eventType
-        ])
+        <div id="">
+            @include('Organizer.__ManageEventPartials.BracketUpdateList')
+        </div>
         @livewireScripts
         <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
     <script src="{{ asset('/assets/js/shared/tournament.js') }}"></script>

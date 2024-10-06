@@ -40,7 +40,7 @@
 
     @endphp
     <div class="tournament-bracket__match tournament first-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }}"
-        tabindex="0" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
+        tabindex="0" data-bracket="{{ $bracket['willJsonTeam'] ? json_encode($bracket) : '[]' }}" data-stage_name="{{ $stageName }}"
         data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}"
         data-item-type="first"
     >

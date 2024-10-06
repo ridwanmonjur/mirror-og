@@ -27,6 +27,7 @@ class BracketData
         'team2Code' => 'N/A',
         'winner_next_position' => 'N/A',
         'loser_next_position' => null,
+        'willJsonTeam' => false
     ];
 
     const PREV_VALUES = [

@@ -1,8 +1,8 @@
-{{-- @php
-    dd($previousValues);
-@endphp --}}
 <div id="bracket-list" class="position-absolute" style="overflow-x: visible; overflow-y: visible;">
-   
+    @livewire('shared.brackets.bracket-update-modal', [
+        'event' => $event,
+        'teamList' => $teamList,
+    ])
     <h5 class=" mb-2 text-start">Upper bracket</h5>
     <div class="row mb-2">
         <div class="tournament-bracket tournament-bracket--rounded col-12 col-xxl-6">

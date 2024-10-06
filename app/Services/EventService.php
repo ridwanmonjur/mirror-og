@@ -1,49 +1,17 @@
 <?php
-
-namespace App\Http\Livewire\Shared\Brackets;
+namespace App\Services;
 
 use App\Models\BracketData;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
-use App\Models\Team;
-use App\Models\Matches;
-use App\Models\RosterMember;
-use Livewire\Component;
 
-class BracketUpdateList extends Component
-{
-    public $eventId = null;
-    public $event = null;
-    public $teamList;
-    public $rosterList = null;
-    public $componentEventType = 'Tournament';
-    public $isWrongType = false;
 
-    public function __construct(
-            string | int  $eventId,
-        ) {
-            $this->eventId = $eventId;
-        }
+class EventService {
 
-    public function mount() {
-        $this->event = EventDetail::with(['type'])->findOrFail($this->eventId);
+    public function generateBrackets(EventDetail $event, bool $isOrganizer , JoinEvent $existingJoint = null) {
+        $joinEventIds = $event->joinEvents->pluck('id');
 
-        if ($this->event->type->eventType !== $this->componentEventType) {
-            $this->isWrongType = true;
-            return;
-        }
-
-        $this->event->load([
-            'tier',
-            'type',
-            'joinEvents.team' => function ($query) {
-                $query->select('teams.id', 'teamName', 'teamBanner');
-            },
-        ]);
-        
-        $joinEventIds = $this->event->joinEvents->pluck('id');
-        
-        $this->event->load([
+        $event->load([
             'joinEvents.team.roster' => function ($query) use ($joinEventIds) {
                 $query->select('id', 'team_id', 'join_events_id', 'user_id')
                       ->whereIn('join_events_id', $joinEventIds)
@@ -56,38 +24,34 @@ class BracketUpdateList extends Component
 
         $teamMap = collect();
         $teamList = collect();
-        $this->event->joinEvents->each(function ($joinEvent) use (&$teamList, &$teamMap) {
+        $event->joinEvents->each(function ($joinEvent) use (&$teamList, &$teamMap) {
             $teamMap[$joinEvent->team->id] = $joinEvent->team;
             $teamList->push($joinEvent->team);
         });
 
         $matchTeamIds = collect();
-        $this->event->matches->each(function ($match) use ($teamMap, &$matchTeamIds) {
+        $event->matches->each(function ($match) use ($teamMap, &$matchTeamIds) {
             $match->team1 = $teamMap->get($match->team1_id);
             $match->team2 = $teamMap->get($match->team2_id);
             $matchTeamIds->push($match->team1_id, $match->team2_id);
         });
 
-        $this->teamList = $teamList;
-    }
-
-    public function render()
-    {
-        if ($this->isWrongType) {
-            return '<div>Hi, wrong tourney type</div>';
-        }
-
         $defaultValues = BracketData::DEFAULT_VALUES;
-        $matchesUpperCount = intval($this->event->tier->tierTeamSlot); 
+        $matchesUpperCount = intval($event->tier->tierTeamSlot); 
         $valuesMap = ['Tournament' => 'tournament', 'League' => 'tournament'];
-        $tournamentType = $this->event->type->eventType;
+        $tournamentType = $event->type->eventType;
         $tournamentTypeFinal = $valuesMap[$tournamentType];
-        
-        $bracketList = BracketData::BRACKET_DATA[(int)($matchesUpperCount)][$tournamentTypeFinal];
         $previousValues = BracketData::PREV_VALUES[(int)($matchesUpperCount)];
-        $bracketList = $this->event->matches->reduce(function ($bracketList, $match) {
+        $bracketList = BracketData::BRACKET_DATA[$matchesUpperCount][$tournamentTypeFinal];
+        $bracketList = $event->matches->reduce(function ($bracketList, $match) use ($existingJoint, $isOrganizer) {
             $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
-
+            
+            $match->willJsonTeam = $isOrganizer ?
+                true :  
+                (
+                    $match->team1_id === $existingJoint?->team_id || 
+                    $match->team2_id === $existingJoint?->team_id
+                ) ;
             return data_set($bracketList, $path, [
                 'id' => $match->id,
                 'event_details_id' => $match->event_details_id,
@@ -115,11 +79,13 @@ class BracketUpdateList extends Component
                 'team1_name' => $match->team1->name ?? null,
                 'team2_name' => $match->team2->name ?? null,
                 'winner_name' => $match->winner->name ?? null,
+                'willJsonTeam' => $match->willJsonTeam
             ]);
+
+           
         }, $bracketList);
         
-        
-        if (empty($matchesArray['tournament']['finals']['finals'])) {
+        if (empty($bracketList['tournament']['finals']['finals'])) {
             $bracketList['tournament']['finals']['finals'][] = [
                 'team1_position' => 'G1',
                 'team2_position' => 'G2',
@@ -129,7 +95,7 @@ class BracketUpdateList extends Component
             ];
         }
         
-        if (empty($matchesArray['tournament']['upperBracket']['eliminator1'])) {
+        if (empty($bracketList['tournament']['upperBracket']['eliminator1'])) {
             $bracketList['tournament']['upperBracket']['eliminator1'][] = [
                 'team1_position' => '',
                 'team2_position' => '',
@@ -139,11 +105,14 @@ class BracketUpdateList extends Component
             ];
         }
 
-        return view('livewire.shared.brackets.bracket-update-list', [
+        return [
+            'teamList' => $teamList,
             'matchesUpperCount' => $matchesUpperCount,
             'bracketList' => $bracketList,
             'defaultValues' => $defaultValues,
+            'existingJoint' => $existingJoint,
             'previousValues' => $previousValues
-        ]);
+        ];
     }
+
 }

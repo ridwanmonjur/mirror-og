@@ -75,8 +75,6 @@ class OrganizerEventController extends Controller
 
         $joinEventDetailsMap = $results->pluck('accepted_members_count', 'event_details_id');
        
-
-
         $outputArray = compact(
             'eventList',
             'count',
@@ -174,6 +172,7 @@ class OrganizerEventController extends Controller
                 $userId,
                 $request->id,
                 [],
+                null,
                 ['joinEvents' => function ($q) {
                     $q->where('join_status', 'confirmed');
                 }]
@@ -203,6 +202,7 @@ class OrganizerEventController extends Controller
             $event = EventDetail::findEventWithRelationsAndThrowError(
                 $userId,
                 $id,
+                null,
                 ['joinEvents' => function ($query) {
                     $query->with(['members' => function ($query) {
                         $query->where('status', 'accepted');
@@ -210,7 +210,6 @@ class OrganizerEventController extends Controller
                     ]);
                 },
                 ],
-                null
             );
 
            
@@ -238,6 +237,7 @@ class OrganizerEventController extends Controller
             $event = EventDetail::findEventWithRelationsAndThrowError(
                 $userId,
                 $id,
+                null,
                 [],
                 ['joinEvents' => function ($q) {
                     $q->where('join_status', 'confirmed');
@@ -289,8 +289,6 @@ class OrganizerEventController extends Controller
             $event = EventDetail::findEventWithRelationsAndThrowError(
                 $userId,
                 $id,
-                null,
-                null
             );
             $status = $event->statusResolved();
 
@@ -329,9 +327,9 @@ class OrganizerEventController extends Controller
             $eventId = $id;
             $user = $request->get('user');
             $userId = $user->id;
-            $eventDetail = EventDetail::findEventAndThrowError(
+            $eventDetail = EventDetail::findEventWithRelationsAndThrowError(
+                $userId,
                 $id,
-                $userId
             );
 
             if ($eventId) {

@@ -1,4 +1,4 @@
-<div class="modal fade" id="firstMatchModal" tabindex="-1" aria-labelledby="firstMatchModalLabel" aria-hidden="true">
+<div class="modal fade" id="reportMatchModal" tabindex="-1" aria-labelledby="reportMatchModalLabel" aria-hidden="true">
     <div class="modal-dialog " style="min-width: 50vw;">
         <div class="modal-content " style="background-color: #F5F4ED !important; ">
             <div class="modal-body my-3 px-5 ">

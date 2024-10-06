@@ -15,6 +15,7 @@ use App\Models\JoinEvent;
 use App\Models\Matches;
 use App\Models\Team;
 use App\Models\User;
+use App\Services\EventService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -22,9 +23,14 @@ use Illuminate\Support\Facades\DB;
 
 class OrganizerEventResultsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    private $eventService;
+
+    public function __construct(EventService $eventService)
+    {
+        $this->eventService = $eventService;
+    }
+
     public function index(Request $request, $id)
     {
         $event = EventDetail::with(['tier'])
@@ -237,10 +243,44 @@ class OrganizerEventResultsController extends Controller
 
     public function viewMatches(Request $request, $id) {
         $eventType = $request->query('eventType');
-        return view('Participant.Matches', compact(
-            'id',
-            'eventType',
-        ));
+        $event = EventDetail::with(['type'])->findOrFail($id);
+
+        if ($event->type->eventType !== $eventType) {
+            return $this->showErrorOrganizer("Event with id: {$id} must be of type: {$event->type->eventType}");
+        }
+
+        $event->load([
+            'tier',
+            'type',
+            'joinEvents.team' => function ($query) {
+                $query->select('teams.id', 'teamName', 'teamBanner');
+            },
+        ]);
+        
+        [
+            'teamList' => $teamList,
+            'matchesUpperCount' => $matchesUpperCount,
+            'bracketList' => $bracketList,
+            'defaultValues' => $defaultValues,
+            'existingJoint' => $existingJoint,
+            'previousValues' => $previousValues
+        ] = $this->eventService->generateBrackets(
+            $event,
+            true
+        );
+
+        return view('Organizer.Matches', [
+            'id' => $id,
+            'eventType' => $eventType,
+            'event' => $event,
+            'teamList' => $teamList,
+            'matchesUpperCount' => $matchesUpperCount,
+            'bracketList' => $bracketList,
+            'defaultValues' => $defaultValues,
+            'existingJoint' => $existingJoint,
+            'previousValues' => $previousValues
+            
+        ]);
     }
 
 
