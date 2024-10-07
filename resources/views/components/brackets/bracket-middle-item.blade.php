@@ -54,7 +54,7 @@
 
             <small class="position-absolute winner-label ">
                 <span class="d-none-until-hover2">
-                    <svg onclick="updateModal(event); event.preventDefault();" style="z-index: 999;"
+                    <svg onclick="updateModalShow(event); " style="z-index: 999;"
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-pencil-square  cursor-pointer me-2" viewBox="0 0 16 16">
                         <path
@@ -63,6 +63,7 @@
                             d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
                     </svg>
                     <svg
+                         onclick="reportModalShow(event);" 
                         style="z-index: 999;" class="me-2  cursor-pointer " fill="currentColor" height="16px"
                         width="16px" version="1.1" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 128" xml:space="preserve">

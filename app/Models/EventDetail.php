@@ -520,7 +520,7 @@ class EventDetail extends Model
         string| int | null $userId,
         string| int $id,
         array| null $where = null,
-        array| null $relations = null,
+        string | array| null $relations = null,
         string | null | array $relationCount = null
     ): EventDetail {
         $relations ??= ['type', 'tier', 'game'];

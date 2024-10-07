@@ -1,4 +1,4 @@
-<div class="modal fade" id="firstMatchModal" tabindex="-1" aria-labelledby="firstMatchModalLabel" aria-hidden="true">
+<div class="modal fade" id="updateModal" tabindex="1" aria-labelledby="updateModalLabel" aria-hidden="true">
     <div class="modal-dialog " >
         <div class="modal-content " style="background-color: #F5F4ED !important; ">
             <div class="modal-body my-3 px-5 ">
@@ -80,7 +80,7 @@
                                             <path
                                                 d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935M3.504 1q.01.775.056 1.469c.13 2.028.457 3.546.87 4.667C5.294 9.48 6.484 10 7 10a.5.5 0 0 1 .5.5v2.61a1 1 0 0 1-.757.97l-1.426.356a.5.5 0 0 0-.179.085L4.5 15h7l-.638-.479a.5.5 0 0 0-.18-.085l-1.425-.356a1 1 0 0 1-.757-.97V10.5A.5.5 0 0 1 9 10c.516 0 1.706-.52 2.57-2.864.413-1.12.74-2.64.87-4.667q.045-.694.056-1.469z" />
                                         </svg>
-                                        Winner
+                                        Winner (<span  id="winner_next_position_label"> </span>)
                                     </span>
                                     <select class="form-select" id="winner_id" name="winner_id"  data-dynamic-select
                                         aria-describedby="winner-addon">
@@ -118,8 +118,7 @@
                     </div>
                     <hr>
                     <div>
-                        <i>* Winner's next match: <span  id="winner_next_position_label"> </span></i>
-                        <br><i>** Loser's next match: <span id="loser_next_position_label"> </span></i>
+                        <i>** Loser's next match: <span id="loser_next_position_label"> </span></i>
                     </div>
                     <br>
                     <div class="d-flex justify-content-center">
@@ -134,154 +133,6 @@
         </div>
     </div>
 
-<script>
-    const form = document.getElementById('matchForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const closeBtn = document.getElementById('closeBtn');
-    
-
-    submitBtn.addEventListener('click', function(event) {
-        event.preventDefault();
-
-        const formData = new FormData(form);
-        let jsonObject = {}
-        for (let [key, value] of formData.entries()) {
-            jsonObject[key] = value;
-        }
-
-        fetch(form.action, {
-            method: 'POST',
-            body: JSON.stringify(jsonObject),
-            headers: {
-                'Content-type': 'application/json',  
-                'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    let isUpperBracketFirstRound = false;
-                    let {team1, match, team2} = data.data;
-                    let currentMatchDiv = document.querySelector(`.${match.team1_position}.${match.team2_position}`);
-                    if (match.type==="upperBracket" && match.inner_stage_name === "eliminator1") {
-                        isUpperBracketFirstRound = true;
-                    }
-                    let currentMatch = JSON.parse(currentMatchDiv.dataset.bracket);
-                    currentMatch.id = match.id;
-                    currentMatch.team1_score = match.team1_score;
-                    currentMatch.team2_score = match.team2_score;
-                    currentMatch.winner_id = match.winner_id;
-                    currentMatch.team1_id = match.team1_id;
-                    currentMatch.team2_id = match.team2_id;
-                    currentMatch.result= match.result;
-                    currentMatch.status= match.status;
-
-                    currentMatch.team1_teamBanner = team1.teamBanner;
-                    currentMatch.team2_teamBanner = team2.teamBanner;
-                    if (currentMatch.winner_id == team1_id) {
-                        currentMatch.winner = team1;
-                    }
-
-                    if (currentMatch.winner_id == team2_id) {
-                        currentMatch.winner = team2;
-                    }
-
-                    currentMatchDiv.dataset.bracket = JSON.stringify(currentMatch);
-                    
-                    const parentElements = currentMatchDiv.querySelectorAll(".popover-parent");
-                    console.log({parentElements});
-                    
-                    // can't update table so not done
-                    let imgs = currentMatchDiv.querySelectorAll(`.tournament-bracket__box img.popover-button`);
-                    let smalls = currentMatchDiv.querySelectorAll(`.tournament-bracket__box small.replace_me_with_image`);
-                    
-                    for (let index=0; index <2; index++) {
-                        let banner = index ? team2.teamBanner : team1.teamBanner;
-
-                        if (imgs[index] && 'src' in imgs[index]) {
-                            imgs[index].src =  `/storage/${banner}`;
-                        } else {
-                            let small = smalls[index];
-                             if (small) {
-                                let img = document.createElement('img');
-                                small.parentElement.replaceChild(img, small);
-                                img.src = `/storage/${banner}`;
-                                img.style.width = '100%';
-                                img.height = '25';
-                                 img.onerror = function() {
-                                    this.src='/assets/images/404.png';
-                                };
-
-                                img.className = 'popover-button position-absolute d-none-when-hover object-fit-cover me-2';
-                                img.alt = 'Team View';
-                                img.style.zIndex = '99';
-                                console.log({img})
-                            }
-                        }
-                    }
-                   
-                    closeBtn.click();
-
-                    const bracketBoxList = currentMatchDiv.querySelectorAll(`.tournament-bracket__box`);
-                    let popoverImgs = currentMatchDiv.querySelectorAll('.popover-content-img');
-                    let index = 0;
-                    bracketBoxList.forEach(bracketBox => {
-                        let banner = index ? team2.teamBanner : team1.teamBanner;
-                        let roster = index ? team2.roster : team1.roster;
-                        let currentImg = popoverImgs[index];
-                        if (currentImg && 'src' in currentImg) currentImg.src = `/storage/${banner}`;
-
-                        const rosterContainer = bracketBox.querySelector('.popover-box .col-12.col-lg-7');
-                        if (rosterContainer && roster) {
-                            if (Array.isArray(roster) && roster[0] !== undefined) {
-                                let rosterHtml = '<ul class="d-block ms-0 ps-0">';
-                                roster.forEach(rosterItem => {
-                                    rosterHtml += `
-                                        <li class="d-inline">
-                                            <img width="25" height="25" onerror="this.src='/assets/images/404.png';"
-                                                src="/storage/${rosterItem.user.userBanner}" alt="User Banner"
-                                                class="mb-2 rounded-circle object-fit-cover me-3">
-                                            ${rosterItem.user.name}
-                                        </li>
-                                        <br>
-                                    `;
-                                });
-                                rosterHtml += '</ul>';
-                                rosterContainer.innerHTML = rosterHtml;
-                            } else {
-                                rosterContainer.innerHTML = '<p class="text-muted">The team roster is empty.</p>';
-                            }
-                        }
-
-                        index++;
-                    });
-
-                    if (isUpperBracketFirstRound) {
-                        parentElements.forEach(parent => {
-                            const contentElement = parent.querySelector(".popover-content");
-                            const parentElement = parent.querySelector(".popover-button");
-                            console.log({contentElement, parentElement});
-                            if (contentElement) {
-                                window.addPopover(parentElement, contentElement, 'mouseenter');
-                            }
-                        });
-                    } else {
-                        
-                    }
-                    window.Toast.fire({
-                        icon: 'success',
-                        text: data.message
-                    });
-
-                } else {
-                    window.toastError('Error saving match: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                window.toastError('An error occurred while saving the match.');
-            });
-    });
-
-</script>
+    <script src="{{ asset('/assets/js/shared/BracketUpdateModal.js') }}"></script>
+   
 </div>

@@ -51,7 +51,8 @@ function scrollIntoView(length, type="top") {
 
 Alpine.data('alpineDataComponent', function () {
     return {
-       
+        matchNumber: 1,
+        
         // changeUser(user) {
         //     user = Alpine.raw(user);  
 
