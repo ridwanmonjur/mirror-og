@@ -85,7 +85,7 @@ function reportModalShow(event) {
     };
 }
 
-window.onload = () => {
+addOnLoad( () => {
     const parentElements = document.querySelectorAll(".first-item .popover-parent");
     parentElements?.forEach(parent => {
         const contentElement = parent.querySelector(".popover-content");
@@ -111,9 +111,9 @@ window.onload = () => {
        })
     });
 
-    var myModal = new bootstrap.Modal(document.getElementById('disputeModal'), {});
+    var myModal = new bootstrap.Modal(document.getElementById('reportModal'), {});
     myModal.show();
-};
+});
 
 let selectMap = {};
 document.querySelectorAll('[data-dynamic-select]').forEach(select => {

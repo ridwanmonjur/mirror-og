@@ -52,14 +52,17 @@
                         <hr>
                         <div class="row px-0 mx-auto">
                             <div class="col-1 col-xl-2 px-0 h-100 d-flex justify-content-center align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#7f7f7f" 
-                                class="bi bi-chevron-left  cursor-pointer" viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" 
+                                    x-bind:class="{ 'd-none': report.matchNumber === 1 }"
+                                    x-on:click="report.matchNumber = report.matchNumber -1 "
+                                    width="25" height="25" fill="#7f7f7f" 
+                                    class="bi bi-chevron-left  cursor-pointer" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
                                 </svg>
                             </div>
                             <div class="col-10 col-xl-8 px-0">
                                 <p>
-                                    Game 2:
+                                    Game <span x-text="report.matchNumber"> </span>
                                     <span class="text-success">ONGOING</span> 
                                 </p>
                                 <button class="ps-0 btn mb-2 d-block rounded-pill w-100 mx-auto py-0 border border-dark text-start">
@@ -79,8 +82,13 @@
                                 <br>
                             </div> 
                             <div class="col-1 col-xl-2 px-0 h-100 d-flex justify-content-center align-items-center">
-                               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#7f7f7f" 
-                                class="bi bi-chevron-right cursor-pointer" viewBox="0 0 16 16">
+                               <svg
+                                x-on:click="report.matchNumber = report.matchNumber + 1 "
+                                xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#7f7f7f" 
+                                class="bi bi-chevron-right cursor-pointer" 
+                                x-bind:class="{ 'd-none': report.matchNumber === 3 }"
+                                viewBox="0 0 16 16"
+                            >
                                 <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
                                 </svg>
                             </div> 

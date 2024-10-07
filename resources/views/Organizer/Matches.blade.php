@@ -7,7 +7,7 @@
     <title>Tournament Matches 2</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
-    @vite(['resources/js/tippy.js', 'resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/js/tippy.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/pages/bracket.js'])
     <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
     @include('__CommonPartials.HeadIcon')
     <style>
@@ -15,12 +15,12 @@
 </head>
 
 <body>
-    <main>
+    <main x-data="alpineDataComponent">
         @include('__CommonPartials.NavbarGoToSearchPage')
         <input type="hidden" id="previousValues" value="{{json_encode($previousValues)}}">
         {{-- {{$id}}
         {{$eventType}} --}}
-        <div id="">
+        <div id="" >
             @include('Organizer.__ManageEventPartials.BracketUpdateList')
         </div>
         @livewireScripts
