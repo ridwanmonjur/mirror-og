@@ -4,9 +4,7 @@
             <div class="tournament-bracket__item tournament">
             @php
 
-                    foreach ($defaultValues as $key => $defaultValue) {
-                        $bracket[$key] = $bracket[$key] ?? $defaultValue;
-                    }
+                  
 
                     if (isset($bracket['team1Code']) && $bracket['team1Code'] !== 'N/A') {
                         $bracket['team1Display'] = true;
@@ -24,16 +22,16 @@
 
                     if (!$bracket['team1_position']) {
                         $bracket['team1_position'] = '';
-                        $bracket['team1_positionMobile'] = 'TBD';
+                        $bracket['team1_position'] = 'TBD';
                     } else {
-                        $bracket['team1_positionMobile'] = $bracket['team1_position'];
+                        $bracket['team1_position'] = $bracket['team1_position'];
                     }
 
                     if (!$bracket['team2_position']) {
                         $bracket['team2_position'] = '';
-                        $bracket['team2_positionMobile'] = 'TBD';
+                        $bracket['team2_position'] = 'TBD';
                     } else {
-                        $bracket['team2_positionMobile'] = $bracket['team2_position'];
+                        $bracket['team2_position'] = $bracket['team2_position'];
                     }
 
                     $bracket['team1_score'] = $bracket['team1_score'] ?? '0';

@@ -1,35 +1,30 @@
 <?php
-namespace App\Models;
+namespace App\Services;
 
-class BracketData
+class BracketDataService
 {
-    const DEFAULT_VALUES = [
-        'id' => null,
-        'match_type' => 'tournament',
-        'stage_name' => '',
-        'inner_stage_name' => '',
-        'team1_id' => '',
-        'team1_teamName' => '',
-        'team1_teamBanner' => null,
-        'team1_score' => '0',
-        'team1_roster' => null,
-        'team2_id' => '',
-        'team2_score' => '0',
-        'team1_position' => '',
-        'team2_position' => '',
-        'team2_teamName' => '',
-        'team2_teamBanner' => null,
-        'team2_roster' => null,
-        'winner_id' => '',
-        'status' => 'Upcoming',
-        'result' => '',
-        'team1Code' => 'N/A',
-        'team2Code' => 'N/A',
-        'winner_next_position' => 'N/A',
-        'loser_next_position' => null,
-        'willJsonTeam' => false
-    ];
-
+    public function generateDefaultValues (
+            bool $isOrganizer = true
+        ): array {
+        return [
+            'id' => null,
+            'match_type' => 'tournament',
+            'team1_id' => '',
+            'team1_teamName' => '',
+            'team1_teamBanner' => null,
+            'team1_score' => '0',
+            'team1_roster' => null,
+            'team2_id' => '',
+            'team2_score' => '0',
+            'team2_teamName' => '',
+            'team2_teamBanner' => null,
+            'team2_roster' => null,
+            'winner_id' => '',
+            'status' => 'Upcoming',
+            'result' => '',
+            'willJsonTeam' => $isOrganizer ? true: false
+        ];
+    }
     const PREV_VALUES = [
         32 => [
             'G1' => ['L29', 'L30'],
@@ -237,7 +232,12 @@ class BracketData
         ],
     ];
 
-    const BRACKET_DATA = [
+    public function generateBrackets(
+            int $teamNumber = 32,
+            bool $isOrganizer = true
+        ) {
+        $defaultValues = $this->generateDefaultValues($isOrganizer);
+        return [
         32 => [
             'tournament' => [
                 'finals' => [
@@ -248,6 +248,7 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => null,
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ],
                     ],
                 ],
@@ -259,6 +260,7 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => 'U1',
                             'loser_next_position' => 'L1',
+                            ...$defaultValues
                         ], // 1
                         [
                             'team1_position' => 'W3',
@@ -266,6 +268,7 @@ class BracketData
                             'order' => 2,
                             'winner_next_position' => 'U2',
                             'loser_next_position' => 'L2',
+                            ...$defaultValues
                         ], // 2
                         [
                             'team1_position' => 'W5',
@@ -273,6 +276,7 @@ class BracketData
                             'order' => 3,
                             'winner_next_position' => 'U3',
                             'loser_next_position' => 'L3',
+                            ...$defaultValues
                         ], // 3
                         [
                             'team1_position' => 'W7',
@@ -280,6 +284,7 @@ class BracketData
                             'order' => 4,
                             'winner_next_position' => 'U4',
                             'loser_next_position' => 'L4',
+                            ...$defaultValues
                         ], // 4
                         [
                             'team1_position' => 'W9',
@@ -287,6 +292,7 @@ class BracketData
                             'order' => 5,
                             'winner_next_position' => 'U5',
                             'loser_next_position' => 'L6',
+                            ...$defaultValues
                         ], // 5
                         [
                             'team1_position' => 'W11',
@@ -294,6 +300,7 @@ class BracketData
                             'order' => 6,
                             'winner_next_position' => 'U6',
                             'loser_next_position' => 'L6',
+                            ...$defaultValues
                         ], // 6
                         [
                             'team1_position' => 'W13',
@@ -301,6 +308,7 @@ class BracketData
                             'order' => 7,
                             'winner_next_position' => 'U7',
                             'loser_next_position' => 'L7',
+                            ...$defaultValues
                         ], // 7
                         [
                             'team1_position' => 'W15',
@@ -308,6 +316,7 @@ class BracketData
                             'order' => 8,
                             'winner_next_position' => 'U8',
                             'loser_next_position' => 'L8',
+                            ...$defaultValues
                         ], // 8
                         [
                             'team1_position' => 'W17',
@@ -315,6 +324,7 @@ class BracketData
                             'order' => 9,
                             'winner_next_position' => 'U9',
                             'loser_next_position' => 'L9',
+                            ...$defaultValues
                         ], // 9
                         [
                             'team1_position' => 'W19',
@@ -322,6 +332,7 @@ class BracketData
                             'order' => 10,
                             'winner_next_position' => 'U10',
                             'loser_next_position' => 'L10',
+                            ...$defaultValues
                         ], // 10
                         [
                             'team1_position' => 'W21',
@@ -329,6 +340,7 @@ class BracketData
                             'order' => 11,
                             'winner_next_position' => 'U11',
                             'loser_next_position' => 'L11',
+                            ...$defaultValues
                         ], // 11
                         [
                             'team1_position' => 'W23',
@@ -336,6 +348,7 @@ class BracketData
                             'order' => 12,
                             'winner_next_position' => 'U12',
                             'loser_next_position' => 'L12',
+                            ...$defaultValues
                         ], // 12
                         [
                             'team1_position' => 'W25',
@@ -343,6 +356,7 @@ class BracketData
                             'order' => 13,
                             'winner_next_position' => 'U13',
                             'loser_next_position' => 'L13',
+                            ...$defaultValues
                         ], // 13
                         [
                             'team1_position' => 'W27',
@@ -350,6 +364,7 @@ class BracketData
                             'order' => 14,
                             'winner_next_position' => 'U14',
                             'loser_next_position' => 'L14',
+                            ...$defaultValues
                         ], // 14
                         [
                             'team1_position' => 'W29',
@@ -357,6 +372,7 @@ class BracketData
                             'order' => 15,
                             'winner_next_position' => 'U15',
                             'loser_next_position' => 'L15',
+                            ...$defaultValues
                         ], // 15
                         [
                             'team1_position' => 'W31',
@@ -364,6 +380,7 @@ class BracketData
                             'order' => 16,
                             'winner_next_position' => 'U16',
                             'loser_next_position' => 'L16',
+                            ...$defaultValues
                         ], // 16
                     ],
                     'eliminator2' => [
@@ -373,6 +390,7 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => 'U17',
                             'loser_next_position' => 'L18',
+                            ...$defaultValues
                         ], // 1
                         [
                             'team1_position' => 'U3',
@@ -380,6 +398,7 @@ class BracketData
                             'order' => 2,
                             'winner_next_position' => 'U18',
                             'loser_next_position' => 'L20',
+                            ...$defaultValues
                         ], // 2
                         [
                             'team1_position' => 'U5',
@@ -387,6 +406,7 @@ class BracketData
                             'order' => 3,
                             'winner_next_position' => 'U19',
                             'loser_next_position' => 'L22',
+                            ...$defaultValues
                         ], // 3
                         [
                             'team1_position' => 'U7',
@@ -394,6 +414,7 @@ class BracketData
                             'order' => 4,
                             'winner_next_position' => 'U20',
                             'loser_next_position' => 'L24',
+                            ...$defaultValues
                         ], // 4
                         [
                             'team1_position' => 'U9',
@@ -401,6 +422,7 @@ class BracketData
                             'order' => 5,
                             'winner_next_position' => 'U21',
                             'loser_next_position' => 'L26',
+                            ...$defaultValues
                         ], // 5
                         [
                             'team1_position' => 'U11',
@@ -408,6 +430,7 @@ class BracketData
                             'order' => 6,
                             'winner_next_position' => 'U22',
                             'loser_next_position' => 'L28',
+                            ...$defaultValues
                         ], // 6
                         [
                             'team1_position' => 'U13',
@@ -415,6 +438,7 @@ class BracketData
                             'order' => 7,
                             'winner_next_position' => 'U23',
                             'loser_next_position' => 'L30',
+                            ...$defaultValues
                         ], // 7
                         [
                             'team1_position' => 'U15',
@@ -422,6 +446,7 @@ class BracketData
                             'order' => 8,
                             'winner_next_position' => 'U24',
                             'loser_next_position' => 'L32',
+                            ...$defaultValues
                         ], // 8
                     ],
                     'eliminator3' => [
@@ -431,6 +456,7 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => 'U25',
                             'loser_next_position' => 'L42',
+                            ...$defaultValues
                         ], // 1
                         [
                             'team1_position' => 'U19',
@@ -438,6 +464,7 @@ class BracketData
                             'order' => 2,
                             'winner_next_position' => 'U26',
                             'loser_next_position' => 'L44',
+                            ...$defaultValues
                         ], // 2
                         [
                             'team1_position' => 'U21',
@@ -445,6 +472,7 @@ class BracketData
                             'order' => 3,
                             'winner_next_position' => 'U27',
                             'loser_next_position' => 'L46',
+                            ...$defaultValues
                         ], // 3
                         [
                             'team1_position' => 'U23',
@@ -452,6 +480,7 @@ class BracketData
                             'order' => 4,
                             'winner_next_position' => 'U28',
                             'loser_next_position' => 'L48',
+                            ...$defaultValues
                         ], // 4
                     ],
                     'eliminator4' => [
@@ -461,6 +490,7 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => 'U29',
                             'loser_next_position' => 'L54',
+                            ...$defaultValues
                         ], // 1
                         [
                             'team1_position' => 'U27',
@@ -468,6 +498,7 @@ class BracketData
                             'order' => 2,
                             'winner_next_position' => 'U30',
                             'loser_next_position' => 'L56',
+                            ...$defaultValues
                         ], // 2
                     ],
                     'prefinals' => [
@@ -477,6 +508,7 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => 'G1',
                             'loser_next_position' => 'L60',
+                            ...$defaultValues
                         ], // 1
                     ],
                 ],
@@ -488,6 +520,7 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => 'L17',
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ], // 1
                         [
                             'team1_position' => 'L3',
@@ -495,6 +528,7 @@ class BracketData
                             'order' => 2,
                             'winner_next_position' => 'L19',
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ], // 2
                         [
                             'team1_position' => 'L5',
@@ -502,6 +536,7 @@ class BracketData
                             'order' => 3,
                             'winner_next_position' => 'L21',
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ], // 3
                         [
                             'team1_position' => 'L7',
@@ -509,6 +544,7 @@ class BracketData
                             'order' => 4,
                             'winner_next_position' => 'L23',
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ], // 4
                         [
                             'team1_position' => 'L9',
@@ -516,6 +552,7 @@ class BracketData
                             'order' => 5,
                             'winner_next_position' => 'L25',
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ], // 5
                         [
                             'team1_position' => 'L11',
@@ -523,6 +560,7 @@ class BracketData
                             'order' => 6,
                             'winner_next_position' => 'L27',
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ], // 6
                         [
                             'team1_position' => 'L13',
@@ -530,6 +568,7 @@ class BracketData
                             'order' => 7,
                             'winner_next_position' => 'L29',
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ], // 7
                         [
                             'team1_position' => 'L15',
@@ -537,6 +576,7 @@ class BracketData
                             'order' => 8,
                             'winner_next_position' => 'L31',
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ], // 8
                     ],
                     'eliminator2' => [
@@ -546,6 +586,7 @@ class BracketData
                             'winner_next_position' => 'L33',
                             'loser_next_position' => null,
                             'order' => 1,
+                            ...$defaultValues
                         ], // 1
                         [
                             'team1_position' => 'L19',
@@ -553,6 +594,7 @@ class BracketData
                             'winner_next_position' => 'L34',
                             'loser_next_position' => null,
                             'order' => 2,
+                            ...$defaultValues
                         ], // 2
                         [
                             'team1_position' => 'L21',
@@ -560,6 +602,7 @@ class BracketData
                             'winner_next_position' => 'L35',
                             'loser_next_position' => null,
                             'order' => 3,
+                            ...$defaultValues
                         ], // 3
                         [
                             'team1_position' => 'L23',
@@ -567,6 +610,7 @@ class BracketData
                             'winner_next_position' => 'L36',
                             'loser_next_position' => null,
                             'order' => 4,
+                            ...$defaultValues
                         ], // 4
                         [
                             'team1_position' => 'L25',
@@ -574,6 +618,7 @@ class BracketData
                             'winner_next_position' => 'L37',
                             'loser_next_position' => null,
                             'order' => 5,
+                            ...$defaultValues
                         ], // 5
                         [
                             'team1_position' => 'L27',
@@ -581,6 +626,7 @@ class BracketData
                             'winner_next_position' => 'L38',
                             'loser_next_position' => null,
                             'order' => 6,
+                            ...$defaultValues
                         ], // 6
                         [
                             'team1_position' => 'L29',
@@ -588,6 +634,7 @@ class BracketData
                             'winner_next_position' => 'L39',
                             'loser_next_position' => null,
                             'order' => 7,
+                            ...$defaultValues
                         ], // 7
                         [
                             'team1_position' => 'L31',
@@ -595,6 +642,7 @@ class BracketData
                             'winner_next_position' => 'L40',
                             'loser_next_position' => null,
                             'order' => 8,
+                            ...$defaultValues
                         ], // 8
                     ],
                     'eliminator3' => [
@@ -604,6 +652,7 @@ class BracketData
                             'winner_next_position' => 'L41',
                             'loser_next_position' => null,
                             'order' => 1,
+                            ...$defaultValues
                         ], // 1
                         [
                             'team1_position' => 'L35',
@@ -611,6 +660,8 @@ class BracketData
                             'winner_next_position' => 'L43',
                             'loser_next_position' => null,
                             'order' => 2,
+                            ...$defaultValues
+
                         ], // 2
                         [
                             'team1_position' => 'L37',
@@ -618,6 +669,8 @@ class BracketData
                             'winner_next_position' => 'L45',
                             'loser_next_position' => null,
                             'order' => 3,
+                            ...$defaultValues
+
                         ], // 3
                         [
                             'team1_position' => 'L39',
@@ -625,6 +678,8 @@ class BracketData
                             'winner_next_position' => 'L47',
                             'loser_next_position' => null,
                             'order' => 4,
+                            ...$defaultValues
+
                         ], // 4
                     ],
                     'eliminator4' => [
@@ -634,6 +689,8 @@ class BracketData
                             'winner_next_position' => 'L49',
                             'loser_next_position' => null,
                             'order' => 1,
+                            ...$defaultValues
+
                         ], // 1
                         [
                             'team1_position' => 'L43',
@@ -641,6 +698,8 @@ class BracketData
                             'winner_next_position' => 'L50',
                             'loser_next_position' => null,
                             'order' => 2,
+                            ...$defaultValues
+
                         ], // 2
                         [
                             'team1_position' => 'L45',
@@ -648,6 +707,8 @@ class BracketData
                             'winner_next_position' => 'L51',
                             'loser_next_position' => null,
                             'order' => 3,
+                            ...$defaultValues
+
                         ], // 3
                         [
                             'team1_position' => 'L47',
@@ -655,6 +716,8 @@ class BracketData
                             'winner_next_position' => 'L52',
                             'loser_next_position' => null,
                             'order' => 4,
+                            ...$defaultValues
+
                         ], // 4
                     ],
                     'eliminator5' => [
@@ -664,6 +727,8 @@ class BracketData
                             'winner_next_position' => 'L53',
                             'loser_next_position' => null,
                             'order' => 1,
+                                                        ...$defaultValues
+
                         ], // 1
                         [
                             'team1_position' => 'L51',
@@ -671,6 +736,8 @@ class BracketData
                             'winner_next_position' => 'L55',
                             'loser_next_position' => null,
                             'order' => 2,
+                                                        ...$defaultValues
+
                         ], // 2
                     ],
                     'eliminator6' => [
@@ -680,6 +747,8 @@ class BracketData
                             'winner_next_position' => 'L57',
                             'loser_next_position' => null,
                             'order' => 1,
+                                                        ...$defaultValues
+
                         ], // 1
                         [
                             'team1_position' => 'L55',
@@ -687,6 +756,8 @@ class BracketData
                             'winner_next_position' => 'L58',
                             'loser_next_position' => null,
                             'order' => 2,
+                                                        ...$defaultValues
+
                         ], // 2
                     ],
                     'prefinals1' => [
@@ -696,6 +767,8 @@ class BracketData
                             'winner_next_position' => 'L59',
                             'loser_next_position' => null,
                             'order' => 1,
+                                                        ...$defaultValues
+
                         ], // 1
                     ],
                     'prefinals2' => [
@@ -705,6 +778,8 @@ class BracketData
                             'winner_next_position' => 'G2',
                             'loser_next_position' => null,
                             'order' => 1,
+                                                        ...$defaultValues
+
                         ], // 1
                     ],
                 ],
@@ -720,6 +795,8 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => null,
                             'loser_next_position' => null,
+                            ...$defaultValues
+
                         ],
                     ],
                 ],
@@ -731,6 +808,8 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => 'U1',
                             'loser_next_position' => 'L1',
+                            ...$defaultValues
+
                         ], // 1
                         [
                             'team1_position' => 'W3',
@@ -738,6 +817,8 @@ class BracketData
                             'order' => 2,
                             'winner_next_position' => 'U2',
                             'loser_next_position' => 'L2',
+                            ...$defaultValues
+
                         ], // 2
                         [
                             'team1_position' => 'W5',
@@ -745,6 +826,8 @@ class BracketData
                             'order' => 3,
                             'winner_next_position' => 'U3',
                             'loser_next_position' => 'L3',
+                            ...$defaultValues
+
                         ], // 3
                         [
                             'team1_position' => 'W7',
@@ -752,6 +835,8 @@ class BracketData
                             'order' => 4,
                             'winner_next_position' => 'U4',
                             'loser_next_position' => 'L4',
+                            ...$defaultValues
+
                         ], // 4
                         [
                             'team1_position' => 'W9',
@@ -759,6 +844,8 @@ class BracketData
                             'order' => 5,
                             'winner_next_position' => 'U5',
                             'loser_next_position' => 'L6',
+                            ...$defaultValues
+
                         ], // 5
                         [
                             'team1_position' => 'W11',
@@ -766,6 +853,8 @@ class BracketData
                             'order' => 6,
                             'winner_next_position' => 'U6',
                             'loser_next_position' => 'L6',
+                            ...$defaultValues
+
                         ], // 6
                         [
                             'team1_position' => 'W13',
@@ -773,6 +862,8 @@ class BracketData
                             'order' => 7,
                             'winner_next_position' => 'U7',
                             'loser_next_position' => 'L7',
+                            ...$defaultValues
+
                         ], // 7
                         [
                             'team1_position' => 'W15',
@@ -780,6 +871,8 @@ class BracketData
                             'order' => 8,
                             'winner_next_position' => 'U8',
                             'loser_next_position' => 'L8',
+                            ...$defaultValues
+
                         ], // 8
                     ],
                     'eliminator2' => [
@@ -789,6 +882,8 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => 'U9',
                             'loser_next_position' => 'L10',
+                            ...$defaultValues
+
                         ], // 1
                         [
                             'team1_position' => 'U3',
@@ -796,6 +891,8 @@ class BracketData
                             'order' => 2,
                             'winner_next_position' => 'U10',
                             'loser_next_position' => 'L12',
+                            ...$defaultValues
+
                         ], // 2
                         [
                             'team1_position' => 'U5',
@@ -803,6 +900,7 @@ class BracketData
                             'order' => 3,
                             'winner_next_position' => 'U11',
                             'loser_next_position' => 'L14',
+                            ...$defaultValues
                         ], // 3
                         [
                             'team1_position' => 'U7',
@@ -810,6 +908,7 @@ class BracketData
                             'order' => 4,
                             'winner_next_position' => 'U12',
                             'loser_next_position' => 'L16',
+                            ...$defaultValues
                         ], // 4
                     ],
                     'eliminator3' => [
@@ -819,6 +918,7 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => 'U13',
                             'loser_next_position' => 'L22',
+                            ...$defaultValues
                         ], // 1
                         [
                             'team1_position' => 'U11',
@@ -826,6 +926,7 @@ class BracketData
                             'order' => 2,
                             'winner_next_position' => 'U14',
                             'loser_next_position' => 'L24',
+                            ...$defaultValues
                         ], // 2
                     ],
                     'prefinals' => [
@@ -835,6 +936,7 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => 'G1',
                             'loser_next_position' => 'L28',
+                            ...$defaultValues
                         ], // 1
                     ],
                 ],
@@ -846,6 +948,7 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => 'L9',
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ], // 1
                         [
                             'team1_position' => 'L3',
@@ -853,6 +956,7 @@ class BracketData
                             'order' => 2,
                             'winner_next_position' => 'L11',
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ], // 2
                         [
                             'team1_position' => 'L5',
@@ -860,6 +964,7 @@ class BracketData
                             'order' => 3,
                             'winner_next_position' => 'L13',
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ], // 3
                         [
                             'team1_position' => 'L7',
@@ -867,6 +972,7 @@ class BracketData
                             'order' => 4,
                             'winner_next_position' => 'L15',
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ], // 4
                     ],
                     'eliminator2' => [
@@ -876,6 +982,7 @@ class BracketData
                             'winner_next_position' => 'L17',
                             'loser_next_position' => null,
                             'order' => 1,
+                            ...$defaultValues
                         ], // 1
                         [
                             'team1_position' => 'L11',
@@ -883,6 +990,7 @@ class BracketData
                             'winner_next_position' => 'L18',
                             'loser_next_position' => null,
                             'order' => 2,
+                            ...$defaultValues
                         ], // 2
                         [
                             'team1_position' => 'L13',
@@ -890,6 +998,7 @@ class BracketData
                             'winner_next_position' => 'L19',
                             'loser_next_position' => null,
                             'order' => 3,
+                            ...$defaultValues
                         ], // 3
                         [
                             'team1_position' => 'L15',
@@ -897,6 +1006,7 @@ class BracketData
                             'winner_next_position' => 'L20',
                             'loser_next_position' => null,
                             'order' => 4,
+                            ...$defaultValues
                         ], // 4
                     ],
                     'eliminator3' => [
@@ -906,6 +1016,7 @@ class BracketData
                             'winner_next_position' => 'L21',
                             'loser_next_position' => null,
                             'order' => 1,
+                            ...$defaultValues
                         ], // 1
                         [
                             'team1_position' => 'L19',
@@ -913,6 +1024,7 @@ class BracketData
                             'winner_next_position' => 'L23',
                             'loser_next_position' => null,
                             'order' => 2,
+                            ...$defaultValues
                         ], // 2
                     ],
                     'eliminator4' => [
@@ -922,6 +1034,7 @@ class BracketData
                             'winner_next_position' => 'L25',
                             'loser_next_position' => null,
                             'order' => 1,
+                            ...$defaultValues
                         ], // 1
                         [
                             'team1_position' => 'L23',
@@ -929,6 +1042,7 @@ class BracketData
                             'winner_next_position' => 'L26',
                             'loser_next_position' => null,
                             'order' => 2,
+                            ...$defaultValues
                         ], // 2
                     ],
                     'prefinals1' => [
@@ -938,6 +1052,7 @@ class BracketData
                             'winner_next_position' => 'L27',
                             'loser_next_position' => null,
                             'order' => 1,
+                            ...$defaultValues
                         ], // 1
                     ],
                     'prefinals2' => [
@@ -947,6 +1062,7 @@ class BracketData
                             'winner_next_position' => 'G2',
                             'loser_next_position' => null,
                             'order' => 1,
+                            ...$defaultValues
                         ], // 1
                     ],
                 ],
@@ -962,6 +1078,7 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => null,
                             'loser_next_position' => null,
+                            ...$defaultValues
                         ],
                     ],
                 ],
@@ -973,6 +1090,7 @@ class BracketData
                             'order' => 1,
                             'winner_next_position' => 'U1',
                             'loser_next_position' => 'L1',
+                            ...$defaultValues
                         ], // 1
                         [
                             'team1_position' => 'W3',
@@ -980,6 +1098,7 @@ class BracketData
                             'order' => 2,
                             'winner_next_position' => 'U2',
                             'loser_next_position' => 'L2',
+                            ...$defaultValues
                         ], // 2
                         [
                             'team1_position' => 'W5',
@@ -987,6 +1106,7 @@ class BracketData
                             'order' => 3,
                             'winner_next_position' => 'U3',
                             'loser_next_position' => 'L3',
+                            ...$defaultValues
                         ], // 3
                         [
                             'team1_position' => 'W7',
@@ -994,6 +1114,7 @@ class BracketData
                             'order' => 4,
                             'winner_next_position' => 'U4',
                             'loser_next_position' => 'L4',
+                            ...$defaultValues
                         ], // 4
                     ],
                     'eliminator2' => [
@@ -1001,6 +1122,7 @@ class BracketData
                             'team1_position' => 'U1',
                             'team2_position' => 'U2',
                             'order' => 1,
+                            ...$defaultValues,
                             'winner_next_position' => 'U5',
                             'loser_next_position' => 'L6',
                         ], // 1
@@ -1008,6 +1130,7 @@ class BracketData
                             'team1_position' => 'U3',
                             'team2_position' => 'U4',
                             'order' => 2,
+                            ...$defaultValues,
                             'winner_next_position' => 'U6',
                             'loser_next_position' => 'L8',
                         ], // 2
@@ -1017,6 +1140,7 @@ class BracketData
                             'team1_position' => 'U5',
                             'team2_position' => 'U6',
                             'order' => 1,
+                            ...$defaultValues,
                             'winner_next_position' => 'G1',
                             'loser_next_position' => 'L12',
                         ], // 1
@@ -1028,6 +1152,7 @@ class BracketData
                             'team1_position' => 'L1',
                             'team2_position' => 'L2',
                             'order' => 1,
+                            ...$defaultValues,
                             'winner_next_position' => 'L5',
                             'loser_next_position' => null,
                         ], // 1
@@ -1035,6 +1160,7 @@ class BracketData
                             'team1_position' => 'L3',
                             'team2_position' => 'L4',
                             'order' => 2,
+                            ...$defaultValues,
                             'winner_next_position' => 'L7',
                             'loser_next_position' => null,
                         ], // 2
@@ -1045,6 +1171,7 @@ class BracketData
                             'team2_position' => 'L6',
                             'winner_next_position' => 'L9',
                             'order' => 1,
+                            ...$defaultValues,
                             'loser_next_position' => null,
                         ], // 1
                         [
@@ -1052,6 +1179,7 @@ class BracketData
                             'team2_position' => 'L8',
                             'winner_next_position' => 'L10',
                             'order' => 2,
+                            ...$defaultValues,
                             'loser_next_position' => null,
                         ], // 2
                     ],
@@ -1062,6 +1190,7 @@ class BracketData
                             'winner_next_position' => 'L11',
                             'loser_next_position' => null,
                             'order' => 1,
+                            ...$defaultValues,
                         ], // 1
                     ],
                     'prefinals2' => [
@@ -1071,10 +1200,12 @@ class BracketData
                             'winner_next_position' => 'G2',
                             'loser_next_position' => null,
                             'order' => 1,
+                            ...$defaultValues,
                         ], // 1
                     ],
                 ],
             ],
         ],
-    ];
+    ][$teamNumber];
+}
 }

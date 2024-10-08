@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Participant;
 use App\Events\JoinEventSignuped;
 use App\Http\Controllers\Controller;
 use App\Jobs\HandleFollows;
-use App\Models\BracketData;
 use App\Models\EventDetail;
 use App\Models\EventInvitation;
 use App\Models\JoinEvent;
@@ -26,21 +25,21 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\UnauthorizedException;
-use App\Services\EventService;
+use App\Services\EventMatchService;
 
 class ParticipantEventController extends Controller
 {
 
     private $paymentService;
-    private $eventService;
+    private $eventMatchService;
 
     public function __construct(
         PaymentService $paymentService,
-        EventService $eventService
+        EventMatchService $eventMatchService
     )
     {
         $this->paymentService = $paymentService;
-        $this->eventService = $eventService;
+        $this->eventMatchService = $eventMatchService;
     }
 
     public function home(Request $request)
@@ -138,10 +137,9 @@ class ParticipantEventController extends Controller
                 'teamList' => $teamList,
                 'matchesUpperCount' => $matchesUpperCount,
                 'bracketList' => $bracketList,
-                'defaultValues' => $defaultValues,
                 'existingJoint' => $existingJoint,
                 'previousValues' => $previousValues
-            ] = $this->eventService->generateBrackets(
+            ] = $this->eventMatchService->generateBrackets(
                 $event, false, $existingJoint,
             );
 
@@ -150,7 +148,6 @@ class ParticipantEventController extends Controller
                 'teamList' => $teamList,
                 'matchesUpperCount' => $matchesUpperCount,
                 'bracketList' => $bracketList,
-                'defaultValues' => $defaultValues,
                 'likesCount' => $likesCount, 
                 'followersCount' => $followersCount, 
                 'user' => $user, 

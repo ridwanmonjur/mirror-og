@@ -1,12 +1,18 @@
 <?php
 namespace App\Services;
 
-use App\Models\BracketData;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
 
 
-class EventService {
+class EventMatchService {
+
+    private $bracketDataService;
+
+    public function __construct(BracketDataService $bracketDataService)
+    {
+        $this->bracketDataService = $bracketDataService;
+    }
 
     public function generateBrackets(EventDetail $event, bool $isOrganizer , JoinEvent $existingJoint = null) {
         $joinEventIds = $event->joinEvents->pluck('id');
@@ -36,13 +42,14 @@ class EventService {
             $matchTeamIds->push($match->team1_id, $match->team2_id);
         });
 
-        $defaultValues = BracketData::DEFAULT_VALUES;
         $matchesUpperCount = intval($event->tier->tierTeamSlot); 
+        $previousValues = $this->bracketDataService::PREV_VALUES;
         $valuesMap = ['Tournament' => 'tournament', 'League' => 'tournament'];
         $tournamentType = $event->type->eventType;
         $tournamentTypeFinal = $valuesMap[$tournamentType];
-        $previousValues = BracketData::PREV_VALUES[(int)($matchesUpperCount)];
-        $bracketList = BracketData::BRACKET_DATA[$matchesUpperCount][$tournamentTypeFinal];
+        $bracketList = $this->bracketDataService->generateBrackets
+            ($matchesUpperCount, $isOrganizer
+            )[$tournamentTypeFinal];
         $bracketList = $event->matches->reduce(function ($bracketList, $match) use ($existingJoint, $isOrganizer) {
             $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
             
@@ -109,7 +116,6 @@ class EventService {
             'teamList' => $teamList,
             'matchesUpperCount' => $matchesUpperCount,
             'bracketList' => $bracketList,
-            'defaultValues' => $defaultValues,
             'existingJoint' => $existingJoint,
             'previousValues' => $previousValues
         ];

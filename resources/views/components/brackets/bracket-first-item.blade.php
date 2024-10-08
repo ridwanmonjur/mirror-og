@@ -1,43 +1,7 @@
 <div class="tournament-bracket__item tournament  d-none-until-hover2-parent">
     @php
 
-        foreach ($defaultValues as $key => $defaultValue) {
-            $bracket[$key] = $bracket[$key] ?? $defaultValue;
-        }
-
-        if (isset($bracket['team1Code']) && $bracket['team1Code'] !== 'N/A') {
-            $bracket['team1Display'] = true;
-        } else {
-            $bracket['team1Display'] = false;
-            $bracket['team1Code'] = 'N/A';
-        }
-
-        if (isset($bracket['team2Code']) && $bracket['team2Code'] !== 'N/A') {
-            $bracket['team2Display'] = true;
-        } else {
-            $bracket['team2Display'] = false;
-            $bracket['team2Code'] = 'N/A';
-        }
-
-        if (!$bracket['team1_position']) {
-            $bracket['team1_position'] = '';
-            $bracket['team1_positionMobile'] = 'TBD';
-        } else {
-            $bracket['team1_positionMobile'] = $bracket['team1_position'];
-        }
-
-        if (!$bracket['team2_position']) {
-            $bracket['team2_position'] = '';
-            $bracket['team2_positionMobile'] = 'TBD';
-        } else {
-            $bracket['team2_positionMobile'] = $bracket['team2_position'];
-        }
-
-        $bracket['team1_score'] = $bracket['team1_score'] ?? '0';
-        $bracket['team2_score'] = $bracket['team2_score'] ?? '0';
-        $bracket['winner_next_position'] = $bracket['winner_next_position'] ?? 'N/A';
-        $bracket['loser_next_position'] = $bracket['loser_next_position'] ?? null;
-
+      
     @endphp
     <div class="tournament-bracket__match tournament first-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }}"
         tabindex="0" data-bracket="{{ $bracket['willJsonTeam'] ? json_encode($bracket) : '[]' }}" data-stage_name="{{ $stageName }}"

@@ -15,7 +15,7 @@ use App\Models\JoinEvent;
 use App\Models\Matches;
 use App\Models\Team;
 use App\Models\User;
-use App\Services\EventService;
+use App\Services\EventMatchService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -24,11 +24,11 @@ use Illuminate\Support\Facades\DB;
 class OrganizerEventResultsController extends Controller
 {
 
-    private $eventService;
+    private $eventMatchService;
 
-    public function __construct(EventService $eventService)
+    public function __construct(EventMatchService $eventMatchService)
     {
-        $this->eventService = $eventService;
+        $this->eventMatchService = $eventMatchService;
     }
 
     public function index(Request $request, $id)
@@ -261,10 +261,9 @@ class OrganizerEventResultsController extends Controller
             'teamList' => $teamList,
             'matchesUpperCount' => $matchesUpperCount,
             'bracketList' => $bracketList,
-            'defaultValues' => $defaultValues,
             'existingJoint' => $existingJoint,
             'previousValues' => $previousValues
-        ] = $this->eventService->generateBrackets(
+        ] = $this->eventMatchService->generateBrackets(
             $event,
             true
         );
@@ -276,7 +275,6 @@ class OrganizerEventResultsController extends Controller
             'teamList' => $teamList,
             'matchesUpperCount' => $matchesUpperCount,
             'bracketList' => $bracketList,
-            'defaultValues' => $defaultValues,
             'existingJoint' => $existingJoint,
             'previousValues' => $previousValues
             

@@ -10,8 +10,9 @@ use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Listeners\JoinEventSignupListener;
 use App\Listeners\TeamMemberCreatedListener;
 use App\Listeners\TeamMemberUpdatedListener;
+use App\Services\BracketDataService;
 use App\Models\StripePayment;
-use App\Services\EventService;
+use App\Services\EventMatchService;
 use App\Services\PaymentService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
@@ -28,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(PaymentService::class, function ($app) {
             return new PaymentService($app->make(StripePayment::class));
+        });
+
+        $this->app->bind(EventMatchService::class, function ($app) {
+            return new EventMatchService($app->make(BracketDataService::class));
         });
 
         if ($this->app->environment('local', 'testing')){
