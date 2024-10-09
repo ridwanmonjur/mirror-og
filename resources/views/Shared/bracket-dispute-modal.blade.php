@@ -47,7 +47,7 @@
                                     </div>
                                     <div class="col-12 col-lg-4  text-center">
                                         <div>
-                                            <img :src="'/storage/images/team/' + report.teams[1]?.banner" 
+                                            <img :src="'/storage/images/team/' + report.teams[1].banner" 
                                                 alt="Team Banner" width="50"
                                                 height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
