@@ -20,9 +20,15 @@
             onerror="this.src='{{ asset('assets/images/404.png') }}';"
             class=" position-absolute  object-fit-cover me-2" alt="Team View"
             style="z-index: 99;"
+            data-position="{{$position1}}" 
+            onclick="reportModalShow(event);" 
         >
     @else 
-        <small class="ms-1 position-absolute  replace_me_with_image" style="z-index: 99;">{{$position1}}</small>
+        <small 
+            data-position="{{$position2}}" 
+            onclick="reportModalShow(event);" 
+            class="ms-1 position-absolute  replace_me_with_image" style="z-index: 99;"
+        >{{$position1}}</small>
      @endif
     <span></span>
      
@@ -40,9 +46,16 @@
             onerror="this.src='{{ asset('assets/images/404.png') }}';"
             class=" position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
             style="z-index: 99;"
+           data-position="{{$position2}}" 
+            onclick="reportModalShow(event);" 
         >
+        
     @else 
-        <small class="ms-1 position-absolute replace_me_with_image" style="z-index: 99;">{{$position2}}</small>
+        <small class="ms-1 position-absolute replace_me_with_image" 
+            style="z-index: 99;"
+            data-position="{{$position2}}" 
+            onclick="reportModalShow(event);" 
+        >{{$position2}}</small>
      @endif
     <span></span>
      

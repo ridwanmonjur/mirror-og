@@ -5,7 +5,6 @@ import { initializeFirestore, memoryLocalCache, addDoc, onSnapshot, updateDoc, g
 import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
-
 let throttle2 = (func, wait) => {
     let lastTime = 0;
 
@@ -50,11 +49,98 @@ function scrollIntoView(length, type="top") {
 
 
 Alpine.data('alpineDataComponent', function () {
+  
+    const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums').value);
+    const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
     return {
-        report: {
-            matchNumber: 1,
+        userLevelEnums,
+        contextEnums : {
+          'WINNER_CHOSEN_TEAM1' : 1,
+          'WINNER_CHOSEN_TEAM2' : 2,
+          'WINNER_CHOSEN_ORGANIZER' : 3,
         },
-        
+        reportUI: {
+            matchNumber: 1,
+            userTeamId,
+            context: {},
+        },
+        report: {
+          organizerWinners: [null, null, null],
+          realWinners: [1, null, null],
+          score: [0, 0, 0],
+          userLevel: null,
+          teamNumber: null,
+          teams: [
+            {
+              winners:  [null, null, null],
+              id: null,
+              position: "",
+              banner: "",
+              name: "No team chosen yet"
+            },
+            {
+              id: null,
+              position: "",
+              banner: "",
+              name: "No team chosen yet",
+              winners: [null, null, null]
+            }
+          ],
+          position: ""
+        },
+        response: {
+          response: {
+
+          },
+          counter: {
+            
+          },
+          resolution : {
+
+          }
+        },
+        init() {
+            window.addEventListener('currentReportChange', (event) => {
+                let dataset = event?.detail ?? null;
+                console.log({dataset, position: dataset.position});
+                this.report = {
+                    ...this.report,
+                    position: dataset.position,
+                    userLevel: userLevelEnums['IS_PUBLIC'],
+                    teamNumber: 0,
+                    // userLevel: dataset.user_level,
+                    // teamNumber: (dataset.userLevel === userLevelEnums['IS_TEAM1'] ? 0 :
+                    //   (dataset.userLevel === userLevelEnums['IS_TEAM2'] ? 1 : null )
+                    // ),
+                    teams: [
+                        {
+                          winners: this.report.teams[0].winners,
+                          id: dataset.team1_id,
+                          position: dataset.team1_position,
+                          banner: dataset.team1_teamBanner,
+                          name: dataset.team1_teamName 
+                        },
+                        {
+                          winners: this.report.teams[1].winners,
+                          id: dataset.team2_id,
+                          position: dataset.team2_position,
+                          banner: dataset.team2_teamBanner,
+                          name: dataset.team2_teamName 
+                        }
+                      ],
+                        
+                    }
+                });
+            },
+            destroy() {
+                if (this.roomSnapshot) this.roomSnapshot();
+                for (let snap in this.chatSnapshots) {
+                    snap();
+                }
+            }
+        }
+    });
+    
         // changeUser(user) {
         //     user = Alpine.raw(user);  
 
@@ -310,14 +396,7 @@ Alpine.data('alpineDataComponent', function () {
         //     }, 400));
             
         // },
-        destroy() {
-            if (this.roomSnapshot) this.roomSnapshot();
-            for (let snap in this.chatSnapshots) {
-                snap();
-            }
-        }
-    }
-});
+        
 
 
 

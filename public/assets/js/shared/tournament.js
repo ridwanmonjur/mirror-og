@@ -17,29 +17,16 @@ bracketBoxList.forEach(item => {
     item.style.setProperty('--border2-color', 'red');
 });
 
-function getParentByClassName(element, targetClassName) {
-    let parent = element.parentElement;
 
-    while (parent && !parent.classList.contains(targetClassName)) {
-        parent = parent.parentElement;
-    }
 
-    return parent;
-}
 
 function updateModalShow(event) {
     event.stopPropagation();
     event.preventDefault();
     const button = event.currentTarget;
-    let parentWithDataset = getParentByClassName(button, "tournament-bracket__match");
-    
+    let { team1_id, team2_id } = button.dataset;
+    let parentWithDataset = document.querySelector(`.tournament-bracket__match.${team1_id}.${team2_id}`);
     let dataset = JSON.parse(parentWithDataset.dataset.bracket);
-    const stageName = parentWithDataset.dataset.stage_name;
-    const innerStageName = parentWithDataset.dataset.inner_stage_name;
-    const order = parentWithDataset.dataset.order;
-    dataset.stage_name = stageName;
-    dataset.inner_stage_name = innerStageName;
-    dataset.order = order;
     const modalElement = document.getElementById('updateModal');
     const inputs = modalElement.querySelectorAll('input, select, textarea');
 
@@ -52,7 +39,6 @@ function updateModalShow(event) {
 
     ['team1_position', 'team2_position', 'winner_next_position', 'loser_next_position'].forEach((element)=> {
         let id2 = `${element}_label`;
-        console.log({id2});
         document.getElementById(id2).innerText = dataset[element];
     });
 
@@ -65,7 +51,7 @@ function updateModalShow(event) {
     if (modal) {
         modal.show();
     } else {
-        modal = new bootstrap.Modal(modalElement);
+        const modal = new bootstrap.Modal(modalElement);
         modal.show();
     };
 }
@@ -73,9 +59,38 @@ function updateModalShow(event) {
 function reportModalShow(event) {
     event.stopPropagation();
     event.preventDefault();
+    event.stopPropagation();
+    const button = event.currentTarget;
+    let { position } = button.dataset;
+    let triggerParentsPositionIds = previousValues[position];
+    if (!triggerParentsPositionIds) {
+        throw new Error("Positions missing");
+    }
+
+    let parentWithDataset = document.querySelector(`.tournament-bracket__match.${triggerParentsPositionIds.join(".")}`);
+    let dataset = JSON.parse(parentWithDataset.dataset.bracket);
+    console.log({dataset, position})
+
+    const alpineEvent = new CustomEvent("currentReportChange", {
+        detail: {
+            // team1
+            team1_position: dataset.team1_position,
+            team1_id: dataset.team1_id,
+            team1_teamBanner: dataset.team1_teamBanner,
+            team1_teamName: dataset.team1_teamName,
+            user_level: dataset.user_level,
+            // team2
+            team2_position: dataset.team2_position,
+            team2_id: dataset.team2_id,
+            team2_teamBanner: dataset.team2_teamBanner,
+            team2_teamName:  dataset.team2_teamName,
+            position: position
+
+        }
+    });
+    window.dispatchEvent(alpineEvent);
     const modalElement = document.getElementById('reportModal');
     let modal = bootstrap.Modal.getInstance(modalElement);
-    console.log({hello: true, modalElement});
 
     if (modal) {
         modal.show();
@@ -112,7 +127,10 @@ addOnLoad( () => {
     });
 
     var myModal = new bootstrap.Modal(document.getElementById('reportModal'), {});
-    myModal.show();
+    // myModal.show();
+
+   
+    
 });
 
 let selectMap = {};

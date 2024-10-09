@@ -2,6 +2,7 @@
     @include('Shared.bracket-report-modal')
     @include('Shared.bracket-update-modal')
     @include('Shared.bracket-dispute-modal')
+ 
     <h5 class=" mb-2 text-start">Upper bracket</h5>
     <div class="row mb-2">
         <div class="tournament-bracket tournament-bracket--rounded col-12 col-xxl-6">

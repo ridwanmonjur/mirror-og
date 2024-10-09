@@ -140,7 +140,9 @@ class ParticipantEventController extends Controller
                 'existingJoint' => $existingJoint,
                 'previousValues' => $previousValues
             ] = $this->eventMatchService->generateBrackets(
-                $event, false, $existingJoint,
+                $event,
+                false, 
+                $existingJoint,
             );
 
             return view('Participant.ViewEvent', [

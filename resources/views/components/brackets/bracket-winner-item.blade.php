@@ -2,44 +2,6 @@
     <div class="tournament-bracket__round  tournament-bracket__round--gold">
         <div class="tournament-bracket__list tournament-bracket__joined-list  tournament-bracket__joined-odd-list">
             <div class="tournament-bracket__item tournament">
-            @php
-
-                  
-
-                    if (isset($bracket['team1Code']) && $bracket['team1Code'] !== 'N/A') {
-                        $bracket['team1Display'] = true;
-                    } else {
-                        $bracket['team1Display'] = false;
-                        $bracket['team1Code'] = 'N/A';
-                    }
-
-                    if (isset($bracket['team2Code']) && $bracket['team2Code'] !== 'N/A') {
-                        $bracket['team2Display'] = true;
-                    } else {
-                        $bracket['team2Display'] = false;
-                        $bracket['team2Code'] = 'N/A';
-                    }
-
-                    if (!$bracket['team1_position']) {
-                        $bracket['team1_position'] = '';
-                        $bracket['team1_position'] = 'TBD';
-                    } else {
-                        $bracket['team1_position'] = $bracket['team1_position'];
-                    }
-
-                    if (!$bracket['team2_position']) {
-                        $bracket['team2_position'] = '';
-                        $bracket['team2_position'] = 'TBD';
-                    } else {
-                        $bracket['team2_position'] = $bracket['team2_position'];
-                    }
-
-                    $bracket['team1_score'] = $bracket['team1_score'] ?? '0';
-                    $bracket['team2_score'] = $bracket['team2_score'] ?? '0';
-                    $bracket['winner_next_position'] = $bracket['winner_next_position'] ?? 'N/A';
-                    $bracket['loser_next_position'] = $bracket['loser_next_position'] ?? null;
-                @endphp
-
                 <div class="tournament-bracket__match {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} tournament"
                     tabindex="0" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
                     data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}">
@@ -59,7 +21,9 @@
                             <span>{{ $bracket['team2_position'] }}</span>
                         </div>
                         <small class="position-absolute winner-label d-none-until-hover" style="left: 100%;">
-                            <span class="d-none-until-hover" onclick="updateModalShow(event); "
+                            <span 
+                                data-team1_id="{{$bracket['team1_position']}}" data-team2_id="{{$bracket['team2_position']}}"
+                                class="d-none-until-hover" onclick="updateModalShow(event); "
                                 data-bs-toggle="modal" data-bs-target="#winnerMatchModal">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                     fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -85,22 +49,6 @@
     <div class="tournament-bracket__round tournament-bracket__round--gold d-none d-lg-block">
         <div class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
             <div class="tournament-bracket__item tournament">
-                @php
-                    if (isset($bracket['team1Code'])) {
-                        $bracket['team1Display'] = true;
-                    } else {
-                        $bracket['team1Display'] = false;
-                        $bracket['team1Code'] = 'N/A';
-                    }
-
-                    $bracket['team1_score'] = $bracket['team1_score'] ?? 'N/A';
-
-                    if (!$bracket['team1_position']) {
-                        $bracket['team1_position'] = '';
-                    }
-
-                @endphp
-
                 <div class="tournament-bracket__match tournament " tabindex="0">
                     <table class="tournament-bracket__table mx-auto">
                         <thead class="sr-only">

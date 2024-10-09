@@ -1,10 +1,6 @@
 <div class="tournament-bracket__item tournament  d-none-until-hover2-parent">
-    @php
-
-      
-    @endphp
     <div class="tournament-bracket__match tournament first-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }}"
-        tabindex="0" data-bracket="{{ $bracket['willJsonTeam'] ? json_encode($bracket) : '[]' }}" data-stage_name="{{ $stageName }}"
+        tabindex="0" data-bracket="{{ $bracket['will_json'] ? json_encode($bracket) : '[]' }}" data-stage_name="{{ $stageName }}"
         data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}"
         data-item-type="first"
     >
@@ -26,7 +22,7 @@
                 :roster="$bracket['team2_roster']" 
                 :teamName="$bracket['team2_teamName']"
 
-                />
+            />
             
             <x-brackets.bracket-middle-item-popover
                 :position1="$bracket['team1_position']"
@@ -45,7 +41,9 @@
             />
 
             <small class="position-absolute winner-label ">
-                <span class="d-none-until-hover2" onclick="updateModalShow(event);">
+                <span class="d-none-until-hover2" onclick="updateModalShow(event);"
+                    data-team1_id="{{$bracket['team1_position']}}" data-team2_id="{{$bracket['team2_position']}}"
+                >
                     <svg style="z-index: 999;" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                         fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                         <path

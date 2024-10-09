@@ -9,20 +9,20 @@ class BracketDataService
         return [
             'id' => null,
             'match_type' => 'tournament',
-            'team1_id' => '',
-            'team1_teamName' => '',
+            'team1_id' => null,
+            'team1_teamName' => 'No team',
             'team1_teamBanner' => null,
             'team1_score' => '0',
             'team1_roster' => null,
-            'team2_id' => '',
+            'team2_id' => null,
             'team2_score' => '0',
-            'team2_teamName' => '',
+            'team2_teamName' => 'No team',
             'team2_teamBanner' => null,
             'team2_roster' => null,
             'winner_id' => '',
             'status' => 'Upcoming',
             'result' => '',
-            'willJsonTeam' => $isOrganizer ? true: false
+            'will_json' => $isOrganizer ? true: false
         ];
     }
     const PREV_VALUES = [
@@ -232,7 +232,7 @@ class BracketDataService
         ],
     ];
 
-    public function generateBrackets(
+    public function produceBrackets(
             int $teamNumber = 32,
             bool $isOrganizer = true
         ) {

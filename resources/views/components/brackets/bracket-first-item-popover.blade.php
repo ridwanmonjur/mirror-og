@@ -46,9 +46,12 @@
         <img src="{{ asset('storage/' . $teamBanner) }}" width="100%" height="25"
             onerror="this.src='{{ asset('assets/images/404.png') }}';"
             class="popover-button position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
-            style="z-index: 99;">
+            style="z-index: 99;"
+            data-position="{{$position}}"
+            onclick="reportModalShow(event);" 
+        >
     @else 
-        <span class="replace_me_with_image popover-button"></span>
+        <span data-position="{{$position}}" class="replace_me_with_image popover-button"></span>
      @endif
     <span></span>
 </div>

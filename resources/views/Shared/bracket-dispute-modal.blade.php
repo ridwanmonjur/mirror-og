@@ -10,13 +10,13 @@
                         >
                             <h5 class="text-start my-3"> Event Information </h5>
                             <div class="ps-5 ps-5 text-start">
-                                <p class="my-0"> Name: Totally awesome event </p>
-                                <p class="my-0">Organizer: Totally awesome organizer</p>
+                                <p class="my-0"> Name: {{$event->eventName}} </p>
+                                <p class="my-0">Organizer: {{$event->user->name}}</p>
                                 <br>
-                                <p class="my-0"> Title: Totally awesome title </p>
-                                <p class="my-0">Type: Tournament</p>
-                                <p class="my-0">Tier: Starfish</p>
-                                <p class="mb-3">Tier: Starfish</p>
+                                <p class="my-0"> Description: {{$event->eventDescription}}</p>
+                                <p class="my-0">Type: {{$event->type->eventType}}</p>
+                                <p class="my-0">Tier: {{$event->tier->eventTier}}</p>
+                                <p class="mb-3">Region: South East Asia (SEA)</p>
                             </div>
                         </div>
                     </div>
@@ -26,18 +26,18 @@
                         >
                             <h5 class="text-start my-3"> Match Information </h5>
                             <div class="ps-5 ps-5 text-start">
-                                <p class="my-0"> Match: U1</p>
-                                <p class="mt-0 mb-2">Game: 3</p>
+                                <p class="my-0"> Match: <span  x-text="report.position"></span></p>
+                                <p class="mt-0 mb-2">Game: <span x-text="reportUI.matchNumber"> </span></p>
                                 <div class="row px-0 w-75 mx-auto">
                                     <div class="col-12  text-center col-lg-4">
                                         <div>
-                                            <img src="{{ asset('storage/images/team/teamBanner-1727678919.jpeg') }}"
+                                            <img :src="'/storage/images/team/' + report.teams[0].banner"
                                                 alt="Team Banner" width="50" height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover"
                                             >
                                         </div>
-                                        <p class="mt-1 mb-2 py-0">Team 1</p>
+                                        <p class="mt-1 mb-2 py-0" x-text="report.teams[0]?.name"></p>
                                         <br>
                                     </div>
                                     <div class="col-12 col-lg-4">
@@ -47,12 +47,13 @@
                                     </div>
                                     <div class="col-12 col-lg-4  text-center">
                                         <div>
-                                            <img src="{{ asset('storage/') }}" alt="Team Banner" width="50"
+                                            <img :src="'/storage/images/team/' + report.teams[1]?.banner" 
+                                                alt="Team Banner" width="50"
                                                 height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover">
                                         </div>
-                                        <p class="mt-1 mb-2 py-0">Team 2</p>
+                                        <p class="mt-1 mb-2 py-0"  x-text="report.teams[1]?.name"></p>
                                         
                                     </div>
                                 </div>

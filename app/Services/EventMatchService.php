@@ -3,7 +3,8 @@ namespace App\Services;
 
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
-
+use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class EventMatchService {
 
@@ -14,7 +15,13 @@ class EventMatchService {
         $this->bracketDataService = $bracketDataService;
     }
 
-    public function generateBrackets(EventDetail $event, bool $isOrganizer , JoinEvent $existingJoint = null) {
+    public function generateBrackets(EventDetail $event, 
+        bool $isOrganizer, 
+        JoinEvent $existingJoint = null,
+    ): array {
+       
+        $USER_ENUMS = config('constants.USER_ACCESS');
+
         $joinEventIds = $event->joinEvents->pluck('id');
 
         $event->load([
@@ -42,23 +49,27 @@ class EventMatchService {
             $matchTeamIds->push($match->team1_id, $match->team2_id);
         });
 
-        $matchesUpperCount = intval($event->tier->tierTeamSlot); 
-        $previousValues = $this->bracketDataService::PREV_VALUES;
+        $matchesUpperCount = intval($event->tier?->tierTeamSlot); 
+        $previousValues = $this->bracketDataService::PREV_VALUES[$matchesUpperCount];
         $valuesMap = ['Tournament' => 'tournament', 'League' => 'tournament'];
-        $tournamentType = $event->type->eventType;
+        $tournamentType = $event->type?->eventType;
         $tournamentTypeFinal = $valuesMap[$tournamentType];
-        $bracketList = $this->bracketDataService->generateBrackets
-            ($matchesUpperCount, $isOrganizer
-            )[$tournamentTypeFinal];
-        $bracketList = $event->matches->reduce(function ($bracketList, $match) use ($existingJoint, $isOrganizer) {
+        $bracketList = $this->bracketDataService->produceBrackets(
+            $matchesUpperCount, 
+            $isOrganizer
+        )[$tournamentTypeFinal];
+        $bracketList = $event->matches->reduce(function ($bracketList, $match) use (
+                $existingJoint, 
+                $isOrganizer,
+                $USER_ENUMS,
+            ) {
             $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
-            
-            $match->willJsonTeam = $isOrganizer ?
-                true :  
-                (
-                    $match->team1_id === $existingJoint?->team_id || 
-                    $match->team2_id === $existingJoint?->team_id
-                ) ;
+            $user_level = $isOrganizer ? $USER_ENUMS['IS_ORGANIZER'] : null;
+            if ($match->team1_id === $existingJoint?->team_id) $user_level = $USER_ENUMS['IS_TEAM1'];
+            elseif ($match->team2_id === $existingJoint?->team_id) $user_level = $USER_ENUMS['IS_TEAM2'];
+            elseif ($user_level === null) $user_level = $USER_ENUMS['IS_PUBLIC'];
+            $match->user_level = $user_level;
+            $match->will_json = $user_level !== $USER_ENUMS['IS_PUBLIC'];
             return data_set($bracketList, $path, [
                 'id' => $match->id,
                 'event_details_id' => $match->event_details_id,
@@ -86,7 +97,8 @@ class EventMatchService {
                 'team1_name' => $match->team1->name ?? null,
                 'team2_name' => $match->team2->name ?? null,
                 'winner_name' => $match->winner->name ?? null,
-                'willJsonTeam' => $match->willJsonTeam
+                'will_json' => $match->will_json,
+                'user_level'  => $match->user_level,
             ]);
 
            

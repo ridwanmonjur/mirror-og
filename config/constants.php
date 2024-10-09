@@ -224,4 +224,10 @@ return [
             'cover' => true,
         ],
     ],
+    'USER_ACCESS' => [
+        'IS_TEAM1' => 1,
+        'IS_TEAM2' => 2,
+        'IS_PUBLIC' => 3,
+        'IS_ORGANIZER' => 4,
+    ]
 ];

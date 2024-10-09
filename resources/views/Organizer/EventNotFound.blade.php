@@ -4,7 +4,7 @@
 
     <main>
         <input type="hidden" id="manage_event_route" value="{{ route('event.index') }}">
-        <input type="hidden" id="edit_event_route" value="{{ route('event.edit', ['id' => $id]) }}">
+        <input type="hidden" id="edit_event_route" value="{{ route('event.edit', ['event' => isset($id) ? $id : -1]) }}">
 
         <br><br><br><br>
         <div class="text-center" >

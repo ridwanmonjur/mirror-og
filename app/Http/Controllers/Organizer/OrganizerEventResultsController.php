@@ -242,6 +242,7 @@ class OrganizerEventResultsController extends Controller
     }
 
     public function viewMatches(Request $request, $id) {
+        $user = $request->attributes->get('user');
         $eventType = $request->query('eventType');
         $event = EventDetail::with(['type'])->findOrFail($id);
 
@@ -265,8 +266,12 @@ class OrganizerEventResultsController extends Controller
             'previousValues' => $previousValues
         ] = $this->eventMatchService->generateBrackets(
             $event,
-            true
+            true,
+            null,
         );
+
+        $USER_ENUMS = config('constants.USER_ACCESS');
+
 
         return view('Organizer.Matches', [
             'id' => $id,
@@ -276,7 +281,8 @@ class OrganizerEventResultsController extends Controller
             'matchesUpperCount' => $matchesUpperCount,
             'bracketList' => $bracketList,
             'existingJoint' => $existingJoint,
-            'previousValues' => $previousValues
+            'previousValues' => $previousValues,
+            'USER_ENUMS' => $USER_ENUMS
             
         ]);
     }
