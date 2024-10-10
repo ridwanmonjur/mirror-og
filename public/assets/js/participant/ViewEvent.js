@@ -10,8 +10,6 @@ function restoreBodyHeight () {
 
 let main = document.getElementsByTagName('main')[0];
 let body = document.getElementsByTagName('body')[0];
-body.style.width = '100vw';
-main.style.width = '100vw';
 
 let bracket = document.getElementById('Bracket');
 let bracketList = document.querySelector('#bracket-list');
