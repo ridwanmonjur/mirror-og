@@ -171,8 +171,6 @@ submitBtnElement.addEventListener('click', function(event) {
                 }
                 let currentMatch = JSON.parse(currentMatchDiv.dataset.bracket);
                 currentMatch.id = match.id;
-                currentMatch.team1_score = match.team1_score;
-                currentMatch.team2_score = match.team2_score;
                 currentMatch.winner_id = match.winner_id;
                 currentMatch.team1_id = match.team1_id;
                 currentMatch.team2_id = match.team2_id;

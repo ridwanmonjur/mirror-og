@@ -6,10 +6,10 @@
         <x-brackets.bracket-table :bracket="$bracket" />
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative  ">
             <x-brackets.bracket-middle-item-popover :position1="$bracket['team1_position']" :teamBanner1="$bracket['team1_teamBanner']" :teamId1="$bracket['team1_id']"
-                :score1="$bracket['team1_score']" :position2="$bracket['team2_position']" :teamBanner2="$bracket['team2_teamBanner']" :teamName2="$bracket['team2_teamName']" :teamId2="$bracket['team2_id']"
-                :score2="$bracket['team2_score']" :teamName1="$bracket['team1_teamName']" :winner_next_position="$bracket['winner_next_position']" :loser_next_position="$bracket['loser_next_position']" :status="$bracket['status']" />
+                :position2="$bracket['team2_position']" :teamBanner2="$bracket['team2_teamBanner']" :teamName2="$bracket['team2_teamName']" :teamId2="$bracket['team2_id']"
+                :teamName1="$bracket['team1_teamName']" :winner_next_position="$bracket['winner_next_position']" :loser_next_position="$bracket['loser_next_position']" :status="$bracket['status']" />
             <x-brackets.bracket-middle-desktop-item :position1="$bracket['team1_position']" :teamBanner1="$bracket['team1_teamBanner']" :teamId1="$bracket['team1_id']"
-                :score1="$bracket['team1_score']" :position2="$bracket['team2_position']" :teamBanner2="$bracket['team2_teamBanner']" :teamId2="$bracket['team2_id']" :score2="$bracket['team2_score']" />
+                :position2="$bracket['team2_position']" :teamBanner2="$bracket['team2_teamBanner']" :teamId2="$bracket['team2_id']" />
             <small class="position-absolute winner-label ">
                 <span class="d-none-until-hover2">
                     <svg 

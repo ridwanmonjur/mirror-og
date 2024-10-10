@@ -5,12 +5,10 @@
     'teamBanner1',
     'teamName1',
     'teamId1',
-    'score1',
     'position2',
     'teamBanner2',
     'teamId2',
     'teamName2',
-    'score2',
     'winner_next_position',
     'loser_next_position',
     'status'
@@ -41,9 +39,9 @@
         </div>
         <div class="col-12 col-lg-4">
             <div class="d-flex justify-content-center align-items-center h-100">
-                <h1 class="pe-4">{{ $score1 }}</h1>
+                <h1 class="pe-4">0</h1>
                 <h1>-</h3>
-                <h1 class="ps-4">{{ $score2 }}</h1>
+                <h1 class="ps-4">0</h1>
             </div>
         </div>
         <div class="col-12 col-lg-4">

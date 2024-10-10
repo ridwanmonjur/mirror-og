@@ -85,8 +85,6 @@ class EventMatchService {
                 'team2_teamName' => $match->team2->teamName,
                 'team1_roster' => $match->team1->roster,
                 'team2_roster' => $match->team2->roster,
-                'team1_score' => $match->team1_score,
-                'team2_score' => $match->team2_score,
                 'team1_position' => $match->team1_position,
                 'team2_position' => $match->team2_position,
                 'winner_id' => $match->winner_id,

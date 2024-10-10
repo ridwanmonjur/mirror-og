@@ -3,11 +3,9 @@
     'position1',
     'teamBanner1',
     'teamId1',
-    'score1',
     'position2',
     'teamBanner2',
     'teamId2',
-    'score2',
 ])
 
 <div

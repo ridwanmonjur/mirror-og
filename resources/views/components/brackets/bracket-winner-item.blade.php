@@ -64,7 +64,7 @@
                                         title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }}</abbr>
                                 </td>
                                 <td class="tournament-bracket__score">
-                                    <span class="tournament-bracket__number">{{ $bracket['team1_score'] }}</span>
+                                    <span class="tournament-bracket__number">0</span>
                                 </td>
                             </tr>
                         </tbody>

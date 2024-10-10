@@ -18,7 +18,7 @@
                  @endif
              </td>
              <td class="tournament-bracket__score mb-2">
-                 <span class="tournament-bracket__number">{{ $bracket['team1_score'] }}</span>
+                 <span class="tournament-bracket__number">0</span>
              </td>
          </tr>
          <tr class="tournament-bracket__team">
@@ -32,7 +32,7 @@
 
              </td>
              <td class="tournament-bracket__score mb-2">
-                 <span class="tournament-bracket__number">{{ $bracket['team2_score'] }}</span>
+                 <span class="tournament-bracket__number">0</span>
              </td>
          </tr>
      </tbody>
