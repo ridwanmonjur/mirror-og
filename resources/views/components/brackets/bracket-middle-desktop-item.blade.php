@@ -23,7 +23,7 @@
         >
     @else 
         <small 
-            data-position="{{$position2}}" 
+            data-position="{{$position1}}" 
             onclick="reportModalShow(event);" 
             class="ms-1 position-absolute  replace_me_with_image" style="z-index: 99;"
         >{{$position1}}</small>

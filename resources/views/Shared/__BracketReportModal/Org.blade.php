@@ -1,39 +1,74 @@
 <div>
-    <template x-if="report.realWinners[reportUI.matchNumber-1]">
+    @include('Shared.__BracketReportModal.ExistingChoices')
+    <template x-if="!report.realWinners[reportUI.matchNumber]">
         <div>
-            <span x-text="report.teams[1].name"> </span>
-            has chosen
-            <span x-text="report.teams[winners[reportUI.matchNumber-1]].name"> </span>
-            to be the winner
+            <div>
+                <template x-if="report.teams[0].winners[reportUI.matchNumber] &&
+                    report.teams[1].winners[reportUI.matchNumber]"
+                >
+                    <div>
+                        <template x-if="(report.teams[0].winners[reportUI.matchNumber] !=
+                                report.teams[1].winners[reportUI.matchNumber])
+                                && !dispute[reportUI.matchNumber]?.resolved
+                            "
+                        >
+                            <div>
+                                <p class="text-red">
+                                    <i> The results of this match are being disagreed. </i>
+                                </p>
+                            </div>
+                        </template>
+                        
+                    </div>   
+                </template>
+            </div>
+            @include('Shared.__BracketReportModal.PickWinners')         
         </div>
     </template>
-
-    <template x-if="!report.teams[1].winners[reportUI.matchNumber-1]">
+    <template x-if="dispute[reportUI.matchNumber]">
         <div>
-            <template x-if="report.teams[0].winners[reportUI.matchNumber-1]">
+            <template x-if="dispute[reportUI.matchNumber]?.resolved">
                 <div>
-                    You have chosen
-                    <span x-text="report.teams[winners[reportUI.matchNumber-1]].name"> </span>
-                    to be the winner
+                    <p class="text-red mt-2">
+                        <i> The results of this match are disputed. </i>
+                    </p>
+                    <div class="mt-2">
+                        <div class="d-flex justify-content-center"><div class="d-flex justify-content-center">
+                            <button class="btn btn-sm border rounded-pill text-primary border-primary me-3" x-on:click="onChangeTeamToWin"> Change Declaration </button>
+                        </div>
+                    </div>
+                    <template x-if="report.realWinners[reportUI.matchNumber]">
+                        <div>
+                            @include('Shared.__BracketReportModal.RealWinners')
+                        </div>
+                    </template>
                 </div>
             </template>
-
-            <template x-if="!report.teams[0].winners[reportUI.matchNumber-1]">
+            <template x-if="!dispute[reportUI.matchNumber]?.resolved">
                 <div>
-                    <button class="ps-0 btn mb-2 d-block rounded-pill w-100 mx-auto py-0 border border-dark text-start">
-                        <img :src="'/storage/' + report.teams[0].banner" alt="Team Banner" width="35" height="35"
-                            onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                            class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
-                        <small class="ms-2 py-0" x-text="report.teams[0]?.name"></small>
-                    </button>
-                    <button class="ps-0 btn d-block rounded-pill w-100 mx-auto py-0 border border-dark text-start">
-                        <img :src="'/storage/' + report.teams[1].banner" alt="Team Banner" width="35"
-                            height="35" onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                            class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
-                        <small class="ms-2 py-0" x-text="report.teams[1]?.name"></small>
-                    </button>
+                    <p class="text-red mt-2">
+                        <i> The results of this match are disputed. </i>
+                    </p>
+                    <div class="mt-2">
+                        <div class="d-flex justify-content-center"><div class="d-flex justify-content-center">
+                            <button class="btn btn-sm border rounded-pill text-primary border-primary me-3" x-on:click="onChangeTeamToWin"> Change Declaration </button>
+                        </div>
+                    </div>
+                    <p class="text-success mt-2">
+                        The dispute has been resolved in favor of 
+                        <span x-text="report.teams[dispute[reportUI.matchNumber]?.resolved].name"> </span>
+                    </p>
                 </div>
+                @include('Shared.__BracketReportModal.RealWinners')
             </template>
+        </div>
+    </template>
+    <template x-if="!dispute[reportUI.matchNumber] && report.realWinners[reportUI.matchNumber]">
+        <div>
+            @include('Shared.__BracketReportModal.RealWinners')
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-sm border rounded-pill text-primary border-primary me-3" x-on:click="onChangeTeamToWin"> Change Declaration </button>
+            </div>
         </div>
     </template>
 </div>

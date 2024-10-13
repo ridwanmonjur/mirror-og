@@ -27,7 +27,7 @@
                             <h5 class="text-start my-3"> Match Information </h5>
                             <div class="ps-5 ps-5 text-start">
                                 <p class="my-0"> Match: <span  x-text="report.position"></span></p>
-                                <p class="mt-0 mb-2">Game: <span x-text="reportUI.matchNumber"> </span></p>
+                                <p class="mt-0 mb-2">Game: <span x-text="reportUI.matchNumber+1"> </span></p>
                                 <div class="row px-0 w-75 mx-auto">
                                     <div class="col-12  text-center col-lg-4">
                                         <div>

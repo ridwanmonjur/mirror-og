@@ -60,60 +60,142 @@ Alpine.data('alpineDataComponent', function () {
           'WINNER_CHOSEN_ORGANIZER' : 3,
         },
         reportUI: {
-            matchNumber: 1,
+            matchNumber: 0,
             userTeamId,
-            context: {},
+            teamNumber: null,
+            otherTeamNumber: null,
         },
         report: {
           organizerWinners: [null, null, null],
-          realWinners: [1, null, null],
-          score: [0, 0, 0],
+          realWinners: ['0', null, null],
           userLevel: null,
-          teamNumber: null,
+        
+          matchStatus: ['ONGOING', null, null],
           teams: [
             {
-              winners:  [null, null, null],
+              winners:  ['1', '1', '1'],
               id: null,
               position: "",
               banner: "",
-              name: "No team chosen yet"
+              name: "No team chosen yet",
+              score: 0,
             },
             {
               id: null,
               position: "",
               banner: "",
               name: "No team chosen yet",
-              winners: [null, null, null]
+              winners: [null, null, null],
+              score: 0,
             }
           ],
           position: ""
         },
-        response: {
-          response: {
-
-          },
-          counter: {
-            
-          },
-          resolution : {
-
+        dispute: [null, null, null],
+        onSubmitSelectTeamToWin() {
+          let teamNumber = this.reportUI.teamNumber;
+          let otherTeamNumber = this.reportUI.otherTeamNumber;
+          let matchNumber = this.reportUI.matchNumber;
+          let selectedTeamIndex = document.getElementById('selectedTeamIndex').value;
+          if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
+            this.report.organizerWinners[matchNumber] = selectedTeamIndex;
+            this.report.realWinners[matchNumber] = selectedTeamIndex;
           }
+
+          if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
+            this.report.teams[teamNumber].winners[matchNumber] = selectedTeamIndex;
+            let otherTeamIndex = this.report.teams[otherTeamNumber].winners[matchNumber];
+            if (otherTeam) {
+              if (otherTeamIndex === selectedTeamIndex) {
+                this.report.realWinners[matchNumber] = selectedTeamIndex;
+              } 
+            }
+          }
+        },
+        onChangeTeamToWin() {
+          let matchNumber = this.reportUI.matchNumber;
+
+          if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
+            let otherIndex = this.report.realWinners[matchNumber] === "1" ? "0" : "1"; 
+            this.report.organizerWinners[matchNumber] = otherIndex;
+            this.report.realWinners[matchNumber] = otherIndex;
+          }
+
+          if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
+            let teamNumber = this.reportUI.teamNumber;
+            let otherTeamNumber = this.reportUI.otherTeamNumber;
+            let otherIndex = this.report.teams[otherTeamNumber].winners[matchNumber]; 
+            this.report.teams[teamNumber].winners[matchNumber] = otherIndex;
+            if (otherTeamIndex === selectedTeamIndex) {
+              this.report.realWinners[matchNumber] = selectedTeamIndex;
+            } 
+          }
+        },
+        selectTeamToWin(event, index) {
+            this.clearSelection();
+            let selectedButton = event.currentTarget;
+            if (selectedButton) {
+              selectedButton.style.backgroundColor = '#43A4D7'; 
+              selectedButton.style.color = 'white';
+            }
+
+            const selectTeamSubmitButton = document.querySelector('.selectTeamSubmitButton');
+            selectTeamSubmitButton.style.backgroundColor = '#43A4D7'; 
+            selectTeamSubmitButton.style.color = 'white';
+
+            document.getElementById('selectedTeamIndex').value = index;
+            const selectionMessage = document.querySelector('.selectionMessage');
+            selectionMessage.innerText = `Currently selecting ${this.report.teams[index].name} as the winner of Game ${this.reportUI.matchNumber+1}`;
+        },
+      
+       clearSelection() {
+          let selectionButtons  = document.querySelectorAll('.selectedButton');
+          selectionButtons.forEach((selectedButton)=> {
+              if (selectedButton) {
+                selectedButton.style.backgroundColor = 'white'; 
+                selectedButton.style.color = 'black'; 
+                selectedButton = null;
+              }
+
+              const selectTeamSubmitButton = document.querySelector('.selectTeamSubmitButton');
+              selectTeamSubmitButton.style.backgroundColor = '#white'; 
+              selectTeamSubmitButton.style.color = 'black';
+
+              document.getElementById('selectedTeamIndex').value = null;
+          
+              // const selectionMessage = document.querySelector('.selectionMessage');
+              // selectionMessage.innerText = ""; 
+          }); 
+      },
+        changeMatchNumber(increment) {
+          this.clearSelection();
+          this.reportUI.matchNumber = this.reportUI.matchNumber + increment; 
+        },
+        getDisabled() {
+            return this.report.realWinners[(this.reportUI.matchNumber-1) % 3] === null;
         },
         init() {
             window.addEventListener('currentReportChange', (event) => {
                 let dataset = event?.detail ?? null;
-                console.log({dataset, position: dataset.position});
+                this.reportUI = {
+                  ...this.reportUI,
+                  teamNumber: 1,
+                  otherTeamNumber: 0,
+                  // teamNumber: (dataset.userLevel === userLevelEnums['IS_TEAM1'] ? 0 :
+                  //   (dataset.userLevel === userLevelEnums['IS_TEAM2'] ? 1 : null )
+                  // ),
+                  // otherTeamNumber: (dataset.userLevel === userLevelEnums['IS_TEAM1'] ? 1 :
+                  //   (dataset.userLevel === userLevelEnums['IS_TEAM2'] ? 0 : null )
+                  // ),
+                }
                 this.report = {
                     ...this.report,
                     position: dataset.position,
-                    userLevel: userLevelEnums['IS_PUBLIC'],
-                    teamNumber: 0,
+                    userLevel: userLevelEnums['IS_ORGANIZER'],
                     // userLevel: dataset.user_level,
-                    // teamNumber: (dataset.userLevel === userLevelEnums['IS_TEAM1'] ? 0 :
-                    //   (dataset.userLevel === userLevelEnums['IS_TEAM2'] ? 1 : null )
-                    // ),
                     teams: [
                         {
+                          ...this.report.teams[0],
                           winners: this.report.teams[0].winners,
                           id: dataset.team1_id,
                           position: dataset.team1_position,
@@ -121,6 +203,7 @@ Alpine.data('alpineDataComponent', function () {
                           name: dataset.team1_teamName 
                         },
                         {
+                          ...this.report.teams[0],
                           winners: this.report.teams[1].winners,
                           id: dataset.team2_id,
                           position: dataset.team2_position,
