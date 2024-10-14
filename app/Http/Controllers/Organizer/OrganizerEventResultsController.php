@@ -270,7 +270,6 @@ class OrganizerEventResultsController extends Controller
             null,
         );
 
-        $USER_ENUMS = config('constants.USER_ACCESS');
 
 
         return view('Organizer.Matches', [
@@ -282,8 +281,6 @@ class OrganizerEventResultsController extends Controller
             'bracketList' => $bracketList,
             'existingJoint' => $existingJoint,
             'previousValues' => $previousValues,
-            'USER_ENUMS' => $USER_ENUMS
-            
         ]);
     }
 

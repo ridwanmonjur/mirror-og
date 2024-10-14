@@ -7,7 +7,7 @@
     <title>View Event</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/viewEvent.css') }}">
     @include('__CommonPartials.HeadIcon')
-    @vite(['resources/js/tippy.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/lightgallery.js', 'resources/sass/lightgallery.scss'])
+    @vite(['resources/js/tippy.js', 'resources/js/pages/bracket.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/lightgallery.js', 'resources/sass/lightgallery.scss'])
     <title>Tournament Matches </title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
@@ -31,7 +31,7 @@
     <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
     <input type="hidden" id="create_url" value="{{ route('event.create') }}">
     <input type="hidden" id="edit_url" value="{{ route('event.edit', $event->id) }}">
-    <main>
+    <main x-data="alpineDataComponent">
         <br class="d-none-at-desktop">
         <div class="pt-2">
             <header>
@@ -323,13 +323,13 @@
             <div>
                 <div class="tab ms-0 position-relative" style="width: max(60vw, 95%); left: min(2%, 10px); top:20px;">
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ' }}"
-                        onclick="openTab(event, 'Overview'); restoreBodyHeight();">Overview</button>
+                        onclick="openTab(event, 'Overview'); ">Overview</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
-                        onclick="openTab(event, 'Bracket'); increaseBodyHeight();">Bracket</button>
+                        onclick="openTab(event, 'Bracket', 'bracket-list'); ">Bracket</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
-                        onclick="openTab(event, 'Teams'); restoreBodyHeight();">Teams</button>
+                        onclick="openTab(event, 'Teams'); ">Teams</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
-                        onclick="openTab(event, 'Result'); restoreBodyHeight();">Result</button>
+                        onclick="openTab(event, 'Result'); ">Result</button>
                 </div>
                 <br>
                 <div id="Overview" class="tabcontent" style="display: block;">
@@ -338,15 +338,59 @@
                 </div>
 
                 <div id="Bracket" class="tabcontent">
-                    <input type="hidden" id="previousValues" value="{{ json_encode($previousValues) }}">
 
                     @include('Participant.__Partials.BracketReport')
 
                 </div>
 
                 <div id="Teams" class="tabcontent">
-                    <h5><u>Teams</u></h5>
-                    <p>Teams tab.</p>
+                    <h5 class="my-0"><u>Teams</u></h5>
+                     <div style="width: 90%;">
+                        @if (isset($teamList[0]))
+                            <br>
+                            <table id="current_teams" class="member-table responsive ">
+                                <thead>
+                                    <tr>
+                                        <th> </th>
+                                        <th>Team name</th>
+                                        <th>Description</th>
+                                        <th>Region</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($teamList as $team)
+                                        <tr class="st">
+                                            <td style="width: 60px !important;" class="py-0 px-0 mx-0"> 
+                                                <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
+                                                    <svg class="gear-icon-btn"
+                                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                                        class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                                                        <path
+                                                            d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                                                    </svg>
+                                                </a>
+                                            </td>
+                                            <td class="d-flex align-items-center colored-cell">
+                                                <img
+                                                    class="rounded-circle d-inline-block object-fit-cover me-3"
+                                                    src="{{ '/storage' . '/'. $team->teamBanner }}"
+                                                    {!! trustedBladeHandleImageFailure() !!} 
+                                                    height="40"
+                                                    width="40"
+                                                > 
+                                                <span>{{$team->teamName}}</span>
+                                            </td>
+                                            <td class="colored-cell text-start">{{$team->teamDescription}}</td>
+                                            <td style="font-size: 1.5rem;" class="colored-cell">{{$team->country_flag}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <div class="pt-3" style="width: 90%;">No current teams</div>
+                        @endif
+                    </div>
                 </div>
                 <div id="Result" class="tabcontent">
                     <h5><u>Result</u></h5>
@@ -356,9 +400,8 @@
             <div></div>
         </div>
     </main>
-    @stack('script')
-
+     @livewireScripts
     <script src="{{ asset('/assets/js/participant/ViewEvent.js') }}"></script>
     <script src="{{ asset('/assets/js/shared/tournament.js') }}"></script>
-
+   
 </html>

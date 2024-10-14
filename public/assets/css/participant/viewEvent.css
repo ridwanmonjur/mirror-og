@@ -474,3 +474,18 @@ input[type="submit"]:active {
     cursor: pointer;
     transform: scale(1.1);
 }
+
+.member-table th,
+.member-table td {
+    padding: 8px;
+    text-align: left;
+}
+
+
+tr:nth-child(odd) .colored-cell {
+    background-color: #d0cfcf;
+}
+
+tr:nth-child(even) .colored-cell {
+    background-color: #bdb9b9;
+}

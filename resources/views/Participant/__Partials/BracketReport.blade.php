@@ -1,9 +1,14 @@
 {{-- @php
     dd($previousValues);
 @endphp --}}
+<input type="hidden" id="previousValues" value="{{ json_encode($previousValues) }}">
+<input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
+<input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
+@include('Shared.bracket-report-modal')
+@include('Shared.bracket-dispute-modal')
 <div id="bracket-list" class="position-absolute" style="overflow-x: visible; overflow-y: visible;">
    
-    <h5 class=" mb-2 text-start">Upper bracket</h5>
+    <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
     <div class="row mb-2">
         <div class="tournament-bracket tournament-bracket--rounded col-12 col-xxl-6">
             <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
@@ -49,7 +54,7 @@
         @endforeach
 
     </div>
-    <h5 class="mb-2 text-start">Lower bracket</h5>
+    <h5 class="mb-2 text-start"><u>Lower bracket</u></h5>
     <div class="tournament-bracket tournament-bracket--rounded">
         @php
             $rounds = [

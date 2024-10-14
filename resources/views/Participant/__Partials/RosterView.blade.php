@@ -39,7 +39,7 @@
                 'opacity-until-hover',
                 'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
             ])
-                style="object-fit: cover; border-radius: 30px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
+                style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;">
             <div class="invisible-until-hover mt-4 ms-4 position-absolute" style="top: 20px;"
                 style="width: 100%; background-color: red;">
@@ -67,7 +67,7 @@
                     <a class="d-flex justify-content-start" href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img {!! trustedBladeHandleImageFailureBanner() !!}
                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
-                            class="object-fit-cover" width="60px" height="40px">
+                            class="object-fit-cover me-1" width="60px" height="40px">
                         <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventDetails->eventName }}
                         </span>
                     </a>

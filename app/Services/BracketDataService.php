@@ -4,7 +4,8 @@ namespace App\Services;
 class BracketDataService
 {
     public function generateDefaultValues (
-            bool $isOrganizer = true
+            bool $isOrganizer = true,
+            array $USER_ENUMS
         ): array {
         return [
             'id' => null,
@@ -22,7 +23,8 @@ class BracketDataService
             'winner_id' => '',
             'status' => 'Upcoming',
             'result' => '',
-            'will_json' => $isOrganizer ? true: false
+            'will_json' => $isOrganizer ? true: false,
+            'user_level' => $isOrganizer ? $USER_ENUMS['IS_ORGANIZER']: null
         ];
     }
     const PREV_VALUES = [
@@ -234,9 +236,10 @@ class BracketDataService
 
     public function produceBrackets(
             int $teamNumber = 32,
-            bool $isOrganizer = true
+            bool $isOrganizer = true,
+            array $USER_ENUMS
         ) {
-        $defaultValues = $this->generateDefaultValues($isOrganizer);
+        $defaultValues = $this->generateDefaultValues($isOrganizer, $USER_ENUMS);
         return [
         32 => [
             'tournament' => [

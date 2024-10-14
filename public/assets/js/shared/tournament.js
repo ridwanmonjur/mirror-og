@@ -4,7 +4,6 @@ bracketItemList.forEach(item => {
     item.classList.add('special-item-right');
 });
 
-
 var bracketteamList = document.querySelectorAll('.codeCANcode.tournament-bracket__match');
 bracketItemList.forEach(item => {
     item.classList.add('special-item2');
@@ -143,7 +142,7 @@ const submitBtnElement = document.getElementById('submitBtn');
 const closeBtnElement = document.getElementById('closeBtn');
 
 
-submitBtnElement.addEventListener('click', function(event) {
+submitBtnElement?.addEventListener('click', function(event) {
     event.preventDefault();
 
     const updateFormElementData = new FormData(updateFormElement);

@@ -1,26 +1,3 @@
-function increaseBodyHeight () {
-    main.style.height = bodyHeight + bracketListHeight + 'px';
-    document.body.style.height = bodyHeight + bracketListHeight + 'px';
-}
-
-function restoreBodyHeight () {
-    main.style.height = bodyHeight + 'px';
-    document.body.style.height = bodyHeight  + 'px';
-}
-
-let main = document.getElementsByTagName('main')[0];
-let body = document.getElementsByTagName('body')[0];
-
-let bracket = document.getElementById('Bracket');
-let bracketList = document.querySelector('#bracket-list');
-bracket.style.display = 'block';
-let bracketListHeight = bracketList.getBoundingClientRect().height;
-let bracketListWidth = bracketList.getBoundingClientRect().width;
-
-let bodyHeight = main.offsetHeight;
-let bodyWidth = main.offsetWidth;
-bracket.style.display = 'none';
-
 
 function reddirectToLoginWithIntened(route) {
     route = encodeURIComponent(route);

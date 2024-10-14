@@ -24,7 +24,7 @@
                             <span 
                                 data-team1_id="{{$bracket['team1_position']}}" data-team2_id="{{$bracket['team2_position']}}"
                                 class="d-none-until-hover" onclick="updateModalShow(event); "
-                                data-bs-toggle="modal" data-bs-target="#winnerMatchModal">
+                                data-bs-toggle="modal" ks>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                     fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                     <path

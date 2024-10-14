@@ -17,6 +17,7 @@ use App\Services\PaymentService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
 use Laravel\Dusk\DuskServiceProvider;
 use Opcodes\LogViewer\Facades\LogViewer;
 
@@ -45,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        View::share('USER_ACCESS', config('constants.USER_ACCESS'));
         LogViewer::auth(function ($request) {
             if (app()->environment('production')) {
                 return $request->user()

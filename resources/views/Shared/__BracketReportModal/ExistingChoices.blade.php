@@ -5,7 +5,7 @@
             : report.teams[0].name + ' has '  
         "> </small>
         chosen
-        <small x-text="report.teams[0].name"> </small>
+        <small x-text="report.teams[report.teams[0].winners[reportUI.matchNumber]].name"> </small>
         to be the winner
     </small>
 </template>
@@ -17,7 +17,7 @@
             : report.teams[1].name + ' has '  
         "> </small>      
         chosen
-        <small x-text="report.teams[1].name"> </small>
+        <small x-text="report.teams[report.teams[1].winners[reportUI.matchNumber]].name"> </small>
         to be the winner
     </small>
 </template>

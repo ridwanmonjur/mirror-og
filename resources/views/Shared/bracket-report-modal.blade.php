@@ -96,18 +96,11 @@
                                 </svg>
                             </div> 
                         </div>
-                        
-                        
                     </div>
                 </div>
-
-               
-
             </div>
-
         </div>
     </div>
-
     <script src="{{ asset('/assets/js/shared/BracketUpdateModal.js') }}"></script>
 
 </div>

@@ -5,6 +5,8 @@ import { initializeFirestore, memoryLocalCache, addDoc, onSnapshot, updateDoc, g
 import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
+console.log("hi");
+
 let throttle2 = (func, wait) => {
     let lastTime = 0;
 
@@ -54,11 +56,6 @@ Alpine.data('alpineDataComponent', function () {
     const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
     return {
         userLevelEnums,
-        contextEnums : {
-          'WINNER_CHOSEN_TEAM1' : 1,
-          'WINNER_CHOSEN_TEAM2' : 2,
-          'WINNER_CHOSEN_ORGANIZER' : 3,
-        },
         reportUI: {
             matchNumber: 0,
             userTeamId,
@@ -67,13 +64,13 @@ Alpine.data('alpineDataComponent', function () {
         },
         report: {
           organizerWinners: [null, null, null],
-          realWinners: ['0', null, null],
+          realWinners: [null, null, null],
           userLevel: null,
         
           matchStatus: ['ONGOING', null, null],
           teams: [
             {
-              winners:  ['1', '1', '1'],
+              winners:  ['1', '1', null],
               id: null,
               position: "",
               banner: "",
@@ -85,13 +82,42 @@ Alpine.data('alpineDataComponent', function () {
               position: "",
               banner: "",
               name: "No team chosen yet",
-              winners: [null, null, null],
+              winners: ['0', null, null],
               score: 0,
             }
           ],
           position: ""
         },
-        dispute: [null, null, null],
+        dispute: [
+          null, 
+          {
+            id: null,
+            information: {
+              teamName: "TeamName",
+              teamBanner: "",
+              reason: "The reason",
+              desc: "The desc",
+              evidence: [],
+              userId: 1,
+            },
+            counter: {
+              teamName: "TeamName",
+              teamBanner: "",
+              reason: "The reason",
+              desc: "The desc",
+              evidence: [],
+              userId: 1,
+            },
+            resolution: {
+
+            },
+            statement: "Hello",
+            videos: [],
+            resolved: null,
+
+          }, 
+          null
+        ],
         onSubmitSelectTeamToWin() {
           let teamNumber = this.reportUI.teamNumber;
           let otherTeamNumber = this.reportUI.otherTeamNumber;
@@ -124,11 +150,9 @@ Alpine.data('alpineDataComponent', function () {
           if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
             let teamNumber = this.reportUI.teamNumber;
             let otherTeamNumber = this.reportUI.otherTeamNumber;
-            let otherIndex = this.report.teams[otherTeamNumber].winners[matchNumber]; 
+            let otherIndex = this.report.teams[otherTeamNumber].winners[matchNumber];
             this.report.teams[teamNumber].winners[matchNumber] = otherIndex;
-            if (otherTeamIndex === selectedTeamIndex) {
-              this.report.realWinners[matchNumber] = selectedTeamIndex;
-            } 
+            this.report.realWinners[matchNumber] = otherIndex;
           }
         },
         selectTeamToWin(event, index) {
@@ -172,26 +196,25 @@ Alpine.data('alpineDataComponent', function () {
           this.reportUI.matchNumber = this.reportUI.matchNumber + increment; 
         },
         getDisabled() {
-            return this.report.realWinners[(this.reportUI.matchNumber-1) % 3] === null;
+            return this.report.teams[this.reportUI.teamNumber].winners[(this.reportUI.matchNumber-1) % 3] === null;
         },
         init() {
             window.addEventListener('currentReportChange', (event) => {
                 let dataset = event?.detail ?? null;
+                // let teamNumber = dataset.userLevel === userLevelEnums['IS_TEAM1'] ? 0 :
+                  // (dataset.userLevel === userLevelEnums['IS_TEAM2'] ? 1 : null );
+                // let otherTeamNumber = teamNumber === null? null : !teamNumber;
                 this.reportUI = {
                   ...this.reportUI,
-                  teamNumber: 1,
-                  otherTeamNumber: 0,
-                  // teamNumber: (dataset.userLevel === userLevelEnums['IS_TEAM1'] ? 0 :
-                  //   (dataset.userLevel === userLevelEnums['IS_TEAM2'] ? 1 : null )
-                  // ),
-                  // otherTeamNumber: (dataset.userLevel === userLevelEnums['IS_TEAM1'] ? 1 :
-                  //   (dataset.userLevel === userLevelEnums['IS_TEAM2'] ? 0 : null )
-                  // ),
+                  teamNumber: 0,
+                  otherTeamNumber: 1,
+                  // teamNumber, 
+                  // otherTeamNumber
                 }
                 this.report = {
                     ...this.report,
                     position: dataset.position,
-                    userLevel: userLevelEnums['IS_ORGANIZER'],
+                    userLevel: userLevelEnums['IS_TEAM1'],
                     // userLevel: dataset.user_level,
                     teams: [
                         {

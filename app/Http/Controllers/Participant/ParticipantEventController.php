@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Participant;
 use App\Events\JoinEventSignuped;
 use App\Http\Controllers\Controller;
 use App\Jobs\HandleFollows;
+use App\Models\Achievements;
+use App\Models\AwardResults;
 use App\Models\EventDetail;
 use App\Models\EventInvitation;
+use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\Like;
 use App\Models\OrganizerFollow;
@@ -89,6 +92,8 @@ class ParticipantEventController extends Controller
             if (! $event) {
                 throw new ModelNotFoundException("Event not found by id: {$id}");
             }
+            $awardAndTeamList = AwardResults::getTeamAwardResults($id);
+            $achievementsAndTeamList = Achievements::getTeamAchievements($id);
 
             $status = $event->statusResolved();
             if (in_array($status, ['DRAFT', 'PREVEW', 'PENDING'])) {
@@ -130,8 +135,6 @@ class ParticipantEventController extends Controller
                 $existingJoint = null;
             }
 
-            $isUserOrganizer = false;
-            $userTeamId = $existingJoint?->team_id;
             
             [
                 'teamList' => $teamList,
@@ -146,15 +149,17 @@ class ParticipantEventController extends Controller
             );
 
             return view('Participant.ViewEvent', [
-                'event' => $event,
-                'teamList' => $teamList,
-                'matchesUpperCount' => $matchesUpperCount,
-                'bracketList' => $bracketList,
-                'likesCount' => $likesCount, 
-                'followersCount' => $followersCount, 
-                'user' => $user, 
-                'existingJoint' => $existingJoint,
-                'previousValues' => $previousValues
+                    'event' => $event,
+                    'teamList' => $teamList,
+                    'awardAndTeamList' => $awardAndTeamList,
+                    'achievementsAndTeamList' => $achievementsAndTeamList,
+                    'matchesUpperCount' => $matchesUpperCount,
+                    'bracketList' => $bracketList,
+                    'likesCount' => $likesCount, 
+                    'followersCount' => $followersCount, 
+                    'user' => $user, 
+                    'existingJoint' => $existingJoint,
+                    'previousValues' => $previousValues,
                 ]
             );
         } catch (Exception $e) {

@@ -56,7 +56,8 @@ class EventMatchService {
         $tournamentTypeFinal = $valuesMap[$tournamentType];
         $bracketList = $this->bracketDataService->produceBrackets(
             $matchesUpperCount, 
-            $isOrganizer
+            $isOrganizer,
+            $USER_ENUMS
         )[$tournamentTypeFinal];
         $bracketList = $event->matches->reduce(function ($bracketList, $match) use (
                 $existingJoint, 
