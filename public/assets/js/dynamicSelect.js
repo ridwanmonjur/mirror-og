@@ -1,9 +1,4 @@
-/*
- * Created by David Adams
- * https://codeshack.io/dynamic-select-images-html-javascript/
- * 
- * Released under the MIT license
- */
+
 class DynamicSelect {
 
     constructor(element, options = {}) {
@@ -54,7 +49,7 @@ class DynamicSelect {
             } else {
                 optionContent = `
                     ${this.data[i].img ? `<img  onerror="this.src='/assets/images/404.png';"
-                        src="${this.data[i].img}" alt="${this.data[i].text}" class="${this.data[i].imgWidth && this.data[i].imgHeight ? 'object-fit-cover' : ''}" style="${this.data[i].imgWidth ? 'width:' + this.data[i].imgWidth + ';' : ''}${this.data[i].imgHeight ? 'height:' + this.data[i].imgHeight + ';' : ''}">` : ''}
+                        src="${this.data[i].img}" alt="${this.data[i].text}" class=" border border-primary border-2   object-fit-cover ${this.data[i].imgWidth && this.data[i].imgHeight ? '' : ''}" style="${this.data[i].imgWidth ? 'width:' + this.data[i].imgWidth + ';' : ''}${this.data[i].imgHeight ? 'height:' + this.data[i].imgHeight + ';' : ''}">` : ''}
                     ${this.data[i].text ? '<span class="dynamic-select-option-text">' + this.data[i].text + '</span>' : ''}
                 `;
             }
@@ -190,7 +185,7 @@ class DynamicSelect {
             } else {
                 optionContent = `
                     ${this.data[i].img ? `<img onerror="this.src='/assets/images/404.png';"
-                        src="${this.data[i].img}" alt="${this.data[i].text}" class="${this.data[i].imgWidth && this.data[i].imgHeight ? 'object-fit-cover' : ''}" style="${this.data[i].imgWidth ? 'width:' + this.data[i].imgWidth + ';' : ''}${this.data[i].imgHeight ? 'height:' + this.data[i].imgHeight + ';' : ''}">` : ''}
+                        src="${this.data[i].img}" alt="${this.data[i].text}" class=" border border-primary border-2   object-fit-cover ${this.data[i].imgWidth && this.data[i].imgHeight ? 'object-fit-cover' : ''}" style="${this.data[i].imgWidth ? 'width:' + this.data[i].imgWidth + ';' : ''}${this.data[i].imgHeight ? 'height:' + this.data[i].imgHeight + ';' : ''}">` : ''}
                     ${this.data[i].text ? '<span class="dynamic-select-option-text">' + this.data[i].text + '</span>' : ''}
                 `;
             }
@@ -205,7 +200,6 @@ class DynamicSelect {
 
     updateSelectElement(dataValue) {
         const selectedData = this.data.find(item => item.value == dataValue);
-        console.log({selectedData, data: this.data, dataValue});
         if (selectedData) {
             this.data.forEach(item => item.selected = (item.value == dataValue));
 
@@ -216,7 +210,7 @@ class DynamicSelect {
 
             const headerContent = selectedData.html || `
                 ${selectedData.img ? `<img onerror="this.src='/assets/images/404.png';"
-                    src="${selectedData.img}" alt="${selectedData.text}" class="${selectedData.imgWidth && selectedData.imgHeight ? 'object-fit-cover' : ''}" style="${selectedData.imgWidth ? 'width:' + selectedData.imgWidth + ';' : ''}${selectedData.imgHeight ? 'height:' + selectedData.imgHeight + ';' : ''}">` : ''}
+                    src="${selectedData.img}" alt="${selectedData.text}" class=" border border-primary border-2   object-fit-cover ${selectedData.imgWidth && selectedData.imgHeight ? 'object-fit-cover' : ''}" style="${selectedData.imgWidth ? 'width:' + selectedData.imgWidth + ';' : ''}${selectedData.imgHeight ? 'height:' + selectedData.imgHeight + ';' : ''}">` : ''}
                 ${selectedData.text ? '<span class="dynamic-select-option-text">' + selectedData.text + '</span>' : ''}
             `;
             this.element.querySelector('.dynamic-select-header').innerHTML = headerContent;

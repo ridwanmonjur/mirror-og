@@ -15,6 +15,7 @@
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
+        <input type="hidden" id="event_view_route" value="{{ route('participant.event.view', ':id') }}">
         <div class="text-center" id="step-0">
             <div class="">
                 <div class="time-line-box mx-auto" id="timeline-box">
@@ -116,12 +117,7 @@
                 onclick=""> Next > </button>
         </div>
     </main>
-    <script>
-        function goToCancelButton() {
-            let url = "{{ route('participant.event.view', $id) }}";
-            window.location.href = url;
-        }
-    </script>
+    <script src="{{ asset('/assets/js/participant/CreateTeamToRegister.js') }}"></script>
     
 
 </body>

@@ -54,4 +54,16 @@ class OrganizerFollow extends Model
             ->pluck('organizer_user_id', 'organizer_user_id')
             ->toArray();
     }
+
+    public static function getFollowersCount($organizerUserId)
+    {
+        return self::where('organizer_user_id', $organizerUserId)->count();
+    }
+
+    public static function isFollowing($participantUserId, $organizerUserId)
+    {
+        return self::where('participant_user_id', $participantUserId)
+            ->where('organizer_user_id', $organizerUserId)
+            ->exists();
+    }
 }

@@ -10,5 +10,3 @@
     <link href="https://cdn.jsdelivr.net/npm/litepicker@2.0/dist/css/litepicker.min.css" rel="stylesheet">
 </head>
 
-
-</html>

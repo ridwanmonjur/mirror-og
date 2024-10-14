@@ -15,6 +15,7 @@ use App\Models\JoinEvent;
 use App\Models\Matches;
 use App\Models\Team;
 use App\Models\User;
+use App\Services\EventMatchService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -22,9 +23,14 @@ use Illuminate\Support\Facades\DB;
 
 class OrganizerEventResultsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    private $eventMatchService;
+
+    public function __construct(EventMatchService $eventMatchService)
+    {
+        $this->eventMatchService = $eventMatchService;
+    }
+
     public function index(Request $request, $id)
     {
         $event = EventDetail::with(['tier'])
@@ -236,11 +242,46 @@ class OrganizerEventResultsController extends Controller
     }
 
     public function viewMatches(Request $request, $id) {
+        $user = $request->attributes->get('user');
         $eventType = $request->query('eventType');
-        return view('Participant.Matches', compact(
-            'id',
-            'eventType',
-        ));
+        $event = EventDetail::with(['type'])->findOrFail($id);
+
+        if ($event->type->eventType !== $eventType) {
+            return $this->showErrorOrganizer("Event with id: {$id} must be of type: {$event->type->eventType}");
+        }
+
+        $event->load([
+            'tier',
+            'type',
+            'joinEvents.team' => function ($query) {
+                $query->select('teams.id', 'teamName', 'teamBanner');
+            },
+        ]);
+        
+        [
+            'teamList' => $teamList,
+            'matchesUpperCount' => $matchesUpperCount,
+            'bracketList' => $bracketList,
+            'existingJoint' => $existingJoint,
+            'previousValues' => $previousValues
+        ] = $this->eventMatchService->generateBrackets(
+            $event,
+            true,
+            null,
+        );
+
+
+
+        return view('Organizer.Matches', [
+            'id' => $id,
+            'eventType' => $eventType,
+            'event' => $event,
+            'teamList' => $teamList,
+            'matchesUpperCount' => $matchesUpperCount,
+            'bracketList' => $bracketList,
+            'existingJoint' => $existingJoint,
+            'previousValues' => $previousValues,
+        ]);
     }
 
 
@@ -254,11 +295,27 @@ class OrganizerEventResultsController extends Controller
                 : new Matches;
             $team1 = Team::findOrFail($validatedData['team1_id']);
             $team2 = Team::findOrFail($validatedData['team2_id']);
+            if ($team1->id === $team2->id) {
+                throw new Exception("Same teams can't be provided!");
+            }
             $event = EventDetail::findOrFail($validatedData['event_details_id']);
             $match->fill($validatedData);
             $match->event_details_id = $event->id;
             $match->save();
-    
+
+            $joinEventId = JoinEvent::where('event_details_id', $event->id)
+                ->whereIn('team_id', [$team1->id, $team2->id])
+                ->get()
+                ->pluck(value: 'id');
+
+            $team1->load(['roster' => function($query) use ($joinEventId) {
+                $query->whereIn('join_events_id', $joinEventId)->with('user');
+            }]);
+            
+            $team2->load(['roster' => function($query) use ($joinEventId) {
+                $query->whereIn('join_events_id', $joinEventId)->with('user');
+            }]);
+
             $message = isset($validatedData['id']) 
                 ? 'Match updated successfully' 
                 : 'Match created successfully';

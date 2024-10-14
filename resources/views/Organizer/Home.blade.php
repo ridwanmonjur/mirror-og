@@ -15,6 +15,7 @@
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
+        <input type="hidden" id="endpoint_route" value="{{ route('landing.view') }}">
         <section class="hero">
             <img src="{{ asset('/assets/images/events/ss.png') }}" alt="">
         </section>
@@ -81,37 +82,8 @@
                 </div>
             </a>
             <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
-            
-            <script>
-                
-                var ENDPOINT = "{{ route('landing.view') }}";
-                var page = 1;
-                var search = null;
-                
-                window.addEventListener(
-                    "scroll",
-                    throttle((e) => {
-                        
-                        var windowHeight = window.innerHeight;
-                        var documentHeight = document.documentElement.scrollHeight;
-                        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                        
-                        if (scrollTop + windowHeight >= documentHeight - 200) {
-                            page++;
-                            ENDPOINT = "{{ route('landing.view') }}";
+            <script src="{{ asset('/assets/js/organizer/Home.js') }}"></script>
 
-                            if (!search || String(search).trim() == "") {
-                                search = null;
-                                ENDPOINT += "?page=" + page;
-                            } else {
-                                ENDPOINT += "?search=" + search + "&page=" + page;
-                            }
-                            
-                            infinteLoadMore(null, ENDPOINT);
-                        }
-                    }, 300)
-                );
-            </script>
 
         </section>
     </main>

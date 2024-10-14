@@ -1,82 +1,12 @@
-<div class="tournament-bracket tournament-bracket--rounded  col-lg-3 col-xl-4 col-xxl-6 align-items-start">
+<div class="tournament-bracket tournament-bracket--rounded col-12 col-xl-6 align-items-start">
     <div class="tournament-bracket__round  tournament-bracket__round--gold">
-        <br class="d-none d-lg-block"><br class="d-none d-lg-block"><br>
         <div class="tournament-bracket__list tournament-bracket__joined-list  tournament-bracket__joined-odd-list">
             <div class="tournament-bracket__item tournament">
-            @php
-
-                    foreach ($defaultValues as $key => $defaultValue) {
-                        $bracket[$key] = $bracket[$key] ?? $defaultValue;
-                    }
-
-                    if (isset($bracket['team1Code']) && $bracket['team1Code'] !== 'N/A') {
-                        $bracket['team1Display'] = true;
-                    } else {
-                        $bracket['team1Display'] = false;
-                        $bracket['team1Code'] = 'N/A';
-                    }
-
-                    if (isset($bracket['team2Code']) && $bracket['team2Code'] !== 'N/A') {
-                        $bracket['team2Display'] = true;
-                    } else {
-                        $bracket['team2Display'] = false;
-                        $bracket['team2Code'] = 'N/A';
-                    }
-
-                    if (!$bracket['team1_position']) {
-                        $bracket['team1_position'] = '';
-                        $bracket['team1_positionMobile'] = 'TBD';
-                    } else {
-                        $bracket['team1_positionMobile'] = $bracket['team1_position'];
-                    }
-
-                    if (!$bracket['team2_position']) {
-                        $bracket['team2_position'] = '';
-                        $bracket['team2_positionMobile'] = 'TBD';
-                    } else {
-                        $bracket['team2_positionMobile'] = $bracket['team2_position'];
-                    }
-
-                    $bracket['team1_score'] = $bracket['team1_score'] ?? '0';
-                    $bracket['team2_score'] = $bracket['team2_score'] ?? '0';
-                    $bracket['winner_next_position'] = $bracket['winner_next_position'] ?? 'N/A';
-                    $bracket['loser_next_position'] = $bracket['loser_next_position'] ?? null;
-                @endphp
-
                 <div class="tournament-bracket__match {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} tournament"
                     tabindex="0" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
                     data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}">
-                    <table class="tournament-bracket__table mx-auto">
-                        <thead class="sr-only">
-                            <tr>
-                                <th>Country</th>
-                                <th>Score</th>
-                            </tr>
-                        </thead>
-                        <tbody class="tournament-bracket__content">
-                            <tr class="tournament-bracket__team tournament-bracket__team--winner">
-                                <td
-                                    class="tournament-bracket__country position-relative {{ $bracket['team2_position'] }}">
-                                    <abbr class="tournament-bracket__code position-absolute"
-                                        title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }}</abbr>
-                                </td>
-                                <td
-                                    class="tournament-bracket__country position-relative {{ $bracket['team2_position'] }}">
-                                    <span class="tournament-bracket__number">{{ $bracket['team1_score'] }}</span>
-                                </td>
-                            </tr>
-                            <tr class="tournament-bracket__team">
-                                <td
-                                    class="tournament-bracket__country position-relative {{ $bracket['team2_position'] }}">
-                                    <abbr class="tournament-bracket__code position-absolute"
-                                        title="{{ $bracket['team2_position'] }}">{{ $bracket['team2_position'] }}</abbr>
-                                </td>
-                                <td class="tournament-bracket__score">
-                                    <span class="tournament-bracket__number">{{ $bracket['team2_score'] }}</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                            <x-brackets.bracket-table :bracket="$bracket" />
+
                     <div class="text-center popover-parent   mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
                     >
                         <div class="popover-content d-none-until-hover position-absolute"
@@ -91,8 +21,10 @@
                             <span>{{ $bracket['team2_position'] }}</span>
                         </div>
                         <small class="position-absolute winner-label d-none-until-hover" style="left: 100%;">
-                            <span class="d-none-until-hover" onclick="fillModalInputs(event); event.preventDefault();"
-                                data-bs-toggle="modal" data-bs-target="#winnerMatchModal">
+                            <span 
+                                data-team1_id="{{$bracket['team1_position']}}" data-team2_id="{{$bracket['team2_position']}}"
+                                class="d-none-until-hover" onclick="updateModalShow(event); "
+                                data-bs-toggle="modal" ks>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                     fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                     <path
@@ -115,25 +47,8 @@
         </div>
     </div>
     <div class="tournament-bracket__round tournament-bracket__round--gold d-none d-lg-block">
-        <br><br><br>
         <div class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
             <div class="tournament-bracket__item tournament">
-                @php
-                    if (isset($bracket['team1Code'])) {
-                        $bracket['team1Display'] = true;
-                    } else {
-                        $bracket['team1Display'] = false;
-                        $bracket['team1Code'] = 'N/A';
-                    }
-
-                    $bracket['team1_score'] = $bracket['team1_score'] ?? 'N/A';
-
-                    if (!$bracket['team1_position']) {
-                        $bracket['team1_position'] = '';
-                    }
-
-                @endphp
-
                 <div class="tournament-bracket__match tournament " tabindex="0">
                     <table class="tournament-bracket__table mx-auto">
                         <thead class="sr-only">
@@ -149,7 +64,7 @@
                                         title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }}</abbr>
                                 </td>
                                 <td class="tournament-bracket__score">
-                                    <span class="tournament-bracket__number">{{ $bracket['team1_score'] }}</span>
+                                    <span class="tournament-bracket__number">0</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -163,7 +78,6 @@
                 </div>
             </div>
             <div class="tournament-bracket__round tournament-bracket__round--gold">
-                <br><br><br>
                 <div class="tournament-bracket__list">
                     <div class="tournament-bracket__round tournament-bracket__round--gold">
                     </div>

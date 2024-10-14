@@ -388,8 +388,8 @@
                 </div>
             </div> 
 
-            <div id="filter-search-results" class="d-none">
-                <span class="me-5 cursor-not-allowed" class="">
+            <div id="filter-search-results" class="d-none pb-2">
+                <span class="me-5  pb-2">
                     <small class="me-4">Filter/ Sort: </small>
                     <span class="">
                         <small data-form-parent="default-filter" class="me-2">

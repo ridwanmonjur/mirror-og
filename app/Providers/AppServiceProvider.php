@@ -6,14 +6,18 @@ use App\Console\Commands\RespondTasks;
 use App\Events\JoinEventSignuped;
 use App\Events\TeamMemberCreated;
 use App\Events\TeamMemberUpdated;
+use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Listeners\JoinEventSignupListener;
 use App\Listeners\TeamMemberCreatedListener;
 use App\Listeners\TeamMemberUpdatedListener;
+use App\Services\BracketDataService;
 use App\Models\StripePayment;
+use App\Services\EventMatchService;
 use App\Services\PaymentService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
 use Laravel\Dusk\DuskServiceProvider;
 use Opcodes\LogViewer\Facades\LogViewer;
 
@@ -28,6 +32,10 @@ class AppServiceProvider extends ServiceProvider
             return new PaymentService($app->make(StripePayment::class));
         });
 
+        $this->app->bind(EventMatchService::class, function ($app) {
+            return new EventMatchService($app->make(BracketDataService::class));
+        });
+
         if ($this->app->environment('local', 'testing')){
             $this->app->register(DuskServiceProvider::class);
         }
@@ -38,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        View::share('USER_ACCESS', config('constants.USER_ACCESS'));
         LogViewer::auth(function ($request) {
             if (app()->environment('production')) {
                 return $request->user()

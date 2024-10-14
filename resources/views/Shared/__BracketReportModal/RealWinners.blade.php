@@ -1,0 +1,11 @@
+<div class="mt-2">
+    <div>
+        <img :src="'/storage/' + report.teams[report.realWinners[reportUI.matchNumber]].banner" alt="Team Banner"
+            width="60" height="60" onerror="this.src='{{ asset('assets/images/404.png') }}';"
+            class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
+    </div>
+    <p class="mt-2 d-block">
+        <span x-text="report.teams[report.realWinners[reportUI.matchNumber]].name"> </span>
+        wins this game
+    </p>
+</div>

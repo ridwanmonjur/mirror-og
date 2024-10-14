@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Participant;
 use App\Events\JoinEventSignuped;
 use App\Http\Controllers\Controller;
 use App\Jobs\HandleFollows;
+use App\Models\Achievements;
+use App\Models\AwardResults;
 use App\Models\EventDetail;
+use App\Models\EventInvitation;
+use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\Like;
 use App\Models\OrganizerFollow;
@@ -24,15 +28,21 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\UnauthorizedException;
+use App\Services\EventMatchService;
 
 class ParticipantEventController extends Controller
 {
 
     private $paymentService;
+    private $eventMatchService;
 
-    public function __construct(PaymentService $paymentService)
+    public function __construct(
+        PaymentService $paymentService,
+        EventMatchService $eventMatchService
+    )
     {
         $this->paymentService = $paymentService;
+        $this->eventMatchService = $eventMatchService;
     }
 
     public function home(Request $request)
@@ -67,19 +77,23 @@ class ParticipantEventController extends Controller
         try {
             $user = Auth::user();
             $userId = $user && $user->id ? $user->id : null;
-            $event = EventDetail::with(
-                ['game', 'type' ]
-                ,
-                null
-            )
-                ->withCount(['joinEvents' => function ($q) {
+            $event = EventDetail::findEventWithRelationsAndThrowError(
+                null,
+                $id,
+                null,
+                ['game', 'type',  'joinEvents' => function ($q) {
+                    $q->where('join_status', 'confirmed')->with('team');
+                }],
+                ['joinEvents' => function ($q) {
                     $q->where('join_status', 'confirmed');
-                }])
-                ->find($id);
+                }]
+            );
            
             if (! $event) {
                 throw new ModelNotFoundException("Event not found by id: {$id}");
             }
+            $awardAndTeamList = AwardResults::getTeamAwardResults($id);
+            $achievementsAndTeamList = Achievements::getTeamAchievements($id);
 
             $status = $event->statusResolved();
             if (in_array($status, ['DRAFT', 'PREVEW', 'PENDING'])) {
@@ -87,31 +101,11 @@ class ParticipantEventController extends Controller
                 throw new ModelNotFoundException("Can't display event: {$id} with status: {$lowerStatus}");
             }
 
-            $followersCount = OrganizerFollow::where('organizer_user_id', $event->user_id)->count();
-            $likesCount = Like::where('event_id', $event->id)->count();
+            $followersCount = OrganizerFollow::getFollowersCount($event->user_id);
+            $likesCount = Like::getLikesCount($event->id);
             if ($user && $userId) {
-                // @phpstan-ignore-next-line
-                $user->isFollowing = OrganizerFollow::where('participant_user_id', $userId)
-                    ->where('organizer_user_id', $event->user_id)
-                    ->first();
-
-                // @phpstan-ignore-next-line
-                $user->isLiking = Like::where('user_id', $userId)
-                    ->where('event_id', $event->id)
-                    ->first();
-
-                if ($event->sub_action_private === 'private') {
-                    $checkIfUserIsOrganizerOfEvent = $event->user_id === $userId;
-                    $checkIfUserIsInvited = true;
-                    // phstan correct actually
-                    // @phpstan-ignore-next-line
-                    $checkIfShouldDisallow = ! ($checkIfUserIsOrganizerOfEvent || $checkIfUserIsInvited);
-                    // phstan correct actually
-                    // @phpstan-ignore-next-line
-                    if ($checkIfShouldDisallow) {
-                        throw new UnauthorizedException("This is a provate event and you're neither organizer nor a participant of event");
-                    }
-                }
+                $user->isFollowing = OrganizerFollow::isFollowing($userId, $event->user_id);
+                $user->isLiking = Like::isLiking($userId, $event->id);
 
                 if ($status === 'SCHEDULED') {
                     $checkIfUserIsOrganizerOfEvent = $event->user_id === $userId;
@@ -121,6 +115,19 @@ class ParticipantEventController extends Controller
                 }
 
                 $existingJoint = JoinEvent::getJoinedByTeamsForSameEvent($event->id, $userId);
+                if ($event->sub_action_private === 'private') {
+                    $checkIfUserIsOrganizerOfEvent = $event->user_id === $userId;
+                    $checkIfUserIsInvited = EventInvitation::where([
+                        'team_id' => $existingJoint?->team_id, 
+                        'event_id' => $event->id
+                    ])->exists();
+
+                    $checkIfShouldDisallow = ! ($checkIfUserIsOrganizerOfEvent || $checkIfUserIsInvited);
+                    if ($checkIfShouldDisallow) {
+                        throw new UnauthorizedException("This is a provate event and you're neither organizer nor a participant of event");
+                    }
+                }
+
             } else {
                 if ($event->sub_action_private === 'private') {
                     throw new UnauthorizedException('Login to access this event.');
@@ -128,7 +135,33 @@ class ParticipantEventController extends Controller
                 $existingJoint = null;
             }
 
-            return view('Participant.ViewEvent', compact('event', 'likesCount', 'followersCount', 'user', 'existingJoint'));
+            
+            [
+                'teamList' => $teamList,
+                'matchesUpperCount' => $matchesUpperCount,
+                'bracketList' => $bracketList,
+                'existingJoint' => $existingJoint,
+                'previousValues' => $previousValues
+            ] = $this->eventMatchService->generateBrackets(
+                $event,
+                false, 
+                $existingJoint,
+            );
+
+            return view('Participant.ViewEvent', [
+                    'event' => $event,
+                    'teamList' => $teamList,
+                    'awardAndTeamList' => $awardAndTeamList,
+                    'achievementsAndTeamList' => $achievementsAndTeamList,
+                    'matchesUpperCount' => $matchesUpperCount,
+                    'bracketList' => $bracketList,
+                    'likesCount' => $likesCount, 
+                    'followersCount' => $followersCount, 
+                    'user' => $user, 
+                    'existingJoint' => $existingJoint,
+                    'previousValues' => $previousValues,
+                ]
+            );
         } catch (Exception $e) {
             return $this->showErrorParticipant($e->getMessage());
         }
@@ -439,23 +472,5 @@ class ParticipantEventController extends Controller
         }
     }
 
-    public function showSuccess(Request $request)
-    {
-        // try {
-        //     $user = $request->get('user');
-        //     $userId = $user->id;
-
-        // } catch (ModelNotFoundException|UnauthorizedException $e) {
-        //     return $this->showErrorOrganizer($e->getMessage());
-        // } catch (Exception $e) {
-        //     return $this->showErrorOrganizer("Event can't be retieved with id: $id");
-        // }
-
-        // return view('Participant.RegistrationSuccess', [
-        //     'event' => $event,
-        //     'mappingEventState' => EventDetail::mappingEventStateResolve(),
-        //     'isUser' => $isUserSameAsAuth,
-        //     'livePreview' => 1,
-        // ]);
-    }
+  
 }

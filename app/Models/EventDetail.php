@@ -517,13 +517,17 @@ class EventDetail extends Model
     }
 
     public static function findEventWithRelationsAndThrowError(
-        string| int $userId,
+        string| int | null $userId,
         string| int $id,
-        array| null $relations = null,
+        array| null $where = null,
+        string | array| null $relations = null,
         string | null | array $relationCount = null
     ): EventDetail {
         $relations ??= ['type', 'tier', 'game'];
         $eventQuery = self::with($relations);
+        if ($where !== null) {
+            $eventQuery->where($where);
+        }
 
         if ($relationCount) {
             $eventQuery->withCount($relationCount);
@@ -534,9 +538,11 @@ class EventDetail extends Model
         if (is_null($event)) {
             throw new ModelNotFoundException("Event not found with id: {$id}");
         }
-        if ($event->user_id !== $userId) {
+
+        if ($userId && $event->user_id !== $userId) {
             throw new UnauthorizedException('You cannot view an event of another organizer!');
         }
+        
         return $event;
     }
 

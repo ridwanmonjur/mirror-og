@@ -31,16 +31,15 @@
 }
 
 main {
-    width: 100%;
     min-height: 115vh;
-    height: fit-content;
     display: block !important;
-    padding: 0px 10px;
+    padding: 0px 0px;
     align-items: center;
+    background-size: cover;
     justify-content: center;
     background-image: url("/assets/images/event-management-bg.png");
+    background-repeat: repeat-y no-repeat ;
 }
-
 
 svg{
     position: relative;
@@ -124,8 +123,8 @@ input[type="submit"],
 .grid-container {
     display: grid;
     grid-template-columns: 1fr;
-    grid-gap: 1%;
-    padding: 0% 5%;
+    grid-gap: 0%;
+    padding: 0% 0%;
 }
 
 
@@ -246,14 +245,14 @@ input[type="submit"]:active {
 }
 
 .side-image-absolute-top {
-    position: absolute;
-    bottom: 40vh;
+    position: fixed;
+    top: 10vh;
     rotate: -80deg;
 }
 
 .side-image-absolute-bottom {
-    position: absolute;
-    bottom: 40vh;
+    position: fixed;
+    top: 90vh;
     rotate: -315deg;
 }
 
@@ -331,7 +330,6 @@ input[type="submit"]:active {
 /* Style the buttons inside the tab */
 .tab button {
     background-color: inherit;
-    /* float: left; */
     border: none;
     outline: none;
     cursor: pointer;
@@ -370,13 +368,13 @@ input[type="submit"]:active {
         height: 35vh;
     }
     .side-image-absolute-top{
-        bottom: -10vh;
-        left: -15vh;
+        top: 20vh;
+        left: 0vw;
     }
 
     .side-image-absolute-bottom {
-        bottom: -70vh;
-        right: -15vh;
+        top: 80vh;
+        left: 80vw;
     }
 
     .d-lg-none {
@@ -396,7 +394,7 @@ input[type="submit"]:active {
     }
 
     main {
-        padding: 20px 100px;
+        padding: 20px 0px;
     }
 
     .d-none-at-desktop {
@@ -464,13 +462,7 @@ input[type="submit"]:active {
         grid-template-columns: 0.75fr 4fr 0.75fr;
     }
 
-    .side-image-absolute-bottom {
-        bottom: -70vh;
-    }
-
-    .side-image-absolute-top{
-        bottom: -15vh;
-    }
+   
 }
 
 .svg-fix {
@@ -481,4 +473,19 @@ input[type="submit"]:active {
 .svg-hover:hover {
     cursor: pointer;
     transform: scale(1.1);
+}
+
+.member-table th,
+.member-table td {
+    padding: 8px;
+    text-align: left;
+}
+
+
+tr:nth-child(odd) .colored-cell {
+    background-color: #d0cfcf;
+}
+
+tr:nth-child(even) .colored-cell {
+    background-color: #bdb9b9;
 }

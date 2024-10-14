@@ -1,0 +1,61 @@
+<!-- tournament-bracket-box.blade.php -->
+@props([
+    'position1',
+    'teamBanner1',
+    'teamId1',
+    'position2',
+    'teamBanner2',
+    'teamId2',
+])
+
+<div
+    class="tournament-bracket__box  position-relative mx-auto popover-button tournament bg-light"
+    data-position="{{$position1}}"
+    style="width: 35px; height: 28px;"
+>
+    @if ($teamId1)
+        <img src="{{ asset('storage/' . $teamBanner1) }}" width="33" height="25"
+            onerror="this.src='{{ asset('assets/images/404.png') }}';"
+            class=" position-absolute  object-fit-cover me-2" alt="Team View"
+            style="z-index: 99;"
+            data-position="{{$position1}}" 
+            onclick="reportModalShow(event);" 
+        >
+    @else 
+        <small 
+            data-position="{{$position1}}" 
+            onclick="reportModalShow(event);" 
+            class="ms-1 position-absolute  replace_me_with_image" style="z-index: 99;"
+        >{{$position1}}</small>
+     @endif
+    <span></span>
+     
+    <span></span>
+</div>
+
+
+<div
+    class="tournament-bracket__box  position-relative mx-auto popover-button tournament bg-light"
+    data-position="{{$position2}}"
+    style="width: 35px; height: 28px;"
+>
+    @if ($teamId2)
+        <img src="{{ asset('storage/' . $teamBanner2) }}" width="33" height="25"
+            onerror="this.src='{{ asset('assets/images/404.png') }}';"
+            class=" position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
+            style="z-index: 99;"
+           data-position="{{$position2}}" 
+            onclick="reportModalShow(event);" 
+        >
+        
+    @else 
+        <small class="ms-1 position-absolute replace_me_with_image" 
+            style="z-index: 99;"
+            data-position="{{$position2}}" 
+            onclick="reportModalShow(event);" 
+        >{{$position2}}</small>
+     @endif
+    <span></span>
+     
+    <span></span>
+</div>

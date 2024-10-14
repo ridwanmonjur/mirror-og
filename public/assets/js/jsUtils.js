@@ -157,16 +157,34 @@ async function storeFetchDataInLocalStorage(url) {
     }
 }
 
-function openTab(evt, activeName) {
+function openTab(evt, activeName, specialElemntHeightId = null) {
     var i, tabcontent, tablinks;
+    
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
+        tabcontent[i].style.display = "none";
     }
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-    document.getElementById(activeName).style.display = "block";
+
+    let bodyHeight = document.body.offsetHeight;
+    
+    let activeElement = document.getElementById(activeName);
+    activeElement.style.display = "block";
     evt.currentTarget.className += " active";
-  }
+    
+    if (specialElemntHeightId) {
+        let bracketList = document.getElementById(specialElemntHeightId);
+        let bracketListHeight = bracketList.getBoundingClientRect().height;
+        console.log({bracketList, bracketListHeight});
+        let main = document.querySelector('main');
+        if (main) {
+            main.style.height = bodyHeight + bracketListHeight + 'px';
+        }
+
+        document.body.style.height = bodyHeight + bracketListHeight + 'px';
+    }
+}
+
