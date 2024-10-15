@@ -30,11 +30,11 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_APP_ID,
 };
 
-// const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-// const db = initializeFirestore(app, {
-//     localCache: memoryLocalCache(),
-// });
+const db = initializeFirestore(app, {
+    localCache: memoryLocalCache(),
+});
 
 
 
@@ -51,11 +51,12 @@ function scrollIntoView(length, type="top") {
 
 
 Alpine.data('alpineDataComponent', function () {
-  
+
     const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums').value);
     const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
-    return {
-        userLevelEnums,
+    const eventId = document.getElementById('eventId').value;
+    let initialData = {
+      
         reportUI: {
             matchNumber: 0,
             userTeamId,
@@ -63,10 +64,10 @@ Alpine.data('alpineDataComponent', function () {
             otherTeamNumber: null,
         },
         report: {
+          matchId: null,
           organizerWinners: [null, null, null],
           realWinners: [null, null, null],
           userLevel: null,
-        
           matchStatus: ['ONGOING', null, null],
           teams: [
             {
@@ -111,13 +112,16 @@ Alpine.data('alpineDataComponent', function () {
             resolution: {
 
             },
-            statement: "Hello",
-            videos: [],
-            resolved: null,
 
           }, 
           null
         ],
+    };
+    return {
+        ...initialData,
+      subscribeToMatchStatusesSnapshot: null,
+      subscribeToCurrentReportSnapshot: null,
+      userLevelEnums,
         onSubmitSelectTeamToWin() {
           let teamNumber = this.reportUI.teamNumber;
           let otherTeamNumber = this.reportUI.otherTeamNumber;
@@ -199,51 +203,91 @@ Alpine.data('alpineDataComponent', function () {
             return this.report.teams[this.reportUI.teamNumber].winners[(this.reportUI.matchNumber-1) % 3] === null;
         },
         init() {
+            this.getAllMatchStatusesData();
             window.addEventListener('currentReportChange', (event) => {
+                if (this.subscribeToMatchStatusesSnapshot) this.subscribeToMatchStatusesSnapshot();
+
                 let dataset = event?.detail ?? null;
                 // let teamNumber = dataset.userLevel === userLevelEnums['IS_TEAM1'] ? 0 :
                   // (dataset.userLevel === userLevelEnums['IS_TEAM2'] ? 1 : null );
                 // let otherTeamNumber = teamNumber === null? null : !teamNumber;
                 this.reportUI = {
-                  ...this.reportUI,
+                  ...initialData.reportUI,
                   teamNumber: 0,
                   otherTeamNumber: 1,
                   // teamNumber, 
                   // otherTeamNumber
                 }
+
                 this.report = {
-                    ...this.report,
-                    position: dataset.position,
-                    userLevel: userLevelEnums['IS_TEAM1'],
-                    // userLevel: dataset.user_level,
-                    teams: [
-                        {
-                          ...this.report.teams[0],
-                          winners: this.report.teams[0].winners,
-                          id: dataset.team1_id,
-                          position: dataset.team1_position,
-                          banner: dataset.team1_teamBanner,
-                          name: dataset.team1_teamName 
-                        },
-                        {
-                          ...this.report.teams[0],
-                          winners: this.report.teams[1].winners,
-                          id: dataset.team2_id,
-                          position: dataset.team2_position,
-                          banner: dataset.team2_teamBanner,
-                          name: dataset.team2_teamName 
-                        }
-                      ],
-                        
-                    }
-                });
+                  ...initialData.report,
+                  position: dataset.position,
+                  userLevel: userLevelEnums['IS_TEAM1'],
+                  // userLevel: dataset.user_level,
+                  teams: [
+                      {
+                        ...initialData.report.teams[0],
+                        winners: initialData.report.teams[0].winners,
+                        id: dataset.team1_id,
+                        position: dataset.team1_position,
+                        banner: dataset.team1_teamBanner,
+                        name: dataset.team1_teamName 
+                      },
+                      {
+                        ...initialData.report.teams[0],
+                        winners: initialData.report.teams[1].winners,
+                        id: dataset.team2_id,
+                        position: dataset.team2_position,
+                        banner: dataset.team2_teamBanner,
+                        name: dataset.team2_teamName 
+                      }
+                    ],
+                      
+                  };
+
+                this.getCurrentReportSnapshot(dataset.classNamesWithoutPrecedingDot);
+              });
             },
             destroy() {
-                if (this.roomSnapshot) this.roomSnapshot();
-                for (let snap in this.chatSnapshots) {
-                    snap();
+                if (this.subscribeToMatchStatusesSnapshot) this.subscribeToMatchStatusesSnapshot();
+                // for (let snap in this.chatSnapshots) {
+                //     snap();
+                // }
+            },
+            getAllMatchStatusesData() {
+              const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
+              const allMatchStatusesQ = query(allMatchStatusesCollectionRef);
+              let subscribeToMatchStatusesSnapshot = onSnapshot(allMatchStatusesQ, async (reportSnapshot) => {
+                  reportSnapshot.docChanges().forEach( (change) => {
+                      if (change.type === "added" || change.type === "modified") {
+                        let data = change.doc.data();
+                        console.log({data});
+                        data['id'] = change.doc.id;
+                      }
+                  });
+  
+                  
+              });
+  
+              this.subscribeToMatchStatusesSnapshot = subscribeToMatchStatusesSnapshot;
+          },
+
+          getCurrentReportSnapshot(classNamesWithoutPrecedingDot) {
+            const currentReportRef = doc(db, `event/${eventId}/match_status`, classNamesWithoutPrecedingDot);
+            let subscribeToCurrentReportSnapshot = onSnapshot(
+              currentReportRef, 
+              async (reportSnapshot) => {
+                  if (reportSnapshot.exists()) {
+                    // very first data
+                  console.log("Document data:", reportSnapshot.data());
+                } else {
+                  console.log("No such document!");
                 }
-            }
+              }
+            );
+
+            this.subscribeToCurrentReportSnapshot = subscribeToCurrentReportSnapshot;
+          }
         }
     });
     
@@ -302,48 +346,7 @@ Alpine.data('alpineDataComponent', function () {
           
         // },
         
-        // initDB() {
-           
-        //     const roomCollectionRef = collection(db, 'room');
-
-        //     const roomQ = query(roomCollectionRef,
-        //         or(
-        //             where("user1", "==", String(currentUserId)),
-        //             where("user2", "==", String(currentUserId))
-        //         )
-        //     );
-
-        //     let subscribeToRoomSnapshot = onSnapshot(roomQ, async (rommSnapshot) => {
-        //         rommSnapshot.docChanges().forEach( (change) => {
-        //             if (change.type === "added") {
-        //                 let data = change.doc.data();
-        //                 data['id'] = change.doc.id;
-        //                 if (data.user1 != currentUserId) {
-        //                     userIdList.push(data.user1);
-        //                     data.otherRoomMemberId = data.user1;
-        //                 } else {
-        //                     userIdList.push(data.user2);
-        //                     data.otherRoomMemberId = data.user2;
-        //                 }
-
-        //                 if (isInitialDataFetched) {
-        //                     rooms.unshift(data);
-        //                 } else {
-        //                     rooms.push(data);
-        //                 }
-
-        //                 length++;
-        //             }
-        //             if (change.type === "modified") {
-        //                 console.log("Modified city: ", change.doc.data());
-        //             }
-        //         });
-
-                
-        //     });
-
-        //     this.roomSnapshot = subscribeToRoomSnapshot;
-        // },
+       
         // async handleScrollChat() {
         //     let id =  this.currentRoom;
             

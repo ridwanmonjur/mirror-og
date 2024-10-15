@@ -118,7 +118,7 @@
                     </div>
                     <hr>
                     <div>
-                        <i>** Loser's next match: <span id="loser_next_position_label"> </span></i>
+                        <i>** Loser's next match: <span id="loser_next_position_label"></span></i>
                     </div>
                     <br>
                     <div class="d-flex justify-content-center">

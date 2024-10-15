@@ -17,6 +17,7 @@
 <body>
     <main x-data="alpineDataComponent">
         @include('__CommonPartials.NavbarGoToSearchPage')
+        <input type="hidden" id="eventId" value="{{$event->id}}">
         <input type="hidden" id="previousValues" value="{{json_encode($previousValues)}}">
         <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
         <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">

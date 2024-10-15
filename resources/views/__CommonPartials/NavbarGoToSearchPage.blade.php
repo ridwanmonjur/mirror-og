@@ -184,7 +184,8 @@
             method: 'put',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-type': 'application/json',            },
+                'Content-type': 'application/json',            
+            },
         })
             .then((response) => response.json())
             .then((response) => {
