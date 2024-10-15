@@ -167,5 +167,5 @@
         localStorage.setItem("message", error);
     }
 </script>
-<script src="{{ asset('/assets/js/chat/chat.js') }}"></script>
+<script src="{{ asset('/assets/js/chat.js') }}"></script>
 </html>

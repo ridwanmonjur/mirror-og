@@ -97,7 +97,7 @@
         @endif
     </main>
     
-    <script src="{{ asset('/assets/js/models/DialogForMember.js') }}"></script>
+    <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
 
     <script>
         let tabButtonBalueValue = localStorage.getItem("tab");
