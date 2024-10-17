@@ -22,7 +22,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url("/assets/images/home.png");
+            background-image: url("/assets/images/homepage new bg.png");
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center; 

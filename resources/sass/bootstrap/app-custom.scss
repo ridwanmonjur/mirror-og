@@ -117,8 +117,6 @@ svg{
 .navbar {
     display: flex;
     justify-content: space-between;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
     background-color: white;
     width: 100%;
     z-index: 999;
@@ -173,7 +171,7 @@ nav svg:active {
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 90px;
-    width: 450px;
+    width: 600px;
     max-width: 80vw;
     /* caret-color: #43A4D7;
 color: #43A4D7; */

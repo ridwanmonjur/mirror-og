@@ -10,15 +10,24 @@
         <a class="d-block" href="/event/{{ $event['id'] }}">
             <div style="display: flex; justify-content: center;">
                 <img style="position: absolute !important; top: -35px !important; z-index: 111; border-radius: 60px !important; object-fit: cover;"
-                    width="100" height="100" src="{{ $eventTierLowerImg }}"
+                    width="80" height="80" src="{{ $eventTierLowerImg }}"
                 >
             </div>
             <img src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover" style="min-height: 150px !important; ">
-            <div class="frame1 d-flex justify-content-around flex-wrap">
-                <img src="{{ $bladeEventGameImage }}" class="logo2 mt-2"
-                  onerror="this.onerror=null;this.src='/assets/images/404.png';"   
-                >
-                <button class="event_status_1" style="@php echo $stylesEventStatus; @endphp">{{ $event->statusResolved() }}
+            <div class="frame1 d-flex justify-content-between flex-wrap px-3">
+                <div>
+                    <img 
+                        src="{{ $eventTierLowerImg }}" 
+                        class="pe-3 tierIcon mt-2"
+                        alt=""
+                    >
+                    <img 
+                        src="{{ $bladeEventGameImage }}" 
+                        class="logo2 mt-2 object-fit-cover gameIcon" 
+                        alt=""
+                    >
+                </div>
+                <button class="event_status_1 mt-2" style="@php echo $stylesEventStatus; @endphp">{{ $event->statusResolved() }}
                 </button>
             </div>
             <div class="league_name mt-4">

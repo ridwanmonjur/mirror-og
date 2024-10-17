@@ -2,7 +2,7 @@
 
 @section('signUpbody')
 
-<img src="{{ asset('/assets/images/auth/logo.png') }}">
+<img src="{{ asset('/assets/images/driftwood logo.png') }}">
 <h5 class="mt-2 mb-0"><u>Create an  organizer account</u></h5>
 <form autocomplete="off" readonly name="organizer-signup-form" id="organizer-signup-form" method="post" action="{{route('organizer.signup.action')}}">
     @csrf

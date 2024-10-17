@@ -2,7 +2,7 @@
 
 
 @section('signUpbody')
-    <img src="{{ asset('/assets/images/auth/logo.png') }}">
+    <img src="{{ asset('/assets/images/driftwood logo.png') }}">
     <h5><u class="px-2">Create a participant account</u></h5>
     <form autocomplete="off" readonly name="signup-form" id="signup-form" method="post"
         action="{{ route('participant.signup.action') }}">

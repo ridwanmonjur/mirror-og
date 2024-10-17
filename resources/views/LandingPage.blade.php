@@ -18,8 +18,9 @@
     <main>
         <section class="hero">
             <img 
+                style="max-width: 100%; height: 45vh;"
                 onerror="this.onerror=null;this.src='/assets/images/404.png';"
-                src="{{ asset('/assets/images/ss.png') }}" alt="">
+                src="{{ asset('/assets/images/homepage new header.png') }}" alt="">
         </section>
 
         <div class="text__middle">

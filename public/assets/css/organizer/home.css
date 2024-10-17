@@ -1,6 +1,6 @@
 
 main {
-    background-image: url("/assets/images/events/home_bg.png");
+    background-image: url("/assets/images/homepage new bg.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -223,9 +223,7 @@ footer {
     margin: 0;
 }
 
-.logo2 {
-    height: 50px;
-}
+
 
 .icons {
     height: 10px;

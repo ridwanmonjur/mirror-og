@@ -31,7 +31,7 @@
         <div class="grid-container">
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }}">
-                    <img class="side-image-absolute-bottom" src="{{ $eventTierLowerImg }}" width="180" height="125">
+                    <img class="side-image-absolute-bottom" src="{{ $eventTierLowerImg }}" width="80" height="80">
                 </div>
             @else
                 <div></div>
@@ -220,8 +220,7 @@
             </div>
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }} ">
-                    <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="180"
-                        height="125">
+                    <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="80" height="80">
                 </div>
             @else
                 <div></div>

@@ -20,7 +20,7 @@
             <input type="hidden" id="session_token" value="{{ session('token') }}">
         @endif
         <section class="hero">
-            <img src="{{ asset('/assets/images/ss.png') }}" alt="">
+            <img src="{{ asset('/assets/images/homepage new header.png') }}" alt="">
         </section>
 
         <div class="text__middle">

@@ -238,7 +238,7 @@ class AuthController extends Controller
         DB::table('password_reset_tokens')->updateOrInsert(['email' => $request->email], ['token' => $token, 'expires_at' => Carbon::now()->addDay()]);
 
         Mail::to($email)->queue(new ResetPasswordMail(
-            public_path('assets/images/logo-default.png'), 
+            public_path('assets/images/driftwood logo.png'), 
             $token
         ));
 

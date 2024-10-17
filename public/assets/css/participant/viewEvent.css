@@ -246,7 +246,7 @@ input[type="submit"]:active {
 
 .side-image-absolute-top {
     position: fixed;
-    top: 10vh;
+    top: 20vh;
     rotate: -80deg;
 }
 
@@ -369,12 +369,12 @@ input[type="submit"]:active {
     }
     .side-image-absolute-top{
         top: 20vh;
-        left: 0vw;
+        left: 3vw;
     }
 
     .side-image-absolute-bottom {
         top: 80vh;
-        left: 80vw;
+        left: 85vw;
     }
 
     .d-lg-none {
@@ -462,6 +462,15 @@ input[type="submit"]:active {
         grid-template-columns: 0.75fr 4fr 0.75fr;
     }
 
+    .side-image-absolute-top{
+        top: 20vh;
+        left: 5vw;
+    }
+
+    .side-image-absolute-bottom {
+        top: 80vh;
+        left: vw;
+    }
    
 }
 
