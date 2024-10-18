@@ -2,17 +2,7 @@
 
 use Carbon\Carbon;
 
-function bladeEventStatusStyleMapping($status)
-{
-    $mappingEventState = config('constants.mappingEventState');
-    $status = $status ?? 'DRAFT';
-    $stylesEventStatus = '';
-    $stylesEventStatus .= 'background-color: '.$mappingEventState[$status]['buttonBackgroundColor'].' ;';
-    $stylesEventStatus .= 'color: '.$mappingEventState[$status]['buttonTextColor'].' ; ';
-    $stylesEventStatus .= 'border: 1px solid '.$mappingEventState[$status]['borderColor'].' ; ';
 
-    return $stylesEventStatus;
-}
 
 function bladeGetPaymentLogos($logoType)
 {
@@ -54,7 +44,7 @@ function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants
     if ($ratio > 0.9) {
         $stylesEventRatio .= 'background-color: #EF4444; color: white;';
     } elseif ($ratio === 0) {
-        $stylesEventRatio .= 'background-color: #8CCD39; color: white;';
+        $stylesEventRatio .= 'background-color: #f9b82a; color: white;';
     } elseif ($ratio > 0.5) {
         $stylesEventRatio .= 'background-color: #FA831F; color: white;';
     } elseif ($ratio <= 0.5) {

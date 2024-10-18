@@ -69,7 +69,6 @@ class ParticipantCheckoutController extends Controller
                 'memberId' => $request->memberId,
                 'event' => $event,
                 'discount_wallet' => $discount_wallet,
-                'mappingEventState' => EventDetail::mappingEventStateResolve(),
                 'isUser' => $isUserSameAsAuth,
                 'livePreview' => 1,
                 'paymentMethods' => $paymentMethods,

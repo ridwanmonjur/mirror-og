@@ -2,7 +2,6 @@
 
 @php
     $status = $event->statusResolved();
-    $stylesEventStatus = bladeEventStatusStyleMapping($status);
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
     $tier = $event->tier ? $event->tier?->eventTier : null;
     $eventTierLower = bladeEventTowerLowerClass($tier);
@@ -135,7 +134,7 @@
                         </div>
                         <div class="ps-3">
                             <br><br>
-                            <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
+                            <button class="{{ 'activate-tooltip px-3 py-2 rounded-pill '. 'EventStatus-' .  $status }}" >
                                 <u>{{ $status ?? 'Choose event status' }}</u>
                             </button>
                             <br><br>

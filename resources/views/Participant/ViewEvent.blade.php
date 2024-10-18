@@ -11,12 +11,12 @@
     <title>Tournament Matches </title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/common/event-status.css') }}">
     <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
 </head>
 
 @php
     $status = $event->statusResolved();
-    $stylesEventStatus = bladeEventStatusStyleMapping($status);
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
     $tier = $event->tier ? $event->tier?->eventTier : null;
     $eventTierLower = bladeEventTowerLowerClass($tier);

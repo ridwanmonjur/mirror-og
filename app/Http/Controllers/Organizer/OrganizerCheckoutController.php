@@ -37,7 +37,6 @@ class OrganizerCheckoutController extends Controller
             if (! is_null($event->payment_transaction_id)) {
                 return view('Organizer.CheckoutEventSuccess', [
                     'event' => $event,
-                    'mappingEventState' => EventDetail::mappingEventStateResolve(),
                     'isUser' => $isUserSameAsAuth,
                 ]);
             }
@@ -63,7 +62,6 @@ class OrganizerCheckoutController extends Controller
 
             return view('Organizer.CheckoutEvent', [
                 'event' => $event,
-                'mappingEventState' => EventDetail::mappingEventStateResolve(),
                 'isUser' => $isUserSameAsAuth,
                 'livePreview' => 1,
                 'fee' => $fee,
@@ -118,7 +116,6 @@ class OrganizerCheckoutController extends Controller
 
                     return view('Organizer.CheckoutEventSuccess', [
                         'event' => $event,
-                        'mappingEventState' => EventDetail::mappingEventStateResolve(),
                         'isUser' => true,
                     ]);
                 }

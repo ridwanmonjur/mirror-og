@@ -88,14 +88,10 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(TeamMember::class, 'user_id');
     }
 
-    public function following(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'organizer_follows', 'user_id', 'organizer_id');
-    }
 
     public function follows(): HasMany
     {
-        return $this->hasMany(OrganizerFollow::class, 'user_id');
+        return $this->hasMany(OrganizerFollow::class,  'organizer_user_id');
     }
 
     public function activities(): MorphMany

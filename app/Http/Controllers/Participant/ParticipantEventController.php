@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\UnauthorizedException;
 use App\Services\EventMatchService;
+use Carbon\Carbon;
 
 class ParticipantEventController extends Controller
 {
@@ -56,11 +57,13 @@ class ParticipantEventController extends Controller
 
         $userId = Auth::id();
         $count = 6;
-        $events = EventDetail::generateParticipantFullQueryForFilter($request)->with('tier', 'type', 'game', 'joinEvents')->paginate($count);
+        $currentDateTime = Carbon::now()->utc();
+        $events = EventDetail::landingPageQuery($request, $currentDateTime)
+            ->paginate($count);
+        
 
         $output = [
             'events' => $events,
-            'mappingEventState' => EventDetail::mappingEventStateResolve(),
             'id' => $userId,
         ];
 
