@@ -9,7 +9,7 @@
     </div>
 
 
-    <script src="{{ asset('/assets/js/auth/validity.js') }}"></script>
+    <script src="{{ asset('/assets/js/shared/authValidity.js') }}"></script>
 
 
 </body>

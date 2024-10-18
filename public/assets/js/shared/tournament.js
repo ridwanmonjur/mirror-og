@@ -66,12 +66,15 @@ function reportModalShow(event) {
         throw new Error("Positions missing");
     }
 
-    let parentWithDataset = document.querySelector(`.tournament-bracket__match.${triggerParentsPositionIds.join(".")}`);
+    let classNamesWithoutPrecedingDot = triggerParentsPositionIds.join(".");
+
+    let parentWithDataset = document.querySelector(`.tournament-bracket__match.${classNamesWithoutPrecedingDot}`);
     let dataset = JSON.parse(parentWithDataset.dataset.bracket);
     console.log({dataset, position})
 
     const alpineEvent = new CustomEvent("currentReportChange", {
         detail: {
+            classNamesWithoutPrecedingDot,
             // team1
             team1_position: dataset.team1_position,
             team1_id: dataset.team1_id,

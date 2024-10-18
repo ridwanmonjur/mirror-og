@@ -11,12 +11,12 @@
     <title>Tournament Matches </title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/common/event-status.css') }}">
     <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
 </head>
 
 @php
     $status = $event->statusResolved();
-    $stylesEventStatus = bladeEventStatusStyleMapping($status);
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
     $tier = $event->tier ? $event->tier?->eventTier : null;
     $eventTierLower = bladeEventTowerLowerClass($tier);
@@ -46,11 +46,10 @@
         <div>
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }} ">
-                    <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="180" height="125">
+                    <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="80" height="80">
                 </div>
                 <div class="{{ 'side-image side-image-' . $eventTierLower }}">
-                    <img class="side-image-absolute-bottom" src="{{ $eventTierLowerImg }}" width="180"
-                        height="125">
+                    <img class="side-image-absolute-bottom" src="{{ $eventTierLowerImg }}" width="80" height="80">
                 </div>
             @else
                 <div>

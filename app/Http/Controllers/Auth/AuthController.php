@@ -121,30 +121,11 @@ class AuthController extends Controller
         $count = 6;
         $currentDateTime = Carbon::now()->utc();
 
-        $events = EventDetail::whereNotIn('status', ['DRAFT', 'PENDING'])
-            ->whereNotNull('payment_transaction_id')
-            ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
-            ->where('sub_action_private', '<>', 'private')
-            ->where(function ($query) use ($currentDateTime) {
-                $query
-                    ->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) < ?', [$currentDateTime])
-                    ->orWhereNull('sub_action_public_time')
-                    ->orWhereNull('sub_action_public_date');
-            })
-            ->when($request->has('search'), function ($query) use ($request) {
-                $search = trim($request->input('search'));
-                if (empty($search)) {
-                    return $query;
-                }
-
-                return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
-            })
-            ->with('tier', 'type', 'game')
+        $events = EventDetail::landingPageQuery($request, $currentDateTime)
             ->paginate($count);
 
-        $mappingEventState = EventDetail::mappingEventStateResolve();
 
-        $output = compact('events', 'mappingEventState');
+        $output = compact('events');
 
         if ($request->ajax()) {
             $view = view('__CommonPartials.LandingPageScroll', $output)->render();
@@ -238,7 +219,7 @@ class AuthController extends Controller
         DB::table('password_reset_tokens')->updateOrInsert(['email' => $request->email], ['token' => $token, 'expires_at' => Carbon::now()->addDay()]);
 
         Mail::to($email)->queue(new ResetPasswordMail(
-            public_path('assets/images/logo-default.png'), 
+            public_path('assets/images/driftwood logo.png'), 
             $token
         ));
 

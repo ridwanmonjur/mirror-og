@@ -1,0 +1,105 @@
+/* ERROR State */
+.EventStatus-ERROR {
+    background-color: #EF4444;
+    color: white;
+    border: 1px solid transparent;
+}
+
+/* PENDING State */
+.EventStatus-PENDING {
+    background-color: #EF4444;
+    color: white;
+    border: 1px solid transparent;
+}
+
+/* UPCOMING State */
+.EventStatus-UPCOMING, .EventStatus-UPCOMING-HOME {
+    background-color: #43A4D7;
+    color: white;
+    border: 1px solid transparent;
+}
+
+.EventStatus-UPCOMING-HOME {
+    border: 2px solid rgb(199, 207, 188);
+}
+
+.EventStatus-UPCOMING-HOME svg.ENDED {
+    display: inline;
+}
+
+
+
+/* LIVE State */
+.EventStatus-LIVE {
+    background-color: #43A4D7;
+    color: white;
+    border: 1px solid transparent;
+}
+
+/* SCHEDULED State */
+.EventStatus-SCHEDULED {
+    background-color: #43A4D7;
+    color: white;
+    border: 1px solid transparent;
+}
+
+/* ONGOING State */
+.EventStatus-ONGOING, .EventStatus-ONGOING-HOME {
+    background-color: #FFFBFB;
+    color: black;
+    border: 1px solid black;
+}
+
+.EventStatus-ONGOING-HOME {
+    background-color: #8CCD39;
+    border: 2px solid #cafa8b;
+    color: white;
+}
+
+
+
+.EventStatus-ONGOING-HOME svg.ONGOING {
+    display:inline !important;
+}
+/* DRAFT State */
+.EventStatus-DRAFT {
+    background-color: #f9b82a;
+    color: white;
+    border: 1px solid transparent;
+}
+
+/* PREVIEW State */
+.EventStatus-PREVIEW {
+    background-color: #f9b82a;
+    color: white;
+    border: 1px solid transparent;
+}
+
+/* ENDED State */
+.EventStatus-ENDED, .EventStatus-ENDED-HOME {
+    background-color: #A6A6A6;
+    color: white;
+    border: 1px solid transparent;
+}
+
+.EventStatus-ENDED-HOME {
+    border: 2px solid #A6A6A6;
+}
+
+
+
+.EventStatus-ONGOING-ENDED svg.ENDED {
+    display:inline;
+}
+
+.Color-Turtle {
+    color: #8CCD39;
+}
+
+.Color-Starfish {
+    color: #CE3C39;
+}
+
+.Color-Dolphin{
+    color: #43A4D7;
+}

@@ -2,7 +2,7 @@
 
 @section('signUpbody')
 
-<img src="{{ asset('/assets/images/auth/logo.png') }}">
+<img src="{{ asset('/assets/images/driftwood logo.png') }}">
 <br>
 <h5><u>Success Notification</u></h5>
 <br><br> 

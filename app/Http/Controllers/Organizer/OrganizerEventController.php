@@ -55,7 +55,6 @@ class OrganizerEventController extends Controller
         $count = 8;
         $organizer = Organizer::where('user_id', $userId)->first();
         $eventListQuery = EventDetail::generateOrganizerPartialQueryForFilter($request);
-        $mappingEventState = EventDetail::mappingEventStateResolve();
         $eventList = $eventListQuery
             ->with(['tier', 'type', 'game'])
             ->where('user_id', $user->id)
@@ -80,7 +79,6 @@ class OrganizerEventController extends Controller
             'count',
             'user',
             'organizer',
-            'mappingEventState',
             'eventCategoryList',
             'eventTierList',
             'eventTypeList'
@@ -115,8 +113,7 @@ class OrganizerEventController extends Controller
         $joinEventDetailsMap = $results->pluck('accepted_members_count', 'event_details_id');
         
 
-        $mappingEventState = EventDetail::mappingEventStateResolve();
-        $outputArray = compact('eventList', 'count', 'user', 'organizer', 'mappingEventState');
+        $outputArray = compact('eventList', 'count', 'user', 'organizer');
         $view = view('Organizer.__ManageEventPartials.ManageEventScroll', $outputArray)->render();
 
         return response()->json(['html' => $view], 200);
@@ -165,7 +162,6 @@ class OrganizerEventController extends Controller
             $user = $request->get('user');
             $userId = $user->id;
             $isUserSameAsAuth = true;
-            $mappingEventState = EventDetail::mappingEventStateResolve();
             $livePreview = true;
 
             $event = EventDetail::findEventWithRelationsAndThrowError(
@@ -183,7 +179,6 @@ class OrganizerEventController extends Controller
                 'event',
                 'user',
                 'livePreview',
-                'mappingEventState'
             );
 
             return view('Organizer.ViewEvent', $outputArray);
@@ -223,7 +218,6 @@ class OrganizerEventController extends Controller
 
         return view('Organizer.CreateEventSuccess', [
             'event' => $event,
-            'mappingEventState' => EventDetail::mappingEventStateResolve(),
             'isUser' => $isUserSameAsAuth,
             'livePreview' => 1,
         ]);
@@ -247,7 +241,6 @@ class OrganizerEventController extends Controller
 
             return view('Organizer.ViewEvent', [
                 'event' => $event,
-                'mappingEventState' => EventDetail::mappingEventStateResolve(),
                 'isUser' => true,
                 'livePreview' => 0,
             ]);

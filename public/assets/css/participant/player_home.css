@@ -1,7 +1,7 @@
 /* Reset some default styles */
 
 main {
-    background-image: url("/assets/images/home.png");
+    background-image: url("/assets/images/homepage new bg.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -117,11 +117,10 @@ main {
     position: relative;
     margin: auto;
     margin-bottom: 40px;
-    min-height: 470px;
+    min-height: 450px;
     width: min(360px, 80vw);
-    background: transparent;
-    border: 2px solid rgb(82, 159, 23);
-    border-radius: 40px;
+    border: 4px solid rgb(82, 159, 23);
+    border-radius: 42px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -331,8 +330,14 @@ footer {
     margin: 0;
 }
 
-.logo2 {
-    height: 50px;
+.tierIcon {
+    width: 50px;
+    height: 40px;
+}
+
+.gameIcon {
+    width: 40px;
+    height: 40px;
 }
 
 .icons {
@@ -454,7 +459,7 @@ footer {
     .nav__items {
         display: flex;
     }
-
+   
     .nav__items ul {
         flex-direction: row;
     }

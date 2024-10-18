@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @include('__CommonPartials.HeadIcon')
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/common/event-status.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
     <link rel=" stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Splash</title>
-
 </head>
 
 <body>
@@ -18,8 +18,9 @@
     <main>
         <section class="hero">
             <img 
+                style="max-width: 100%; height: 45vh;"
                 onerror="this.onerror=null;this.src='/assets/images/404.png';"
-                src="{{ asset('/assets/images/ss.png') }}" alt="">
+                src="{{ asset('/assets/images/homepage new header.png') }}" alt="">
         </section>
 
         <div class="text__middle">

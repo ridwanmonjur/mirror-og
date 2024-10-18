@@ -2,9 +2,7 @@
     
     @php
         $status = $event->statusResolved();
-        $stylesEventStatus = bladeEventStatusStyleMapping($status);
-        $stylesEventStatus .= 'padding-top: -150px; ';
-        $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
+        $stylesEventRatio = bladeEventRatioStyleMapping($event->join_events_count, $event->tierTeamSlot);
         $tier = $event->tier ? $event->tier?->eventTier : null;
         $eventTierLower = bladeEventTowerLowerClass($tier);
         
@@ -42,8 +40,8 @@
                         class="object-fit-cover"
                     >
                     <button data-bs-toggle="tooltip" data-bs-html="true" title="{{ $toolTip }}"
-                        class="activate-tooltip oceans-gaming-default-button"
-                        style="@php echo $stylesEventStatus; @endphp text-align: left; font-size: 0.875rem;">
+                        class="{{ 'activate-tooltip px-3 py-2 rounded-pill '. 'EventStatus-' .  $status }}"
+                        style="padding-top: -150px; text-align: left; font-size: 0.875rem;">
                         <u> {{ $status }} </u>
                     </button>
                     <button style="@php echo $stylesEventRatio; @endphp"
@@ -52,7 +50,7 @@
                         >
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-user">
+                            stroke-linejoin="round" class="feather mt-1 feather-user">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
@@ -74,8 +72,8 @@
                 <p class="card-text-2-lines">
                     <u>{{ $event->eventName ?? 'Choose a name' }}</u></p>
                 <p class="small-text"><i>
-                        {{ $organizer->companyName ?? 'Choose organization name' }}
-                    </i></p>
+                    {{ $organizer->companyName ?? 'Choose organization name' }}
+                </i></p>
                 <div class="flexbox-welcome">
                     <div>@php echo $dateStr; @endphp</div>
                 </div>

@@ -245,14 +245,12 @@ input[type="submit"]:active {
 }
 
 .side-image-absolute-top {
-    position: fixed;
-    top: 10vh;
+    position: absolute;
     rotate: -80deg;
 }
 
 .side-image-absolute-bottom {
-    position: fixed;
-    top: 90vh;
+    position: absolute;
     rotate: -315deg;
 }
 
@@ -368,13 +366,13 @@ input[type="submit"]:active {
         height: 35vh;
     }
     .side-image-absolute-top{
-        top: 20vh;
-        left: 0vw;
+        top: 0vh;
+        left: 3vw;
     }
 
     .side-image-absolute-bottom {
-        top: 80vh;
-        left: 80vw;
+        top: 60vh;
+        right: 3vw;
     }
 
     .d-lg-none {
@@ -462,7 +460,6 @@ input[type="submit"]:active {
         grid-template-columns: 0.75fr 4fr 0.75fr;
     }
 
-   
 }
 
 .svg-fix {

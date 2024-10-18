@@ -1,4 +1,4 @@
- <script src="{{ asset('/assets/js/models/FetchVariables.js') }}"></script>
+ <script src="{{ asset('/assets/js/organizer/FetchVariables.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/litepicker@2.0/dist/litepicker.min.js"></script>
 
  <script>

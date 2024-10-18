@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Exceptions\TimeGreaterException;
+use DateTime;
+use DateTimeZone;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -208,9 +210,38 @@ class EventDetail extends Model
             ->utc();
     }
 
-    public static function mappingEventStateResolve(): array
+    function startDatesReadableForLanding(bool $willShowCountDown): array
     {
-        return config('constants.mappingEventState');
+        $now = new DateTime('now', new DateTimeZone('UTC'));
+        $startsIn = null;
+        if ($this->startDate !== null && $this->startTime !== null) {
+            $startTime = $this->fixTimeToRemoveSeconds($this->startTime);
+            $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $this->startDate.' '.$startTime, 'UTC') ?? null;
+            
+            if ($carbonDateTimeUtc) {
+                // $carbonDateTimeUtc = $carbonDateTimeUtc->setTimezone('Asia/Singapore');
+                $formattedDate = $carbonDateTimeUtc->format('d M y');
+                $formattedTime = $carbonDateTimeUtc->format('g:i A');
+                
+                if ($willShowCountDown) {
+                    $diff = $now->diff($carbonDateTimeUtc);
+                    if ($diff->days > 0 ) {
+                        $startsIn .= $diff->days . 'd ';
+                    }
+                    $startsIn .= $diff->h . 'h';
+                } 
+            } 
+        } else {
+            $formattedDate = 'Date not set';
+            $formattedTime = 'Time not set';
+            $startsIn = 'N/A';
+        }
+
+        return [
+            'formattedStartDate' => $formattedDate,
+            'formattedStartTime' => $formattedTime,
+            'formmattedStartsIn' => $startsIn,
+        ];
     }
 
     public function getRegistrationState(string| null $date, string| null $time): ?string
@@ -291,6 +322,38 @@ class EventDetail extends Model
         });
 
         return $eventListQuery;
+    }
+
+    public static function landingPageQuery(Request $request, $currentDateTime) {
+        return self::whereNotIn('status', ['DRAFT', 'PENDING'])
+        ->whereNotNull('payment_transaction_id')
+        ->where('sub_action_private', '<>', 'private')
+        ->where(function ($query) use ($currentDateTime) {
+            $query
+                ->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) < ?', [$currentDateTime])
+                ->orWhereNull('sub_action_public_time')
+                ->orWhereNull('sub_action_public_date');
+        })
+        ->when($request->has('search'), function ($query) use ($request) {
+            $search = trim($request->input('search'));
+            if (empty($search)) {
+                return $query;
+            }
+
+            return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
+        })
+        ->with(['tier', 'type', 'game'])
+        ->with(['user' => function($q) {
+            $q->select('id')
+              ->with(['organizer' => function ($innerQ) {
+                  $innerQ->select(['id', 'user_id', 'companyName']);
+              }])
+              ->withCount('follows');
+        }])
+        ->withCount(
+        ['joinEvents' => function ($q) {
+            $q->where('join_status', 'confirmed');
+        }]);
     }
 
     public static function generateOrganizerFullQueryForFilter(Request $request)

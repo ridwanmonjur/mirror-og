@@ -20,11 +20,9 @@
         $routeLogo = route('landing.view');
     }
 @endphp
-<nav class="navbar px-3">
+<nav class="navbar px-3 py-3 py-lg-2">
     <a href="{{ $routeLogo }}">
-        <div class="logo">
-            <img width="160px" height="60px" src="{{ asset('/assets/images/logo-default.png') }}" alt="">
-        </div>
+        <img width="150" height="30" src="{{ asset('/assets/images/driftwood logo.png') }}" alt="">
     </a>
     <svg style="margin-top: 10px; margin-right: 10px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -36,7 +34,7 @@
     <div class="search-bar d-none-at-mobile">
         <input type="text" name="search" id="search-bar"
             value="{{app('request')->input('search')}}"
-            placeholder="Search for events">
+            placeholder="Search for events...">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" class="feather feather-search">
@@ -56,12 +54,12 @@
         @endauth
     </div>
 </nav>
-<nav class="mobile-navbar d-centered-at-mobile d-none" id="mobile-navbar">
+<nav class="mobile-navbar d-centered-at-mobile d-none py-3" id="mobile-navbar">
     <div class="search-bar search-bar-mobile ">
         <input
             type="text" name="search" id="search-bar-mobile"
             value="{{app('request')->input('search')}}"
-            placeholder="Search for events">
+            placeholder="Search for events...">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" class="feather feather-search" style="left: 40px;">
@@ -184,7 +182,8 @@
             method: 'put',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-type': 'application/json',            },
+                'Content-type': 'application/json',            
+            },
         })
             .then((response) => response.json())
             .then((response) => {

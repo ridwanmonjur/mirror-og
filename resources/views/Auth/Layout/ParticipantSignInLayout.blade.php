@@ -4,7 +4,7 @@
 @section('signInbody')
 
 
-<img src="{{ asset('/assets/images/auth/logo.png') }}">
+<img src="{{ asset('/assets/images/driftwood logo.png') }}">
 <h5 class="px-2"><u>Sign in to your participant account</u></h5>
 <form 
     autocomplete="off" 

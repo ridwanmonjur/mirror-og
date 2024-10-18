@@ -2,7 +2,6 @@
 
 @php
     $status = $event->statusResolved();
-    $stylesEventStatus = bladeEventStatusStyleMapping($status);
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
     $tier = $event->tier ? $event->tier?->eventTier : null;
     $eventTierLower = bladeEventTowerLowerClass($tier);
@@ -31,7 +30,7 @@
         <div class="grid-container">
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }}">
-                    <img class="side-image-absolute-bottom" src="{{ $eventTierLowerImg }}" width="180" height="125">
+                    <img class="side-image-absolute-bottom" src="{{ $eventTierLowerImg }}" width="80" height="80">
                 </div>
             @else
                 <div></div>
@@ -135,7 +134,7 @@
                         </div>
                         <div class="ps-3">
                             <br><br>
-                            <button class="oceans-gaming-default-button" style="@php echo $stylesEventStatus; @endphp">
+                            <button class="{{ 'activate-tooltip px-3 py-2 rounded-pill '. 'EventStatus-' .  $status }}" >
                                 <u>{{ $status ?? 'Choose event status' }}</u>
                             </button>
                             <br><br>
@@ -220,8 +219,7 @@
             </div>
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }} ">
-                    <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="180"
-                        height="125">
+                    <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="80" height="80">
                 </div>
             @else
                 <div></div>

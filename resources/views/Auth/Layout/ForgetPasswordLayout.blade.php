@@ -2,7 +2,7 @@
 
 @section('signUpbody')
 
-<img src="{{ asset('/assets/images/auth/logo.png') }}">
+<img src="{{ asset('/assets/images/driftwood logo.png') }}">
 <br>
 <header><u>Forgotten Password?</u></header>
 <br><br>
