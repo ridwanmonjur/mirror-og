@@ -21,14 +21,12 @@
         <input type="hidden" id="previousValues" value="{{json_encode($previousValues)}}">
         <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
         <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
-        {{-- {{$id}}
-        {{$eventType}} --}}
         <div id="" >
             @include('Organizer.__ManageEventPartials.BracketUpdateList')
         </div>
         @livewireScripts
         <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
-    <script src="{{ asset('/assets/js/shared/tournament.js') }}"></script>
+        <script src="{{ asset('/assets/js/shared/tournament.js') }}"></script>
 
     </main>
 </body>

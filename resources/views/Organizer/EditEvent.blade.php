@@ -35,7 +35,4 @@
         </main>
         
         @include('Organizer.__CreateEditPartials.CreateEventScripts')
-        <script>
-
-        </script>
     </body>

@@ -200,7 +200,7 @@ function setAllNotificationsRead(event) {
      fetch(url, {
         method: 'put',
         headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             ...window.loadBearerCompleteHeader()
         },
     })
@@ -287,3 +287,14 @@ document.getElementById('load-more')?.addEventListener('click', function(event) 
             }
         });
 });
+
+function getUrl(inputId, id = null) {
+    let url = document.getElementById(inputId).value;
+    if (url === null) {
+        console.error("Null input: ", url);
+    }
+    if (id !== null) {
+        url = url.replace(':id', id);
+    }
+    return url;
+}

@@ -1,6 +1,3 @@
-{{-- @php
-    dd($previousValues);
-@endphp --}}
 <input type="hidden" id="eventId" value="{{$event->id}}">
 <input type="hidden" id="previousValues" value="{{ json_encode($previousValues) }}">
 <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">

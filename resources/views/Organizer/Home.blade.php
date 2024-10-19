@@ -85,7 +85,6 @@
             <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
             <script src="{{ asset('/assets/js/organizer/Home.js') }}"></script>
 
-
         </section>
     </main>
 </body>

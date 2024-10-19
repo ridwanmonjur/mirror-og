@@ -13,6 +13,7 @@
 
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
+    <input type="hidden" id="eventUrl" value="{{ route('participant.event.view', $id) }}">
     <main>
         <div class="time-line-box mx-auto" id="timeline-box">
             <div class="swiper-container ps-5 text-center">
@@ -152,56 +153,8 @@
                 onclick=""> Next > </button>
         </div>
     </main>
-    <script>
-        function goToCancelButton() {
-            let url = "{{ route('participant.event.view', $id) }}";
-            window.location.href = url;
-        }
-
-        function toggleDropdown() {
-            var dropdown = document.querySelector(".dropdown-content");
-            dropdown.classList.toggle("show");
-        }
-
-        function filterTeams() {
-            var input = document.getElementById("teamSearch").value.toLowerCase();
-            var teams = document.getElementById("teamList");
-            var teamDivs = teams.getElementsByTagName("div");
-
-            for (var i = 0; i < teamDivs.length; i++) {
-                var teamName = teamDivs[i].querySelector("a").textContent.toLowerCase();
-                var teamLogo = teamDivs[i].querySelector("img");
-
-                if (teamName.includes(input)) {
-                    teamDivs[i].style.display = "block";
-                    teamLogo.style.display = "block";
-                } else {
-                    teamDivs[i].style.display = "none";
-                    teamLogo.style.display = "none";
-                }
-            }
-        }
-
-        function selectOption(element, label, teamId) {
-            const dropdownButton = document.querySelector(".dropdown .dropbtn");
-            dropdownButton.classList.add('selected');
-
-            const selectedTeamLabel = document.getElementById("selectedTeamLabel");
-            selectedTeamLabel.textContent = label;
-
-            const selectedTeamInput = document.querySelector('input[name="selectedTeamId"]');
-            selectedTeamInput.value = teamId;
-            closeDropDown(dropdownButton);
-            document.querySelector('button[disabled]').removeAttribute('disabled');
-        }
-
-        function closeDropDown(button) {
-            const dropdownContent = button.nextElementSibling;
-            dropdownContent.classList.remove('show');
-        }
-    </script>
-    
-
+    <script src="{{ asset('/assets/js/participant/SelectTeamToRegister.js') }}"></script>
+        
 </body>
 
 </html>
