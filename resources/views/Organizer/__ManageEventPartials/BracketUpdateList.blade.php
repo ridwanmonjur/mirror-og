@@ -1,7 +1,7 @@
 <div id="bracket-list" class="position-absolute" style="overflow-x: visible; overflow-y: visible;">
-    @include('Shared.__BracketModal.Report')
-    @include('Shared.__BracketModal.Update')
-    @include('Shared.__BracketModal.Dispute')
+    @include('___CommonPartials.__BracketModal.Report')
+    @include('___CommonPartials.__BracketModal.Update')
+    @include('___CommonPartials.__BracketModal.Dispute')
  
     <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
     <div class="row mb-2">
