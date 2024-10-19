@@ -24,7 +24,7 @@
 }
 
 .EventStatus-UPCOMING-HOME svg.ENDED {
-    display: inline;
+    display: inline !important;
 }
 
 
