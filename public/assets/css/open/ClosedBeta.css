@@ -27,3 +27,17 @@ body {
 .icon-bg-purple {
     background-color: #a78bfa;
 }
+
+
+@media screen and (min-width: 1000px) {
+    body {
+        max-height: 100vh;
+        overflow-y: hidden;
+    }
+
+    .description-section {
+        background-position: bottom;
+        min-height: 420px;
+        width: 100vw;
+    }
+}

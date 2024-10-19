@@ -7,35 +7,12 @@
 @endpush
 
 @section('content')
-    <!-- Header Section with White Navbar -->
-    {{-- <header class="bg-white shadow-sm">
-        <nav class="navbar navbar-expand-lg navbar-light">
-            <div class="container">
-                <a class="navbar-brand" href="#">
-                    <img src="{{ asset('landing page assets/driftwood logo.png') }}" alt="Driftwood Logo" width="150" height="150">
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-primary fw-semibold" href="{{ route('landing') }}">CLOSED BETA</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="{{ route('about') }}">ABOUT</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="{{ route('contact') }}">CONTACT US</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header> --}}
+    <header>
+        @include('__CommonPartials.NavbarBeta')
+    </header>
 
     <!-- Main Content -->
-    <main class="flex-grow-1">
+    <main >
         <!-- Hero Section -->
         <section class="hero-section py-5">
             <div class="container">

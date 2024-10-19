@@ -8,20 +8,10 @@
     <title>@yield('title', 'Driftwood')</title>
     @stack('styles')
     
+
 </head>
-<body class="d-flex flex-column min-vh-100">
-    <header>
-        @include('__CommonPartials.NavbarBeta')
-    </header>
-
-    <main class="flex-grow-1">
-        @yield('content')
-    </main>
-
-    {{-- <footer>
-        @include('partials.footer')
-    </footer> --}}
-
+<body class="">
+    @yield('content')
     @stack('scripts')
     <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
 </body>

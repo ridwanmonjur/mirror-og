@@ -34,7 +34,7 @@
     
     <div class="nav-buttons">
         <li class="nav-item" style="list-style-type: none;">
-            <a class="nav-link text-primary fw-semibold" href="{{ route('public.landing.view') }}">CLOSED BETA</a>
+            <a class="nav-link text-primary fw-semibold" href="{{ route('public.closedBeta.view') }}">CLOSED BETA</a>
         </li>
         <li class="nav-item" style="list-style-type: none;">
             <a class="nav-link text-dark" href="{{ route('public.about.view') }}">ABOUT</a>

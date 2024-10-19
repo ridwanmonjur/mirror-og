@@ -5,7 +5,9 @@
 @import './bootstrap/bootstrap.css';
 @import 'tippy.js/dist/tippy.css';
 @import 'tippy.js/themes/light.css';
-
+  .text-justify {
+    text-align: justify;
+  }
   .tippy-box[data-theme~='light'] {
     background-color: #F8F7F0;
   }
