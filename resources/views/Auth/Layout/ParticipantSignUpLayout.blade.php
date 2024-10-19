@@ -53,7 +53,7 @@
 
         <input type="submit" value="Register">
 
-        <div class="sign-txt">By continuing, you agree to Splash's <a href="#">Terms of Use</a>. Read our <a
+        <div class="sign-txt">By continuing, you agree to Driftwood's <a href="#">Terms of Use</a>. Read our <a
                 href="#">Privacy Policy</a>.</div>
 
         <div class="section-bottoms">

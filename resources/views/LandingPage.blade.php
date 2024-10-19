@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/common/event-status.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
-    <link rel=" stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Splash</title>
+    <title>Driftwood</title>
 </head>
 
 <body>
@@ -41,7 +40,7 @@
         
         <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
         <script>
-            var ENDPOINT = "{{ route('landing.view') }}";
+            var ENDPOINT = "{{ route('public.landing.view') }}";
             var page = 1;
             let fetchedPage = 1;
             var search = null;
@@ -55,7 +54,7 @@
                     
                     if (scrollTop + windowHeight >= documentHeight - 200) {
                         page++;
-                        ENDPOINT = "{{ route('landing.view') }}";
+                        ENDPOINT = "{{ route('public.landing.view') }}";
                        
                         if (!search || String(search).trim() == "") {
                             search = null;

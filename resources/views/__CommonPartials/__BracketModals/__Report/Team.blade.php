@@ -1,5 +1,5 @@
 <div>
-    @include('Shared.__BracketReportModal.ExistingChoices')
+    @include('__CommonPartials.__BracketModals.__Report.ExistingChoices')
     <template x-if="!report.realWinners[reportUI.matchNumber]">
         <div>
             <template
@@ -62,7 +62,7 @@
                                     </div>
                             </template>
                             <template x-if="report.realWinners[reportUI.matchNumber]">
-                                @include('Shared.__BracketReportModal.RealWinners')
+                                @include('__CommonPartials.__BracketModals.__Report.RealWinners')
                             </template>
                         </div>
                     </template>
@@ -72,7 +72,7 @@
                 x-if="!report.teams[reportUI.teamNumber].winners[reportUI.matchNumber]"
             >
                 <div class="mt-2">
-                    @include('Shared.__BracketReportModal.PickWinners')
+                    @include('__CommonPartials.__BracketModals.__Report.PickWinners')
                 </div>
             </template>
             <template
@@ -81,14 +81,14 @@
                 "
             >
                 <div class="mt-2">
-                     @include('Shared.__BracketReportModal.PendingWinners')
+                     @include('__CommonPartials.__BracketModals.__Report.PendingWinners')
                 </div>
             </template>
         </div>
     </template>
     <template x-if="!dispute[reportUI.matchNumber] && report.realWinners[reportUI.matchNumber]">
         <div>
-            @include('Shared.__BracketReportModal.RealWinners')
+            @include('__CommonPartials.__BracketModals.__Report.RealWinners')
         </div>
     </template>
 </div>

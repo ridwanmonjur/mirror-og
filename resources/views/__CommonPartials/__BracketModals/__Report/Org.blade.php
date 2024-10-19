@@ -1,5 +1,5 @@
 <div>
-    @include('Shared.__BracketReportModal.ExistingChoices')
+    @include('__CommonPartials.__BracketModals.__Report.ExistingChoices')
     <template x-if="!report.realWinners[reportUI.matchNumber] && !dispute[reportUI.matchNumber]">
         <div>
             <div>
@@ -22,7 +22,7 @@
                     </div>   
                 </template>
             </div>
-            @include('Shared.__BracketReportModal.PickWinners')         
+            @include('__CommonPartials.__BracketModals.__Report.PickWinners')         
         </div>
     </template>
     <template x-if="dispute[reportUI.matchNumber]">
@@ -46,7 +46,7 @@
                     </p>
                     <template x-if="report.realWinners[reportUI.matchNumber]">
                         <div>
-                            @include('Shared.__BracketReportModal.RealWinners')
+                            @include('__CommonPartials.__BracketModals.__Report.RealWinners')
                         </div>
                     </template>
                 </div>
@@ -63,14 +63,14 @@
                             > Show dispute </button>
                         </div>
                     </div>
-                    @include('Shared.__BracketReportModal.PendingWinners')
+                    @include('__CommonPartials.__BracketModals.__Report.PendingWinners')
                 </div>
             </template>
         </div>
     </template>
     <template x-if="!dispute[reportUI.matchNumber] && report.realWinners[reportUI.matchNumber]">
         <div>
-            @include('Shared.__BracketReportModal.RealWinners')
+            @include('__CommonPartials.__BracketModals.__Report.RealWinners')
             <div class="d-flex justify-content-center">
                 <button class="btn btn-sm border rounded-pill text-primary border-primary me-3" x-on:click="onChangeTeamToWin"> Change Declaration </button>
             </div>

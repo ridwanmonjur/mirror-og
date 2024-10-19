@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.hero-section {
+    background-color: #94a3b8;
+}
+
+.description-section {
+    background-image: url('/assets/images/landing page assets/landing page bg.png');
+    background-size: cover;
+    background-position: bottom;
+    min-height: 500px;
+    width: 100vw;
+}
+
+.icon-bg-yellow {
+    background-color: #fde047;
+}
+
+.icon-bg-emerald {
+    background-color: #34d399;
+}
+
+.icon-bg-purple {
+    background-color: #a78bfa;
+}
+
+
+@media screen and (min-width: 1000px) {
+    body {
+        max-height: 100vh;
+        overflow-y: hidden;
+    }
+
+    .description-section {
+        background-position: bottom;
+        min-height: 420px;
+        width: 100vw;
+    }
+}

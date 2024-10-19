@@ -141,7 +141,7 @@
     }
 
     document.getElementById("{{ 'followForm' . $joinEvent->id . $random_int }}").addEventListener('submit',
-    async function(event) {
+        async function(event) {
             event.preventDefault();
             event.stopPropagation();
             let followButtons = document.getElementsByClassName(

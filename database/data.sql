@@ -31,7 +31,7 @@ INSERT INTO participants (created_at,updated_at,user_id) VALUES
 
 
 INSERT INTO `organizers` (`id`, `companyName`, `companyDescription`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Splash Test', 'Good Company', '2023-11-05 20:44:22', '2023-11-05 20:44:22', 1),
+(1, 'Driftwood Test', 'Good Company', '2023-11-05 20:44:22', '2023-11-05 20:44:22', 1),
 (2, 'Oceans Gaming Co', 'Cool Water Gaming', '2023-11-06 07:42:08', '2023-11-06 07:42:08', 1),
 (3, 'Human', 'Good', '2023-11-06 17:45:20', '2023-11-06 17:45:20', 1),
 (4, 'ridwanmonjur@gmail.com', 'ridwanmonjur@gmail.com', '2023-11-10 10:02:24', '2023-11-10 10:02:24', 1);

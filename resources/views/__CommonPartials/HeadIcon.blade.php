@@ -6,6 +6,7 @@
 
 <!-- Fallback favicon -->
 <link rel="icon" href="{{ asset('assets/images/driftwood logo.png') }}" type="image/x-icon">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!-- Open Graph meta tags -->
 <meta property="og:title" content="Driftwood Gaming">

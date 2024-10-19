@@ -1,12 +1,9 @@
-{{-- @php
-    dd($previousValues);
-@endphp --}}
 <input type="hidden" id="eventId" value="{{$event->id}}">
 <input type="hidden" id="previousValues" value="{{ json_encode($previousValues) }}">
 <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
 <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
-@include('Shared.bracket-report-modal')
-@include('Shared.bracket-dispute-modal')
+@include('__CommonPartials.__BracketModals.Report')
+@include('__CommonPartials.__BracketModals.Dispute')
 <div id="bracket-list" class="position-absolute" style="overflow-x: visible; overflow-y: visible;">
    
     <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
