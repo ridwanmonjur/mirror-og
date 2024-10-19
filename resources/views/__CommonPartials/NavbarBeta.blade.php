@@ -1,0 +1,75 @@
+@auth
+    @php
+        if (!isset($user)) {
+            $user = auth()->user();
+        }
+    @endphp
+@endauth
+@php
+    if (isset($user)) {
+        $role = $user->role;
+        if ($role == 'PARTICIPANT') {
+            $routeLogo = route('landing.view');
+        } else if ($role == 'ORGANIZER') {
+            $routeLogo = route('organizer.home.view');
+        }
+        else {
+            $routeLogo = route('landing.view');
+        }
+    } else {
+        $routeLogo = route('landing.view');
+    }
+@endphp
+<nav class="navbar px-3 py-3 py-lg-2">
+    <a href="{{ $routeLogo }}">
+        <img width="150" height="30" src="{{ asset('/assets/images/driftwood logo.png') }}" alt="">
+    </a>
+    <svg style="margin-top: 10px; margin-right: 10px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" class="feather feather-menu menu-toggle" onclick="toggleNavbar()">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+    
+    <div class="nav-buttons">
+       
+    </div>
+</nav>
+<nav class="mobile-navbar d-centered-at-mobile d-none py-3" id="mobile-navbar">
+    <div class="search-bar search-bar-mobile ">
+        <input
+            type="text" name="search" id="search-bar-mobile"
+            value="{{app('request')->input('search')}}"
+            placeholder="Search for events...">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" class="feather feather-search" style="left: 40px;">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+    </div>
+    <div class="nav-buttons search-bar-mobile d-centered-at-mobile py-2">
+        
+    </div>
+    <div class="text-center cursor-pointer mb-2"
+        onclick="
+            let element = document.getElementById('mobile-navbar');
+            console.log({element})
+            if (element) element.classList.toggle('d-none');
+        "
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#43A4D7" class="bi bi-x-circle d-inline" viewBox="0 0 16 16"
+        >
+        <path stroke-width="0.9" d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+        <path stroke-width="0.9" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+        </svg>
+        <span class="ms-1 py-1 text-primary"><b>Close</b></span>
+    </div>
+</nav>
+<script src="{{ asset('/assets/js/shared/jsUtils.js') }}"></script>
+@if (isset($search))
+    <script src="{{ asset('/assets/js/shared/navbarSearchResults.js') }}"></script>
+@else
+    <script src="{{ asset('/assets/js/shared/navbarGoToSearch.js') }}"></script>
+@endif

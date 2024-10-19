@@ -49,9 +49,6 @@
             @include('__CommonPartials.__Navbar.NavbarGuest')
         @endguest
         @auth
-            @if (isset($user) && $user->role == 'PARTICIPANT')
-                @include('__CommonPartials.__Navbar.WhereIsMoop')
-            @endif
             @include('__CommonPartials.__Navbar.NavbarAuth')
         @endauth
     </div>
