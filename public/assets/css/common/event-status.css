@@ -88,8 +88,8 @@
 
 
 
-.EventStatus-ONGOING-ENDED svg.ENDED {
-    display:inline;
+.EventStatus-ENDED-HOME svg.ENDED {
+    display:inline !important;
 }
 
 .Color-Turtle {
