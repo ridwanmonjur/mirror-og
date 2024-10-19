@@ -2,8 +2,8 @@
 <input type="hidden" id="previousValues" value="{{ json_encode($previousValues) }}">
 <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
 <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
-@include('___CommonPartials.__BracketModal.Report')
-@include('___CommonPartials.__BracketModal.Dispute')
+@include('__CommonPartials.__BracketModals.Report')
+@include('__CommonPartials.__BracketModals.Dispute')
 <div id="bracket-list" class="position-absolute" style="overflow-x: visible; overflow-y: visible;">
    
     <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>

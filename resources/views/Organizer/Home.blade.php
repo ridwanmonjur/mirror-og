@@ -16,7 +16,7 @@
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
-        <input type="hidden" id="endpoint_route" value="{{ route('landing.view') }}">
+        <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
         <section class="hero">
             <img src="{{ asset('/assets/images/events/homepage new header.png') }}" alt="">
         </section>

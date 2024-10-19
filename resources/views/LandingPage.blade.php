@@ -41,7 +41,7 @@
         
         <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
         <script>
-            var ENDPOINT = "{{ route('landing.view') }}";
+            var ENDPOINT = "{{ route('public.landing.view') }}";
             var page = 1;
             let fetchedPage = 1;
             var search = null;
@@ -55,7 +55,7 @@
                     
                     if (scrollTop + windowHeight >= documentHeight - 200) {
                         page++;
-                        ENDPOINT = "{{ route('landing.view') }}";
+                        ENDPOINT = "{{ route('public.landing.view') }}";
                        
                         if (!search || String(search).trim() == "") {
                             search = null;

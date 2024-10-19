@@ -1,20 +1,20 @@
 function toggleDropdown() {
     document.querySelector("#myDropdown").classList.toggle("d-none")
 }
-const landingEndpointInput = document.getElementById('landingEndpointInput').value;
+const landingEndpointInput = document.getElementById('landingEndpointInput')?.value;
 
 var ENDPOINT = landingEndpointInput;
 var page = 1;
 var search = null;
 
-document.getElementById('search-bar').addEventListener(
+document.getElementById('search-bar')?.addEventListener(
     "keydown",
     debounce((e) => {
         searchPart(e);
     }, 1000)
 );
 
-  document.getElementById('search-bar-mobile').addEventListener(
+  document.getElementById('search-bar-mobile')?.addEventListener(
     "keydown",
     debounce((e) => {
         searchPart(e);

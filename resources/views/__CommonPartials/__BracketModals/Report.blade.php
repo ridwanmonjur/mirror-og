@@ -72,15 +72,15 @@
                                 <template x-if="userLevelEnums['IS_TEAM1'] === report.userLevel 
                                     || userLevelEnums['IS_TEAM2'] === report.userLevel"
                                 >
-                                    @include('___CommonPartials.__BracketModal.__Report.Team')
+                                    @include('__CommonPartials.__BracketModals.__Report.Team')
                                 </template>
                                 <template x-if="userLevelEnums['IS_PUBLIC'] === report.userLevel"
                                 >
-                                    @include('___CommonPartials.__BracketModal.__Report.Public')
+                                    @include('__CommonPartials.__BracketModals.__Report.Public')
                                 </template>
                                 <template x-if="userLevelEnums['IS_ORGANIZER'] === report.userLevel"
                                 >
-                                    @include('___CommonPartials.__BracketModal.__Report.Org')
+                                    @include('__CommonPartials.__BracketModals.__Report.Org')
                                 </template>
                                 <br>
                             </div> 

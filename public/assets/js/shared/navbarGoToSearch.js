@@ -2,7 +2,7 @@ function toggleDropdown() {
     document.querySelector("#myDropdown").classList.toggle("d-none")
 }
 
-const searchEndpointInput = document.getElementById('searchEndpointInput').value;
+const searchEndpointInput = document.getElementById('searchEndpointInput')?.value;
 
 function goToSearchPage() {
     let ENDPOINT = searchEndpointInput;
@@ -24,14 +24,14 @@ function goToSearchPage() {
     window.location = ENDPOINT;
 }
 
- document.getElementById('search-bar').addEventListener(
+ document.getElementById('search-bar')?.addEventListener(
     "keydown",
     debounce((e) => {
         goToSearchPage();
     }, 1000)
 );
 
-document.getElementById('search-bar-mobile').addEventListener(
+document.getElementById('search-bar-mobile')?.addEventListener(
     "keydown",
     debounce((e) => {
         goToSearchPage();

@@ -58,7 +58,7 @@
     </div>
     <input type="submit" value="Sign in">
 
-    <div class="sign-txt">By continuing, you agree to Splash's <a href="#">Terms of Use</a>. Read our <a
+    <div class="sign-txt">By continuing, you agree to Driftwood's <a href="#">Terms of Use</a>. Read our <a
             href="#">Privacy Policy</a>.</div>
     <div class="section-or">
         <div class="straight-line"></div>
@@ -77,7 +77,7 @@
 </form>
 
 <div class="section-bottom">
-    <p>New to Splash? <a href="{{ route('participant.signup.view') }}">Create an account</a></p>
+    <p>New to Driftwood? <a href="{{ route('participant.signup.view') }}">Create an account</a></p>
 </div>
 <script>
     function submitForm(event) {
