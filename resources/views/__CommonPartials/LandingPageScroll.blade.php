@@ -110,7 +110,7 @@
                 <div>
                     <h5 class="{{ 'py-0 my-0 mt-3 d-flex justify-content-center Color-' . $event->tier->eventTier }}">
                         <span> {{$formattedStartDate}} </span>
-                        <ul class="d-inline ms-0 py-0 mb-1"> <li class="d-inline ">{{$formattedStartTime}} </li> </ul>
+                        <ul class="d-inline ms-0 py-0 mb-1"> <li style="list-style-type: disc !important;" class="d-inline ">{{$formattedStartTime}} </li> </ul>
                     </h5>
                     @if ($willShowStartsInCountDown) 
                         <div class="text-center">
@@ -119,7 +119,7 @@
                             </p>
                         </div>
                     @else
-                        <div>
+                        <div class="text-center">
                             <button class="btn btn-small border-primary"> See bracket</button>
                         </div>
                     @endif

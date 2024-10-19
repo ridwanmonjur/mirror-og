@@ -329,7 +329,7 @@ class AuthController extends Controller
                 'password' => 'bail|required|min:6|max:24',
             ]);
         } else {
-            return redirect()->route('landing.view');
+            return redirect()->route('public.landing.view');
         }
 
         $redirectErrorRoute = $userRole.'.signup.view';

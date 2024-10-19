@@ -9,19 +9,19 @@
     if (isset($user)) {
         $role = $user->role;
         if ($role == 'PARTICIPANT') {
-            $routeLogo = route('landing.view');
+            $routeLogo = route('public.landing.view');
         } else if ($role == 'ORGANIZER') {
             $routeLogo = route('organizer.home.view');
         }
         else {
-            $routeLogo = route('landing.view');
+            $routeLogo = route('public.landing.view');
         }
     } else {
-        $routeLogo = route('landing.view');
+        $routeLogo = route('public.landing.view');
     }
 @endphp
 <input type="hidden" id="searchEndpointInput" value="{{ route('public.search.view') }}">
-<input type="hidden" id="landingEndpointInput" value="{{ route('landing.view') }}">
+<input type="hidden" id="landingEndpointInput" value="{{ route('public.landing.view') }}">
 <nav class="navbar px-3 py-3 py-lg-2">
     <a href="{{ $routeLogo }}">
         <img width="150" height="30" src="{{ asset('/assets/images/driftwood logo.png') }}" alt="">
