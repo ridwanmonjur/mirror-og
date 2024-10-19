@@ -19,7 +19,7 @@
             <div class="position-relative">
                 <div class="pt-2 pb-1 d-flex justify-content-between">
                     <a href="" class="btn btn-link"> </a>
-                    <a role="button" onclick="setAllNotificationsRead();" class="btn btn-link">
+                    <a role="button" onclick="setAllNotificationsRead(event);" class="btn btn-link">
                         <u>
                             {{-- All checks --}}
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check-all" viewBox="0 0 16 16">

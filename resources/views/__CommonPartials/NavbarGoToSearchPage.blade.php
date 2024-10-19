@@ -20,6 +20,8 @@
         $routeLogo = route('landing.view');
     }
 @endphp
+<input type="hidden" id="searchEndpointInput" value="{{ route('public.search.view') }}">
+<input type="hidden" id="landingEndpointInput" value="{{ route('landing.view') }}">
 <nav class="navbar px-3 py-3 py-lg-2">
     <a href="{{ $routeLogo }}">
         <img width="150" height="30" src="{{ asset('/assets/images/driftwood logo.png') }}" alt="">
@@ -132,112 +134,9 @@
         <span class="ms-1 py-1 text-primary"><b>Close</b></span>
     </div>
 </nav>
-<script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+<script src="{{ asset('/assets/js/shared/jsUtils.js') }}"></script>
 @if (isset($search))
-    @include('__CommonPartials.__Navbar.NavbarShowSearchResultsScript')
+    <script src="{{ asset('/assets/js/shared/navbarSearchResults.js') }}"></script>
 @else
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPageScript')
+    <script src="{{ asset('/assets/js/shared/navbarGoToSearch.js') }}"></script>
 @endif
-@auth
-<script>
-    function setAllNotificationsRead() {
-        event.preventDefault();
-        event.stopPropagation();
-        var notificationId = event.target.dataset.notificationId;
-        console.log(notificationId);
-        var divElements = document.querySelectorAll('div.notification-container');
-        let url = "{{route('user.notifications.readAll')}}";
-        console.log({url})
-         fetch(url, {
-            method: 'put',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                ...window.loadBearerCompleteHeader()
-            },
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                if (response.success) {
-                    divElements.forEach(function(div) {
-                        div.classList.remove('notification-container-not-read');
-                    });
-                }
-            })
-            .catch(function (error) {
-                console.log('Server error occured');
-                throw new Error('Error occurred');
-            });
-    }
-
-    function setNotificationReadById(event, notificationId, loopCount) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        var divElement = document.querySelector('div.notification-container[data-loop-count="' + loopCount + '"]');
-        var element = divElement.querySelector('a.mark-read');
-        console.log({element, notificationId, loopCount})
-        let url = "{{ route('user.notifications.read', ['id' => ':id']) }}"
-            .replace(':id', notificationId);
-         fetch(url, {
-            method: 'put',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-type': 'application/json',            
-            },
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                if (response.success) {
-                    const notificationCountElement = document.getElementById('countUnread');
-                    const notificationCount = notificationCountElement.dataset.notificationCount;
-                    const decreasedCount = parseInt(notificationCount, 0) - 1;
-                    if (decreasedCount >= 0) {
-                        notificationCountElement.dataset.notificationCount = decreasedCount;
-                        notificationCountElement.textContent = decreasedCount;
-                    }
-                    divElement.classList.remove('notification-container-not-read');
-                    
-                    element.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-all" viewBox="0 0 16 16">
-                        <path d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 1 0-1.091-1.028L9.477 9.417l-.485-.486z"/>
-                        </svg>
-                        <span> Read </span>
-                    `;
-                }
-            })
-            .catch(function (error) {
-
-                console.error(error);
-                throw new Error('Error occurred');
-            });
-    }
-
-    document.getElementById('load-more')?.addEventListener('click', function() {
-        let baseUrl = event.target.getAttribute('data-url');
-        let cursor = event.target.getAttribute('data-cursor');
-        event.preventDefault();
-        event.stopPropagation();
-        let url = `${baseUrl}?cursor=${cursor}`;
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-type': 'application/json',  
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                document.querySelector('.notifications-list-container').innerHTML+= data?.html ?? '';
-                applyRandomColorsAndShapes();
-                let nextPageUrl = data.nextPageUrl;
-                if (nextPageUrl) {
-                    this.setAttribute('data-cursor', nextPageUrl);
-                } else {
-                    this.style.display = 'none';
-                }
-            });
-    });
-
-</script>
-@endauth
