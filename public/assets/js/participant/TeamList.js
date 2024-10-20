@@ -353,6 +353,7 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                             src="/assets/images/animation/empty-exclamation.gif"
                             width="150"
                             height="150"
+                            class="object-fit-cover"
                         >
                     </label>
                 </div>
@@ -372,7 +373,7 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                                 <div class="circle-container" style="cursor: pointer;">
                                     <img
                                         onerror="this.onerror=null;this.src='/assets/images/404.png';"
-                                        id="uploaded-image" class="uploaded-image"
+                                        id="uploaded-image" class="uploaded-image object-fit-cover"
                                         src="${team?.teamBanner ? '/storage' + '/' + team?.teamBanner : '/assets/images/animations/empty-exclamation.gif' }"
                                     >
                                     </label>

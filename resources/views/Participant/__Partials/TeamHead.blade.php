@@ -643,25 +643,6 @@
         window.location.href = url;
     }
 
-    function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
-        const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
-        tabContents.forEach(content => {
-            content.classList.add("d-none");
-        });
-
-        const selectedTab = document.getElementById(tabName);
-        selectedTab.classList.remove('d-none');
-        selectedTab.classList.add('tab-button-active');
-
-        const tabButtons = document.querySelectorAll(`.tab-button-active.${extraClassNameToFilter}`);
-        tabButtons.forEach(button => {
-            button.classList.remove("tab-button-active");
-        });
-       
-        let target = event.currentTarget;
-        target.classList.add('tab-button-active');
-    }
-
     function redirectToProfilePage(userId) {
         window.location.href = "{{ route('public.participant.view', ['id' => ':id']) }}"
             .replace(':id', userId);

@@ -137,6 +137,8 @@ main {
     border-bottom: 2px solid transparent;
     margin: 0 10px;
     cursor: pointer;
+    border-radius: 60px 60px 0 0;
+
 }
 
 .tab-button:hover {

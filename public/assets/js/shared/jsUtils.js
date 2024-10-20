@@ -160,34 +160,68 @@ async function storeFetchDataInLocalStorage(url) {
 let bodyHeight = null;
 
 
-function openTab(evt, activeName, specialElemntHeightId = null) {
+function openTab(evt, activeName, specialElementHeightId = null) {
     var i, tabcontent, tablinks;
     
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.opacity = "0";
         tabcontent[i].style.display = "none";
+
     }
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-    if (bodyHeight === null) bodyHeight = document.body.offsetHeight;
-
+    if (typeof bodyHeight === 'undefined' || bodyHeight === null) {
+        bodyHeight = document.body.offsetHeight;
+    }
     
     let activeElement = document.getElementById(activeName);
     activeElement.style.display = "block";
     evt.currentTarget.className += " active";
     
-    if (specialElemntHeightId) {
-        let bracketList = document.getElementById(specialElemntHeightId);
+    activeElement.style.transition = "opacity 0.5s ease-in-out";
+    setTimeout(() => {
+        activeElement.style.opacity = "1";
+    }, 10);
+    
+    if (specialElementHeightId) {
+        let bracketList = document.getElementById(specialElementHeightId);
         let bracketListHeight = bracketList.getBoundingClientRect().height;
         let main = document.querySelector('main');
         if (main) {
+            main.style.transition = "height 0.5s ease-in-out";
             main.style.height = bodyHeight + bracketListHeight + 'px';
         }
-
-        // document.body.style.height = bodyHeight + bracketListHeight + 'px';
     }
+}
+
+function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
+
+    const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
+    tabContents.forEach(content => {
+        content.classList.add("d-none");
+        content.style.opacity = "0";
+    });
+
+    const selectedTab = document.getElementById(tabName);
+    if (selectedTab) {
+        selectedTab.classList.remove('d-none');
+        
+        setTimeout(() => {
+            selectedTab.style.transition = "opacity 0.5s ease-in-out";
+            selectedTab.style.opacity = "1";
+        }, 10);
+    }
+
+    const tabButtons = document.querySelectorAll(`.tab-button-active.${extraClassNameToFilter}`);
+    tabButtons.forEach(button => {
+        button.classList.remove("tab-button-active");
+    });
+
+    let target = event.currentTarget;
+    target.classList.add('tab-button-active');
 }
 
 function setAllNotificationsRead(event) {
