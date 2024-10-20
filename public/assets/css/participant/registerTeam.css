@@ -13,6 +13,9 @@ body {
     justify-content: flex-start;
     align-items: center;
     background-image: url("/assets/images/Single_Screen.png");
+    background-size: 100vw 100vh;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
 .wrapper-height {

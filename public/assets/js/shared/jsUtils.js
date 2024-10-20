@@ -157,6 +157,9 @@ async function storeFetchDataInLocalStorage(url) {
     }
 }
 
+let bodyHeight = null;
+
+
 function openTab(evt, activeName, specialElemntHeightId = null) {
     var i, tabcontent, tablinks;
     
@@ -168,8 +171,8 @@ function openTab(evt, activeName, specialElemntHeightId = null) {
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
+    if (bodyHeight === null) bodyHeight = document.body.offsetHeight;
 
-    let bodyHeight = document.body.offsetHeight;
     
     let activeElement = document.getElementById(activeName);
     activeElement.style.display = "block";
@@ -178,13 +181,12 @@ function openTab(evt, activeName, specialElemntHeightId = null) {
     if (specialElemntHeightId) {
         let bracketList = document.getElementById(specialElemntHeightId);
         let bracketListHeight = bracketList.getBoundingClientRect().height;
-        console.log({bracketList, bracketListHeight});
         let main = document.querySelector('main');
         if (main) {
             main.style.height = bodyHeight + bracketListHeight + 'px';
         }
 
-        document.body.style.height = bodyHeight + bracketListHeight + 'px';
+        // document.body.style.height = bodyHeight + bracketListHeight + 'px';
     }
 }
 

@@ -6,6 +6,7 @@
         $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
         $stylesEventRatio = bladeEventRatioStyleMapping($event->join_events_count, $event->tierTeamSlot);
         $willShowStartsInCountDown = $status === 'ONGOING';
+        $isEnded = $status === 'ENDED';
         extract($event->startDatesReadableForLanding($willShowStartsInCountDown));
     @endphp
     <div class="{{'rounded-box-' . strtoLower($event->tier?->eventTier) . ' event' }}" 
@@ -116,7 +117,10 @@
                     @endif
                 </div>
                 <div>
-                    <h5 class="{{ 'py-0 my-0 mt-3 d-flex justify-content-center Color-' . $event->tier->eventTier }}">
+                    <h5 @class([
+                        'py-0 my-0 mt-3 d-flex justify-content-center Color-' . $event->tier->eventTier,
+                        ' text-secondary' => $isEnded
+                    ])>
                         <span> {{$formattedStartDate}} </span>
                         <span> <span class="ms-3 me-2">▪️ </span>{{$formattedStartTime}} </span>
                     </h5>
@@ -127,8 +131,8 @@
                             </p>
                         </div>
                     @else
-                        <div class="text-center">
-                            <button class="btn btn-small border-primary text-primary"> See bracket</button>
+                        <div class="text-center mt-1">
+                            <button class="btn btn-small py-1 px-2 border-primary text-primary"> See bracket</button>
                         </div>
                     @endif
                 </div>

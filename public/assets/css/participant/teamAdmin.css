@@ -319,6 +319,7 @@
     border-radius: 50%;
     background-size: cover;
     margin-right: 10px;
+    
     transform: rotate(-20deg) skewX(10deg); 
     background-image: url('/assets/images/participants/crown-tilted.png');
 }

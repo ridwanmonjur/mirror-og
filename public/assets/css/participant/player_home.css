@@ -3,12 +3,13 @@
 main {
     background-image: url("/assets/images/homepage new bg.png");
     background-size: cover;
-    background-repeat: no-repeat;
     background-position: center;
-    /* background-attachment: fixed; */
     margin: 0;
     color: #2E4B59;
     min-height: 100vh;
+    background-size: 100vw 100vh;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
 /* @import "node_modules/bootstrap/scss/bootstrap"; */
@@ -61,8 +62,12 @@ main {
 .hero {
     background-size: cover;
     text-align: center;
-    padding: 5rem 0;
+    padding: 0;
     color: #fff;
+}
+
+.hero img {
+    height: 40vh;
 }
 
 .hero h1 {
@@ -349,6 +354,10 @@ footer {
 /* Mobile styles */
 
 @media (max-width: 560px) {
+    .hero img {
+        height: 30vh;
+    }
+
     .league_name p{
         font-size: 1.15rem;
     }

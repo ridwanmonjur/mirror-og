@@ -16,14 +16,18 @@
             [
                 'icon' => 'support.png',
                 'title' => 'Need support?',
-                'description' => 'If you\'re facing an issue with Driftwood, ping for support and we\'ll be there.',
+                'description' => <<<HTML
+                    If you're <span class="text-primary">facing an issue</span> with Driftwood, <span class="text-primary">ping for support</span> and we'll be there.
+                    HTML,
                 'email' => 'supportmain@driftwood.gg',
                 'btnClass' => 'bg-support-btn',
             ],
             [
                 'icon' => 'help.png',
                 'title' => 'Got a question?',
-                'description' => 'For any general inquiries or business matters, shoot us an email and let\'s chat.',
+                'description' => <<<HTML
+                    For <span class="text-success">any general inquiries</span> or <span class="text-success">business matters</span>, shoot us an email and let's chat.
+                    HTML,
                 'email' => 'handshake@driftwood.gg',
                 'btnClass' => 'bg-general-btn',
             ],
@@ -50,22 +54,21 @@
                     <div class="d-none d-lg-block col-lg-2"> </div>
                     @foreach ($contactOptions as $key => $option)
                         <div @class([
-                                "col-md-6 col-lg-4 mb-3",
-                                "ms-3" => $key % 2,
-                                "me-3" => !($key % 2),
+                                "col-md-6 col-lg-4 mb-3 mx-0 mx-lg-3"
+                             
                             ]) >
                             <div class="bg-white shadow p-4 mx-auto text-center h-100"
                                 style="border-radius: 30px; max-width: min(80%, 400px;)">
-                                <h2 class="fs-3 mb-3">
+                                <h2 class="fs-3 pt-4 pb-3 mb-3">
                                     <img src="{{ asset('/assets/images/landing page assets/' . $option['icon']) }}"
                                         alt="" class="me-2" width="32" height="32" aria-hidden="true">
                                     {{ $option['title'] }}
                                 </h2>
-                                <p class="text-muted mb-4">
-                                    {{ $option['description'] }}
+                                <p class="px-0 px-lg-5 text-muted mb-4">
+                                    {!! $option['description'] !!}
                                 </p>
                                 <a href="mailto:{{ $option['email'] }}"
-                                    class="btn {{ $option['btnClass'] }} text-white rounded-pill px-4 py-2">
+                                    class="btn mt-2 mb-4 {{ $option['btnClass'] }} text-white rounded-pill px-4 py-2">
                                     {{ $option['email'] }}
                                 </a>
                             </div>
