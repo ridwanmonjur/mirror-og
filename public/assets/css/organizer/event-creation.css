@@ -456,15 +456,14 @@ input[type="time"] {
 main {
     background-image: url("/assets/images/event-management-bg.png");
     min-height: 100vh;
-    max-height: 500vh;
     background-repeat: repeat-y;
 }
 
 .main-background-2{
     background-image: url("/assets/images/background/event-checkout-bg.png");
-    min-height: 100vh;
-    max-height: 500vh;
-    background-repeat: repeat-y repeat-x;
+    background-size: 100vw 100vh;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     background-size: cover;
 }
 

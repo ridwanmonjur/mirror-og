@@ -11,6 +11,8 @@ body {
     align-items: center;
     height: min-content;
     background-image: url('/assets/images/chat/signinbg.png');
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
 .app-container {
