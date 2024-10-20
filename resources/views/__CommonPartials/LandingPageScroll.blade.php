@@ -34,7 +34,7 @@
                     </svg>
                    
                  
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" 
                         class="bi bi-flag d-none me-3 ENDED" viewBox="0 0 16 16"
                     >
                     <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12 12 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A20 20 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a20 20 0 0 0 1.349-.476l.019-.007.004-.002h.001M14 1.221c-.22.078-.48.167-.766.255-.81.252-1.872.523-2.734.523-.886 0-1.592-.286-2.203-.534l-.008-.003C7.662 1.21 7.139 1 6.5 1c-.669 0-1.606.229-2.415.478A21 21 0 0 0 3 1.845v6.433c.22-.078.48-.167.766-.255C4.576 7.77 5.638 7.5 6.5 7.5c.847 0 1.548.28 2.158.525l.028.01C9.32 8.29 9.86 8.5 10.5 8.5c.668 0 1.606-.229 2.415-.478A21 21 0 0 0 14 7.655V1.222z"/>
@@ -65,10 +65,14 @@
             </div>
             <div class="league_name mt-4">
                 <p class="{{ 'ms-0 mb-0 p-0 ' . 'Color-' . $event->tier->eventTier }}"><b>{{ $event->eventName }}</b></p>
-                <small class="d-block ms-0 pb-2 fw-lighter">
-                    <i>{{ $event->user->organizer->companyName  }}</i>
-                    <i>.</i>
-                    <i>{{ $event->user->follows_count }} followers</i>
+                <small class="row px-0 ms-0 pb-2 fw-lighter">
+                    <span class="col-12 col-lg-6 px-0 text-start">
+                        <i>{{ $event->user->organizer->companyName  }}</i>
+                    </span>
+                    <span class="col-12 col-lg-6 px-0 text-start">
+                        <i class="ms-0 ms-lg-4">▪️</i>
+                        <i>{{ $event->user->follows_count }} followers</i>
+                    </span>
                 </small>
             </div>
             <div class="ms-3 fs-7">
@@ -114,7 +118,7 @@
                 <div>
                     <h5 class="{{ 'py-0 my-0 mt-3 d-flex justify-content-center Color-' . $event->tier->eventTier }}">
                         <span> {{$formattedStartDate}} </span>
-                        <ul class="d-inline ms-0 py-0 mb-1"> <li style="list-style-type: disc !important;" class="d-inline ">{{$formattedStartTime}} </li> </ul>
+                        <span> <span class="ms-3 me-2">▪️ </span>{{$formattedStartTime}} </span>
                     </h5>
                     @if ($willShowStartsInCountDown) 
                         <div class="text-center">
@@ -124,7 +128,7 @@
                         </div>
                     @else
                         <div class="text-center">
-                            <button class="btn btn-small border-primary"> See bracket</button>
+                            <button class="btn btn-small border-primary text-primary"> See bracket</button>
                         </div>
                     @endif
                 </div>

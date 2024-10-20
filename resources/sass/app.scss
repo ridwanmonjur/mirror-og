@@ -1,163 +1,162 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Poppins:wght@400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Nunito:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Poppins:wght@300;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Nunito:wght@300;500;600&display=swap');
 @import 'variables';
 @import './bootstrap/bootstrap.css';
 @import 'tippy.js/dist/tippy.css';
 @import 'tippy.js/themes/light.css';
-  .text-justify {
-    text-align: justify;
-  }
-  .tippy-box[data-theme~='light'] {
-    background-color: #F8F7F0;
-  }
 
-  table.responsive {
-    // border: 1px solid #ccc;
-    border-collapse: collapse;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    // margin-top:150px;
-  }
 
-  table.responsive thead { display: table-column; }
+.text-justify {
+  text-align: justify;
+}
 
-  
-//   table.responsive caption {
-//     font-size: 1.5em;
-//     margin: .25em 0 .75em;
-//   }
-  
-  table.responsive tr {
-    // background: #f8f8f8;
-    // border: 1px solid #ddd;
-    // padding: .35em;
-  }
-  
-  table.responsive th, table.responsive td {
-    // padding: .625em;
-    text-align: left;
-  }
-  
-//   table.responsive th {
-    // font-size: 1em;
-//     letter-spacing: .1em;
-//     text-transform: uppercase;
-//   }
-  
-  table.responsive td img { text-align: left; }
-  @media screen and (max-width: 600px) {
-  
-    table.responsive { border: 0; }
-    
-    table.responsive caption { 
-        font-size: 1.3em; 
-    }
-    
-    table.responsive thead { display: none; }
-    
-    table.responsive tr {
-        // border-bottom: 3px solid #ddd;
-        display: block;
-        margin-bottom: .625em;
-    }
-    
-    table.responsive td {
-        // border-bottom: 1px solid #ddd;
-        display: block;
-        // font-size: .8em;
-        text-align: left;
-    }
-    
-    table.responsive td:before {
-        content: attr(data-label);
-        float: left;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-    
-    table.responsive td:last-child { border-bottom: 0; }
+.tippy-box[data-theme~='light'] {
+  background-color: #F8F7F0;
+}
+
+table.responsive {
+  // border: 1px solid #ccc;
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+table.responsive thead {
+  display: table-column;
+}
+
+table.responsive th,
+table.responsive td {
+  text-align: left;
 }
 
 
-// damn, underrated bootstrap responsiveness! amazing goat
-// $utilities: (
-//   // ...
-//   "color": (
-//       property: color,
-//       class: text,
-//       local-vars: (
-//         "text-opacity": 1
-//       ),
-//       values: map-merge(
-//         $utilities-text-colors,
-//         (
-//           "muted": var(--#{$prefix}secondary-color), // deprecated
-//           "black-50": rgba($black, .5), // deprecated
-//           "white-50": rgba($white, .5), // deprecated
-//           "body-secondary": var(--#{$prefix}secondary-color),
-//           "body-tertiary": var(--#{$prefix}tertiary-color),
-//           "body-emphasis": var(--#{$prefix}emphasis-color),
-//           "reset": inherit,
-//         )
-//       )
-//     ),
-//     // ...
-// );
+table.responsive td img {
+  text-align: left;
+}
+
+@media screen and (max-width: 600px) {
+
+  table.responsive {
+    border: 0;
+  }
+
+  table.responsive caption {
+    font-size: 1.3em;
+  }
+
+  table.responsive thead {
+    display: none;
+  }
+
+  table.responsive tr {
+    display: block;
+    margin-bottom: .625em;
+  }
+
+  table.responsive td {
+    display: block;
+    text-align: left;
+  }
+
+  table.responsive td:before {
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  table.responsive td:last-child {
+    border-bottom: 0;
+  }
+}
+
+
 @import './bootstrap/swal.scss';
 @import './bootstrap/app-custom.scss';
 
 // Variables
 /*! purgecss start ignore */
 .notification-black {
-    color: black;
+  color: black;
 }
 
 .notification-gray {
-    color: black;
+  color: black;
 }
 
 .notification-blue {
-    color: #43A4D7;
+  color: #43A4D7;
 }
 
 .notification-gold {
-    color: goldenrod;
+  color: goldenrod;
 }
 
 .notification-container-not-read {
-    text-align: justify !important;
+  text-align: justify !important;
 }
 
 .notification-container-read {
-    text-align: justify !important;
+  text-align: justify !important;
 }
 
 .dropdown-menu {
-    animation: 1s modalDropdownAnimate;
-  }
+  animation: 1s modalDropdownAnimate;
+}
 
-  .modal-body {
-    animation: 1s modalDropdownAnimate;
-  }
+.modal-body {
+  animation: 1s modalDropdownAnimate;
+}
 
-  
-  @keyframes modalDropdownAnimate {
-    0% {
-        scale: 1.05;
-    }
 
-    100% {
-        scale: 1.0;
-    }
-  }
-
-  button{position:relative;overflow:hidden}
-  .simple-button:hover,button:hover{
+@keyframes modalDropdownAnimate {
+  0% {
     scale: 1.05;
   }
-  button:after{content:"";display:block;position:absolute;width:100%;height:100%;top:0;left:0;border-radius: 200px; background-image:radial-gradient(circle,#000 10%,transparent 10.01%);background-repeat:no-repeat;background-position:50%;transform:scale(10,10);opacity:0;transition:transform .5s,opacity 1s}
-  button:active:after{transform:scale(0,0);opacity:.2;transition:0s}
-  .simple-button:active{opacity:0.7;}
+
+  100% {
+    scale: 1.0;
+  }
+}
+
+button {
+  position: relative;
+  overflow: hidden
+}
+
+.simple-button:hover,
+button:hover {
+  scale: 1.05;
+}
+
+button:after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 200px;
+  background-image: radial-gradient(circle, #000 10%, transparent 10.01%);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transform: scale(10, 10);
+  opacity: 0;
+  transition: transform .5s, opacity 1s
+}
+
+button:active:after {
+  transform: scale(0, 0);
+  opacity: .2;
+  transition: 0s
+}
+
+.simple-button:active {
+  opacity: 0.7;
+}
+
 /*! purgecss end ignore */

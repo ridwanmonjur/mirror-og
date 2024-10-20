@@ -31,6 +31,9 @@ Route::middleware('auth')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::put('/interest', [AuthController::class, 'interestedAction'])->name('public.interest.action');
+
+
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
         Route::post('/user/likes', [ParticipantController::class, 'likeEvent'])->name('participant.events.like');
