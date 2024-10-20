@@ -18,10 +18,32 @@ if (emailForm) {
         })
         .then(response => response.json())
         .then(data => {
-            window.toastSuccess(data.message);
+            if (data.success) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Success...",
+                    confirmButtonColor: "#43A4D7",
+                    text: data.message,
+                    timer: 6000
+                });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error...",
+                    confirmButtonColor: "#43A4D7",
+                    text: data.message,
+                    timer: 6000
+                });
+            }
         })
         .catch(error => {
-            messageDiv.textContent = error.data.message || error.message;
+            Swal.fire({
+                icon: "error",
+                title: "Error...",
+                confirmButtonColor: "#43A4D7",
+                text: error.message,
+                timer: 6000
+              });
             console.error('Error:', error);
         });
         
