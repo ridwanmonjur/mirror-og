@@ -10,7 +10,7 @@
         extract($event->startDatesReadableForLanding($willShowStartsInCountDown));
     @endphp
     <div class="{{'rounded-box-' . strtoLower($event->tier?->eventTier) . ' event' }}" 
-        style="background-color: rgba(255, 255, 255, 0.3);"
+        style="background-color: rgba(255, 255, 255, 0.6);"
     >
         <a class="d-block" href="/event/{{ $event['id'] }}">
             <div style="display: flex; justify-content: center;">
@@ -71,7 +71,7 @@
                         <i class="d-inline">{{ $event->user->organizer->companyName  }}</i>
                     </span>
                     <span class="px-0 text-start d-block d-lg-inline">
-                        <i class="ms-1 me-1 ">▪️</i>
+                        <i class="ms-1 me-1 d-inline">▪️</i>
                         <i>{{ $event->user->follows_count }} followers</i>
                     </span>
                 </small>
