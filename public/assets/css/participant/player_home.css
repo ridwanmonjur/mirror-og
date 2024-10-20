@@ -68,6 +68,7 @@ main {
 
 .hero img {
     height: 40vh;
+    max-width: 70vw;
 }
 
 .hero h1 {
@@ -110,7 +111,7 @@ main {
 /* Featured Events */
 
 .featured-events {
-    margin: 0 11vw;
+    margin: 0 1vw;
     gap: 0 2vw;
     padding: 2rem 0 1rem;
     display: grid;
@@ -123,7 +124,7 @@ main {
     margin: auto;
     margin-bottom: 40px;
     min-height: 470px;
-    width: min(360px, 80vw);
+    max-width: min(360px, 80vw);
     border: 4px solid rgb(82, 159, 23);
     border-radius: 42px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
@@ -462,7 +463,7 @@ footer {
 
     .featured-events {
         padding: 1rem 0;
-        margin: 0 15vw;
+        margin: 0 10vw;
         grid-template-columns: 1fr;
     }
 
