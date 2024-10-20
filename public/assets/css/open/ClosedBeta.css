@@ -1,11 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap');
 
 body {
     font-family: 'Inter', sans-serif;
 }
 
+.text-dark {
+    color: rgb(97, 97, 97) !important;
+}
+
 .hero-section {
     background-color: #94a3b8;
+    min-height: 30vh;
 }
 
 .description-section {
@@ -17,15 +22,23 @@ body {
 }
 
 .icon-bg-yellow {
-    background-color: #fde047;
+    background: linear-gradient(90deg, #ffde59, #ff914d);
+    border: 4px solid white;
 }
 
 .icon-bg-emerald {
-    background-color: #34d399;
+    background: linear-gradient(90deg, #0097b2, #79ed97);
+    border: 4px solid white;
 }
 
 .icon-bg-purple {
-    background-color: #a78bfa;
+    background: linear-gradient(90deg, #5170ff, #ff66c4);
+    border: 4px solid white;
+}
+
+.submit-button {
+    background: linear-gradient(90deg, #5de0e6, #004aad);
+    border: 2px solid white;
 }
 
 
@@ -37,7 +50,7 @@ body {
 
     .description-section {
         background-position: bottom;
-        min-height: 420px;
+        min-height: 65vh;
         width: 100vw;
     }
 }

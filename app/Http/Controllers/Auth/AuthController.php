@@ -11,7 +11,9 @@ use App\Models\Participant;
 use App\Models\User;
 use Carbon\Carbon;
 use ErrorException;
+use Exception;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -526,8 +528,44 @@ class AuthController extends Controller
         return ['finduser' => $newUser, 'error' => null];
     }
 
-    private function generateToken()
+    private function generateToken(): string
     {
         return Str::random(64);
+    }
+
+    public function interestedAction(Request $request): JsonResponse  {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:interested_user,email',
+        ], [
+            'email.unique' => 'This email is already added.',
+            'email.required' => 'Please add a valid email address',
+            'email.email' => 'Please add a valid email address'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 422);
+        }
+
+        try {
+            DB::table('interested_user')->insertGetId([
+                'email' => $request->email,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Thank you for your interest!',
+            ], 201);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while subscribing.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
