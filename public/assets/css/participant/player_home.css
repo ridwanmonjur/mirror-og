@@ -291,6 +291,23 @@ main {
     border-radius: 40px 40px 0px 0px;
 }
 
+@keyframes spinOdd {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(1deg); }
+}
+
+@keyframes spinEven {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-1deg); }
+}
+
+.event:nth-child(odd):hover {
+    animation: spinOdd 1s linear;
+}
+
+.event:nth-child(even):hover {
+    animation: spinEven 1s linear;
+}
 .event:hover .cover {
     animation: grayscale 2s ease-in-out;
 }

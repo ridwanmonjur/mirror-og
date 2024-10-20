@@ -84,17 +84,7 @@ function getRandomColor() {
     return color;
 }
 
-function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
-    const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
-    tabContents.forEach(content => {
-        content.classList.add("d-none");
-    });
 
-    const selectedTab = document.getElementById(tabName);
-    if (selectedTab) {
-        selectedTab.classList.remove('d-none');
-        selectedTab.classList.add('tab-button-active');
-    }
 
     const tabButtons = document.querySelectorAll(`.tab-button-active.${extraClassNameToFilter}`);
     tabButtons.forEach(button => {

@@ -10,7 +10,7 @@
         extract($event->startDatesReadableForLanding($willShowStartsInCountDown));
     @endphp
     <div class="{{'rounded-box-' . strtoLower($event->tier?->eventTier) . ' event' }}" 
-        style="background-color: rgba(255, 255, 255, 0.6);"
+        style="background-color: rgba(255, 255, 255, 0.3);"
     >
         <a class="d-block" href="/event/{{ $event['id'] }}">
             <div style="display: flex; justify-content: center;">
@@ -64,14 +64,14 @@
                     <span>{{ $event->join_events_count }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}</span>
                 </button>
             </div>
-            <div class="league_name mt-4">
+            <div class="league_name mt-4 mb-2">
                 <p class="{{ 'ms-0 mb-0 p-0 ' . 'Color-' . $event->tier->eventTier }}"><b>{{ $event->eventName }}</b></p>
-                <small class="row px-0 ms-0 pb-2 fw-lighter">
-                    <span class="col-12 col-lg-6 px-0 text-start">
-                        <i>{{ $event->user->organizer->companyName  }}</i>
+                <small class=" px-0 ms-0 pb-2 fw-lighter">
+                    <span class="px-0 text-start">
+                        <i class="d-inline">{{ $event->user->organizer->companyName  }}</i>
                     </span>
-                    <span class="col-12 col-lg-6 px-0 text-start">
-                        <i class="ms-0 ms-lg-4">▪️</i>
+                    <span class="px-0 text-start d-block d-lg-inline">
+                        <i class="ms-1 me-1 ">▪️</i>
                         <i>{{ $event->user->follows_count }} followers</i>
                     </span>
                 </small>
