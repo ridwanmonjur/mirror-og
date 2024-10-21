@@ -5,6 +5,18 @@
     font-family: "Nunito", sans-serif;
 }
 
+
+html.is-changing main {
+    visibility: hidden;
+    transform: translateX(0);
+}
+
+html.is-animating main {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+
 body {
     width: 100%;
     height: auto;
