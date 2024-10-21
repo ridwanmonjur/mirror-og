@@ -1,10 +1,10 @@
 <body>
+    <main>
+        <div class="wrapper">
 
-    <div class="wrapper">
+            @yield('signUpbody')
 
-        @yield('signUpbody')
-
-    </div>
-    <script src="{{ asset('/assets/js/shared/authValidity.js') }}"></script>
-
+        </div>
+        <script src="{{ asset('/assets/js/shared/authValidity.js') }}"></script>
+    </main>
 </body>

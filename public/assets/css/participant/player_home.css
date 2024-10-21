@@ -124,10 +124,11 @@ main {
     margin: auto;
     margin-bottom: 40px;
     min-height: 470px;
-    max-width: min(360px, 80vw);
+    width: min(360px, 80vw);
     border: 4px solid rgb(82, 159, 23);
     border-radius: 42px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
+    padding-bottom: 20px;
 }
 
 .event_1 {
@@ -473,10 +474,7 @@ footer {
         margin: 0 auto 2rem;
     }
 
-    .event{
-        width: 90%;
-        margin: 0 auto 60px;
-    }
+   
 }
 
 
