@@ -100,7 +100,7 @@
                     class="btn border-dark rounded-pill py-2 px-4"> Back </button>
                 <button onclick="goNextScreens()" type="button" 
                     class="btn btn-primary text-light rounded-pill py-2 px-4"
-                    onclick=""> Next > </button>
+                    onclick=""> Next &gt; </button>
             </div>
         @else 
             <br><br><br><br><br><br>

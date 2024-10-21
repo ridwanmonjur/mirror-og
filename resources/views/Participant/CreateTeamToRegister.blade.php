@@ -114,7 +114,7 @@
                 class="btn border-dark rounded-pill py-2 px-4"> Back </button>
             <button form="formSubmit" type="submit" 
                 class="btn btn-primary text-light rounded-pill py-2 px-4"
-                onclick=""> Next > </button>
+                onclick=""> Next &gt; </button>
         </div>
     </main>
     <script src="{{ asset('/assets/js/participant/CreateTeamToRegister.js') }}"></script>
