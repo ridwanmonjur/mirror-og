@@ -150,7 +150,7 @@
                 class="btn border-dark rounded-pill py-2 px-4 cursor-pointer"> Back </button>
             <button form="selectTeam" type="submit" 
                 class="btn btn-primary text-light rounded-pill py-2 px-4"
-                onclick=""> Next > </button>
+                onclick=""> Next &gt; </button>
         </div>
     </main>
     <script src="{{ asset('/assets/js/participant/SelectTeamToRegister.js') }}"></script>

@@ -30,7 +30,7 @@ class OrganizerCheckoutController extends Controller
             $user = $request->get('user');
             $user->stripe_customer_id = $user->organizer()->value('stripe_customer_id');
             $userId = $user->id;
-            $event = EventDetail::findEventWithRelationsAndThrowError($userId, $id, ['tier']);
+            $event = EventDetail::findEventWithRelationsAndThrowError($userId, $id, null,['tier']);
             $isUserSameAsAuth = true;
             $fee = null;
 
@@ -71,7 +71,7 @@ class OrganizerCheckoutController extends Controller
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             return $this->showErrorOrganizer(
-                "Event not retrieved with id: {$id}"
+        $e->getMessage()
             );
         }
     }

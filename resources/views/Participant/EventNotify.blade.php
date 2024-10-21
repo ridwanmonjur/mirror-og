@@ -103,7 +103,7 @@
             <button form="eventNotify" type="submit"
                 id="proxySubmit" 
                 class="btn btn-primary text-light rounded-pill py-2 px-4"
-            > Next > </button>
+            > Next &gt; </button>
         </div>
     </main>
     <script src="{{ asset('/assets/js/participant/EventNotify.js') }}"></script>
