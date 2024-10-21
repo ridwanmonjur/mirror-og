@@ -1,10 +1,10 @@
-import Swup from 'swup';
-import SwupHeadPlugin from '@swup/head-plugin';
-import SwupA11yPlugin from '@swup/a11y-plugin';
+// import Swup from 'swup';
+// import SwupHeadPlugin from '@swup/head-plugin';
+// import SwupA11yPlugin from '@swup/a11y-plugin';
 
-new Swup({
-    plugins: [new SwupHeadPlugin(), new SwupA11yPlugin()]
-});
+// new Swup({
+//     plugins: [new SwupHeadPlugin(), new SwupA11yPlugin()]
+// });
 
 
 import Swal from 'sweetalert2'
