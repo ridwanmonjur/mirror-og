@@ -29,7 +29,7 @@
                         <form id="emailForm" class="d-flex">
                             @csrf
                             <input type="email" class="ps-5 rounded-pill py-2 me-2 form-control" placeholder="enter your email address" id="emailInput" name="email">
-                            <button id="submitButton" type="submit" class="submit-button text-white py-2 rounded-pill ps-3 pe-4" data-url="{{ route('public.interest.action') }}">Submit</button>
+                            <button id="submitButton" type="submit" class="mx-auto submit-button text-white py-2 rounded-pill ps-3 pe-4" data-url="{{ route('public.interest.action') }}">Submit</button>
                         </form>
                     </div>
                 </div>

@@ -1,7 +1,6 @@
 @include('Organizer.__Partials.CreateEventHeadTag')
 <body style="margin-top: 0 !important;">
 @include('__CommonPartials.NavbarGoToSearchPage')
-
     <main>
         <input type="hidden" id="manage_event_route" value="{{ route('event.index') }}">
         <input type="hidden" id="edit_event_route" value="{{ route('event.edit', ['event' => isset($id) ? $id : -1]) }}">
@@ -28,7 +27,5 @@
             @endif
         </div>
         <script src="{{ asset('/assets/js/organizer/EventNotFound.js') }}"></script>
-
-
     </main>
 </body>

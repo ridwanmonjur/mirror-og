@@ -7,7 +7,15 @@
         extract($dateStartArray);
     }
 @endphp
-
+<div id="eventContainer" 
+    data-event="{{ json_encode($event ?? null) }}"
+    data-tier="{{ json_encode($tier) }}"
+    data-type="{{ json_encode($type) }}"
+    data-game="{{ json_encode($game) }}"
+    data-asset-key-word="{{ asset('') }}"
+    class="d-none"    
+>
+</div>
 <div id="step-2" class="d-none">
 
     <div class="welcome text-center">
@@ -21,22 +29,13 @@
             <div class="grid-2-columns box-width" style="margin-top: -20px !important;">
                 @foreach ($eventTypeList as $gameCategory)
                     @if ($gameCategory->eventDefinitions)
-                        <div onclick="setFormValues( {'eventType': {{ Js::from($gameCategory->eventType) }} } );
-                            let eventTypeId = {{ Js::from($gameCategory->id) }} ;
-                            setFormValues( {'eventTypeId': eventTypeId} );
-                            goToNextScreen('step-3', 'timeline-1');
-                            document.querySelectorAll('.box_2nd').forEach((el) => {
-                                el.classList.remove('color-border-success');
-                            });
-                            this.querySelector('.box_2nd').classList.add('color-border-success');
-                            let eventTypeTitle = this.querySelector('.inputEventTypeTitle u').innerHTML;
-                            let eventTypeDefinition = this.querySelector('.inputEventTypeDefinition').innerHTML;
-                            localStorage.setItem('eventTypeTitle', eventTypeTitle);
-                            localStorage.setItem('eventTypeTitle', eventTypeTitle);
-                            localStorage.setItem('eventTypeDefinition', eventTypeDefinition);
-                            localStorage.setItem('eventTypeId', eventTypeId);
-                            "
-                            @class(['container-border'])>
+                        <div  
+                            data-event-type="{{ $gameCategory->eventType }}"
+                            data-event-type-id="{{ $gameCategory->id }}"
+                            data-event-definitions="{{ $gameCategory->eventDefinitions }}"
+                            onclick="setFormValuesAndNavigate(this)"
+                            @class(['container-border'])
+                        >
                             <a href="#" @class([
                                 'box_2nd selectable-box',
                                 'color-border-success' =>
@@ -57,7 +56,7 @@
             <button onclick="goToNextScreen('step-1', 'none')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-3', 'timeline-1')" type="button"
-                class="oceans-gaming-default-button"> Next > </button>
+                class="oceans-gaming-default-button"> Next &gt; </button>
         </div>
     </div>
 </div>
@@ -76,28 +75,11 @@
         <div class="grid-3-columns box-width">
             @foreach ($eventTierList as $tierCategory)
                 <section
-                    onclick="setFormValues( {'eventTier': {{ Js::from($tierCategory->eventTier) }} } );
-                        let eventTierId = {{ Js::from($tierCategory->id) }} ;
-                        let eventTierImg = this.querySelector('.inputEventTierImg').src;
-                        let eventTierPerson = this.querySelector('.inputEventTierPerson').innerHTML;
-                        let eventTierPrize = this.querySelector('.inputEventTierPrize').innerHTML;
-                        let eventTierEntry = this.querySelector('.inputEventTierEntry').innerHTML;
-                        let eventTierTitle = this.querySelector('.inputEventTierTitle').innerHTML;
-                        setFormValues( {'eventTierId': eventTierId } );
-                        localStorage.setItem('eventTierPerson', eventTierPerson);
-                        localStorage.setItem('eventTierPrize', eventTierPrize);
-                        localStorage.setItem('eventTierImg', eventTierImg);
-                        localStorage.setItem('eventTierEntry', eventTierEntry);
-                        localStorage.setItem('eventTierTitle', eventTierTitle);
-                        localStorage.setItem('eventTierId', eventTierId);
-                        fillStepGameDetailsValues();
-                        document.querySelectorAll('.box-tier').forEach(element => {
-                            element.classList.remove('color-border-success-dotted');
-                        });
-                        this.querySelector('.box-tier').classList.add('color-border-success-dotted');
-                        goToNextScreen('step-4', 'timeline-1');
-                        ;"
-                    class="featured-events">
+                     data-event-tier="{{ $tierCategory->eventTier }}"
+                    data-event-tier-id="{{ $tierCategory->id }}"
+                    class="featured-events"
+                    onclick="handleTierSelection(this)"
+                >
                     <a href="#" @class([
                         'event selectable-box box-tier',
                         'rounded-box-' . strtolower($tierCategory->eventTier),
@@ -146,7 +128,7 @@
             <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-4', 'timeline-1'); fillStepGameDetailsValues();" type="button"
-                class="oceans-gaming-default-button"> Next > </button>
+                class="oceans-gaming-default-button"> Next &gt; </button>
         </div>
     </div>
 </div>
@@ -268,7 +250,7 @@
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button"
                 class="oceans-gaming-default-button">
-                Next > </button>
+                Next &gt; </button>
         </div>
     </div>
 </div>
@@ -297,7 +279,7 @@
         <button onclick="goToNextScreen('step-5', 'timeline-2')" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-7', 'timeline-2')" type="button" class="oceans-gaming-default-button">
-            Next > </button>
+            Next &gt; </button>
     </div>
 </div>
 
@@ -331,7 +313,7 @@
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-8', 'timeline-2'); fillEventTags();" type="button"
             class="oceans-gaming-default-button">
-            Next > </button>
+            Next &gt; </button>
     </div>
 </div>
 
@@ -352,7 +334,7 @@
             <label for="eventTags">Event Tags</label>
             <p class="description">Add some relevant keywords to help players find your event more easily</p>
             <div class="box">
-                <input type="text" id="eventTags" name="eventTags" placeholder="Add tags" required>
+                <input type="text" id="eventTags" name="eventTags" placeholder="Add tags" required class="w-100 rounded-pil">
             </div>
         </div>
     </div>
@@ -360,7 +342,7 @@
         <button onclick="goToNextScreen('step-7', 'timeline-2'); fillEventTags();" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-9', 'timeline-2')" type="button" class="oceans-gaming-default-button">
-            Next > </button>
+            Next &gt; </button>
     </div>
 </div>
 
@@ -581,16 +563,6 @@
     <br>
 </div>
 
-<script> 
-    function goToPaymentPage() {
-        goToNextScreen('step-payment', 'timeline-payment');
-        fillStepPaymentValues();
-    }
-
-    function goToLaunch2ndPage() {
-        goToNextScreen('step-launch-2', 'timeline-launch');
-    }
-</script>
 
 <div class="text-center d-none" id="step-launch-2">
     <div class="welcome">
