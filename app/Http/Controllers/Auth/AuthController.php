@@ -571,7 +571,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:interested_user,email',
         ], [
-            'email.unique' => 'This email is already added.',
+            'email.unique' => 'This email is already added. Please go to your email and verify if you have not done so already!',
             'email.required' => 'Please add a valid email address',
             'email.email' => 'Please add a valid email address'
         ]);
