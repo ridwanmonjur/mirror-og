@@ -34,13 +34,13 @@
     
     <div class="nav-buttons">
         <li class="nav-item" style="list-style-type: none;">
-            <a class="nav-link text-primary fw-semibold" href="{{ route('public.closedBeta.view') }}">CLOSED BETA</a>
+            <a class="nav-link text-primary me-5 px-4 fw-semibold text-center" href="{{ route('public.closedBeta.view') }}">CLOSED BETA</a>
         </li>
         <li class="nav-item" style="list-style-type: none;">
-            <a class="nav-link text-dark" href="{{ route('public.about.view') }}">ABOUT</a>
+            <a class="nav-link text-dark me-5 px-4 text-center" href="{{ route('public.about.view') }}">ABOUT</a>
         </li>
         <li class="nav-item" style="list-style-type: none;">
-            <a class="nav-link text-dark" href="{{ route('public.contact.view') }}">CONTACT US</a>
+            <a class="nav-link text-dark me-5 ps-5 pe-0 text-center" href="{{ route('public.contact.view') }}">CONTACT US</a>
         </li>
     </div>
 </nav>
@@ -51,13 +51,13 @@
     <div class="nav-buttons search-bar-mobile d-centered-at-mobile py-2">
          <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link  fw-semibold" href="{{ route('public.landing.view') }}">CLOSED BETA</a>
+                <a class="nav-link text-center  fw-semibold" href="{{ route('public.landing.view') }}">CLOSED BETA</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="{{ route('public.about.view') }}">ABOUT</a>
+                <a class="nav-link text-center text-dark" href="{{ route('public.about.view') }}">ABOUT</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="{{ route('public.contact.view') }}">CONTACT US</a>
+                <a class="nav-link text-center text-dark" href="{{ route('public.contact.view') }}">CONTACT US</a>
             </li>
             <li class="nav-item mt-2"
                 onclick="

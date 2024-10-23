@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-md-6">
                         <p class="text-white mb-4">
-                            We're currently accepting closed beta users. If you're interested to join the closed beta, just submit your email and wait for an invitation.
+                            We're currently accepting closed beta users. If you're interested to join the closed beta, just submit your email address and wait for an invitation via email.
                         </p>
                         <form id="emailForm" class="d-flex">
                             @csrf
