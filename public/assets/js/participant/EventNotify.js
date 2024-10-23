@@ -1,11 +1,9 @@
-function goToRegistrationScreen(teamId) {
+function goToRegistrationScreen() {
     let url = document.getElementById('register_route').value;
-    url = url.replace(':id', teamId);
     window.location.href = url;
 }
 
-function goToViewEvent(eventId) {
+function goToViewEvent() {
     let url = document.getElementById('event_view_route').value;
-    url = url.replace(':id', eventId);
     window.location.href = url;
 }

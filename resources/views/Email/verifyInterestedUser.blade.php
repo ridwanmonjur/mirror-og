@@ -4,14 +4,9 @@
 @endphp
 @extends('Email.Layout.Layout')
 @section('title')
-    {{ 'Email Verification Mail' }}
+    {{ 'Interest Verification Mail' }}
 @endsection
 
-@push('head')
-@endpush
-@section('emailTitle')
-    {{ 'Email Verification Mail' }}
-@endsection
 @section('content')
     <tr>
         <td style="padding: 0; text-align: center;">
@@ -20,15 +15,15 @@
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
                         <p>Hi,</p>
-                        <p>You recently created your account with us. Click the button below to verify
-                            it.</p>
+                        <p>You recently expressed interest to take part in our closed beta.
+                        </p>
                         <p style="text-align: center;">
-                            <a href="{{ route('user.verify.action', $token) }}"
+                            <a href="{{ route('interestedUser.verify.action', $token) }}"
                                 style="display: inline-block; padding: 10px 20px; font-size: 18px; color: white !important; background-color: {{$secondaryColor}}; text-decoration: none; border-radius: 5px;">
-                                Verify email
+                                Verify your email.
                             </a>
                         </p>
-                        <p>If you did not create an account with us, please ignore this email or contact support if you have
+                        <p>If you did not hear from us, please ignore this email or contact support if you have
                             questions.</p>
                         <p>Thanks,<br>Driftwood</p>
                     </td>
@@ -37,8 +32,8 @@
                     <td style="text-align: center; padding: 10px 0; color: #999999;">
                         <p>If you're having trouble with the button above, copy and paste the URL below into your web
                             browser:</p>
-                        <p><a href="{{ route('user.verify.action', $token) }}"
-                                style="color: {{$secondaryColor}};">{{ route('user.verify.action', $token) }}</a></p>
+                        <p><a href="{{ route('interestedUser.verify.action', $token) }}"
+                                style="color: {{$secondaryColor}};">{{ route('interestedUser.verify.action', $token) }}</a></p>
                     </td>
                 </tr>
             </table>
