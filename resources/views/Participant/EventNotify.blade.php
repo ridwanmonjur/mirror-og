@@ -14,9 +14,9 @@
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
-    <input type="hidden" id="register_route" value="{{ route('participant.register.manage', ['id' => ':id']) }}">
+    <input type="hidden" id="register_route" value="{{ route('participant.register.manage', ['id' => $selectTeam->id] ) }}">
 
-    <input type="hidden" id="event_view_route" value="{{ route('public.event.view', ['id' => ':id']) }}">
+    <input type="hidden" id="event_view_route" value="{{ route('public.event.view', ['id' => $id]) }}">
 
         {{-- Hidden urls --}}
         <a class="d-none" id="manageRosterUrl" href="{{route('participant.roster.manage', ['id' => $id, 'teamId' => $selectTeam->id, 'redirect' => 'true' ] ) }}"> </a>

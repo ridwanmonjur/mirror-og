@@ -37,7 +37,7 @@
                         </p>
                         <p>If you did not do this action, please ignore this email or contact support if you have
                             questions.</p>
-                        <p>Thanks,<br>Oceans Gaming</p>
+                        <p>Thanks,<br>Driftwood</p>
                     </td>
                 </tr>
                 <tr>

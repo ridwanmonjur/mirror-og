@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\VerifyInterestedUserMail;
 use App\Mail\VerifyUserMail;
 use App\Mail\ResetPasswordMail;
 use App\Models\EventDetail;
@@ -234,6 +235,33 @@ class AuthController extends Controller
         return view('Auth.ForgetPassword');
     }
 
+    public function verifyInterestedUser($token)
+    {
+        $user = DB::table('interested_user')->where('email_verified_token', $token)
+            ->first();
+        if (! $user) {
+            return view( 'VerifyInterestedUser')
+                ->with('error', 'Invalid verification token.');
+        }
+
+        if ($user->email_verified_at !== null) {
+            return view( 'VerifyInterestedUser')
+                ->with('success', 'Your email has already been successfully verified.');
+        }
+
+        DB::query()
+            ->from('interested_user')
+            ->where('id', $user->id)
+            ->update([
+                'email_verified_at' => now(),
+                'email_verified_token' => null
+            ]);
+    
+
+        return view( 'VerifyInterestedUser')
+            ->with('success', 'Your email has been successfully verified.');
+    }
+
     public function verifyAccount($token)
     {
         $user = User::where('email_verified_token', $token)->first();
@@ -289,6 +317,12 @@ class AuthController extends Controller
     public function verifySuccess(Request $request)
     {
         return view('Auth.VerifySuccess');
+    }
+
+
+    public function  verifyInterestedUserSuccess()
+    {
+        return view(view: 'VerifyInterestedUserSuccess');
     }
 
     //SignUp Auth View
@@ -550,15 +584,24 @@ class AuthController extends Controller
         }
 
         try {
+            $token = $this->generateToken();
+
             DB::table('interested_user')->insertGetId([
                 'email' => $request->email,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
+                'email_verified_token' => $token
             ]);
+
+            // Mail::to($request->email)
+            //     ->queue(new VerifyInterestedUserMail($request->email, $token));
+
+            Mail::to($request->email)
+                ->send(new VerifyInterestedUserMail($request->email, $token));
 
             return response()->json([
                 'success' => true,
-                'message' => 'Thank you for your interest!',
+                'message' => 'Thank you! An email has been sent to verify the email address you sent us!',
             ], 201);
         } catch (Exception $e) {
             return response()->json([

@@ -15,7 +15,7 @@
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
-        <input type="hidden" id="event_view_route" value="{{ route('participant.event.view', ':id') }}">
+        <input type="hidden" id="event_view_route" value="{{ route('participant.event.view', $id) }}">
         <div class="text-center" id="step-0">
             <div class="">
                 <div class="time-line-box mx-auto" id="timeline-box">
