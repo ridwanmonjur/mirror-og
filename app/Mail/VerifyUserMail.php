@@ -15,7 +15,7 @@ use Illuminate\Queue\SerializesModels;
 class VerifyUserMail extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = config('constants.QUEUE_TRIES'); 
+    public $tries = 3; 
 
     public $user;
     public $token;

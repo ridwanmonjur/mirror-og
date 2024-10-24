@@ -107,7 +107,8 @@ class BetaController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Some error occured'
+                'error' => 'server_error',
+                'message' => $e->getMessage()
             ], 500);
         }
     }

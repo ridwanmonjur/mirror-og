@@ -81,6 +81,7 @@ if (emailForm) {
                             </p>
                         </div>
                     `,
+                    
                     confirmButtonText: 'Resend Confirmation Email',
                     confirmButtonColor: "#43A4D7",
                     showConfirmButton: true,
