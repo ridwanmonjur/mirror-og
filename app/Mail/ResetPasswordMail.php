@@ -14,7 +14,7 @@ use Illuminate\Queue\InteractsWithQueue;
 class ResetPasswordMail extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = config('constants.QUEUE_TRIES'); 
+    public $tries = 3; 
     
     public $image;
     public $token;

@@ -18,7 +18,7 @@ class SendBetaWelcomeMail extends Mailable  implements ShouldQueue
     protected $user;
     private $email;
     private $password;
-    public $tries = config('constants.QUEUE_TRIES'); 
+    public $tries = 3; 
 
     public function __construct(string $email, string $password)
     {

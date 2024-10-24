@@ -16,7 +16,7 @@ use Illuminate\Queue\SerializesModels;
 class JoinEventSignupListener implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = config('constants.QUEUE_TRIES'); 
+    public $tries = 3; 
 
     /**
      * 
