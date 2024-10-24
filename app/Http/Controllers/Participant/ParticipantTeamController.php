@@ -168,11 +168,6 @@ class ParticipantTeamController extends Controller
         return $this->showErrorParticipant('This event is missing or you need to be a member to view events!');
     }
 
-    public function createTeamView()
-    {
-        return view('Participant.CreateTeam');
-    }
-
     public function editTeam(UpdateTeamRequest $request)
     {
         try {

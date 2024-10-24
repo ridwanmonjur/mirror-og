@@ -309,8 +309,6 @@ class ParticipantEventController extends Controller
         return view('Participant.CreateTeamToRegister', compact('id'));
     }
 
-   
-
     public function selectTeamToJoinEvent(Request $request, $id)
     {
         DB::beginTransaction();

@@ -90,8 +90,6 @@ class AuthController extends Controller
         return Socialite::driver('google')->redirect();
     }    
    
-
-
     public function storeUser(Request $request)
     {
         $validatedData = [];
@@ -116,7 +114,7 @@ class AuthController extends Controller
             ]);
 
             if ($userRole === 'organizer') {
-                $this->createUser($validatedData, $userRole);
+                $this->authService->createUser($validatedData, $userRole);
 
                 $organizer = new Organizer([
                     'user_id' => $user->id,
@@ -130,7 +128,7 @@ class AuthController extends Controller
                     ...$validationRules,
                 ]);
 
-                $this->createUser($validatedData, $userRole);
+                $this->authService->createUser($validatedData, $userRole);
                 $participant = new Participant([
                     'user_id' => $user->id,
                 ]);
@@ -216,7 +214,5 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'message' => $th->getMessage()], 422);
         }
     }
-
-
    
 }

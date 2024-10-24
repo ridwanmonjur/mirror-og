@@ -26,7 +26,7 @@ if (emailForm) {
                         <div class="p-2 mt-2">
                             <p>Just check your email to confirm your email address and you're good to go.</p>
                             <p style="margin-top: 20px;">If you need any support, ping us at 
-                                <a href="mailto:supportmain@driftwood.gg">supportmain@driftwood.gg</a> 
+                                <a class="text-primary" href="mailto:supportmain@driftwood.gg">supportmain@driftwood.gg</a>
                                 and we'll come to your aid.
                             </p>
                         </div>

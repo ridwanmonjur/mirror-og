@@ -70,7 +70,7 @@ Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-permission:participant|admin|organizer'], function () {
-        Route::get('user/{id}/stats', [UserController::class, 'showStats'])->name('user.stats');
+        Route::view('user/{id}/stats', 'Shared.PlayerProfileStats', ['userId' => request('id')])->name('user.stats');
         Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackground.action');
         Route::get('profile/message', [ChatController::class, 'message'])->name('user.message.view');
     });
@@ -97,6 +97,10 @@ Route::group(['prefix' => 'participant'], function () {
             // Request page
             Route::get('/request', [ParticipantController::class, 'viewRequest'])->name('participant.request.view');
 
+            // Beta onboarding
+            Route::get('/onboardBeta', [UserController::class, 'viewOnboardBeta'])->name('participant.onboardBeta.view');
+            Route::post('/onboardBeta', [UserController::class, 'postOnboardBeta'])->name('participant.onboardBeta.view');
+
             // Friends
             Route::post('/friends', [ParticipantController::class, 'updateFriend'])->name('participant.friends.update');
             Route::post('/follow', [ParticipantController::class, 'followParticipant'])->name('participant.participant.follow');
@@ -105,7 +109,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::get('/team/list', [ParticipantTeamController::class, 'teamList'])
                 ->middleware('prevent-back-history')
                 ->name('participant.team.view');
-            Route::get('/team/create', [ParticipantTeamController::class, 'createTeamView'])->name('participant.team.create');
+            Route::view('/team/create', 'Participant.CreateTeam')->name('participant.team.create');
             Route::get('/team/{id}/edit', [ParticipantTeamController::class, 'editTeamView'])->name('participant.team.edit');
             Route::get('/team/confirm', [ParticipantEventController::class, 'confirmUpdate']);
             Route::get('/team/{id}/manage/member', [ParticipantTeamController::class, 'teamMemberManagement'])->name('participant.member.manage');
