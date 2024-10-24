@@ -1,23 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layout.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title')</title>
-    <link rel="stylesheet" href="{{ asset('/assets/css/auth/authLogin.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    @include('__CommonPartials.HeadIcon')
-</head>
+@section('title', 'Driftwood - About Us')
 
-<body>
-    <main>
-        <div class="wrapper">
-            <br><br>
-            <img src="{{ asset('/assets/images/driftwood logo.png') }}">
-            <br>
+@push('styles')
+    <link href="{{ asset('/assets/css/open/About.css') }}" rel="stylesheet">
+@endpush
+
+@section('content')
+    <header>
+        @include('__CommonPartials.NavbarBeta')
+    </header>
+    <main style="padding: 5vh 10vw ;">
+        <br><br>
+        <div class="card">
             @if (isset($error))
-                <div class="mb-4 mt-4">
+                <div class="mb-2 mt-4 text-center">
                     <div class="text-danger mb-3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
                             class="bi bi-x-circle" viewBox="0 0 16 16">
@@ -27,14 +24,14 @@
                         </svg>
                     </div>
                     <h4 class="text-danger">Verification Failed</h4>
-                    <div class="alert rounded-pill  alert-danger">
+                    <div class=" rounded-pill  ">
                         {{ $error }}
                     </div>
                 </div>
             @endif
 
             @if (isset($success))
-                <div class="mb-4 mt-4">
+                <div class="mb-2 mt-4  text-center">
                     <div class="text-success mb-3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
                             class="bi bi-check-circle" viewBox="0 0 16 16">
@@ -44,23 +41,32 @@
                         </svg>
                     </div>
                     <h4 class="text-success">Email Verified</h4>
-                    <div class="alert rounded-pill  alert-success">
-                        {{ $success }}
+                    <div class="rounded-pill d-inline-block ">
+                        <br>
+                        <p> Got it! </p>
+
+                        </p>We've received your email address safe and sound. Now all you have to do is wait for an
+                        invitation email from us. Keep an eye out! </p>
+
+                        </p> If you need any support, ping us at supportmain@driftwood.gg and we'll come to your aid.
+                        </p>
+
+                        <p> Action button to redirect to closed beta landing page: Back to Driftwood </p>
+
                     </div>
                 </div>
             @endif
 
-            <div class="mt-4">
-                <a href="{{ route('public.closedBeta.view') }}" class="text-light btn btn-primary rounded-pill">
+            <div class="mt-3 d-flex justify-content-center">
+                <a href="{{ route('public.closedBeta.view') }}" class="text-light btn btn-primary mx-auto rounded-pill">
                     Return to Homepage
                 </a>
             </div>
-
-            <br> <br><br>
-
+            <br> 
         </div>
-        <script src="{{ asset('/assets/js/shared/authValidity.js') }}"></script>
     </main>
-</body>
+@endsection
 
-</html>
+@push('scripts')
+    <script src="{{ asset('/assets/js/open/About.js') }}"></script>
+@endpush

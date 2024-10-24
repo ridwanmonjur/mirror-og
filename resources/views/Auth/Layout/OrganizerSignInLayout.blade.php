@@ -4,7 +4,7 @@
 @section('signInbody')
 
 
-<img src="{{ asset('/assets/images/driftwood logo.png') }}">
+<img class="mt-4 mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
 <h5 class="mt-2 mb-0"><u>Sign in to your organizer account</u></h5>
 <form 
     autocomplete="off" 
@@ -17,7 +17,7 @@
 >
     @csrf
     <div class="flash-message">
-    @include('Auth.Layout.Flash')
+    @include('__CommonPartials.Flash')
         @if(session('errorEmail'))
         Click
         <a style="font-weight: bold; text-decoration: underline;"

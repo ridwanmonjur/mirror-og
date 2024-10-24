@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\AuthViewController;
+use App\Http\Controllers\Auth\AuthResetAndVerifyController;
+use App\Http\Controllers\Open\BetaController;
+use App\Http\Controllers\Open\MiscController;
 use App\Http\Controllers\Organizer\OrganizerCheckoutController;
 use App\Http\Controllers\Organizer\OrganizerController;
 use App\Http\Controllers\Organizer\OrganizerEventController;
@@ -18,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 /* THIS IS THE UNSIGNED VIEW */
 // Home
 Route::redirect('/', '/closedbeta', 301);
-Route::get('/home', [AuthController::class, 'showLandingPage'])->name('public.landing.view');
+Route::get('/home', [MiscController::class, 'showLandingPage'])->name('public.landing.view');
 Route::view('/closedbeta', 'ClosedBeta')->name('public.closedBeta.view');
 Route::view('/about', 'About')->name('public.about.view');
 Route::view('/contact', 'Contact')->name('public.contact.view');
@@ -27,27 +31,26 @@ Route::get('/login', function () {
 })->name('login');
 
 // Forget, reset password
-Route::get('/forget-password', [AuthController::class, 'createForget'])->name('user.forget.view');
-Route::get('/reset-password/{token}', [AuthController::class, 'createReset'])->name('user.reset.view');
-Route::post('/reset-password', [AuthController::class, 'storeReset'])->name('user.reset.action');
-Route::post('/forget-password', [AuthController::class, 'storeForget'])->name('user.forget.action');
+Route::view('/forget-password', 'Auth.ForgetPassword')->name('user.forget.view');
+Route::get('/reset-password/{token}', [AuthResetAndVerifyController::class, 'createReset'])->name('user.reset.view');
+Route::post('/reset-password', [AuthResetAndVerifyController::class, 'storeReset'])->name('user.reset.action');
+Route::post('/forget-password', [AuthResetAndVerifyController::class, 'storeForget'])->name('user.forget.action');
 
 // Verify
-Route::get('/account/verify-resend/{email}', [AuthController::class, 'verifyResend'])->name('user.verify.resend');
-Route::get('/account/verify/{token}', [AuthController::class, 'verifyAccount'])->name('user.verify.action');
-Route::get('/account/verify-success/', [AuthController::class, 'verifySuccess'])->name('user.verify.success');
-Route::get('/interestedUser/verify/{token}', [AuthController::class, 'verifyInterestedUser'])->name('interestedUser.verify.action');
+Route::get('/account/verify-resend/{email}', [AuthResetAndVerifyController::class, 'verifyResend'])->name('user.verify.resend');
+Route::get('/account/verify/{token}', [AuthResetAndVerifyController::class, 'verifyAccount'])->name('user.verify.action');
+Route::view('/account/verify-success/', 'Auth.VerifySuccess')->name('user.verify.success');
+Route::get('/interestedUser/verify/{token}', [BetaController::class, 'verifyInterestedUser'])->name('interestedUser.verify.action');
 
 // Countries and games
-Route::get('/countries', [AuthController::class, 'countryList'])->name('country.view');
-Route::get('/games', [AuthController::class, 'gameList'])->name('game.view');
+Route::get('/countries', [MiscController::class, 'countryList'])->name('country.view');
+Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
 
 // Logout
-Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
-Route::post('/logout', [AuthController::class, 'logout'])->name('participant.logout.action');
+Route::get('logout', [AuthViewController::class, 'logoutAction'])->name('logout.action');
 
 // Search bar
-Route::get('/event/search', [AuthController::class, 'showLandingPage'])->name('public.search.view');
+Route::get('/event/search', [MiscController::class, 'showLandingPage'])->name('public.search.view');
 Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view');
 Route::get('/view/team/{id}', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
 Route::get('/view/participant/{id}', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view')
@@ -76,8 +79,8 @@ Route::group(['middleware' => 'auth'], function () {
 /* THIS IS THE PARTICIPANT VIEW */
 Route::group(['prefix' => 'participant'], function () {
     // Normal login
-    Route::get('/signin', [AuthController::class, 'signIn'])->name('participant.signin.view');
-    Route::get('/signup', [AuthController::class, 'signUp'])->name('participant.signup.view');
+    Route::get('/signin', [AuthViewController::class, 'participantSignIn'])->name('participant.signin.view');
+    Route::view('/signup', 'Auth.ParticipantSignUp')->name('participant.signup.view');
     Route::post('/signin', [AuthController::class, 'accessUser'])->name('participant.signin.action');
     Route::post('/signup', [AuthController::class, 'storeUser'])->name('participant.signup.action');
 
@@ -144,8 +147,8 @@ Route::group(['prefix' => 'participant'], function () {
 /* THIS IS THE ORGANIZER VIEW */
 Route::group(['prefix' => 'organizer'], function () {
     // Normal login
-    Route::get('/signin', [AuthController::class, 'organizerSignin'])->name('organizer.signin.view');
-    Route::get('/signup', [AuthController::class, 'organizerSignup'])->name('organizer.signup.view');
+    Route::get('/signin', [AuthViewController::class, 'organizerSignin'])->name('organizer.signin.view');
+    Route::view('/signup', 'Auth.OrganizerSignUp')->name('organizer.signup.view');
     Route::post('/signin', [AuthController::class, 'accessUser'])->name('organizer.signin.action');
     Route::post('/signup', [AuthController::class, 'storeUser'])->name('organizer.signup.action');
 

@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\UnauthorizedException;
 use App\Services\EventMatchService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class ParticipantEventController extends Controller
 {
@@ -68,11 +69,11 @@ class ParticipantEventController extends Controller
         ];
 
         if ($request->ajax()) {
-            $view = view('Participant.HomeScroll', $output)->render();
+            $view = view('__CommonPartials.LandingPageHomeScroll', $output)->render();
 
             return response()->json(['html' => $view]);
         }
-        return view('Participant.Home', $output);
+        return view('LandingPage', $output);
     }
 
     public function viewEvent(Request $request, $id)
@@ -166,6 +167,7 @@ class ParticipantEventController extends Controller
                 ]
             );
         } catch (Exception $e) {
+            Log::error($e);
             return $this->showErrorParticipant($e->getMessage());
         }
     }

@@ -31,7 +31,7 @@ class VerifyInterestedUserMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Verify Interest In Closed Beta',
+            subject: "Confirm your Email for Driftwood's Closed Beta!",
         );
     }
     public function build()

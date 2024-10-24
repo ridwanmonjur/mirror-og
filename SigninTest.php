@@ -78,7 +78,7 @@
     //         'name' => '',
     //         'email' => 'invalid-email',
     //         'password' => 'short',
-    //         'password_confirmation' => 'nomatch',
+    //         'confirmPassword' => 'nomatch',
     //     ]);
 
     //     $response->assertSessionHasErrors('password');

@@ -373,7 +373,7 @@
                                             <td class="d-flex align-items-center colored-cell">
                                                 <img
                                                     class="rounded-circle d-inline-block object-fit-cover me-3"
-                                                    src="{{ '/storage' . '/'. $team?->teamBanner }}"
+                                                    src="{{ '/storage' . '/'. $team->teamBanner }}"
                                                     {!! trustedBladeHandleImageFailure() !!} 
                                                     height="40"
                                                     width="40"

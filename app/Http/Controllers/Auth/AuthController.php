@@ -3,389 +3,121 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Mail\VerifyInterestedUserMail;
 use App\Mail\VerifyUserMail;
-use App\Mail\ResetPasswordMail;
-use App\Models\EventDetail;
 use App\Models\Organizer;
 use App\Models\Participant;
 use App\Models\User;
-use Carbon\Carbon;
 use ErrorException;
-use Exception;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Io238\ISOCountries\Models\Country;
+use App\Services\AuthService;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
-    public function logoutAction()
-    {
-        Auth::logout();
+    private AuthService $authService;
 
-        return redirect('/');
+    public function __construct(AuthService $authService) {
+        $this->authService = $authService;
     }
 
-    public function countryList()
+    private function handleUserRedirection(?User $user, ?string $error = null)
     {
-        $countries = Country::all(['name', 'emoji_flag', 'id']);
+        Session::forget('role');
 
-        return response()->json(['success' => true, 'data' => $countries], 200);
+        if ($error) {
+            return view('Error', ['error' => $error]);
+        }
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if ($user->role === 'PARTICIPANT') {
+            return redirect()->route('participant.home.view');
+        }
+
+        return redirect()->route('organizer.home.view');
     }
-
-    public function gameList()
-    {
-        $games = DB::table('games')->get();
-
-        return response()->json(['success' => true, 'data' => $games], 200);
-    }
+  
 
     public function handleGoogleCallback(Request $request)
     {
-        // dd("hio");
-        //** @var \Illuminate\Support\Facades\Socialite $socialite */
         // @phpstan-ignore-next-line
         $user = Socialite::driver('google')->stateless()->user();
         $role = Session::get('role');
         // phpcs:enable
 
         ['finduser' => $finduser, 'error' => $error]
-            = $this->_registerOrLoginUser($user, 'google', $role);
+            = $this->authService->registerOrLoginUserForSocialAuth($user, 'google', $role);
 
-        Session::forget('role');
-        if ($error) {
-            return view('Participant.EventNotFound', ['error' => $error]);
-        }
-        if ($finduser->role === 'PARTICIPANT') {
-            return redirect()->route('participant.home.view');
-        }
-        if ($finduser->role === 'ORGANIZER' || $finduser->role === 'ADMIN') {
-            return redirect()->route('organizer.home.view');
+        return $this->handleUserRedirection($finduser, $error);
+    }
+
+    public function handleSteamCallback()
+    {
+        $user = Socialite::driver('steam')->user();
+        $role = Session::get('role');
+        ['finduser' => $finduser, 'error' => $error]
+            = $this->authService->registerOrLoginUserForSocialAuth($user, 'steam', $role);
+
+        return $this->handleUserRedirection($finduser, $error);
+    }
+
+    private function putRoleInSessionBasedOnRoute($url): void {
+        if (strpos($url, 'organizer') !== false) {
+            Session::put('role', 'organizer');
+        } elseif (strpos($url, 'participant') !== false) {
+            Session::put('role', 'participant');
         }
     }
 
     // Steam login
     public function redirectToSteam(Request $request)
     {
-        $url = $request->url();
-        if (strpos($url, 'organizer') !== false) {
-            Session::put('role', 'organizer');
-        } elseif (strpos($url, 'participant') !== false) {
-            Session::put('role', 'participant');
-        }
-
+        $this->putRoleInSessionBasedOnRoute($request->url());
         return Socialite::driver('steam')->redirect();
     }
 
     public function redirectToGoogle(Request $request)
     {
-        $url = $request->url();
-        if (strpos($url, 'organizer') !== false) {
-            Session::put('role', 'organizer');
-        } elseif (strpos($url, 'participant') !== false) {
-            Session::put('role', 'participant');
-        }
-
+        $this->putRoleInSessionBasedOnRoute($request->url());
         return Socialite::driver('google')->redirect();
-    }
+    }    
+   
 
-    // Steam callback
-    public function handleSteamCallback()
-    {
-        $user = Socialite::driver('steam')->user();
-        $role = Session::get('role');
-        ['finduser' => $finduser, 'error' => $error]
-            = $this->_registerOrLoginUser($user, 'steam', $role);
-
-        Session::forget('role');
-        if ($error) {
-            return view('Participant.EventNotFound', ['error' => $error]);
-        }
-        if ($finduser->role === 'PARTICIPANT') {
-            return redirect()->route('participant.home.view');
-        }
-        if ($finduser->role === 'ORGANIZER' || $finduser->role === 'ADMIN') {
-            return redirect()->route('organizer.home.view');
-        }
-    }
-
-    public function showLandingPage(Request $request)
-    {
-        $count = 6;
-        $currentDateTime = Carbon::now()->utc();
-
-        $events = EventDetail::landingPageQuery($request, $currentDateTime)
-            ->paginate($count);
-
-
-        $output = compact('events');
-
-        if ($request->ajax()) {
-            $view = view('__CommonPartials.LandingPageScroll', $output)->render();
-
-            return response()->json(['html' => $view]);
-        }
-
-        return view('LandingPage', $output);
-    }
-
-    public function signIn(Request $request)
-    {
-        if ($request->has('url')) {
-            Session::put('intended', $request->input('url'));
-        }
-
-        return view('Auth.ParticipantSignIn');
-    }
-
-    public function organizerSignIn(Request $request)
-    {
-        if ($request->has('url')) {
-            Session::put('intended', $request->input('url'));
-        }
-
-        return view('Auth.OrganizerSignIn');
-    }
-
-    public function storeReset(Request $request)
-    {
-        $request->validate([
-            'token' => 'required',
-            'password' => 'required|min:6',
-            'password_confirmation' => 'required|min:6',
-        ]);
-
-        if ($request->password !== $request->password_confirmation) {
-            return back()->with(['error' => 'Password confirmation does not match.']);
-        }
-
-        $tokenData = DB::table('password_reset_tokens')
-            ->where('token', $request->token)
-            ->first();
-
-        if (! $tokenData) {
-            return back()->with(['error' => 'Invalid token or email address.']);
-        }
-
-        if (now() > $tokenData->expires_at) {
-            return back()->with(['error' => 'Token has expired. Please request a new password reset.']);
-        }
-
-        $user = User::where('email', $tokenData->email)->first();
-        if ($user) {
-            $user->update([
-                'password' => Hash::make($request->password),
-            ]);
-            DB::table('password_reset_tokens')
-                ->where('email', $tokenData->email)
-                ->delete();
-
-            return view('Auth.ResetSuccess');
-        }
-
-        return back()->with(['error' => 'User not found.']);
-    }
-
-    public function createReset(Request $request)
-    {
-        return view('Auth.ResetPassword', ['token' => $request->token]);
-    }
-
-    public function storeForget(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-        ]);
-
-        if ($validator->fails()) {
-            return back()->with('error', $validator);
-        }
-
-        $token = $this->generateToken();
-        $email = $request->email;
-        $user = User::where('email', $request->email)->first();
-
-        if (! $user) {
-            return back()->with(['error' => 'User not found with this email.']);
-        }
-
-        DB::table('password_reset_tokens')->updateOrInsert(['email' => $request->email], ['token' => $token, 'expires_at' => Carbon::now()->addDay()]);
-
-        Mail::to($email)->queue(new ResetPasswordMail(
-            public_path('assets/images/driftwood logo.png'), 
-            $token
-        ));
-
-
-        return back()->with('success', 'Password reset link sent. Please check your email.');
-    }
-
-    public function createForget(Request $request)
-    {
-        return view('Auth.ForgetPassword');
-    }
-
-    public function verifyInterestedUser($token)
-    {
-        $user = DB::table('interested_user')->where('email_verified_token', $token)
-            ->first();
-        if (! $user) {
-            return view( 'VerifyInterestedUser')
-                ->with('error', 'Invalid verification token.');
-        }
-
-        if ($user->email_verified_at !== null) {
-            return view( 'VerifyInterestedUser')
-                ->with('success', 'Your email has already been successfully verified.');
-        }
-
-        DB::query()
-            ->from('interested_user')
-            ->where('id', $user->id)
-            ->update([
-                'email_verified_at' => now(),
-                'email_verified_token' => null
-            ]);
-    
-
-        return view( 'VerifyInterestedUser')
-            ->with('success', 'Your email has been successfully verified.');
-    }
-
-    public function verifyAccount($token)
-    {
-        $user = User::where('email_verified_token', $token)->first();
-        $role = $user->role;
-        $route = strtolower($role).'.signin.view';
-        if (! $user) {
-            return redirect()
-                ->route($route)
-                ->with('error', 'Invalid verification token.');
-        }
-
-        if ($user->email_verified_at !== null) {
-            return redirect()
-                ->route($route)
-                ->with('info', 'Your account is already verified.');
-        }
-
-        $user->email_verified_at = now();
-        $user->email_verified_token = null;
-        $user->save();
-
-        return redirect()
-            ->route($route)
-            ->with('success', 'Your account has been successfully verified.');
-    }
-
-    public function verifyResend($email)
-    {
-        $user = User::where('email', $email)->first();
-
-        if (! $user) {
-            return redirect()
-                ->back()
-                ->with('error', 'User not found with this email address.');
-        }
-
-        if ($user->email_verified_at !== null) {
-            return redirect()
-                ->back()
-                ->with('info', 'Your account is already verified.');
-        }
-
-        $token = $this->generateToken();
-        $user->email_verified_token = $token;
-        $user->save();
-
-        Mail::to($user->email)->queue(new VerifyUserMail($user, $token));
-        return redirect()
-            ->back()
-            ->with('success', 'Verification email has been sent. Please check your inbox.');
-    }
-
-    public function verifySuccess(Request $request)
-    {
-        return view('Auth.VerifySuccess');
-    }
-
-
-    public function  verifyInterestedUserSuccess()
-    {
-        return view(view: 'VerifyInterestedUserSuccess');
-    }
-
-    //SignUp Auth View
-
-    public function signUp(Request $request)
-    {
-        return view('Auth.ParticipantSignUp');
-    }
-
-    public function organizerSignUp(Request $request)
-    {
-        return view('Auth.OrganizerSignUp');
-    }
 
     public function storeUser(Request $request)
     {
-        $userRole = '';
-        $userRoleCapital = '';
         $validatedData = [];
-        if ($request->is('organizer/*')) {
-            $userRole = 'organizer';
-            $userRoleCapital = 'ORGANIZER';
-            $userRoleFirstCapital = 'Organizer';
-
-            $validatedData = $request->validate([
-                'username' => 'baiL|required',
-                'email' => 'bail|required|email',
-                'password' => 'bail|required|min:6|max:24',
-                'companyDescription' => 'bail|required',
-                'companyName' => 'bail|required',
-            ]);
-        } elseif ($request->is('participant/*')) {
-            $userRole = 'participant';
-            $userRoleCapital = 'PARTICIPANT';
-            $userRoleFirstCapital = 'Participant';
-
-            $validatedData = $request->validate([
-                'username' => 'baiL|required',
-                'email' => 'bail|required|email',
-                'password' => 'bail|required|min:6|max:24',
-            ]);
-        } else {
-            return redirect()->route('public.landing.view');
-        }
+        $validationRules = [
+            'username' => 'baiL|required',
+            'email' => 'bail|required|email',
+            'password' => 'bail|required|min:6|max:24',
+        ];
+        
+        extract($this->authService->determineUserRole($request));
 
         $redirectErrorRoute = $userRole.'.signup.view';
         $redirectSuccessRoute = $userRole.'.signin.view';
+        
         DB::beginTransaction();
 
         try {
-            $user = new User([
-                'name' => $validatedData['username'],
-                'email' => $validatedData['email'],
-                'password' => $validatedData['password'],
-                'role' => $userRoleCapital,
-                'created_at' => now(),
+            $validatedData = $request->validate([
+                ...$validationRules,
+                'companyDescription' => 'bail|required',
+                'companyName' => 'bail|required',
             ]);
 
-            $token = $this->generateToken();
-            $user->email_verified_token = $token;
-            $user->save();
-
             if ($userRole === 'organizer') {
+                $this->createUser($validatedData, $userRole);
+
                 $organizer = new Organizer([
                     'user_id' => $user->id,
                     'companyDescription' => $validatedData['companyDescription'],
@@ -394,6 +126,11 @@ class AuthController extends Controller
 
                 $organizer->save();
             } elseif ($userRole === 'participant') {
+                $validatedData = $request->validate([
+                    ...$validationRules,
+                ]);
+
+                $this->createUser($validatedData, $userRole);
                 $participant = new Participant([
                     'user_id' => $user->id,
                 ]);
@@ -422,6 +159,7 @@ class AuthController extends Controller
                     ->route($redirectErrorRoute)
                     ->with('error', 'The email already exists. Add another email!');
             }
+
             return redirect()
                 ->route($redirectErrorRoute)
                 ->with('error', 'An error occurred while processing your request.');
@@ -436,21 +174,8 @@ class AuthController extends Controller
 
     public function accessUser(Request $request)
     {
-        $userRole = '';
-        $userRoleCapital = '';
         $validatedData = [];
-
-        if ($request->is('organizer/*')) {
-            $userRole = 'organizer';
-            $userRoleCapital = 'ORGANIZER';
-            $userRoleSentence = 'Organizer';
-        } elseif ($request->is('participant/*')) {
-            $userRole = 'participant';
-            $userRoleCapital = 'PARTICIPANT';
-            $userRoleSentence = 'Participant';
-        } else {
-            return response()->json(['success' => false, 'message' => 'Wrong route!'], 422);
-        }
+        extract($this->authService->determineUserRole($request));
 
         try {
             $validatedData = $request->validate([
@@ -481,6 +206,7 @@ class AuthController extends Controller
                     'success' => true,
                 ], 201);
             }
+
             throw new ErrorException('The email or password you entered is incorrect!');
         } catch (QueryException $e) {
             Log::error($e->getMessage());
@@ -491,124 +217,6 @@ class AuthController extends Controller
         }
     }
 
-    protected function _registerOrLoginUser($user, $type, $role)
-    {
-        $finduser = null;
-        if ($type === 'google') {
-            $finduser = User::where('google_id', $user->id)->first();
-        } elseif ($type === 'steam') {
-            $finduser = User::where('steam_id', $user->id)->first();
-        }
 
-        if ($finduser) {
-            // if (!$user->user['email_verified']) {
-            //     return ['finduser' => null, 'error' => 'Your Gmail is not verified'];
-            // }
-
-            Auth::login($finduser);
-
-            return ['finduser' => $finduser, 'error' => null];
-        }
-
-        $finduser = User::where('email', $user->email)->first();
-
-        if ($finduser) {
-            if ($type === 'google') {
-                $finduser->google_id = $user->id;
-            } elseif ($type === 'steam') {
-                $finduser->steam_id = $user->id;
-            }
-
-            $finduser->email_verified_at = now();
-            Auth::login($finduser);
-            $finduser->save();
-
-            return ['finduser' => $finduser, 'error' => null];
-        }
-
-        $newUser = User::create([
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => bcrypt(Str::random(13)),
-            'role' => strtoupper($role),
-            'created_at' => now(),
-        ]);
-
-        if ($newUser->role === 'ORGANIZER') {
-            $organizer = new Organizer([
-                'user_id' => $newUser->id,
-            ]);
-
-            $organizer->save();
-        } elseif ($newUser->role === 'PARTICIPANT') {
-            $participant = new Participant([
-                'user_id' => $newUser->id,
-            ]);
-
-            $participant->save();
-        }
-
-        $newUser->email_verified_at = now();
-
-        if ($type === 'google') {
-            $newUser->google_id = $user->id;
-        } elseif ($type === 'steam') {
-            $newUser->steam_id = $user->id;
-        }
-
-        $newUser->save();
-        Auth::login($newUser);
-
-        return ['finduser' => $newUser, 'error' => null];
-    }
-
-    private function generateToken(): string
-    {
-        return Str::random(64);
-    }
-
-    public function interestedAction(Request $request): JsonResponse  {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:interested_user,email',
-        ], [
-            'email.unique' => 'This email is already added. Please go to your email and verify if you have not done so already!',
-            'email.required' => 'Please add a valid email address',
-            'email.email' => 'Please add a valid email address'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first(),
-            ], 422);
-        }
-
-        try {
-            $token = $this->generateToken();
-
-            DB::table('interested_user')->insertGetId([
-                'email' => $request->email,
-                'created_at' => now(),
-                'updated_at' => now(),
-                'email_verified_token' => $token
-            ]);
-
-            // Mail::to($request->email)
-            //     ->queue(new VerifyInterestedUserMail($request->email, $token));
-
-            Mail::to($request->email)
-                ->send(new VerifyInterestedUserMail($request->email, $token));
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Thank you! An email has been sent to verify the email address you sent us!',
-            ], 201);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while subscribing.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
+   
 }
