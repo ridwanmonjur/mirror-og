@@ -74,7 +74,8 @@ table.responsive td img {
 }
 
 
-@import './bootstrap/swal.scss';
+@import 'sweetalert2/src/sweetalert2.scss';
+
 @import './bootstrap/app-custom.scss';
 
 // Variables

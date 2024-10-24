@@ -7,9 +7,12 @@
     <title>Event creation</title>
   
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
+    @vite(['resources/sass/app.scss', 
+        'resources/js/app.js', 
+        'resources/js/libraries/tagify.js',
+        'resources/sass/libraries/tagify.scss'
+    ])    
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.6/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.scss">
 
 </head>

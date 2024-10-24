@@ -7,7 +7,7 @@
     <title>Team Edit</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamCreate.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.scss">
     @include('__CommonPartials.HeadIcon')
     
 </head>

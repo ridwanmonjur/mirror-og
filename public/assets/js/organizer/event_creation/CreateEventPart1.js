@@ -1,0 +1,126 @@
+function goToPaymentPage() {
+    goToNextScreen('step-payment', 'timeline-payment');
+    fillStepPaymentValues();
+}
+
+function goToLaunch2ndPage() {
+    goToNextScreen('step-launch-2', 'timeline-launch');
+}
+
+function setFormValuesAndNavigate(element) {
+    let eventType = element.dataset.eventType;
+    let eventTypeId = element.dataset.eventTypeId;
+    let eventDefinitions = element.dataset.eventDefinitions;
+
+    setFormValues({'eventType': eventType, 'eventTypeId': eventTypeId});
+    goToNextScreen('step-3', 'timeline-1');
+    
+    document.querySelectorAll('.box_2nd').forEach((el) => {
+        el.classList.remove('color-border-success');
+    });
+
+    element.querySelector('.box_2nd').classList.add('color-border-success');
+    
+    let eventTypeTitle = element.querySelector('.inputEventTypeTitle u').innerHTML;
+    localStorage.setItem('eventTypeTitle', eventTypeTitle);
+    localStorage.setItem('eventTypeDefinition', eventDefinitions);
+    localStorage.setItem('eventTypeId', eventTypeId);
+}
+
+function handleTierSelection(element) {
+    let eventTier = element.dataset.eventTier;
+    let eventTierId = element.dataset.eventTierId;
+    let eventTierImg = element.querySelector('.inputEventTierImg').src;
+    let eventTierPerson = element.querySelector('.inputEventTierPerson').innerHTML;
+    let eventTierPrize = element.querySelector('.inputEventTierPrize').innerHTML;
+    let eventTierEntry = element.querySelector('.inputEventTierEntry').innerHTML;
+    let eventTierTitle = element.querySelector('.inputEventTierTitle').innerHTML;
+
+    setFormValues({'eventTier': eventTier, 'eventTierId': eventTierId});
+    
+    localStorage.setItem('eventTierPerson', eventTierPerson);
+    localStorage.setItem('eventTierPrize', eventTierPrize);
+    localStorage.setItem('eventTierImg', eventTierImg);
+    localStorage.setItem('eventTierEntry', eventTierEntry);
+    localStorage.setItem('eventTierTitle', eventTierTitle);
+    localStorage.setItem('eventTierId', eventTierId);
+    
+    fillStepGameDetailsValues();
+    
+    document.querySelectorAll('.box-tier').forEach(element => {
+        element.classList.remove('color-border-success-dotted');
+    });
+    element.querySelector('.box-tier').classList.add('color-border-success-dotted');
+    
+    goToNextScreen('step-4', 'timeline-1');
+}
+
+function fillStepPaymentValues() {
+    
+    const paymentMethodConditionFulfilledButton =
+        document.getElementsByClassName('choose-payment-method-condition-fulfilled')[0];
+    
+    const paymentMethodCondition = document.getElementsByClassName('choose-payment-method')[0];
+    
+    let eventRate = 20,
+        eventSubTotal = 0,
+        eventFee = 0,
+        eventTotal = 0;
+    
+    let eventRateToTierMap = {
+        'Starfish': 5000,
+        'Turtle': 10000,
+        'Dolphin': 15000
+    };
+    
+    let formValues = getFormValues(['eventTier', 'eventType']);
+    
+    if (
+        'eventTier' in formValues &&
+        'eventType' in formValues
+    ) {
+
+        let eventTier = formValues['eventTier'] ?? null;
+        let eventType = formValues['eventType'] ?? null;
+        eventSubTotal = eventRateToTierMap[eventTier] ?? -1;
+        
+        if (eventRate == -1) {
+            Toast.fire({
+                icon: 'error',
+                text: `Invalid event tier or event type!`
+            })
+        }
+
+        eventFee = eventSubTotal * (eventRate / 100);
+        eventTotal = eventSubTotal + eventFee;
+        
+        if (eventTier == null || eventType == null || eventSubTotal == -1) {
+            getElementByIdAndSetInnerHTML('paymentType', "N/A");
+            getElementByIdAndSetInnerHTML('paymentTier', "N/A");
+            getElementByIdAndSetInnerHTML('paymentTotal', "N/A");
+
+            if (!paymentMethodCondition.classList.contains("d-none")) {
+                paymentMethodCondition.classList.add("d-none");
+            }
+
+            if (paymentMethodConditionFulfilledButton.classList.contains("d-none")) {
+                paymentMethodConditionFulfilledButton.classList.remove("d-none");
+            }
+        } else {
+            getElementByIdAndSetInnerHTML('paymentType', eventType);
+            getElementByIdAndSetInnerHTML('paymentTier', eventTier);
+            getElementByIdAndSetInnerHTML('paymentSubtotal', "RM " + numberToLocaleString(eventSubTotal));
+            getElementByIdAndSetInnerHTML('paymentRate', `${eventRate}%`);
+            getElementByIdAndSetInnerHTML('paymentFee', "RM " + numberToLocaleString(eventFee));
+            getElementByIdAndSetInnerHTML('paymentTotal', "RM " + numberToLocaleString(eventTotal));
+            
+            if (!paymentMethodConditionFulfilledButton.classList.contains("d-none")) {
+                paymentMethodConditionFulfilledButton.classList.add("d-none");
+            }
+
+            if (paymentMethodCondition.classList.contains("d-none")) {
+                paymentMethodCondition.classList.remove("d-none");
+            }
+        }
+    }
+}

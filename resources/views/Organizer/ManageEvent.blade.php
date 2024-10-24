@@ -148,7 +148,16 @@
                 }
 
             </script>
-            @include('Organizer.__ManageEventPartials.ManageEventScripts')
+            <div id="app-data"
+                data-endpoint="{{ route('event.search.view') }}"
+                data-user-id="{{ $user->id }}"
+                data-event-index-url="{{ route('event.index') }}"
+                data-event-create-url="{{ route('event.create') }}">
+            </div>
+
+            <script src="{{ asset('/assets/js/organizer/FetchVariables.js') }}"></script>
+            <script src="https://cdn.jsdelivr.net/npm/litepicker@2.0/dist/litepicker.min.js"></script>
+            <script src="{{ asset('/assets/js/organizer/ManageEvent.js') }}"></script>
         </div>
     </main>
 </body>

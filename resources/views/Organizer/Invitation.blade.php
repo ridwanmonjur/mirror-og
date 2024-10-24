@@ -8,6 +8,13 @@ extract($dateArray);
         @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
         <div>
+            <div id="eventData"
+                data-event-id="{{ $event->id }}"
+                data-user-id="{{ $user_id }}"
+                data-route-show="{{ route('event.show', $event->id) }}"
+                data-route-invitation-store="{{ route('event.invitation.store', $event->id) }}">
+            </div>
+
             @include('Organizer.__CreateEditPartials.CreateEventTimelineBox')
             <br>
             <div class="text-center" style="margin:auto; border-color: black; background: white; max-width: 60vw; min-height: 60vh;display:flex;flex-direction:column; justify-content:space-between;">
@@ -42,66 +49,13 @@ extract($dateArray);
                 </button>
                 <br>
             </div>
-            <script>
-                const goToManageScreen = () => {
-                    window.location.href = "{{route('event.show', $event->id) }}";
-                }
-
-                function addParticant() {
-                    const teamId = document.querySelector('select').value;
-                    const teamName = document.querySelector('select').value;
-                    const addedTeam = document.querySelector('.added-participant');
-                    const hideIfTeam = document.querySelector('.hide-if-participant');
-                    if (hideIfTeam) {
-                        hideIfTeam.classList.add('d-none');
-                    }
-                
-                    let data = {
-                        event_id: "{{ $event->id }}",
-                        team_id: teamId,
-                        organizer_id: "{{ $user_id }}",
-                    };
-                
-                    fetch("{{ route('event.invitation.store', $event->id) }}", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                                "Accept": "application/json",
-                            },
-                            body: JSON.stringify(data)
-                        })
-                        .then(response => {
-                            return response.json()
-                        })
-                        .then(responseData => {
-                            console.log({responseData})
-                            const teamElement = document.createElement('p');
-                            teamElement.textContent = responseData?.data.team.teamName;
-                            addedTeam.appendChild(teamElement);
-                            
-                            Toast.fire({
-                                icon: 'success',
-                                text: "Successfully added user."
-                            })
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        })
-                } 
-            </script>
+            <script src="{{ asset('/assets/js/organizer/Invitation.js') }}"></script>
         </div>
         <br><br>
     </main>
-    @include('Organizer.__CreateEditPartials.CreateEventScripts')
-    
-
-    <script>
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-        }
-    </script>
-
+    <script src="{{ asset('/assets/js/organizer/event_creation/CreateEventPart1.js') }}"></script>
+    <script src="{{ asset('/assets/js/organizer/event_creation/timeline.js') }}"></script>
+    <script src="{{ asset('/assets/js/organizer/event_creation/event_create.js') }}"></script>
+    <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+    <script src="{{ asset('/assets/js/organizer/event_creation/CreateEventPart2.js') }}"></script>
 </body>

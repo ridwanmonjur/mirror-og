@@ -204,7 +204,7 @@
                     class="btn border-dark rounded-pill py-2 px-4" onclick="document.getElementById('manageMemberButton')?.click();"> Back </button>
                 <button type="button" 
                     class="btn btn-primary text-light rounded-pill py-2 px-4"
-                    onclick="document.getElementById('manageRegistrationUrl')?.click();"> Next > </button>
+                    onclick="document.getElementById('manageRegistrationUrl')?.click();"> Next &gt; </button>
             </div>
         @else
             <br><br><br><br><br><br>
