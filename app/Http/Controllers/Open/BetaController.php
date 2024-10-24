@@ -61,6 +61,7 @@ class BetaController extends Controller
                     return response()->json(
                         [
                             'success' => false,
+                            'error' => 'duplicate_verified', 
                             'message' => 'This email is already in use',
                         ],
                         422,

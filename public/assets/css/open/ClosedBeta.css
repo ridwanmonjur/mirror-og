@@ -4,6 +4,11 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
+
+.swal2-title {
+    margin-top: 15px ;
+}
+
 .text-dark {
     color: rgb(97, 97, 97) !important;
 }

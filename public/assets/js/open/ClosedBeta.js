@@ -45,7 +45,29 @@ if (emailForm) {
                         resendVerificationEmail(emailInput, url);
                     }
                 }) ;
-            } else if (data.error === 'duplicate_unverified') {
+            } else if (data.error === 'duplicate_verified') {
+                Swal.fire({
+                    title: "Wait a minute…",
+                    html: `
+                        <div class="p-2 mt-2">
+                            <p>This email address <strong>${emailInput}</strong> is already submitted and confirmed!</p>
+                            <p>Submit another email address, or just wait for an invitation email for ${emailInput}.</p>
+                            <p style="margin-top: 20px;">If you need any support, ping us at 
+                                <a class="text-primary" href="mailto:supportmain@driftwood.gg">supportmain@driftwood.gg</a> 
+                                and we'll come to your aid.
+                            </p>
+                        </div>
+                    `,
+                    confirmButtonText: 'Back to Driftwood',
+                    confirmButtonColor: "#43A4D7",
+                    showConfirmButton: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showCloseButton: false,
+                });
+            }
+            
+            else if (data.error === 'duplicate_unverified') {
                 // Popup for duplicate unverified email
                 Swal.fire({
                     title: "Wait a minute…",
@@ -54,7 +76,7 @@ if (emailForm) {
                             <p>Looks like this email address <strong>${emailInput}</strong> has been submitted before, but hasn't been confirmed yet.</p>
                             <p>Just check your email to confirm your email address and you're good to go.</p>
                             <p style="margin-top: 20px;">If you need any support, ping us at 
-                                <a href="mailto:supportmain@driftwood.gg">supportmain@driftwood.gg</a> 
+                                <a class="text-primary" href="mailto:supportmain@driftwood.gg">supportmain@driftwood.gg</a> 
                                 and we'll come to your aid.
                             </p>
                         </div>
