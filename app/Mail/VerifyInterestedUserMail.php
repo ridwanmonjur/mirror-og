@@ -8,10 +8,14 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+
 
 class VerifyInterestedUserMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    public $tries = config('constants.QUEUE_TRIES'); 
 
     public $email;
     public $token;

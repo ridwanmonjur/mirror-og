@@ -5,35 +5,34 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 
-
-class ResetPasswordMail extends Mailable implements ShouldQueue
+class SendBetaWelcomeMail extends Mailable  implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $user;
+    private $email;
+    private $password;
     public $tries = config('constants.QUEUE_TRIES'); 
-    
-    public $image;
-    public $token;
 
-
-    public function __construct(string $image, string $token)
+    public function __construct(string $email, string $password)
     {
-        $this->image = $image;
-        $this->token = $token;
+        $this->email = $email;
+        $this->password = $password;
     }
 
-
-    /**
+        /**
      * Get the message envelope.
      */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Reset Password Mail',
+            subject: 'Welcome to Driftwood\'s Closed Beta!',
         );
     }
 
@@ -42,9 +41,9 @@ class ResetPasswordMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('Email.reset')->with([
-            'token' => $this->token,
-            'image' => $this->image,
+        return $this->view('Email.sendBetaWelcome')->with([
+            'password' => $this->password,
+            'email' => $this->email,
         ]);
     }
 
@@ -57,4 +56,5 @@ class ResetPasswordMail extends Mailable implements ShouldQueue
     {
         return [];
     }
+  
 }

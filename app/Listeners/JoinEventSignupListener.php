@@ -7,10 +7,19 @@ use App\Models\ActivityLogs;
 use App\Notifications\EventJoinNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+
 
 class JoinEventSignupListener implements ShouldQueue
 {
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    public $tries = config('constants.QUEUE_TRIES'); 
+
     /**
+     * 
      * Create the event listener.
      */
     public function __construct()

@@ -21,7 +21,7 @@
     }
 @endphp
 <nav class="navbar px-3 py-3 py-lg-2">
-    <a href="{{ $routeLogo }}">
+    <a href="{{ route('public.closedBeta.view') }}">
         <img width="150" height="30" src="{{ asset('/assets/images/driftwood logo.png') }}" alt="">
     </a>
     <svg style="margin-top: 10px; margin-right: 10px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24"

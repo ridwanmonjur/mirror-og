@@ -37,7 +37,7 @@
                         </tr>
                         <p>Please note: Confirming your email does not automatically give you access to Driftwood's closed beta. Those invited will receive an additional email invitation.</p>
 
-                        <p>If you need any support, ping us at <a style="color: {{$primaryColor}};">supportmain@driftwood.gg </a> and we'll come to your aid.</p>
+                        <p>If you need any support, ping us at <a href="mailto:supportmain@driftwood.gg" style="color: {{$primaryColor}};">supportmain@driftwood.gg </a> and we'll come to your aid.</p>
 
                         <p>Sincerely,<br>The Driftwood Team</p>
                     </td>

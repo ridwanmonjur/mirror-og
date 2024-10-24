@@ -236,10 +236,6 @@ class ParticipantCheckoutController extends Controller
             DB::rollBack();
 
             return $this->showErrorParticipant($e->getMessage());
-
-            // return redirect()
-            //     ->route('organizer.checkout.view', ['id' => $id] )
-            //     ->with('errorCheckout', $e->getMessage());
         }
     }
 }

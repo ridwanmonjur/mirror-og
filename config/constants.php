@@ -229,5 +229,6 @@ return [
         'IS_TEAM2' => 2,
         'IS_PUBLIC' => 3,
         'IS_ORGANIZER' => 4,
-    ]
+    ],
+    'QUEUE_TRIES' => 3,
 ];

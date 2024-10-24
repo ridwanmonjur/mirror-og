@@ -48,18 +48,15 @@
                         </p>We've received your email address safe and sound. Now all you have to do is wait for an
                         invitation email from us. Keep an eye out! </p>
 
-                        </p> If you need any support, ping us at supportmain@driftwood.gg and we'll come to your aid.
+                        </p> If you need any support, ping us at <a class="text-primary" href="mailto:supportmain@driftwood.gg">supportmain@driftwood.gg</a> and we'll come to your aid.
                         </p>
-
-                        <p> Action button to redirect to closed beta landing page: Back to Driftwood </p>
-
                     </div>
                 </div>
             @endif
 
             <div class="mt-3 d-flex justify-content-center">
                 <a href="{{ route('public.closedBeta.view') }}" class="text-light btn btn-primary mx-auto rounded-pill">
-                    Return to Homepage
+                    Back to Driftwood
                 </a>
             </div>
             <br> 

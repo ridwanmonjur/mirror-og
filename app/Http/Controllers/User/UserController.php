@@ -4,9 +4,11 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\TeamProfile;
+use App\Models\User;
 use App\Models\UserProfile;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -22,7 +24,6 @@ class UserController extends Controller
             ]);
 
             $user = $request->attributes->get('user');
-            // dd($user);
             $oldBanner = $user->userBanner;
             $fileName = $user->uploadUserBanner($request);
             $user->destroyUserBanner($oldBanner);
@@ -44,6 +45,7 @@ class UserController extends Controller
                 'fontColor' => 'nullable|string',
                 'frameColor' => 'nullable|string',
             ]);
+
             $user = $request->attributes->get('user');
             if ($request->teamId) {
                 $profile = TeamProfile::where('team_id', $request->teamId)->firstOrNew();
@@ -93,8 +95,27 @@ class UserController extends Controller
         }
     }
 
-    public function showStats($id)
-    {
-        return view('Shared.PlayerProfileStats', ['userId' => $id]);
+    public function viewOnboardBeta (Request $request) {
+        $users = DB::table('interested_user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(50); 
+
+        return view('Organizer.BetaUser', compact('users'));
+
+    }
+
+    public function postOnboardBeta (Request $request) {
+        $users = DB::table('interested_user')
+            ->where('id', $request->idList)
+            ->get()
+            ->keyBy('email'); 
+        
+        $userList = new User([
+            'name' => 'user' . ,
+            'email' => $validatedData['email'],
+            'password' => $validatedData['password'],
+            'role' => $userRoleCapital,
+            'created_at' => now(),
+        ]);
     }
 }
