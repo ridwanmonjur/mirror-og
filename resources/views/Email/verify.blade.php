@@ -45,3 +45,6 @@
         </td>
     </tr>
 @endsection
+@section('footer')
+    @include('Email.Layout.Footer')
+@endsection

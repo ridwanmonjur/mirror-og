@@ -2,6 +2,8 @@
 
 use Carbon\Carbon;
 
+use Illuminate\Support\Str;
+
 function generateCarbonDateTime($startDate, $startTime)
 {
     $startTime = fixTimeToRemoveSeconds($startTime);
@@ -11,3 +13,11 @@ function generateCarbonDateTime($startDate, $startTime)
     }
     return null;
 }
+
+function generateToken(?int $number = 64): string
+{
+    return Str::random($number);
+}
+
+
+

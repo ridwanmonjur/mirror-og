@@ -4,7 +4,7 @@
 @section('signInbody')
 
 
-<img src="{{ asset('/assets/images/driftwood logo.png') }}">
+<img class="mt-4  mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
 <h5 class="px-2"><u>Sign in to your participant account</u></h5>
 <form 
     autocomplete="off" 
@@ -30,7 +30,7 @@
             </a>
             to resend verification email.
         @endif
-        @include('Auth.Layout.Flash')
+        @include('__CommonPartials.Flash')
     </div>
     <div class="field">
         <label for="email" class="placeholder-moves-up-container">

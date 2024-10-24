@@ -28,6 +28,6 @@
 
 @if ($errors->any())
 <div>
-    <strong>Please check the form below for errors </strong>
+    <strong>{{ $errors->first() }} </strong>
 </div>
 @endif

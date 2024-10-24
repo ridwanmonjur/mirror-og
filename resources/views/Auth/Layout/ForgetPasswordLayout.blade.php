@@ -2,15 +2,14 @@
 
 @section('signUpbody')
 
-<img src="{{ asset('/assets/images/driftwood logo.png') }}">
-<br>
+<img class="mt-4 mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
 <header><u>Forgotten Password?</u></header>
-<br><br>
+<br>
 <p> Enter your email to reset your password</p>
 <form name="forget-password-form" id="forget-password-form" method="post" action="{{route('user.forget.action')}}">
     @csrf
     <div class="flash-message">
-        @include('Auth.Layout.Flash')
+        @include('__CommonPartials.Flash')
     </div>
    <div class="field">
         <label for="email" class="placeholder-moves-up-container">

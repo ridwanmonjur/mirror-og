@@ -51,7 +51,7 @@
     <div class="nav-buttons search-bar-mobile d-centered-at-mobile py-2">
          <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link text-center  fw-semibold" href="{{ route('public.landing.view') }}">CLOSED BETA</a>
+                <a class="nav-link text-center  fw-semibold" href="{{ route('public.closedBeta.view') }}">CLOSED BETA</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-center text-dark" href="{{ route('public.about.view') }}">ABOUT</a>
