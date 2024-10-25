@@ -32,10 +32,15 @@
                                 <br>
                                 <span class="input-group-text bg-primary text-light" id="inputGroup-sizing-sm">RM </span>
                                 <input 
-                                    onchange="validateInput(this);"
                                     data-amount="{{$amount}}"
                                     data-wallet="{{$discount_wallet->amount}}"
-                                    name="discount_applied_amount" class="form-control text-auto" type="number" placeholder="0.00"
+                                    name="discount_applied_amount" 
+                                    class="form-control text-auto" 
+                                    type="number" 
+                                    placeholder="0.00"
+                                    default="0.00"
+                                    step=".01"
+                                    pattern="^\d+(?:\.\d{1,2})?$" 
                                 >
                             </div>
                             <br>

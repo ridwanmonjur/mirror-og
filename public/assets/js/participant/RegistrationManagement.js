@@ -31,7 +31,7 @@ function updateInput(input) {
         plusValue: +newValue
     })
 
-    if (+newValue > total) {
+    if (+newValue >= +pending) {
         newValue = pending.toFixed(2);
     }
 
@@ -82,17 +82,6 @@ function getRandomColor() {
         color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
-}
-
-
-
-    const tabButtons = document.querySelectorAll(`.tab-button-active.${extraClassNameToFilter}`);
-    tabButtons.forEach(button => {
-        button.classList.remove("tab-button-active");
-    });
-
-    let target = event.currentTarget;
-    target.classList.add('tab-button-active');
 }
 
 

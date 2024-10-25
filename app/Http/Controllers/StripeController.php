@@ -60,7 +60,7 @@ class StripeController extends Controller
                 && $paymentIntentStripe?->status === 'requires_payment_method');
 
             $paymentIntentStripeBody = [
-                'amount' => $request->paymentAmount * 100,
+                'amount' => +$request->paymentAmount * 100,
                 'metadata' => $request->metadata,
             ];
 

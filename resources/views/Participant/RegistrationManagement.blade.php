@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/common/pie-chart.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/timeline.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/manage_team.css') }}">
+    <script src="{{ asset('assets/js/participant/RegistrationManagement.js') }}"></script>
+
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @include('__CommonPartials.HeadIcon')
 </head>
@@ -144,6 +146,5 @@
         @endif
     </main>
     
-    <script src="{{ asset('/assets/js/participant/RegistrationManagement.js') }}"></script>
    
 </body>
