@@ -4,6 +4,9 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
+.swal2-popup.swal2-modal.swal2-show {
+    width: min(550px, 95vw) !important;
+}
 
 .swal2-title {
     margin-top: 15px ;

@@ -33,7 +33,7 @@
                                         </svg>
                                         Team 1 (<span id="team1_position_label"> </span>) 
                                     </span>
-                                    <select style="min-width: 80%;" class="form-select" id="team1_id" name="team1_id" required  data-dynamic-select>
+                                    <select  class="form-select" id="team1_id" name="team1_id" required  data-dynamic-select>
                                             <option value="">Choose a team</option>
                                         @foreach ($teamList as $team)
                                             <option  value="{{ $team['id'] }}"   data-img-width="30" data-img-height="30"
@@ -58,7 +58,7 @@
                                         </svg>
                                         Team 2 (<span id="team2_position_label"> </span>) 
                                     </span>
-                                    <select style="min-width: 80%;" class="form-select" id="team2_id" name="team2_id" required  data-dynamic-select>
+                                    <select  class="form-select" id="team2_id" name="team2_id" required  data-dynamic-select>
                                             <option value="">Choose a team</option>
                                         @foreach ($teamList as $team)
                                             <option class="object-fit-cover" value="{{ $team['id'] }}"   data-img-width="30" data-img-height="30"
@@ -97,7 +97,7 @@
                             <div class="input-group mb-2">
                                 <span class="input-group-text " id="status-addon">Status</span>
                                 <select class="form-select" id="status" name="status"
-                                    style="max-width: 250px;" data-dynamic-select
+                                    data-dynamic-select
                                     aria-describedby="status-addon">
                                     <option value="upcoming">Upcoming</option>
                                     <option value="ongoing">Ongoing</option>
@@ -108,7 +108,7 @@
                             <div class="input-group mb-2">
                                 <span class="input-group-text " id="result-addon">Result</span>
                                 <select class="form-select" id="result" name="result" data-dynamic-select
-                                    aria-describedby="result-addon" style="max-width: 250px;">
+                                    aria-describedby="result-addon" >
                                     <option value="draw">Draw</option>
                                     <option value="win">Win</option>
                                     <option value="dispute">Dispute</option>

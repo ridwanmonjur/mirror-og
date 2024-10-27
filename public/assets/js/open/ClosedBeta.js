@@ -1,4 +1,7 @@
+
 const emailForm = document.getElementById('emailForm');
+const toastLiveExample = document.getElementById('liveToast')
+localStorage.setItem('disabled', false);
 
 if (emailForm) {
     emailForm.addEventListener('submit', function(e) {
@@ -39,12 +42,12 @@ if (emailForm) {
                     allowEscapeKey: false,
                     showCloseButton: false,
                     denyButtonText: 'Back to Driftwood',
-                    denyButtonColor: "red"
-                }).then(result=> {
-                    if (result.isConfirmed) {
+                    denyButtonColor: "red",
+                    preConfirm: () => {
                         resendVerificationEmail(emailInput, url);
+                        return false; 
                     }
-                }) ;
+                });
             } else if (data.error === 'duplicate_verified') {
                 Swal.fire({
                     title: "Wait a minute…",
@@ -84,16 +87,21 @@ if (emailForm) {
                     
                     confirmButtonText: 'Resend Confirmation Email',
                     confirmButtonColor: "#43A4D7",
+                    stopKeydownPropagation: false,
                     showConfirmButton: true,
                     showDenyButton: true,
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                     showCloseButton: false,
                     denyButtonText: 'Back to Driftwood',
-                    denyButtonColor: "red"
-                }).then(result=> {
-                    if (result.isConfirmed) {
-                        resendVerificationEmail(emailInput, url);
+                    denyButtonColor: "red",
+                    preConfirm: () => {
+                        let isButtonDisabled = localStorage.getItem('disabled') === "true";
+                        if (isButtonDisabled) return false;
+                        else {
+                            resendVerificationEmail(emailInput, url);
+                            return false; 
+                        }
                     }
                 });
             } else {
@@ -127,7 +135,27 @@ if (emailForm) {
     });
 }
 
+let countdownInterval = null;
+
 function resendVerificationEmail(email, resendUrl) {
+    
+    toggleResetButtonToUnavailable();
+
+    let secondsLeft = 90;
+
+    if (countdownInterval) clearInterval(countdownInterval);
+    
+    countdownInterval = setInterval(() => {
+        secondsLeft--;
+        Swal.update({
+            confirmButtonText: `Hold on for ${secondsLeft}s`
+        });
+        
+        if (secondsLeft <= 0) {
+            clearInterval(countdownInterval);
+            toggleResetButtonToUnavailable(false);
+        }
+    }, 1000);
     
     fetch(resendUrl, {
         method: 'PUT',
@@ -140,17 +168,12 @@ function resendVerificationEmail(email, resendUrl) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            Swal.fire({
-                icon: "success",
-                title: "Verification Email Sent",
-                text: data.message,
-                confirmButtonText: 'Back to Driftwood',
-                confirmButtonColor: "#43A4D7",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                showCloseButton: false
-            });
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+            toastBootstrap?.show()
         } else {
+            if (countdownInterval) clearInterval(countdownInterval);
+            toggleResetButtonToUnavailable(false);
+           
             Swal.fire({
                 icon: "error",
                 title: "Error",
@@ -165,15 +188,38 @@ function resendVerificationEmail(email, resendUrl) {
     })
     .catch(error => {
         Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: 'An unexpected error occurred. Please try again.',
-            confirmButtonText: 'Back to Driftwood',
-            confirmButtonColor: "#43A4D7",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            showCloseButton: false
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong while sending the verification email. Please try again later.',
         });
-        console.error('Error:', error);
+        
+        clearInterval(countdownInterval);
+      
+
+        
     });
+}
+
+function toggleResetButtonToUnavailable (willDisable = true) {
+    const confirmButton = Swal.getConfirmButton();
+
+    if (willDisable) {
+        Swal.disableButtons();
+        confirmButton.pointerEvents = 'none';
+        localStorage.setItem('disabled', true);
+        Swal.update({
+            confirmButtonText: 'Hold on for 90s',
+            confirmButtonColor: '#808080',
+        });
+    }
+
+    else {
+        Swal.enableButtons();
+        confirmButton.pointerEvents = 'auto';
+        localStorage.setItem('disabled', false);
+        Swal.update({
+            confirmButtonText: 'Resend Confirmation Email',
+            confirmButtonColor: '#43A4D7',
+        });
+    }
 }

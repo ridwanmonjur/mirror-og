@@ -126,7 +126,9 @@ class BetaController extends Controller
         }
 
         if ($user->email_verified_at !== null) {
-            return view('VerifyInterestedUser')->with('success', 'Your email has already been successfully verified.');
+            return view('VerifyInterestedUser')
+                ->with('success', 'verified_already')
+                ->with('key', $user->email);
         }
 
         DB::query()
@@ -137,6 +139,8 @@ class BetaController extends Controller
                 'email_verified_token' => null,
             ]);
 
-        return view('VerifyInterestedUser')->with('success', 'Your email has been successfully verified.');
+        return view('VerifyInterestedUser')
+            ->with('success', 'verified_now')
+            ->with('key', $user->email);;
     }
 }
