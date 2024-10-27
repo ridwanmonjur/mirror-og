@@ -43,8 +43,14 @@ if (emailForm) {
                     denyButtonText: 'Back to Driftwood',
                     denyButtonColor: "red",
                     preConfirm: () => {
-                        resendVerificationEmail(emailInput, url);
-                        return false; 
+                        let isButtonDisabled = localStorage.getItem('disabled') === "true";
+                        if (isButtonDisabled) {
+                            return false;
+                        }
+                        else {
+                            resendVerificationEmail(emailInput, url);
+                            return false; 
+                        }
                     }
                 });
             } else if (data.error === 'duplicate_verified') {
@@ -203,7 +209,9 @@ function toggleResetButtonToUnavailable (willDisable = true) {
         });
 
         Swal.disableButtons();
-        confirmButton.pointerEvents = 'none';
+        confirmButton.style.cursor = 'not-allowed !important';
+        confirmButton.style.pointerEvents = 'none';
+       
     }
 
     else {
@@ -216,6 +224,7 @@ function toggleResetButtonToUnavailable (willDisable = true) {
         });
 
         Swal.enableButtons();
-        confirmButton.pointerEvents = 'auto';
+        confirmButton.style.cursor = 'auto';
+        confirmButton.style.pointerEvents = 'auto';
     }
 }
