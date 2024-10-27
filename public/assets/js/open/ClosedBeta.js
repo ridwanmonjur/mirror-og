@@ -116,7 +116,7 @@ if (emailForm) {
                     showCloseButton: false,
                 });
 
-                toggleResetButtonToUnavailable(false);
+                toggleResetButtonToUnavailable(false, 'Back to Driftwood');
                 clearTimeout(countdownInterval);
             }
             
@@ -168,7 +168,7 @@ if (emailForm) {
                     showCloseButton: false
                 });
 
-                toggleResetButtonToUnavailable(false);
+                toggleResetButtonToUnavailable(false, 'Back to Driftwood');
                 clearTimeout(countdownInterval);
             }
         })
@@ -185,7 +185,7 @@ if (emailForm) {
             });
             console.error('Error:', error);
 
-            toggleResetButtonToUnavailable(false);
+            toggleResetButtonToUnavailable(false, 'Back to Driftwood');
             clearTimeout(countdownInterval);
         });
         
@@ -253,7 +253,7 @@ function resendVerificationEmail(email, resendUrl) {
     });
 }
 
-function toggleResetButtonToUnavailable (willDisable = true) {
+function toggleResetButtonToUnavailable (willDisable = true, confirmButtonText = 'Resend Confirmation Email') {
     const confirmButton = Swal.getConfirmButton();
 
     if (willDisable) {
@@ -269,15 +269,12 @@ function toggleResetButtonToUnavailable (willDisable = true) {
             confirmButton.style.cursor = 'not-allowed !important';
             confirmButton.style.pointerEvents = 'none';
         }
-    
-       
     }
-
     else {
        
         localStorage.setItem('disabled', willDisable);
         Swal.update({
-            confirmButtonText: 'Resend Confirmation Email',
+            confirmButtonText,
             confirmButtonColor: '#43A4D7',
             footer: ''
         });
