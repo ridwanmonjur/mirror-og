@@ -43,8 +43,6 @@
                         </div>
                         <h4 class="text-success">Got it!</h4>
                         <div class="rounded-pill d-inline-block ">
-                            <br>
-
                             </p>We've received your email address safe and sound. Now all you have to do is wait for an
                             invitation email from us. Keep an eye out! </p>
 
@@ -84,6 +82,7 @@
             </div>
             <br> 
         </div>
+        
     </main>
 @endsection
 
