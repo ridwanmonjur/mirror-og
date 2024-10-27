@@ -128,7 +128,7 @@ class BetaController extends Controller
         if ($user->email_verified_at !== null) {
             return view('VerifyInterestedUser')
                 ->with('success', 'verified_already')
-                ->with('key', $user->email);
+                ->with('email', $user->email);
         }
 
         DB::query()
@@ -140,6 +140,6 @@ class BetaController extends Controller
 
         return view('VerifyInterestedUser')
             ->with('success', 'verified_now')
-            ->with('key', $user->email);;
+            ->with('email', $user->email);;
     }
 }

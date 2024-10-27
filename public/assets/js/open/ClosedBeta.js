@@ -204,22 +204,26 @@ function toggleResetButtonToUnavailable (willDisable = true) {
     const confirmButton = Swal.getConfirmButton();
 
     if (willDisable) {
-        Swal.disableButtons();
-        confirmButton.pointerEvents = 'none';
+        
         localStorage.setItem('disabled', true);
         Swal.update({
             confirmButtonText: 'Hold on for 90s',
-            confirmButtonColor: '#808080',
+            confirmButtonColor: '#666666',
         });
+
+        Swal.disableButtons();
+        confirmButton.pointerEvents = 'none';
     }
 
     else {
-        Swal.enableButtons();
-        confirmButton.pointerEvents = 'auto';
+       
         localStorage.setItem('disabled', false);
         Swal.update({
             confirmButtonText: 'Resend Confirmation Email',
             confirmButtonColor: '#43A4D7',
         });
+
+        Swal.enableButtons();
+        confirmButton.pointerEvents = 'auto';
     }
 }

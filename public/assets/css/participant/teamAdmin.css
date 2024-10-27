@@ -174,10 +174,14 @@
     cursor: pointer;
     border-radius: 20px 20px 0 0;
     margin-top: 10px;
+    transition: border 0.5s linear;
 }
 
 .tab-button:hover, .tab-button-active {
     border-bottom: 2px solid #000;
+}
+.tab-button:active {
+    border: 2px solid #000;
 }
 
 .event-carousel-styles {
