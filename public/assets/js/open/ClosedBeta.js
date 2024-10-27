@@ -1,6 +1,5 @@
 
 const emailForm = document.getElementById('emailForm');
-const toastLiveExample = document.getElementById('liveToast')
 localStorage.setItem('disabled', false);
 
 if (emailForm) {
@@ -168,30 +167,21 @@ function resendVerificationEmail(email, resendUrl) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-            toastBootstrap?.show()
+            Swal.update({
+                footer: "<span class='text-success'>We've sent you a confirmation email. Please take a look!</span>",
+            });
         } else {
             if (countdownInterval) clearInterval(countdownInterval);
             toggleResetButtonToUnavailable(false);
-           
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: data.message || 'Failed to resend verification email. Please try again.',
-                confirmButtonText: 'Back to Driftwood',
-                confirmButtonColor: "#43A4D7",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                showCloseButton: false
-            });
+            Swal.update({
+                footer: `<span class='text-red'>${data.message || 'Failed to resend verification email. Please try again.'}</span>`,
+            })
         }
     })
     .catch(error => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Something went wrong while sending the verification email. Please try again later.',
-        });
+        Swal.update({
+            footer: `<span class='text-red'>${data.message || 'Failed to resend verification email. Please try again.'}</span>`,
+        })
         
         clearInterval(countdownInterval);
       
@@ -209,6 +199,7 @@ function toggleResetButtonToUnavailable (willDisable = true) {
         Swal.update({
             confirmButtonText: 'Hold on for 90s',
             confirmButtonColor: '#666666',
+            footer: ''
         });
 
         Swal.disableButtons();
@@ -221,6 +212,7 @@ function toggleResetButtonToUnavailable (willDisable = true) {
         Swal.update({
             confirmButtonText: 'Resend Confirmation Email',
             confirmButtonColor: '#43A4D7',
+            footer: ''
         });
 
         Swal.enableButtons();
