@@ -4,7 +4,6 @@ localStorage.setItem('disabled', false);
 let submitButton = document.getElementById('submitButton');
 let emailInputElement = document.getElementById('emailInput');
 emailInputElement.addEventListener('focus', function() {
-    console.log("hi");
     if (!this.value) {
         submitButton.classList.remove('submit-button');
         submitButton.classList.add('bg-secondary');
@@ -30,6 +29,7 @@ emailInputElement.addEventListener('input', function() {
 if (emailForm) {
     emailForm.addEventListener('submit', function(e) {
         e.preventDefault();
+        if (countdownInterval) clearInterval(countdownInterval);
 
         const emailInput = document.getElementById('emailInput').value;
         const submitButton = document.getElementById('submitButton');
