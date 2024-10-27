@@ -1,6 +1,31 @@
 
 const emailForm = document.getElementById('emailForm');
 localStorage.setItem('disabled', false);
+let submitButton = document.getElementById('submitButton');
+let emailInputElement = document.getElementById('emailInput');
+emailInputElement.addEventListener('focus', function() {
+    console.log("hi");
+    if (!this.value) {
+        submitButton.classList.remove('submit-button');
+        submitButton.classList.add('bg-secondary');
+        submitButton.style.cursor = 'auto';
+        submitButton.style.pointerEvents = 'auto';
+    }
+});
+
+emailInputElement.addEventListener('input', function() {
+    if (!this.value) {
+        submitButton.style.cursor = 'not-allowed';
+        submitButton.style.pointerEvents = 'none;'
+        submitButton.classList.remove('submit-button');
+        submitButton.classList.add('bg-secondary');
+    } else {
+        submitButton.style.cursor = 'auto';
+        submitButton.style.pointerEvents = 'auto';
+        submitButton.classList.remove('bg-secondary');
+        submitButton.classList.add('submit-button');
+    }
+});
 
 if (emailForm) {
     emailForm.addEventListener('submit', function(e) {
