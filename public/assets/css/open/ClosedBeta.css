@@ -46,7 +46,10 @@ body {
 
 .submit-button {
     background: linear-gradient(90deg, #5de0e6, #004aad);
-    border: 2px solid white;
+}
+
+.submit-button-border {
+    border: 2px solid white !important;
 }
 
 
