@@ -5,10 +5,10 @@ let submitButton = document.getElementById('submitButton');
 let emailInputElement = document.getElementById('emailInput');
 emailInputElement.addEventListener('focus', function() {
     if (!this.value) {
+        submitButton.style.cursor = 'not-allowed';
+        submitButton.style.pointerEvents = 'none;'
         submitButton.classList.remove('submit-button');
         submitButton.classList.add('bg-secondary');
-        submitButton.style.cursor = 'auto';
-        submitButton.style.pointerEvents = 'auto';
     }
 });
 
@@ -29,9 +29,22 @@ emailInputElement.addEventListener('input', function() {
 if (emailForm) {
     emailForm.addEventListener('submit', function(e) {
         e.preventDefault();
+        if (!emailInputElement.value) {
+            submitButton.style.cursor = 'not-allowed';
+            submitButton.style.pointerEvents = 'none;'
+            submitButton.classList.remove('submit-button');
+            submitButton.classList.add('bg-secondary');
+            Toast.fire ({
+                icon: 'error',
+                text: "Cannot submit empty email address"
+            })
+
+            return;
+        }
+
+    
 
         const emailInput = document.getElementById('emailInput').value;
-        const submitButton = document.getElementById('submitButton');
         const url = submitButton.getAttribute('data-url');
       
 
