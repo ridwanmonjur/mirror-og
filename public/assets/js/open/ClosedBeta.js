@@ -29,11 +29,12 @@ emailInputElement.addEventListener('input', function() {
 if (emailForm) {
     emailForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        if (countdownInterval) clearInterval(countdownInterval);
 
         const emailInput = document.getElementById('emailInput').value;
         const submitButton = document.getElementById('submitButton');
         const url = submitButton.getAttribute('data-url');
+      
+
 
         fetch(url, {
             method: 'PUT',
@@ -78,6 +79,9 @@ if (emailForm) {
                         }
                     }
                 });
+
+                toggleResetButtonToUnavailable(false);
+                clearTimeout(countdownInterval);
             } else if (data.error === 'duplicate_verified') {
                 Swal.fire({
                     title: "Wait a minute…",
@@ -98,6 +102,9 @@ if (emailForm) {
                     allowEscapeKey: false,
                     showCloseButton: false,
                 });
+
+                toggleResetButtonToUnavailable(false);
+                clearTimeout(countdownInterval);
             }
             
             else if (data.error === 'duplicate_unverified') {
@@ -134,6 +141,8 @@ if (emailForm) {
                         }
                     }
                 });
+                toggleResetButtonToUnavailable(false);
+                clearTimeout(countdownInterval);
             } else {
                 Swal.fire({
                     icon: "error",
@@ -145,6 +154,9 @@ if (emailForm) {
                     allowEscapeKey: false,
                     showCloseButton: false
                 });
+
+                toggleResetButtonToUnavailable(false);
+                clearTimeout(countdownInterval);
             }
         })
         .catch(error => {
@@ -159,6 +171,9 @@ if (emailForm) {
                 showCloseButton: false
             });
             console.error('Error:', error);
+
+            toggleResetButtonToUnavailable(false);
+            clearTimeout(countdownInterval);
         });
         
         document.getElementById('emailInput').value = '';
@@ -198,25 +213,29 @@ function resendVerificationEmail(email, resendUrl) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+
             Swal.update({
                 footer: "<span class='text-success'>We've sent you a confirmation email. Please take a look!</span>",
             });
+
         } else {
             if (countdownInterval) clearInterval(countdownInterval);
             toggleResetButtonToUnavailable(false);
+
             Swal.update({
                 footer: `<span class='text-red'>${data.message || 'Failed to resend verification email. Please try again.'}</span>`,
             })
+
         }
     })
     .catch(error => {
+        console.error(error);
         Swal.update({
-            footer: `<span class='text-red'>${data.message || 'Failed to resend verification email. Please try again.'}</span>`,
+            footer: `<span class='text-red'> 'Failed to resend verification email. Please try again.'}</span>`,
         })
         
         clearInterval(countdownInterval);
-      
-
+        toggleResetButtonToUnavailable(false);
         
     });
 }
@@ -225,8 +244,7 @@ function toggleResetButtonToUnavailable (willDisable = true) {
     const confirmButton = Swal.getConfirmButton();
 
     if (willDisable) {
-        
-        localStorage.setItem('disabled', true);
+        localStorage.setItem('disabled', willDisable);
         Swal.update({
             confirmButtonText: 'Hold on for 90s',
             confirmButtonColor: '#666666',
@@ -234,14 +252,17 @@ function toggleResetButtonToUnavailable (willDisable = true) {
         });
 
         Swal.disableButtons();
-        confirmButton.style.cursor = 'not-allowed !important';
-        confirmButton.style.pointerEvents = 'none';
+        if (confirmButton) {
+            confirmButton.style.cursor = 'not-allowed !important';
+            confirmButton.style.pointerEvents = 'none';
+        }
+    
        
     }
 
     else {
        
-        localStorage.setItem('disabled', false);
+        localStorage.setItem('disabled', willDisable);
         Swal.update({
             confirmButtonText: 'Resend Confirmation Email',
             confirmButtonColor: '#43A4D7',
@@ -249,7 +270,9 @@ function toggleResetButtonToUnavailable (willDisable = true) {
         });
 
         Swal.enableButtons();
-        confirmButton.style.cursor = 'auto';
-        confirmButton.style.pointerEvents = 'auto';
+        if (confirmButton) {
+            confirmButton.style.cursor = 'auto';
+            confirmButton.style.pointerEvents = 'auto';
+        }
     }
 }
