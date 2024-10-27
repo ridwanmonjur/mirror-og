@@ -4,10 +4,10 @@
 <head>
    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tournament Matches 2</title>
+    <title>Tournament Matches</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
-    @vite(['resources/js/tippy.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/pages/bracket.js'])
+    @vite(['resources/js/libraries/tippy.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/pages/bracket.js'])
     <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
     @include('__CommonPartials.HeadIcon')
     <style>

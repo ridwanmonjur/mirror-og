@@ -172,9 +172,10 @@
     }
 
     function validateInput(input) {
-        const amount = parseFloat(input.dataset.amount);
-        const walletAmount = parseFloat(input.dataset.wallet);
-        let value = parseFloat(input.value);
+        const amount = +input.dataset.amount;
+        const walletAmount = +input.dataset.wallet;
+        let value = +input.value;
+        console.log({amount, walletAmount,value});
 
         if (isNaN(value)) {
             value = 0;
@@ -189,19 +190,20 @@
 
         value = Math.min(value, walletAmount);
 
-        input.value = value.toFixed(); 
+        input.value = value.toFixed(2); 
     }
 
     async function handleSubmit(event) {
         event.preventDefault();
         const form = event.target;
-        let formData = new FormData(form);
+       
+        const input = form.querySelector('input[name="discount_applied_amount"]');
+        validateInput(input);
+         let formData = new FormData(form);
         let jsonObject = {};   
         for (let [key, value] of formData.entries()) {
             jsonObject[key] = value;
         }
-        const input = form.querySelector('input[name="discount_applied_amount"]');
-        validateInput(input);
         
         if (form.checkValidity()) {
             try {

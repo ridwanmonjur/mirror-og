@@ -8,19 +8,18 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/css/intlTelInput.css">
-    <link href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css" rel="stylesheet">
     @include('__CommonPartials.HeadIcon')
     @vite(['resources/sass/app.scss', 
         'resources/js/app.js', 
-        'resources/js/alpine.js', 
-        'resources/js/lightgallery.js', 
-        'resources/sass/lightgallery.scss',   
-        'resources/js/file-upload-preview.js',
-        'resources/sass/file-upload-preview.scss',
-        'resources/js/colorpicker.js',
-        'resources/sass/colorpicker.scss',
-         'resources/js/file-edit.js',
-        'resources/sass/file-edit.scss',
+        'resources/js/libraries/alpine.js', 
+        'resources/js/libraries/lightgallery.js', 
+        'resources/sass/libraries/lightgallery.scss',   
+        'resources/js/libraries/file-upload-preview.js',
+        'resources/sass/libraries/file-upload-preview.scss',
+        'resources/js/libraries/colorpicker.js',
+        'resources/sass/libraries/colorpicker.scss',
+         'resources/js/libraries/file-edit.js',
+        'resources/sass/libraries/file-edit.scss',
     ])
 </head>
 @php
@@ -563,7 +562,6 @@
 
 </body>
 @livewireScripts
-<script src="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/scripts/choices.min.js"></script>
 <script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/js/intlTelInput.min.js"></script>
 <script>

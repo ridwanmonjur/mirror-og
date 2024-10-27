@@ -25,15 +25,15 @@ input[type="time"] {
 }
 
 .back-next button {
-    position: static;
+    position: absolute;
 }
 
 .back-next button:nth-child(1) {
-    position: static;
+    left: 5vw;
 }
 
 .back-next button:nth-child(2) {
-    position: static;
+    right: 5vw;
 }
 
 .form-group-width {
@@ -522,7 +522,7 @@ color: #43A4D7; */
 
 .time-line-box {
     height: 120px;
-    padding: 30px 0;
+    padding: 30px 0 0;
     width: 100%;
 }
 

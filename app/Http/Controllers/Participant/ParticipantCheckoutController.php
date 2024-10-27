@@ -82,8 +82,11 @@ class ParticipantCheckoutController extends Controller
     {
         DB::beginTransaction();
         try {
-            $newAmount = (float) $request->payment_amount - (float) $request->discount_applied_amount ;
+            $discountAmount = (float) $request->discount_applied_amount ;
+            $paymentAmount = (float) $request->payment_amount;
+            $newAmount = $paymentAmount - $discountAmount ;
             $isNewAmountZero = $newAmount < 0.05;
+            
             $user = $request->get('user');
             $userId = $user->id;
             $walletAmount = 0;
@@ -91,7 +94,7 @@ class ParticipantCheckoutController extends Controller
                 ->where('user_id', $user->id)->first();
 
             if ($userDiscount) {
-                $walletAmount = $userDiscount->amount - $request->discount_applied_amount;
+                $walletAmount = $userDiscount->amount - $discountAmount;
                 DB::table('user_discounts')
                     ->where('user_id', $user->id)
                     ->update(
@@ -104,7 +107,6 @@ class ParticipantCheckoutController extends Controller
             if (!$isNewAmountZero) {
                 $stripePaymentIntent =
                     $this->stripeClient->retrieveStripePaymentByPaymentId($request?->payment_intent_id);
-                
                 $this->stripeClient->updatePaymentIntent($stripePaymentIntent->id, [
                     'amount' => $newAmount * 100,
                 ]);
@@ -113,7 +115,7 @@ class ParticipantCheckoutController extends Controller
             $transaction = new PaymentTransaction([
                 'payment_id' => null,
                 'payment_status' => 'succeeded_applied_discount',
-                'payment_amount' => $request->discount_applied_amount
+                'payment_amount' => $discountAmount
             ]);
 
             $transaction->save();
@@ -122,15 +124,22 @@ class ParticipantCheckoutController extends Controller
                 'team_members_id' => $request->member_id,
                 'user_id' => $userId,
                 'join_events_id' => $request->joinEventId,
-                'payment_amount' =>  $request->discount_applied_amount,
+                'payment_amount' =>  $discountAmount,
                 'payment_id' => $transaction->id,
             ]);
             
             if ($isNewAmountZero) {
                 $joinEvent = JoinEvent::select('id', 'event_details_id', 'payment_status')
                     ->findOrFail($request->joinEventId);
-                $joinEvent->payment_status = 'completed';
-                $joinEvent->save();
+                $event = EventDetail::select(['id', 'event_tier_id'])
+                    ->where('id', $joinEvent->event_details_id)
+                    ->with('tier')->first();
+                $total = (float) $event->tier?->tierEntryFee ;
+                if (($total - $discountAmount) < 0.05) {
+                    $joinEvent->payment_status = 'completed';
+                    $joinEvent->save();
+                }
+
                 $message = "Discount applied successfully. You have completed this payment.";
             } else {
                 $message = "Discount applied. You have RM {$newAmount} to pay.";
@@ -153,6 +162,11 @@ class ParticipantCheckoutController extends Controller
             
         } catch (ModelNotFoundException|UnauthorizedException $e) {
             DB::rollBack();
+            $stripePaymentIntent =
+                $this->stripeClient->retrieveStripePaymentByPaymentId($request?->payment_intent_id);
+                $this->stripeClient?->updatePaymentIntent($stripePaymentIntent->id, [
+                    'amount' => $paymentAmount * 100,
+                ]);
 
             return response()->json([
                 'success' => false,

@@ -17,6 +17,7 @@
     border: 1px solid #89C6E7 !important;
 }
 
+
 form span, .form-control, .form-select, form span,
 .input-group-text
 { 
@@ -33,14 +34,17 @@ input:read-only {
     border: 1px solid #89C6E7 !important;
     border-radius: 0 !important;
     font-weight: 500 !important;
+    width: 150px !important;
 }
+
+
 .dynamic-select {
     background-color: white !important;
     border-right: 1px solid #89C6E7 !important;
     border-top: 1px solid #89C6E7 !important;
     border-bottom: 1px solid #89C6E7 !important;
     border-left: 0px solid #89C6E7 !important;
-
+    width: 200px !important;
     border-radius: 0 !important;
     font-weight: 500 !important;
 }

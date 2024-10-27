@@ -24,6 +24,17 @@
     @include('__CommonPartials.NavbarGoToSearchPage')
 
     <main class="px-2">
+        <input type="hidden" id="currentUrlInput" value="{{ route('event.awards.index', ['id' => $event->id]) }}">
+        <input type="hidden" id="profile-route" value="{{ route('public.participant.view', ['id' => ':id']) }}">
+        <input type="hidden" id="create-event-route" value="{{ route('event.create') }}">
+        <input type="hidden" id="edit-event-route" value="{{ route('event.edit', $event->id) }}">
+        <input type="hidden" id="team-route" value="{{ route('public.team.view', ['id' => ':id']) }}">
+        <input type="hidden" id="event-results-store-route" value="{{ route('event.results.store', ['id' => $event->id]) }}">
+        <input type="hidden" id="event-awards-store-route" value="{{ route('event.awards.store', ['id' => $event->id]) }}">
+        <input type="hidden" id="event-achievements-store-route" value="{{ route('event.achievements.store', ['id' => $event->id]) }}">
+        <input type="hidden" id="event-awards-destroy-route" value="{{ route('event.awards.destroy', ['id' => $event->id, 'awardId' => ':id']) }}">
+        <input type="hidden" id="event-achievements-destroy-route" value="{{ route('event.achievements.destroy', ['achievementId' => ':id']) }}">
+        <input type="hidden" id="eventId" value="{{ $event->id }}">
         <br>
         <div class="ms-5">
             <u>
@@ -465,213 +476,9 @@
             <br>
     </main>
     @stack('script')
-    
-    <script>
-        var awardToDeleteId = null;
-        var achievementToDeleteId = null;
-        var actionToTake = null;
-        const actionMap = {
-            'achievement': deleteAchievementsAction,
-            'award': deleteAwardAction
-        };
-
-        window.onload = () => { window.loadMessage(); }
-
-        function reloadUrl(currentUrl, message, tab) {
-            if (currentUrl.includes('?')) {
-                currentUrl = currentUrl.split('?')[0];
-            }
-
-            localStorage.setItem('success', 'true');
-            localStorage.setItem('message', message);
-            localStorage.setItem('tab', tab);
-            window.location.replace(currentUrl);
-        }
-
-        function takeYesAction() {
-            const actionFunction = actionMap[actionToTake];
-            if (actionFunction) {
-                actionFunction();
-            } else {
-                Toast.fire({
-                    icon: 'error',
-                    text: "No action found."
-                })
-            }
-        }
-
-        function takeNoAction() {
-            awardToDeleteId = null;
-            achievementToDeleteId = null;
-            actionToTake = null;
-        }
-
-        function deleteAward(id) {
-            awardToDeleteId = id;
-            actionToTake = 'award';
-            window.dialogOpen('Are you sure you want to remove this award from this user?', takeYesAction, takeNoAction)
-        }
-
-        function deleteAchievement(id) {
-            achievementToDeleteId = id;
-            actionToTake = 'achievement';
-            window.dialogOpen('Are you sure you want to remove this achievement from this user?', takeYesAction, takeNoAction)
-        }
-
-        function editCreatePosition(event) {
-            event.preventDefault();
-            let formData = new FormData(event.target);
-            let joinEventId = formData.get('id');
-            let joinEventPosition = formData.get('position');
-            const url = "{{ route('event.results.store', ['id' => $event->id]) }}";
-            
-            fetchData(url,
-                function(responseData) {
-                    if (responseData.success) {
-                        let currentUrl = "{{ route('event.awards.index', ['id' => $event->id]) }}";
-                        reloadUrl(currentUrl, responseData.message, 'PositionBtn');
-                    } else {
-                        toastError(responseData.message);
-                    }
-                },
-                function(error) { toastError('Error changing position.', error);  }, 
-                {
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 
-                        ...window.loadBearerCompleteHeader() 
-                    },                     
-                    body: JSON.stringify({
-                        'join_events_id': joinEventId,
-                        'position': joinEventPosition,
-                        'teamName': formData.get('teamName'),
-                        'team_id': formData.get('team_id'),
-                        'eventName': formData.get('eventName'),
-                        'teamBanner': formData.get('teamBanner'),
-                        'creator_id': formData.get('creator_id')
-                    })
-                }
-            );
-        }
-
-        async function addAward(event) {
-            event.preventDefault();
-            let formData = new FormData(event.target);
-            let teamId = formData.get('teamId');
-            let awardId = formData.get('awardId');
-            const url = "{{ route('event.awards.store', ['id' => $event->id]) }}";
-
-            fetchData(url,
-                function(responseData) {
-                    if (responseData.success) {
-                        let currentUrl = "{{ route('event.awards.index', ['id' => $event->id]) }}";
-                        reloadUrl(currentUrl, responseData.message, 'AwardsBtn');
-                    } else {
-                        toastError(responseData.message)
-                    }
-                },
-                function(error) { toastError('Error changing awards.', error);  }, 
-                {
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', ...window.loadBearerCompleteHeader() },    
-                    body: JSON.stringify({
-                        'team_id': Number(teamId),
-                        'award_id': Number(awardId),
-                        'event_details_id': {{ $event->id }},
-                        'award': formData.get('awardName')
-                    })
-                }
-            );
-        }
-
-        async function addAchievement(event) {
-            event.preventDefault();
-            let formData = new FormData(event.target);
-            let teamId = formData.get('teamId');
-            let title = formData.get('title');
-            let description = formData.get('description');
-            const url = "{{ route('event.achievements.store', ['id' => $event->id]) }}";
-
-            fetchData(url,
-                function(responseData) {
-                    if (responseData.success) {
-                        let currentUrl = "{{ route('event.awards.index', ['id' => $event->id]) }}";
-                        reloadUrl(currentUrl, responseData.message, 'AchievementsBtn');
-                    } else {
-                        toastError(responseData.message)
-                    }
-                },
-                function(error) { toastError('Error changing awards.', error);  }, 
-                {
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', ...window.loadBearerCompleteHeader() },    
-                    body: JSON.stringify({
-                        'team_id': Number(teamId),
-                        title,
-                        description,
-                        'event_details_id': {{ $event->id }}
-                    })
-                }
-            );
-        }
-
-        async function deleteAwardAction() {
-
-            const url = "{{ route('event.awards.destroy', ['id' => $event->id, 'awardId' => ':id']) }}"
-                .replace(':id', awardToDeleteId)
-
-            fetchData(url,
-                function(responseData) {
-                    if (responseData.success) {
-                        let currentUrl = "{{ route('event.awards.index', ['id' => $event->id]) }}";
-                        reloadUrl(currentUrl, responseData.message, 'AwardsBtn');
-                    } else {
-                        toastError(responseData.message);
-                    }
-                },
-                function(error) { toastError('Error changing awards.', error);  }, 
-                {
-                    method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', ...window.loadBearerCompleteHeader() },  
-                }
-            );
-        }
-
-         async function deleteAchievementsAction() {
-            const url = "{{ route('event.achievements.destroy', ['achievementId' => ':id']) }}"
-                .replace(':id', achievementToDeleteId)
-
-            fetchData(url,
-                function(responseData) {
-                    if (responseData.success) {
-                        let currentUrl = "{{ route('event.awards.index', ['id' => $event->id]) }}";
-                        reloadUrl(currentUrl, responseData.message, 'AchievementsBtn');
-                    } else {
-                        toastError(responseData.message);
-                    }
-                },
-                function(error) { toastError('Error changing achievements.', error);  }, 
-                {
-                    method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', ...window.loadBearerCompleteHeader() },  
-                }
-            );
-        }
-
-        function redirectToProfilePage(userId) {
-            window.location.href = "{{ route('public.participant.view', ['id' => ':id']) }}"
-                .replace(':id', userId);
-        }
-
-        function goToCreateScreen() {
-            let url = "{{ route('event.create') }}";
-            window.location.href = url;
-        }
-
-        function goToEditScreen() {
-            let url = "{{ route('event.edit', $event->id) }}";
-            window.location.href = url;
-        }
-
-        function redirectToTeamPage(teamId) {
-            window.location.href = "{{ route('public.team.view', ['id' => ':id']) }}"
-                .replace(':id', teamId);
-        }
-    </script>
     <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+    <script src="{{ asset('/assets/js/organizer/EventResults.js') }}"></script>
+
+    <script>
+       
+    </script>

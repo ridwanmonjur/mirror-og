@@ -12,15 +12,15 @@
     @vite([
         'resources/sass/app.scss', 
         'resources/js/app.js', 
-        'resources/js/alpine.js', 
-        'resources/js/lightgallery.js',
-        'resources/sass/lightgallery.scss',   
-        'resources/js/file-upload-preview.js',
-        'resources/sass/file-upload-preview.scss',
-        'resources/js/file-edit.js',
-        'resources/sass/file-edit.scss',
-        'resources/js/colorpicker.js',
-        'resources/sass/colorpicker.scss',
+        'resources/js/libraries/alpine.js', 
+        'resources/js/libraries/lightgallery.js',
+        'resources/sass/libraries/lightgallery.scss',   
+        'resources/js/libraries/file-upload-preview.js',
+        'resources/sass/libraries/file-upload-preview.scss',
+        'resources/js/libraries/file-edit.js',
+        'resources/sass/libraries/file-edit.scss',
+        'resources/js/libraries/colorpicker.js',
+        'resources/sass/libraries/colorpicker.scss',
     ])
     <link rel="stylesheet" href="{{ asset('/assets/css/chat/inpage-message.css') }}">
 

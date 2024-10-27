@@ -18,16 +18,15 @@
 }
 
 .back-next button {
-    margin: auto;
-    position: static;
+    position: absolute;
 }
 
 .back-next button:nth-child(1) {
-    position: static;
+    left: 5vw;
 }
 
 .back-next button:nth-child(2) {
-    position: static;
+    right: 5vw;
 }
 
 /* Add this CSS to your existing stylesheet */

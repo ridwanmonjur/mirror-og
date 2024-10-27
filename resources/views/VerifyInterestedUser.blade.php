@@ -32,24 +32,47 @@
 
             @if (isset($success))
                 <div class="mb-2 mt-4  text-center">
-                    <div class="text-success mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
-                            class="bi bi-check-circle" viewBox="0 0 16 16">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                            <path
-                                d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05" />
-                        </svg>
-                    </div>
-                    <h4 class="text-success">Email Verified</h4>
-                    <div class="rounded-pill d-inline-block ">
-                        <br>
-                        <p> Got it! </p>
+                    @if ($success === "verified_now")
+                        <div class="text-success mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+                                class="bi bi-check-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                <path
+                                    d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05" />
+                            </svg>
+                        </div>
+                        <h4 class="text-success">Got it!</h4>
+                        <div class="rounded-pill d-inline-block ">
+                            <br>
 
-                        </p>We've received your email address safe and sound. Now all you have to do is wait for an
-                        invitation email from us. Keep an eye out! </p>
+                            </p>We've received your email address safe and sound. Now all you have to do is wait for an
+                            invitation email from us. Keep an eye out! </p>
 
-                        </p> If you need any support, ping us at <a class="text-primary" href="mailto:supportmain@driftwood.gg">supportmain@driftwood.gg</a> and we'll come to your aid.
-                        </p>
+                            </p> If you need any support, ping us at <a class="text-primary" href="mailto:supportmain@driftwood.gg">supportmain@driftwood.gg</a> and we'll come to your aid.
+                            </p>
+                        </div>
+                    @elseif ($success === "verified_now")
+                        <div class="text-success mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+                                class="bi bi-check-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                <path
+                                    d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05" />
+                            </svg>
+                        </div>
+                        <h4 class="text-success">Wait a minute...</h4>
+                        <div class="rounded-pill d-inline-block ">
+                            <br>
+
+                            </p> <p>This email address <strong>{{$email}}</strong> has already been confirmed!</p>
+                            <p>Submit another email address, or just wait for an invitation email for {{$email}}.</p>
+                            <p style="margin-top: 20px;">If you need any support, ping us at 
+                                <a class="text-primary" href="mailto:supportmain@driftwood.gg">supportmain@driftwood.gg</a> 
+                                and we'll come to your aid.
+                            </p>
+
+                        </div>
+                    @endif
                     </div>
                 </div>
             @endif

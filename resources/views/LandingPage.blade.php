@@ -15,6 +15,8 @@
     @include('__CommonPartials.NavbarGoToSearchPage', ['search' => true ])
 
     <main>
+        <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
+        
         <section class="hero">
             <img 
                 onerror="this.onerror=null;this.src='/assets/images/404.png';"
@@ -38,55 +40,8 @@
         <br><br>
         
         <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
-        <script>
-            var ENDPOINT = "{{ route('public.landing.view') }}";
-            var page = 1;
-            let fetchedPage = 1;
-            var search = null;
-            
-            window.addEventListener(
-                "scroll",
-                (e) => {
-                    var windowHeight = window.innerHeight;
-                    var documentHeight = document.documentElement.scrollHeight;
-                    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    
-                    if (scrollTop + windowHeight >= documentHeight - 200) {
-                        page++;
-                        ENDPOINT = "{{ route('public.landing.view') }}";
-                       
-                        if (!search || String(search).trim() == "") {
-                            search = null;
-                            ENDPOINT += "?page=" + page;
-                        } else {
-                            ENDPOINT += "?search=" + search + "&page=" + page;
-                        }
-                        
-                        infinteLoadMore(null, ENDPOINT);
-                    }
-                });
-        </script>
-        <script>
-            function myFunction() {
-                document.getElementById("myDropdown").classList.toggle("show");
-            }
+        <script src="{{ asset('/assets/js/open/Landing.js') }}"></script>
 
-            window.onclick = function(event) {
-                
-                if (!event.target.matches('.dropbtn')) {
-                    var dropdowns = document.getElementsByClassName("dropdown-content");
-                    var i;
-                    
-                    for (i = 0; i < dropdowns.length; i++) {
-                        var openDropdown = dropdowns[i];
-                        
-                        if (openDropdown.classList.contains('show')) {
-                            openDropdown.classList.remove('show');
-                        }
-                    }
-                }
-            }
-        </script>
     </main>
 </body>
 

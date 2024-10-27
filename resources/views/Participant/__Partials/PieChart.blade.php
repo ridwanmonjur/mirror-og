@@ -11,6 +11,7 @@
     $styles = '--p:' . $percent . '; --c:' . ($isInvited ? 'purple' : 'orange');
 @endphp
 
+
 <div class="ms-3 d-flex flex-column justify-content-between position-relative popover__wrapper rounded">
     <div class="mx-auto text-center popover__title">
         <div class="pie animate no-round" style="{{ $styles }}">{{ $percent }}%</div>
