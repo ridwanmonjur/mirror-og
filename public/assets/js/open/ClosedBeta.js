@@ -157,19 +157,7 @@ if (emailForm) {
                 toggleResetButtonToUnavailable(false);
                 clearTimeout(countdownInterval);
             } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: data.message || 'An error occurred. Please try again.',
-                    confirmButtonText: 'Back to Driftwood',
-                    confirmButtonColor: "#43A4D7",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    showCloseButton: false
-                });
-
-                toggleResetButtonToUnavailable(false, 'Back to Driftwood');
-                clearTimeout(countdownInterval);
+                throw new Error("Error occurred");
             }
         })
         .catch(error => {
@@ -185,7 +173,6 @@ if (emailForm) {
             });
             console.error('Error:', error);
 
-            toggleResetButtonToUnavailable(false, 'Back to Driftwood');
             clearTimeout(countdownInterval);
         });
         
