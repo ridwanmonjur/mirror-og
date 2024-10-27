@@ -5,21 +5,6 @@ import { initializeFirestore, memoryLocalCache, addDoc, onSnapshot, updateDoc, g
 import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
-console.log("hi");
-
-let throttle2 = (func, wait) => {
-    let lastTime = 0;
-
-    return (...args) => {
-        const now = Date.now();
-
-        if (now - lastTime >= wait) {
-            func(...args);
-
-            lastTime = now;
-        }
-    };
-};
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -71,7 +56,7 @@ Alpine.data('alpineDataComponent', function () {
           matchStatus: ['ONGOING', null, null],
           teams: [
             {
-              winners:  ['1', '1', null],
+              winners:  [null, null, null],
               id: null,
               position: "",
               banner: "",
@@ -278,8 +263,27 @@ Alpine.data('alpineDataComponent', function () {
               currentReportRef, 
               async (reportSnapshot) => {
                   if (reportSnapshot.exists()) {
-                    // very first data
-                  console.log("Document data:", reportSnapshot.data());
+                    let data = reportSnapshot.data();
+                    console.log({dataHi:data, id: reportSnapshot.id});
+                    let { score, status, winners} = data;
+                    this.report = {
+                      ...this.report,
+                      matchId: reportSnapshot.id,
+                      matchStatus: status,
+                      realWinners: winners,
+                      teams: [
+                        {
+                          ...this.report.teams[0],
+                          score: score[0],
+
+                        },
+                        {
+                          ...this.report.teams[1],
+                          score: score[1],
+
+                        }
+                      ]
+                    }
                 } else {
                   console.log("No such document!");
                 }

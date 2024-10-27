@@ -16,9 +16,6 @@ bracketBoxList.forEach(item => {
     item.style.setProperty('--border2-color', 'red');
 });
 
-
-
-
 function updateModalShow(event) {
     event.stopPropagation();
     event.preventDefault();
@@ -70,10 +67,10 @@ function reportModalShow(event) {
 
     let parentWithDataset = document.querySelector(`.tournament-bracket__match.${classNamesWithoutPrecedingDot}`);
     let dataset = JSON.parse(parentWithDataset.dataset.bracket);
-    console.log({dataset, position})
 
     const alpineEvent = new CustomEvent("currentReportChange", {
         detail: {
+            
             classNamesWithoutPrecedingDot,
             // team1
             team1_position: dataset.team1_position,
