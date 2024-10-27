@@ -136,7 +136,6 @@ class BetaController extends Controller
             ->where('id', $user->id)
             ->update([
                 'email_verified_at' => now(),
-                'email_verified_token' => null,
             ]);
 
         return view('VerifyInterestedUser')
