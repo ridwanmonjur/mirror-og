@@ -23,7 +23,7 @@
 </template>
 <input type="hidden" id="selectedTeamIndex" type="text" name="selectedTeamIndex">
 
-<div class="d-flex justify-content-center">
+<div class="d-flex justify-content-center  mt-2">
     <button class="btn border rounded-pill border-dark me-3" data-dismiss="modal" id="reportModalCancelBtn"
         data-bs-dismiss="modal"> Cancel </button>
     <button x-on:click="onSubmitSelectTeamToWin" class="selectTeamSubmitButton btn border rounded-pill text-light btn-secondary me-3"> Submit </button>

@@ -90,7 +90,7 @@
             <button class="btn oceans-gaming-default-button" data-bs-toggle="modal"
                 data-bs-target="{{ '#payModal' . $random_int }}">Contribute </button>
         @else
-            <button style="pointer-events: none;" class="btn oceans-gaming-default-button oceans-gaming-gray-button px-3">Contribution Full </button>
+            <button style="pointer-events: none; cursor: not-allowed;" class="btn oceans-gaming-default-button oceans-gaming-gray-button px-3">Contribution Full </button>
         @endif
         <br>
         @if ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "pending")
@@ -123,8 +123,11 @@
                 </button>
             </form>
         @else
-            <button class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button px-2">Confirm
-                Registration
+            <button 
+                style="cursor: not-allowed !important; pointer-events: none;"
+                style="z-index: 9999;"
+                class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button px-2"
+            >Confirm Registration
             </button>
         @endif
     </div>
