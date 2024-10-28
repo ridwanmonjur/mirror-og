@@ -41,7 +41,6 @@ Alpine.data('alpineDataComponent', function () {
     const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
     const eventId = document.getElementById('eventId').value;
     let initialData = {
-      
         reportUI: {
             matchNumber: 0,
             userTeamId,
@@ -209,7 +208,7 @@ Alpine.data('alpineDataComponent', function () {
               // const selectionMessage = document.querySelector('.selectionMessage');
               // selectionMessage.innerText = ""; 
           }); 
-      },
+        },
         changeMatchNumber(increment) {
           this.clearSelection();
           this.reportUI.matchNumber = this.reportUI.matchNumber + increment; 
@@ -270,15 +269,17 @@ Alpine.data('alpineDataComponent', function () {
             getAllMatchStatusesData() {
               const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
               const allMatchStatusesQ = query(allMatchStatusesCollectionRef);
+              let allDataList = {};
               let subscribeToMatchStatusesSnapshot = onSnapshot(allMatchStatusesQ, async (reportSnapshot) => {
                   reportSnapshot.docChanges().forEach( (change) => {
                       if (change.type === "added" || change.type === "modified") {
                         let data = change.doc.data();
-                        console.log({data});
-                        data['id'] = change.doc.id;
+                        allDataList[change.doc.id] = data;
+
                       }
                   });
-  
+                  
+                  console.log(allDataList);
                   
               });
   
