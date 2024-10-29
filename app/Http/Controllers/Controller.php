@@ -22,4 +22,13 @@ class Controller extends BaseController
     {
         return view('Participant.EventNotFound', compact('error'));
     }
+
+    public function handleErrorJson(\Exception $e)
+    {
+        return response()->json([
+            'success' => false,
+            'message' => 'Operation failed',
+            'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+        ], 500);
+    }
 }

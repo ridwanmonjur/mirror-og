@@ -110,12 +110,12 @@ class UserController extends Controller
             ->get()
             ->keyBy('email'); 
         
-        $userList = new User([
-            'name' => 'user' . ,
-            'email' => $validatedData['email'],
-            'password' => $validatedData['password'],
-            'role' => $userRoleCapital,
-            'created_at' => now(),
-        ]);
+        // $userList = new User([
+        //     'name' => 'user' . '122222222222',
+        //     'email' => $validatedData['email'],
+        //     'password' => $validatedData['password'],
+        //     'role' => $userRoleCapital,
+        //     'created_at' => now(),
+        // ]);
     }
 }
