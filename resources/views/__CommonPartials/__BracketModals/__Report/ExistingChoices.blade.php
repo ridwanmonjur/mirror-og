@@ -1,3 +1,4 @@
+
  <template x-if="report.teams[0].winners[reportUI.matchNumber]">
     <small class="d-block">
         <small x-text="report.userLevel === userLevelEnums['IS_TEAM1'] ? 

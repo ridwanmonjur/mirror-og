@@ -9,7 +9,7 @@
                     <div>
                         <template x-if="(report.teams[0].winners[reportUI.matchNumber] !=
                                 report.teams[1].winners[reportUI.matchNumber])
-                                && !dispute[reportUI.matchNumber]?.resolved
+                                && !dispute[reportUI.matchNumber]?.resolution_winner
                             "
                         >
                             <div>
@@ -27,7 +27,7 @@
     </template>
     <template x-if="dispute[reportUI.matchNumber]">
         <div>
-            <template x-if="dispute[reportUI.matchNumber]?.resolved">
+            <template x-if="dispute[reportUI.matchNumber]?.resolution_winner">
                 <div>
                     <p class="text-red mt-2">
                         The results of this match are disputed.
@@ -42,7 +42,7 @@
                     </div>
                      <p class="text-success mt-2">
                         The dispute has been resolved in favor of 
-                        <span x-text="report.teams[dispute[reportUI.matchNumber]?.resolved].name"> </span>
+                        <span x-text="report.teams[dispute[reportUI.matchNumber]?.resolution_winner].name"> </span>
                     </p>
                     <template x-if="report.realWinners[reportUI.matchNumber]">
                         <div>
@@ -51,7 +51,7 @@
                     </template>
                 </div>
             </template>
-            <template x-if="!dispute[reportUI.matchNumber]?.resolved">
+            <template x-if="!dispute[reportUI.matchNumber]?.resolution_winner">
                 <div>
                     <p class="text-red mt-2">
                         The results of this match are disputed. 

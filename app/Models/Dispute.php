@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 class Dispute extends Model
 {
     protected $fillable = [
+        'report_id',
+        'match_number',
         'dispute_userId',
         'dispute_teamId',
         'dispute_teamNumber',
@@ -38,8 +40,4 @@ class Dispute extends Model
         return $this->imageVideos()->wherePivot('type', 'response');
     }
 
-    public function canBeResolved(): bool
-    {
-        return $this->response_userId && !$this->resolution_winner;
-    }
 }

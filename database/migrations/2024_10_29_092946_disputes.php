@@ -9,7 +9,8 @@ return new class extends Migration {
     {
         Schema::create('disputes', function (Blueprint $table) {
             $table->id();
-
+            $table->string('report_id');
+            $table->string('match_number');
             $table->unsignedBigInteger('dispute_userId');
             $table->unsignedBigInteger('dispute_teamId');
             $table->string('dispute_teamNumber');
@@ -57,8 +58,9 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('disputes');
-        Schema::dropIfExists('image_videos');
         Schema::dropIfExists('dispute_image_video');
+        Schema::dropIfExists('image_videos');
+
         if (!Schema::hasTable('videos')) {
             Schema::create('videos', function (Blueprint $table) {
                 $table->id();

@@ -15,22 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class DisputeController extends Controller
 {
-    public function retrieveDispute(DisputeRetrieveRequest $request) {
-        $disputeIdList = $request->dispute_id;
-        $disputesByKey = Dispute::whereIn('id', $disputeIdList)
-            ->get()
-            ->keyBy('id');
-
-        $mapByKey = [];
-        for ($i = 0; $i < 3; $i++) {
-            $mapByKey[] = $disputesByKey[$disputeIdList[$i]];
-        }
-
-        return response()->json([
-            'success' => true,
-            'dispute' => $mapByKey
-        ]);
-    }
+  
     /**
      * Handle all dispute actions through a single endpoint
      */
@@ -53,6 +38,26 @@ class DisputeController extends Controller
         };
     }
 
+    public function retrieveDispute(DisputeRetrieveRequest $request) {
+        $report_id = $request->report_id;
+        $disputesByKey = Dispute::where('report_id', $report_id)
+            ->orderBy('match_number')
+            ->get()
+            ->keyBy('match_number');
+
+        $mapByKey = [null, null, null];
+        for ($i = 0; $i < 3; $i++) {
+            if (isset($disputesByKey[$i])) {                
+                $mapByKey[$i] = $disputesByKey[$i];
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $mapByKey
+        ]);
+    }
+
     /**
      * Create a new dispute
      */
@@ -62,6 +67,8 @@ class DisputeController extends Controller
             DB::beginTransaction();
 
             $dispute = Dispute::create([
+                'match_number' => $request->match_number,
+                'report_id' => $request->report_id,
                 'dispute_userId' => $request->userId,
                 'dispute_teamId' => $request->dispute_teamId,
                 'dispute_teamNumber' => $request->dispute_teamNumber,
