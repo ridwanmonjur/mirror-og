@@ -248,7 +248,6 @@ class BracketDataService
                         [
                             'team1_position' => 'G1',
                             'team2_position' => 'G2',
-                            'order' => 1,
                             'winner_next_position' => null,
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -260,7 +259,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W1',
                             'team2_position' => 'W2',
-                            'order' => 1,
                             'winner_next_position' => 'U1',
                             'loser_next_position' => 'L1',
                             ...$defaultValues
@@ -268,7 +266,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W3',
                             'team2_position' => 'W4',
-                            'order' => 2,
                             'winner_next_position' => 'U2',
                             'loser_next_position' => 'L2',
                             ...$defaultValues
@@ -276,7 +273,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W5',
                             'team2_position' => 'W6',
-                            'order' => 3,
                             'winner_next_position' => 'U3',
                             'loser_next_position' => 'L3',
                             ...$defaultValues
@@ -284,7 +280,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W7',
                             'team2_position' => 'W8',
-                            'order' => 4,
                             'winner_next_position' => 'U4',
                             'loser_next_position' => 'L4',
                             ...$defaultValues
@@ -292,7 +287,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W9',
                             'team2_position' => 'W10',
-                            'order' => 5,
                             'winner_next_position' => 'U5',
                             'loser_next_position' => 'L6',
                             ...$defaultValues
@@ -300,7 +294,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W11',
                             'team2_position' => 'W12',
-                            'order' => 6,
                             'winner_next_position' => 'U6',
                             'loser_next_position' => 'L6',
                             ...$defaultValues
@@ -308,7 +301,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W13',
                             'team2_position' => 'W14',
-                            'order' => 7,
                             'winner_next_position' => 'U7',
                             'loser_next_position' => 'L7',
                             ...$defaultValues
@@ -316,7 +308,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W15',
                             'team2_position' => 'W16',
-                            'order' => 8,
                             'winner_next_position' => 'U8',
                             'loser_next_position' => 'L8',
                             ...$defaultValues
@@ -324,7 +315,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W17',
                             'team2_position' => 'W18',
-                            'order' => 9,
                             'winner_next_position' => 'U9',
                             'loser_next_position' => 'L9',
                             ...$defaultValues
@@ -332,7 +322,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W19',
                             'team2_position' => 'W20',
-                            'order' => 10,
                             'winner_next_position' => 'U10',
                             'loser_next_position' => 'L10',
                             ...$defaultValues
@@ -340,7 +329,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W21',
                             'team2_position' => 'W22',
-                            'order' => 11,
                             'winner_next_position' => 'U11',
                             'loser_next_position' => 'L11',
                             ...$defaultValues
@@ -348,7 +336,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W23',
                             'team2_position' => 'W24',
-                            'order' => 12,
                             'winner_next_position' => 'U12',
                             'loser_next_position' => 'L12',
                             ...$defaultValues
@@ -356,7 +343,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W25',
                             'team2_position' => 'W26',
-                            'order' => 13,
                             'winner_next_position' => 'U13',
                             'loser_next_position' => 'L13',
                             ...$defaultValues
@@ -364,7 +350,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W27',
                             'team2_position' => 'W28',
-                            'order' => 14,
                             'winner_next_position' => 'U14',
                             'loser_next_position' => 'L14',
                             ...$defaultValues
@@ -372,7 +357,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W29',
                             'team2_position' => 'W30',
-                            'order' => 15,
                             'winner_next_position' => 'U15',
                             'loser_next_position' => 'L15',
                             ...$defaultValues
@@ -380,7 +364,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W31',
                             'team2_position' => 'W32',
-                            'order' => 16,
                             'winner_next_position' => 'U16',
                             'loser_next_position' => 'L16',
                             ...$defaultValues
@@ -390,7 +373,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U1',
                             'team2_position' => 'U2',
-                            'order' => 1,
                             'winner_next_position' => 'U17',
                             'loser_next_position' => 'L18',
                             ...$defaultValues
@@ -398,7 +380,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U3',
                             'team2_position' => 'U4',
-                            'order' => 2,
                             'winner_next_position' => 'U18',
                             'loser_next_position' => 'L20',
                             ...$defaultValues
@@ -406,7 +387,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U5',
                             'team2_position' => 'U6',
-                            'order' => 3,
                             'winner_next_position' => 'U19',
                             'loser_next_position' => 'L22',
                             ...$defaultValues
@@ -414,7 +394,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U7',
                             'team2_position' => 'U8',
-                            'order' => 4,
                             'winner_next_position' => 'U20',
                             'loser_next_position' => 'L24',
                             ...$defaultValues
@@ -422,7 +401,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U9',
                             'team2_position' => 'U10',
-                            'order' => 5,
                             'winner_next_position' => 'U21',
                             'loser_next_position' => 'L26',
                             ...$defaultValues
@@ -430,7 +408,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U11',
                             'team2_position' => 'U12',
-                            'order' => 6,
                             'winner_next_position' => 'U22',
                             'loser_next_position' => 'L28',
                             ...$defaultValues
@@ -438,7 +415,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U13',
                             'team2_position' => 'U14',
-                            'order' => 7,
                             'winner_next_position' => 'U23',
                             'loser_next_position' => 'L30',
                             ...$defaultValues
@@ -446,7 +422,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U15',
                             'team2_position' => 'U16',
-                            'order' => 8,
                             'winner_next_position' => 'U24',
                             'loser_next_position' => 'L32',
                             ...$defaultValues
@@ -456,7 +431,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U17',
                             'team2_position' => 'U18',
-                            'order' => 1,
                             'winner_next_position' => 'U25',
                             'loser_next_position' => 'L42',
                             ...$defaultValues
@@ -464,7 +438,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U19',
                             'team2_position' => 'U20',
-                            'order' => 2,
                             'winner_next_position' => 'U26',
                             'loser_next_position' => 'L44',
                             ...$defaultValues
@@ -472,7 +445,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U21',
                             'team2_position' => 'U22',
-                            'order' => 3,
                             'winner_next_position' => 'U27',
                             'loser_next_position' => 'L46',
                             ...$defaultValues
@@ -480,7 +452,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U23',
                             'team2_position' => 'U24',
-                            'order' => 4,
                             'winner_next_position' => 'U28',
                             'loser_next_position' => 'L48',
                             ...$defaultValues
@@ -490,7 +461,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U25',
                             'team2_position' => 'U26',
-                            'order' => 1,
                             'winner_next_position' => 'U29',
                             'loser_next_position' => 'L54',
                             ...$defaultValues
@@ -498,7 +468,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U27',
                             'team2_position' => 'U28',
-                            'order' => 2,
                             'winner_next_position' => 'U30',
                             'loser_next_position' => 'L56',
                             ...$defaultValues
@@ -508,7 +477,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U29',
                             'team2_position' => 'U30',
-                            'order' => 1,
                             'winner_next_position' => 'G1',
                             'loser_next_position' => 'L60',
                             ...$defaultValues
@@ -520,7 +488,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L1',
                             'team2_position' => 'L2',
-                            'order' => 1,
                             'winner_next_position' => 'L17',
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -528,7 +495,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L3',
                             'team2_position' => 'L4',
-                            'order' => 2,
                             'winner_next_position' => 'L19',
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -536,7 +502,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L5',
                             'team2_position' => 'L6',
-                            'order' => 3,
                             'winner_next_position' => 'L21',
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -544,7 +509,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L7',
                             'team2_position' => 'L8',
-                            'order' => 4,
                             'winner_next_position' => 'L23',
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -552,7 +516,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L9',
                             'team2_position' => 'L10',
-                            'order' => 5,
                             'winner_next_position' => 'L25',
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -560,7 +523,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L11',
                             'team2_position' => 'L12',
-                            'order' => 6,
                             'winner_next_position' => 'L27',
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -568,7 +530,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L13',
                             'team2_position' => 'L14',
-                            'order' => 7,
                             'winner_next_position' => 'L29',
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -576,7 +537,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L15',
                             'team2_position' => 'L16',
-                            'order' => 8,
                             'winner_next_position' => 'L31',
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -588,7 +548,6 @@ class BracketDataService
                             'team2_position' => 'L18',
                             'winner_next_position' => 'L33',
                             'loser_next_position' => null,
-                            'order' => 1,
                             ...$defaultValues
                         ], // 1
                         [
@@ -596,7 +555,6 @@ class BracketDataService
                             'team2_position' => 'L20',
                             'winner_next_position' => 'L34',
                             'loser_next_position' => null,
-                            'order' => 2,
                             ...$defaultValues
                         ], // 2
                         [
@@ -604,7 +562,6 @@ class BracketDataService
                             'team2_position' => 'L22',
                             'winner_next_position' => 'L35',
                             'loser_next_position' => null,
-                            'order' => 3,
                             ...$defaultValues
                         ], // 3
                         [
@@ -612,7 +569,6 @@ class BracketDataService
                             'team2_position' => 'L24',
                             'winner_next_position' => 'L36',
                             'loser_next_position' => null,
-                            'order' => 4,
                             ...$defaultValues
                         ], // 4
                         [
@@ -620,7 +576,6 @@ class BracketDataService
                             'team2_position' => 'L26',
                             'winner_next_position' => 'L37',
                             'loser_next_position' => null,
-                            'order' => 5,
                             ...$defaultValues
                         ], // 5
                         [
@@ -628,7 +583,6 @@ class BracketDataService
                             'team2_position' => 'L28',
                             'winner_next_position' => 'L38',
                             'loser_next_position' => null,
-                            'order' => 6,
                             ...$defaultValues
                         ], // 6
                         [
@@ -636,7 +590,6 @@ class BracketDataService
                             'team2_position' => 'L30',
                             'winner_next_position' => 'L39',
                             'loser_next_position' => null,
-                            'order' => 7,
                             ...$defaultValues
                         ], // 7
                         [
@@ -644,7 +597,6 @@ class BracketDataService
                             'team2_position' => 'L32',
                             'winner_next_position' => 'L40',
                             'loser_next_position' => null,
-                            'order' => 8,
                             ...$defaultValues
                         ], // 8
                     ],
@@ -654,7 +606,6 @@ class BracketDataService
                             'team2_position' => 'L34',
                             'winner_next_position' => 'L41',
                             'loser_next_position' => null,
-                            'order' => 1,
                             ...$defaultValues
                         ], // 1
                         [
@@ -662,7 +613,6 @@ class BracketDataService
                             'team2_position' => 'L36',
                             'winner_next_position' => 'L43',
                             'loser_next_position' => null,
-                            'order' => 2,
                             ...$defaultValues
 
                         ], // 2
@@ -671,7 +621,6 @@ class BracketDataService
                             'team2_position' => 'L38',
                             'winner_next_position' => 'L45',
                             'loser_next_position' => null,
-                            'order' => 3,
                             ...$defaultValues
 
                         ], // 3
@@ -680,7 +629,6 @@ class BracketDataService
                             'team2_position' => 'L40',
                             'winner_next_position' => 'L47',
                             'loser_next_position' => null,
-                            'order' => 4,
                             ...$defaultValues
 
                         ], // 4
@@ -691,7 +639,6 @@ class BracketDataService
                             'team2_position' => 'L42',
                             'winner_next_position' => 'L49',
                             'loser_next_position' => null,
-                            'order' => 1,
                             ...$defaultValues
 
                         ], // 1
@@ -700,7 +647,6 @@ class BracketDataService
                             'team2_position' => 'L44',
                             'winner_next_position' => 'L50',
                             'loser_next_position' => null,
-                            'order' => 2,
                             ...$defaultValues
 
                         ], // 2
@@ -709,7 +655,6 @@ class BracketDataService
                             'team2_position' => 'L46',
                             'winner_next_position' => 'L51',
                             'loser_next_position' => null,
-                            'order' => 3,
                             ...$defaultValues
 
                         ], // 3
@@ -718,7 +663,6 @@ class BracketDataService
                             'team2_position' => 'L48',
                             'winner_next_position' => 'L52',
                             'loser_next_position' => null,
-                            'order' => 4,
                             ...$defaultValues
 
                         ], // 4
@@ -729,8 +673,7 @@ class BracketDataService
                             'team2_position' => 'L50',
                             'winner_next_position' => 'L53',
                             'loser_next_position' => null,
-                            'order' => 1,
-                                                        ...$defaultValues
+                            ...$defaultValues
 
                         ], // 1
                         [
@@ -738,8 +681,7 @@ class BracketDataService
                             'team2_position' => 'L52',
                             'winner_next_position' => 'L55',
                             'loser_next_position' => null,
-                            'order' => 2,
-                                                        ...$defaultValues
+                            ...$defaultValues
 
                         ], // 2
                     ],
@@ -749,8 +691,7 @@ class BracketDataService
                             'team2_position' => 'L54',
                             'winner_next_position' => 'L57',
                             'loser_next_position' => null,
-                            'order' => 1,
-                                                        ...$defaultValues
+                            ...$defaultValues
 
                         ], // 1
                         [
@@ -758,8 +699,7 @@ class BracketDataService
                             'team2_position' => 'L56',
                             'winner_next_position' => 'L58',
                             'loser_next_position' => null,
-                            'order' => 2,
-                                                        ...$defaultValues
+                            ...$defaultValues
 
                         ], // 2
                     ],
@@ -769,8 +709,7 @@ class BracketDataService
                             'team2_position' => 'L58',
                             'winner_next_position' => 'L59',
                             'loser_next_position' => null,
-                            'order' => 1,
-                                                        ...$defaultValues
+                            ...$defaultValues
 
                         ], // 1
                     ],
@@ -780,8 +719,7 @@ class BracketDataService
                             'team2_position' => 'L60',
                             'winner_next_position' => 'G2',
                             'loser_next_position' => null,
-                            'order' => 1,
-                                                        ...$defaultValues
+                            ...$defaultValues
 
                         ], // 1
                     ],
@@ -795,7 +733,6 @@ class BracketDataService
                         [
                             'team1_position' => 'G1',
                             'team2_position' => 'G2',
-                            'order' => 1,
                             'winner_next_position' => null,
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -808,7 +745,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W1',
                             'team2_position' => 'W2',
-                            'order' => 1,
                             'winner_next_position' => 'U1',
                             'loser_next_position' => 'L1',
                             ...$defaultValues
@@ -817,7 +753,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W3',
                             'team2_position' => 'W4',
-                            'order' => 2,
                             'winner_next_position' => 'U2',
                             'loser_next_position' => 'L2',
                             ...$defaultValues
@@ -826,7 +761,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W5',
                             'team2_position' => 'W6',
-                            'order' => 3,
                             'winner_next_position' => 'U3',
                             'loser_next_position' => 'L3',
                             ...$defaultValues
@@ -835,7 +769,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W7',
                             'team2_position' => 'W8',
-                            'order' => 4,
                             'winner_next_position' => 'U4',
                             'loser_next_position' => 'L4',
                             ...$defaultValues
@@ -844,7 +777,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W9',
                             'team2_position' => 'W10',
-                            'order' => 5,
                             'winner_next_position' => 'U5',
                             'loser_next_position' => 'L6',
                             ...$defaultValues
@@ -853,7 +785,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W11',
                             'team2_position' => 'W12',
-                            'order' => 6,
                             'winner_next_position' => 'U6',
                             'loser_next_position' => 'L6',
                             ...$defaultValues
@@ -862,7 +793,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W13',
                             'team2_position' => 'W14',
-                            'order' => 7,
                             'winner_next_position' => 'U7',
                             'loser_next_position' => 'L7',
                             ...$defaultValues
@@ -871,7 +801,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W15',
                             'team2_position' => 'W16',
-                            'order' => 8,
                             'winner_next_position' => 'U8',
                             'loser_next_position' => 'L8',
                             ...$defaultValues
@@ -882,7 +811,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U1',
                             'team2_position' => 'U2',
-                            'order' => 1,
                             'winner_next_position' => 'U9',
                             'loser_next_position' => 'L10',
                             ...$defaultValues
@@ -891,7 +819,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U3',
                             'team2_position' => 'U4',
-                            'order' => 2,
                             'winner_next_position' => 'U10',
                             'loser_next_position' => 'L12',
                             ...$defaultValues
@@ -900,7 +827,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U5',
                             'team2_position' => 'U6',
-                            'order' => 3,
                             'winner_next_position' => 'U11',
                             'loser_next_position' => 'L14',
                             ...$defaultValues
@@ -918,7 +844,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U9',
                             'team2_position' => 'U10',
-                            'order' => 1,
                             'winner_next_position' => 'U13',
                             'loser_next_position' => 'L22',
                             ...$defaultValues
@@ -926,7 +851,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U11',
                             'team2_position' => 'U12',
-                            'order' => 2,
                             'winner_next_position' => 'U14',
                             'loser_next_position' => 'L24',
                             ...$defaultValues
@@ -936,7 +860,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U13',
                             'team2_position' => 'U14',
-                            'order' => 1,
                             'winner_next_position' => 'G1',
                             'loser_next_position' => 'L28',
                             ...$defaultValues
@@ -948,7 +871,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L1',
                             'team2_position' => 'L2',
-                            'order' => 1,
                             'winner_next_position' => 'L9',
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -956,7 +878,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L3',
                             'team2_position' => 'L4',
-                            'order' => 2,
                             'winner_next_position' => 'L11',
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -964,7 +885,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L5',
                             'team2_position' => 'L6',
-                            'order' => 3,
                             'winner_next_position' => 'L13',
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -972,7 +892,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L7',
                             'team2_position' => 'L8',
-                            'order' => 4,
                             'winner_next_position' => 'L15',
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -984,7 +903,6 @@ class BracketDataService
                             'team2_position' => 'L10',
                             'winner_next_position' => 'L17',
                             'loser_next_position' => null,
-                            'order' => 1,
                             ...$defaultValues
                         ], // 1
                         [
@@ -992,7 +910,6 @@ class BracketDataService
                             'team2_position' => 'L12',
                             'winner_next_position' => 'L18',
                             'loser_next_position' => null,
-                            'order' => 2,
                             ...$defaultValues
                         ], // 2
                         [
@@ -1000,7 +917,6 @@ class BracketDataService
                             'team2_position' => 'L14',
                             'winner_next_position' => 'L19',
                             'loser_next_position' => null,
-                            'order' => 3,
                             ...$defaultValues
                         ], // 3
                         [
@@ -1008,7 +924,6 @@ class BracketDataService
                             'team2_position' => 'L16',
                             'winner_next_position' => 'L20',
                             'loser_next_position' => null,
-                            'order' => 4,
                             ...$defaultValues
                         ], // 4
                     ],
@@ -1018,7 +933,6 @@ class BracketDataService
                             'team2_position' => 'L18',
                             'winner_next_position' => 'L21',
                             'loser_next_position' => null,
-                            'order' => 1,
                             ...$defaultValues
                         ], // 1
                         [
@@ -1026,7 +940,6 @@ class BracketDataService
                             'team2_position' => 'L20',
                             'winner_next_position' => 'L23',
                             'loser_next_position' => null,
-                            'order' => 2,
                             ...$defaultValues
                         ], // 2
                     ],
@@ -1036,7 +949,6 @@ class BracketDataService
                             'team2_position' => 'L22',
                             'winner_next_position' => 'L25',
                             'loser_next_position' => null,
-                            'order' => 1,
                             ...$defaultValues
                         ], // 1
                         [
@@ -1044,7 +956,6 @@ class BracketDataService
                             'team2_position' => 'L24',
                             'winner_next_position' => 'L26',
                             'loser_next_position' => null,
-                            'order' => 2,
                             ...$defaultValues
                         ], // 2
                     ],
@@ -1054,7 +965,6 @@ class BracketDataService
                             'team2_position' => 'L26',
                             'winner_next_position' => 'L27',
                             'loser_next_position' => null,
-                            'order' => 1,
                             ...$defaultValues
                         ], // 1
                     ],
@@ -1064,7 +974,6 @@ class BracketDataService
                             'team2_position' => 'L28',
                             'winner_next_position' => 'G2',
                             'loser_next_position' => null,
-                            'order' => 1,
                             ...$defaultValues
                         ], // 1
                     ],
@@ -1078,7 +987,6 @@ class BracketDataService
                         [
                             'team1_position' => 'G1',
                             'team2_position' => 'G2',
-                            'order' => 1,
                             'winner_next_position' => null,
                             'loser_next_position' => null,
                             ...$defaultValues
@@ -1090,7 +998,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W1',
                             'team2_position' => 'W2',
-                            'order' => 1,
                             'winner_next_position' => 'U1',
                             'loser_next_position' => 'L1',
                             ...$defaultValues
@@ -1098,7 +1005,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W3',
                             'team2_position' => 'W4',
-                            'order' => 2,
                             'winner_next_position' => 'U2',
                             'loser_next_position' => 'L2',
                             ...$defaultValues
@@ -1106,7 +1012,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W5',
                             'team2_position' => 'W6',
-                            'order' => 3,
                             'winner_next_position' => 'U3',
                             'loser_next_position' => 'L3',
                             ...$defaultValues
@@ -1114,7 +1019,6 @@ class BracketDataService
                         [
                             'team1_position' => 'W7',
                             'team2_position' => 'W8',
-                            'order' => 4,
                             'winner_next_position' => 'U4',
                             'loser_next_position' => 'L4',
                             ...$defaultValues
@@ -1124,7 +1028,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U1',
                             'team2_position' => 'U2',
-                            'order' => 1,
                             ...$defaultValues,
                             'winner_next_position' => 'U5',
                             'loser_next_position' => 'L6',
@@ -1132,7 +1035,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U3',
                             'team2_position' => 'U4',
-                            'order' => 2,
                             ...$defaultValues,
                             'winner_next_position' => 'U6',
                             'loser_next_position' => 'L8',
@@ -1142,7 +1044,6 @@ class BracketDataService
                         [
                             'team1_position' => 'U5',
                             'team2_position' => 'U6',
-                            'order' => 1,
                             ...$defaultValues,
                             'winner_next_position' => 'G1',
                             'loser_next_position' => 'L12',
@@ -1154,7 +1055,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L1',
                             'team2_position' => 'L2',
-                            'order' => 1,
                             ...$defaultValues,
                             'winner_next_position' => 'L5',
                             'loser_next_position' => null,
@@ -1162,7 +1062,6 @@ class BracketDataService
                         [
                             'team1_position' => 'L3',
                             'team2_position' => 'L4',
-                            'order' => 2,
                             ...$defaultValues,
                             'winner_next_position' => 'L7',
                             'loser_next_position' => null,
@@ -1173,7 +1072,6 @@ class BracketDataService
                             'team1_position' => 'L5',
                             'team2_position' => 'L6',
                             'winner_next_position' => 'L9',
-                            'order' => 1,
                             ...$defaultValues,
                             'loser_next_position' => null,
                         ], // 1
@@ -1181,7 +1079,6 @@ class BracketDataService
                             'team1_position' => 'L7',
                             'team2_position' => 'L8',
                             'winner_next_position' => 'L10',
-                            'order' => 2,
                             ...$defaultValues,
                             'loser_next_position' => null,
                         ], // 2
@@ -1192,7 +1089,6 @@ class BracketDataService
                             'team2_position' => 'L10',
                             'winner_next_position' => 'L11',
                             'loser_next_position' => null,
-                            'order' => 1,
                             ...$defaultValues,
                         ], // 1
                     ],
@@ -1202,7 +1098,6 @@ class BracketDataService
                             'team2_position' => 'L12',
                             'winner_next_position' => 'G2',
                             'loser_next_position' => null,
-                            'order' => 1,
                             ...$defaultValues,
                         ], // 1
                     ],

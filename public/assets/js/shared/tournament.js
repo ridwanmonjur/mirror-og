@@ -4,6 +4,9 @@ bracketItemList.forEach(item => {
     item.classList.add('special-item-right');
 });
 
+const eventId = document.getElementById('eventId').value;
+
+
 var bracketteamList = document.querySelectorAll('.codeCANcode.tournament-bracket__match');
 bracketItemList.forEach(item => {
     item.classList.add('special-item2');
@@ -23,14 +26,16 @@ function updateModalShow(event) {
     let { team1_id, team2_id } = button.dataset;
     let parentWithDataset = document.querySelector(`.tournament-bracket__match.${team1_id}.${team2_id}`);
     let dataset = JSON.parse(parentWithDataset.dataset.bracket);
+    dataset.inner_stage_name = parentWithDataset.dataset.inner_stage_name;
+    dataset.stage_name = parentWithDataset.dataset.stage_name;
+    dataset.event_details_id = eventId;
+    dataset.order = parentWithDataset.dataset.order;
+
     const modalElement = document.getElementById('updateModal');
     const inputs = modalElement.querySelectorAll('input, select, textarea');
-
     inputs.forEach(input => {
         const inputName = input.getAttribute('name');
-        if (dataset[inputName] !== undefined) {
-            input.value = dataset[inputName];
-        }
+        input.value = dataset[inputName];
     });
 
     ['team1_position', 'team2_position', 'winner_next_position', 'loser_next_position'].forEach((element)=> {

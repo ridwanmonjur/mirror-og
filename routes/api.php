@@ -10,6 +10,8 @@ use App\Http\Controllers\Participant\ParticipantCheckoutController;
 use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
+use App\Http\Controllers\Shared\DisputeController;
+use App\Http\Controllers\Shared\EventController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\NotificationController;
@@ -45,6 +47,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
         Route::post('/user/{id}/notifications', [NotificationController::class, 'getMoreNotifications'])->name('user.notifications.more');
         Route::post('/card/intent', [StripeController::class,  'stripeCardIntentCreate'])->name('stripe.stripeCardIntentCreate');
+        Route::post( '/disputes', [DisputeController::class,  'handleDisputes']);
+
     });
 });
 

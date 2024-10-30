@@ -1,11 +1,14 @@
-<!-- Favicon links -->
-<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon/apple-touch-icon.png') }}">
-<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon/favicon-32x32.png') }}">
-<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon/favicon-16x16.png') }}">
 <link rel="manifest" href="{{ asset('site.webmanifest') }}">
 
-<!-- Fallback favicon -->
-<link rel="icon" href="{{ asset('assets/images/driftwood logo.png') }}" type="image/x-icon">
+
+<link rel="icon" type="image/svg+xml" href="{{ asset('assets/images/favicon/favicon.svg') }}">
+<link rel="shortcut icon" href="{{ asset('assets/images/favicon/favicon.ico') }}">
+<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/favicon/apple-touch-icon.png') }}">
+<meta name="apple-mobile-web-app-title" content="{{ config('app.name') }}">
+{{-- fallback --}}
+<link rel="icon" type="image/png" href="{{ asset('assets/images/favicon/favicon-96x96.png') }}" sizes="96x96">
+
+<link rel="manifest" href="{{ asset('assets/images/favicon/site.webmanifest') }}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!-- Open Graph meta tags -->
