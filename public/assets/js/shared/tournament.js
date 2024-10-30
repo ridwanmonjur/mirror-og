@@ -320,3 +320,99 @@ submitBtnElement?.addEventListener('click', function(event) {
         });
 });
 
+
+const uploadContainers = document.querySelectorAll('.upload-container');
+console.log({uploadContainers});
+uploadContainers.forEach((container) => {
+    const uploadArea = container.querySelector('.upload-area');
+    const plusButton = container.querySelector('.plus-button');
+    const fileInput = container.querySelector('.file-input');
+    console.log({container, uploadArea, plusButton, fileInput})
+    let uploadedFiles = [];
+    
+    fileInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        files.forEach(file => {
+            if (file.type.startsWith('image/')) {
+                uploadedFiles.push(file);
+                createPreview(file);
+            }
+        });
+        fileInput.value = ''; 
+    });
+    
+    function createPreview(file) {
+        const preview = document.createElement('div');
+        preview.className = 'preview-item loading';
+    
+        const img = document.createElement('img');
+        img.addEventListener('load', () => {
+            preview.classList.remove('loading');
+        });
+    
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.innerHTML = '×';
+    
+        deleteBtn.addEventListener('click', () => {
+            uploadedFiles = uploadedFiles.filter(f => f !== file);
+            preview.remove();
+        });
+    
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    
+        preview.appendChild(img);
+        preview.appendChild(deleteBtn);
+        uploadArea.insertBefore(preview, plusButton);
+    }
+    
+    plusButton.addEventListener('click', (e) => {
+        let grandparent = e.currentTarget.parent.parent;
+
+        grandparent.click();
+    });
+    
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('drag-over');
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+        
+        const files = Array.from(e.dataTransfer.files);
+        files.forEach(file => {
+            if (file.type.startsWith('image/')) {
+                uploadedFiles.push(file);
+                createPreview(file);
+            }
+        });
+    });
+  
+})
+
+  
+function getUploadedFiles() {
+    return uploadedFiles;
+}
+
+function clearPreviews() {
+    uploadedFiles = [];
+    const previews = uploadArea.querySelectorAll('.preview-item');
+    previews.forEach(preview => preview.remove());
+}
+
+function validateFileSize(file, maxSizeMB = 5) {
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    return file.size <= maxSizeBytes;
+}

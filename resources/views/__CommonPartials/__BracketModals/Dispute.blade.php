@@ -126,13 +126,22 @@
                                         <h5 class="text-start my-3"> Image/Video Evidence <span class="text-red">*</span>
                                         </h5>
                                         <div class="ps-5 pe-5 text-start">
-                                            <div class="mb-3">
-                                                <label for="description" class="form-label"><strong>Provide a detailed
-                                                    description:</strong>
-                                                </label>
-                                                {{-- <textarea class="form-control" id="description" name="description" rows="5"
-                                                    placeholder="Please provide more details about the issue...">
-                                                </textarea> --}}
+                                            <div class="upload-container" >
+                                                <div class="upload-area" 
+                                                    x-ref="uploadArea1"
+                                                    @dragover.prevent="$refs.uploadArea1.classList.add('drag-over')"
+                                                    @dragleave.prevent="$refs.uploadArea1.classList.remove('drag-over')"
+                                                    @drop.prevent="handleDrop($event, '1')">
+                                                    <div class="plus-button" @click="$refs.fileInput1.click()">+</div>
+                                                </div>
+                                                <input 
+                                                    type="file" 
+                                                    x-ref="fileInput1" 
+                                                    class="file-input" 
+                                                    multiple 
+                                                    accept="image/*"
+                                                    @change="handleFiles($event, '1')"
+                                                >
                                             </div>
                                         </div>
                                         
@@ -181,27 +190,90 @@
                                         <p class="text-primary" style="white-space: pre-wrap;"
                                             x-html="dispute[reportUI.matchNumber].dispute_description">
                                         </p>
-                                        <p class="my-0">Image/ Video Evidence: </p>
-                                        <p class="mb-3">Tier: Starfish</p>
+                                        <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span></p>
+                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
-                                <div
-                                    class="row  bg-light justify-content-start border border-3 border rounded px-2 py-2">
-                                    <h5 class="text-start my-3"> Dispute Response </h5>
-                                    <div class="ps-5 ps-5 text-start">
-                                        <br><br><br>
-                                        <p class="text-center fw-lighter">
-                                            <i> Waiting for the team to respond </i>
+                    
+                        {{-- reportUI.teamNumber == dispute[reportUI.matchNumber].dispute_teamNumber --}}
+                        <template x-if="dispute[reportUI.matchNumber].response_teamId">
+                            <div class="row">
+                                <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
+                                    <div
+                                        class="row justify-content-start bg-light border border-3 border-dark border rounded px-2 py-2">
+                                        <h5 class="text-start my-3"> Counter Explanation (Optional) </h5>
+                                         <p class="my-0"> Responding Team </p>
+                                        <img :src="'/storage/images/' + report.teams[dispute[reportUI.matchNumber].response_teamNumber].banner"
+                                            alt="Team Banner" width="50" height="50"
+                                            onerror="this.src='{{ asset('assets/images/404.png') }}';"
+                                            class="mb-1 border border-2 popover-content-img rounded-circle object-fit-cover">
+                                        <p class="text-primary">
+                                            <span x-text="report.teams[dispute[reportUI.matchNumber].response_teamNumber].name"> </span>
+                                            <span x-show="reportUI.teamNumber == dispute[reportUI.matchNumber].response_teamNumber">(Your Team)</span>
                                         </p>
-                                        <br><br><br>    
+
+                                        <p class="my-0" x-html="dispute[reportUI.matchNumber].response_explanation">
+                                        </p>
+                                        <p class="text-primary" style="white-space: pre-wrap;"
+                                            x-html="dispute[reportUI.matchNumber].dispute_description">
+                                        </p>
+                                        
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </template>
+                        <template x-if="!dispute[reportUI.matchNumber].response_teamId">
+                            <div class="row">
+                                <template x-if="reportUI.teamNumber == dispute[reportUI.matchNumber].dispute_teamNumber">
+                                    <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
+                                        <div
+                                            class="row  bg-light justify-content-start border border-3 border rounded px-2 py-2">
+                                            <h5 class="text-start my-3"> Dispute Response </h5>
+                                            <div class="ps-5 ps-5 text-start">
+                                                <br><br><br>
+                                                <p class="text-center fw-lighter">
+                                                    <i> Waiting for the team to respond </i>
+                                                </p>
+                                                <br><br><br>    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template x-if="reportUI.teamNumber != dispute[reportUI.matchNumber].dispute_teamNumber">
+                                    <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
+                                        <h5 class="text-start my-3"> Dispute Description (optional) </h5>
+                                        <div class="ps-5 pe-5 text-start">
+                                            <div class="mb-3">
+                                                <label for="description" class="form-label"><strong>Provide a detailed
+                                                        description:</strong></label>
+                                                <textarea class="form-control" id="description" name="dispute_description" rows="5"
+                                                    placeholder="Please provide more details about the issue..."></textarea>
+                                            </div>
+                                        </div>
+                                        <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span> </p>
+                                        <div class="upload-container" >
+                                            <div class="upload-area" 
+                                                x-ref="uploadArea2"
+                                                @dragover.prevent="$refs.uploadArea2.classList.add('drag-over')"
+                                                @dragleave.prevent="$refs.uploadArea2.classList.remove('drag-over')"
+                                                @drop.prevent="handleDrop($event, '2')">
+                                                <div class="plus-button" @click="$refs.fileInput2.click()">+</div>
+                                            </div>
+                                            <input 
+                                                type="file" 
+                                                x-ref="fileInput2" 
+                                                class="file-input" 
+                                                multiple 
+                                                accept="image/*"
+                                                @change="handleFiles($event, '2')"
+                                            >
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
                         <div class="row">
                             <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                 <div

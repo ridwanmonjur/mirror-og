@@ -253,8 +253,8 @@ Alpine.data('alpineDataComponent', function () {
               if (this.subscribeToMatchStatusesSnapshot) this.subscribeToMatchStatusesSnapshot();
 
 
-                let teamNumber = dataset.userLevel === userLevelEnums['IS_TEAM1'] ? 0 :
-                  (dataset.userLevel === userLevelEnums['IS_TEAM2'] ? 1 : 0 );
+                let teamNumber = dataset.user_level == this.userLevelEnums['IS_TEAM1'] ? 0 :
+                  (dataset.user_level == this.userLevelEnums['IS_TEAM2'] ? 1 : 0 );
 
                 let otherTeamNumber =  teamNumber === 0 ? 1 : 0;
               
@@ -263,6 +263,7 @@ Alpine.data('alpineDataComponent', function () {
                   teamNumber, 
                   otherTeamNumber
                 }
+
 
                 this.report = {
                   ...initialData.report,
@@ -446,6 +447,66 @@ Alpine.data('alpineDataComponent', function () {
               }
             }
             
+          },
+          handleFiles(event, id) {
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    this.createPreview(file, id);
+                }
+            });
+            event.target.value = '';
+          },
+
+          createPreview(file, id) {
+              const preview = document.createElement('div');
+              preview.className = 'preview-item loading';
+
+              const img = document.createElement('img');
+              img.addEventListener('load', () => {
+                  preview.classList.remove('loading');
+              });
+
+              const deleteBtn = document.createElement('button');
+              deleteBtn.className = 'delete-btn';
+              deleteBtn.innerHTML = '×';
+              deleteBtn.addEventListener('click', () => preview.remove());
+
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                  img.src = e.target.result;
+              };
+              reader.readAsDataURL(file);
+
+              preview.appendChild(img);
+              preview.appendChild(deleteBtn);
+              
+              const uploadArea = this.$refs[`uploadArea${id}`];
+              const plusButton = uploadArea.querySelector('.plus-button');
+              uploadArea.insertBefore(preview, plusButton);
+          },
+
+          handleDrop(event, id) {
+              event.preventDefault();
+              this.$refs[`uploadArea${id}`].classList.remove('drag-over');
+              
+              const files = Array.from(event.dataTransfer.files);
+              files.forEach(file => {
+                  if (file.type.startsWith('image/')) {
+                      this.createPreview(file, id);
+                  }
+              });
+          },
+
+          getAllImages() {
+              const images1 = Array.from(this.$refs.uploadArea1.querySelectorAll('.preview-item img'))
+                  .map(img => img.src);
+              const images2 = Array.from(this.$refs.uploadArea2.querySelectorAll('.preview-item img'))
+                  .map(img => img.src);
+              
+              console.log('Images from uploader 1:', images1);
+              console.log('Images from uploader 2:', images2);
+              return { uploader1: images1, uploader2: images2 };
           },
         }
     });

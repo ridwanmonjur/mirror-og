@@ -47,7 +47,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
         Route::post('/user/{id}/notifications', [NotificationController::class, 'getMoreNotifications'])->name('user.notifications.more');
         Route::post('/card/intent', [StripeController::class,  'stripeCardIntentCreate'])->name('stripe.stripeCardIntentCreate');
-        Route::post( '/disputes', [DisputeController::class,  'handleDisputes']);
+        Route::post( '/disputes', action: [DisputeController::class,  'handleDisputes']);
 
     });
 });
