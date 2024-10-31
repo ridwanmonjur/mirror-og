@@ -311,9 +311,9 @@ Alpine.data('alpineDataComponent', function () {
               async (disputeSnapshot) => {
                 let allDisputes = [];
                 disputeSnapshot.docChanges().forEach( (change) => {
+                  let data = change.doc.data();
+                  let id = change.doc.id;
                   if (change.type === "added") {
-                    let data = change.doc.data();
-                    let id = change.doc.id;
                     allDisputes[data['match_number']] = {
                       ...data, id
                     };
@@ -464,25 +464,25 @@ Alpine.data('alpineDataComponent', function () {
             const form = event.target;
             const formData = Object.fromEntries(new FormData(form));
             const {
-              dispute_id,
+              id,
               dispute_teamId,
               response_teamNumber,
               dispute_description,
               dispute_matchNumber,
-              user_id
+              response_userId
             } = formData;
         
-            if (!dispute_id || !dispute_teamId || !response_teamNumber) {
+            if (!id || !dispute_teamId || !response_teamNumber) {
               throw new Error('Missing required fields');
             }
         
-            const disputeRef = doc(db, `events/${eventId}/disputes`, dispute_id);
+            const disputeRef = doc(db, `event/${eventId}/disputes`, id);
         
             const updateData = {
               response_teamId: dispute_teamId,
               response_teamNumber: response_teamNumber,
               response_explanation: dispute_description || null,
-              response_userId: user_id,
+              response_userId,
               updated_at: serverTimestamp(),
               status: 'responded' 
             };

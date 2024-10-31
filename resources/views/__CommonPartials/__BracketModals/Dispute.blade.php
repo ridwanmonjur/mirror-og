@@ -69,7 +69,7 @@
                             <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber].id">
                             <input type="hidden" name="dispute_teamNumber" x-bind:value="reportUI.teamNumber">
                             <input type="hidden" name="report_id" x-bind:value="report.id">
-                            <input type="hidden" name="dispute_userId" value="{{$user->id}}">
+                            <input type="hidden" name="dispute_userId" value="{{$user?->id}}">
                             <input type="hidden" name="match_number" x-bind:value="reportUI.matchNumber">
                             <div class="row">
                                 <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
@@ -198,28 +198,31 @@
                                 <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                     <div
                                         class="row justify-content-start bg-light border border-3 border-dark border rounded px-2 py-2">
-                                        <h5 class="text-start my-3"> Counter Explanation (Optional) </h5>
-                                        <p class="my-0"> Responding Team </p>
-                                        <img :src="'/storage/images/' + report.teams[dispute[reportUI.matchNumber]
-                                            .response_teamNumber].banner"
-                                            alt="Team Banner" width="50" height="50"
-                                            onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                                            class="mb-1 border border-2 popover-content-img rounded-circle object-fit-cover">
-                                        <p class="text-primary">
-                                            <span
-                                                x-text="report.teams[dispute[reportUI.matchNumber].response_teamNumber].name">
-                                            </span>
-                                            <span
-                                                x-show="reportUI.teamNumber == dispute[reportUI.matchNumber].response_teamNumber">(Your
-                                                Team)
-                                            </span>
-                                        </p>
+                                        <div class="ps-5 ps-5 text-start">
+                                            <h5 class="text-start my-3"> Counter Explanation (Optional) </h5>
+                                            <p class="my-0"> Responding Team </p>
+                                            <img :src="'/storage/images/' + report.teams[dispute[reportUI.matchNumber]
+                                                .response_teamNumber].banner"
+                                                alt="Team Banner" width="50" height="50"
+                                                onerror="this.src='{{ asset('assets/images/404.png') }}';"
+                                                class="mb-1 border border-2 popover-content-img rounded-circle object-fit-cover"
+                                            >
+                                            <p class="text-primary">
+                                                <span
+                                                    x-text="report.teams[dispute[reportUI.matchNumber].response_teamNumber].name">
+                                                </span>
+                                                <span
+                                                    x-show="reportUI.teamNumber == dispute[reportUI.matchNumber].response_teamNumber">(Your
+                                                    Team)
+                                                </span>
+                                            </p>
 
-                                        <p class="my-0" x-html="dispute[reportUI.matchNumber].response_explanation">
-                                        </p>
-                                        <p class="text-primary" style="white-space: pre-wrap;"
-                                            x-html="dispute[reportUI.matchNumber].dispute_description">
-                                        </p>
+                                            <p class="my-0" x-html="dispute[reportUI.matchNumber].response_explanation">
+                                            </p>
+                                            <p class="text-primary" style="white-space: pre-wrap;"
+                                                x-html="dispute[reportUI.matchNumber].dispute_description">
+                                            </p>
+                                        </div>
 
                                     </div>
                                 </div>
@@ -273,7 +276,9 @@
                                                 <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber].id">
                                                 <input type="hidden" name="response_teamNumber" x-bind:value="reportUI.teamNumber">
                                                 <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].matchNumber">
-                                                <input type="hidden" name="dispute_id" x-bind:value="dispute[reportUI.matchNumber].id">
+                                                <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
+                                                <input type="hidden" name="response_userId" value="{{$user?->id}}">
+
                                                 <h5 class="text-start my-3"> Dispute Description (optional) </h5>
                                                 <div class="ps-5 pe-5 text-start">
                                                     <div class="mb-3">
@@ -337,7 +342,7 @@
                                         </div>
                                     </div>
                                 </template>
-                                <template x-if="resolution_winner['IS_ORGANIZER'] == report.userLevel">
+                                <template x-if="userLevelEnums['IS_ORGANIZER'] == report.userLevel">
                                     <div class="row">
                                         <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                             <div
