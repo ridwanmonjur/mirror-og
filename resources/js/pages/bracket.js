@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, memoryLocalCache, setDoc, addDoc, onSnapshot, updateDoc, getDocsFromCache, startAfter, limit, orderBy, doc, query, collection, collectionGroup, getDocs, getDoc, where, or } from "firebase/firestore";
+import { initializeFirestore, memoryLocalCache, setDoc,   serverTimestamp,
+  addDoc, onSnapshot, updateDoc, getDocsFromCache, startAfter, limit, orderBy, doc, query, collection, collectionGroup, getDocs, getDoc, where, or } from "firebase/firestore";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 import Alpine from 'alpinejs';
@@ -41,6 +42,9 @@ Alpine.data('alpineDataComponent', function () {
     const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
     const eventId = document.getElementById('eventId').value;
     let initialData = {
+        subscribeToMatchStatusesSnapshot: null,
+        subscribeToCurrentReportSnapshot: null,
+        subscribeToCurrentReportDisputesSnapshot: null,
         reportUI: {
             matchNumber: 0,
             userTeamId,
@@ -54,6 +58,7 @@ Alpine.data('alpineDataComponent', function () {
           realWinners: [null, null, null],
           userLevel: null,
           matchStatus: ['ONGOING', null, null],
+          dispute: [null, null, null],
           teams: [
             {
               winners:  [null, null, null],
@@ -77,36 +82,12 @@ Alpine.data('alpineDataComponent', function () {
         dispute: [
           null, 
           null,
-          // {
-          //   id: null,
-          //   information: {
-          //     teamName: "TeamName",
-          //     teamBanner: "",
-          //     reason: "The reason",
-          //     desc: "The desc",
-          //     evidence: [],
-          //     userId: 1,
-          //   },
-          //   counter: {
-          //     teamName: "TeamName",
-          //     teamBanner: "",
-          //     reason: "The reason",
-          //     desc: "The desc",
-          //     evidence: [],
-          //     userId: 1,
-          //   },
-          //   resolution: {
-
-          //   },
-
-          // }, 
           null
         ],
     };
     return {
       ...initialData,
-      subscribeToMatchStatusesSnapshot: null,
-      subscribeToCurrentReportSnapshot: null,
+    
       userLevelEnums,
         async onSubmitSelectTeamToWin() {
           let teamNumber = this.reportUI.teamNumber;
@@ -180,6 +161,10 @@ Alpine.data('alpineDataComponent', function () {
             console.error("Error adding document: ", error);
           }
         },
+        toggleResponseForm(classToShow, classToHide) {
+          document.querySelector(`.${classToShow}`).classList.toggle("d-none");
+          document.querySelector(`.${classToHide}`).classList.toggle("d-none");
+        },
         selectTeamToWin(event, index) {
             this.clearSelection();
             let selectedButton = event.currentTarget;
@@ -250,8 +235,10 @@ Alpine.data('alpineDataComponent', function () {
               }
 
               this.clearSelection();
-              if (this.subscribeToMatchStatusesSnapshot) this.subscribeToMatchStatusesSnapshot();
-
+              if (this.subscribeToMatchStatusesSnapshot) 
+                this.subscribeToMatchStatusesSnapshot();
+              if (this.subscribeToCurrentReportDisputesSnapshot) 
+                this.subscribeToCurrentReportDisputesSnapshot();
 
                 let teamNumber = dataset.user_level == this.userLevelEnums['IS_TEAM1'] ? 0 :
                   (dataset.user_level == this.userLevelEnums['IS_TEAM2'] ? 1 : 0 );
@@ -263,7 +250,6 @@ Alpine.data('alpineDataComponent', function () {
                   teamNumber, 
                   otherTeamNumber
                 }
-
 
                 this.report = {
                   ...initialData.report,
@@ -312,6 +298,40 @@ Alpine.data('alpineDataComponent', function () {
   
               this.subscribeToMatchStatusesSnapshot = subscribeToMatchStatusesSnapshot;
           },
+          getCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot) {
+            const disputesRef = collection(db, `/event/${eventId}/disputes`);
+            const disputeQuery = query(
+              disputesRef,
+              where('report_id', '==', classNamesWithoutPrecedingDot),
+              where('event_id', '==', eventId)
+            );
+
+            let subscribeToCurrentReportDisputesSnapshot = onSnapshot(
+              disputeQuery, 
+              async (disputeSnapshot) => {
+                let allDisputes = [];
+                disputeSnapshot.docChanges().forEach( (change) => {
+                  if (change.type === "added") {
+                    let data = change.doc.data();
+                    let id = change.doc.id;
+                    allDisputes[data['match_number']] = {
+                      ...data, id
+                    };
+                  }
+
+                  if (change.type === "modified") {
+                    this.dispute[data['match_number']] = {
+                      ...data, id
+                    }
+                  }
+                });
+
+                this.dispute = [...allDisputes];
+              }
+            );
+
+            this.subscribeToCurrentReportDisputesSnapshot = subscribeToCurrentReportDisputesSnapshot;
+          },
 
           getCurrentReportSnapshot(classNamesWithoutPrecedingDot) {
             const currentReportRef = doc(db, `event/${eventId}/match_status`, classNamesWithoutPrecedingDot);
@@ -350,41 +370,13 @@ Alpine.data('alpineDataComponent', function () {
                       ]
                     }
 
-                    console.log({userLevelEnums: this.userLevelEnums, userLevel: this.report.userLevel})
                     if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) 
                     {
                       this.setDisabled();
                     }
 
-                    const allNull = this.dispute.every(item => item === null);
-                    if (allNull) this.dispute = [
-                      null, null, null
-                    ];
-
-                    try {
-                      let response = await fetch('/api/disputes', {
-                          method: 'POST',
-                          headers: {
-                            "Content-Type": "application/json",
-                              'Accept': 'application/json',
-                              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
-                          },
-                            body: JSON.stringify({
-                              report_id: this.report.id,
-                              action: 'retrieve'
-                            })
-                        });
-      
-                        response = await response.json();
-      
-                        if (response.success) {
-                          this.dispute = response.data;
-                        } else {
-                          window.toastError(response.message);
-                        }
-                    } catch (error) {
-                      window.toastError("Failed");
-                    }
+                    this.getCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
+                   
 
                 } else {
                   console.log("No such document!");
@@ -396,7 +388,6 @@ Alpine.data('alpineDataComponent', function () {
           },
           async submitDisputeForm(event) {
             event.preventDefault();
-            console.log("hi");
             const form = event.target;
             const formData = new FormData(form);
             let jsonObject = {}
@@ -404,47 +395,102 @@ Alpine.data('alpineDataComponent', function () {
                 jsonObject[key] = value;
             }
 
-            if (jsonObject['action'] === 'create') {
-              const selectedRadio = jsonObject['reportReason'];
-              const otherReasonInput = jsonObject['otherReasonText'];
-              let dispute_reason = '';
-              if (selectedRadio) {
-                dispute_reason = selectedRadio;
-              } 
-              else if (otherReasonInput) {
-                dispute_reason = otherReasonInput.trim();
+            const selectedRadio = jsonObject['reportReason'];
+            const otherReasonInput = jsonObject['otherReasonText'];
+            let dispute_reason = '';
+            if (selectedRadio) {
+              dispute_reason = selectedRadio;
+            } 
+            else if (otherReasonInput) {
+              dispute_reason = otherReasonInput.trim();
+            }
+            
+            delete jsonObject['reportReason'];
+            delete jsonObject['otherReasonText'];
+            jsonObject['dispute_reason'] = dispute_reason;
+
+            try {
+              const disputeDto = {
+                report_id: jsonObject.report_id,
+                match_number: jsonObject.match_number,
+                event_id: jsonObject.event_id,
+                dispute_userId: jsonObject.dispute_userId,
+                dispute_teamId: jsonObject.dispute_teamId,
+                dispute_teamNumber: jsonObject.dispute_teamNumber,
+                dispute_reason: jsonObject.dispute_reason,
+                dispute_description: jsonObject.dispute_description || null,
+                
+                // Initialize optional fields as null
+                response_userId: null,
+                response_teamId: null,
+                response_teamNumber: null,
+                response_explanation: null,
+                resolution_winner: null,
+                resolution_resolved_by: null,
+                
+                created_at: serverTimestamp(),
+                updated_at: serverTimestamp()
+              };
+
+              validateDisputeCreation(disputeDto);
+
+              const disputesRef = collection(db, `event/${eventId}/disputes`);
+              const docRef = await addDoc(disputesRef, disputeDto);
+              const docSnap = await getDoc(docRef);
+              if (docSnap.exists()) {
+                let id = docRef.id;
+                let data = docSnap.data();
+                this.dispute[disputeDto['match_number']] = {
+                  ...data,
+                  id
+                }
               }
               
-              delete jsonObject['reportReason'];
-              delete jsonObject['otherReasonText'];
-              jsonObject['dispute_reason'] = dispute_reason;
-
-              try {
-                  let response = await fetch('/api/disputes', {
-                      method: 'POST',
-                      headers: {
-                        "Content-Type": "application/json",
-                          'Accept': 'application/json',
-                          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
-                      },
-                      body: JSON.stringify(jsonObject)
-                  });
-
-                  response = await response.json();
-
-                  if (response.success) {
-                    window.Toast.fire({
-                        icon: 'success',
-                        text: response.message
-                    });
-
-                  
-                  } else {
-                    window.toastError("Failed");
-                  }
-              } catch (error) {
-                window.toastError("Failed");
+              if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) 
+              {
+                this.setDisabled();
               }
+
+              window.Toast.fire({
+                icon: 'success',
+                text: response.message
+              });
+            } catch (error) {
+              console.error("Error adding document: ", error);
+            }
+          },
+          async respondDisputeForm(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = Object.fromEntries(new FormData(form));
+            const {
+              dispute_id,
+              dispute_teamId,
+              response_teamNumber,
+              dispute_description,
+              dispute_matchNumber,
+              user_id
+            } = formData;
+        
+            if (!dispute_id || !dispute_teamId || !response_teamNumber) {
+              throw new Error('Missing required fields');
+            }
+        
+            const disputeRef = doc(db, `events/${eventId}/disputes`, dispute_id);
+        
+            const updateData = {
+              response_teamId: dispute_teamId,
+              response_teamNumber: response_teamNumber,
+              response_explanation: dispute_description || null,
+              response_userId: user_id,
+              updated_at: serverTimestamp(),
+              status: 'responded' 
+            };
+        
+            await updateDoc(disputeRef, updateData);
+            this.dispute[dispute_matchNumber] = {
+              ...this.dispute[dispute_matchNumber],
+              ...updateData
             }
             
           },
@@ -512,7 +558,41 @@ Alpine.data('alpineDataComponent', function () {
     });
     
         
+const validateDisputeCreation = async (data) => {
+  const errors = [];
 
+  const requiredFields = [
+    'report_id',
+    'match_number',
+    'event_id',
+    'dispute_userId',
+    'dispute_teamId',
+    'dispute_teamNumber',
+    'dispute_reason'
+  ];
+
+  for (const field of requiredFields) {
+    if (!data[field]) {
+      errors.push(`${field} is required`);
+    }
+  }
+
+  const uniqueQuery = query(
+    collection(db, 'disputes'),
+    where('event_id', '==', data.event_id),
+    where('match_number', '==', data.match_number),
+    where('report_id', '==', data.report_id)
+  );
+
+  const existingDisputes = await getDocs(uniqueQuery);
+  if (!existingDisputes.empty) {
+    errors.push('A dispute with this event, match number, and report already exists');
+  }
+
+  
+
+  return errors;
+};
 
 
 Alpine.start();

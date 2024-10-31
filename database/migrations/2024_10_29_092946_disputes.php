@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('report_id');
             $table->string('match_number');
+            $table->unsignedBigInteger('event_id');
             $table->unsignedBigInteger('dispute_userId');
             $table->unsignedBigInteger('dispute_teamId');
             $table->string('dispute_teamNumber');
@@ -23,14 +24,19 @@ return new class extends Migration {
             $table->text('response_explanation')->nullable();
 
             $table->unsignedBigInteger('resolution_winner')->nullable();
+            $table->unsignedBigInteger('resolution_resolved_by')->nullable();
 
             $table->timestamps();
 
+            $table->foreign('event_id')->references('id')->on('event_details')->onDelete('cascade');
             $table->foreign('dispute_userId')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('dispute_teamId')->references('id')->on('teams')->onDelete('cascade');
+            $table->foreign(columns: 'dispute_teamId')->references('id')->on('teams')->onDelete('cascade');
             $table->foreign('response_userId')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('response_teamId')->references('id')->on('teams')->onDelete('cascade');
             $table->foreign('resolution_winner')->references('id')->on('teams')->onDelete('cascade');
+
+            $table->unique(columns: ['event_id', 'match_number', 'report_id']);
+
         });
 
         Schema::create('image_videos', function (Blueprint $table) {

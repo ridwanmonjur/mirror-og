@@ -72,7 +72,7 @@
         <div>
             @include('__CommonPartials.__BracketModals.__Report.RealWinners')
             <div class="d-flex justify-content-center">
-                <button class="btn btn-sm border rounded-pill text-primary border-primary me-3" x-on:click="onChangeTeamToWin"> Change Declaration </button>
+                <button class="btn btn-sm border rounded-pill text-primary border-primary " x-on:click="onChangeTeamToWin"> Change Declaration </button>
             </div>
         </div>
     </template>

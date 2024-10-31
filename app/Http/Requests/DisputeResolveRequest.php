@@ -49,6 +49,9 @@ class DisputeResolveRequest extends FormRequest
                 'required',
                 'string',
             ],
+            'resolution_resolved_by' => [
+                'required',
+            ],
         ];
     }
 
@@ -62,6 +65,8 @@ class DisputeResolveRequest extends FormRequest
             'dispute_id.integer' => 'The dispute ID must be a number',
             'dispute_id.exists' => 'The specified dispute does not exist',
             'resolution_winner.required' => 'A resolution winner must be specified',
+            'resolution_resolved_by.required' => 'A resolver must be specified',
+
         ];
     }
 

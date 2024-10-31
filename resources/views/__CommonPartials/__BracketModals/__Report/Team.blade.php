@@ -13,7 +13,7 @@
                     ">
                         <div class="mt-3">
                             <div class="d-flex justify-content-center">
-                                <button class="btn border rounded-pill text-light bg-primary"
+                                <button class="btn border rounded-pill text-light bg-primary me-3"
                                     x-on:click="onChangeTeamToWin">
                                     Change Declaration
                                 </button>

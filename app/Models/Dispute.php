@@ -10,6 +10,7 @@ class Dispute extends Model
 {
     protected $fillable = [
         'report_id',
+        'event_id',
         'match_number',
         'dispute_userId',
         'dispute_teamId',
@@ -20,7 +21,8 @@ class Dispute extends Model
         'response_teamId',
         'response_teamNumber',
         'response_explanation',
-        'resolution_winner'
+        'resolution_winner',
+        'resolution_resolved_by'
     ];
 
     public function imageVideos(): MorphToMany

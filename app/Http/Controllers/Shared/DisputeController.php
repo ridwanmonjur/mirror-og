@@ -30,6 +30,7 @@ class DisputeController extends Controller
             'create' => $this->createDispute(new DisputeCreateRequest($request->all())),
             'respond' => $this->respondToDispute(new DisputeResponseRequest($request->all())),
             'resolve' => $this->resolveDispute(new DisputeResolveRequest($request->all())),
+            'delete' => $this->deleteDispute($request->disputeId),
             default => response()->json([
                 'success' => false,
                 'status' => 'error', 
@@ -41,20 +42,31 @@ class DisputeController extends Controller
     public function retrieveDispute(DisputeRetrieveRequest $request) {
         $report_id = $request->report_id;
         $disputesByKey = Dispute::where('report_id', $report_id)
+            ->where('event_id', $request->event_id)
             ->orderBy('match_number')
             ->get()
             ->keyBy('match_number');
 
         $mapByKey = [null, null, null];
+        $disputeIdList = [null, null, null];
+        $resolvedWinner = [null, null, null];
+        $resolverList = [null, null, null];
         for ($i = 0; $i < 3; $i++) {
             if (isset($disputesByKey[$i])) {                
                 $mapByKey[$i] = $disputesByKey[$i];
+                $disputeIdList[$i] = $disputesByKey[$i]->id;
+                $resolvedWinner[$i] = $disputesByKey[$i]->resolution_winner;
+                $resolverList[$i] = $disputesByKey[$i]->resolution_resolved_by;
             }
         }
 
         return response()->json([
             'success' => true,
-            'data' => $mapByKey
+            'data' => [
+                'dispute' => $mapByKey,
+                'resolvedWinner' => $resolvedWinner,
+                'resolverList' => $resolverList
+            ]
         ]);
     }
 
@@ -73,7 +85,8 @@ class DisputeController extends Controller
                 'dispute_teamId' => $request->dispute_teamId,
                 'dispute_teamNumber' => $request->dispute_teamNumber,
                 'dispute_reason' => $request->dispute_reason,
-                'dispute_description' => $request->dispute_description
+                'dispute_description' => $request->dispute_description,
+                'event_id' => $request->event_id
             ]);
 
             // ImageVideoDispute::handleMediaUploads($request, $dispute, 'dispute');
@@ -135,13 +148,29 @@ class DisputeController extends Controller
             $dispute = $request->getDispute();
 
             $dispute->update([
-                'resolution_winner' => $request->resolution_winner
+                'resolution_winner' => $request->resolution_winner,
+                'resolution_resolved_by' => $request->resolution_resolved_by
             ]);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Dispute resolved successfully',
                 'dispute' => $dispute->load(['disputeMedia', 'responseMedia'])
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->handleErrorJson($e);
+        }
+    }
+
+    private function deleteDispute($disputeId): JsonResponse
+    {
+        try {
+            Dispute::where('id', $disputeId)->delete($disputeId);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Dispute deleted successfully',
             ]);
 
         } catch (\Exception $e) {
