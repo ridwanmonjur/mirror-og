@@ -23,6 +23,9 @@ class DisputeCreateRequest extends FormRequest
     {
         return [
             'action' => 'required',
+            'report_id' => 'required',
+            'event_id' => 'required',
+            'match_number' => 'int|required',
             'dispute_teamId' => 'required|exists:teams,id',
             'dispute_teamNumber' => 'required|string',
             'dispute_reason' => 'required|string|max:255',

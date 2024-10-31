@@ -5,7 +5,7 @@
             class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
     </div>
     <p class="mt-2 d-block">
-        <span x-text="report.teams[report.realWinners[reportUI.matchNumber]].name"> </span>
+        <span x-text="report.teams[report.realWinners[reportUI.matchNumber]]?.name"> </span>
         wins this game
     </p>
 </div>

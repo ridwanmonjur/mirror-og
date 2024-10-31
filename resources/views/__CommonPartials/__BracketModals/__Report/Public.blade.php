@@ -1,6 +1,6 @@
 <div>
     <template x-if="!report.realWinners[reportUI.matchNumber]">
-        @include('__CommonPartials.__BracketModals.__Report.RealWinners')
+        @include('__CommonPartials.__BracketModals.__Report.PendingWinners')
     </template> 
     <template x-if="report.realWinners[reportUI.matchNumber]">
         <div>

@@ -25,7 +25,19 @@ function updateModalShow(event) {
     const button = event.currentTarget;
     let { team1_id, team2_id } = button.dataset;
     let parentWithDataset = document.querySelector(`.tournament-bracket__match.${team1_id}.${team2_id}`);
+    console.log({button: `.tournament-bracket__match.${team1_id}.${team2_id}`})
+
+    if (
+        parentWithDataset === null || 
+        parentWithDataset.dataset === null || 
+        parentWithDataset.dataset.bracket === null
+    ) {
+        toastError("Previous match results not updated");
+        return;
+    }
+
     let dataset = JSON.parse(parentWithDataset.dataset.bracket);
+
     dataset.inner_stage_name = parentWithDataset.dataset.inner_stage_name;
     dataset.stage_name = parentWithDataset.dataset.stage_name;
     dataset.event_details_id = eventId;
@@ -71,11 +83,19 @@ function reportModalShow(event) {
     let classNamesWithoutPrecedingDot = triggerParentsPositionIds.join(".");
 
     let parentWithDataset = document.querySelector(`.tournament-bracket__match.${classNamesWithoutPrecedingDot}`);
+    if (
+        parentWithDataset === null || 
+        parentWithDataset.dataset === null || 
+        parentWithDataset.dataset.bracket === null
+    ) {
+        toastError("Previous match results not updated");
+        return;
+    }
+
     let dataset = JSON.parse(parentWithDataset.dataset.bracket);
 
     const alpineEvent = new CustomEvent("currentReportChange", {
         detail: {
-            
             classNamesWithoutPrecedingDot,
             // team1
             team1_position: dataset.team1_position,
@@ -173,6 +193,7 @@ submitBtnElement?.addEventListener('click', function(event) {
                 if (match.type==="upperBracket" && match.inner_stage_name === "eliminator1") {
                     isUpperBracketFirstRound = true;
                 }
+
                 let currentMatch = JSON.parse(currentMatchDiv.dataset.bracket);
                 currentMatch.id = match.id;
                 currentMatch.winner_id = match.winner_id;
@@ -191,7 +212,13 @@ submitBtnElement?.addEventListener('click', function(event) {
                     currentMatch.winner = team2;
                 }
 
-                currentMatchDiv.dataset.bracket = JSON.stringify(currentMatch);
+                if (currentMatchDiv.dataset) {
+                    currentMatchDiv.dataset.bracket = JSON.stringify(currentMatch);
+                } else {
+                    currentMatch.dataset = {
+                        bracket :  JSON.stringify(currentMatch)
+                    }
+                }
                 
                 const parentElements = currentMatchDiv.querySelectorAll(".popover-parent");
                 console.log({parentElements});
@@ -293,3 +320,4 @@ submitBtnElement?.addEventListener('click', function(event) {
         });
 });
 
+const uploadContainers = document.querySelectorAll('.upload-container');

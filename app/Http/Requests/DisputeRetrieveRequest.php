@@ -27,9 +27,9 @@ class DisputeRetrieveRequest extends FormRequest
                 'string',
                 'in:retrieve'
             ],
-            'dispute_id' => [
+            'report_id' => [
                 'required',
-                'array',
+                'string',
             ],
         ];
     }
@@ -42,8 +42,8 @@ class DisputeRetrieveRequest extends FormRequest
         return [
             'action.required' => 'The action field is required',
             'action.in' => 'Invalid action specified',
-            'dispute_id.required' => 'The dispute ID is required',
-            'dispute_id.array' => 'The specified dispute ids are not in array format',
+            'report_id.required' => 'The dispute ID is required',
+            'report_id.string' => 'The specified dispute ids must be string',
         ];
     }
 }
