@@ -207,7 +207,19 @@ h2 {
         margin-bottom: 1em;
    }
 }
+
+.selectedDisputeResolveButton {
+    width: min-content;
+    display: block;
+    margin: auto;
+}
+
 @media (min-width: 1000px) {
+    .selectedDisputeResolveButton {
+        width: 30vw;
+
+    }
+
     .tournament-bracket__list {
         margin-bottom: 0;
         padding-bottom: 0;
@@ -732,3 +744,4 @@ tournament-bracket__round:last-child .tournament-bracket__list {
         font-size: 30px;
     }
 }
+
