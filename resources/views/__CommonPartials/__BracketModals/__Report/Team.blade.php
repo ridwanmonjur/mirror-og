@@ -76,15 +76,19 @@
         <div>
              <template x-if="dispute[reportUI.matchNumber]?.resolution_winner">
                 <div>
-                    <p class="text-red mt-2">
-                        <i> The results of this match are disputed. </i>
-                    </p>
                     <div class="mt-2">
                         <p class="text-success mt-2">
                             The dispute has been resolved in favor of
                             <span x-text="report.teams[dispute[reportUI.matchNumber]?.resolution_winner].name">
                             </span>
                         </p>
+                    </div>
+                     <div class="mt-2 mb-3">
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-sm border rounded-pill text-primary border-primary"
+                                data-bs-toggle="modal" data-bs-target="#disputeModal"
+                            > Show dispute </button>
+                        </div>
                     </div>
             </template>
             @include('__CommonPartials.__BracketModals.__Report.RealWinners')

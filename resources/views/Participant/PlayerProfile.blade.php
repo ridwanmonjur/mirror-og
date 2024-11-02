@@ -60,7 +60,6 @@
                 <input type="hidden" id="userBannerInput" value="{{ $userProfile->userBanner }}">
                 <input type="hidden" id="backgroundColorInput" value="{{ $userProfile->profile?->backgroundColor }}">
                 <input type="hidden" id="fontColorInput" value="{{ $userProfile->profile?->fontColor }}">
-
             @endif
             <input type="hidden" id="games_data_input" value="{{ $userProfile->participant?->games_data ?? json_encode([]) }}">
             <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant?->getRegionDetails()) }}">
@@ -591,5 +590,4 @@
     </script>
 </body>
 @include('Participant.__ProfilePartials.Scripts')
-@livewireScripts
 </html>

@@ -22,9 +22,9 @@
                     <small class="mt-2"> 
                         {{-- check fill --}}
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-exclamation-octagon ms-1 me-2" viewBox="0 0 16 16">
-  <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
-  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-</svg>
+                            <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
+                            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                            </svg>
                     
                         <span> Please save to persist changes in database. </span>
                     </small>
@@ -77,33 +77,33 @@
                                     <div id="div-color-picker"> </div>
                                 </div>
                                 @foreach ([
-        'black' => 'Black',
-        '#545454' => '#545454',
-        '#737373' => '#737373',
-        'gray' => 'Gray',
-        'lightgray' => 'Light gray',
-        'white' => 'White',
-        '#e0ffff' => 'Light Cyan',
-        '#add8e6' => 'Light Blue',
-        '#b0c4de' => 'Light Steel Blue',
-        '#ffe4b5' => 'Moccasin',
-        '#ffffe0' => 'Light Yellow',
-        '#f0e68c' => 'Khaki',
-        '#dda0dd' => 'Plum',
-        '#cd5c5c' => 'Indian Red',
-        '#ffa07a' => 'Light Salmon',
-        '#ff7f50' => 'Coral',
-        '#ff6347' => 'Tomato',
-        '#f08080' => 'Light Coral',
-        '#800080' => '#800080',
-        '#00ff7f' => 'Spring Green',
-        '#4682b4' => 'Steel Blue',
-        '#e9967a' => 'Dark Salmon',
-        '#8fbc8f' => 'Dark Sea Green',
-        'brown' => 'Brown',
-        'maroon' => 'Maroon',
-        'red' => 'Red',
-    ] as $color => $name)
+                                    'black' => 'Black',
+                                    '#545454' => '#545454',
+                                    '#737373' => '#737373',
+                                    'gray' => 'Gray',
+                                    'lightgray' => 'Light gray',
+                                    'white' => 'White',
+                                    '#e0ffff' => 'Light Cyan',
+                                    '#add8e6' => 'Light Blue',
+                                    '#b0c4de' => 'Light Steel Blue',
+                                    '#ffe4b5' => 'Moccasin',
+                                    '#ffffe0' => 'Light Yellow',
+                                    '#f0e68c' => 'Khaki',
+                                    '#dda0dd' => 'Plum',
+                                    '#cd5c5c' => 'Indian Red',
+                                    '#ffa07a' => 'Light Salmon',
+                                    '#ff7f50' => 'Coral',
+                                    '#ff6347' => 'Tomato',
+                                    '#f08080' => 'Light Coral',
+                                    '#800080' => '#800080',
+                                    '#00ff7f' => 'Spring Green',
+                                    '#4682b4' => 'Steel Blue',
+                                    '#e9967a' => 'Dark Salmon',
+                                    '#8fbc8f' => 'Dark Sea Green',
+                                    'brown' => 'Brown',
+                                    'maroon' => 'Maroon',
+                                    'red' => 'Red',
+                                ] as $color => $name)
                                     <div onclick="chooseColor(event, '{{ $color }}')"
                                         class="d-inline-block rounded color-pallete"
                                         style="{{ 'background-color: ' . $color . ';' }}">
