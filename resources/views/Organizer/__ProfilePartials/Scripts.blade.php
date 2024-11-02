@@ -52,13 +52,7 @@
     window.onload = () => { 
         localStorage.setItem('isInited', "false");
         
-        if (successInput) {
-            localStorage.setItem('success', 'true');
-            localStorage.setItem('message', successInput.value);
-        } else if (errorInput) {
-            localStorage.setItem('error', 'true');
-            localStorage.setItem('message', errorInput.value);
-        }
+        
 
          window.setupFileInputEditor('#changeBackgroundBanner', (file) => {
             if (file) {

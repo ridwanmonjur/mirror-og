@@ -65,17 +65,15 @@
     <input type="file" id="backgroundInput" class="d-none"> 
     {{-- @if ($isCreator) --}}
         <div class="team-section" 
-            x-data="alpineDataComponent"
         >
         @if ($isCreator)
             <div  class="d-flex w-100 justify-content-end py-0 my-0 mt-2">
                 <button 
-                x-show="isEditMode"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#profileDrawer"
-                    x-cloak
+                    
                     {{-- onclick="document.getElementById('backgroundInput').click();" --}}
-                    class="btn btn-secondary text-light rounded-pill py-2 fs-7 mt-2"
+                    class="editMode d-none btn btn-secondary text-light rounded-pill py-2 fs-7 mt-2"
                 > 
                     Change Background
                 </button>
@@ -101,7 +99,7 @@
                             </button>
                         </a>    
                         @if ($isCreator)
-                            <button x-show="isEditMode"  id="upload-button2" class="btn btn-sm" aria-hidden="true">
+                            <button class="btn btn-sm editMode d-none" id="upload-button2" aria-hidden="true">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
@@ -113,18 +111,29 @@
             </label>
         </div>
         <div>
-            <div :class="{'team-info': !isEditMode}">
+        <form 
+            onsubmit="submitEditProfile(event);"
+            data-url="{{route('participant.team.update')}}"
+        >
+
+            {{-- <input type="hidden"  name="country_name" value="{{$selectTeam->country_name}}"> --}}
+            {{--             <div :class="{'team-info': !isEditMode}">
+ --}}
+ {{-- team-info team-info-notEditMode notEditMode --}}
+            <div class="">
                 @if ($isCreator)
-                <div x-cloak x-show.important="isEditMode">
+                <div class="editMode d-none">
                     <input type="file" id="image-upload" accept="image/*" style="display: none;">
                     <br>
-                    <div x-show="errorMessage != null" class="text-red" x-text="errorMessage"> </div>
+                    <div id="errorMessage" class="text-red d-none"> </div>
+
                     <div>
                         <input 
                             placeholder="Enter your team name..."
                             style="width: 200px;"
                             class="form-control border-secondary player-profile__input d-inline me-4 d-inline" 
-                            x-model="teamName"
+                            name="teamName"
+                            value="{{$selectTeam->teamName}}"
                             autocomplete="off"
                             autocomplete="nope"
                             type="text"
@@ -135,14 +144,16 @@
                                 xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                                 <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                             </svg>
-                            <select x-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;" class="d-inline form-select"  data-placeholder="Select a country" x-model="country"> 
+                            <select onchange="changeFlagEmoji" id="select2-country3" style="width: 150px;" class="d-inline form-select"  data-placeholder="Select a country" 
+                                name="country"
+                                value="{{$selectTeam->country}}"
+                            > 
                             </select>
                         </span>
                     </div>
                 </div>
                 <span
-                    x-cloak 
-                    x-show.important="!isEditMode"
+                    class="notEditMode"
                 >
                     <h3 style="{{$fontStyles}}" class="team-name" id="team-name">{{$selectTeam->teamName}}</h3>
                 </span>
@@ -153,9 +164,7 @@
                     @if ($user->role == "PARTICIPANT")
                     <div class="dropdown" data-bs-auto-close="outside">
                         <button
-                            x-cloak
-                            x-show.important="!isEditMode"
-                            class="gear-icon-btn me-2 position-relative" style="top: 10px;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            class="gear-icon-btn me-2 position-relative notEditMode" style="top: 10px;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="{{$selectTeam->profile?->fontColor}}" class="bi bi-gear-fill" viewBox="0 0 16 16">
                                 <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
                             </svg>
@@ -210,10 +219,8 @@
                         </div>
                         @if ($isCreator)
                             <button 
-                                x-cloak
-                                x-show="!isEditMode"
-                                x-on:click="reset(); isEditMode = true;"
-                                class="gear-icon-btn me-2 position-relative" 
+                                onclick="turnOnEditMode()"
+                                class="notEditMode gear-icon-btn me-2 position-relative" 
                                 style="top: 10px;" type="button" id="editModalBtn" 
                                 aria-expanded="false"
                             >
@@ -227,38 +234,36 @@
                     @endif
                 @endauth
             </div>
+        </form>
         </div>
             @if ($isCreator)
                 <div
-                    class="d-flex justify-content-center align-items-center"
-                    x-cloak
-                    x-show.important="isEditMode"
+                    class="d-flex justify-content-center align-items-center editMode d-none"
                 >
                     <input 
                         placeholder="Enter your team description..."
-                        class="form-control border-secondary player-profile__input d-inline py-2 me-5" 
-                        x-model="teamDescription"
+                        class="form-control border-secondary player-profile__input d-inline py-2 me-3" 
+                        name="teamDescription"
+                        value="{{$selectTeam->teamDescription}}"
                         autocomplete="off"
                         autocomplete="nope"
                     >
-                    <a 
-                        x-on:click="submitEditProfile(event);"
-                        data-url="{{route('participant.team.update')}}"
-                        class="mt-4 oceans-gaming-default-button btn oceans-gaming-transparent-button simple-button px-3 py-1  rounded cursor-pointer  mx-auto me-3 mb-4"> 
-                        Save
-                    </a>
+                    <button 
+                        type="submit"
+                        class="mt-4 btn border-dark ps-3 py-1 pe-4 text-center rounded cursor-pointer  me-3 mb-4"
+                    > Save </button>
                     {{-- Close icon --}}
                     <svg 
                         style="top: 10px;"
-                        x-on:click="isEditMode = false;"
+                        onclick="turnOffEditMode()"
                         xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-x-circle cursor-pointer text-red position-relative mb-4" viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                     </svg>
                 </div>
                 <div>
-                    <span class="ms-2" x-cloak x-show="!isEditMode">{{$selectTeam->teamDescription}}</span>
-                    <span class="ms-2 fs-3"x-show="!isEditMode">{{$selectTeam->country_flag}}</span>
+                    <span class="ms-2 notEditMode" >{{$selectTeam->teamDescription}}</span>
+                    <span class="ms-2 fs-3 notEditMode" >{{$selectTeam->country_flag}}</span>
                 </div>
             @else
                 <p>
@@ -281,115 +286,143 @@
 </main>
     @include('Participant.__Partials.BackgroundModal')
 
-<script>
+    <script>
         let teamData = JSON.parse(document.getElementById('teamData').value);
+        let countriesData = [];
 
-        document.addEventListener('alpine:init', () => {
+        function changeFlagEmoji(event) {
+            console.log({event})
+            let { value } = event.currentTarget; 
+            let countryX = countriesData?.find(elem => elem.id == value);
+            country_name = countryX?.name.en;
+            country_flag = countryX?.emoji_flag;
+            document.getElementById('country_name_input').value = country_name;
+            document.getElementById('country_flag_input').value = country_flag;
+        }
+     
+        function turnOffEditMode() {
+            let editModeElements = document.querySelectorAll('.editMode');
+            let notEditModeElements = document.querySelectorAll('.notEditMode');
 
-            Alpine.data('alpineDataComponent', () => ({
-                select2: null,
-                isEditMode: false, 
-                ...teamData,
-                country: teamData?.country,
-                errorMessage: '', 
-                isCountriesFetched: false,
-                countries: 
-                [
-                    {
-                        name: { en: 'No country' },
-                        emoji_flag: ''
-                    }
-                ], 
-                errorMessage: errorInput?.value, 
-                changeFlagEmoji() {
-                    let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == this.country);
-                    this.country_name = countryX?.name.en;
-                    this.country_flag = countryX?.emoji_flag;
-                },
-                async fetchCountries () {
-                    if (this.isCountriesFetched) return;
-                    try {
-                        const data = await storeFetchDataInLocalStorage('/countries');
+            editModeElements?.forEach((element)=> {
+                element.classList.add('d-none');
+            });
 
-                        if (data?.data) {
-                            this.isCountriesFetched = true;
-                            this.countries = data.data;
-                            
-                            const choices2 = document.getElementById('select2-country3');
-                            let countriesHtml = "<option value=''>Choose a country</option>";
+            notEditModeElements?.forEach((element)=> {
+                element.classList.remove('d-none');
+            });
 
-                            data?.data.forEach((value) => {
-                                countriesHtml +=`
-                                    <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
-                                `;
-                            });
-                            console.log({c: this.country});
-                            choices2.innerHTML = countriesHtml;
-                            let option = choices2.querySelector(`option[value='${this.country}']`);
-                            option.selected = true;
-                        } else {
-                            this.errorMessage = "Failed to get data!";
-                        }
-                    } catch (error) {
-                        console.error('Error fetching countries:', error);
-                    }
-                },
-                async submitEditProfile (event) {
-                    try {
-                        event.preventDefault(); 
-                        const url = event.target.dataset.url;
-                        const response = await fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Content-type': 'application/json',
-                                'Accept': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                id: this.id, 
-                                teamName: this.teamName, 
-                                teamDescription: this.teamDescription,
-                                country: this.country,
-                                country_flag: this.country_flag,
-                                country_name: this.country_name
-                            }),
-                        });
+            // Change
+            // document.getElementById('Events').classList.add('d-none');
+        }
 
-                        const data = await response.json();
-                            
-                        if (data.success) {
-                            let currentUrl = window.location.href;
-                            if (currentUrl.includes('?')) {
-                                currentUrl = currentUrl.split('?')[0];
-                            } 
+        function turnOnEditMode() {
+            let editModeElements = document.querySelectorAll('.editMode');
+            let notEditModeElements = document.querySelectorAll('.notEditMode');
 
-                            localStorage.setItem('success', true);
-                            localStorage.setItem('message', data.message);
-                            window.location.replace(currentUrl);
-                        } else {
-                            this.errorMessage = data.message;
-                        }
-                    } catch (error) {
-                        this.errorMessage = error.message;
-                    console.error({error});
+            notEditModeElements?.forEach((element)=> {
+                element.classList.add('d-none');
+            });
+
+            editModeElements?.forEach((element)=> {
+                element.classList.remove('d-none');
+            });
+        }
+
+        function turnOffErrorMessage() {
+            errorMessage = null;
+            document.getElementById('errorMessage').classList.add('d-none');
+        }
+
+        function turnOnErrorMessage(errorMessage) {
+            let errorMessageContainer = document.getElementById('errorMessage');
+            errorMessageContainer.classList.remove('d-none');
+            errorMessage.innerText = errorMessage;
+        }
+
+        async function submitEditProfile (event) {
+            try {
+                turnOffEditMode();
+                event.preventDefault(); 
+                let form = event.currentTarget;
+                let formData = new FormData(form);
+                const url = event.target.dataset.url;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'credentials': 'include',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                    },
+                    body: {
+                        id: this.id, 
+                        teamName: this.teamName, 
+                        teamDescription: this.teamDescription,
+                        country: this.country,
+                        country_flag: this.country_flag,
+                        country_name: this.country_name
+                    },
+                });
+
+                const data = await response.json();
+                    
+                if (data.success) {
+                    let currentUrl = window.location.href;
+                    if (currentUrl.includes('?')) {
+                        currentUrl = currentUrl.split('?')[0];
                     } 
-                },
-                reset() {
-                    Object.assign(this, teamData);
-                },
-                init() {
-                    this.fetchCountries();
-                    var backgroundStyles = "<?php echo $backgroundStyles; ?>";
-                    var fontStyles = "<?php echo $fontStyles; ?>";
-                    console.log({backgroundStyles, fontStyles})
-                    var banner = document.getElementById('backgroundBanner');
-                    banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-                    banner.querySelectorAll('.form-control').forEach((element) => {
-                        element.style.cssText += fontStyles;
-                    });
+
+                    localStorage.setItem('success', true);
+                    localStorage.setItem('message', data.message);
+                    window.location.replace(currentUrl);
+                } else {
+                    this.errorMessage = data.message;
                 }
-            })
-    )});
+            } catch (error) {
+                this.errorMessage = error.message;
+                console.error({error});
+            } 
+        }
+
+    const choices2 = document.getElementById('select2-country3');
+
+    async function fetchCountries () {
+        try {
+            const data = await storeFetchDataInLocalStorage('/countries');
+
+            if (data?.data) {
+                countriesData = data.data;
+                
+                let countriesHtml = "<option value=''>Choose a country</option>";
+
+                data?.data.forEach((value) => {
+                    countriesHtml +=`
+                        <option value='${value.id}'>${value.emoji_flag} ${value.name.en}</option>
+                    `;
+                });
+                console.log({c: this.country});
+                choices2.innerHTML = countriesHtml;
+                // let option = choices2.querySelector(`option[value='${this.country}']`);
+                // option.selected = true;
+            } else {
+                turnOnErrorMessage("Failed to get countries data!");
+            }
+        } catch (error) {
+            console.error('Error fetching countries:', error);
+        }
+    }
+
+    var backgroundStyles = "<?php echo $backgroundStyles; ?>";
+    var fontStyles = "<?php echo $fontStyles; ?>";
+    console.log({backgroundStyles, fontStyles})
+    var banner = document.getElementById('backgroundBanner');
+    banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
+    banner.querySelectorAll('.form-control').forEach((element) => {
+        element.style.cssText += fontStyles;
+    });
+
+    fetchCountries();
+        
 
     let colorOrGradient = null; 
     function applyBackground(event, colorOrGradient) {
@@ -585,7 +618,7 @@
     let uploadedImage = uploadedImageList[0];
     let backgroundBanner = document.getElementById("backgroundBanner")
    
-    uploadButton2.addEventListener("click", function() {
+    uploadButton2?.addEventListener("click", function() {
         imageUpload.click();
     });
 
