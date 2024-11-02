@@ -63,6 +63,7 @@ class OrganizerController extends Controller
     {
         $user = $request->attributes->get('user');
         $validatedData = $request->validated();
+        $address = $userProfile = $organizer = null;
 
         try {
             DB::transaction(function () use ($user, $validatedData) {
@@ -71,17 +72,13 @@ class OrganizerController extends Controller
                     ? Address::findOrFail($validatedData['address']['id'])
                     : new Address();
 
-                    if (! empty($validatedData['address']['city']) && ! empty($validatedData['address']['country']) && ! empty($validatedData['address']['addressLine1'])) {
-                        $address->fill($validatedData['address']);
-                        $address->user_id = $user->id;
-                        $address->save();
-                    } else {
-                        if (count($validatedData['address']) > 0) {
-                            throw new Exception('Incomplete address given!');
-                        }
-                    }
+                    $address->fill($validatedData['address']);
+                    $address->user_id = $user->id;
+                    $address->save();
+                   
                 }
-                User::where('id', $user->id)->first()->fill($validatedData['userProfile'])->save();
+                $userProfile = User::where('id', $user->id)->first();
+                $userProfile->fill($validatedData['userProfile'])->save();
 
                 $organizer = isset($validatedData['organizer']['id'])
                     ? Organizer::findOrFail($validatedData['organizer']['id'])
@@ -89,20 +86,19 @@ class OrganizerController extends Controller
 
                 $organizer->user_id = $user->id;
 
-                $links = ['website_link', 'instagram_link', 'twitter_link', 'facebook_link'];
-                foreach ($links as $link) {
-                    if (isset($validatedData['organizer'][$link])) {
-                        $url = $validatedData['organizer'][$link];
-                        $url = rtrim($url, '/');
-                        $url = preg_replace('#^https?://#', '', $url);
-                        $validatedData['organizer'][$link] = $url;
-                    }
-                }
-
                 $organizer->fill($validatedData['organizer'])->save();
             });
 
-            return response()->json(['message' => 'User profile updated successfully', 'success' => true], 200);
+            return response()->json(
+                [
+                        'message' => 'User profile updated successfully',
+                        'success' => true,
+                        'data' => [
+                            'organizer' => $organizer,
+                            'address' => $address,
+                            'userProfile' => $userProfile
+                        ]
+                ], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'success' => false], 400);
         }

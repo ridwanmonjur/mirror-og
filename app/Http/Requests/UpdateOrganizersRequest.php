@@ -22,11 +22,12 @@ class UpdateOrganizersRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'address.id' => 'nullable',
-            'address.addressLine1' => 'nullable|string',
+            'address' => 'nullable|array',
+            'address.id' => 'nullable|exists:addresses,id',
+            'address.addressLine1' => 'nullable|required_with:address.city,address.country|string',
             'address.addressLine2' => 'nullable|string',
-            'address.city' => 'nullable|string',
-            'address.country' => 'nullable|string',
+            'address.city' => 'nullable|required_with:address.addressLine1,address.country|string',
+            'address.country' => 'nullable|required_with:address.addressLine1,address.city|string',
             'address.user_id' => 'nullable',
             'userProfile.name' => 'required|string',
             'userProfile.id' => 'required',
@@ -49,6 +50,9 @@ class UpdateOrganizersRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'userProfile.name.required' => 'The name field is required.',
+            'userProfile.id.required' => 'The user profile ID is required.',
+            'organizer.id.required' => 'The organizer ID is required.',
             'address.addressLine1.string' => 'Address Line 1 must be a string.',
             'address.addressLine2.string' => 'Address Line 2 must be a string.',
             'address.city.string' => 'City must be a string.',
