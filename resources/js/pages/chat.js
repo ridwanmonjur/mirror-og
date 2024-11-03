@@ -21,6 +21,8 @@ const db = initializeFirestore(app, {
     localCache: memoryLocalCache(),
 });
 
+let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
 const chatInput = document.querySelector(".chat-input input");
 const sendButton = document.querySelector(".chat-input button");
 const chatMessages = document.querySelector(".chat-messages");
@@ -250,7 +252,7 @@ Alpine.data('alpineDataComponent', function () {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    "X-CSRF-TOKEN": csrfToken
                 },
                 body: JSON.stringify({
                     searchQ: event?.target?.value ?? null,
@@ -309,7 +311,7 @@ Alpine.data('alpineDataComponent', function () {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        "X-CSRF-TOKEN": csrfToken
                     },
                     body: JSON.stringify({
                         userIdList

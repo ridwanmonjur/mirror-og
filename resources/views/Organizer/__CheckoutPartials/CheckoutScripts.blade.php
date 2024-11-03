@@ -3,6 +3,21 @@
 <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
 <script src="{{ asset('/assets/js/organizer/PaymentProcessor.js') }}"></script>
 <script>
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const hiddenElement = document.getElementById('hidden-variables');
+    const hiddenVars = {
+        csrfToken: hiddenElement.dataset.csrfToken,
+        finalFee: hiddenElement.dataset.feeFinal,
+        userEmail: hiddenElement.dataset.userEmail,
+        userName: hiddenElement.dataset.userName,
+        stripeCustomerId: hiddenElement.dataset.stripeCustomerId,
+        eventId: hiddenElement.dataset.eventId,
+        stripeKey: hiddenElement.dataset.stripeKey,
+        stripeReturnUrl: hiddenElement.dataset.stripeReturnUrl,
+        stripeIntentUrl: hiddenElement.dataset.stripeIntentUrl
+
+    };
+
     document.querySelectorAll('.transform-number').forEach((element) => {
         let text = element.textContent;
         let number = Number(text);
@@ -25,7 +40,7 @@
         parent.classList.toggle("squared-box");
         element.classList.toggle("rounded-box");
     }
-    let paymentProcessor = new PaymentProcessor({{ $fee['finalFee'] }});
+    let paymentProcessor = new PaymentProcessor(hiddenVars['finalFee']);
 
     function onChoosePayment(event, type, element) {
         let target = event.currentTarget;
@@ -110,20 +125,20 @@
 
     async function initializeStripeCardPayment() {
         try {
-            const response = await fetch("{{ route('stripe.stripeCardIntentCreate') }}", {
+            const response = await fetch(hiddenVars['stripeIntentUrl'], {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    "X-CSRF-TOKEN": csrfToken
                 },
                 body: JSON.stringify({
                     role: "ORGANIZER",
                     paymentAmount: paymentProcessor.getPaymentAmount(),
-                    email: "{{ $user->email }}",
-                    name: "{{ $user->name }}",
-                    stripe_customer_id: "{{ $user->stripe_customer_id }}",
+                    email: hiddenVars['userEmail'],
+                    name: hiddenVars['userName'],
+                    stripe_customer_id: hiddenVars['stripeCustomerId'],
                     metadata : {
-                        eventId: "{{ $event->id }}"
+                        eventId: hiddenVars['eventId']
                     }
                 })
             });
@@ -188,7 +203,7 @@
             } = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
-                    return_url: "{{ route('organizer.checkout.transition', ['id' => $event->id]) }}",
+                    return_url: hiddenVars['stripeReturnUrl'],
                     payment_method_data: {
                         billing_details: billingDetails
                     }
@@ -209,7 +224,7 @@
         }
     }
 
-    let stripe = Stripe('{{ env('STRIPE_KEY') }}')
+    let stripe = Stripe(hiddenVars['stripeKey'])
     const appearance = {
         theme: 'flat',
         variables: {

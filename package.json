@@ -23,6 +23,7 @@
         "@yaireo/tagify": "^4.31.3",
         "alpinejs": "^3.13.10",
         "bootstrap": "^5.0.2",
+        "cropperjs": "^1.6.2",
         "file-upload-with-preview": "^6.0.2",
         "firebase": "^10.12.3",
         "sass-loader": "^14.2.1",

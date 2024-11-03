@@ -48,6 +48,3 @@
 @else
     <span class="d-none"> </span>
 @endif
-<script>
-new ResponsiveTable({{'#table' . $name}}, 'stack', '600px');
-</script>

@@ -585,9 +585,6 @@
 
     </main>
 
-    <script>
-    
-    </script>
 </body>
 @include('Participant.__ProfilePartials.Scripts')
 </html>

@@ -287,6 +287,8 @@
     @include('Participant.__Partials.BackgroundModal')
 
     <script>
+        let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
         let teamData = JSON.parse(document.getElementById('teamData').value);
         let countriesData = [];
 
@@ -351,7 +353,7 @@
                     method: 'POST',
                     headers: {
                         'credentials': 'include',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-CSRF-TOKEN': csrfToken,
                         'Accept': 'application/json',
                     },
                     body: {
@@ -591,7 +593,7 @@
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-CSRF-TOKEN': csrfToken,
                     'Content-type': 'application/json',
                     'Accept': 'application/json',
                     ...window.loadBearerHeader()
@@ -633,7 +635,7 @@
                     const response = await fetch(url, {
                         method: 'POST',
                         headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'X-CSRF-TOKEN': csrfToken,
                         },
                         body: formData,
                     });

@@ -9,7 +9,6 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "filament/filament": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
         "io238/laravel-iso-countries": "^1.2",
         "laravel/framework": "^10.10",
@@ -18,7 +17,6 @@
         "laravel/tinker": "^2.8",
         "opcodesio/log-viewer": "^3.11",
         "predis/predis": "^2.2",
-        "sendgrid/sendgrid": "~7",
         "socialiteproviders/google": "^4.1",
         "socialiteproviders/steam": "^4.2",
         "stripe/stripe-php": "^13.0"

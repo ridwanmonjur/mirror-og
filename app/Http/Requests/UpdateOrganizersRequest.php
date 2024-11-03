@@ -71,4 +71,29 @@ class UpdateOrganizersRequest extends FormRequest
             'organizer.twitter_link.url' => 'Twitter Link must be a valid URL.',
         ];
     }
+
+    protected function prepareForValidation()
+    {
+        if (empty($this->address['city']) && 
+            empty($this->address['country']) && 
+            empty($this->address['addressLine1'])) {
+            $this->request->remove('address');
+        }
+
+        if ($this->input('organizer')) {
+            $organizerData = $this->organizer;
+            $links = ['website_link', 'instagram_link', 'facebook_link', 'twitter_link'];
+            
+            foreach ($links as $link) {
+                if (empty($organizerData[$link]) || trim($organizerData[$link]) === '') {
+                    $organizerData[$link] = null;
+                }
+            }
+    
+            $this->request->set(
+                'organizer', $organizerData
+            );
+        }
+
+    }
 }

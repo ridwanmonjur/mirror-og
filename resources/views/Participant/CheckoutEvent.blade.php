@@ -27,6 +27,23 @@
         <br><br>
     </main>
     
+    <div class="d-none" id="payment-variables" 
+        data-payment-amount="{{ $amount }}"
+        data-user-email="{{ $user->email }}"
+        data-user-name="{{ $user->name }}"
+        data-stripe-customer-id="{{ $user->stripe_customer_id }}"
+        data-join-event-id="{{ $joinEventId }}"
+        data-member-id="{{ $memberId }}"
+        data-team-id="{{ $teamId }}"
+        data-event-id="{{ $event->id }}"
+        data-event-type="{{ $event->getRegistrationStatus() }}"
+        data-stripe-key="{{ env('STRIPE_KEY') }}"
+        data-stripe-card-intent-url="{{ route('stripe.stripeCardIntentCreate') }}"
+        data-discount-checkout-url="{{ route('stripe.discountCheckout.action') }}"
+        data-checkout-transition-url="{{ route('participant.checkout.transition') }}"
+    >    
+    
+    </div>
     @include('Participant.__CheckoutPartials.CheckoutScripts')
     <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
 </body>

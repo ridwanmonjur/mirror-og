@@ -45,6 +45,18 @@
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main 
     >
+        <div 
+            id="dataEssential"
+            data-background-styles="<?php echo htmlspecialchars($backgroundStyles); ?>"
+            data-font-styles="<?php echo htmlspecialchars($fontStyles); ?>"
+            data-login-organizerUrl="{{ route('organizer.signin.view') }}"
+            data-user-id = "{{ $userProfile->id }}"
+            data-user-bg-api = "{{ route('user.userBackgroundApi.action', ['id' => $userProfile->id] ) }}"
+            data-user-bn-action = "{{ route('participant.userBanner.action', ['id' => $userProfile->id] ) }}"
+            data-user-role="{{ $userProfile->role }}"
+            data-login-participantUrl="{{ route('participant.signin.view') }}"
+            style="display: none;">
+        </div>
         <input type="hidden" id="initialUserProfile" value="{{json_encode($userProfile?->only(['id', 'name', 'mobile_no']))}}">
         <input type="hidden" id="initialOrganizer" value="{{json_encode($userProfile?->organizer)}}">
         <input type="hidden" id="initialAddress" value="{{json_encode($userProfile?->address)}}">
@@ -589,292 +601,14 @@
                 
             </div>
         </div>
-        <br> <br>
+        <br> <br> <br> 
         </form>
     </main>
 
 </body>
 <script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/js/intlTelInput.min.js"></script>
-<script>
-    const input = document.querySelector("#phone");
-    window.intlTelInput(input, {
-        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/js/utils.js",
-    });
-    const iti = window.intlTelInput.getInstance(input);
-    
-    let initialUserProfile = JSON.parse(document.getElementById('initialUserProfile').value);
-    let initialOrganizer = JSON.parse(document.getElementById('initialOrganizer').value);
-    let initialAddress = JSON.parse(document.getElementById('initialAddress').value);
-    const toggleVisibility = (socialType, value) => {
-        console.log(socialType, value);
-        const element = document.querySelector(`.organizer-${socialType}`);
-        if (element) {
-            if (value) {
-                element.classList.remove('d-none');
-                element.querySelector('.social-link-text').textContent = value;
-            } else {
-                element.classList.add('d-none');
-            }
-        }
-    };
+<script src="{{ asset('/assets/js/organizer/Profile.js') }}"></script>
 
-    const processUrl = (url) => {
-        if (!url) return;
-        url = url.replace(/\/+$/, '');
-        url = url.replace(/^(https?:\/\/)?(www\.)?/i, '');
-        return url;
-    };
-
-    function populateSocialLinks(organizerData) {
-        toggleVisibility('website', processUrl(organizerData['website_link']));
-        toggleVisibility('facebook', processUrl(organizerData['facebook_link']));
-        toggleVisibility('instagram', processUrl(organizerData['instagram_link']));
-        toggleVisibility('twitter', processUrl(organizerData['twitter_link']));
-    }
-
-    function populateProfileInfo(organizerData, addressData, userProfileData) {
-        const updateElement = (selector, value) => {
-            const element = document.querySelector(selector);
-            if (element && value) {
-                element.textContent = value;
-                element.classList.remove('d-none');
-                // Also show parent if it has 'd-none'
-                const parent = element.parentElement;
-                if (parent && parent.classList.contains('d-none')) {
-                    parent.classList.remove('d-none');
-                }
-            }
-        };
-
-        const elementMap = {
-            '.organizer-description': organizerData.companyDescription,
-            '.organizer-industry': organizerData.industry,
-            '.organizer-type': organizerData.type,
-            '.address-line1': addressData.addressLine1,
-            '.address-line2': addressData.addressLine2,
-            '.address-city': addressData.city,
-            '.address-country': addressData.country,
-            '.phone-number': userProfileData.mobile_no
-        };
-
-        Object.entries(elementMap).forEach(([selector, value]) => {
-            updateElement(selector, value);
-        });
-    }
-
-
-    function handlePageLoad() {
-        try {
-            console.log(initialOrganizer);
-            populateSocialLinks(initialOrganizer);
-            populateProfileInfo(initialOrganizer, initialAddress, initialUserProfile);
-        } catch (error) {
-            console.error('Error loading initial organizer data:', error);
-        }
-    }
-
-   
-
-    document.addEventListener('DOMContentLoaded', handlePageLoad);
-    
-    let errorMessage = null;
-    
-    var backgroundStyles = "<?php echo $backgroundStyles; ?>";
-    var fontStyles = "<?php echo $fontStyles; ?>";
-    var banner = document.getElementById('backgroundBanner');
-    banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-    banner.querySelectorAll('.form-control').forEach((element) => {
-        element.style.cssText += fontStyles;
-    });
-
-    banner.querySelectorAll('.followCounts').forEach((element) => {
-        element.style.cssText += fontStyles;
-    });
-
-    function turnOffEditMode() {
-        let editModeElements = document.querySelectorAll('.editMode');
-        let notEditModeElements = document.querySelectorAll('.notEditMode');
-
-        editModeElements?.forEach((element)=> {
-            element.classList.add('d-none');
-        });
-
-        notEditModeElements?.forEach((element)=> {
-            element.classList.remove('d-none');
-        });
-
-        document.getElementById('Events').classList.add('d-none');
-    }
-
-    function turnOnEditMode() {
-        let editModeElements = document.querySelectorAll('.editMode');
-        let notEditModeElements = document.querySelectorAll('.notEditMode');
-
-        editModeElements?.forEach((element)=> {
-            element.classList.remove('d-none');
-        });
-
-        notEditModeElements?.forEach((element)=> {
-            element.classList.add('d-none');
-        });
-    }
-
-    function turnOffErrorMessage() {
-        errorMessage = null;
-        document.getElementById('errorMessage').classList.add('d-none');
-    }
-
-    function turnOnErrorMessage(errorMessage) {
-        
-        let errorMessageContainer = document.getElementById('errorMessage');
-        errorMessageContainer.classList.remove('d-none');
-        errorMessage.innerText = errorMessage;
-    }
-
-    async function submitEditProfile (event) {
-        try {
-            event.preventDefault(); 
-            turnOffErrorMessage();
-            let form = event.currentTarget;
-            let formData = new FormData(form);  
-            console.log({number: iti.getNumber(), formData});
-            formData.set('userProfile[mobile_no]', iti.getNumber());
-
-            if (!iti.isValidNumber()) {
-                if (document.getElementById("phone").value.trim() == "") {
-                    formData.delete('userProfile[mobile_no]');
-                } else  {
-                    toastError('Valid phone number with country code is not chosen!');
-                    return;
-                }
-            }
-
-            const url = form.dataset.url; 
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    credentials: 'include',
-                    'Accept': 'application/json',
-                },
-                body: formData
-            });
-
-            const data = await response.json();
-                
-            if (data.success) {
-                let currentUrl = window.location.href;
-                if (currentUrl.includes('?')) {
-                    currentUrl = currentUrl.split('?')[0];
-                } 
-
-                localStorage.setItem('success', 'true');
-                localStorage.setItem('message', "Successfully updated");
-                window.location.replace(currentUrl);
-            } else {
-                turnOnErrorMessage(data.message);
-                toastError("An error occurred");
-            }
-        } catch (error) {
-            toastError("An error occurred");
-            turnOnErrorMessage("An error occurred");
-            console.error({error});
-        } 
-    }
-
-
-    function reddirectToLoginWithIntened(route) {
-        route = encodeURIComponent(route);
-        let url = "{{ route('organizer.signin.view') }}";
-        url += `?url=${route}`;
-        window.location.href = url;
-    }
-
-    carouselWork();
-    window.addEventListener('resize', debounce((e) => {
-        carouselWork();
-    }, 250));
-
-
-    function redirectToProfilePage(userId) {
-        window.location.href = "{{ route('public.organizer.view', ['id' => ':id']) }}"
-            .replace(':id', userId);
-    }
-
-    function reddirectToLoginWithIntened(route) {
-            route = encodeURIComponent(route);
-            let url = "{{ route('participant.signin.view') }}";
-            url+= `?url=${route}`;
-            window.location.href = url;
-        }
-
-
-        document.getElementById('followFormProfile')?.addEventListener('submit', async function(event) {
-            event.preventDefault();
-            let followButtons = document.getElementsByClassName("{{'followButton' . $userProfile->id}}");
-            let followCounts = document.getElementsByClassName("{{'followCounts' . $userProfile->id}}");
-            console.log({followButtons});
-            let form = this;
-            let formData = new FormData(form);
-            [...followButtons].forEach((button) => {
-                button.style.setProperty('pointer-events', 'none');
-            });    
-
-            try {
-                let jsonObject = {}
-                for (let [key, value] of formData.entries()) {
-                    jsonObject[key] = value;
-                }
-                let response = await fetch(form.action, {
-                    method: form.method,
-                    body: JSON.stringify(jsonObject),
-                    headers: {
-                        ...window.loadBearerHeader(),
-                        'Accept': 'application/json',
-                        "Content-Type": "application/json",
-                    }
-                });
-
-                let data = await response.json();
-                [...followButtons].forEach( (followButton) => {
-                    followButton.style.setProperty('pointer-events', 'none');
-
-                    if (data.isFollowing) {
-                        followButton.innerText = 'Following';
-                        followButton.style.backgroundColor = '#8CCD39';
-                        followButton.style.color = 'black';
-                    } else {
-                        followButton.innerText = 'Follow';
-                        followButton.style.backgroundColor = '#43A4D7';
-                        followButton.style.color = 'white';
-                    }
-
-                    followButton.style.setProperty('pointer-events', 'auto');
-                });
-
-                let count = Number(followCounts[0].dataset.count);
-                if (data.isFollowing) {
-                    count++;
-                } else {
-                    count--;
-                }
-                                
-                [...followCounts].forEach( (followCount) => {
-                    followCount.dataset.count = count;
-                    if (count == 1) {
-                        followCount.innerHTML = '1 follower';
-                    } else if (count == 0) {
-                        followCount.innerHTML = `0 followers`;
-                    } else {
-                        followCount.innerHTML = `${followCount.dataset.count} followers`;
-                    }
-                })
-            } catch (error) {
-                followButton.style.setProperty('pointer-events', 'auto');
-                toastError('Error occured.', error);
-            }
-        });
-</script>
-@include('Organizer.__ProfilePartials.Scripts')
 
 </html>

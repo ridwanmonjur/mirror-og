@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 
 // use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable 
 {
     use HasFactory, Notifiable;
 
