@@ -26,9 +26,9 @@ Route::get('/home', [MiscController::class, 'showLandingPage'])->name('public.la
 Route::view('/closedbeta', 'ClosedBeta')->name('public.closedBeta.view');
 Route::view('/about', 'About')->name('public.about.view');
 Route::view('/contact', 'Contact')->name('public.contact.view');
-Route::get('/login', function () {
-    return redirect(route('filament.admin.auth.login'));
-})->name('login');
+// Route::get('/login', function () {
+//     return redirect(route('filament.admin.auth.login'));
+// })->name('login');
 
 // Forget, reset password
 Route::view('/forget-password', 'Auth.ForgetPassword')->name('user.forget.view');

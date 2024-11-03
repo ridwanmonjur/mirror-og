@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -22,7 +21,6 @@ class User extends Authenticatable
 
     public $timestamps = false;
 
-    public static $filamentUserColumn = 'is_filament_user';
 
     /**
      * The attributes that are mass assignable.
@@ -48,10 +46,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function canAccessFilament(): bool
-    {
-        return $this->role === 'ADMIN';
-    }
+   
 
     public function address(): HasOne
     {
