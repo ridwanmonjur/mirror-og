@@ -259,7 +259,7 @@
                                                     <input type="hidden" name="action" value="resolve">
                                                     <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
                                                     <input type="hidden" name="resolution_winner" x-bind:value="reportUI.otherTeamNumber">
-                                                    <input type="hidden" name="resolution_resolved_by" x-bind:value="report.userLevel">
+                                                    <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['RESPONDER']">
                                                     <button type="submit" style="width: 250px;" class="btn d-inline-block btn-light border px-2 mb-2 py-2 border-dark rounded-pill text-dark">
                                                         Concede
                                                     </button>
@@ -362,8 +362,8 @@
                                                         <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
 
                                                         <input type="hidden" name="resolution_winner" id="resolution_winner_input">
-                                                        <input type="hidden" name="resolution_resolved_by" x-bind:value="report.userLevel">
-                                                        <p class="text-primary text-center"> The dispute is resolved in favor of: </p>
+                                                        <input type="hidden" name="resolution_resolved_by" value="disputeLevelEnums['ORGANIZER']">
+                                                        <p class="text-primary text-center"> The dispute will be resolved in favor of (Choose): </p>
                                                         <div class="d-flex justify-content-center flex-column mt-2">
                                                             <button type="button" x-on:click="decideResolution(event, 0)" :disabled="getDisabled()"
                                                                 class="selectedButton selectedDisputeResolveButton ps-0 btn mb-2 mt-2 rounded-pill mx-auto py-0 border border-dark text-start">
@@ -405,25 +405,49 @@
                                                         width="60" height="60" onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                         class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
                                                 </div>
-                                                <p class="mt-2 d-block">
-                                                    <span x-text="report.teams[report.realWinners[reportUI.matchNumber]]?.name"> </span>
-                                                    has been resolved as the winner.
+                                                <div class="mt-2 d-block">
+                                                    <p>
+                                                        <span x-text="report.teams[report.realWinners[reportUI.matchNumber]]?.name"> </span>
+                                                        has been resolved as the winner.
+                                                    </p>
+                                                    <template x-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['DISPUTEE']">
+                                                        <div class="mt-2">
+                                                            <p class="text-success mt-2">
+                                                                <span x-text="report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber].name">
+                                                                </span> has conceded the dispute. Winner is to be decided by the organizer.
+                                                            </p>
+                                                        </div>
+                                                    </template>
+                                                    <template x-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['RESPONDER']">
+                                                        <div class="mt-2">
+                                                            <p class="text-success mt-2">
+                                                                The responder has conceded the dispute. The disputee is declared as the winner.
+                                                            </p>
+                                                        </div>
+                                                    </template>
+                                                    <template x-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['ORGANIZER']">
+                                                        <div class="mt-2">
+                                                            <p class="text-success mt-2">
+                                                            Winner has been decided by the organizer.
+                                                            </p>
+                                                        </div>
+                                                    </template>
+
                                                     <template x-if="userLevelEnums['IS_ORGANIZER'] == report.userLevel">
-                                                    <div class="d-inline">
-                                                        <form method="POST" class="d-inline" x-on:submit="resolveDisputeForm(event)" id="resolve">
-                                                             <input type="hidden" name="action" value="resolve">
-                                                            <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
-                                                            <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
-                                                            <input type="hidden" name="already_winner" x-bind:value="dispute[reportUI.matchNumber].resolution_winner">
-                                                            <input type="hidden" name="resolution_resolved_by" x-bind:value="report.userLevel">
-                                                            <button type="submit" class="btn py-0 d-inline rounded-pill btn-link text-primary">
-                                                                Change Declaration
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </template>
-                                                </p>
-                                                
+                                                        <div class="d-inline">
+                                                            <form method="POST" class="d-inline" x-on:submit="resolveDisputeForm(event)" id="resolve">
+                                                                <input type="hidden" name="action" value="resolve">
+                                                                <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
+                                                                <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
+                                                                <input type="hidden" name="already_winner" x-bind:value="dispute[reportUI.matchNumber].resolution_winner">
+                                                                <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['ORGANIZER']">
+                                                                <button type="submit" class="btn py-0 d-inline rounded-pill btn-link text-primary">
+                                                                    Change Declaration
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </template>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -444,7 +468,7 @@
                                 <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
                                 <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
                                 <input type="hidden" name="already_winner" x-bind:value="reportUI.otherTeamNumber">
-                                <input type="hidden" name="resolution_resolved_by" x-bind:value="report.userLevel">
+                                <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['DISPUTEE']">
                                 <button type="submit"
                                     class="btn  btn-large btn-danger bg-red border-danger rounded-pill px-5 py-3">
                                     Cancel Dispute

@@ -18,7 +18,7 @@
                                     Change Declaration
                                 </button>
                                 <button class="btn border rounded-pill text-light me-3 bg-red" 
-                                data-bs-toggle="modal" data-bs-target="#disputeModal"
+                                    data-bs-toggle="modal" data-bs-target="#disputeModal"
                                 > 
                                 Dispute 
                                 </button>
@@ -72,25 +72,40 @@
             </template>
         </div>
     </template>
-    <template x-if="!dispute[reportUI.matchNumber] && report.realWinners[reportUI.matchNumber]">
+     <template x-if="dispute[reportUI.matchNumber]?.resolution_winner">
         <div>
-             <template x-if="dispute[reportUI.matchNumber]?.resolution_winner">
-                <div>
-                    <div class="mt-2">
-                        <p class="text-success mt-2">
-                            The dispute has been resolved in favor of
-                            <span x-text="report.teams[dispute[reportUI.matchNumber]?.resolution_winner].name">
-                            </span>
-                        </p>
-                    </div>
-                     <div class="mt-2 mb-3">
-                        <div class="d-flex justify-content-center">
-                            <button class="btn btn-sm border rounded-pill text-primary border-primary"
-                                data-bs-toggle="modal" data-bs-target="#disputeModal"
-                            > Show dispute </button>
-                        </div>
-                    </div>
+            <template x-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == dispute[reportUI.matchNumber]?.dispute_teamNumber">
+                <div class="mt-2">
+                <p class="text-success mt-2">
+                    <span x-text="report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber].name">
+                    </span> has conceded the dispute. Winner is to be decided by the organizer.
+                </p>
+            </div>
             </template>
+            <template x-if="dispute[reportUI.matchNumber]?.resolution_resolved_by != dispute[reportUI.matchNumber]?.dispute_teamNumber">
+                <div class="mt-2">
+                    <p class="text-success mt-2">
+                        The dispute has been resolved in favor of
+                        <span x-text="report.teams[dispute[reportUI.matchNumber]?.resolution_winner].name">
+                        </span>
+                    </p>
+                </div>
+            </template>
+            
+                <div class="mt-2 mb-3">
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-sm border rounded-pill text-primary border-primary"
+                        data-bs-toggle="modal" data-bs-target="#disputeModal"
+                    > Show dispute </button>
+                </div>
+            </div>
+            <template x-if="!report.realWinners[reportUI.matchNumber]">
+                @include('__CommonPartials.__BracketModals.__Report.PendingWinners')
+            </template>
+    </template>
+    <template x-if="report.realWinners[reportUI.matchNumber]">
+        <div>
+            
             @include('__CommonPartials.__BracketModals.__Report.RealWinners')
         </div>
     </template>
