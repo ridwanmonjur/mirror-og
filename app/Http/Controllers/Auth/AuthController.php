@@ -101,8 +101,8 @@ class AuthController extends Controller
         
         extract($this->authService->determineUserRole($request));
 
-        $redirectErrorRoute = $userRole.'.signup.view';
-        $redirectSuccessRoute = $userRole.'.signin.view';
+        $redirectErrorRoute = $role.'.signup.view';
+        $redirectSuccessRoute = $role.'.signin.view';
         
         DB::beginTransaction();
 
@@ -113,8 +113,8 @@ class AuthController extends Controller
                 'companyName' => 'bail|required',
             ]);
 
-            if ($userRole === 'organizer') {
-                $this->authService->createUser($validatedData, $userRole);
+            if ($role === 'organizer') {
+                $this->authService->createUser($validatedData, $role);
 
                 $organizer = new Organizer([
                     'user_id' => $user->id,
@@ -123,12 +123,12 @@ class AuthController extends Controller
                 ]);
 
                 $organizer->save();
-            } elseif ($userRole === 'participant') {
+            } elseif ($role === 'participant') {
                 $validatedData = $request->validate([
                     ...$validationRules,
                 ]);
 
-                $this->authService->createUser($validatedData, $userRole);
+                $this->authService->createUser($validatedData, $role);
                 $participant = new Participant([
                     'user_id' => $user->id,
                 ]);
@@ -144,7 +144,7 @@ class AuthController extends Controller
                 ->route($redirectSuccessRoute)
                 ->with(
                     [
-                        'success' => $userRoleFirstCapital.' account created and verification email sent. Please verify email now!',
+                        'success' => $roleFirstCapital.' account created and verification email sent. Please verify email now!',
                         'email' => $user->email,
                     ]
                 );
@@ -198,8 +198,8 @@ class AuthController extends Controller
                 $request->session()->regenerate();
 
                 return response()->json([
-                    'message' => "Account signed in successfully as {$userRole}!",
-                    'route' => route($userRole.'.home.view'),
+                    'message' => "Account signed in successfully as {$role}!",
+                    'route' => route($role.'.home.view'),
                     'token' => null,
                     'success' => true,
                 ], 201);
