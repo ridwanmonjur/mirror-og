@@ -165,11 +165,21 @@ window.onload = function() {
     /* beautify preserve:start */
    const container = document.getElementById('eventContainer');
 
-    const $event = JSON.parse(container.dataset.event);
-    const tier = JSON.parse(container.dataset.tier);
-    const type = JSON.parse(container.dataset.type);
-    const game = JSON.parse(container.dataset.game);
-    const assetKeyWord = container.dataset.assetKeyWord;
+   let $event = null;
+   let tier = null;
+   let type = null;
+   let game = null;
+   let assetKeyWord = null;
+    if (container) {
+        $event = JSON.parse(container.dataset.event);
+        tier = JSON.parse(container.dataset.tier);
+        type = JSON.parse(container.dataset.type);
+        game = JSON.parse(container.dataset.game);
+        assetKeyWord = container.dataset.assetKeyWord;
+    } else {
+      
+    }
+  
     
     clearLocalStorage();
     

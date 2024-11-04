@@ -1,5 +1,4 @@
 const eventData = document.getElementById('eventData');
-let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 const goToManageScreen = () => {
     window.location.href = eventData.dataset.routeShow;
@@ -19,12 +18,13 @@ function addParticant() {
         team_id: teamId,
         organizer_id: eventData.dataset.userId,
     };
+    let csrfToken2 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     fetch(eventData.dataset.routeInvitationStore, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "X-CSRF-TOKEN": csrfToken,
+            "X-CSRF-TOKEN": csrfToken2,
             "Accept": "application/json",
         },
         body: JSON.stringify(data)

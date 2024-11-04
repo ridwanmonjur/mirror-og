@@ -24,7 +24,7 @@ function addFormValues(keyList) {
     if (!createEventForm) {
         Toast.fire({
             icon: 'error',
-            title: 'Form cannot be found!'
+            text: 'Form cannot be found!'
         })
         return []
     }
@@ -48,7 +48,7 @@ function validateFormValuesPresent(keyList) {
     if (!createEventForm) {
         Toast.fire({
             icon: 'error',
-            title: 'Form not found'
+            text: 'Form not found'
         })
         return [false, "form"];
     }
@@ -66,7 +66,7 @@ function validateFormValuesPresent(keyList) {
         else {
             Toast.fire({
                 icon: 'error',
-                title: 'Form not found'
+                text: 'Form not found'
             })
             isFormValid = false;
             invalidKey = key;
@@ -101,7 +101,7 @@ function getFormValues(keyList = ["ALL_FORM_KEYS"]) {
     if (!createEventForm) {
         Toast.fire({
             icon: 'error',
-            title: 'Form not found'
+            text: 'Form not found'
         })
     }
 
@@ -145,10 +145,10 @@ function previewSelectedImage(imageId, previewImageId) {
         
             image.onload = function() {
                 
-                if (image.width <= 1400 ) {
+                if (image.width < 1400 ) {
                     Toast.fire({
                         icon: 'error',
-                        title: `Image width ${image.width}px is lesser than 1400px`
+                        text: `Image width ${image.width}px is lesser than 1400px`
                     })
                     
                     isError = true;
@@ -158,7 +158,7 @@ function previewSelectedImage(imageId, previewImageId) {
                 if (image.height <= 600) {
                     Toast.fire({
                         icon: 'error',
-                        title: `Image height ${image.height} is lesser than 600px`
+                        text: `Image height ${image.height} is lesser than 600px`
                     })
     
                     isError = true;
