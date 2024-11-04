@@ -91,63 +91,9 @@
             <div class="no-more-data d-none mb-3" style="margin-top: 50px;" ></div>
 
             <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
-            <script>
-                function cancelEvent(event) {
-                    let svgElement = event.target.closest('svg');
-                    if (!svgElement) return;
-                    let eventUrl = svgElement.dataset.url;
+            <script src="{{ asset('/assets/js/organizer/ManageEventP1.js') }}"></script>
 
-                    Swal.fire({
-                        title: "Are you sure?",
-                        text: "You won't be able to revert this!",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#43A4D7",
-                        cancelButtonColor: "#d33",
-                        cancelButtonText: "Cancel Event",
-                        confirmButtonText: "Oops, no..."
-                    })
-                    .then((result) => {
-                        if (result.isDismissed) {
-                            fetch(eventUrl, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    'Content-Type': 'application/json',
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    Swal.fire({
-                                        title: 'Cancelled!',
-                                        text: 'Event has been cancelled.',
-                                        icon: 'success',
-                                        confirmButtonColor: "#43A4D7",
-                                    });
-                                    location.reload();
-                                } else {
-                                    Swal.fire({
-                                        title: 'Error!',
-                                        text: 'Failed to cancel the event.',
-                                        icon: 'error',
-                                        confirmButtonColor: "#43A4D7",
-                                    });
-                                }
-                            })
-                            .catch((error) => {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong!',
-                                    icon: 'error',
-                                    confirmButtonColor: "#43A4D7",
-                                });
-                            });
-                        }
-                    });
-                }
-
-            </script>
+         
             <div id="app-data"
                 data-endpoint="{{ route('event.search.view') }}"
                 data-user-id="{{ $user->id }}"

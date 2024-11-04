@@ -160,12 +160,7 @@
         </div>
     </div>
 </body>
-<script>
-    let error = document.getElementById('errorMessage')?.value;
-    if (error) {
-        localStorage.setItem("error", "true");
-        localStorage.setItem("message", error);
-    }
-</script>
+<script src="{{ asset('/assets/js/shared/BackgroundModal.js') }}"></script>
+
 <script src="{{ asset('/assets/js/chat.js') }}"></script>
 </html>

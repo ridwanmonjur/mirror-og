@@ -214,12 +214,4 @@
 
     </div>
 </div>
-<script>
-    function uploadImageToBanner(event) {
-        var file = event.target.files[0];
-        if (file) {
-            var cachedImage = URL.createObjectURL(file);
-            backgroundBanner.style.backgroundImage = `url(${cachedImage})`;
-        }
-    }
-</script>
+<script src="{{ asset('/assets/js/shared/BackgroundModal.js') }}"></script>

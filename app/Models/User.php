@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,13 +15,12 @@ use Illuminate\Support\Facades\Storage;
 
 // use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable 
 {
     use HasFactory, Notifiable;
 
     public $timestamps = false;
 
-    public static $filamentUserColumn = 'is_filament_user';
 
     /**
      * The attributes that are mass assignable.
@@ -48,10 +46,7 @@ class User extends Authenticatable implements FilamentUser
         'password' => 'hashed',
     ];
 
-    public function canAccessFilament(): bool
-    {
-        return $this->role === 'ADMIN';
-    }
+   
 
     public function address(): HasOne
     {

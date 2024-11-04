@@ -12,15 +12,13 @@
         class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
     <small class="ms-2 py-0" x-text="report.teams[1]?.name"></small>
 </button>
-<template x-if="getDisabled()">
-    <p class="selectionMessage text-secondary my-3">Selection is not yet available.</p>
-</template>
-<template x-if="!getDisabled()">
-    <p class="selectionMessage text-primary my-3">Select a winner for Game
-        <span x-text="reportUI.matchNumber+1">
-        </span>.
+    <p  
+        x-text="reportUI.statusText"
+        :class="['selectionMessage my-3 ',
+         getDisabled() ? 'text-secondary' :  'text-primary'
+        ]"   
+    >   
     </p>
-</template>
 <input type="hidden" id="selectedTeamIndex" type="text" name="selectedTeamIndex">
 
 <div class="d-flex justify-content-center  mt-2">

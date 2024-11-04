@@ -10,15 +10,17 @@
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @include('__CommonPartials.HeadIcon')
-       
+
 </head>
 @php
     use Carbon\Carbon;
+    $userProfile = \App\Models\User::where('id', $id)->first();
 @endphp
 
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
-
+    <div id="routeConfig" data-profile-route="{{ route('public.participant.view', ['id' => $id]) }}">
+    </div>
     <main class="ps-5">
         <br>
         <div class="ms-5">
@@ -29,25 +31,20 @@
             </u>
         </div>
 
-        @livewire('shared.profile.friends-follow-display', ['userId' => $userId])
+        @livewire('shared.profile.friends-follow-display', ['userId' => $id])
+        <livewire:scripts />
+
         </div>
         <br>
 
         <br>
     </main>
-    @livewireScripts
     @stack('script')
+    <script src="{{ asset('/assets/js/shared/ProfileStats.js') }}"></script>
 
-    <script>
-        function redirectToProfilePage(userId) {
-            window.location.href = "{{ route('public.participant.view', ['id' => ':id']) }}"
-                .replace(':id', userId);
-        }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const type = urlParams.get('type');
-            document.getElementById(`${type}Btn`)?.click();
-        });
-    </script>
     <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+
+</body>
+
+</html>

@@ -24,24 +24,17 @@ const db = initializeFirestore(app, {
 
 
 
-function scrollIntoView(length, type="top") {
-    if (type="top") {
-        if (length) chatMessages.children[length-1]?.scrollIntoView();
-       
-    } else if (type="bottom") {
-       if (length) chatMessages.children[0]?.scrollIntoView();
-
-    }
-}
-
-
-
 Alpine.data('alpineDataComponent', function () {
 
     const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums').value);
     const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
     const eventId = document.getElementById('eventId').value;
     let initialData = {
+        disputeLevelEnums: {
+          'ORGANIZER' : 1,
+          'DISPUTEE': 2,
+          'RESPONDER': 3
+        },
         subscribeToMatchStatusesSnapshot: null,
         subscribeToCurrentReportSnapshot: null,
         subscribeToCurrentReportDisputesSnapshot: null,
@@ -50,7 +43,8 @@ Alpine.data('alpineDataComponent', function () {
             userTeamId,
             teamNumber: null,
             otherTeamNumber: null,
-            disabled: [false, false, false]
+            disabled: [false, false, false],
+            statusText: 'Select a winner for Game 1'
         },
         report: {
           id: null,
@@ -110,35 +104,140 @@ Alpine.data('alpineDataComponent', function () {
               } 
             }
 
-            console.log({otherTeamWinner, teamNumber, otherTeamNumber, report: Alpine.raw(this.report)});
-          }
+                console.log({otherTeamWinner, teamNumber, otherTeamNumber, report: Alpine.raw(this.report)});
+            }
 
           await this.saveReport();
         },
         async onChangeTeamToWin() {
-          let matchNumber = this.reportUI.matchNumber;
+          window.Swal.fire({
+            title: 'Submitting a Dispute',
+            html: `
+                Are you sure you want to change the winner>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Submit Dispute',
+            cancelButtonText: 'Back',
+            padding: '2em',
+            confirmButtonColor: '#286281',
+            reverseButtons: true,
+          }).then(async (result) => {
+              if (result.isConfirmed) {
+                let matchNumber = this.reportUI.matchNumber;
 
-          if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
-            let otherIndex = this.report.realWinners[matchNumber] === "1" ? "0" : "1"; 
-            this.report.organizerWinners[matchNumber] = otherIndex;
-            this.report.realWinners[matchNumber] = otherIndex;
+                if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
+                  let otherIndex = this.report.realWinners[matchNumber] === "1" ? "0" : "1"; 
+                  this.report.organizerWinners[matchNumber] = otherIndex;
+                  this.report.realWinners[matchNumber] = otherIndex;
+                }
+      
+                if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
+                  let teamNumber = this.reportUI.teamNumber;
+                  let otherTeamNumber = this.reportUI.otherTeamNumber;
+                  let otherIndex = this.report.teams[otherTeamNumber].winners[matchNumber];
+                  if (otherIndex) {
+                    this.report.teams[teamNumber].winners[matchNumber] = otherIndex;
+                    this.report.realWinners[matchNumber] = otherIndex;
+                  }
+                }
+      
+                await this.saveReport();
+              }
+          });
+        
+         
+        },
+        async resolveDisputeForm(event) {
+          event.preventDefault();
+          const form = event.currentTarget;
+          const formData = Object.fromEntries(new FormData(form));
+          let {
+            id,
+            dispute_matchNumber,
+            resolution_winner,
+            resolution_resolved_by,
+            already_winner
+          } = formData;
+
+          console.log({formData});
+      
+          if (!id || !dispute_matchNumber || !resolution_resolved_by) {
+            window.toastError('Missing required fields');
+            console.error(id, dispute_matchNumber, resolution_resolved_by);
+            return;
           }
 
-          if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
-            let teamNumber = this.reportUI.teamNumber;
-            let otherTeamNumber = this.reportUI.otherTeamNumber;
-            let otherIndex = this.report.teams[otherTeamNumber].winners[matchNumber];
-            if (otherIndex) {
-              this.report.teams[teamNumber].winners[matchNumber] = otherIndex;
-              this.report.realWinners[matchNumber] = otherIndex;
+       
+
+          if (!resolution_winner) {
+            resolution_winner = already_winner == '0' ? '1' : '0';  
+          }
+      
+          const disputeRef = doc(db, `event/${eventId}/disputes`, id);        
+          const updateData = {
+            resolution_winner,
+            resolution_resolved_by,              
+            updated_at: serverTimestamp(),
+          };
+
+          await updateDoc(disputeRef, updateData);
+
+          if (already_winner) {
+            this.dispute[this.reportUI.matchNumber] = {
+              ...this.dispute[this.reportUI.matchNumber],
+              ...updateData
+            };
+
+            if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) 
+            {
+              this.setDisabled();
             }
+
+            return;
           }
 
-          await this.saveReport();
+
+          const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
+          const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`; 
+          const docRef = doc(allMatchStatusesCollectionRef, customDocId);
+          
+          try {
+            let winnerNew = [...this.report.realWinners];
+            winnerNew[this.reportUI.matchNumber] = resolution_winner;
+            await updateDoc(docRef, {
+              winners: winnerNew,
+            });
+
+            console.log({
+              demo: {...this.dispute[dispute_matchNumber] }, winnerNew
+            })
+
+            this.report.realWinners = [...winnerNew];
+           
+            this.dispute[this.reportUI.matchNumber] = {
+              ...this.dispute[this.reportUI.matchNumber],
+              ...updateData
+            };
+
+            if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) 
+            {
+              this.setDisabled();
+            }
+          } catch (error) {
+            console.error("Error adding document: ", error);
+          }
+        },
+        async decideResolution(event, teamNumber) {
+          let button = event.currentTarget;
+          document.querySelectorAll(".selectedDisputeResolveButton").forEach((value)=>
+           {value.classList.remove('bg-primary', 'text-light'); }
+          );
+          
+          button.classList.add('bg-primary', 'text-light');
+          document.getElementById('resolution_winner_input').value = teamNumber;
         },
         async saveReport() {
           const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
-
           const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`; 
           const docRef = doc(allMatchStatusesCollectionRef, customDocId);
           
@@ -178,10 +277,8 @@ Alpine.data('alpineDataComponent', function () {
             selectTeamSubmitButton.style.color = 'white';
 
             document.getElementById('selectedTeamIndex').value = index;
-            const selectionMessage = document.querySelector('.selectionMessage');
-            if (selectionMessage) {
-              selectionMessage.innerText = `Currently selecting ${this.report.teams[index].name} as the winner of Game ${this.reportUI.matchNumber+1}`;
-            }
+            this.reportUI.statusText = `Currently selecting ${this.report.teams[index].name} as the winner of Game ${this.reportUI.matchNumber+1}`;
+            
           },
       
         clearSelection() {
@@ -199,14 +296,19 @@ Alpine.data('alpineDataComponent', function () {
 
               document.getElementById('selectedTeamIndex').value = null;
           
-              const selectionMessage = document.querySelector('.selectionMessage');
-              if (selectionMessage) {
-                selectionMessage.innerText = ""; 
-              }
+              this.reportUI.statusText = '';
+              
           }); 
         },
         changeMatchNumber(increment) {
-          this.reportUI.matchNumber = this.reportUI.matchNumber + increment; 
+          this.reportUI = {
+            ...this.reportUI ,
+            matchNumber : this.reportUI.matchNumber + increment,
+            statusText: this.reportUI.disabled[this.reportUI.matchNumber + increment] ?
+              'Selection is not yet available.': 
+              `Select a winner for Game ${this.reportUI.matchNumber+1+increment}`
+          };
+          
         },
         getDisabled() {
           return this.reportUI.disabled[this.reportUI.matchNumber] ;
@@ -220,7 +322,6 @@ Alpine.data('alpineDataComponent', function () {
 
           this.reportUI.disabled = [...disabledList];
         },
-        
         init() {
             this.getAllMatchStatusesData();
             window.addEventListener('currentReportChange', (event) => {
@@ -379,6 +480,17 @@ Alpine.data('alpineDataComponent', function () {
                    
 
                 } else {
+                  let teamNumber = this.report.userLevel == this.userLevelEnums['IS_TEAM1'] ? 0 :
+                    (this.report.userLevel == this.userLevelEnums['IS_TEAM2'] ? 1 : 0 );
+
+                  let otherTeamNumber =  teamNumber === 0 ? 1 : 0;
+                
+                  this.reportUI = {
+                    ...initialData.reportUI,
+                    teamNumber, 
+                    otherTeamNumber,
+                    statusText: "Select a winner for Game 1"
+                  }
                   console.log("No such document!");
                 }
               }
@@ -390,13 +502,13 @@ Alpine.data('alpineDataComponent', function () {
             event.preventDefault();
             const form = event.target;
             const formData = new FormData(form);
-            let jsonObject = {}
+            let formObject = {}
             for (let [key, value] of formData.entries()) {
-                jsonObject[key] = value;
+                formObject[key] = value;
             }
 
-            const selectedRadio = jsonObject['reportReason'];
-            const otherReasonInput = jsonObject['otherReasonText'];
+            const selectedRadio = formObject['reportReason'];
+            const otherReasonInput = formObject['otherReasonText'];
             let dispute_reason = '';
             if (selectedRadio) {
               dispute_reason = selectedRadio;
@@ -405,59 +517,82 @@ Alpine.data('alpineDataComponent', function () {
               dispute_reason = otherReasonInput.trim();
             }
             
-            delete jsonObject['reportReason'];
-            delete jsonObject['otherReasonText'];
-            jsonObject['dispute_reason'] = dispute_reason;
-
-            try {
-              const disputeDto = {
-                report_id: jsonObject.report_id,
-                match_number: jsonObject.match_number,
-                event_id: jsonObject.event_id,
-                dispute_userId: jsonObject.dispute_userId,
-                dispute_teamId: jsonObject.dispute_teamId,
-                dispute_teamNumber: jsonObject.dispute_teamNumber,
-                dispute_reason: jsonObject.dispute_reason,
-                dispute_description: jsonObject.dispute_description || null,
-                
-                // Initialize optional fields as null
-                response_userId: null,
-                response_teamId: null,
-                response_teamNumber: null,
-                response_explanation: null,
-                resolution_winner: null,
-                resolution_resolved_by: null,
-                
-                created_at: serverTimestamp(),
-                updated_at: serverTimestamp()
-              };
-
-              validateDisputeCreation(disputeDto);
-
-              const disputesRef = collection(db, `event/${eventId}/disputes`);
-              const docRef = await addDoc(disputesRef, disputeDto);
-              const docSnap = await getDoc(docRef);
-              if (docSnap.exists()) {
-                let id = docRef.id;
-                let data = docSnap.data();
-                this.dispute[disputeDto['match_number']] = {
-                  ...data,
-                  id
+            delete formObject['reportReason'];
+            delete formObject['otherReasonText'];
+            formObject['dispute_reason'] = dispute_reason;
+            window.Swal.fire({
+                title: 'Submitting a Dispute',
+                html: `
+                    <div class="text-left">
+                        <p class="mt-2 mb-2">A total of TWO (2) dispute submissions are allocated to each team per event. 
+                        A dispute submission will only be consumed when a dispute is submitted.</p>
+                        
+                        <p class="mb-2">You have TWO (2) dispute submissions remaining. Submitting this dispute will consume
+                        one dispute submission and you will have ONE (1) dispute submission remaining.</p>
+                        
+                        <p class="mb-2">If this dispute is resolved in your favour, a dispute submission will be returned to you.</p>
+                        
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Submit Dispute',
+                cancelButtonText: 'Back',
+                padding: '2em',
+                reverseButtons: true,
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                  try {
+                    const disputeDto = {
+                      report_id: formObject.report_id,
+                      match_number: formObject.match_number,
+                      event_id: formObject.event_id,
+                      dispute_userId: formObject.dispute_userId,
+                      dispute_teamId: formObject.dispute_teamId,
+                      dispute_teamNumber: formObject.dispute_teamNumber,
+                      dispute_reason: formObject.dispute_reason,
+                      dispute_description: formObject.dispute_description || null,
+                      
+                      // Initialize optional fields as null
+                      response_userId: null,
+                      response_teamId: null,
+                      response_teamNumber: null,
+                      response_explanation: null,
+                      resolution_winner: null,
+                      resolution_resolved_by: null,
+                      
+                      created_at: serverTimestamp(),
+                      updated_at: serverTimestamp()
+                    };
+      
+                    validateDisputeCreation(disputeDto);
+      
+                    const disputesRef = collection(db, `event/${eventId}/disputes`);
+                    const docRef = await addDoc(disputesRef, disputeDto);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                      let id = docRef.id;
+                      let data = docSnap.data();
+                      this.dispute[disputeDto['match_number']] = {
+                        ...data,
+                        id
+                      }
+                    }
+                    
+                    if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) 
+                    {
+                      this.setDisabled();
+                    }
+      
+                    window.Toast.fire({
+                      icon: 'success',
+                      text: "Successfully created!"
+                    });
+                  } catch (error) {
+                    console.error("Error adding document: ", error);
+                  }
                 }
-              }
-              
-              if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) 
-              {
-                this.setDisabled();
-              }
-
-              window.Toast.fire({
-                icon: 'success',
-                text: response.message
-              });
-            } catch (error) {
-              console.error("Error adding document: ", error);
-            }
+            });
+            
           },
           async respondDisputeForm(event) {
             event.preventDefault();
@@ -475,23 +610,47 @@ Alpine.data('alpineDataComponent', function () {
             if (!id || !dispute_teamId || !response_teamNumber) {
               throw new Error('Missing required fields');
             }
+
+            window.Swal.fire({
+              title: 'Responding to a Dispute',
+              html: `
+                  <p class="mt-2 mb-2">An opponent team has raised a dispute and requires your response.</p>
+                  <p class="mt-2">Responding to a dispute does not consume any dispute submissions.</p>
+                  <p class="mt-2">A dispute submission is only consumed when you raise a dispute and submit it.</p>
+                  <p class="mt-2">A dispute submission will be returned if a dispute resolves in the disputing team's favour.</p>
+              `,
+              confirmButtonText: 'Continue',
+              width: 500,
+              padding: '2em',
+            }).then(async (result) => {
+              if (result.isConfirmed) {
+                const disputeRef = doc(db, `event/${eventId}/disputes`, id);
         
-            const disputeRef = doc(db, `event/${eventId}/disputes`, id);
+                const updateData = {
+                  response_teamId: dispute_teamId,
+                  response_teamNumber: response_teamNumber,
+                  response_explanation: dispute_description || null,
+                  response_userId,
+                  updated_at: serverTimestamp(),
+                  status: 'responded' 
+                };
+            
+                await updateDoc(disputeRef, updateData);
+                const docSnap = await getDoc(disputeRef);
+                  if (docSnap.exists()) {
+                    let id = disputeRef.id;
+                    let data = docSnap.data();
+                    this.dispute[dispute_matchNumber] = {
+                      ...data,
+                      id
+                    }
+                  }
+              } else {
+                  handleCancelResponse();
+              }
+          });
         
-            const updateData = {
-              response_teamId: dispute_teamId,
-              response_teamNumber: response_teamNumber,
-              response_explanation: dispute_description || null,
-              response_userId,
-              updated_at: serverTimestamp(),
-              status: 'responded' 
-            };
-        
-            await updateDoc(disputeRef, updateData);
-            this.dispute[dispute_matchNumber] = {
-              ...this.dispute[dispute_matchNumber],
-              ...updateData
-            }
+            
             
           },
           handleFiles(event, id) {

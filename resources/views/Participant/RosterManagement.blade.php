@@ -214,6 +214,8 @@
     <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
     
     <script>
+        let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
         let dialogForMember = new DialogForMember();
         function scroll() {
             let successValue = localStorage.getItem('success');
@@ -326,7 +328,7 @@
                     toastError('Error making captain.', error);
                 }, {
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-CSRF-TOKEN': csrfToken,
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
@@ -361,7 +363,7 @@
                     toastError('Error disapproving member.', error);
                 }, {
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-CSRF-TOKEN': csrfToken,
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     }, 
@@ -396,7 +398,7 @@
                     toastError('Error making captain.', error);
                 }, {
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-CSRF-TOKEN': csrfToken,
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
@@ -431,7 +433,7 @@
                     toastError('Error making captain.', error);
                 }, {
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-CSRF-TOKEN': csrfToken,
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },

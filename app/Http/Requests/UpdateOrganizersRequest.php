@@ -22,11 +22,12 @@ class UpdateOrganizersRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'address.id' => 'nullable',
-            'address.addressLine1' => 'nullable|string',
+            'address' => 'nullable|array',
+            'address.id' => 'nullable|exists:addresses,id',
+            'address.addressLine1' => 'nullable|required_with:address.city,address.country|string',
             'address.addressLine2' => 'nullable|string',
-            'address.city' => 'nullable|string',
-            'address.country' => 'nullable|string',
+            'address.city' => 'nullable|required_with:address.addressLine1,address.country|string',
+            'address.country' => 'nullable|required_with:address.addressLine1,address.city|string',
             'address.user_id' => 'nullable',
             'userProfile.name' => 'required|string',
             'userProfile.id' => 'required',
@@ -49,6 +50,9 @@ class UpdateOrganizersRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'userProfile.name.required' => 'The name field is required.',
+            'userProfile.id.required' => 'The user profile ID is required.',
+            'organizer.id.required' => 'The organizer ID is required.',
             'address.addressLine1.string' => 'Address Line 1 must be a string.',
             'address.addressLine2.string' => 'Address Line 2 must be a string.',
             'address.city.string' => 'City must be a string.',
@@ -66,5 +70,30 @@ class UpdateOrganizersRequest extends FormRequest
             'organizer.facebook_link.url' => 'Facebook Link must be a valid URL.',
             'organizer.twitter_link.url' => 'Twitter Link must be a valid URL.',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        if (empty($this->address['city']) && 
+            empty($this->address['country']) && 
+            empty($this->address['addressLine1'])) {
+            $this->request->remove('address');
+        }
+
+        if ($this->input('organizer')) {
+            $organizerData = $this->organizer;
+            $links = ['website_link', 'instagram_link', 'facebook_link', 'twitter_link'];
+            
+            foreach ($links as $link) {
+                if (empty($organizerData[$link]) || trim($organizerData[$link]) === '') {
+                    $organizerData[$link] = null;
+                }
+            }
+    
+            $this->request->set(
+                'organizer', $organizerData
+            );
+        }
+
     }
 }

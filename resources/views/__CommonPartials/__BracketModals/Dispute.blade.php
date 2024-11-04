@@ -255,10 +255,11 @@
                                                     Submit Counter Evidence
                                                 </button>
                                                 <form method="POST" x-on:submit="resolveDisputeForm(event)" id="create">
+                                                    <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].matchNumber">
                                                     <input type="hidden" name="action" value="resolve">
-                                                    <input type="hidden" name="dispute_id" value="dispute[reportUI.matchNumber].id">
+                                                    <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
                                                     <input type="hidden" name="resolution_winner" x-bind:value="reportUI.otherTeamNumber">
-                                                    <input type="hidden" name="resolution_resolved_by" x-bind:value="report.userLevel">
+                                                    <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['RESPONDER']">
                                                     <button type="submit" style="width: 250px;" class="btn d-inline-block btn-light border px-2 mb-2 py-2 border-dark rounded-pill text-dark">
                                                         Concede
                                                     </button>
@@ -275,7 +276,7 @@
                                                 <input type="hidden" name="action" value="respond">
                                                 <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber].id">
                                                 <input type="hidden" name="response_teamNumber" x-bind:value="reportUI.teamNumber">
-                                                <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].matchNumber">
+                                                <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
                                                 <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
                                                 <input type="hidden" name="response_userId" value="{{$user?->id}}">
 
@@ -357,28 +358,28 @@
                                                 <div class="ps-5 ps-5 text-start">
                                                     <form method="POST" x-on:submit="resolveDisputeForm(event)" id="resolve">
                                                         <input type="hidden" name="action" value="resolve">
-                                                        <input type="hidden" name="dispute_id" value="dispute[reportUI.matchNumber].id">
-                                                        <input type="hidden" name="resolution_winner" x-bind:value="reportUI.otherTeamNumber">
-                                                        <input type="hidden" name="resolution_resolved_by" x-bind:value="report.userLevel">
-                                                        <br>
-                                                        <button x-on:click="selectTeamToWin(event, 0)" :disabled="getDisabled()"
-                                                            class="selectedButton ps-0 btn mb-2 mt-2 d-block rounded-pill w-100 mx-auto py-0 border border-dark text-start">
-                                                            <img :src="'/storage/' + report.teams[0].banner" alt="Team Banner" width="35" height="35"
-                                                                onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                                                                class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
-                                                            <small class="ms-2 py-0" x-text="report.teams[0]?.name"></small>
-                                                        </button>
-                                                        <button x-on:click="selectTeamToWin(event, 1)" :disabled="getDisabled()"
-                                                            class="selectedButton ps-0 btn d-block rounded-pill w-100 mx-auto py-0 border border-dark text-start">
-                                                            <img :src="'/storage/' + report.teams[1].banner" alt="Team Banner" width="35" height="35"
-                                                                onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                                                                class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
-                                                            <small class="ms-2 py-0" x-text="report.teams[1]?.name"></small>
-                                                        </button>
-                                                        <input type="hidden" id="selectedResolvedTeamIndex" type="text" name="selectedResolvedTeamIndex">
+                                                        <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
+                                                        <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
 
-                                                        <div class="d-flex justify-content-center  mt-2">
-                                                            <button x-on:click="onSubmitSelectTeamToWin" class="selectTeamSubmitButton btn border rounded-pill text-light btn-secondary me-3"> Submit </button>
+                                                        <input type="hidden" name="resolution_winner" id="resolution_winner_input">
+                                                        <input type="hidden" name="resolution_resolved_by" value="disputeLevelEnums['ORGANIZER']">
+                                                        <p class="text-primary text-center"> The dispute will be resolved in favor of (Choose): </p>
+                                                        <div class="d-flex justify-content-center flex-column mt-2">
+                                                            <button type="button" x-on:click="decideResolution(event, 0)" :disabled="getDisabled()"
+                                                                class="selectedButton selectedDisputeResolveButton ps-0 btn mb-2 mt-2 rounded-pill mx-auto py-0 border border-dark text-start">
+                                                                <img :src="'/storage/' + report.teams[0].banner" alt="Team Banner" width="35" height="35"
+                                                                    onerror="this.src='{{ asset('assets/images/404.png') }}';"
+                                                                    class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
+                                                                <small class="ms-2 py-0" x-text="report.teams[0]?.name"></small>
+                                                            </button>
+                                                            <button type="button" x-on:click="decideResolution(event, 1)" :disabled="getDisabled()"
+                                                                class="selectedButton selectedDisputeResolveButton ps-0 btn  rounded-pill mx-auto py-0 mt-2 border border-dark text-start">
+                                                                <img :src="'/storage/' + report.teams[1].banner" alt="Team Banner" width="35" height="35"
+                                                                    onerror="this.src='{{ asset('assets/images/404.png') }}';"
+                                                                    class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
+                                                                <small class="ms-2 py-0" x-text="report.teams[1]?.name"></small>
+                                                            </button>
+                                                            <button type="submit"  class="selectTeamSubmitButton btn border mx-auto border border-primary text-primary py-2 btn-sm rounded-pill mt-4 px-4"> Submit </button>
                                                         </div>
                                                         <br>
                                                     </form>
@@ -396,21 +397,58 @@
                                         class="row justify-content-start bg-light border border-3 border rounded px-2 py-2">
                                         <div class="d-flex justify-content-between">
                                             <h5 class="text-start my-3"> Resolution </h5>
-                                            <div class="text-end my-3">
-                                                <p class="my-0">Time left until auto-resolve:</p>
-                                                <small>0d 0h</small>
-                                            </div>
                                         </div>
                                         <div class="ps-5 ps-5 text-start">
-                                            <br><br><br>
-                                            <p class="text-center fw-lighter">
-                                                When the opponent team submits their counter-evidence, the organizer will
-                                                resolve the dispute.
-                                                <br>
-                                                If the opponent team does not respond by the allocated time, the dispute
-                                                will automatically resolve in your favor.
-                                            </p>
-                                            <br><br><br>
+                                            <div class="mt-2">
+                                                <div>
+                                                    <img :src="'/storage/' + report.teams[report.realWinners[reportUI.matchNumber]].banner" alt="Team Banner"
+                                                        width="60" height="60" onerror="this.src='{{ asset('assets/images/404.png') }}';"
+                                                        class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
+                                                </div>
+                                                <div class="mt-2 d-block">
+                                                    <p>
+                                                        <span x-text="report.teams[report.realWinners[reportUI.matchNumber]]?.name"> </span>
+                                                        has been resolved as the winner.
+                                                    </p>
+                                                    <template x-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['DISPUTEE']">
+                                                        <div class="mt-2">
+                                                            <p class="text-success mt-2">
+                                                                <span x-text="report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber].name">
+                                                                </span> has conceded the dispute. Winner is to be decided by the organizer.
+                                                            </p>
+                                                        </div>
+                                                    </template>
+                                                    <template x-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['RESPONDER']">
+                                                        <div class="mt-2">
+                                                            <p class="text-success mt-2">
+                                                                The responder has conceded the dispute. The disputee is declared as the winner.
+                                                            </p>
+                                                        </div>
+                                                    </template>
+                                                    <template x-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['ORGANIZER']">
+                                                        <div class="mt-2">
+                                                            <p class="text-success mt-2">
+                                                            Winner has been decided by the organizer.
+                                                            </p>
+                                                        </div>
+                                                    </template>
+
+                                                    <template x-if="userLevelEnums['IS_ORGANIZER'] == report.userLevel">
+                                                        <div class="d-inline">
+                                                            <form method="POST" class="d-inline" x-on:submit="resolveDisputeForm(event)" id="resolve">
+                                                                <input type="hidden" name="action" value="resolve">
+                                                                <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
+                                                                <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
+                                                                <input type="hidden" name="already_winner" x-bind:value="dispute[reportUI.matchNumber].resolution_winner">
+                                                                <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['ORGANIZER']">
+                                                                <button type="submit" class="btn py-0 d-inline rounded-pill btn-link text-primary">
+                                                                    Change Declaration
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -425,11 +463,12 @@
                         </div>
                         <br>
                         <div class="text-center">
-                            <form method="POST" x-on:submit="resolveDisputeForm(event)" id="create">
+                            <form method="POST" x-on:submit="resolveDisputeForm(event)" id="resolve">
                                 <input type="hidden" name="action" value="resolve">
-                                <input type="hidden" name="dispute_id" value="dispute[reportUI.matchNumber].id">
-                                <input type="hidden" name="resolution_winner" x-bind:value="reportUI.otherTeamNumber">
-                                <input type="hidden" name="resolution_resolved_by" x-bind:value="report.userLevel">
+                                <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
+                                <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
+                                <input type="hidden" name="already_winner" x-bind:value="reportUI.otherTeamNumber">
+                                <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['DISPUTEE']">
                                 <button type="submit"
                                     class="btn  btn-large btn-danger bg-red border-danger rounded-pill px-5 py-3">
                                     Cancel Dispute

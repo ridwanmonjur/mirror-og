@@ -582,7 +582,6 @@
              userProfile: { ...initialUserProfile },
             organizer: { ...initialOrganizer },
             address: { ...initialAddress },
-            countries: [], 
             errorMessage: null, 
             reset() {
                 this.userProfile = { ...initialUserProfile };
@@ -635,7 +634,6 @@
                     console.error({error});
                 } 
             },
-            isCountriesFetched: false ,
              init() {
                 var backgroundStyles = "<?php echo $backgroundStyles; ?>";
                 var fontStyles = "<?php echo $fontStyles; ?>";
@@ -650,27 +648,8 @@
                 });
 
 
-                this.fetchCountries();
             },
-            fetchCountries () {
-                return fetch('/countries')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data?.data) {
-                            this.isCountriesFetched = true;
-                            this.countries = data?.data;
-                        } else {
-                            this.errorMessage = "Failed to get data!"
-                            this.countries = [{
-                                 name: {
-                                    en: 'No country'
-                                },
-                                emoji_flag: '🇦🇫'
-                            }];
-                        }
-                    })
-                    .catch(error => console.error('Error fetching countries:', error));
-                }
+         
             })
         })
     })
@@ -694,9 +673,6 @@
             .replace(':id', userId);
     }
 
-</script>
-
-<script>
     function reddirectToLoginWithIntened(route) {
             route = encodeURIComponent(route);
             let url = "{{ route('participant.signin.view') }}";

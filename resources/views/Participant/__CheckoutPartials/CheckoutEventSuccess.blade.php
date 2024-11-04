@@ -6,6 +6,12 @@
 
 @endphp
 <div class="text-center" id="step-13">
+    <div id="eventData" 
+        data-manage-url="{{ route('event.index') }}"
+        data-copy-url="{{ route('event.show', $event->id) }}"
+        class="d-none"
+    >
+    </div>
     <div class="welcome">
         <u>
             <h3 id="heading">Payment Successful</h3>
@@ -50,22 +56,6 @@
         <button class="oceans-gaming-default-button" style="padding:10px 100px;">Done</button>
     </a>
 </div>
-<script>
-    const goToManageScreen = () => {
-        window.location.href = "{{ route('event.index') }}";
-    }
-    let copyUrl = "{{ route('event.show', $event->id) }}";
-    const copyUtil = () => {
-        navigator.clipboard.writeText(copyUrl).then(function() {
-            Toast.fire({
-                icon: 'success',
-                text: 'Event url copied to clipboard',
-            });
-        });
-    };
-    
-    let shareUrl = document.querySelectorAll('.js-shareUrl');
-    for (let i = 0; i < shareUrl.length; i++) {
-        shareUrl[i].addEventListener('click', copyUtil, false);
-    }
-</script>
+<script src="{{ asset('/assets/js/shared/CheckoutEventSuccess.js') }}"></script>
+
+   

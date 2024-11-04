@@ -4,6 +4,26 @@
 <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
 <script src="{{ asset('/assets/js/organizer/PaymentProcessor.js') }}"></script>
 <script>
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    let variablesDiv = document.getElementById('payment-variables');
+    const paymentVars = {
+        paymentAmount: variablesDiv.dataset.paymentAmount,
+        userEmail: variablesDiv.dataset.userEmail,
+        userName: variablesDiv.dataset.userName,
+        stripeCustomerId: variablesDiv.dataset.stripeCustomerId,
+        joinEventId: variablesDiv.dataset.joinEventId,
+        memberId: variablesDiv.dataset.memberId,
+        teamId: variablesDiv.dataset.teamId,
+        eventId: variablesDiv.dataset.eventId,
+        eventType: variablesDiv.dataset.eventType,
+        stripeKey: variablesDiv.dataset.stripeKey,
+        stripeCardIntentUrl: variablesDiv.dataset.stripeCardIntentUrl,
+        discountCheckoutUrl: variablesDiv.dataset.discountCheckoutUrl,
+        checkoutTransitionUrl: variablesDiv.dataset.checkoutTransitionUrl
+    };
+
+    console.log({paymentVars});
+
     document.querySelectorAll('.transform-number').forEach((element) => {
         let text = element.textContent;
         let number = Number(text);
@@ -26,7 +46,7 @@
         parent.classList.toggle("squared-box");
         element.classList.toggle("rounded-box");
     }
-    let amount = "{{ $amount }}";
+    let amount = paymentVars['paymentAmount'];
     let paymentProcessor = new PaymentProcessor( amount );
 
     function onChoosePayment(event, type, element) {
@@ -112,24 +132,24 @@
 
     async function initializeStripeCardPayment() {
         try {
-            const response = await fetch("{{ route('stripe.stripeCardIntentCreate') }}", {
+            const response = await fetch(paymentVars['stripeCardIntentUrl'], {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    "X-CSRF-TOKEN": csrfToken
                 },
                 body: JSON.stringify({
                     paymentAmount: paymentProcessor.getPaymentAmount(),
-                    email: "{{ $user->email }}",
-                    name: "{{ $user->name }}",
-                    stripe_customer_id: "{{ $user->stripe_customer_id }}",
+                    email: paymentVars['userEmail'],
+                    name: paymentVars['userName'],
+                    stripe_customer_id: paymentVars['stripeCustomerId'],
                     role: "PARTICIPANT",
                     metadata : {
-                        joinEventId: "{{ $joinEventId }}",
-                        memberId: "{{ $memberId }}",
-                        teamId: "{{ $teamId }}",
-                        eventId: "{{ $event->id }}",
-                        eventType: "{{ $event->getRegistrationStatus() }}"
+                        joinEventId: paymentVars['joinEventId'],
+                        memberId: paymentVars['memberId'],
+                        teamId: paymentVars['teamId'],
+                        eventId: paymentVars['eventId'],
+                        eventType: paymentVars['eventType']
                     }
                 })
             });
@@ -163,10 +183,10 @@
                 document.getElementById('payment-summary')?.classList.remove('d-none');
                 
             } else {
-                window.toastError(json.message);
+                alert(json.message)
             }
         } catch (error) {
-            window.toastError(error.message);
+            alert(error.message);
             console.error("Error initializing Stripe Card Payment:", error);
         }
     }
@@ -207,11 +227,11 @@
         
         if (form.checkValidity()) {
             try {
-                const response = await fetch("{{ route('stripe.discountCheckout.action') }}", {
+                const response = await fetch(paymentVars['discountCheckoutUrl'], {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        "X-CSRF-TOKEN": csrfToken
                     },
                     body: JSON.stringify(jsonObject)
                 });
@@ -274,7 +294,7 @@
             } = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
-                    return_url: "{{ route('participant.checkout.transition') }}",
+                    return_url: paymentVars['checkoutTransitionUrl'],
                     payment_method_data: {
                         billing_details: billingDetails
                     }
@@ -295,7 +315,7 @@
         }
     }
 
-    let stripe = Stripe('{{ env('STRIPE_KEY') }}')
+    let stripe = Stripe(paymentVars['stripeKey'])
     const appearance = {
         theme: 'flat',
         variables: {

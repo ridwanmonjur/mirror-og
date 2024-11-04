@@ -1,6 +1,8 @@
 <script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
 
 <script>
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
     var backgroundBanner = document.getElementById("backgroundBanner")
     let backgroundColorInputValue = document.getElementById('backgroundColorInput')?.value;
     let fontColorInputValue = document.getElementById('fontColorInput')?.value;
@@ -159,7 +161,7 @@
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-CSRF-TOKEN': csrfToken,
                     'Content-type': 'application/json',
                     'Accept': 'application/json',
                     ...window.loadBearerHeader()
@@ -323,7 +325,7 @@
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-CSRF-TOKEN': csrfToken,
                     'Content-type': 'application/json',
                     'Accept': 'application/json',
                     ...window.loadBearerHeader()

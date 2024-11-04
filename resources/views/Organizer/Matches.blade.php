@@ -7,7 +7,7 @@
     <title>Tournament Matches</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
-    @vite(['resources/js/libraries/tippy.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/pages/bracket.js'])
+    @vite(['resources/js/libraries/tippy.js', 'resources/js/libraries/alpine.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/pages/bracket.js'])
     <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
     @include('__CommonPartials.HeadIcon')
     <style>
@@ -24,7 +24,6 @@
         <div id="" >
             @include('Organizer.__ManageEventPartials.BracketUpdateList')
         </div>
-        @livewireScripts
         <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
         <script src="{{ asset('/assets/js/shared/tournament.js') }}"></script>
 

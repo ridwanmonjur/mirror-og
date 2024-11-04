@@ -3,7 +3,12 @@
 
 @section('signInbody')
 
-
+<div id="routeConfig" 
+     data-google-login="{{ route('participant.google.login') }}"
+     data-steam-login="{{ route('participant.steam.login') }}"
+     class="d-none"
+>
+</div>
 <img class="mt-4  mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
 <h5 class="px-2"><u>Sign in to your participant account</u></h5>
 <form 
@@ -79,60 +84,7 @@
 <div class="section-bottom">
     <p>New to Driftwood? <a href="{{ route('participant.signup.view') }}">Create an account</a></p>
 </div>
-<script>
-    function submitForm(event) {
-        event.preventDefault(); 
-        document.querySelector('.flash-message').innerHTML = '';
-
-        const formData = new FormData(event.target);
-        fetch( event.target.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Accept': 'application/json',
-            }
-        })
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                  // TODO
-                // COOKIE TASK
-                console.log({data})
-                window.location.href = data.route;
-            } else {
-                document.querySelector('.flash-message').innerHTML = `<div class="text-red">${data.message}</div>`;
-                console.error('Error:', data.message);
-            }
-        })
-        .catch(error => {
-            document.querySelector('.flash-message').innerHTML = `<div class="text-red">An error occurred during form submission. Please try again later</div>`;
-            console.error('Error during login:', error);
-        });
-    }
-
-    function redirectToGoogle() {
-        window.location.href = "{{ route('participant.google.login') }}";
-    }
-    function redirectToSteam() {
-        window.location.href = "{{ route('participant.steam.login') }}";
-    }
-
-
-    function togglePassword(fieldId, buttonId) {
-        var passwordField = document.getElementById(fieldId);
-        var toggleButton = document.getElementById(buttonId);
-
-        if (passwordField.type === 'password') {
-            passwordField.type = 'text';
-            toggleButton.className = 'fa fa-eye-slash';
-        } else {
-            passwordField.type = 'password';
-            toggleButton.className = 'fa fa-eye';
-        }
-    }
-</script>
+<script src="{{ asset('/assets/js/participant/signin.js') }}"></script>
 
 @endsection
 
