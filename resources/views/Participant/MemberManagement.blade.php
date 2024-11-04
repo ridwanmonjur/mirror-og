@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Member Management</title>
@@ -17,6 +18,8 @@
 <body
     @style(["min-height: 100vh;" => $isRedirect])
 >
+    @include('googletagmanager::body')
+
     <input type="hidden" id="publicParticipantViewUrl" value="{{ route('public.participant.view', ['id' => ':id']) }}">
 
     @include('__CommonPartials.NavbarGoToSearchPage')

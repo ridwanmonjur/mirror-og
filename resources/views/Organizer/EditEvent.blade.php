@@ -2,6 +2,7 @@
     <!-- https://stackoverflow.com/questions/895171/prevent-users-from-submitting-a-form-by-hitting-enter -->
 
     <body>
+    @include('googletagmanager::body')
         @include('__CommonPartials.NavbarGoToSearchPage')
         <main>
             <div>

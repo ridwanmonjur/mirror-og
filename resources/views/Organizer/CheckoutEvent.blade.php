@@ -1,6 +1,7 @@
 @include('Organizer.__Partials.CheckoutEventHeadTag')
 
 <body>
+    @include('googletagmanager::body')
     @include('__CommonPartials.NavbarGoToSearchPage')
    
     <main class="main-background-2">

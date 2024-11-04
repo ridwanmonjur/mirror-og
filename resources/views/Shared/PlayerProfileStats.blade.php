@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Event Results</title>
@@ -18,6 +19,7 @@
 @endphp
 
 <body>
+    @include('googletagmanager::body')
     @include('__CommonPartials.NavbarGoToSearchPage')
     <div id="routeConfig" data-profile-route="{{ route('public.participant.view', ['id' => $id]) }}">
     </div>

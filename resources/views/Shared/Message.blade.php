@@ -1,12 +1,14 @@
 <html>
 
 <head>
+    @include('googletagmanager::head')
     <link rel="stylesheet" href="{{ asset('/assets/css/chat/fullpage.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/pages/chat.js'])
     @include('__CommonPartials.HeadIcon')
 </head>
 
 <body>
+    @include('googletagmanager::body')
     <div x-data="alpineDataComponent" class="app-container row"
         @fetchstart.window="console.log('Received event:', $event); "
         {{-- x-init="initDB();" --}}

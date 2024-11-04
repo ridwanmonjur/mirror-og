@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizer Profile Page</title>
@@ -42,6 +43,7 @@
     @endphp
 @endauth
 <body>
+    @include('googletagmanager::body')
     @include('Organizer.__ProfilePartials.BackgroundModal')
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main 

@@ -11,7 +11,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
     <meta name="x-apple-disable-message-reformatting">
-    <title></title>
     <style>
         html, body {
             font-size: 16px;

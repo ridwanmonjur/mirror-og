@@ -2,6 +2,7 @@
 
 
 <body>
+    @include('googletagmanager::body')
     @include('__CommonPartials.NavbarGoToSearchPage')
 
     <main>
