@@ -20,6 +20,7 @@
         "predis/predis": "^2.2",
         "socialiteproviders/google": "^4.1",
         "socialiteproviders/steam": "^4.2",
+        "spatie/laravel-googletagmanager": "^2.7",
         "stripe/stripe-php": "^13.0"
     },
     "require-dev": {

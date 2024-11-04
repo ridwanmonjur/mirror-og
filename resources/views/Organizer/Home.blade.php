@@ -3,6 +3,7 @@
 
 
 <head>
+    @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizer Home Page</title>
@@ -14,6 +15,7 @@
 </head>
 
 <body>
+    @include('googletagmanager::body')
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
         <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">

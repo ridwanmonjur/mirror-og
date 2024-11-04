@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Event</title>
@@ -27,6 +28,8 @@
 @endphp
 
 <body style="background: none; ">
+    @include('googletagmanager::body')
+
     @include('__CommonPartials.NavbarGoToSearchPage')
     <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
     <input type="hidden" id="create_url" value="{{ route('event.create') }}">

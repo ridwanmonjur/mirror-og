@@ -1,4 +1,5 @@
 <body>
+    @include('googletagmanager::body')
     <main>
         <div class="wrapper">
 

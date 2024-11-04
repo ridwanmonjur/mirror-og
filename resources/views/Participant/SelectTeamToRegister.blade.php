@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Team to Register</title>
@@ -12,6 +13,7 @@
 </head>
 
 <body>
+    @include('googletagmanager::body')
     @include('__CommonPartials.NavbarGoToSearchPage')
     <input type="hidden" id="eventUrl" value="{{ route('participant.event.view', $id) }}">
     <main>

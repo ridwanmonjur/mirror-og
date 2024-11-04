@@ -5,6 +5,7 @@ extract($dateArray);
 @endphp
 
 <body>
+    @include('googletagmanager::body')
         @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
         <div>
