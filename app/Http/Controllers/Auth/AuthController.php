@@ -191,8 +191,8 @@ class AuthController extends Controller
                     ]);
                 }
 
-                if ($user->role !== $userRoleCapital && $user->role !== 'ADMIN') {
-                    throw new ErrorException("Invalid Role for {$userRoleSentence}");
+                if ($user->role !== $roleCapital && $user->role !== 'ADMIN') {
+                    throw new ErrorException("Invalid Role for {$roleFirstCapital}");
                 }
 
                 $request->session()->regenerate();

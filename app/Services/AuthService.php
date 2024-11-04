@@ -23,13 +23,13 @@ use Laravel\Socialite\Facades\Socialite;
 
 class AuthService {
     
-    public function createUser(array $validatedData, string $userRoleCapital): User
+    public function createUser(array $validatedData, string $roleCapital): User
     {
         $user = new User([
             'name' => $validatedData['username'],
             'email' => $validatedData['email'],
             'password' => $validatedData['password'],
-            'role' => $userRoleCapital,
+            'role' => $roleCapital,
             'created_at' => now(),
         ]);
 

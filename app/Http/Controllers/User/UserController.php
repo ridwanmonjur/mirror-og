@@ -114,7 +114,7 @@ class UserController extends Controller
         //     'name' => 'user' . '122222222222',
         //     'email' => $validatedData['email'],
         //     'password' => $validatedData['password'],
-        //     'role' => $userRoleCapital,
+        //     'role' => $roleCapital,
         //     'created_at' => now(),
         // ]);
     }
