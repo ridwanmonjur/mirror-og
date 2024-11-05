@@ -4,6 +4,7 @@ import { initializeFirestore, memoryLocalCache, setDoc,   serverTimestamp,
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 import Alpine from 'alpinejs';
+import tippy from "tippy.js";
 window.Alpine = Alpine;
 
 
@@ -21,6 +22,79 @@ const app = initializeApp(firebaseConfig);
 const db = initializeFirestore(app, {
     localCache: memoryLocalCache(),
 });
+
+const parentElements = document.querySelectorAll(".first-item .popover-parent");
+parentElements?.forEach(parent => {
+    const contentElement = parent.querySelector(".popover-content");
+    const parentElement = parent.querySelector(".popover-button");
+    if (contentElement) {
+        window.addPopover(parentElement, contentElement, 'mouseenter');
+    }
+});
+
+function addAllTippy () {
+ 
+    const parentSecondElements = document.querySelectorAll(".middle-item");
+    parentSecondElements?.forEach(parent => {
+        const triggers = parent.querySelectorAll(".popover-button");
+        triggers.forEach((trigger) =>{
+            let triggerPositionId = trigger.dataset.position;
+            let triggerParentsPositionIds = previousValues[triggerPositionId];
+            
+            if (triggerParentsPositionIds && Array.isArray(triggerParentsPositionIds)) {
+                let triggerClassName = '.popover-middle-content.' + triggerParentsPositionIds.join(".");
+                let contentElement = document.querySelector(triggerClassName);
+               
+                window.addPopover(trigger, contentElement, 'mouseenter');
+            } 
+       })
+    });
+}
+
+
+async function  getAllMatchStatusesData() {
+  const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
+  const allMatchStatusesQ = await query(allMatchStatusesCollectionRef);
+  let allDataList = {};
+  await onSnapshot(allMatchStatusesQ, async (reportSnapshot) => {
+    reportSnapshot.docChanges().forEach( (change) => {
+        if (change.type === "added" || change.type === "modified") {
+          allDataList[change.doc.id] = change.doc.data();
+        }
+    });
+
+      
+    Object.entries(allDataList).forEach(([key, value]) => {
+      let dottedScoreContainer = document.querySelectorAll(`.${key}.popover-middle-content .dotted-score-container`);
+      console.log({dottedScoreContainer, value, key});
+      console.log({dottedScoreContainer, value, key});
+      console.log({dottedScoreContainer, value, key});
+      dottedScoreContainer.forEach((element, index) => {
+        element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
+          if (value.realWinners[dottedElementIndex]) {
+            if (value.realWinners[dottedElementIndex] == index) {
+              dottedElement.classList.remove('bg-secondary', 'bg-red', 'd-none');
+              dottedElement.classList.add("bg-success");
+            } else {
+              dottedElement.classList.remove('bg-secondary', 'bg-success', 'd-none');
+              dottedElement.classList.add("bg-red");
+            }
+          } else {
+            dottedElement.classList.remove('bg-success', 'bg-red', 'd-none');
+            dottedElement.classList.add('bg-secondary');
+          }
+        })
+      })
+    });
+
+    addAllTippy();
+
+  });
+
+}
+
+await getAllMatchStatusesData();
+
 
 
 
@@ -41,8 +115,8 @@ Alpine.data('alpineDataComponent', function () {
         reportUI: {
             matchNumber: 0,
             userTeamId,
-            teamNumber: null,
-            otherTeamNumber: null,
+            teamNumber: 0,
+            otherTeamNumber: 1,
             disabled: [false, false, false],
             statusText: 'Select a winner for Game 1'
         },
@@ -52,7 +126,6 @@ Alpine.data('alpineDataComponent', function () {
           realWinners: [null, null, null],
           userLevel: null,
           matchStatus: ['ONGOING', null, null],
-          dispute: [null, null, null],
           teams: [
             {
               winners:  [null, null, null],
@@ -81,71 +154,100 @@ Alpine.data('alpineDataComponent', function () {
     };
     return {
       ...initialData,
-    
       userLevelEnums,
+      calcScores(update) {
+        let score1 = update.realWinners?.reduce((acc, value) => acc + (value == "0" ? 1 : 0), 0);
+        let score2 = update.realWinners?.reduce((acc, value) => acc + (value == "1" ? 1 : 0), 0);
+        return [score1, score2];
+      },
         async onSubmitSelectTeamToWin() {
           let teamNumber = this.reportUI.teamNumber;
           let otherTeamNumber = this.reportUI.otherTeamNumber;
           let matchNumber = this.reportUI.matchNumber;
           let selectedTeamIndex = document.getElementById('selectedTeamIndex').value;
           console.log({teamNumber, otherTeamNumber, userLevel: this.report.userLevel, IS_ORGANIZER: this.userLevelEnums['IS_ORGANIZER']})
+          let update = {
+            organizerWinners: [...this.report.organizerWinners],
+            matchStatus: [...this.report.matchStatus],
+            realWinners: [...this.report.realWinners],
+            teams: [...this.report.teams],
+            position: this.report.position
+          };
+
           if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
-            this.report.organizerWinners[matchNumber] = selectedTeamIndex;
-            this.report.realWinners[matchNumber] = selectedTeamIndex;
+            update.organizerWinners[matchNumber] = selectedTeamIndex;
+            update.realWinners[matchNumber] = selectedTeamIndex;
+            update.score = this.calcScores(update);
+            console.log({update});
           }
 
           if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
-            this.report.teams[teamNumber].winners[matchNumber] = selectedTeamIndex;
+            update.teams[teamNumber].winners[matchNumber] = selectedTeamIndex;
             let otherTeamWinner = this.report.teams[otherTeamNumber].winners[matchNumber];
-            console.log({otherTeamWinner, teamNumber, otherTeamNumber, report: Alpine.raw(this.report)});
             if (otherTeamWinner) {
               if (otherTeamWinner === selectedTeamIndex) {
-                this.report.realWinners[matchNumber] = selectedTeamIndex;
+                update.realWinners[matchNumber] = selectedTeamIndex;
+                update.score = this.calcScores(update);
               } 
             }
 
-                console.log({otherTeamWinner, teamNumber, otherTeamNumber, report: Alpine.raw(this.report)});
-            }
+            console.log({otherTeamWinner, teamNumber, otherTeamNumber, report: Alpine.raw(this.report)});
+          }
 
-          await this.saveReport();
+          try {
+             await this.saveReport(update);
+           
+          } catch(error) {
+            window,toastError("Problem updating data");
+          }
+          
         },
         async onChangeTeamToWin() {
           window.Swal.fire({
-            title: 'Submitting a Dispute',
+            title: 'Changing the winner',
             html: `
-                Are you sure you want to change the winner>
+                Are you sure you want to change the winner?
             `,
             showCancelButton: true,
-            confirmButtonText: 'Submit Dispute',
+            confirmButtonText: 'Change Declaration',
             cancelButtonText: 'Back',
             padding: '2em',
-            confirmButtonColor: '#286281',
+            confirmButtonColor: '#43A4D7',
             reverseButtons: true,
           }).then(async (result) => {
               if (result.isConfirmed) {
                 let matchNumber = this.reportUI.matchNumber;
 
+                let update = {
+                  organizerWinners: [...this.report.organizerWinners],
+                  matchStatus: [...this.report.matchStatus],
+                  realWinners: [...this.report.realWinners],
+                  teams: [...this.report.teams],
+                  position: this.report.position
+                };
+
                 if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
                   let otherIndex = this.report.realWinners[matchNumber] === "1" ? "0" : "1"; 
-                  this.report.organizerWinners[matchNumber] = otherIndex;
-                  this.report.realWinners[matchNumber] = otherIndex;
-                }
+                  update.organizerWinners[matchNumber] = otherIndex;
+                  update.realWinners[matchNumber] = otherIndex;
+                  update.score = this.calcScores(update);
+
+                } 
       
                 if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
                   let teamNumber = this.reportUI.teamNumber;
                   let otherTeamNumber = this.reportUI.otherTeamNumber;
                   let otherIndex = this.report.teams[otherTeamNumber].winners[matchNumber];
                   if (otherIndex) {
-                    this.report.teams[teamNumber].winners[matchNumber] = otherIndex;
-                    this.report.realWinners[matchNumber] = otherIndex;
+                    update.teams[teamNumber].winners[matchNumber] = otherIndex;
+                    update.realWinners[matchNumber] = otherIndex;
+                    update.score = this.calcScores(update);
                   }
                 }
-      
-                await this.saveReport();
+
+                await this.saveReport(update);
               }
           });
-        
-         
         },
         async resolveDisputeForm(event) {
           event.preventDefault();
@@ -166,8 +268,6 @@ Alpine.data('alpineDataComponent', function () {
             console.error(id, dispute_matchNumber, resolution_resolved_by);
             return;
           }
-
-       
 
           if (!resolution_winner) {
             resolution_winner = already_winner == '0' ? '1' : '0';  
@@ -236,23 +336,47 @@ Alpine.data('alpineDataComponent', function () {
           button.classList.add('bg-primary', 'text-light');
           document.getElementById('resolution_winner_input').value = teamNumber;
         },
-        async saveReport() {
+        async saveReport(report) {
           const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
           const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`; 
           const docRef = doc(allMatchStatusesCollectionRef, customDocId);
           
           try {
-            await setDoc(docRef, {
-              organizerWinners: this.report.organizerWinners,
-              status: this.report.matchStatus,
-              winners: this.report.realWinners,
-              score: [this.report.teams[0].score, this.report.teams[1].score],
-              team1Winners: this.report.teams[0].winners,
-              team2Winners: this.report.teams[1].winners,
-            });
+            let _report = {};
+            _report['score'] = [report.score[0] ?? "0" , report.score[1] ?? "0"];
+            _report['matchStatus'] = report.matchStatus;
+            _report['realWinners'] = report.realWinners;
+            _report['organizerWinners'] = report.organizerWinners;
+            _report['team1Winners'] = report.teams[0]?.winners;
+            _report['team2Winners'] = report.teams[1]?.winners;
+            console.log({_report});
+            console.log({_report});
+            console.log({_report});
+            await setDoc(docRef, _report);
             console.log("Document written with ID: ", customDocId);
             console.log({array: Alpine.raw(this.report)});
-            if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) 
+             
+            this.report = {
+              ...this.report,
+              organizerWinners: _report.organizerWinners,
+              id: _report['id'],
+              matchStatus: _report.matchStatus,
+              realWinners: _report.realWinners,
+              teams: [
+                {
+                  ...this.report.teams[0],
+                  score: _report.score[0],
+                  winners: _report.team1Winners
+                },
+                {
+                  ...this.report.teams[1],
+                  score: _report.score[1],
+                  winners: _report.team2Winners
+                }
+              ]
+            }; 
+
+            if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER'])
             {
               this.setDisabled();
             }
@@ -313,22 +437,27 @@ Alpine.data('alpineDataComponent', function () {
         getDisabled() {
           return this.reportUI.disabled[this.reportUI.matchNumber] ;
         },
-        setDisabled() {
+        setDisabled(reportUI = {}) {
           let disabledList = [false, false, false];
-          for (let index = 0; index <= 2; index++) {
-            disabledList[index] = 
-              this.report.teams[this.reportUI.teamNumber].winners[(this.reportUI.matchNumber-1) % 2] === null;
-          }
 
-          this.reportUI.disabled = [...disabledList];
+          disabledList[1] = 
+            this.report.teams[this.reportUI.teamNumber]?.winners[0] === null;
+          disabledList[2] = 
+            this.report.teams[this.reportUI.teamNumber]?.winners[1] === null; 
+
+          this.reportUI = {
+            ...reportUI,
+            disabled: [...disabledList]
+          };
         },
         init() {
-            this.getAllMatchStatusesData();
             window.addEventListener('currentReportChange', (event) => {
-             
-                let dataset = event?.detail ?? null;
 
-                if (dataset.position === this.report.position 
+              let newReport = null, newReportUI = null;
+             
+              let dataset = event?.detail ?? null;
+
+              if (dataset && dataset?.position === this.report.position 
                   && dataset.team1_position == this.report.teams[0].position 
                   && dataset.team2_position == this.report.teams[1].position 
                 ) {
@@ -341,18 +470,27 @@ Alpine.data('alpineDataComponent', function () {
               if (this.subscribeToCurrentReportDisputesSnapshot) 
                 this.subscribeToCurrentReportDisputesSnapshot();
 
-                let teamNumber = dataset.user_level == this.userLevelEnums['IS_TEAM1'] ? 0 :
-                  (dataset.user_level == this.userLevelEnums['IS_TEAM2'] ? 1 : 0 );
+              let teamNumber = dataset?.user_level == this.userLevelEnums['IS_TEAM1'] ? 0 :
+                (dataset.user_level == this.userLevelEnums['IS_TEAM2'] ? 1 : 0 );
 
-                let otherTeamNumber =  teamNumber === 0 ? 1 : 0;
-              
-                this.reportUI = {
+              let otherTeamNumber =  teamNumber === 0 ? 1 : 0;
+            
+              if (!dataset) {
+                newReport = {
+                  ...initialData.report,
+                };
+
+                newReportUI = {
+                  ...initialData.reportUI,
+                }
+              } else {
+                newReportUI = {
                   ...initialData.reportUI,
                   teamNumber, 
-                  otherTeamNumber
+                  otherTeamNumber,
                 }
 
-                this.report = {
+                newReport = {
                   ...initialData.report,
                   position: dataset.position,
                   userLevel: dataset.user_level,
@@ -374,31 +512,16 @@ Alpine.data('alpineDataComponent', function () {
                         name: dataset.team2_teamName 
                       }
                     ],
-                      
                   };
+                }
 
-                this.getCurrentReportSnapshot(dataset.classNamesWithoutPrecedingDot);
+                this.getCurrentReportSnapshot(dataset.classNamesWithoutPrecedingDot, newReport, newReportUI);
               });
             },
             destroy() {
                 if (this.subscribeToMatchStatusesSnapshot) this.subscribeToMatchStatusesSnapshot();
             },
-            getAllMatchStatusesData() {
-              const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
-              const allMatchStatusesQ = query(allMatchStatusesCollectionRef);
-              let allDataList = {};
-              let subscribeToMatchStatusesSnapshot = onSnapshot(allMatchStatusesQ, async (reportSnapshot) => {
-                  reportSnapshot.docChanges().forEach( (change) => {
-                      if (change.type === "added" || change.type === "modified") {
-                        allDataList[change.doc.id] = change.doc.data();
-                      }
-                  });
-                  
-                  console.log(allDataList);
-              });
-  
-              this.subscribeToMatchStatusesSnapshot = subscribeToMatchStatusesSnapshot;
-          },
+            
           getCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot) {
             const disputesRef = collection(db, `/event/${eventId}/disputes`);
             const disputeQuery = query(
@@ -414,16 +537,10 @@ Alpine.data('alpineDataComponent', function () {
                 disputeSnapshot.docChanges().forEach( (change) => {
                   let data = change.doc.data();
                   let id = change.doc.id;
-                  if (change.type === "added") {
+                  if (change.type === "added" || change.type === "modified") {
                     allDisputes[data['match_number']] = {
                       ...data, id
                     };
-                  }
-
-                  if (change.type === "modified") {
-                    this.dispute[data['match_number']] = {
-                      ...data, id
-                    }
                   }
                 });
 
@@ -434,7 +551,7 @@ Alpine.data('alpineDataComponent', function () {
             this.subscribeToCurrentReportDisputesSnapshot = subscribeToCurrentReportDisputesSnapshot;
           },
 
-          getCurrentReportSnapshot(classNamesWithoutPrecedingDot) {
+          getCurrentReportSnapshot(classNamesWithoutPrecedingDot, newReport, newReportUI) {
             const currentReportRef = doc(db, `event/${eventId}/match_status`, classNamesWithoutPrecedingDot);
             let subscribeToCurrentReportSnapshot = onSnapshot(
               currentReportRef, 
@@ -442,56 +559,85 @@ Alpine.data('alpineDataComponent', function () {
                   if (reportSnapshot.exists()) {
                     let data = reportSnapshot.data();
                     let { 
-                        score, 
-                        status: matchStatus, 
-                        winners: realWinners, 
+                        score,
+                        matchStatus, 
+                        realWinners, 
                         organizerWinners,
                         team1Winners,
                         team2Winners,
                       } = data;
+                    
+                      console.log({ score, 
+                        matchStatus, 
+                        realWinners, 
+                        organizerWinners,
+                        team1Winners,
+                        team2Winners});
+
+                    if (!score) {
+                      score = [0, 0]; 
+                    }
 
                     this.report = {
-                      ...this.report,
+                      ...newReport,
                       organizerWinners,
                       id: reportSnapshot.id,
                       matchStatus,
                       realWinners,
                       teams: [
                         {
-                          ...this.report.teams[0],
+                          ...newReport.teams[0],
+                          winners: team1Winners,
                           score: score[0],
-                          winners: team1Winners
-
                         },
                         {
-                          ...this.report.teams[1],
+                          ...newReport.teams[1],
+                          winners: team2Winners,
                           score: score[1],
-                          winners: team2Winners
                         }
                       ]
                     }
 
-                    if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) 
+                    console.log({reportSnapshot: this.report});
+                    console.log({reportSnapshot: this.report});
+                    console.log({reportSnapshot: this.report});
+                    console.log({reportSnapshot: this.report});
+
+                    if (this.report.userLevel != this.userLevelEnums['IS_ORGANIZER']) 
                     {
-                      this.setDisabled();
+                      this.setDisabled(newReportUI);
                     }
 
+                    let dottedScoreContainer = document.querySelectorAll('#reportModal .dotted-score-container');
+                    dottedScoreContainer.forEach((element, index) => {
+                        element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
+                          if (this.report.realWinners[dottedElementIndex]) {
+                            if (this.report.realWinners[dottedElementIndex] == index) {
+                              dottedElement.classList.remove('bg-secondary', 'bg-red', 'd-none');
+                              dottedElement.classList.add("bg-success");
+                            } else {
+                              dottedElement.classList.remove('bg-secondary', 'bg-success', 'd-none');
+                              dottedElement.classList.add("bg-red");
+                            }
+                          } else {
+                            dottedElement.classList.remove('bg-success', 'bg-red', 'd-none');
+                            dottedElement.classList.add('bg-secondary');
+                          }
+                        })
+                    })
+
                     this.getCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
-                   
 
                 } else {
-                  let teamNumber = this.report.userLevel == this.userLevelEnums['IS_TEAM1'] ? 0 :
-                    (this.report.userLevel == this.userLevelEnums['IS_TEAM2'] ? 1 : 0 );
+                  this.report = {
+                    ...newReport
+                  };
 
-                  let otherTeamNumber =  teamNumber === 0 ? 1 : 0;
-                
                   this.reportUI = {
-                    ...initialData.reportUI,
-                    teamNumber, 
-                    otherTeamNumber,
-                    statusText: "Select a winner for Game 1"
+                    ...newReportUI,
                   }
-                  console.log("No such document!");
+
+                  this.dispute = [null, null, null];
                 }
               }
             );

@@ -32,9 +32,10 @@
                 >
             </div>
              <p class="mt-1 mb-0 py-0">{{$teamName1}}</p>
-            <div class="mt-1 mb-2 py-0">
-                <div class="d-inline-block rounded-circle me-3 bg-secondary" style="width: 6px; height: 6px;"></div>
-                <div class="d-inline-block rounded-circle bg-secondary" style="width: 6px; height: 6px;"></div> 
+            <div class="{{ 'mt-1 mb-2 py-0 dotted-score-container ' . $position1 . ' ' . $position2  }}">
+                <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
+                <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
+                <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score d-none"></div>
             </div>
         </div>
         <div class="col-12 col-lg-4">
@@ -52,9 +53,10 @@
                 >
             </div>
             <p class="mt-1 mb-2 py-0">{{$teamName2}}</p>
-            <div class="mt-1 mb-2 py-0 ">
-                <div class="d-inline-block rounded-circle me-3 bg-secondary" style="width: 6px; height: 6px;"></div>
-                <div class="d-inline-block rounded-circle  bg-secondary" style="width: 6px; height: 6px;"></div> 
+            <div class="{{ 'mt-1 mb-2 py-0 dotted-score-container ' . $position1 . ' ' . $position2 }}">
+                <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
+                <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
+                <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score d-none"></div>
             </div>
         </div>
     </div>

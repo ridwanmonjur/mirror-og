@@ -561,6 +561,7 @@
         <br> <br>
         {{-- </form> --}}
     </main>
+    @include('__CommonPartials.Cropper')
 
 </body>
 @livewireScripts

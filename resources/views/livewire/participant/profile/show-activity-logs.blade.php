@@ -15,6 +15,7 @@
     @endif
     @if($hasMore)
         <div class="text-center">
+        
             <button wire:click="loadActivityLogs()" class="btn btn-link btn-sm text-primary">
                 Load More
             </button>

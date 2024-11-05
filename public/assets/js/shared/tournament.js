@@ -124,38 +124,10 @@ function reportModalShow(event) {
     };
 }
 
-addOnLoad( () => {
-    const parentElements = document.querySelectorAll(".first-item .popover-parent");
-    parentElements?.forEach(parent => {
-        const contentElement = parent.querySelector(".popover-content");
-        const parentElement = parent.querySelector(".popover-button");
-        if (contentElement) {
-            window.addPopover(parentElement, contentElement, 'mouseenter');
-        }
-    });
-
-    const parentSecondElements = document.querySelectorAll(".middle-item");
-    parentSecondElements?.forEach(parent => {
-        const triggers = parent.querySelectorAll(".popover-button");
-        triggers.forEach((trigger, index) =>{
-            let triggerPositionId = trigger.dataset.position;
-            let triggerParentsPositionIds = previousValues[triggerPositionId];
-            
-            if (triggerParentsPositionIds && Array.isArray(triggerParentsPositionIds)) {
-                let triggerClassName = '.popover-middle-content.' + triggerParentsPositionIds.join(".");
-                let contentElement = document.querySelector(triggerClassName);
-               
-                window.addPopover(trigger, contentElement, 'mouseenter');
-            } 
-       })
-    });
-
-    var myModal = new bootstrap.Modal(document.getElementById('reportModal'), {});
-    // myModal.show();
-
-   
+// addOnLoad( () => {
     
-});
+ 
+// });
 
 let selectMap = {};
 document.querySelectorAll('[data-dynamic-select]').forEach(select => {

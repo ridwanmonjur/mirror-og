@@ -1,25 +1,17 @@
-// import Swup from 'swup';
-// import SwupHeadPlugin from '@swup/head-plugin';
-// import SwupA11yPlugin from '@swup/a11y-plugin';
-
-// new Swup({
-//     plugins: [new SwupHeadPlugin(), new SwupA11yPlugin()]
-// });
-
 
 import Swal from 'sweetalert2'
- import * as Popper from '@popperjs/core'
- window.Popper = Popper
- import * as bootstrap from 'bootstrap'
- window.bootstrap = bootstrap;
- 
-window.loadBearerHeader = function() {
+import * as Popper from '@popperjs/core'
+window.Popper = Popper
+import * as bootstrap from 'bootstrap'
+window.bootstrap = bootstrap;
+
+window.loadBearerHeader = function () {
     return {
         credentials: 'include'
     };
 };
 
-window.loadBearerCompleteHeader = function() {
+window.loadBearerCompleteHeader = function () {
     return {
         credentials: 'include',
         'Accept': 'application/json',
@@ -52,7 +44,7 @@ window.toastWarningAboutRole = function (button, message) {
     button.style.cursor = 'not-allowed';
 }
 
-window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => { 
+window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => {
     Swal.fire({
         icon: "warning",
         title: title,
@@ -87,16 +79,16 @@ window.loadMessage = () => {
             confirmButtonColor: "#43A4D7",
             text: message,
             timer: 6000
-          });
-     
+        });
+
     } else if (error === 'true') {
-            Swal.fire({
-                confirmButtonColor: "#43A4D7",
-                icon: "error",
-                title: "Oops...",
-                text: message ?? "Something went wrong...",
-                footer: 'Please try again following our feedback.'
-            });
+        Swal.fire({
+            confirmButtonColor: "#43A4D7",
+            icon: "error",
+            title: "Oops...",
+            text: message ?? "Something went wrong...",
+            footer: 'Please try again following our feedback.'
+        });
     }
 
     localStorage.removeItem('success');
@@ -105,8 +97,6 @@ window.loadMessage = () => {
     localStorage.removeItem('tab');
 }
 
-// import 'use-bootstrap-select/dist/use-bootstrap-select.css'
-// import UseBootstrapSelect from 'use-bootstrap-select'
-// window.UseBootstrapSelect = UseBootstrapSelect;
+
 window.Toast = Toast;
 window.Swal = Swal;

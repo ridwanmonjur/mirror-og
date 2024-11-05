@@ -648,3 +648,4 @@
             .replace(':id', userId);
     }
 </script>
+@include('__CommonPartials.Cropper')

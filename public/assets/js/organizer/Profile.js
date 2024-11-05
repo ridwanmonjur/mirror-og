@@ -327,8 +327,6 @@ function visibleElements() {
 window.onload = () => { 
     localStorage.setItem('isInited', "false");
     
-    
-
      window.setupFileInputEditor('#changeBackgroundBanner', (file) => {
         if (file) {
             var cachedImage = URL.createObjectURL(file);

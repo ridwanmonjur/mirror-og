@@ -1,37 +1,10 @@
-import { openDefaultEditor } from '@pqina/pintura/pintura.js';
 import Cropper from 'cropperjs';
 
-// Create necessary HTML elements
-const container = document.createElement('div');
-container.className = 'cropper-container';
-container.style.maxWidth = '500px';
-container.style.margin = '20px auto';
+const imagePreview = document.getElementById('imagePreview');
+const cropButton = document.getElementById('cropButton');
+const modalElement = document.getElementById('cropperModal');
 
-const fileInput = document.createElement('input');
-fileInput.type = 'file';
-fileInput.accept = 'image/*';
-fileInput.className = 'file-input';
-
-const previewContainer = document.createElement('div');
-previewContainer.style.marginTop = '20px';
-previewContainer.style.height = '400px';
-previewContainer.style.display = 'none';
-
-const imagePreview = document.createElement('img');
-imagePreview.style.maxWidth = '100%';
-imagePreview.style.display = 'block';
-
-const cropButton = document.createElement('button');
-cropButton.textContent = 'Crop Image';
-cropButton.style.marginTop = '10px';
-cropButton.style.display = 'none';
-
-// Add elements to container
-container.appendChild(fileInput);
-previewContainer.appendChild(imagePreview);
-container.appendChild(previewContainer);
-container.appendChild(cropButton);
-document.body.appendChild(container);
+let listenerAdded = false;
 
 let cropper = null;
 
@@ -43,69 +16,72 @@ function setupFileInputEditor(selector, cb) {
     return;
   }
 
-  fileInput.addEventListener('change', () => {
+  fileInput.addEventListener('input', () => {
     if (!fileInput.files.length) return;
     let file = fileInput.files[0];
-    console.log({file})
-    console.log({file})
-    console.log({file})
     const reader = new FileReader();
-    reader.onload = function(e) {
-      console.log({file})
-      console.log({file})
-      console.log({file})
-  
+    reader.onload = function (e) {
+
+      if (modalElement) {
+        bootstrap.Modal.getOrCreateInstance(modalElement).show();
+      }
+
       imagePreview.src = e.target.result;
-        previewContainer.style.display = 'block';
-        cropButton.style.display = 'block';
-        
-        // Destroy existing cropper if it exists
-        if (cropper) {
-            cropper.destroy();
-        }
-        
-        // Initialize Cropper.js
-        cropper = new Cropper(imagePreview, {
-            aspectRatio: 4/1, // 1:1 ratio
-            viewMode: 1,
-            dragMode: 'move',
-            autoCropArea: 0.8,
-            restore: false,
-            guides: true,
-            center: true,
-            highlight: true,
-            cropBoxMovable: true,
-            cropBoxResizable: true,
-            toggleDragModeOnDblclick: true,
-        });
+
+      if (cropper) {
+        cropper.destroy();
+      }
+
+      cropper = new Cropper(imagePreview, {
+        aspectRatio: 4 / 1,
+        viewMode: 1,
+        dragMode: 'move',
+        restore: false,
+        guides: true,
+        center: true,
+        highlight: true,
+        cropBoxMovable: true,
+        cropBoxResizable: true,
+        toggleDragModeOnDblclick: true,
+        minContainerWidth: 800,
+        minContainerHeight: 500,
+ 
+      });
     };
     reader.readAsDataURL(file);
+
+    if (listenerAdded) return;
+
+    cropButton.addEventListener('click', function () {
+      if (!cropper) return;
+
+      const canvas = cropper.getCroppedCanvas();
+   
+
+      canvas.toBlob(function (blob) {
+        const croppedFile = new File([blob], file.name, {
+          type: 'image/png',
+          lastModified: new Date().getTime()
+        });
+  
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(croppedFile);
+        
+        fileInput.files = dataTransfer.files;
+        cb(blob);
+
+        window.Toast.fire({
+          icon: 'success',
+          text: "Please preview your file! And don't forget to save changes"
+        })
+
+        bootstrap.Modal.getOrCreateInstance(modalElement).hide();
+      }, 'image/png');
+
+    });
+    listenerAdded = true;
   });
 }
-
-cropButton.addEventListener('click', function() {
-  if (!cropper) return;
-  
-  // Get cropped canvas
-  const canvas = cropper.getCroppedCanvas({
-      width: 300,  // Output width
-      height: 300, // Output height
-  });
-  
-  // Convert to blob
-  canvas.toBlob(function(blob) {
-      // Create download link
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'cropped-image.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-  }, 'image/png');
-});
-
 
 
 window.setupFileInputEditor = setupFileInputEditor;

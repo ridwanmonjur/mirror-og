@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'asset_url'  => env("APP_URL") . '/public',
 
 
     /*
@@ -116,7 +115,7 @@ return [
     |
     */
 
-    'inject_assets' => true,
+    'inject_assets' => false,
 
     /*
     |---------------------------------------------------------------------------

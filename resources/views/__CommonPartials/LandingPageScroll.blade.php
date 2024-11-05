@@ -11,6 +11,7 @@
     @endphp
     <div class="{{'rounded-box-' . strtoLower($event->tier?->eventTier) . ' event' }}" 
         style="background-color: rgba(255, 255, 255, 0.6);"
+        
     >
         <a class="d-block" href="/event/{{ $event['id'] }}">
             <div style="display: flex; justify-content: center;">
