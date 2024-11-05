@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FriendRequest;
-use App\Http\Requests\LikeRequest;
-use App\Http\Requests\UpdateParticipantsRequest;
+use App\Http\Requests\User\FriendRequest;
+use App\Http\Requests\User\LikeRequest;
+use App\Http\Requests\User\UpdateParticipantsRequest;
 use App\Models\ActivityLogs;
 use App\Models\EventInvitation;
 use App\Models\Friend;

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MatchUpsertRequest;
+use App\Http\Requests\Match\MatchUpsertRequest;
 use App\Jobs\HandleResults;
 use App\Models\Achievements;
-use App\Models\ActivityLogs;
 use App\Models\Award;
 use App\Models\AwardResults;
 use App\Models\EventDetail;

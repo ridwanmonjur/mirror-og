@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateTeamRequest;
+use App\Http\Requests\Team\UpdateTeamRequest;
 use App\Models\JoinEvent;
 use App\Models\OrganizerFollow;
 use App\Models\RosterCaptain;
