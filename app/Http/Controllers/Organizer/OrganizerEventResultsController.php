@@ -306,9 +306,7 @@ class OrganizerEventResultsController extends Controller
 
             $team1 = $validatedData['team1_id'] ? Team::find($validatedData['team1_id']) : null;
             $team2 = $validatedData['team2_id'] ? Team::find($validatedData['team2_id']) : null;
-            if ($team1->id === $team2->id) {
-                throw new Exception("Same teams can't be provided!");
-            }
+           
             $event = EventDetail::findOrFail($validatedData['event_details_id']);
             $match->fill($validatedData);
             $match->event_details_id = $event->id;
