@@ -316,7 +316,7 @@ class OrganizerEventResultsController extends Controller
 
             if ($team1 && $team2) {
                 $joinEventId = JoinEvent::where('event_details_id', $event->id)
-                    ->whereIn('team_id', [$team1->id, $team2->id])
+                    ->whereIn('team_id', [$team1?->id, $team2?->id])
                     ->get()
                     ->pluck(value: 'id');
             } else {
