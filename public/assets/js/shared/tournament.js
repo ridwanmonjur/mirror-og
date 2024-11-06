@@ -160,9 +160,13 @@ submitBtnElement?.addEventListener('click', function(event) {
                 let isUpperBracketFirstRound = false;
                 let {team1, match, team2} = data.data;
                 let currentMatchDiv = document.querySelector(`.${match.team1_position}.${match.team2_position}`);
-                if (match.type==="upperBracket" && match.inner_stage_name === "eliminator1") {
+                if (match.stage_name == "upperBracket" && match.inner_stage_name == "eliminator1") {
                     isUpperBracketFirstRound = true;
                 }
+
+                console.log({isUpperBracketFirstRound})
+                console.log({isUpperBracketFirstRound})
+                console.log({isUpperBracketFirstRound})
 
                 let currentMatch = JSON.parse(currentMatchDiv.dataset.bracket);
                 currentMatch.id = match.id;
@@ -192,10 +196,15 @@ submitBtnElement?.addEventListener('click', function(event) {
                 
                 const parentElements = currentMatchDiv.querySelectorAll(".popover-parent");
                 
-                // can't update table so not done
-                let imgs = currentMatchDiv.querySelectorAll(`.popover-button img`);
-                console.log({imgs});
-                let smalls = currentMatchDiv.querySelectorAll(`small.replace_me_with_image`);
+                let imgs = null, smalls = null;
+                if (isUpperBracketFirstRound) {
+                    imgs = currentMatchDiv.querySelectorAll(`img.popover-button`);
+                    smalls = currentMatchDiv.querySelectorAll(`.popover-button.replace_me_with_image`);
+                } else {
+                    imgs = currentMatchDiv.querySelectorAll(`.popover-button img`);
+                    smalls = currentMatchDiv.querySelectorAll(`small.replace_me_with_image`);
+                }
+                 
                 
                 for (let index=0; index <2; index++) {
                     let banner = index ? team2.teamBanner : team1.teamBanner;
