@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('matches', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('order');
-            $table->unsignedBigInteger('team1_id');
-            $table->unsignedBigInteger('team2_id');
+            $table->unsignedBigInteger('team1_id')->nullable();
+            $table->unsignedBigInteger('team2_id')->nullable();
             $table->unsignedBigInteger('event_details_id');
             $table->unsignedInteger('team1_score')->default(0);
             $table->unsignedInteger('team2_score')->default(0);
