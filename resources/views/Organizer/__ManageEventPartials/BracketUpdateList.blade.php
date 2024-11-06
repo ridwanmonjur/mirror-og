@@ -11,7 +11,8 @@
                     @foreach ($bracketList['upperBracket']['eliminator1'] as $order => $bracket)
                         <x-brackets.bracket-first-item :bracket="$bracket" :stageName="'upperBracket'" :innerStageName="'eliminator1'"
                             :order="$order" 
-                            :wire:key="'upperBracket'. 'eliminator1'. $loop->index" />
+                            :wire:key="'upperBracket'. 'eliminator1'. $loop->index" 
+                        />
                     @endforeach
                 </div>
             </div>
@@ -32,7 +33,8 @@
                             @foreach ($bracketList['upperBracket'][$stage] as $order => $bracket)
                                 <x-brackets.bracket-middle-item :bracket="$bracket" :stageName="'upperBracket'" :innerStageName="$stage"
                                     :order="$order" 
-                                    :wire:key="'upperBracket'. $stage. $loop->index" />
+                                    :wire:key="'upperBracket'. $stage. $loop->index" 
+                                />
                             @endforeach
                         </div>
                     </div>
@@ -69,7 +71,8 @@
                         @foreach ($bracketList['lowerBracket'][$stage] as $order => $bracket)
                             <x-brackets.bracket-middle-item :bracket="$bracket" :stageName="'lowerBracket'" :innerStageName="$stage"
                                 :order="$order" 
-                                :wire:key="'lowerBracket'. $stage. $loop->index" />
+                                :wire:key="'lowerBracket'. $stage. $loop->index" 
+                            />
                         @endforeach
                     </div>
                 </div>

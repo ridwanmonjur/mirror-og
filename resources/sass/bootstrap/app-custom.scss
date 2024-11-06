@@ -1,14 +1,4 @@
-/*! purgecss start ignore */
-html.is-changing main {
-    transition: opacity 0.5s;
-    opacity: 0.5;
-}
-
-html.is-animating main {
-    transition: opacity 0s;
-    opacity: 0;
-}
-  
+@import 'aos/dist/aos.css';
 
 .text-center {
     text-align: center;

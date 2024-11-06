@@ -15,7 +15,6 @@ bracketItemList.forEach(item => {
 
 var bracketBoxList = document.querySelectorAll('.codeCANcode .tournament-bracket__box.codeCANcode');
 bracketBoxList.forEach(item => {
-   
     item.style.setProperty('--border2-color', 'red');
 });
 
@@ -25,7 +24,6 @@ function updateModalShow(event) {
     const button = event.currentTarget;
     let { team1_id, team2_id } = button.dataset;
     let parentWithDataset = document.querySelector(`.tournament-bracket__match.${team1_id}.${team2_id}`);
-    console.log({button: `.tournament-bracket__match.${team1_id}.${team2_id}`})
 
     if (
         parentWithDataset === null || 
@@ -124,38 +122,10 @@ function reportModalShow(event) {
     };
 }
 
-addOnLoad( () => {
-    const parentElements = document.querySelectorAll(".first-item .popover-parent");
-    parentElements?.forEach(parent => {
-        const contentElement = parent.querySelector(".popover-content");
-        const parentElement = parent.querySelector(".popover-button");
-        if (contentElement) {
-            window.addPopover(parentElement, contentElement, 'mouseenter');
-        }
-    });
-
-    const parentSecondElements = document.querySelectorAll(".middle-item");
-    parentSecondElements?.forEach(parent => {
-        const triggers = parent.querySelectorAll(".popover-button");
-        triggers.forEach((trigger, index) =>{
-            let triggerPositionId = trigger.dataset.position;
-            let triggerParentsPositionIds = previousValues[triggerPositionId];
-            
-            if (triggerParentsPositionIds && Array.isArray(triggerParentsPositionIds)) {
-                let triggerClassName = '.popover-middle-content.' + triggerParentsPositionIds.join(".");
-                let contentElement = document.querySelector(triggerClassName);
-               
-                window.addPopover(trigger, contentElement, 'mouseenter');
-            } 
-       })
-    });
-
-    var myModal = new bootstrap.Modal(document.getElementById('reportModal'), {});
-    // myModal.show();
-
-   
+// addOnLoad( () => {
     
-});
+ 
+// });
 
 let selectMap = {};
 document.querySelectorAll('[data-dynamic-select]').forEach(select => {
@@ -221,7 +191,6 @@ submitBtnElement?.addEventListener('click', function(event) {
                 }
                 
                 const parentElements = currentMatchDiv.querySelectorAll(".popover-parent");
-                console.log({parentElements});
                 
                 // can't update table so not done
                 let imgs = currentMatchDiv.querySelectorAll(`.popover-button img`);
@@ -233,7 +202,6 @@ submitBtnElement?.addEventListener('click', function(event) {
 
                     if (imgs[index] && 'src' in imgs[index]) {
                         imgs[index].src =  `/storage/${banner}`;
-                        console.log({banner});
                     } else {
                         let small = smalls[index];
                          if (small) {
@@ -242,17 +210,15 @@ submitBtnElement?.addEventListener('click', function(event) {
                             img.src = `/storage/${banner}`;
                             img.style.width = '100%';
                             img.height = '25';
-                             img.onerror = function() {
+                            img.onerror = function() {
                                 this.src='/assets/images/404.png';
                             };
 
                             img.className = 'popover-button position-absolute d-none-when-hover object-fit-cover me-2';
                             img.alt = 'Team View';
                             img.style.zIndex = '99';
-                            console.log({img})
                         }
 
-                        console.log({banner2: banner});
 
                     }
                 }
@@ -297,7 +263,6 @@ submitBtnElement?.addEventListener('click', function(event) {
                     parentElements.forEach(parent => {
                         const contentElement = parent.querySelector(".popover-content");
                         const parentElement = parent.querySelector(".popover-button");
-                        console.log({contentElement, parentElement});
                         if (contentElement) {
                             window.addPopover(parentElement, contentElement, 'mouseenter');
                         }

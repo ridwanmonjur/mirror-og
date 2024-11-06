@@ -586,7 +586,10 @@
         </div>
 
     </main>
+    @livewireScripts
 
 </body>
 @include('Participant.__ProfilePartials.Scripts')
+@include('__CommonPartials.Cropper')
+
 </html>

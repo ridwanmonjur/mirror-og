@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateOrganizersRequest;
+use App\Http\Requests\User\UpdateOrganizersRequest;
 use App\Models\Address;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;

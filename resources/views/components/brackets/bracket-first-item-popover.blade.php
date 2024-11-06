@@ -8,7 +8,7 @@
 ])
 
 <div
-    class="tournament-bracket__box popover-parent position-relative {{ $position }} tournament bg-light"
+    class="tournament-bracket__box popover-button position-relative {{ $position }} tournament bg-light"
     style="width: 32px; height: 28px;"
 >
     <div class="popover-content d-none" style="opacity: 1; z-index: 999 !important;">
@@ -45,7 +45,9 @@
     @if ($teamId)
         <img src="{{ asset('storage/' . $teamBanner) }}" width="100%" height="25"
             onerror="this.src='{{ asset('assets/images/404.png') }}';"
-            class="popover-button position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
+            class="{{ ' position-absolute d-none-when-hover object-fit-cover me-2 ' 
+                    . 'data-position-'. $position }}" 
+            alt="Team View"
             style="z-index: 99;"
             data-position="{{$position}}"
             onclick="reportModalShow(event);" 

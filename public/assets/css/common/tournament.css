@@ -4,7 +4,10 @@
     padding: 0;
 }
 
-
+.dotted-score {
+    width: 6px;
+    height: 6px;
+}
 
 .tippy-box[data-theme~='light'] {
     background-color: transparent !important;

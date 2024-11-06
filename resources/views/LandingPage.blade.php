@@ -17,7 +17,8 @@
     @include('googletagmanager::body')
     @include('__CommonPartials.NavbarGoToSearchPage', ['search' => true ])
 
-    <main>
+    <main 
+    >
         <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
         
         <section class="hero">
@@ -26,7 +27,8 @@
                 src="{{ asset('/assets/images/homepage new header.png') }}" alt="">
         </section>
 
-        <div class="text__middle">
+        <div class="text__middle"
+        >
             <p class="head">
             @if (empty(app('request')->input('search')))  
             What's happening?
@@ -36,7 +38,9 @@
             </p>
         </div>
 
-        <section class="featured-events scrolling-pagination">
+        <section 
+            class="featured-events scrolling-pagination"
+        >
             @include('__CommonPartials.LandingPageScroll')
         </section>
         <div class="no-more-data d-none"></div>

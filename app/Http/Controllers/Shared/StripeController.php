@@ -34,10 +34,6 @@ class StripeController extends Controller
                     && $eventType === "normal";
             }
 
-            // if ($isParticipant && $eventType === "closed") {
-                // TODO THROW ERROR NOW'S TOO EARLY OR TOO LATE TO REGISTER
-            // } 
-
             $user = auth()->user()?->fresh();
             $isEmptyStripeCustomerId = empty($user->stripe_customer_id);
             if ($isEmptyStripeCustomerId) {
