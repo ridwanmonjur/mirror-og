@@ -92,13 +92,13 @@ function addDotsToContainer (key, value) {
 
 
 
-async function  getAllMatchStatusesData() {
+ function  getAllMatchStatusesData() {
   const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
-  const allMatchStatusesQ = await query(allMatchStatusesCollectionRef);
+  const allMatchStatusesQ =  query(allMatchStatusesCollectionRef);
   let allDataList = {}, modifiedDataList = {}, newDataList = {};
   let newClassList = [], modifiedClassList = [];
   let isAddedActionType = true, isLoadedActionType = false;
-  await onSnapshot(allMatchStatusesQ, async (reportSnapshot) => {
+    onSnapshot(allMatchStatusesQ, async (reportSnapshot) => {
     reportSnapshot.docChanges().forEach( (change) => {
         if (change.type === "added" ) {
           isAddedActionType = true;
@@ -145,7 +145,7 @@ async function  getAllMatchStatusesData() {
 
 }
 
-await getAllMatchStatusesData();
+getAllMatchStatusesData();
 
 
 let bodyHeight = document.body.offsetHeight;
