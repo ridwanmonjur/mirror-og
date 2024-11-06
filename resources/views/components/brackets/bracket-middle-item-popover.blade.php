@@ -31,8 +31,8 @@
                     class="border border-4 popover-content-img rounded-circle object-fit-cover"
                 >
             </div>
-             <p class="mt-1 mb-0 py-0">{{$teamName1}}</p>
-            <div class="{{ 'mt-1 mb-2 py-0 dotted-score-container ' . $position1 . ' ' . $position2  }}">
+             <p class="mt-2 mb-0 py-0 text-center">{{$teamName1}}</p>
+            <div class="{{ 'mt-2 mb-4 py-0 d-flex justify-content-center dotted-score-container ' . $position1 . ' ' . $position2  }}">
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score d-none"></div>
@@ -40,9 +40,9 @@
         </div>
         <div class="col-12 col-lg-4">
             <div class="d-flex justify-content-center align-items-center h-100">
-                <h1 class="pe-4">0</h1>
+                <h1 class="pe-4 dotted-score-box">0</h1>
                 <h1>-</h3>
-                <h1 class="ps-4">0</h1>
+                <h1 class="ps-4 dotted-score-box">0</h1>
             </div>
         </div>
         <div class="col-12 col-lg-4">
@@ -52,8 +52,8 @@
                     class="border border-4 popover-content-img rounded-circle object-fit-cover"
                 >
             </div>
-            <p class="mt-1 mb-2 py-0">{{$teamName2}}</p>
-            <div class="{{ 'mt-1 mb-2 py-0 dotted-score-container ' . $position1 . ' ' . $position2 }}">
+            <p class="mt-2 mb-2 py-0 text-center">{{$teamName2}}</p>
+            <div class="{{ 'mt-2 mb-4 py-0 d-flex justify-content-center dotted-score-container ' . $position1 . ' ' . $position2 }}">
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score d-none"></div>

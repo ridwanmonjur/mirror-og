@@ -15,6 +15,10 @@
   background-color: #F8F7F0;
 }
 
+div.tippy-arrow {
+  display: none !important;
+}
+
 table.responsive {
   // border: 1px solid #ccc;
   border-collapse: collapse;

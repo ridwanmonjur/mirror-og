@@ -32,7 +32,6 @@ const Toast = Swal.mixin({
 
 
 window.toastError = function (message, error = null) {
-    console.error(error)
     Toast.fire({
         icon: 'error',
         text: message

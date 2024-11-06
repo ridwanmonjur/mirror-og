@@ -9,7 +9,10 @@
 ])
 
 <div
-    class="tournament-bracket__box  position-relative mx-auto popover-button tournament bg-light"
+    class="{{ 
+        'tournament-bracket__box  position-relative mx-auto popover-button tournament bg-light ' .  
+        'data-position-'. $position1
+    }}"
     data-position="{{$position1}}"
     style="width: 35px; height: 28px;"
 >
@@ -35,7 +38,9 @@
 
 
 <div
-    class="tournament-bracket__box  position-relative mx-auto popover-button tournament bg-light"
+    class="{{ 'tournament-bracket__box  position-relative mx-auto popover-button tournament bg-light ' 
+        . 'data-position-'. $position2
+    }}"
     data-position="{{$position2}}"
     style="width: 35px; height: 28px;"
 >

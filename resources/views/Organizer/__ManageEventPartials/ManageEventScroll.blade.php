@@ -135,13 +135,11 @@
                                 </a>
                         @endif    
                         <div class="popover-content2 d-none" style="z-index: 999 !important;">
-                            <div class="popover-box py-3" style="z-index: 999 !important;">
+                            <div class="popover-box py-2 px-1" style="z-index: 999 !important;">
                                 <a class="px-2 py-1 text-light me-3 btn btn-primary d-inline"  href="{{ route('event.matches.index', ['id' => $event->id, 'eventType'=> $event->type->eventType]) }}">
                                     <small> Matches </small>
                                 </a>
-                                <a class="px-2 py-1 text-light me-3 btn btn-primary d-inline " href="{{ route('event.matches.index', ['id' => $event->id]) }}">
-                                    <small> Disputes </small>
-                                </a>
+                               
                                 <a class="px-2 py-1 text-light btn btn-primary d-inline" href="{{ route('event.awards.index', ['id' => $event->id ]) }}">
                                     <small> Awards </small>
                                 </a>

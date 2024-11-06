@@ -4,7 +4,6 @@ import { initializeFirestore, memoryLocalCache, setDoc,   serverTimestamp,
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 import Alpine from 'alpinejs';
-import tippy from "tippy.js";
 window.Alpine = Alpine;
 
 
@@ -23,6 +22,7 @@ const db = initializeFirestore(app, {
     localCache: memoryLocalCache(),
 });
 
+
 const parentElements = document.querySelectorAll(".first-item .popover-parent");
 parentElements?.forEach(parent => {
     const contentElement = parent.querySelector(".popover-content");
@@ -40,55 +40,107 @@ function addAllTippy () {
         triggers.forEach((trigger) =>{
             let triggerPositionId = trigger.dataset.position;
             let triggerParentsPositionIds = previousValues[triggerPositionId];
-            
+
             if (triggerParentsPositionIds && Array.isArray(triggerParentsPositionIds)) {
                 let triggerClassName = '.popover-middle-content.' + triggerParentsPositionIds.join(".");
                 let contentElement = document.querySelector(triggerClassName);
-               
                 window.addPopover(trigger, contentElement, 'mouseenter');
             } 
        })
     });
 }
 
+function addTippyToClass (classAndPositionList) {
+  for (let classX of classAndPositionList) {
+    const triggers = document.querySelectorAll(`.popover-button.data-position-${classX[1]}`);
+    triggers.forEach((trigger) =>{
+      let triggerClassName = '.popover-middle-content.' + classX[0];
+      let contentElement = document.querySelector(triggerClassName);
+      window.addPopover(trigger, contentElement, 'mouseenter');
+    });
+  }
+}
+
+function addDotsToContainer (key, value) {
+  let parent = document.querySelector(`.${key}.popover-middle-content`);
+  let dottedScoreContainer = parent.querySelectorAll('.dotted-score-container');
+  let dottedScoreBox = parent.querySelectorAll('.dotted-score-box');  
+  dottedScoreContainer.forEach((element, index) => {
+    element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
+      if (value.realWinners[dottedElementIndex]) {
+        if (value.realWinners[dottedElementIndex] == index) {
+          dottedElement.classList.remove('bg-secondary', 'bg-red', 'd-none');
+          dottedElement.classList.add("bg-success");
+        } else {
+          dottedElement.classList.remove('bg-secondary', 'bg-success', 'd-none');
+          dottedElement.classList.add("bg-red");
+        }
+      } else {
+        dottedElement.classList.remove('bg-success', 'bg-red', 'd-none');
+        dottedElement.classList.add('bg-secondary');
+      }
+    })
+  });
+
+  dottedScoreBox.forEach((element, index) => {
+    element.innerHTML = value['score'][index];
+  });
+
+}
+
+
+
+
 
 async function  getAllMatchStatusesData() {
   const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
   const allMatchStatusesQ = await query(allMatchStatusesCollectionRef);
-  let allDataList = {};
+  let allDataList = {}, modifiedDataList = {}, newDataList = {};
+  let newClassList = [], modifiedClassList = [];
+  let isAddedActionType = true, isLoadedActionType = false;
   await onSnapshot(allMatchStatusesQ, async (reportSnapshot) => {
     reportSnapshot.docChanges().forEach( (change) => {
-        if (change.type === "added" || change.type === "modified") {
-          allDataList[change.doc.id] = change.doc.data();
+        if (change.type === "added" ) {
+          isAddedActionType = true;
+          if (!isLoadedActionType) {
+            allDataList[change.doc.id] = change.doc.data();
+          } else {
+            newDataList[change.doc.id] = change.doc.data();
+          }
+        }
+
+        if (change.type === "modified") {
+          isAddedActionType = false;
+          modifiedDataList[change.doc.id] = change.doc.data();
         }
     });
 
+    if (!isLoadedActionType) {
+      Object.entries(allDataList).forEach(([key, value]) => {
+        addDotsToContainer(key, value)
+      });
+
+      addAllTippy();
+      isLoadedActionType = true;
+    } else {
       
-    Object.entries(allDataList).forEach(([key, value]) => {
-      let dottedScoreContainer = document.querySelectorAll(`.${key}.popover-middle-content .dotted-score-container`);
-      console.log({dottedScoreContainer, value, key});
-      console.log({dottedScoreContainer, value, key});
-      console.log({dottedScoreContainer, value, key});
-      dottedScoreContainer.forEach((element, index) => {
-        element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
-          if (value.realWinners[dottedElementIndex]) {
-            if (value.realWinners[dottedElementIndex] == index) {
-              dottedElement.classList.remove('bg-secondary', 'bg-red', 'd-none');
-              dottedElement.classList.add("bg-success");
-            } else {
-              dottedElement.classList.remove('bg-secondary', 'bg-success', 'd-none');
-              dottedElement.classList.add("bg-red");
-            }
-          } else {
-            dottedElement.classList.remove('bg-success', 'bg-red', 'd-none');
-            dottedElement.classList.add('bg-secondary');
-          }
-        })
-      })
-    });
+        Object.entries(newDataList).forEach(([key, value]) => {
+          addDotsToContainer(key, value);
+          newClassList.push([key, value.position])
+        });
 
-    addAllTippy();
+        addTippyToClass( newClassList );
+     
+        Object.entries(modifiedDataList).forEach(([key, value]) => {
+          addDotsToContainer(key, value);
+          modifiedClassList.push([key, value.position])
+        });
 
+        addTippyToClass( modifiedClassList );
+    }
+
+    newDataList = {}, modifiedDataList = {};
+    newClassList = [], modifiedClassList = []; 
   });
 
 }
@@ -96,6 +148,14 @@ async function  getAllMatchStatusesData() {
 await getAllMatchStatusesData();
 
 
+let bodyHeight = document.body.offsetHeight;
+let bracketList = document.getElementById('bracket-list');
+let bracketListHeight = bracketList.getBoundingClientRect().height;
+let main = document.querySelector('main');
+if (main) {
+    main.style.transition = "height 0.5s ease-in-out";
+    main.style.height = bodyHeight + bracketListHeight + 'px';
+}
 
 
 Alpine.data('alpineDataComponent', function () {
@@ -165,7 +225,6 @@ Alpine.data('alpineDataComponent', function () {
           let otherTeamNumber = this.reportUI.otherTeamNumber;
           let matchNumber = this.reportUI.matchNumber;
           let selectedTeamIndex = document.getElementById('selectedTeamIndex').value;
-          console.log({teamNumber, otherTeamNumber, userLevel: this.report.userLevel, IS_ORGANIZER: this.userLevelEnums['IS_ORGANIZER']})
           let update = {
             organizerWinners: [...this.report.organizerWinners],
             matchStatus: [...this.report.matchStatus],
@@ -178,7 +237,6 @@ Alpine.data('alpineDataComponent', function () {
             update.organizerWinners[matchNumber] = selectedTeamIndex;
             update.realWinners[matchNumber] = selectedTeamIndex;
             update.score = this.calcScores(update);
-            console.log({update});
           }
 
           if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
@@ -191,11 +249,10 @@ Alpine.data('alpineDataComponent', function () {
               } 
             }
 
-            console.log({otherTeamWinner, teamNumber, otherTeamNumber, report: Alpine.raw(this.report)});
           }
 
           try {
-             await this.saveReport(update);
+            await this.saveReport(update);
            
           } catch(error) {
             window,toastError("Problem updating data");
@@ -261,11 +318,9 @@ Alpine.data('alpineDataComponent', function () {
             already_winner
           } = formData;
 
-          console.log({formData});
       
           if (!id || !dispute_matchNumber || !resolution_resolved_by) {
             window.toastError('Missing required fields');
-            console.error(id, dispute_matchNumber, resolution_resolved_by);
             return;
           }
 
@@ -308,10 +363,6 @@ Alpine.data('alpineDataComponent', function () {
               winners: winnerNew,
             });
 
-            console.log({
-              demo: {...this.dispute[dispute_matchNumber] }, winnerNew
-            })
-
             this.report.realWinners = [...winnerNew];
            
             this.dispute[this.reportUI.matchNumber] = {
@@ -349,12 +400,8 @@ Alpine.data('alpineDataComponent', function () {
             _report['organizerWinners'] = report.organizerWinners;
             _report['team1Winners'] = report.teams[0]?.winners;
             _report['team2Winners'] = report.teams[1]?.winners;
-            console.log({_report});
-            console.log({_report});
-            console.log({_report});
+            _report['position'] = report.position;
             await setDoc(docRef, _report);
-            console.log("Document written with ID: ", customDocId);
-            console.log({array: Alpine.raw(this.report)});
              
             this.report = {
               ...this.report,
@@ -450,6 +497,21 @@ Alpine.data('alpineDataComponent', function () {
             disabled: [...disabledList]
           };
         },
+        resetDotsToContainer () {
+          let parent = document.getElementById('reportModal');
+          let dottedScoreContainer = parent.querySelectorAll('.dotted-score-container');
+          console.log({dottedScoreContainer});
+          dottedScoreContainer.forEach((element) => {
+            element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
+              console.log({dottedElement});  
+              dottedElement.classList.remove('bg-success', 'bg-red');
+              dottedElement.classList.add('bg-secondary');
+              if (dottedElementIndex == 2) {
+                dottedElement.classList.add('d-none');
+              }
+            });
+          });
+        },
         init() {
             window.addEventListener('currentReportChange', (event) => {
 
@@ -474,6 +536,7 @@ Alpine.data('alpineDataComponent', function () {
                 (dataset.user_level == this.userLevelEnums['IS_TEAM2'] ? 1 : 0 );
 
               let otherTeamNumber =  teamNumber === 0 ? 1 : 0;
+
             
               if (!dataset) {
                 newReport = {
@@ -484,6 +547,8 @@ Alpine.data('alpineDataComponent', function () {
                   ...initialData.reportUI,
                 }
               } else {
+                this.resetDotsToContainer();
+
                 newReportUI = {
                   ...initialData.reportUI,
                   teamNumber, 
@@ -514,7 +579,6 @@ Alpine.data('alpineDataComponent', function () {
                     ],
                   };
                 }
-
                 this.getCurrentReportSnapshot(dataset.classNamesWithoutPrecedingDot, newReport, newReportUI);
               });
             },
@@ -566,13 +630,6 @@ Alpine.data('alpineDataComponent', function () {
                         team1Winners,
                         team2Winners,
                       } = data;
-                    
-                      console.log({ score, 
-                        matchStatus, 
-                        realWinners, 
-                        organizerWinners,
-                        team1Winners,
-                        team2Winners});
 
                     if (!score) {
                       score = [0, 0]; 
@@ -598,10 +655,6 @@ Alpine.data('alpineDataComponent', function () {
                       ]
                     }
 
-                    console.log({reportSnapshot: this.report});
-                    console.log({reportSnapshot: this.report});
-                    console.log({reportSnapshot: this.report});
-                    console.log({reportSnapshot: this.report});
 
                     if (this.report.userLevel != this.userLevelEnums['IS_ORGANIZER']) 
                     {
@@ -855,8 +908,6 @@ Alpine.data('alpineDataComponent', function () {
               const images2 = Array.from(this.$refs.uploadArea2.querySelectorAll('.preview-item img'))
                   .map(img => img.src);
               
-              console.log('Images from uploader 1:', images1);
-              console.log('Images from uploader 2:', images2);
               return { uploader1: images1, uploader2: images2 };
           },
         }

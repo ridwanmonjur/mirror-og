@@ -292,6 +292,18 @@ class OrganizerEventResultsController extends Controller
             $match = isset($validatedData['id']) 
                 ? Matches::findOrFail($validatedData['id']) 
                 : new Matches;
+            
+            if (!$match->id) {
+                Matches::where([
+                    'team1_position' => $match->team1_position,
+                    'team2_position' => $match->team2_position,
+                    'event_details_id' => $match->event_details_id
+                ])->doesntExistOr(function () {
+                    throw new \ErrorException("Event exists already!");
+                });
+
+            }
+
             $team1 = Team::findOrFail($validatedData['team1_id']);
             $team2 = Team::findOrFail($validatedData['team2_id']);
             if ($team1->id === $team2->id) {

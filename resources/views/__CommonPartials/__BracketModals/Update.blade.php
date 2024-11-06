@@ -36,7 +36,7 @@
                                     <select  class="form-select" id="team1_id" name="team1_id" required  data-dynamic-select>
                                             <option value="">Choose a team</option>
                                         @foreach ($teamList as $team)
-                                            <option  value="{{ $team['id'] }}"   data-img-width="30" data-img-height="30"
+                                            <option  value="{{ $team['id'] }}"   data-img-width="40px" data-img-height="100%"
                                                 data-img="{{ '/' . 'storage/' . $team['teamBanner']}}"
                                             >
                                             <span> {{ $team['teamName'] }} </span>
@@ -61,7 +61,7 @@
                                     <select  class="form-select" id="team2_id" name="team2_id" required  data-dynamic-select>
                                             <option value="">Choose a team</option>
                                         @foreach ($teamList as $team)
-                                            <option class="object-fit-cover" value="{{ $team['id'] }}"   data-img-width="30" data-img-height="30"
+                                            <option class="object-fit-cover" value="{{ $team['id'] }}"   data-img-width="40px" data-img-height="100%"
                                                 data-img="{{ '/' . 'storage/' . $team['teamBanner']}}"
                                             >
                                             <span> {{ $team['teamName'] }} </span>
@@ -86,7 +86,7 @@
                                         aria-describedby="winner-addon">
                                         <option value="">Choose a team</option>
                                         @foreach ($teamList as $team)
-                                            <option value="{{ $team['id'] }}"  data-img-width="30" data-img-height="30" data-img="{{ '/' . 'storage/' . $team['teamBanner']}}">
+                                            <option value="{{ $team['id'] }}"  data-img-width="40px" data-img-height="100%" data-img="{{ '/' . 'storage/' . $team['teamBanner']}}">
                                             <span> {{ $team['teamName'] }} </span>
                                             </option>
                                         @endforeach

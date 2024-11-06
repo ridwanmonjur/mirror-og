@@ -16,6 +16,8 @@ window.addPopover = function (parent, child, trigger="click") {
             placement: 'top',
             trigger,
             triggerTarget: parent,
+            // hideOnClick: false,
+            // trigger: 'click',
             interactive: true,
             theme: 'light',
             zIndex: 9999,
@@ -23,7 +25,6 @@ window.addPopover = function (parent, child, trigger="click") {
         });
     }
 
-    console.log("added");
     
    
 }
