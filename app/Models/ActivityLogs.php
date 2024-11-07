@@ -22,7 +22,7 @@ class ActivityLogs extends Model
         return $this->morphTo();
     }
 
-    public function findActivityLog(array $parameters): Builder
+    public static function findActivityLog(array $parameters): Builder
     {
         $query = ActivityLogs::query();
         $query->where([
@@ -41,7 +41,7 @@ class ActivityLogs extends Model
         return $query;
     }
 
-    public function createActivityLogs(array $parameters): void
+    public static function createActivityLogs(array $parameters): void
     {
         $data = [];
         $isLogArray = is_array($parameters['log']); 
