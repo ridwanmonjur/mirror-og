@@ -2,7 +2,18 @@
 
 <script>
     let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
+    const {
+        userProfileId,
+        userProfileBirthday: birthday,
+        backgroundApiUrl,
+        signinUrl,
+        publicProfileUrl,
+        backgroundStyles,
+        fontStyles,
+        userBannerUrl,
+        assetCarouselJs
+    } = document.querySelector('.laravel-data-storage').dataset;
+    
     var backgroundBanner = document.getElementById("backgroundBanner")
     let backgroundColorInputValue = document.getElementById('backgroundColorInput')?.value;
     let fontColorInputValue = document.getElementById('fontColorInput')?.value;
@@ -81,7 +92,6 @@
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().split('T')[0];
     document.getElementById('birthdate').setAttribute('max', formattedDate);
-    let birthday = '{{$userProfile->participant->birthday}}';
     if (birthday) {
         birthday = new Date(birthday).toISOString().split('T')[0]
     }
@@ -94,7 +104,6 @@
         element2.classList.add('d-none');
     }
 
-    // const games_data = {{ $userProfile->participant->games_data }};
     window.onload = () => { 
         window.setupFileInputEditor('#changeBackgroundBanner', (file) => {
             if (file) {
@@ -157,8 +166,7 @@
 
     async function changeBackgroundDesignRequest(body, successCallback, errorCallback) {
         try {
-            const url = "{{ route('user.userBackgroundApi.action', ['id' => $userProfile->id] ) }}";
-            const response = await fetch(url, {
+            const response = await fetch(backgroundApiUrl, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
@@ -181,128 +189,7 @@
         }
     }
 
-    document.addEventListener('alpine:init', () => {
-        let gamesDataInput = document.getElementById('games_data_input');
-        let regionDataInput = document.getElementById('region_details_input');
-        let regionSelectInput = document.getElementById('region_select_input');
-
-        let gamesData = JSON.parse(gamesDataInput.value.trim()); 
-        let regionData = JSON.parse(regionDataInput.value.trim()); 
-        let userData = JSON.parse(document.getElementById('initialUserData').value);
-        let participantData = JSON.parse(document.getElementById('initialParticipantData').value);
-
-        
-        Alpine.data('alpineDataComponent', () => {
-        return  {
-            select2: null,
-            isEditMode: false, 
-            countries: 
-            [
-                {
-                    name: { en: 'No country' },
-                    emoji_flag: ''
-                }
-            ], 
-            user : { ...userData },
-            participant: { ...participantData },
-            errorMessage: errorInput?.value, 
-            isCountriesFetched: false ,
-            changeFlagEmoji() {
-                let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == this.participant.region);
-                this.participant.region_name = countryX?.name.en;
-                this.participant.region_flag = countryX?.emoji_flag;
-            },
-            reset() {
-                this.user = userData;
-                this.participant = participantData;
-            },
-            async fetchCountries () {
-                if (this.isCountriesFetched) return;
-                try {
-                    const data = await storeFetchDataInLocalStorage('/countries');
-                    if (data?.data) {
-                        this.isCountriesFetched = true;
-                        this.countries = data.data;
-                        const choices2 = document.getElementById('select2-country3');
-
-                         let countriesHtml = "<option value=''>Choose a country</option>";
-                        data?.data.forEach((value) => {
-                            countriesHtml +=`
-                                <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
-                            `;
-                        });
-                        console.log({p: this.participant.region});
-                        choices2.innerHTML = countriesHtml;
-                        choices2.selected = this.participant.region;
-                    } else {
-                        this.errorMessage = "Failed to get data!";
-                    }
-                } catch (error) {
-                    console.error('Error fetching countries:', error);
-                }
-            },
-            startMessage(){
-                Livewire.emit('chatStarted');
-            },
-            async submitEditProfile (event) {
-                try {
-                    event.preventDefault(); 
-                    const url = event.target.dataset.url; 
-                    this.participant.age = Number(this.participant.age);
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: window.loadBearerCompleteHeader(),
-                        body: JSON.stringify({
-                            participant: Alpine.raw(this.participant),
-                            user: Alpine.raw(this.user)
-                        }),
-                    });             
-                    const data = await response.json();
-                        
-                    if (data.success) {
-                        
-                        let currentUrl = window.location.href;
-                        if (currentUrl.includes('?')) {
-                            currentUrl = currentUrl.split('?')[0];
-                        } 
-
-                        localStorage.setItem('success', true);
-                        localStorage.setItem('message', data.message);
-                        window.location.replace(currentUrl);
-                   
-                    } else {
-                        this.errorMessage = data.message;
-                    }
-                } catch (error) {
-                    this.errorMessage = error.message;
-                    console.error({error});
-                } 
-            },
-         
-            init() {
-                var backgroundStyles = "<?php echo $backgroundStyles; ?>";
-                var fontStyles = "<?php echo $fontStyles; ?>";
-                var banner = document.getElementById('backgroundBanner');
-                banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-               
-                
-                this.$watch('participant.birthday', value => {
-                    const today = new Date();
-                    const birthDate = new Date(value);
-                    this.participant.age = today.getFullYear() - birthDate.getFullYear();
-                    const monthDifference = today.getMonth() - birthDate.getMonth();
-                    
-                    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-                       this.participant.age--;
-                    }
-                });
-
-                this.fetchCountries();
-
-            }
-
-        }})
-    })
+       
 </script>
 @if ($isUserSame)
 <script>
@@ -321,8 +208,7 @@
 
         try {
             const fileContent = await readFileAsBase64(file);
-            const url = "{{ route('participant.userBanner.action', ['id' => $userProfile->id] ) }}";
-            const response = await fetch(url, {
+            const response = await fetch(publicProfileUrl, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
@@ -379,9 +265,7 @@
 
     function reddirectToLoginWithIntened(route) {
         route = encodeURIComponent(route);
-        let url = "{{ route('participant.signin.view') }}";
-        url += `?url=${route}`;
-        window.location.href = url;
+        window.location.href = `${signinUrl}?url=${route}`;
     }
 
     carouselWork();
@@ -390,8 +274,7 @@
     }, 250));
 
     function redirectToProfilePage(userId) {
-        window.location.href = "{{ route('public.participant.view', ['id' => ':id']) }}"
-            .replace(':id', userId);
+        window.location.href = publicProfileUrl.replace(':id', userId);
     }
 
    

@@ -17,6 +17,7 @@ use App\Models\ParticipantFollow;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -433,7 +434,7 @@ class ParticipantController extends Controller
             return view(
                 'Participant.PlayerProfile',
                 compact(
-                    'joinEvents',
+                    'joinEvents', 
                     'userProfile',
                     'teamList',
                     'isOwnProfile',
@@ -453,5 +454,34 @@ class ParticipantController extends Controller
         } catch (Exception $e) {
             return $this->showErrorParticipant($e->getMessage());
         }
+    }
+
+    public function getActivityLogs(Request $request) {
+        $userId = $request->input('userId');
+        $duration = $request->input('duration');
+        $page = $request->input('page', 1);
+        $perPage = 5;
+
+        $activityLogsQuery = ActivityLogs::where('subject_id', $userId)
+            ->where('subject_type', User::class);
+
+
+        if ($duration == 'new') {
+            $activityLogsQuery->whereDate('created_at', Carbon::today());
+        } elseif ($duration == 'recent') {
+            $activityLogsQuery->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::today()]);
+        } else {
+            $activityLogsQuery->whereDate('created_at', '<', Carbon::now()->subWeek()->startOfWeek());
+        }
+
+        // $activityLogsQuery->orderBy('created_date', 'asc');
+
+        $activityLogs = $activityLogsQuery
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage, ['*'], 'page', $page);
+        return response()->json([
+            'items' => $activityLogs->items(),
+            'hasMore' => $activityLogs->hasMorePages()
+        ]);
     }
 }
