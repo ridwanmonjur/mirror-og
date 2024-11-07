@@ -13,7 +13,7 @@
     @vite([
         'resources/sass/app.scss', 
         'resources/js/app.js', 
-        'resources/js/libraries/alpine.js', 
+        'resources/js/pages/participant.js', 
         'resources/js/libraries/lightgallery.js',
         'resources/sass/libraries/lightgallery.scss',   
         'resources/js/libraries/file-upload-preview.js',
@@ -35,7 +35,8 @@
         'fontStyles' => $fontStyles, 
         'frameStyles' => $frameStyles
     ] = $userProfile->profile?->generateStyles();
-    // dd($userProfile->participant);
+
+    $activityNames = ['new', 'recent', 'older'];
 @endphp
 @auth
     @php
@@ -49,7 +50,20 @@
 <body>
     @include('googletagmanager::body')
     @include('__CommonPartials.NavbarGoToSearchPage')
-    <main x-data="alpineDataComponent">
+    <div
+        data-user-profile-id="{{ $userProfile->id }}"
+        data-user-profile-birthday="{{ $userProfile->participant->birthday }}"
+        data-background-api-url="{{ route('user.userBackgroundApi.action', ['id' => $userProfile->id]) }}"
+        data-signin-url="{{ route('participant.signin.view') }}"
+        data-public-profile-url="{{ route('public.participant.view', ['id' => ':id']) }}"
+        data-background-styles="{{ $backgroundStyles }}"
+        data-font-styles="{{ $fontStyles }}"
+        data-is-user-same="{{ $isUserSame }}"
+        data-user-banner-url="{{ route('participant.userBanner.action', ['id' => $userProfile->id]) }}"
+        data-asset-carousel-js="{{ asset('/assets/js/participant/carousel.js') }}"
+        class="d-none laravel-data-storage"
+    ></div>
+    <main >
         @include('Participant.__ProfilePartials.BackgroundModal')
 
         @include('Participant.__ProfilePartials.Forms')
@@ -57,13 +71,14 @@
             @style([
                 "background-size: cover; background-repeat: no-repeat;"
             ])
+            x-data="profileDataComponent"
         >
             @if($isOwnProfile) 
                 <input type="hidden" id="userBannerInput" value="{{ $userProfile->userBanner }}">
                 <input type="hidden" id="backgroundColorInput" value="{{ $userProfile->profile?->backgroundColor }}">
                 <input type="hidden" id="fontColorInput" value="{{ $userProfile->profile?->fontColor }}">
             @endif
-            <input type="hidden" id="games_data_input" value="{{ $userProfile->participant?->games_data ?? json_encode([]) }}">
+            <input type="hidden" id="activity_input" value="{{ json_encode($activityNames) }}">
             <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant?->getRegionDetails()) }}">
             <input type="hidden" id="initialUserData" value="{{json_encode($userProfile?->only(["id", "name"]))}}">
             <input type="hidden" id="initialParticipantData" value="{{json_encode($userProfile->participant)}}">
@@ -444,11 +459,13 @@
         <div class="tab-content pb-4  outer-tab d-none" id="Activity">
             <br>
             <div class="tab-size"><b>New</b></div>
-            <livewire:participant.profile.show-activity-logs :userId="$userProfile->id" :duration="'new'"> </livewire>
+            @include('Participant.__ProfilePartials.ActivityLogs', ['duration' => $activityNames[0]])
+    
             <div class="tab-size"><b>Recent</b></div>
-            <livewire:participant.profile.show-activity-logs :userId="$userProfile->id" :duration="'recent'"> </livewire>
+            @include('Participant.__ProfilePartials.ActivityLogs', ['duration' => $activityNames[1]])
+            
             <div class="tab-size"><b>Older</b></div>
-            <livewire:participant.profile.show-activity-logs :userId="$userProfile->id" :duration="'older'"> </livewire>
+            @include('Participant.__ProfilePartials.ActivityLogs', ['duration' => $activityNames[2]])
             
         </div>
 
@@ -586,7 +603,6 @@
         </div>
 
     </main>
-    @livewireScripts
 
 </body>
 @include('Participant.__ProfilePartials.Scripts')

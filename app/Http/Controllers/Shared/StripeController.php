@@ -1,8 +1,9 @@
 <?php
 
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shared;
 
+use App\Http\Controllers\Controller;
 use App\Models\PaymentIntent;
 use App\Models\StripePayment;
 use Exception;

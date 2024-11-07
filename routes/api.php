@@ -33,6 +33,9 @@ Route::middleware('auth')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/activity-logs', [ParticipantController::class, 'getActivityLogs'])
+    ->name('activity-logs.index');
+
 Route::put('/interest', [BetaController::class, 'interestedAction'])->name('public.interest.action');
 
 Route::group(['middleware' => 'auth'], function () {

@@ -137,24 +137,6 @@ class OrganizerEventController extends Controller
         ]);
     }
 
-    public function storeEventBanner($file)
-    {
-        $fileNameInitial = 'eventBanner-'.time().'.'.$file->getClientOriginalExtension();
-        $fileNameFinal = "images/events/{$fileNameInitial}";
-        $file->storeAs('images/events/', $fileNameInitial);
-
-        return $fileNameFinal;
-    }
-
-    public function destroyEventBanner($file)
-    {
-        $fileNameInitial = str_replace('images/events/', '', $file);
-        $fileNameFinal = "images/events/{$fileNameInitial}";
-
-        if (file_exists($fileNameFinal)) {
-            unlink($fileNameFinal);
-        }
-    }
 
     public function showLive(Request $request): View
     {
@@ -206,7 +188,6 @@ class OrganizerEventController extends Controller
                 },
                 ],
             );
-
            
 
             $isUserSameAsAuth = true;
@@ -358,9 +339,6 @@ class OrganizerEventController extends Controller
                 $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$id], 0);
                 $team->cancelTeamRegistration($event, $discountsByUserAndType, false);
             });
-
-            // $event->deleteEventBanner(); 
-            // $event->delete();
 
             return response()->json([
                 'success' => true,
