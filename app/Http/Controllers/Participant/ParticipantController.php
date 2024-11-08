@@ -460,21 +460,12 @@ class ParticipantController extends Controller
         $page = $request->input('page', 1);
         $perPage = 5;
 
-        $activityLogsQuery = ActivityLogs::where('subject_id', $userId)
-            ->where('subject_type', User::class);
-
-
-        if ($duration == 'new') {
-            $activityLogsQuery->whereDate('created_at', Carbon::today());
-        } elseif ($duration == 'recent') {
-            $activityLogsQuery->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::today()]);
-        } else {
-            $activityLogsQuery->whereDate('created_at', '<', Carbon::now()->subWeek()->startOfWeek());
-        }
-
-        $activityLogs = $activityLogsQuery
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage, ['*'], 'page', $page);
+        $activityLogs = ActivityLogs::retrievePaginatedActivityLogs($userId,
+             $duration, 
+             $perPage, 
+             $page
+        );
+        
         return response()->json([
             'items' => $activityLogs->items(),
             'hasMore' => $activityLogs->hasMorePages()

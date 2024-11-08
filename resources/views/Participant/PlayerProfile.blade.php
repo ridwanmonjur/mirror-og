@@ -601,11 +601,15 @@
             @endif
             </div>
         </div>
+        <script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
+        <script src="{{ asset('/assets/js/participant/Profile.js') }}"></script>
+        @if ($isUserSame)
 
+            <script src="{{ asset('/assets/js/participant/IsUserSame.js') }}"></script>
+        @endif
     </main>
 
 </body>
-@include('Participant.__ProfilePartials.Scripts')
 @include('__CommonPartials.Cropper')
 
 </html>
