@@ -98,6 +98,7 @@ class ParticipantEventController extends Controller
             }
             $awardAndTeamList = AwardResults::getTeamAwardResults($id);
             $achievementsAndTeamList = Achievements::getTeamAchievements($id);
+            $joinEventAndTeamList = EventJoinResults::getEventJoinResults($id);
 
             $status = $event->statusResolved();
             if (in_array($status, ['DRAFT', 'PREVEW', 'PENDING'])) {
@@ -160,6 +161,7 @@ class ParticipantEventController extends Controller
                     'matchesUpperCount' => $matchesUpperCount,
                     'bracketList' => $bracketList,
                     'likesCount' => $likesCount, 
+                    'joinEventAndTeamList' => $joinEventAndTeamList,
                     'followersCount' => $followersCount, 
                     'user' => $user, 
                     'existingJoint' => $existingJoint,
