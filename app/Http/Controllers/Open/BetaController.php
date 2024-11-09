@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Open;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\EmailValidationRequest;
+use App\Mail\SendBetaWelcomeMail;
 use App\Mail\VerifyInterestedUserMail;
+use App\Models\InterestedUser;
+use App\Models\Participant;
 use App\Models\User;
+use App\Services\AuthService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,24 +19,11 @@ use Illuminate\Support\Facades\Validator;
 
 class BetaController extends Controller
 {
-    public function interestedAction(Request $request): JsonResponse
+
+    public function interestedAction(EmailValidationRequest $request): JsonResponse
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|email',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json(
-                    [
-                        'success' => false,
-                        'message' => 'Invalid request format',
-                    ],
-                    422,
-                );
-            }
-
-            $email = $request->email;
+            $email = $request->validated()['email'];
             $isResend = $request->boolean('isResend');
 
             $user = DB::table(table: 'interested_user')
@@ -141,5 +133,63 @@ class BetaController extends Controller
         return view('VerifyInterestedUser')
             ->with('success', 'verified_now')
             ->with('email', $user->email);;
+    }
+
+    public function viewOnboardBeta (Request $request) {
+        $users = DB::table('interested_user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(50); 
+
+        return view('Organizer.SendBetaUser', compact('users'));
+    }
+
+    public function postOnboardBeta (Request $request) {
+        try {
+            DB::beginTransaction();
+            $interestedUsers = DB::table('interested_user')
+                ->where('id', $request->idList)
+                ->get();
+
+            $interestedUserEmail = $interestedUsers->pluck('email')->toArray();
+            $existingUsers = User::whereIn('email', $interestedUserEmail)
+                ->get();
+            
+            foreach ($existingUsers as $user) {
+                Mail::to($user)->queue(new SendBetaWelcomeMail($user));
+            }
+            
+            $existingUsersEmail = $existingUsers->pluck('email')->toArray();
+            $newEmail = array_diff($interestedUserEmail, $existingUsersEmail);
+
+            foreach ($newEmail as $email) {
+                $user = new User([
+                    'email' => $email,
+                    'password' => generateToken(),
+                    'role' => 'PARTICIPANT',
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+
+                $user->save();
+                $participant = new Participant([
+                    'user_id' => $user->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+
+                $participant->save();
+                Mail::to($user)->queue(new SendBetaWelcomeMail($user));
+            }
+
+           
+          
+            DB::commit();
+            return back()->with('success', "Created new users");
+          
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', "Failed to create new users");
+
+        }
     }
 }

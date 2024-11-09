@@ -2,10 +2,10 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -15,18 +15,16 @@ class SendBetaWelcomeMail extends Mailable  implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $user;
-    private $email;
-    private $password;
+    public $user;
     public $tries = 3; 
 
-    public function __construct(string $email, string $password)
+    public function __construct(User $user)
     {
-        $this->email = $email;
-        $this->password = $password;
+        $this->user = $user;
     }
 
-        /**
+    
+    /**
      * Get the message envelope.
      */
     public function envelope(): Envelope
@@ -42,19 +40,10 @@ class SendBetaWelcomeMail extends Mailable  implements ShouldQueue
     public function build()
     {
         return $this->view('Email.sendBetaWelcome')->with([
-            'password' => $this->password,
-            'email' => $this->email,
+            'password' => $this->user->password,
+            'email' => $this->user->email,
+            'username' => $this->user->name,
         ]);
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
-    }
-  
 }

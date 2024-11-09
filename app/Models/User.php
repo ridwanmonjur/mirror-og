@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -21,6 +22,13 @@ class User extends Authenticatable
 
     public $timestamps = false;
 
+    public function createdAtDiffForHumans() {
+        return Carbon::parse($this->created_at)->diffForHumans();
+    }
+
+    public function updatedAtDiffForHumans() {
+        return Carbon::parse($this->updated_at)->diffForHumans();
+    }
 
     /**
      * The attributes that are mass assignable.

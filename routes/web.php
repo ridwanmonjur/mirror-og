@@ -60,6 +60,10 @@ Route::get('/view/organizer/{id}', [OrganizerController::class, 'viewProfileById
 
 Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => 'auth'], function () {
+        // Beta onboarding
+        Route::get('/onboardBeta', [BetaController::class, 'viewOnboardBeta'])->name('admin.onboardBeta.view');
+        Route::post('/onboardBeta', [BetaController::class, 'postOnboardBeta'])->name('admin.onboardBeta.action');
+ 
         Route::get('/profile', [OrganizerController::class, 'viewOwnProfile'])->name('admin.profile.view')
             ->middleware('prevent-back-history');
     });
@@ -97,10 +101,7 @@ Route::group(['prefix' => 'participant'], function () {
             // Request page
             Route::get('/request', [ParticipantController::class, 'viewRequest'])->name('participant.request.view');
 
-            // Beta onboarding
-            Route::get('/onboardBeta', [UserController::class, 'viewOnboardBeta'])->name('participant.onboardBeta.view');
-            Route::post('/onboardBeta', [UserController::class, 'postOnboardBeta'])->name('participant.onboardBeta.view');
-
+       
             // Friends
             Route::post('/friends', [ParticipantController::class, 'updateFriend'])->name('participant.friends.update');
             Route::post('/follow', [ParticipantController::class, 'followParticipant'])->name('participant.participant.follow');

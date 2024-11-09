@@ -22,13 +22,13 @@
                             <br>
                             <span> Email address: {{$email}} </span> <br>
                             <span> Password: {{$password}} </span> <br>
-                            <span> Username: {{$password}} </span> <br>
+                            <span> Username: {{$username}} </span> <br>
                         </p>
                         <p> 
                             <span> Sign into Driftwood here: </span>
                             <a href="{{ route('participant.signin.view') }}"
-                                style="display: inline-block; padding: 10px 20px; font-size: 18px; color: white !important; background-color: {{$primaryColor}}; text-decoration: none; border-radius: 5px;">
-                                {{ route('participant.signin.view') }}
+                                style="display: inline-block; padding: 10px; color: white !important; background-color: {{$primaryColor}}; text-decoration: none; border-radius: 5px;">
+                                Sign in
                             </a>
                         </p>
                         
