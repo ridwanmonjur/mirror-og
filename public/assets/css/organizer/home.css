@@ -260,6 +260,10 @@ footer {
     .event_2 .event_head {
         display: none;
     }
+
+    main {
+        background-size: cover;
+    }
    
     .hamburger-menu {
         display: block;
