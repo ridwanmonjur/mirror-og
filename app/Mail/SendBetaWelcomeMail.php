@@ -16,11 +16,13 @@ class SendBetaWelcomeMail extends Mailable  implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $user;
+    public $passText;
     public $tries = 3; 
 
-    public function __construct(User $user)
+    public function __construct(User $user, string $passText)
     {
         $this->user = $user;
+        $this->passText = $passText;
     }
 
     
@@ -40,7 +42,7 @@ class SendBetaWelcomeMail extends Mailable  implements ShouldQueue
     public function build()
     {
         return $this->view('Email.sendBetaWelcome')->with([
-            'password' => $this->user->password,
+            'password' => $this->passText,
             'email' => $this->user->email,
             'username' => $this->user->name,
         ]);

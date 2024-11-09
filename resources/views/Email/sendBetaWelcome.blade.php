@@ -20,14 +20,14 @@
                         <p>
                             <span>You can sign into your account using the following temporary credentials:</span>
                             <br>
-                            <span> Email address: {{$email}} </span> <br>
+                            <span> Email address: <a style="color: black !important;">{{$email}} </a> </span> <br>
                             <span> Password: {{$password}} </span> <br>
                             <span> Username: {{$username}} </span> <br>
                         </p>
                         <p> 
                             <span> Sign into Driftwood here: </span>
                             <a href="{{ route('participant.signin.view') }}"
-                                style="display: inline-block; padding: 10px; color: white !important; background-color: {{$primaryColor}}; text-decoration: none; border-radius: 5px;">
+                                style="display: inline-block; padding: 10px; color: white !important;background-color: transparent; color: {{$primaryColor}} !important; text-decoration: none; border-radius: 5px;">
                                 Sign in
                             </a>
                         </p>
@@ -36,7 +36,7 @@
 
                         <p>We're still refining many of our features, so thank you for being patient. If you need any support, ping us at <a href="mailto:supportmain@driftwood.gg" style="color: {{$primaryColor}};">supportmain@driftwood.gg </a> and we'll come to your aid.</p>
 
-                        <p>Sincerely,<br>Leigh<br>The Driftwood Team<br>driftwood.gg</p>
+                        <p>Sincerely,<br>Leigh<br>The Driftwood Team<br><a style="color: {{$primaryColor}};"> driftwood.gg </a></p>
                     </td>
                 </tr>
                

@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
@@ -145,32 +146,65 @@ class BetaController extends Controller
 
     public function postOnboardBeta (Request $request) {
         try {
-            DB::beginTransaction();
             $interestedUsers = DB::table('interested_user')
-                ->where('id', $request->idList)
-                ->get();
-
-            $interestedUserEmail = $interestedUsers->pluck('email')->toArray();
-            $existingUsers = User::whereIn('email', $interestedUserEmail)
+                ->whereIn('id', $request->idList)
                 ->get();
             
+            $interestedUserEmail = $interestedUsersPassTextMapByEmail = [];
+
+            foreach ($interestedUsers as $interestedUser) {
+                $interestedUserEmail[] = $interestedUser->email;
+                $interestedUsersPassTextMapByEmail[ $interestedUser->email ] = $interestedUser->pass_text;
+            }
+
+
+            $existingUsers = User::whereIn('email', $interestedUserEmail)
+                ->get();
+
+            
             foreach ($existingUsers as $user) {
-                Mail::to($user)->queue(new SendBetaWelcomeMail($user));
+                if (!$interestedUsersPassTextMapByEmail [$user->email]) {
+                    $password = generateToken(8);
+
+                    DB::table('interested_user')
+                        ->where('email', $interestedUser->email)
+                        ->update([
+                            'pass_text' => $password,
+                            'email_verified_at' => now()
+                        ]);
+                    
+                    $interestedUsersPassTextMapByEmail [$user->email] = $password;
+                    $user->password = $password;
+                    $user->save();
+                }
+
+                Mail::to($user)->queue(new SendBetaWelcomeMail(
+                    $user, $interestedUsersPassTextMapByEmail [$user->email]
+                ));
             }
             
             $existingUsersEmail = $existingUsers->pluck('email')->toArray();
             $newEmail = array_diff($interestedUserEmail, $existingUsersEmail);
 
+
             foreach ($newEmail as $email) {
                 $username = explode('@', $email)[0];
                 $username = strlen($username) > 5 ? substr($username, 0, 5) : $username;
+                $password = generateToken(8);
+                DB::table('interested_user')
+                    ->where('email', $email)
+                    ->update([
+                            'pass_text' => $password,
+                            'email_verified_at' => now()
+                        ]
+                    );
+
                 $user = new User([
                     'email' => $email,
-                    'password' => generateToken(8),
+                    'password' => $password,
                     'name' => generateToken(2) . $username . generateToken(2),
                     'role' => 'PARTICIPANT',
                     'created_at' => now(),
-                    'updated_at' => now()
                 ]);
 
                 $user->save();
@@ -181,17 +215,14 @@ class BetaController extends Controller
                 ]);
 
                 $participant->save();
-                Mail::to($user)->queue(new SendBetaWelcomeMail($user));
+                Mail::to($user)->queue(new SendBetaWelcomeMail($user, $password));
             }
 
-           
-          
-            DB::commit();
-            return back()->with('success', "Created new users");
+
+            return back()->with('success', "Created/ updated new users");
           
         } catch (Exception $e) {
-            DB::rollBack();
-            return back()->with('error', "Failed to create new users");
+            return back()->with('error', $e->getMessage());
 
         }
     }

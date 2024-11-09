@@ -24,17 +24,18 @@
         <div class="container mx-auto">
             <form id="betaUsersForm" action="{{ route('admin.onboardBeta.action') }}" method="POST">
                 @csrf
+                @include('__CommonPartials.Flash')
                 <div class="table-responsive ">
                     <table class="table table-sm">
                         <thead>
                             <tr>
-                                <th>
+                                <th class="px-3">
                                     <input type="checkbox" id="selectAll" class="form-check-input">
                                 </th>
-                                <th>Email</th>
-                                <th>Email verified</th>
-                                <th>Created At</th>
-                                <th>Updated At</th>
+                                <th class="px-3">Email</th>
+                                <th class="px-3">Email verified</th>
+                                <th class="px-3">Created At</th>
+                                <th class="px-3">Updated At</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,16 +44,20 @@
                                     @php
                                         $created_at = Carbon::parse($user->created_at)->diffForHumans();
                                         $updated_at = Carbon::parse($user->updated_at)->diffForHumans();
+                                        $email_verified_at = 'Not verified';
+                                        if ($user->email_verified_at) {
+                                            $email_verified_at = Carbon::parse($user->email_verified_at)->diffForHumans();
+                                        }
                                     @endphp
-                                    <td>
+                                    <td class="px-3">
                                         <input type="checkbox" name="idList[]" value="{{ $user->id }}"
                                             class="form-check-input user-checkbox"
                                         >
                                     </td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->email_verified_at }}</td>
-                                    <td>{{ $created_at }}</td>
-                                    <td>{{ $updated_at }}</td>
+                                    <td class="px-3">{{ $user->email }}</td>
+                                    <td class="px-3">{{ $email_verified_at }}</td>
+                                    <td class="px-3">{{ $created_at }}</td>
+                                    <td class="px-3">{{ $updated_at }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
