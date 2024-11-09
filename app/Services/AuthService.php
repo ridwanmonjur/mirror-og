@@ -8,18 +8,9 @@ use App\Models\EventDetail;
 use App\Models\Organizer;
 use App\Models\Participant;
 use App\Models\User;
-use Carbon\Carbon;
-use ErrorException;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
-use Laravel\Socialite\Facades\Socialite;
+
 
 class AuthService {
     

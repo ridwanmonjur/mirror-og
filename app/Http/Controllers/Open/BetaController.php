@@ -162,9 +162,12 @@ class BetaController extends Controller
             $newEmail = array_diff($interestedUserEmail, $existingUsersEmail);
 
             foreach ($newEmail as $email) {
+                $username = explode('@', $email)[0];
+                $username = strlen($username) > 5 ? substr($username, 0, 5) : $username;
                 $user = new User([
                     'email' => $email,
-                    'password' => generateToken(),
+                    'password' => generateToken(8),
+                    'name' => generateToken(2) . $username . generateToken(2),
                     'role' => 'PARTICIPANT',
                     'created_at' => now(),
                     'updated_at' => now()
