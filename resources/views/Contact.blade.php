@@ -10,7 +10,7 @@
     <header>
         @include('__CommonPartials.NavbarBeta')
     </header>
-    <!-- Main Content -->
+    <!-- Contact & About Us Boxes and Social Media Data-->
     @php
         $contactOptions = [
             [
@@ -42,13 +42,14 @@
     @endphp
     <main class="py-5 d-flex justify-content-between flex-column" style="min-height: 95vh;">
         <div class="mx-auto">
+            <!-- Heading -->
             <div class="g-4">
                 <h1 class="display-4 text-center text-white mb-3">Contact us</h1>
                 <p class="lead text-white mb-5 mx-3 text-center">
                     Talk to us - we're here to help! What do you need?
                 </p>
             </div>
-
+            <!-- Contact and About Us Box -->
             <div class="d-flex justify-content-center mx-4">
                 <div class="row ">
                     <div class="d-none d-lg-block col-lg-2"> </div>
@@ -78,6 +79,7 @@
                 </div>
             </div>
         </div>
+        <!-- Social Media Links -->
         <div >
             <div class=" text-center">
                 @foreach ($socialLinks as $platform => $link)

@@ -60,7 +60,17 @@
         "background-size: cover; background-repeat: no-repeat; min-height: 35vh;" 
     ])
 >    
-    
+
+    <div class="team-head-storage d-none"
+        data-route-signin="{{ route('participant.signin.view') }}"
+        data-route-profile="{{ route('public.participant.view', ['id' => ':id']) }}"
+        data-route-team-banner="{{ route('participant.teamBanner.action', ['id' => $selectTeam->id]) }}"
+        data-route-background-api="{{ route('user.userBackgroundApi.action', ['id' => $selectTeam->id]) }}"
+        data-background-styles="<?php echo $backgroundStyles; ?>"
+        data-font-styles="<?php echo $fontStyles; ?>"
+    >
+    </div>
+
     <input type="hidden" id="teamData" value="{{json_encode($selectTeam)}}">
     <input type="file" id="backgroundInput" class="d-none"> 
     {{-- @if ($isCreator) --}}
@@ -282,7 +292,22 @@
     @include('Participant.__Partials.BackgroundModal')
 
 <script>
+        const storage = document.querySelector('.team-head-storage');
+
+        const routes = {
+            signin: storage.dataset.routeSignin,
+            profile: storage.dataset.routeProfile,
+            teamBanner: storage.dataset.routeTeamBanner,
+            backgroundApi: storage.dataset.routeBackgroundApi
+        };
+
+        const styles = {
+            backgroundStyles: storage.dataset.backgroundStyles,
+            fontStyles: storage.dataset.fontStyles
+        };
+
         let teamData = JSON.parse(document.getElementById('teamData').value);
+        let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         document.addEventListener('alpine:init', () => {
 
@@ -341,7 +366,7 @@
                         const response = await fetch(url, {
                             method: 'POST',
                             headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'X-CSRF-TOKEN': csrfToken,
                                 'Content-type': 'application/json',
                                 'Accept': 'application/json',
                             },
@@ -379,8 +404,8 @@
                 },
                 init() {
                     this.fetchCountries();
-                    var backgroundStyles = "<?php echo $backgroundStyles; ?>";
-                    var fontStyles = "<?php echo $fontStyles; ?>";
+                    var backgroundStyles = styles.backgroundStyles;
+                    var fontStyles = styles.fontStyles;
                     console.log({backgroundStyles, fontStyles})
                     var banner = document.getElementById('backgroundBanner');
                     banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
@@ -554,11 +579,10 @@
 
     async function changeBackgroundDesignRequest(body, successCallback, errorCallback) {
         try {
-            const url = "{{ route('user.userBackgroundApi.action', ['id' => $selectTeam->id] ) }}";
-            const response = await fetch(url, {
+            const response = await fetch(routes.backgroundApi, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-CSRF-TOKEN': csrfToken,
                     'Content-type': 'application/json',
                     'Accept': 'application/json',
                     ...window.loadBearerHeader()
@@ -593,14 +617,13 @@
             const file = e.target.files[0];
 
             if (file) {
-                const url = "{{ route('participant.teamBanner.action', ['id' => $selectTeam->id] ) }}";
                 const formData = new FormData();
                 formData.append('file', file);
                 try {
-                    const response = await fetch(url, {
+                    const response = await fetch(routes.teamBanner, {
                         method: 'POST',
                         headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'X-CSRF-TOKEN': csrfToken,
                         },
                         body: formData,
                     });
@@ -638,14 +661,11 @@
 
     function reddirectToLoginWithIntened(route) {
         route = encodeURIComponent(route);
-        let url = "{{ route('participant.signin.view') }}";
-        url += `?url=${route}`;
-        window.location.href = url;
+        window.location.href = `${routes.signin}?url=${route}`;
     }
 
     function redirectToProfilePage(userId) {
-        window.location.href = "{{ route('public.participant.view', ['id' => ':id']) }}"
-            .replace(':id', userId);
+        window.location.href = routes.profile.replace(':id', userId);
     }
 </script>
 @include('__CommonPartials.Cropper')

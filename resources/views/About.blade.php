@@ -11,6 +11,7 @@
         @include('__CommonPartials.NavbarBeta')
     </header>
     <main style="padding: 5vh 10vw ;">
+        {{-- Para 1 --}}
         <section class="mb-5">
             <h2 class="display-4 fw-light text-white mb-4">What is Driftwood about?</h2>
             <p class="text-white mb-3">Driftwood is about bringing people who love esports closer together.</p>
@@ -18,7 +19,7 @@
                 community. We want to share our passion for esports with those around us, and we want to enable you to share
                 your passion with those around you.</p>
         </section>
-
+        {{-- Para 2 --}}
         <section>
             <h2 class="display-4 px-0 fw-light text-white mb-4">How did Driftwood begin?</h2>
             <p class="text-white px-0 mb-3 text-justify">Our team grew up playing and loving competitive games. Late nights at LAN cafes after

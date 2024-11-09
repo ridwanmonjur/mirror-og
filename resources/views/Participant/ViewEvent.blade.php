@@ -17,6 +17,7 @@
 </head>
 
 @php
+    use Carbon\Carbon;
     $status = $event->statusResolved();
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
     $tier = $event->tier ? $event->tier?->eventTier : null;
@@ -396,7 +397,68 @@
                 </div>
                 <div id="Result" class="tabcontent">
                     <h5><u>Result</u></h5>
-                    <p>Result tab.</p>
+                    <div class="tab-content pb-4 tab-size outer-tab mx-auto" id="Position">
+                        <table class="mx-auto member-table responsive" style="margin-left: 5px;">
+                            
+                            @if (isset($joinEventAndTeamList[0]))
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                    
+                                        <th class="text-start">
+                                            Team Name
+                                        </th>
+                                        
+                                        <th class="text-start" style="width: 150px;">
+                                            Team Created
+                                        </th>
+                                        <th class="text-start" style="width: 120px;">
+                                            Team Position
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="accepted-member-table text-start">
+                                    @foreach ($joinEventAndTeamList as $key => $joinEventAndTeam)
+                                        <tr class="st">
+                                            <td class="colorless-col px-0">
+                                                <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
+                                                    class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
+                                                    width="20" height="20" fill="currentColor"
+                                                    class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                                                    <path
+                                                        d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                                                </svg>
+                                            </td>
+                                            
+                                            <td class="colored-cell px-2 text-start">
+                                                <img
+                                                    class="rounded-circle d-inline-block object-fit-cover me-3"
+                                                    src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"
+                                                    {!! trustedBladeHandleImageFailure() !!} 
+                                                    height="40"
+                                                    width="40"
+                                                > 
+                                                {{ $joinEventAndTeam->teamName }}
+                                            </td>
+                                            
+                                            <td class="colored-cell px-2 text-start">
+                                                {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
+                                            </td>
+                                            <td class="colored-cell text-start px-2">
+                                                {{ $joinEventAndTeam->position ? $joinEventAndTeam->position : 'N/A' }}
+                                                &nbsp;&nbsp;
+                                            </td>
+                                           
+                                        </tr>
+                                        
+                                    @endforeach
+                                </tbody>
+                            @else
+                                <p class="text-center mt-5">  No teams joined yet.</p>
+                            @endif
+                        </table>
+                    </div>
                 </div>
             </div>
             <div></div>
