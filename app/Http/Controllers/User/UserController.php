@@ -74,28 +74,4 @@ class UserController extends Controller
             return back();
         }
     }
-
-    public function viewOnboardBeta (Request $request) {
-        $users = DB::table('interested_user')
-            ->orderBy('created_at', 'desc')
-            ->paginate(50); 
-
-        return view('Organizer.BetaUser', compact('users'));
-
-    }
-
-    public function postOnboardBeta (Request $request) {
-        $users = DB::table('interested_user')
-            ->where('id', $request->idList)
-            ->get()
-            ->keyBy('email'); 
-        
-        // $userList = new User([
-        //     'name' => 'user' . '122222222222',
-        //     'email' => $validatedData['email'],
-        //     'password' => $validatedData['password'],
-        //     'role' => $roleCapital,
-        //     'created_at' => now(),
-        // ]);
-    }
 }

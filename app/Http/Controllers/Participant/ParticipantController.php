@@ -186,7 +186,6 @@ class ParticipantController extends Controller
     {
         $user = $request->attributes->get('user');
         $validatedData = $request->validated();
-        $activityLog = new ActivityLogs();
         if (array_key_exists('deleteUserId', $validatedData)) {
             $friend = Friend::checkFriendship($validatedData['deleteUserId'], $user->id);
             $friend?->deleteOrFail();
@@ -254,7 +253,7 @@ class ParticipantController extends Controller
                 ]);
 
                 if ($status === 'left') {
-                    $activityLog->findActivityLog([
+                    ActivityLogs::findActivityLog([
                         'subject_type' => User::class,
                         'subject_id' => [$user->id, $updateUser->id],
                         'object_type' => Friend::class,
@@ -264,7 +263,7 @@ class ParticipantController extends Controller
                 }
 
                 if ($status === 'accepted') {
-                    $activityLog->createActivityLogs([
+                    ActivityLogs::createActivityLogs([
                         'subject_type' => User::class,
                         'subject_id' => [$user->id, $updateUser->id],
                         'object_type' => Friend::class,
@@ -332,9 +331,8 @@ class ParticipantController extends Controller
         $userId = $user->id;
         $participantId = $request->participant_id;
         $existingFollow = ParticipantFollow::checkFollow($user->id, $participantId);
-        $activityLog = new ActivityLogs();
         if ($existingFollow) {
-            $activityLog->findActivityLog([
+            ActivityLogs::findActivityLog([
                 'subject_type' => User::class,
                 'subject_id' => $user->id,
                 'object_type' => ParticipantFollow::class,
@@ -361,7 +359,7 @@ class ParticipantController extends Controller
                 ]);
 
                 $message = 'Successfully followed the participant';
-                $activityLog->createActivityLogs([
+                ActivityLogs::createActivityLogs([
                     'subject_type' => User::class,
                     'subject_id' => [$user->id],
                     'object_type' => ParticipantFollow::class,
@@ -462,23 +460,12 @@ class ParticipantController extends Controller
         $page = $request->input('page', 1);
         $perPage = 5;
 
-        $activityLogsQuery = ActivityLogs::where('subject_id', $userId)
-            ->where('subject_type', User::class);
-
-
-        if ($duration == 'new') {
-            $activityLogsQuery->whereDate('created_at', Carbon::today());
-        } elseif ($duration == 'recent') {
-            $activityLogsQuery->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::today()]);
-        } else {
-            $activityLogsQuery->whereDate('created_at', '<', Carbon::now()->subWeek()->startOfWeek());
-        }
-
-        // $activityLogsQuery->orderBy('created_date', 'asc');
-
-        $activityLogs = $activityLogsQuery
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage, ['*'], 'page', $page);
+        $activityLogs = ActivityLogs::retrievePaginatedActivityLogs($userId,
+             $duration, 
+             $perPage, 
+             $page
+        );
+        
         return response()->json([
             'items' => $activityLogs->items(),
             'hasMore' => $activityLogs->hasMorePages()

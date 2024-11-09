@@ -15,13 +15,19 @@
         html, body {
             font-size: 16px;
         }
-        h1, p, table {
+        h1, h2, h3, h4, h5, h6, p, table, span, table {
             text-align: justify;
             font-size: 1rem;
         }
         a { 
             color: #43A4D7;
             text-decoration: none !important;
+        }
+
+        @media (max-width: 1000px) {
+            html, body {
+                font-size: 18px;
+            }
         }
     </style>
    

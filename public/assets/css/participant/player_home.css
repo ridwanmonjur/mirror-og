@@ -373,6 +373,10 @@ footer {
 /* Mobile styles */
 
 @media (max-width: 560px) {
+    main {
+        background-size: cover;
+    }
+
     .hero img {
         height: 30vh;
     }
@@ -393,6 +397,10 @@ footer {
 
 
 @media (min-width: 560px) and (max-width: 800px) {
+    main {
+        background-size: cover;
+    }
+    
     .league_name p{
         font-size: 1.15rem;
     }

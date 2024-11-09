@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Support\Facades\Log;
 
 class ActivityLogs extends Model
 {
@@ -22,7 +22,7 @@ class ActivityLogs extends Model
         return $this->morphTo();
     }
 
-    public function findActivityLog(array $parameters): Builder
+    public static function findActivityLog(array $parameters): Builder
     {
         $query = ActivityLogs::query();
         $query->where([
@@ -41,7 +41,7 @@ class ActivityLogs extends Model
         return $query;
     }
 
-    public function createActivityLogs(array $parameters): void
+    public static function createActivityLogs(array $parameters): void
     {
         $data = [];
         $isLogArray = is_array($parameters['log']); 
@@ -59,5 +59,25 @@ class ActivityLogs extends Model
         }
 
         ActivityLogs::insert($data);
+    }
+
+    public static function retrievePaginatedActivityLogs($userId, $duration, $perPage, $page)
+    {
+        $activityLogsQuery = ActivityLogs::where('subject_id', $userId)
+                ->where('subject_type', User::class);
+    
+            if ($duration == 'new') {
+                $activityLogsQuery->whereDate('created_at', operator: Carbon::today());
+            } elseif ($duration == 'recent') {
+                $activityLogsQuery->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::today()]);
+            } else {
+                $activityLogsQuery->whereDate('created_at', '<', Carbon::now()->subWeek()->startOfWeek());
+            }
+    
+            $activityLogs = $activityLogsQuery
+                ->orderBy('created_at', 'desc')
+                ->paginate($perPage, ['*'], 'page', $page);
+                
+        return $activityLogs;
     }
 }

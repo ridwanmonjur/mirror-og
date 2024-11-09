@@ -18,7 +18,7 @@ class Notifications extends Model
         'read_at', 'data',
     ];
 
-    public function findNotifications(array $parameters): Builder
+    public static function findNotifications(array $parameters): Builder
     {
         $query = Notifications::query();
         $query->where([
@@ -36,7 +36,7 @@ class Notifications extends Model
         return $query;
     }
 
-    public function createNotifications(array $parameters): void
+    public static function createNotifications(array $parameters): void
     {
 
         if (is_array($parameters['subject_id'])) {

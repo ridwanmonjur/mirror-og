@@ -23,15 +23,13 @@ class ChangePositionStrategy
             ] = $parameters;
 
             $emojiMap = [1 => '🥇 (1st position)', 2 => '🥈 (2nd position)'];
-            $activityLogX = new ActivityLogs();
-            $notificationX = new Notifications();
             $positionString = intval(bladeOrdinalPrefix($parameters['position']));
             if (isset($emojiMap[$parameters['position']])) {
                 $positionString = $emojiMap[$parameters['position']];
             }
 
-            $foundLogs = $activityLogX->findActivityLog($parameters)->get();
-            $foundNotifications = $notificationX->findNotifications($parameters)->get();
+            $foundLogs = ActivityLogs::findActivityLog($parameters)->get();
+            $foundNotifications = Notifications::findNotifications($parameters)->get();
             $notificationLog = <<<HTML
                 <span>
                     <span class="notification-gray"> You achieved 
@@ -68,7 +66,7 @@ class ChangePositionStrategy
                 }
             } else {
                 $parameters['log'] = $activityLog;
-                $activityLogX->createActivityLogs($parameters);
+                ActivityLogs::createActivityLogs($parameters);
             }
 
             $parameters['data'] = [
@@ -88,7 +86,7 @@ class ChangePositionStrategy
                     ]);
                 }
             } else {
-                $notificationX->createNotifications($parameters);
+                Notifications::createNotifications($parameters);
             }
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -106,8 +104,7 @@ class AddAwardStrategy
                 'image' => $image,
             ] = $parameters;
 
-            $notificationX = new Notifications();
-            $activityLogX = new ActivityLogs();
+            $Notification:: = new Notifications();
             $notificationLog = <<<HTML
                 <span class="notification-gray"> You achieved {$parameters['award']} in the team, 
                     <span class="notification-black">{$parameters['teamName']}</span>.
@@ -148,7 +145,7 @@ class AddAwardStrategy
             HTML;
 
             $parameters['log'] = $activityLog;
-            $activityLogX->createActivityLogs($parameters);
+            ActivityLogs::createActivityLogs($parameters);
 
             $parameters['data'] = [
                 'subject' => 'Award added',
@@ -160,7 +157,7 @@ class AddAwardStrategy
                 ],
             ];
 
-            $notificationX->createNotifications($parameters);
+            Notifications::createNotifications($parameters);
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
@@ -177,8 +174,7 @@ class AddAchievementStrategy
                 'image' => $image,
             ] = $parameters;
             
-            $notificationX = new Notifications();
-            $activityLogX = new ActivityLogs();
+            $Notification:: = new Notifications();
             $notificationLog = <<<HTML
                 <span>
                     <a href="/event/$teamId" alt="Team View">
@@ -222,7 +218,7 @@ class AddAchievementStrategy
             HTML;
 
             $parameters['log'] = $activityLog;
-            $activityLogX->createActivityLogs($parameters);
+            ActivityLogs::createActivityLogs($parameters);
 
             $parameters['data'] = [
                 'subject' => 'Achievement added',
@@ -234,7 +230,7 @@ class AddAchievementStrategy
                 ],
             ];
 
-            $notificationX->createNotifications($parameters);
+            Notifications::createNotifications($parameters);
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
@@ -246,10 +242,9 @@ class DeleteAwardStrategy
     public function handle($parameters)
     {
         try {
-            $activityLogX = new ActivityLogs();
-            $activityLogX->findActivityLog($parameters)->delete();
-            $notificationX = new Notifications();
-            $notificationX->findNotifications($parameters)->delete();
+            ActivityLogs::findActivityLog($parameters)->delete();
+            $Notification:: = new Notifications();
+            Notifications::findNotifications($parameters)->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
@@ -261,10 +256,9 @@ class DeleteAchievementStrategy
     public function handle($parameters)
     {
         try {
-            $activityLogX = new ActivityLogs();
-            $activityLogX->findActivityLog($parameters)->delete();
-            $notificationX = new Notifications();
-            $notificationX->findNotifications($parameters)->delete();
+            ActivityLogs::findActivityLog($parameters)->delete();
+            $Notification:: = new Notifications();
+            Notifications::findNotifications($parameters)->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
