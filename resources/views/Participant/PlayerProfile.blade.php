@@ -345,15 +345,7 @@
                             </span>
                         </div>
                         <div class="mt-4 my-2 text-wrap">
-                            @livewire('shared.profile.participant-friends-follows-count', [
-                                'userId' => $userProfile->id, 'name' => 'follower' 
-                            ])
-                            @livewire('shared.profile.participant-friends-follows-count', [
-                                'userId' => $userProfile->id, 'name' => 'followee' 
-                            ])
-                            @livewire('shared.profile.participant-friends-follows-count', [
-                                'userId' => $userProfile->id, 'name' => 'friend' 
-                            ])
+                            @include('Participant.__ProfilePartials.ProfileStats')
                         </div>
                         <br><br>
 

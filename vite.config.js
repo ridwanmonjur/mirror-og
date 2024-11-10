@@ -22,6 +22,7 @@ export default defineConfig({
                 'resources/sass/libraries/tagify.scss',
                 'resources/js/pages/chat.js',
                 'resources/js/pages/bracket.js',
+                'resources/js/pages/organizer.js',
             ],
             refresh: true,
         }),
