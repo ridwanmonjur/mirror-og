@@ -69,10 +69,10 @@
                     </button>
                 </div>
                 <br>
-                <p class="card-text-2-lines">
+                <p class="card-text-2-lines m-0">
                     <u>{{ $event->eventName ?? 'Choose a name' }}</u></p>
-                <p class="small-text"><i>
-                    {{ $organizer->companyName ?? 'Choose organization name' }}
+                <p class="small-text m-0"><i>
+                    {{ $event?->user?->name ?? 'Choose organization name' }}
                 </i></p>
                 <div class="flexbox-welcome">
                     <div>@php echo $dateStr; @endphp</div>

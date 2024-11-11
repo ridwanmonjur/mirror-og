@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/viewEvent.css') }}">
     @include('__CommonPartials.HeadIcon')
     @vite(['resources/js/libraries/tippy.js',  'resources/js/pages/bracket.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/libraries/lightgallery.js', 'resources/sass/libraries/lightgallery.scss'])
-    <title>Tournament Matches </title>
-    <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
+     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/event-status.css') }}">
     <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
@@ -26,6 +25,8 @@
     extract($dateArray);
     $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
+    $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
+
 @endphp
 
 <body style="background: none; ">
@@ -148,15 +149,22 @@
                             </div>
                             <div class="flexbox-centered-space card-subtitle">
                                 <div class="flexbox-centered-space">
-                                    <img style="display: inline;" src="{{ asset('/assets/images/menu.png') }}"
-                                        class="{{ 'rounded-image rounded-box-' . $eventTierLower }}" alt="menu">
+                                    @if ($bladeEventGameImage)
+                                        <img style="display: inline;" src="{{ $bladeEventGameImage }}"
+                                            class="{{ 'rounded-image rounded-box-' . $eventTierLower }}" alt="menu">
+                                    @else 
+                                        <div class="{{ 'rounded-image rounded-box-' . $eventTierLower }}" alt="menu"> </div>
+                                    @endif
                                     &nbsp;
-                                    <div class="card-organizer">
-                                        <p style="display: inline;"><u>
-                                                {{ $event?->user?->organizer?->companyName ?? 'Add' }} </u> </p>
-                                        <p class="small-text" id="followCount" data-count="{{ $followersCount }}">
+                                    <div class="card-organizer d-flex ms-2 justify-content-center flex-col">
+                                        <a href="{{route('public.organizer.view', ['id'=> $event->user->id])}}">
+                                            <p style="display: inline;"><u>{{ $event->user->name ?? 'Add' }} </u> </p>
+                                        </a>
+                                        <p class="small-text m-0" id="followCount" data-count="{{ $followersCount }}">
                                             <i> {{ $followersCount }}
-                                                {{ $followersCount == 1 ? 'follower' : 'followers' }} </i> </p>
+                                                {{ $followersCount == 1 ? 'follower' : 'followers' }} 
+                                            </i> 
+                                        </p>
                                     </div>
                                 </div>
 
@@ -396,7 +404,7 @@
                     </div>
                 </div>
                 <div id="Result" class="tabcontent">
-                    <h5><u>Result</u></h5>
+                    <h5 class="mb-3"><u>Result</u></h5>
                     <div class="tab-content pb-4 tab-size outer-tab mx-auto" id="Position">
                         <table class="mx-auto member-table responsive" style="margin-left: 5px;">
                             

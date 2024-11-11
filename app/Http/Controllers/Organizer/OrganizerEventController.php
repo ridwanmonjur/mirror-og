@@ -78,7 +78,6 @@ class OrganizerEventController extends Controller
             'eventList',
             'count',
             'user',
-            'organizer',
             'eventCategoryList',
             'eventTierList',
             'eventTypeList'
