@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizer;
 use App\Exceptions\EventChangeException;
 use App\Exceptions\TimeGreaterException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Match\OrganizerViewEventRequest;
 use App\Models\EventCategory;
 use App\Models\EventDetail;
 use App\Models\EventTier;
@@ -13,6 +14,7 @@ use App\Models\JoinEvent;
 use App\Models\Organizer;
 use App\Models\Team;
 use App\Models\User;
+use App\Services\EventMatchService;
 use App\Services\PaymentService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -27,11 +29,17 @@ use Illuminate\View\View;
 class OrganizerEventController extends Controller
 {
     private $paymentService;
+    private $eventMatchService;
 
-    public function __construct(PaymentService $paymentService)
+    public function __construct(
+        PaymentService $paymentService,
+        EventMatchService $eventMatchService
+    )
     {
         $this->paymentService = $paymentService;
+        $this->eventMatchService = $eventMatchService;
     }
+
 
     public function home()
     {
@@ -137,40 +145,7 @@ class OrganizerEventController extends Controller
     }
 
 
-    public function showLive(Request $request): View
-    {
-        try {
-            $user = $request->get('user');
-            $userId = $user->id;
-            $isUserSameAsAuth = true;
-            $livePreview = true;
-
-            $event = EventDetail::findEventWithRelationsAndThrowError(
-                $userId,
-                $request->id,
-                [],
-                null,
-                ['joinEvents' => function ($q) {
-                    $q->where('join_status', 'confirmed');
-                }]
-            );
-
-
-            $outputArray = compact(
-                'event',
-                'user',
-                'livePreview',
-            );
-
-            return view('Organizer.ViewEvent', $outputArray);
-        } catch (ModelNotFoundException|UnauthorizedException $e) {
-            return $this->showErrorOrganizer($e->getMessage());
-        } catch (Exception $e) {
-            return $this->showErrorOrganizer("Event not found with id: {$request->id}");
-        }
-    }
-
-    public function showSuccess(Request $request, $id): View
+    public function showSuccess(OrganizerViewEventRequest $request, $id): View
     {
         try {
             $user = $request->get('user');
@@ -178,17 +153,8 @@ class OrganizerEventController extends Controller
             $event = EventDetail::findEventWithRelationsAndThrowError(
                 $userId,
                 $id,
-                null,
-                ['joinEvents' => function ($query) {
-                    $query->with(['members' => function ($query) {
-                        $query->where('status', 'accepted');
-                    },
-                    ]);
-                },
-                ],
             );
-           
-
+        
             $isUserSameAsAuth = true;
         } catch (ModelNotFoundException|UnauthorizedException $e) {
             return $this->showErrorOrganizer($e->getMessage());
@@ -199,35 +165,36 @@ class OrganizerEventController extends Controller
         return view('Organizer.CreateEventSuccess', [
             'event' => $event,
             'isUser' => $isUserSameAsAuth,
-            'livePreview' => 1,
+            'livePreview' => 0,
         ]);
     }
 
-    public function show(Request $request, $id): View
+    public function show(OrganizerViewEventRequest $request, $id): View
     {
         try {
-            $user = $request->get('user');
-            $userId = $user->id;
-            $event = EventDetail::findEventWithRelationsAndThrowError(
-                $userId,
-                $id,
-                null,
-                [],
-                ['joinEvents' => function ($q) {
-                    $q->where('join_status', 'confirmed');
-                }]
-
+            $event = $request->getEvent();
+            $user = $request->getStoredUser();
+            $existingJoint = $request->getJoinEvent();
+            
+            $viewData = $this->eventMatchService->getEventViewData(
+                $event, $user, $existingJoint
+            );
+    
+            $bracketData = $this->eventMatchService->generateBrackets(
+                $event,
+                false, 
+                $existingJoint,
             );
 
-            return view('Organizer.ViewEvent', [
-                'event' => $event,
-                'isUser' => true,
-                'livePreview' => 0,
-            ]);
-        } catch (ModelNotFoundException|UnauthorizedException $e) {
-            return $this->showErrorOrganizer($e->getMessage());
+            return view('Shared.ViewEvent', [
+                    ...$viewData,
+                    'livePreview' => $request->query('live') === 'true' ? 1 : 0,
+                    ...$bracketData,
+                ]
+            );
         } catch (Exception $e) {
-            return $this->showErrorOrganizer("Event not retrieved with id: {$id}");
+            Log::error($e);
+            return $this->showErrorParticipant($e->getMessage());
         }
     }
 
@@ -241,11 +208,13 @@ class OrganizerEventController extends Controller
             $eventDetail->makeSignupTables();
 
             if ($request->livePreview === 'true') {
-                return redirect('organizer/event/'.$eventDetail->id.'/live');
+                return redirect('organizer/event/'.$eventDetail->id.'?live=true');
             }
+
             if ($request->goToCheckoutPage === 'yes') {
                 return redirect('organizer/event/'.$eventDetail->id.'/checkout');
             }
+            
             return redirect('organizer/event/'.$eventDetail->id.'/success');
         } catch (TimeGreaterException|EventChangeException $e) {
             return back()->with('error', $e->getMessage());

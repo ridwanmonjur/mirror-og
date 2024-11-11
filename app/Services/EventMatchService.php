@@ -1,8 +1,13 @@
 <?php
 namespace App\Services;
 
+use App\Models\Achievements;
+use App\Models\AwardResults;
 use App\Models\EventDetail;
+use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
+use App\Models\Like;
+use App\Models\OrganizerFollow;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -131,5 +136,29 @@ class EventMatchService {
             'previousValues' => $previousValues
         ];
     }
+
+    public function getEventViewData(EventDetail $event, ?User $user, ?JoinEvent $existingJoint): array
+    {
+        $userId = $user?->id;
+        
+        $viewData = [
+            'event' => $event,
+            'awardAndTeamList' => AwardResults::getTeamAwardResults($event->id),
+            'achievementsAndTeamList' => Achievements::getTeamAchievements($event->id),
+            'joinEventAndTeamList' => EventJoinResults::getEventJoinResults($event->id),
+            'followersCount' => OrganizerFollow::getFollowersCount($event->user_id),
+            'likesCount' => Like::getLikesCount($event->id),
+            'user' => $user,
+            'existingJoint' => $existingJoint
+        ];
+
+        if ($user) {
+            $viewData['user']->isFollowing = OrganizerFollow::isFollowing($userId, $event->user_id);
+            $viewData['user']->isLiking = Like::isLiking($userId, $event->id);
+        }
+
+        return $viewData;
+    }
+
 
 }

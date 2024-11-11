@@ -167,42 +167,48 @@
                                         </p>
                                     </div>
                                 </div>
-
-                                <form id="followForm" method="POST"
-                                    action="{{ route('participant.organizer.follow') }}">
-                                    @csrf
-                                    <input type="hidden" name="role"
-                                        value="{{ $user && $user->id ? $user->role : '' }}">
-                                    <input type="hidden" name="user_id"
-                                        value="{{ $user && $user->id ? $user->id : '' }}">
-                                    <input type="hidden" name="organizer_id"
-                                        value="{{ $event?->user_id }}">
-                                    @guest
-                                        <button
-                                            class=""
-                                            type="button"
-                                            onclick="reddirectToLoginWithIntened('{{route('public.event.view', ['id'=> $event->id])}}')"
-                                            id="followButton"
-                                            style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
-                                            Follow
-                                        </button>
-                                    @endguest
-                                    @auth
-                                        @if ($user->role == 'PARTICIPANT')
-                                            <button class="" type="submit" id="followButton"
-                                                style="background-color: {{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
-                                                {{ $user && $user->isFollowing ? 'Following' : 'Follow' }}
-                                            </button>
-                                        @else
-                                            <button class="" type="button"
-                                                onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
+                                
+                                 @if ($livePreview)
+                                    <button type="button" onclick="goToEditScreen();" class="btn btn-link">
+                                        <u>Resume creating....</u>
+                                    </button>
+                                @else
+                                    <form id="followForm" method="POST"
+                                        action="{{ route('participant.organizer.follow') }}">
+                                        @csrf
+                                        <input type="hidden" name="role"
+                                            value="{{ $user && $user->id ? $user->role : '' }}">
+                                        <input type="hidden" name="user_id"
+                                            value="{{ $user && $user->id ? $user->id : '' }}">
+                                        <input type="hidden" name="organizer_id"
+                                            value="{{ $event?->user_id }}">
+                                        @guest
+                                            <button
+                                                class=""
+                                                type="button"
+                                                onclick="reddirectToLoginWithIntened('{{route('public.event.view', ['id'=> $event->id])}}')"
                                                 id="followButton"
                                                 style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                                                 Follow
                                             </button>
-                                        @endif
-                                    @endauth
-                                </form>
+                                        @endguest
+                                        @auth
+                                            @if ($user->role == 'PARTICIPANT')
+                                                <button class="" type="submit" id="followButton"
+                                                    style="background-color: {{ $user && $user->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $user->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
+                                                    {{ $user && $user->isFollowing ? 'Following' : 'Follow' }}
+                                                </button>
+                                            @else
+                                                <button class="" type="button"
+                                                    onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
+                                                    id="followButton"
+                                                    style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
+                                                    Follow
+                                                </button>
+                                            @endif
+                                        @endauth
+                                    </form>
+                                @endif
                             </div>
                             <br>
                             <div>
