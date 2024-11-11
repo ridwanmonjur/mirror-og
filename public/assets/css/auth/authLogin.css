@@ -6,17 +6,6 @@
 }
 
 
-html.is-changing main {
-    visibility: hidden;
-    transform: translateX(0);
-}
-
-html.is-animating main {
-    transform: translateX(-100%);
-    opacity: 0;
-}
-
-
 body {
     width: 100%;
     height: auto;
@@ -138,7 +127,7 @@ input::selection {
 @keyframes slide {
   0% {height: 5px; opacity: 0;  overflow-y: hidden;}
   50% {height: 12px; opacity: 0.25; overflow-y: hidden;}
-  100% {height: 25px; opacity: 1; overflow-y: visible;}
+  100% {height: 100%; opacity: 1; overflow-y: visible;}
 }
 
 
@@ -298,14 +287,13 @@ span.placeholder-moves-up {
     height: 38px !important;
 }
 
-.field input:focus,
-.field input:not(:focus):valid {
+.field input:focus {
     border: none !important;
     outline: none !important;
     box-shadow: 0 0 0 1px #43A4D7;
 }
 
-.field input:not(:-webkit-autofill):not(:focus)invalid {
+.field input:not(:-webkit-autofill):not(:focus):invalid {
     border: none !important;
     outline: none !important;
     box-shadow: 0 0 0 1px rgb(186, 183, 183);
@@ -341,12 +329,16 @@ span.placeholder-moves-up {
 /* Adding new CSS for placeholder animation */
 
 input:focus+span.placeholder-moves-up,
-input:not(:focus):valid+span.placeholder-moves-up {
+input:not(:focus):valid + span.placeholder-moves-up {
     transform:  translateY(-50%) ;
     padding: 0px 0px;
     z-index: 99 !important;
     background-color: white;
+}
+
+input:focus+span.placeholder-moves-up {
     color: #43A4D7;
+
 }
 
 
