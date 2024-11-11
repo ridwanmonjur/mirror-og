@@ -26,7 +26,7 @@
 
         @media (max-width: 1000px) {
             html, body {
-                font-size: 18px;
+                font-size: 17.3px;
             }
         }
     </style>
