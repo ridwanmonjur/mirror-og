@@ -11,6 +11,7 @@ use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\Shared\EventController;
+use App\Http\Controllers\Shared\SocialController;
 use App\Http\Controllers\Shared\StripeController;
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\NotificationController;
@@ -40,7 +41,9 @@ Route::put('/interest', [BetaController::class, 'interestedAction'])->name('publ
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
-        Route::post('/user/likes', [ParticipantController::class, 'likeEvent'])->name('participant.events.like');
+        Route::get('/user/{id}/connections', [SocialController::class, 'getConnections'])->name('user.connections.index');
+       
+        Route::post('/user/likes', [ParticipantEventController::class, 'likeEvent'])->name('participant.events.like');
         Route::post('/user/participants', [ParticipantController::class, 'searchParticipant'])->name('user.teams.index');
         Route::put('/user/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('user.notifications.read');
         Route::put('/user/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('user.notifications.readAll');
@@ -57,7 +60,7 @@ Route::group(['prefix' => 'participant'], function () {
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'check-jwt-permission:participant|admin'], function () {
             Route::post('/events', [ParticipantEventController::class, 'index'])->name('events.index');
-            Route::post('/organizer/follow', [ParticipantEventController::class, 'followOrganizer'])->name('participant.organizer.follow');
+            Route::post('/organizer/follow', [SocialController::class, 'followOrganizer'])->name('participant.organizer.follow');
             Route::post('/profile', [ParticipantController::class, 'editProfile'])->name('participant.profile.update');
             Route::post('/team', [ParticipantTeamController::class, 'editTeam'])->name('participant.team.update');
             Route::post('/team/{id}/user/{userId}/invite', [ParticipantTeamController::class, 'inviteMember'])->name('participant.member.invite');

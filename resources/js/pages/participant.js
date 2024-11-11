@@ -166,4 +166,104 @@ activityTypes.forEach(type => {
     Alpine.data(`${type}Activities`, createActivityLogsData(userId, type));
 });
 
+function alpineProfileData(userId) {
+    return () => ({
+        role: "PARTICIPANT",
+        userId: userId,
+        profile: {},
+        connections: {},
+        count: {},
+        page: {},
+        next_page: {},
+        currentTab: 'followers',
+        
+        async init() {
+            await this.loadInitialData();
+        },
+        
+        async loadInitialData() {
+            try {
+                const response = await fetch(`/api/user/${this.userId}/connections?type=all&role=${this.role}`);
+                const data = await response.json();
+                this.count = data.count;
+            } catch (error) {
+                console.error('Failed to load profile data:', error);
+            }
+        },
+        
+        async openModal(type) {
+            this.currentTab = type;
+
+            if (!this.connections[type]) {
+                await this.loadPage(1);
+            } 
+            
+            let modalElement = document.getElementById("connectionModal");
+            window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
+        },
+
+        async loadNextPage(){
+            if (this.next_page[this.currentTab]) {
+                await this.loadPage(this.page[this.currentTab] + 1);
+            }
+        },
+
+        async loadPage(page) {
+            try {
+                let tab = this.currentTab;
+                const response = await fetch(
+                    `/api/user/${this.userId}/connections?type=${tab}&page=${page}&role=${this.role}`
+                );
+                const data = await response.json();
+                if (tab in data.connections)  {
+                    if (this.page[tab]) {
+                        let newTab = this.page[tab];
+                        newTab++;
+                        this.page = {
+                            ...this.page,
+                            [tab]: newTab
+                        };
+
+                        this.connections = {
+                            ...this.connections,
+                            [tab]: [
+                                ...this.connections[tab],
+                                data.connections[tab].data
+                            ]
+                        } ;
+                       
+                       
+                    } else {
+                        this.page = {
+                            ...this.page,
+                            [tab]: 1
+                        };
+
+                        this.connections = {
+                            ...this.connections,
+                            [tab]: data.connections[tab].data
+                        } ;
+                       
+                    }
+
+                    this.next_page[tab] =  data.connections[tab]?.next_page_url ?
+                        true: false; 
+                    
+                }
+            } catch (error) {
+                console.error('Failed to load page:', error);
+            }
+        },
+        formatDate(date) {
+            return  DateTime
+                .fromISO(date)
+                .toRelative();
+        }
+
+    });
+}
+
+Alpine.data('profileStatsData', alpineProfileData(userId));
+
+
 Alpine.start();

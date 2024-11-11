@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Participant;
 
 use App\Events\JoinEventSignuped;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\LikeRequest;
 use App\Jobs\HandleFollows;
 use App\Models\Achievements;
 use App\Models\AwardResults;
@@ -98,6 +99,7 @@ class ParticipantEventController extends Controller
             }
             $awardAndTeamList = AwardResults::getTeamAwardResults($id);
             $achievementsAndTeamList = Achievements::getTeamAchievements($id);
+            $joinEventAndTeamList = EventJoinResults::getEventJoinResults($id);
 
             $status = $event->statusResolved();
             if (in_array($status, ['DRAFT', 'PREVEW', 'PENDING'])) {
@@ -160,6 +162,7 @@ class ParticipantEventController extends Controller
                     'matchesUpperCount' => $matchesUpperCount,
                     'bracketList' => $bracketList,
                     'likesCount' => $likesCount, 
+                    'joinEventAndTeamList' => $joinEventAndTeamList,
                     'followersCount' => $followersCount, 
                     'user' => $user, 
                     'existingJoint' => $existingJoint,
@@ -172,55 +175,7 @@ class ParticipantEventController extends Controller
         }
     }
 
-    public function followOrganizer(Request $request)
-    {
-        $user = $request->attributes->get('user');
-        $userId = $user->id;
-        $organizerId = $request->organizer_id;
-        $existingFollow = OrganizerFollow::where('participant_user_id', $userId)
-            ->where('organizer_user_id', $organizerId)
-            ->first();
-        $organizer = User::findOrFail($organizerId);
-
-        if ($existingFollow) {
-            dispatch(new HandleFollows('Unfollow', [
-                'subject_type' => User::class,
-                'object_type' => User::class,
-                'subject_id' => $userId,
-                'object_id' => $organizerId,
-                'action' => 'Follow',
-            ]));
-
-            $existingFollow->delete();
-
-            return response()->json([
-                'message' => 'Successfully Unfollowed the organizer',
-                'isFollowing' => false,
-            ], 201);
-        }
-        OrganizerFollow::create([
-            'participant_user_id' => $userId,
-            'organizer_user_id' => $organizerId,
-        ]);
-
-        // dispatch(new HandleFollows('Unfollow', [
-            //     'subject_type' => User::class,
-            //     'object_type' => User::class,
-            //     'subject_id' => $userId,
-            //     'object_id' => $organizerId,
-            //     'action' => 'Follow',
-            //     'log' => '<span class="notification-gray"> User'
-            //     . ' <span class="notification-black">' . $user->name . '</span> started following '
-            //     . ' <span class="notification-black">' . $organizer->name . '.</span> '
-            //     . '</span>'
-        // ]));
-
-        return response()->json([
-            'message' => 'Successfully followed the organizer',
-            'isFollowing' => true,
-        ], 201);
-    }
-
+  
     public function registrationManagement(Request $request, $id)
     {
         $user_id = $request->attributes->get('user')->id;
@@ -363,6 +318,36 @@ class ParticipantEventController extends Controller
             return $this->showErrorParticipant($errorMessage);
         }
     }
+
+    public function likeEvent(LikeRequest $request)
+    {
+        $validatedData = $request->validated();
+        $user = $request->attributes->get('user');
+        $existingLike = Like::where('user_id', $user->id)
+            ->where('event_id', $validatedData['event_id'])
+            ->first();
+
+        if ($existingLike) {
+            $existingLike->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Successfully unliked the event',
+                'isLiked' => false,
+            ], 201);
+        }
+        Like::create([
+            'user_id' => $user->id,
+            'event_id' => $validatedData['event_id'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Successfully liked the event',
+            'isLiked' => true,
+        ], 201);
+    }
+
 
     public function createTeamToJoinEvent(Request $request, $id)
     {

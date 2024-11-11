@@ -15,6 +15,7 @@ use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantRosterController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
+use App\Http\Controllers\Shared\SocialController;
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -74,7 +75,7 @@ Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-permission:participant|admin|organizer'], function () {
-        Route::view('user/{id}/stats', 'Shared.PlayerProfileStats', ['userId' => request('id')])->name('user.stats');
+        // Route::view('user/{id}/stats', 'Shared.PlayerProfileStats', ['userId' => request('id')])->name('user.stats');
         Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackground.action');
         Route::get('profile/message', [ChatController::class, 'message'])->name('user.message.view');
     });
@@ -103,8 +104,8 @@ Route::group(['prefix' => 'participant'], function () {
 
        
             // Friends
-            Route::post('/friends', [ParticipantController::class, 'updateFriend'])->name('participant.friends.update');
-            Route::post('/follow', [ParticipantController::class, 'followParticipant'])->name('participant.participant.follow');
+            Route::post('/friends', [SocialController::class, 'updateFriend'])->name('participant.friends.update');
+            Route::post('/follow', [SocialController::class, 'followParticipant'])->name('participant.participant.follow');
 
             // Team management
             Route::get('/team/list', [ParticipantTeamController::class, 'teamList'])

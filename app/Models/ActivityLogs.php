@@ -76,7 +76,7 @@ class ActivityLogs extends Model
     
             $activityLogs = $activityLogsQuery
                 ->orderBy('created_at', 'desc')
-                ->paginate($perPage, ['*'], 'page', $page);
+                ->cursorPaginate($perPage, ['*'], 'page', $page);
                 
         return $activityLogs;
     }

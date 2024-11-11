@@ -27,8 +27,8 @@
                         <p> 
                             <span> Sign into Driftwood here: </span>
                             <a href="{{ route('participant.signin.view') }}"
-                                style="display: inline-block; padding: 10px; color: white !important;background-color: transparent; color: {{$primaryColor}} !important; text-decoration: none; border-radius: 5px;">
-                                Sign in
+                                style="margin-left: 5px; display: inline-block; color: white !important;background-color: transparent; color: {{$primaryColor}} !important; text-decoration: none; border-radius: 5px;">
+                                Sign in link
                             </a>
                         </p>
                         

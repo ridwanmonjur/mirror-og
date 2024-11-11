@@ -36,4 +36,44 @@ class ParticipantFollow extends Model
 
             ->first();
     }
+
+    public static function getFollowersPaginate($userId, $perPage, $page = 1)
+    {
+        return self::where('participant_followee', $userId)
+            ->with(['followerUser' => function($query) {
+                $query->select('id', 'name', 'email', 'userBanner', 'created_at', 'role');
+            }])
+            ->cursorPaginate($perPage, ['*'], 'followers_page', $page)
+            ->through(function ($follow) {
+                return [
+                    'id' => $follow->followerUser->id,
+                    'name' => $follow->followerUser->name,
+                    'email' => $follow->followerUser->email,
+                    'userBanner' => $follow->followerUser->userBanner,
+                    'created_at' => $follow->created_at,
+                    'role' => $follow->followerUser->role,
+                ];
+            });
+    }
+
+    public static function getFollowingPaginate($userId, $perPage, $page = 1)
+    {
+        return self::where('participant_follower', $userId)
+            ->with(['followeeUser' => function($query) {
+                $query->select('id', 'name', 'email', 'userBanner', 'created_at', 'role');
+            }])
+            ->cursorPaginate($perPage, ['*'], 'following_page', $page)
+            ->through(function ($follow) {
+                return [
+                    'id' => $follow->followeeUser->id,
+                    'name' => $follow->followeeUser->name,
+                    'email' => $follow->followeeUser->email,
+                    'userBanner' => $follow->followeeUser->userBanner,
+                    'created_at' => $follow->created_at,
+                    'role' => $follow->followeeUser->role,
+                ];
+            });
+    }
+
+
 }

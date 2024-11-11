@@ -39,4 +39,27 @@ class Friend extends Model
             })
             ->first();
     }
+
+    public static function getFriendsPaginate($userId, $perPage, $page = 1)
+    {
+        return self::where(function ($query) use ($userId) {
+            $query->where('user1_id', $userId)
+                  ->orWhere('user2_id', $userId);
+        })
+        ->where('status', 'accepted')
+        ->with(['user1', 'user2'])
+        ->cursorPaginate($perPage, ['*'], 'friends_page', $page)
+        ->through(function ($friend) use ($userId) {
+            $relatedUser = $friend->user1_id != $userId ? $friend->user1 : $friend->user2;
+            return [
+                'id' => $relatedUser->id,
+                'name' => $relatedUser->name,
+                'email' => $relatedUser->email,
+                'role' => $relatedUser->role,
+                'userBanner' => $relatedUser->userBanner,
+                'created_at' => $friend->created_at
+            ];
+        });
+    }
+
 }

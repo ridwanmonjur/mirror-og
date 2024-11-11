@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -150,36 +151,31 @@ class BetaController extends Controller
                 ->whereIn('id', $request->idList)
                 ->get();
             
-            $interestedUserEmail = $interestedUsersPassTextMapByEmail = [];
+            $interestedUserEmail = [];
 
             foreach ($interestedUsers as $interestedUser) {
                 $interestedUserEmail[] = $interestedUser->email;
-                $interestedUsersPassTextMapByEmail[ $interestedUser->email ] = $interestedUser->pass_text;
             }
-
 
             $existingUsers = User::whereIn('email', $interestedUserEmail)
                 ->get();
 
             
             foreach ($existingUsers as $user) {
-                if (!$interestedUsersPassTextMapByEmail [$user->email]) {
-                    $password = generateToken(8);
+                $password = generateToken(8);
 
-                    DB::table('interested_user')
-                        ->where('email', $interestedUser->email)
-                        ->update([
-                            'pass_text' => $password,
-                            'email_verified_at' => now()
-                        ]);
-                    
-                    $interestedUsersPassTextMapByEmail [$user->email] = $password;
-                    $user->password = $password;
-                    $user->save();
-                }
+                DB::table('interested_user')
+                    ->where('email', $interestedUser->email)
+                    ->update([
+                        'pass_text' => $password,
+                        'email_verified_at' => now()
+                    ]);
+                
+                $user->password = Hash::make($password);
+                $user->save();
 
                 Mail::to($user)->queue(new SendBetaWelcomeMail(
-                    $user, $interestedUsersPassTextMapByEmail [$user->email]
+                    $user, $password
                 ));
             }
             
@@ -201,7 +197,7 @@ class BetaController extends Controller
 
                 $user = new User([
                     'email' => $email,
-                    'password' => $password,
+                    'password' => Hash::make($password),
                     'name' => generateToken(2) . $username . generateToken(2),
                     'role' => 'PARTICIPANT',
                     'created_at' => now(),
