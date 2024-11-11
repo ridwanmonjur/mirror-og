@@ -23,13 +23,14 @@ class UpdateOrganizersRequest extends FormRequest
     {
         return [
             'address' => 'nullable|array',
-            'address.id' => 'nullable|exists:addresses,id',
+            'address.id' => 'nullable|exists:user_address,id',
             'address.addressLine1' => 'nullable|required_with:address.city,address.country|string',
-            'address.addressLine2' => 'nullable|string',
+            'address.addressLine2' => 'nullable|string|required_with:address.addressLine1,address.country|string',
             'address.city' => 'nullable|required_with:address.addressLine1,address.country|string',
             'address.country' => 'nullable|required_with:address.addressLine1,address.city|string',
             'address.user_id' => 'nullable',
             'userProfile.name' => 'required|string',
+            'userProfile.demo_email' => 'nullable|email',
             'userProfile.id' => 'required',
             'userProfile.mobile_no' => 'nullable|string',
             'organizer.id' => 'required',
@@ -51,6 +52,8 @@ class UpdateOrganizersRequest extends FormRequest
     {
         return [
             'userProfile.name.required' => 'The name field is required.',
+            'userProfile.demo_email.email' => 'The email field must be a valid email.',
+
             'userProfile.id.required' => 'The user profile ID is required.',
             'organizer.id.required' => 'The organizer ID is required.',
             'address.addressLine1.string' => 'Address Line 1 must be a string.',
@@ -74,9 +77,9 @@ class UpdateOrganizersRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if (empty($this->address['city']) && 
-            empty($this->address['country']) && 
-            empty($this->address['addressLine1'])) {
+        if (empty($this->address['city']|| trim($this->address['city']) === '') && 
+            empty($this->address['country'] || trim($this->address['country']) === '') && 
+            empty($this->address['addressLine1']|| trim($this->address['addressLine1']) === '')) {
             $this->request->remove('address');
         }
 

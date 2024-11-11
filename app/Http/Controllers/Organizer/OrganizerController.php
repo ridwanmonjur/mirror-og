@@ -64,7 +64,6 @@ class OrganizerController extends Controller
         $user = $request->attributes->get('user');
         $validatedData = $request->validated();
         $address = $userProfile = $organizer = null;
-
         try {
             DB::transaction(function () use ($user, $validatedData) {
                 if (isset($validatedData['address'])) {
@@ -78,15 +77,16 @@ class OrganizerController extends Controller
                    
                 }
                 $userProfile = User::where('id', $user->id)->first();
-                $userProfile->fill($validatedData['userProfile'])->save();
+                $userProfile->fill($validatedData['userProfile']);
+                $userProfile->save();
 
                 $organizer = isset($validatedData['organizer']['id'])
                     ? Organizer::findOrFail($validatedData['organizer']['id'])
                     : new Organizer();
 
                 $organizer->user_id = $user->id;
-
-                $organizer->fill($validatedData['organizer'])->save();
+                $organizer->fill($validatedData['organizer']);
+                $organizer->save();
             });
 
             return response()->json(
