@@ -10,7 +10,7 @@ use App\Models\Participant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Session;
 
 class AuthService {
     
@@ -54,6 +54,36 @@ class AuthService {
         throw new \InvalidArgumentException('Invalid registration path');
     }
 
+    public function putRoleInSessionBasedOnRoute($url): void {
+        if (strpos($url, 'organizer') !== false) {
+            Session::put('role', 'ORGANIZER');
+        } elseif (strpos($url, 'participant') !== false) {
+            Session::put('role', 'PARTICIPANT');
+        }
+    }
+
+    public function handleUserRedirection(?User $user, ?string $error = null)
+    {
+        $role = strtolower(Session::get('role'));
+        Session::forget('role');
+
+        if ($error) {
+            return redirect()->route("$role.signin.view")->with("error", $error);
+        }
+
+
+        if (!$user) {
+            return redirect()->route("$role.signin.view")->with('key', 'User does not exist!');
+        }
+
+        if ($user->role === 'PARTICIPANT') {
+            return redirect()->route('participant.home.view');
+        }
+
+        return redirect()->route('organizer.home.view');
+    }
+  
+
     public function registerOrLoginUserForSocialAuth($user, $type, $role)
     {
         $finduser = null;
@@ -64,6 +94,9 @@ class AuthService {
         }
 
         if ($finduser) {
+            if ($finduser->role != $role) {
+                return ['finduser' => null, 'error' =>  sprintf("Only %s can sign in.", strtolower($role))];
+            }
             // if (!$user->user['email_verified']) {
             //     return ['finduser' => null, 'error' => 'Your Gmail is not verified'];
             // }
