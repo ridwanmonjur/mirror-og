@@ -26,26 +26,6 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    private function handleUserRedirection(?User $user, ?string $error = null)
-    {
-        Session::forget('role');
-
-        if ($error) {
-            return view('Error', ['error' => $error]);
-        }
-
-        if (!$user) {
-            return redirect()->route('login');
-        }
-
-        if ($user->role === 'PARTICIPANT') {
-            return redirect()->route('participant.home.view');
-        }
-
-        return redirect()->route('organizer.home.view');
-    }
-  
-
     public function handleGoogleCallback(Request $request)
     {
         // @phpstan-ignore-next-line
@@ -56,7 +36,7 @@ class AuthController extends Controller
         ['finduser' => $finduser, 'error' => $error]
             = $this->authService->registerOrLoginUserForSocialAuth($user, 'google', $role);
 
-        return $this->handleUserRedirection($finduser, $error);
+        return $this->authService->handleUserRedirection($finduser, $error);
     }
 
     public function handleSteamCallback()
@@ -66,27 +46,21 @@ class AuthController extends Controller
         ['finduser' => $finduser, 'error' => $error]
             = $this->authService->registerOrLoginUserForSocialAuth($user, 'steam', $role);
 
-        return $this->handleUserRedirection($finduser, $error);
+        return $this->authService->handleUserRedirection($finduser, $error);
     }
 
-    private function putRoleInSessionBasedOnRoute($url): void {
-        if (strpos($url, 'organizer') !== false) {
-            Session::put('role', 'organizer');
-        } elseif (strpos($url, 'participant') !== false) {
-            Session::put('role', 'participant');
-        }
-    }
+    
 
     // Steam login
     public function redirectToSteam(Request $request)
     {
-        $this->putRoleInSessionBasedOnRoute($request->url());
+        $this->authService->putRoleInSessionBasedOnRoute($request->url());
         return Socialite::driver('steam')->redirect();
     }
 
     public function redirectToGoogle(Request $request)
     {
-        $this->putRoleInSessionBasedOnRoute($request->url());
+        $this->authService->putRoleInSessionBasedOnRoute($request->url());
         return Socialite::driver('google')->redirect();
     }    
    
@@ -94,7 +68,7 @@ class AuthController extends Controller
     {
         $validatedData = [];
         $validationRules = [
-            'username' => 'baiL|required',
+            'username' => 'bail|required',
             'email' => 'bail|required|email',
             'password' => 'bail|required|min:6|max:24',
         ];
@@ -105,13 +79,8 @@ class AuthController extends Controller
         $redirectSuccessRoute = $role.'.signin.view';
         
         DB::beginTransaction();
-
+        $validatedData = $request->validate($validationRules);
         try {
-            $validatedData = $request->validate([
-                ...$validationRules,
-                'companyDescription' => 'bail|required',
-                'companyName' => 'bail|required',
-            ]);
 
             if ($role === 'organizer') {
                 $this->authService->createUser($validatedData, $role);
@@ -124,9 +93,6 @@ class AuthController extends Controller
 
                 $organizer->save();
             } elseif ($role === 'participant') {
-                $validatedData = $request->validate([
-                    ...$validationRules,
-                ]);
 
                 $this->authService->createUser($validatedData, $role);
                 $participant = new Participant([

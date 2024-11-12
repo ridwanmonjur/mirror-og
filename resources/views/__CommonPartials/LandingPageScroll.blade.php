@@ -69,7 +69,7 @@
                 <p class="{{ 'ms-0 mb-0 p-0 ' . 'Color-' . $event->tier->eventTier }}"><b>{{ $event->eventName }}</b></p>
                 <small class=" px-0 ms-0 pb-2 fw-lighter">
                     <span class="px-0 text-start">
-                        <i class="d-inline">{{ $event->user->organizer->companyName  }}</i>
+                        <i class="d-inline">{{ $event->user->name  }}</i>
                     </span>
                     <span class="px-0 text-start d-block d-lg-inline">
                         <i class="ms-1 me-1 d-inline">▪️</i>

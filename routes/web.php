@@ -84,7 +84,10 @@ Route::group(['middleware' => 'auth'], function () {
 /* THIS IS THE PARTICIPANT VIEW */
 Route::group(['prefix' => 'participant'], function () {
     // Normal login
-    Route::get('/signin', [AuthViewController::class, 'participantSignIn'])->name('participant.signin.view');
+    Route::get('/signin', [AuthViewController::class, 'participantSignIn'])
+        ->name('participant.signin.view')
+        ->middleware('prevent-back-history')
+        ->middleware('guest');
     Route::view('/signup', 'Auth.ParticipantSignUp')->name('participant.signup.view');
     Route::post('/signin', [AuthController::class, 'accessUser'])->name('participant.signin.action');
     Route::post('/signup', [AuthController::class, 'storeUser'])->name('participant.signup.action');
@@ -153,7 +156,10 @@ Route::group(['prefix' => 'participant'], function () {
 /* THIS IS THE ORGANIZER VIEW */
 Route::group(['prefix' => 'organizer'], function () {
     // Normal login
-    Route::get('/signin', [AuthViewController::class, 'organizerSignin'])->name('organizer.signin.view');
+    Route::get('/signin', [AuthViewController::class, 'organizerSignin'])
+        ->name('organizer.signin.view')
+        ->middleware('prevent-back-history')
+        ->middleware('guest');
     Route::view('/signup', 'Auth.OrganizerSignUp')->name('organizer.signup.view');
     Route::post('/signin', [AuthController::class, 'accessUser'])->name('organizer.signin.action');
     Route::post('/signup', [AuthController::class, 'storeUser'])->name('organizer.signup.action');
@@ -187,8 +193,7 @@ Route::group(['prefix' => 'organizer'], function () {
             Route::get('event/{id}/success', [OrganizerEventController::class, 'showSuccess'])->middleware('prevent-back-button')
                 ->name('organizer.success.view');
             // Live page
-            Route::get('event/{id}/live', [OrganizerEventController::class, 'showLive'])->middleware('prevent-back-button')
-                ->name('organizer.live.view');
+
             // Checkout page
             Route::get('event/{id}/checkout', [OrganizerCheckoutController::class, 'showCheckout'])->middleware('prevent-back-button')
                 ->name('organizer.checkout.view');

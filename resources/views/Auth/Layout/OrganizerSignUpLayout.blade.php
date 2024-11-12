@@ -2,7 +2,7 @@
 
 @section('signUpbody')
 
-<img class="mt-4  mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
+<img class="mt-2  mb-1" src="{{ asset('/assets/images/driftwood logo.png') }}">
 <h5 class="mt-2 mb-0"><u>Create an  organizer account</u></h5>
 <form autocomplete="off" readonly name="organizer-signup-form" id="organizer-signup-form" method="post" action="{{route('organizer.signup.action')}}">
     @csrf
@@ -27,7 +27,7 @@
 
     <div class="field">
         <label for="companyName" class="placeholder-moves-up-container">
-            <input  autocomplete="off" type="text" name="companyName" id="companyName" required="true" class="input-area" oninput="movePlaceholderUp(this)">
+            <input  autocomplete="off" type="text" name="companyName" id="companyName"  class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Company Name</span>
             <div class="field-error-message d-none"></div>
         </label>
@@ -35,7 +35,7 @@
 
     <div class="field">
         <label for="companyDescription" class="placeholder-moves-up-container">
-            <input  autocomplete="off" type="text" name="companyDescription" id="companyDescription" required="true" class="input-area" oninput="movePlaceholderUp(this)">
+            <input  autocomplete="off" type="text" name="companyDescription" id="companyDescription" class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Company Description</span>
             <div class="field-error-message d-none"></div>
         </label>

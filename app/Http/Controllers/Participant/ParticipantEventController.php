@@ -32,6 +32,7 @@ use Illuminate\Validation\UnauthorizedException;
 use App\Services\EventMatchService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\Match\ParticipantViewEventRequest;
 
 class ParticipantEventController extends Controller
 {
@@ -77,96 +78,27 @@ class ParticipantEventController extends Controller
         return view('LandingPage', $output);
     }
 
-    public function viewEvent(Request $request, $id)
+    public function viewEvent(ParticipantViewEventRequest $request, $id)
     {
         try {
-            $user = Auth::user();
-            $userId = $user && $user->id ? $user->id : null;
-            $event = EventDetail::findEventWithRelationsAndThrowError(
-                null,
-                $id,
-                null,
-                ['game', 'type',  'joinEvents' => function ($q) {
-                    $q->where('join_status', 'confirmed')->with('team');
-                }],
-                ['joinEvents' => function ($q) {
-                    $q->where('join_status', 'confirmed');
-                }]
-            );
-           
-            if (! $event) {
-                throw new ModelNotFoundException("Event not found by id: {$id}");
-            }
-            $awardAndTeamList = AwardResults::getTeamAwardResults($id);
-            $achievementsAndTeamList = Achievements::getTeamAchievements($id);
-            $joinEventAndTeamList = EventJoinResults::getEventJoinResults($id);
-
-            $status = $event->statusResolved();
-            if (in_array($status, ['DRAFT', 'PREVEW', 'PENDING'])) {
-                $lowerStatus = strtolower($status);
-                throw new ModelNotFoundException("Can't display event: {$id} with status: {$lowerStatus}");
-            }
-
-            $followersCount = OrganizerFollow::getFollowersCount($event->user_id);
-            $likesCount = Like::getLikesCount($event->id);
-            if ($user && $userId) {
-                $user->isFollowing = OrganizerFollow::isFollowing($userId, $event->user_id);
-                $user->isLiking = Like::isLiking($userId, $event->id);
-
-                if ($status === 'SCHEDULED') {
-                    $checkIfUserIsOrganizerOfEvent = $event->user_id === $userId;
-                    if (! $checkIfUserIsOrganizerOfEvent) {
-                        throw new UnauthorizedException('You cannot view a scheduled event');
-                    }
-                }
-
-                $existingJoint = JoinEvent::getJoinedByTeamsForSameEvent($event->id, $userId);
-                if ($event->sub_action_private === 'private') {
-                    $checkIfUserIsOrganizerOfEvent = $event->user_id === $userId;
-                    $checkIfUserIsInvited = EventInvitation::where([
-                        'team_id' => $existingJoint?->team_id, 
-                        'event_id' => $event->id
-                    ])->exists();
-
-                    $checkIfShouldDisallow = ! ($checkIfUserIsOrganizerOfEvent || $checkIfUserIsInvited);
-                    if ($checkIfShouldDisallow) {
-                        throw new UnauthorizedException("This is a provate event and you're neither organizer nor a participant of event");
-                    }
-                }
-
-            } else {
-                if ($event->sub_action_private === 'private') {
-                    throw new UnauthorizedException('Login to access this event.');
-                }
-                $existingJoint = null;
-            }
-
+            $event = $request->getEvent();
+            $user = $request->getStoredUser();
+            $existingJoint = $request->getJoinEvent();
             
-            [
-                'teamList' => $teamList,
-                'matchesUpperCount' => $matchesUpperCount,
-                'bracketList' => $bracketList,
-                'existingJoint' => $existingJoint,
-                'previousValues' => $previousValues
-            ] = $this->eventMatchService->generateBrackets(
+            $viewData = $this->eventMatchService->getEventViewData(
+                $event, $user, $existingJoint
+            );
+    
+            $bracketData = $this->eventMatchService->generateBrackets(
                 $event,
                 false, 
                 $existingJoint,
             );
 
-            return view('Participant.ViewEvent', [
-                    'event' => $event,
-                    'teamList' => $teamList,
-                    'awardAndTeamList' => $awardAndTeamList,
-                    'achievementsAndTeamList' => $achievementsAndTeamList,
-                    'matchesUpperCount' => $matchesUpperCount,
-                    'bracketList' => $bracketList,
-                    'likesCount' => $likesCount, 
-                    'joinEventAndTeamList' => $joinEventAndTeamList,
-                    'followersCount' => $followersCount, 
-                    'user' => $user, 
-                    'existingJoint' => $existingJoint,
-                    'previousValues' => $previousValues,
+            return view('Shared.ViewEvent', [
+                    ...$viewData,
+                    'livePreview' => 0,
+                    ...$bracketData,
                 ]
             );
         } catch (Exception $e) {
