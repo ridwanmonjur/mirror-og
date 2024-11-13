@@ -23,6 +23,9 @@ function updateModalShow(event) {
     event.preventDefault();
     const button = event.currentTarget;
     let { team1_id, team2_id } = button.dataset;
+    console.log({team1_id, team2_id});
+    console.log({team1_id, team2_id});
+    console.log({team1_id, team2_id});
     let parentWithDataset = document.querySelector(`.tournament-bracket__match.${team1_id}.${team2_id}`);
 
     if (
@@ -30,7 +33,7 @@ function updateModalShow(event) {
         parentWithDataset.dataset === null || 
         parentWithDataset.dataset.bracket === null
     ) {
-        toastError("Previous match results not updated");
+        toastError("Dataset match results not updated");
         return;
     }
 
@@ -68,9 +71,7 @@ function updateModalShow(event) {
 }
 
 function reportModalShow(event) {
-    event.stopPropagation();
     event.preventDefault();
-    event.stopPropagation();
     const button = event.currentTarget;
     let { position } = button.dataset;
     let triggerParentsPositionIds = previousValues[position];
@@ -88,7 +89,6 @@ function reportModalShow(event) {
         parentWithDataset.dataset === null || 
         parentWithDataset.dataset.bracket === null
     ) {
-        toastError("Previous match results not updated");
         return;
     }
 

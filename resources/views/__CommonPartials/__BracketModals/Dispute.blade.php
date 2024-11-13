@@ -63,7 +63,7 @@
                 <template x-if="!dispute[reportUI.matchNumber]">
                     <div>
                         {{-- CREATE FORM --}}
-                        <form method="POST" x-on:submit="submitDisputeForm(event)" id="create">
+                        <form method="POST" x-on:submit="submitDisputeForm(event)" id="createForm" enctype="multipart/form-data">
                             <input type="hidden" name="action" value="create">
                             <input type="hidden" name="event_id" value="{{$event->id}}">
                             <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber]?.idid">
@@ -145,7 +145,9 @@
                             </div>
                             <div class="w-100 mx-auto d-flex justify-content-around">
                                 <button type="button"
-                                    class="btn btn-light btn-large btn-pill border-dark px-5 py-3 rounded-pill px-5 py-2">
+                                    class="btn btn-light btn-large btn-pill border-dark px-5 py-3 rounded-pill px-5 py-2"
+                                    data-bs-toggle="modal" data-bs-target="#reportModal" data-bs-dismiss="modal"    
+                                >
                                     Cancel
                                 </button>
                                 <button type="submit" style="background-color: #686767;"
@@ -254,7 +256,7 @@
                                                 <button style="width: 250px;" class="btn btn-danger text-light bg-red px-2 mb-2 py-2 rounded-pill border border-dark" x-on:click="toggleResponseForm('response_decision', 'response_form');">
                                                     Submit Counter Evidence
                                                 </button>
-                                                <form method="POST" x-on:submit="resolveDisputeForm(event)" id="create">
+                                                <form method="POST" x-on:submit="resolveDisputeForm(event)" id="resolveForm">
                                                     <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].matchNumber">
                                                     <input type="hidden" name="action" value="resolve">
                                                     <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
@@ -272,7 +274,7 @@
 
                                         <div
                                             class="response_form d-none row  bg-light justify-content-start border border-3 border rounded px-2 py-2">
-                                            <form method="POST" x-on:submit="respondDisputeForm(event)" id="respond">
+                                            <form method="POST" x-on:submit="respondDisputeForm(event)" id="respondForm">
                                                 <input type="hidden" name="action" value="respond">
                                                 <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber]?.idid">
                                                 <input type="hidden" name="response_teamNumber" x-bind:value="reportUI.teamNumber">
@@ -295,7 +297,7 @@
                                                         @dragover.prevent="$refs.uploadArea2.classList.add('drag-over')"
                                                         @dragleave.prevent="$refs.uploadArea2.classList.remove('drag-over')"
                                                         @drop.prevent="handleDrop($event, '2')">
-                                                        <div class="plus-button" @click="$refs.fileInput2.click()">+</div>
+                                                        <div class="plus-button" x-on:click="$refs.fileInput2.click()">+</div>
                                                     </div>
                                                     <input type="file" x-ref="fileInput2" class="file-input" multiple
                                                         accept="image/*" @change="handleFiles($event, '2')">
@@ -356,7 +358,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="ps-5 ps-5 text-start">
-                                                    <form method="POST" x-on:submit="resolveDisputeForm(event)" id="resolve">
+                                                    <form method="POST" x-on:submit="resolveDisputeForm(event)" >
                                                         <input type="hidden" name="action" value="resolve">
                                                         <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
                                                         <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
@@ -435,7 +437,7 @@
 
                                                     <template x-if="userLevelEnums['IS_ORGANIZER'] == report.userLevel">
                                                         <div class="d-inline">
-                                                            <form method="POST" class="d-inline" x-on:submit="resolveDisputeForm(event)" id="resolve">
+                                                            <form method="POST" class="d-inline" x-on:submit="resolveDisputeForm(event)">
                                                                 <input type="hidden" name="action" value="resolve">
                                                                 <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
                                                                 <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
@@ -464,7 +466,7 @@
                         <br>
                             <template x-if="!dispute[reportUI.matchNumber]?.resolution_winner">
                                 <div class="text-center">
-                                    <form method="POST" x-on:submit="resolveDisputeForm(event)" id="resolve">
+                                    <form method="POST" x-on:submit="resolveDisputeForm(event)">
                                         <input type="hidden" name="action" value="resolve">
                                         <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
                                         <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">

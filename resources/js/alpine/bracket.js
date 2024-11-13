@@ -2,10 +2,39 @@ import { initializeApp } from "firebase/app";
 import { initializeFirestore, memoryLocalCache, setDoc,   serverTimestamp,
   addDoc, onSnapshot, updateDoc, getDocsFromCache, startAfter, limit, orderBy, doc, query, collection, collectionGroup, getDocs, getDoc, where, or } from "firebase/firestore";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
+import { getAuth, signInWithCustomToken, onAuthStateChanged } from "firebase/auth";
 
 import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
+let csrfToken3 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+
+async function initializeFirebaseAuth() {
+  try {
+      const response = await fetch('/api/user/firebase-token');
+      if (!response.ok) {
+          throw new Error('Failed to get Firebase token');
+      }
+      let currentUser = null;
+
+      const { token, claims } = await response.json();
+      
+      const userCredential = await signInWithCustomToken(auth, token);
+      currentUser = userCredential.user;
+      
+      const idTokenResult = await currentUser.getIdTokenResult();
+      const { role, teamId, userId } = idTokenResult.claims;
+      
+      return {
+          user: currentUser,
+          claims: { role, teamId, userId }
+      };
+  } catch (error) {
+      console.error('Firebase authentication failed:', error);
+      throw error;
+  }
+}
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -17,6 +46,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 const db = initializeFirestore(app, {
     localCache: memoryLocalCache(),
@@ -164,6 +194,7 @@ Alpine.data('alpineDataComponent', function () {
     const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
     const eventId = document.getElementById('eventId').value;
     let initialData = {
+        firebaseUser: null,
         disputeLevelEnums: {
           'ORGANIZER' : 1,
           'DISPUTEE': 2,
@@ -512,7 +543,23 @@ Alpine.data('alpineDataComponent', function () {
             });
           });
         },
-        init() {
+        async init() {
+            const { user, claims } = await initializeFirebaseAuth();
+            this.firebaseUser = user;
+            this.userClaims = claims;
+            this.isInitialized = true;
+
+            onAuthStateChanged(auth, (user) => {
+              if (user) {
+                user.getIdTokenResult().then(idTokenResult => {
+                  this.firebaseUser = { ... user, ...idTokenResult.claims };
+                });
+              } else {
+                this.firebaseUser = null;
+                this.userClaims = null;
+              }
+            });
+
             window.addEventListener('currentReportChange', (event) => {
 
               let newReport = null, newReportUI = null;
@@ -745,6 +792,23 @@ Alpine.data('alpineDataComponent', function () {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                   try {
+
+                  const uploadResponse = await fetch('/media', {
+                      method: 'POST',
+                      body: createFormData,
+                      headers: {
+                        'X-CSRF-TOKEN': csrfToken3
+                      }  
+                  });
+
+                  const uploadResult = await uploadResponse.json();
+                  if (uploadResult.success) {
+                      disputeFiles = uploadResult.files;
+                  } else {
+                      throw new Error('File upload failed');
+                  }
+
+  
                     const disputeDto = {
                       report_id: formObject.report_id,
                       match_number: formObject.match_number,
@@ -894,17 +958,6 @@ Alpine.data('alpineDataComponent', function () {
               uploadArea.insertBefore(preview, plusButton);
           },
 
-          handleDrop(event, id) {
-              event.preventDefault();
-              this.$refs[`uploadArea${id}`].classList.remove('drag-over');
-              
-              const files = Array.from(event.dataTransfer.files);
-              files.forEach(file => {
-                  if (file.type.startsWith('image/')) {
-                      this.createPreview(file, id);
-                  }
-              });
-          },
 
           getAllImages() {
               const images1 = Array.from(this.$refs.uploadArea1.querySelectorAll('.preview-item img'))
