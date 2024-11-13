@@ -148,13 +148,13 @@ function addDotsToContainer (key, value) {
 getAllMatchStatusesData();
 
 
-let bodyHeight = document.body.offsetHeight;
+let bodyHeight22 = document.body.offsetHeight;
 let bracketList = document.getElementById('bracket-list');
 let bracketListHeight = bracketList.getBoundingClientRect().height;
-let main = document.querySelector('main');
-if (main) {
-    main.style.transition = "height 0.5s ease-in-out";
-    main.style.height = bodyHeight + bracketListHeight + 'px';
+let main2 = document.querySelector('main');
+if (main2) {
+    main2.style.transition = "height 0.5s ease-in-out";
+    main2.style.height = bodyHeight22 + bracketListHeight + 'px';
 }
 
 
@@ -184,7 +184,7 @@ Alpine.data('alpineDataComponent', function () {
           id: null,
           organizerWinners: [null, null, null],
           realWinners: [null, null, null],
-          userLevel: null,
+          userLevel: userLevelEnums['IS_PUBLIC'],
           matchStatus: ['ONGOING', null, null],
           teams: [
             {
@@ -557,8 +557,8 @@ Alpine.data('alpineDataComponent', function () {
 
                 newReport = {
                   ...initialData.report,
-                  position: dataset.position,
-                  userLevel: dataset.user_level,
+                  position: dataset.position ?? initialData.report.position,
+                  userLevel: dataset.user_level ?? initialData.report.userLevel,
                   teams: [
                       {
                         ...initialData.report.teams[0],
@@ -579,6 +579,10 @@ Alpine.data('alpineDataComponent', function () {
                     ],
                   };
                 }
+
+                console.log({newReport, newReportUI});
+                console.log({newReport, newReportUI});
+                
                 this.getCurrentReportSnapshot(dataset.classNamesWithoutPrecedingDot, newReport, newReportUI);
               });
             },

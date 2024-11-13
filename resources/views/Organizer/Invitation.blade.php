@@ -57,6 +57,6 @@ extract($dateArray);
     <script src="{{ asset('/assets/js/organizer/event_creation/CreateEventPart1.js') }}"></script>
     <script src="{{ asset('/assets/js/organizer/event_creation/timeline.js') }}"></script>
     <script src="{{ asset('/assets/js/organizer/event_creation/event_create.js') }}"></script>
-    <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+    
     <script src="{{ asset('/assets/js/organizer/event_creation/CreateEventPart2.js') }}"></script>
 </body>

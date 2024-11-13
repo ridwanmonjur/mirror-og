@@ -39,7 +39,7 @@
 
             <small class="position-absolute winner-label ">
                 @if($bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'])
-                    <span class="d-none-until-hover2" onclick="updateModalShow(event);"
+                    <span class="d-none-until-hover2" 
                         data-team1_id="{{$bracket['team1_position']}}" data-team2_id="{{$bracket['team2_position']}}"
                     >
                         <svg style="z-index: 999;" xmlns="http://www.w3.org/2000/svg" width="16" height="16"

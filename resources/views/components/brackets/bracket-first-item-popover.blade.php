@@ -15,7 +15,7 @@
         <div class="popover-box row justify-content-start px-2 py-4" style="min-width: 400px; background: white !important;">
             <div class="col-12 col-lg-5 text-center border-dark" style="border-right: 2px solid black;">
                 <div >
-                    <img src="{{ asset('storage/' . $teamBanner) }}" alt="Team Banner" width="100"
+                    <img src="{{ bladeImageNull($teamBanner) }}" alt="Team Banner" width="100"
                         height="100" onerror="this.src='{{ asset('assets/images/404.png') }}';"
                         class="popover-team-img object-fit-cover rounded-circle border border-dark border-2"
                     >
@@ -29,7 +29,7 @@
                         @foreach ($roster as $rosterItem)
                             <li class="d-inline">
                                 <img width="30" height="30" onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                                    src="{{ asset('storage/' . $rosterItem->user->userBanner) }}" alt="User Banner"
+                                    src="{{ bladeImageNull( $rosterItem->user->userBanner) }}" alt="User Banner"
                                     class="mb-2 rounded-circle border border-dark border-2 object-fit-cover me-3">
                                 {{ $rosterItem->user->name }}
                             </li>
@@ -43,7 +43,7 @@
         </div>
     </div>
     @if ($teamId)
-        <img src="{{ asset('storage/' . $teamBanner) }}" width="100%" height="25"
+        <img src="{{ bladeImageNull($teamBanner) }}" width="100%" height="25"
             onerror="this.src='{{ asset('assets/images/404.png') }}';"
             class="{{ 'popover-button position-absolute d-none-when-hover object-fit-cover me-2 ' 
                     . 'data-position-'. $position }}" 

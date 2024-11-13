@@ -100,6 +100,6 @@
             </div>
         </div>
     </div>
-    <script src="{{ asset('/assets/js/shared/BracketUpdateModal.js') }}"></script>
+    {{-- <script src="{{ asset('/assets/js/shared/BracketUpdateModal.js') }}"></script> --}}
 
 </div>

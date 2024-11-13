@@ -478,6 +478,6 @@
             <br>
     </main>
     @stack('script')
-    <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+    
     <script src="{{ asset('/assets/js/organizer/EventResults.js') }}"></script>
 

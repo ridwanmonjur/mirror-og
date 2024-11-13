@@ -15,6 +15,6 @@
     @include('googletagmanager::body')
     @yield('content')
     @stack('scripts')
-    <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+    
 </body>
 </html>

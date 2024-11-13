@@ -1,4 +1,5 @@
 <div>
+
     @include('__CommonPartials.__BracketModals.__Report.ExistingChoices')
     <template x-if="!report.realWinners[reportUI.matchNumber]">
         <div>

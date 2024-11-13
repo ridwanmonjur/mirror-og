@@ -26,7 +26,7 @@
         <div class="px-4 py-4">
             @include('Organizer.__ManageEventPartials.BracketUpdateList')
         </div>
-        <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+        
         <script src="{{ asset('/assets/js/shared/tournament.js') }}"></script>
     </main>
 </body>

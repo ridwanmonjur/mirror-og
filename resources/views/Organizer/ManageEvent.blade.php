@@ -91,7 +91,7 @@
 
             <div class="no-more-data d-none mb-3" style="margin-top: 50px;" ></div>
 
-            <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+            
             <script src="{{ asset('/assets/js/organizer/ManageEventP1.js') }}"></script>
 
          

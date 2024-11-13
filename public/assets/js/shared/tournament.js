@@ -75,7 +75,9 @@ function reportModalShow(event) {
     let { position } = button.dataset;
     let triggerParentsPositionIds = previousValues[position];
     if (!triggerParentsPositionIds) {
-        throw new Error("Positions missing");
+        console.error("Positions missing");
+        console.error("Positions missing");
+        return;
     }
 
     let classNamesWithoutPrecedingDot = triggerParentsPositionIds.join(".");
