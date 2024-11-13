@@ -104,7 +104,6 @@ class AddAwardStrategy
                 'image' => $image,
             ] = $parameters;
 
-            $Notification:: = new Notifications();
             $notificationLog = <<<HTML
                 <span class="notification-gray"> You achieved {$parameters['award']} in the team, 
                     <span class="notification-black">{$parameters['teamName']}</span>.
@@ -174,7 +173,6 @@ class AddAchievementStrategy
                 'image' => $image,
             ] = $parameters;
             
-            $Notification:: = new Notifications();
             $notificationLog = <<<HTML
                 <span>
                     <a href="/event/$teamId" alt="Team View">
@@ -243,7 +241,6 @@ class DeleteAwardStrategy
     {
         try {
             ActivityLogs::findActivityLog($parameters)->delete();
-            $Notification:: = new Notifications();
             Notifications::findNotifications($parameters)->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -257,7 +254,6 @@ class DeleteAchievementStrategy
     {
         try {
             ActivityLogs::findActivityLog($parameters)->delete();
-            $Notification:: = new Notifications();
             Notifications::findNotifications($parameters)->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());

@@ -83,7 +83,6 @@ class ParticipantEventController extends Controller
             $event = $request->getEvent();
             $user = $request->getStoredUser();
             $existingJoint = $request->getJoinEvent();
-            
             $viewData = $this->eventMatchService->getEventViewData(
                 $event, $user, $existingJoint
             );

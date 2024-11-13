@@ -8,7 +8,7 @@
     <title>Tournament Matches</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
-    @vite(['resources/js/libraries/tippy.js',  'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/bracket.js'])
+    @vite(['resources/js/libraries/tippy.js', 'resources/sass/libraries/filepond.scss', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/bracket.js'])
     <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
     @include('__CommonPartials.HeadIcon')
     <style>
@@ -17,6 +17,7 @@
 
 <body>
     @include('googletagmanager::body')
+ 
     <main x-data="alpineDataComponent">
         @include('__CommonPartials.NavbarGoToSearchPage')
         <input type="hidden" id="eventId" value="{{$event->id}}">

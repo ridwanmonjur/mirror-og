@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Shared\ImageVideoController;
 use App\Http\Controllers\Open\BetaController;
 use App\Http\Controllers\Organizer\OrganizerController;
 use App\Http\Controllers\Organizer\OrganizerEventController;
@@ -10,12 +11,13 @@ use App\Http\Controllers\Participant\ParticipantCheckoutController;
 use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
-use App\Http\Controllers\Shared\EventController;
+use App\Http\Controllers\Shared\FirebaseController;
 use App\Http\Controllers\Shared\SocialController;
 use App\Http\Controllers\Shared\StripeController;
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\UserController;
+use App\Models\ImageVideo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,12 +39,18 @@ Route::middleware('auth')->get('/user', function (Request $request) {
 Route::get('/activity-logs', [ParticipantController::class, 'getActivityLogs'])
     ->name('activity-logs.index');
 
+    Route::prefix('media')->group(function () {
+        Route::post('/media', [ImageVideoController::class, 'upload']);
+        Route::get('stream/{media}', [ImageVideoController::class, 'stream'])->name('media.stream');
+        Route::delete('{media}', [ImageVideoController::class, 'destroy']);
+    });
+
 Route::put('/interest', [BetaController::class, 'interestedAction'])->name('public.interest.action');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
-        Route::get('/user/{id}/connections', [SocialController::class, 'getConnections'])->name('user.connections.index');
-       
+        Route::get('/user/firebase-token', [FirebaseController::class, 'createToken']);
+
         Route::post('/user/likes', [ParticipantEventController::class, 'likeEvent'])->name('participant.events.like');
         Route::post('/user/participants', [ParticipantController::class, 'searchParticipant'])->name('user.teams.index');
         Route::put('/user/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('user.notifications.read');
@@ -51,6 +59,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/user/{id}/banner', [UserController::class, 'replaceBanner'])->name('participant.userBanner.action');
         Route::post('/user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
         Route::post('/user/{id}/notifications', [NotificationController::class, 'getMoreNotifications'])->name('user.notifications.more');
+        Route::get('/user/{id}/connections', [SocialController::class, 'getConnections'])->name('user.connections.index');
         Route::post('/card/intent', [StripeController::class,  'stripeCardIntentCreate'])->name('stripe.stripeCardIntentCreate');
 
     });

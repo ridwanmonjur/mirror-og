@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import pluginPurgeCss from "@mojojoejo/vite-plugin-purgecss";
-import VitePluginBrowserSync from 'vite-plugin-browser-sync'
 
 export default defineConfig({
     plugins: [
@@ -27,19 +26,6 @@ export default defineConfig({
             ],
             refresh: true,
         }),
-        VitePluginBrowserSync({
-            bs: {
-                proxy: 'localhost:8000',
-                notify: false,
-                files: [
-                    'resources/**/*.php',
-                    'resources/**/*.js',
-                    'resources/**/*.scss',
-                    'app/**/*.php',
-                    'routes/**/*.php'
-                ]
-            }
-        }),
         pluginPurgeCss({
             content: [
                 "**/*.js",
@@ -49,10 +35,10 @@ export default defineConfig({
             variables: true,
         }),
     ],
-    build: { 
-        minify: true, 
+    build: {
+        minify: true,
         rollupOptions: {
-            output:{
+            output: {
                 manualChunks(id) {
                     if (id.includes('node_modules')) {
                         return id.toString().split('node_modules/')[1].split('/')[0].toString();

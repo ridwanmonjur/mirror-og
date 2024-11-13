@@ -56,14 +56,16 @@ class ParticipantViewEventRequest extends FormRequest
             }
         }
 
+        $existingJoint = JoinEvent::getJoinedByTeamsForSameEvent($this->event->id, $userId);
+        $this->existingJoint = $existingJoint;
+
         // Handle private events
         if ($this->event->sub_action_private === 'private') {
             if (!$user) {
                 throw new UnauthorizedException('Login to access this event.');
             }
 
-            $existingJoint = JoinEvent::getJoinedByTeamsForSameEvent($this->event->id, $userId);
-            $this->existingJoint = $existingJoint;
+        
             $isOrganizer = $this->event->user_id === $userId;
             $isInvited = EventInvitation::where([
                 'team_id' => $existingJoint?->team_id,

@@ -344,9 +344,9 @@ class EventDetail extends Model
         })
         ->with(['tier', 'type', 'game'])
         ->with(['user' => function($q) {
-            $q->select('id')
+            $q->select('id', 'name')
               ->with(['organizer' => function ($innerQ) {
-                  $innerQ->select(['id', 'user_id', 'companyName']);
+                  $innerQ->select(['id', 'user_id']);
               }])
               ->withCount('follows');
         }])
