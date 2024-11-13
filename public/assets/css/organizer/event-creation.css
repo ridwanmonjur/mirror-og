@@ -464,7 +464,6 @@ main {
     background-size: 100vw 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    background-size: cover;
 }
 
 .menu-toggle {
