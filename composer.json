@@ -15,7 +15,6 @@
         "laravel/horizon": "^5.27",
         "laravel/socialite": "^5.9",
         "laravel/tinker": "^2.8",
-        "livewire/livewire": "^3.5",
         "opcodesio/log-viewer": "^3.11",
         "predis/predis": "^2.2",
         "socialiteproviders/google": "^4.1",

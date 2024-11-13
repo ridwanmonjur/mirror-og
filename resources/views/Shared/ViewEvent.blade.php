@@ -8,7 +8,7 @@
     <title>View Event</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/viewEvent.css') }}">
     @include('__CommonPartials.HeadIcon')
-    @vite(['resources/js/libraries/tippy.js',  'resources/js/pages/bracket.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/libraries/lightgallery.js', 'resources/sass/libraries/lightgallery.scss'])
+    @vite(['resources/js/libraries/tippy.js',  'resources/js/alpine/bracket.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/libraries/lightgallery.js', 'resources/sass/libraries/lightgallery.scss'])
      <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/event-status.css') }}">

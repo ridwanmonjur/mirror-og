@@ -8,7 +8,7 @@
     <title>Tournament Matches</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
-    @vite(['resources/js/libraries/tippy.js',  'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/pages/bracket.js'])
+    @vite(['resources/js/libraries/tippy.js',  'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/bracket.js'])
     <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
     @include('__CommonPartials.HeadIcon')
     <style>

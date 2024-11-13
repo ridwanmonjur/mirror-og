@@ -233,7 +233,7 @@
             <div class="ms-3">Region: <span id="paymentTier">South East Asia (SEA)</span></div>
             <br>
             <br>
-            <div class="flexbox w-75">
+            <div class=" d-flex justify-content-between w-75">
                 <h5> TOTAL </h5>
                 <h5 id="paymentTotal">RM
                     <span id="actualPaymentTable" class="transform-number me-1">{{ $amount }} </span>

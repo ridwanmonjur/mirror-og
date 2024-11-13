@@ -13,7 +13,7 @@
     @vite([
         'resources/sass/app.scss', 
         'resources/js/app.js', 
-        'resources/js/pages/participant.js', 
+        'resources/js/alpine/participant.js', 
         'resources/js/libraries/lightgallery.js',
         'resources/sass/libraries/lightgallery.scss',   
         'resources/js/libraries/file-upload-preview.js',

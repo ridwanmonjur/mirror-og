@@ -257,29 +257,18 @@ class OrganizerEventResultsController extends Controller
             },
         ]);
         
-        [
-            'teamList' => $teamList,
-            'matchesUpperCount' => $matchesUpperCount,
-            'bracketList' => $bracketList,
-            'existingJoint' => $existingJoint,
-            'previousValues' => $previousValues
-        ] = $this->eventMatchService->generateBrackets(
+        $bracket = $this->eventMatchService->generateBrackets(
             $event,
             true,
             null,
         );
 
 
-
         return view('Organizer.Matches', [
             'id' => $id,
             'eventType' => $eventType,
             'event' => $event,
-            'teamList' => $teamList,
-            'matchesUpperCount' => $matchesUpperCount,
-            'bracketList' => $bracketList,
-            'existingJoint' => $existingJoint,
-            'previousValues' => $previousValues,
+            ...$bracket,
         ]);
     }
 

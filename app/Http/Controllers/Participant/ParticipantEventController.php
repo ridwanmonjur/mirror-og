@@ -36,7 +36,6 @@ use App\Http\Requests\Match\ParticipantViewEventRequest;
 
 class ParticipantEventController extends Controller
 {
-
     private $paymentService;
     private $eventMatchService;
 

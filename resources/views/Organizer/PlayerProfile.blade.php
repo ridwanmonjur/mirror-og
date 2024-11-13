@@ -12,7 +12,7 @@
     @include('__CommonPartials.HeadIcon')
     @vite(['resources/sass/app.scss', 
         'resources/js/app.js', 
-        'resources/js/pages/organizer.js', 
+        'resources/js/alpine/organizer.js', 
         'resources/js/libraries/lightgallery.js', 
         'resources/sass/libraries/lightgallery.scss',   
         'resources/js/libraries/file-upload-preview.js',

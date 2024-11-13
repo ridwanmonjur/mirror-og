@@ -2,7 +2,7 @@
     @vite([
         'resources/sass/app.scss', 
         'resources/js/app.js', 
-        'resources/js/libraries/alpine.js', 
+        'resources/js/alpine/teamhead.js', 
         'resources/js/libraries/lightgallery.js',
         'resources/sass/libraries/lightgallery.scss',
         'resources/js/libraries/file-upload-preview.js',
@@ -12,7 +12,6 @@
         'resources/js/libraries/file-edit.js',
         'resources/sass/libraries/file-edit.scss',
     ])
-
 </head>
 @php
     [   

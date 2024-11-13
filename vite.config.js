@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import pluginPurgeCss from "@mojojoejo/vite-plugin-purgecss";
+import VitePluginBrowserSync from 'vite-plugin-browser-sync'
 
 export default defineConfig({
     plugins: [
@@ -10,7 +11,6 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/libraries/tippy.js',
                 'resources/js/libraries/tagify.js',
-                'resources/js/libraries/alpine.js',
                 'resources/js/libraries/file-edit.js',
                 'resources/js/libraries/lightgallery.js',
                 'resources/sass/libraries/lightgallery.scss',
@@ -20,11 +20,25 @@ export default defineConfig({
                 'resources/js/libraries/colorpicker.js',
                 'resources/sass/libraries/colorpicker.scss',
                 'resources/sass/libraries/tagify.scss',
-                'resources/js/pages/chat.js',
-                'resources/js/pages/bracket.js',
-                'resources/js/pages/organizer.js',
+                'resources/js/alpine/chat.js',
+                'resources/js/alpine/bracket.js',
+                'resources/js/alpine/organizer.js',
+                'resources/js/alpine/teamhead.js',
             ],
             refresh: true,
+        }),
+        VitePluginBrowserSync({
+            bs: {
+                proxy: 'localhost:8000',
+                notify: false,
+                files: [
+                    'resources/**/*.php',
+                    'resources/**/*.js',
+                    'resources/**/*.scss',
+                    'app/**/*.php',
+                    'routes/**/*.php'
+                ]
+            }
         }),
         pluginPurgeCss({
             content: [
