@@ -9,7 +9,7 @@ window.Alpine = Alpine;
 
 let csrfToken3 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-
+let hiddenUserId = document.getElementById('hidden_user_id')?.value;
 async function initializeFirebaseAuth() {
   try {
       const response = await fetch('/api/user/firebase-token');
@@ -18,7 +18,7 @@ async function initializeFirebaseAuth() {
       }
       let currentUser = null;
 
-      const { token, claims } = await response.json();
+      const { token } = await response.json();
       
       const userCredential = await signInWithCustomToken(auth, token);
       currentUser = userCredential.user;
@@ -46,7 +46,10 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+let auth = null;
+if (hiddenUserId) {
+  auth = getAuth(app);  
+}
 
 const db = initializeFirestore(app, {
     localCache: memoryLocalCache(),
@@ -466,6 +469,11 @@ Alpine.data('alpineDataComponent', function () {
           document.querySelector(`.${classToShow}`).classList.toggle("d-none");
           document.querySelector(`.${classToHide}`).classList.toggle("d-none");
         },
+        showImageModal(imgPath) {
+          const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageModal'));
+          document.getElementById('modalImage').src = '/storage/' + imgPath;
+          modal.show();
+        },
         selectTeamToWin(event, index) {
             this.clearSelection();
             let selectedButton = event.currentTarget;
@@ -544,21 +552,23 @@ Alpine.data('alpineDataComponent', function () {
           });
         },
         async init() {
-            const { user, claims } = await initializeFirebaseAuth();
-            this.firebaseUser = user;
-            this.userClaims = claims;
-            this.isInitialized = true;
+            if (hiddenUserId) {
+              const { user, claims } = await initializeFirebaseAuth();
+              this.firebaseUser = user;
+              this.userClaims = claims;
+              this.isInitialized = true;
 
-            onAuthStateChanged(auth, (user) => {
-              if (user) {
-                user.getIdTokenResult().then(idTokenResult => {
-                  this.firebaseUser = { ... user, ...idTokenResult.claims };
-                });
-              } else {
-                this.firebaseUser = null;
-                this.userClaims = null;
-              }
-            });
+              onAuthStateChanged(auth, (user) => {
+                if (user) {
+                  user.getIdTokenResult().then(idTokenResult => {
+                    this.firebaseUser = { ... user, ...idTokenResult.claims };
+                  });
+                } else {
+                  this.firebaseUser = null;
+                  this.userClaims = null;
+                }
+              });
+            }
 
             window.addEventListener('currentReportChange', (event) => {
 
@@ -767,9 +777,9 @@ Alpine.data('alpineDataComponent', function () {
               dispute_reason = otherReasonInput.trim();
             }
             
-            delete formObject['reportReason'];
-            delete formObject['otherReasonText'];
-            formObject['dispute_reason'] = dispute_reason;
+            const { reportReason, otherReasonText, ...newFormObject } = formObject;
+            formObject = null;
+            newFormObject['dispute_reason'] = dispute_reason;
             window.Swal.fire({
                 title: 'Submitting a Dispute',
                 html: `
@@ -792,33 +802,23 @@ Alpine.data('alpineDataComponent', function () {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                   try {
+                    this.$dispatch('initiate-upload');
+                    const uploadResult = await new Promise((resolve) => {
+                      window.uploadResolve = resolve;
+                    });
 
-                  const uploadResponse = await fetch('/media', {
-                      method: 'POST',
-                      body: createFormData,
-                      headers: {
-                        'X-CSRF-TOKEN': csrfToken3
-                      }  
-                  });
-
-                  const uploadResult = await uploadResponse.json();
-                  if (uploadResult.success) {
-                      disputeFiles = uploadResult.files;
-                  } else {
-                      throw new Error('File upload failed');
-                  }
-
-  
+                    let { files } = uploadResult;
+                  
                     const disputeDto = {
-                      report_id: formObject.report_id,
-                      match_number: formObject.match_number,
-                      event_id: formObject.event_id,
-                      dispute_userId: formObject.dispute_userId,
-                      dispute_teamId: formObject.dispute_teamId,
-                      dispute_teamNumber: formObject.dispute_teamNumber,
-                      dispute_reason: formObject.dispute_reason,
-                      dispute_description: formObject.dispute_description || null,
-                      
+                      report_id: newFormObject.report_id,
+                      match_number: newFormObject.match_number,
+                      event_id: newFormObject.event_id,
+                      dispute_userId: newFormObject.dispute_userId,
+                      dispute_teamId: newFormObject.dispute_teamId,
+                      dispute_teamNumber: newFormObject.dispute_teamNumber,
+                      dispute_reason: newFormObject.dispute_reason,
+                      dispute_description: newFormObject.dispute_description || null,
+                      dispute_image_videos: files,
                       // Initialize optional fields as null
                       response_userId: null,
                       response_teamId: null,
@@ -916,60 +916,155 @@ Alpine.data('alpineDataComponent', function () {
                   handleCancelResponse();
               }
           });
-        
-            
-            
+        }
+      }     
+          
+    });
+    
+    const createUploaderData = (uploaderId) => {
+      return () => ({
+          inputFiles: [],
+          init() {
+              this.id = uploaderId;
+              this.inputFiles = [];
           },
-          handleFiles(event, id) {
-            const files = Array.from(event.target.files);
-            files.forEach(file => {
+  
+  
+          handleFiles(event) {
+              const newFiles = Array.from(event.target.files);
+              newFiles.forEach(file => {
+                  if (!(file.type.startsWith('image/') || file.type.startsWith('video/'))) {
+                    window.toastError("Only images and videis are supported");
+                    return;
+                  }
+              });
+
+              this.inputFiles = [...this.inputFiles, ...newFiles];
+
+              this.$refs.uploadArea.innerHTML = "";
+
+              this.inputFiles.forEach((file, index) => {
                 if (file.type.startsWith('image/')) {
-                    this.createPreview(file, id);
+                  this.createImgPreview(file, index);
+                } else {
+                  this.createVideoPreview(file, index);
                 }
-            });
-            event.target.value = '';
+              });
+              event.target.value = '';
           },
+          async uploadToServer(url) {
+            try {
+                const createFormData = new FormData();
+                this.inputFiles.forEach((file, index) => {
+                    createFormData.append('media2[]', file);
+                });
+  
+                const csrfToken4 = document.querySelector('meta[name="csrf-token"]').content;
+                
+                const uploadResponse = await fetch(url, {
+                    method: 'POST',
+                    body: createFormData,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken4
+                    }
+                });
+    
+                const uploadResult = await uploadResponse.json();
+                if (window.uploadResolve) {
+                    window.uploadResolve(uploadResult);
+                    window.uploadResolve = null; 
+                }
 
-          createPreview(file, id) {
+            } catch (error) {
+                console.error('Upload error:', error);
+                this.$dispatch('upload-error', {
+                    error: error.message,
+                    uploaderId: this.id
+                });
+            }
+          },
+          createVideoPreview(file, index) {
+            const preview = document.createElement('div');
+            preview.className = 'preview-item me-2';
+        
+            // Create video icon SVG
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("viewBox", "0 0 24 24");
+            svg.setAttribute("width", "64");
+            svg.setAttribute("height", "64");
+        
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z");
+            path.setAttribute("fill", "#666666");
+            svg.appendChild(path);
+        
+            const deleteBtn = document.createElement('button');
+            deleteBtn.innerHTML = '×';
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.addEventListener('click', () => {
+                preview.remove();
+                this.inputFiles = this.inputFiles.filter((_, count) => count !== index);
+              });
+        
+            const fileName = document.createElement('small');
+            fileName.textContent = file.name;
+        
+            preview.appendChild(svg);
+            preview.appendChild(deleteBtn);
+            preview.appendChild(fileName);
+            
+            const uploadArea = this.$refs.uploadArea;
+            const plusButton = uploadArea.querySelector('.plus-button');
+            uploadArea.insertBefore(preview, plusButton);
+          },
+          createImgPreview(file, index) {
               const preview = document.createElement('div');
-              preview.className = 'preview-item loading';
-
+              preview.className = 'preview-item loading me-2';
+  
               const img = document.createElement('img');
               img.addEventListener('load', () => {
                   preview.classList.remove('loading');
               });
-
+  
               const deleteBtn = document.createElement('button');
               deleteBtn.className = 'delete-btn';
               deleteBtn.innerHTML = '×';
-              deleteBtn.addEventListener('click', () => preview.remove());
-
+              deleteBtn.addEventListener('click', () => {
+                  preview.remove();
+                  this.inputFiles = this.inputFiles.filter((_, count) => count !== index);
+                });
+  
               const reader = new FileReader();
               reader.onload = (e) => {
                   img.src = e.target.result;
               };
               reader.readAsDataURL(file);
 
+              const fileName = document.createElement('small');
+              fileName.textContent = file.name;
+          
               preview.appendChild(img);
               preview.appendChild(deleteBtn);
+              preview.appendChild(fileName);
               
-              const uploadArea = this.$refs[`uploadArea${id}`];
+              const uploadArea = this.$refs.uploadArea;
               const plusButton = uploadArea.querySelector('.plus-button');
               uploadArea.insertBefore(preview, plusButton);
           },
-
-
-          getAllImages() {
-              const images1 = Array.from(this.$refs.uploadArea1.querySelectorAll('.preview-item img'))
+  
+          getImages() {
+              return Array.from(this.$refs.uploadArea.querySelectorAll('.preview-item img'))
                   .map(img => img.src);
-              const images2 = Array.from(this.$refs.uploadArea2.querySelectorAll('.preview-item img'))
-                  .map(img => img.src);
-              
-              return { uploader1: images1, uploader2: images2 };
-          },
-        }
-    });
-    
+          }
+      });
+  };
+  
+  const uploaderTypes = ['type1', 'type2'];
+  
+  uploaderTypes.forEach(type => {
+      Alpine.data(type, createUploaderData(type));
+  });
+  
         
 const validateDisputeCreation = async (data) => {
   const errors = [];

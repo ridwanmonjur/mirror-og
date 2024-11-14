@@ -6,7 +6,6 @@ bracketItemList.forEach(item => {
 
 const eventId = document.getElementById('eventId').value;
 
-
 var bracketteamList = document.querySelectorAll('.codeCANcode.tournament-bracket__match');
 bracketItemList.forEach(item => {
     item.classList.add('special-item2');

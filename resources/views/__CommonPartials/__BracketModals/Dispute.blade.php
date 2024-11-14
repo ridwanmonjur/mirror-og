@@ -1,5 +1,17 @@
-<div class="modal fade show" data-show="true" id="disputeModal" tabindex="3" aria-labelledby="disputeModalLabel"
-    aria-hidden="false">
+<div class="modal fade" style="z-index: 999900 !important;" id="imageModal" tabindex="5" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img id="modalImage" class="img-fluid object-fit-cover" alt="Full size image" style="max-height: 70vh;">
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+<div class="modal fade show" data-show="true" id="disputeModal" tabindex="3" aria-labelledby="disputeModalLabel">
     <div class="modal-dialog " style="min-width: 90vw;">
         <div class="modal-content " style="background-color: transparent !important; ">
             <div class="modal-body my-3 px-5 ">
@@ -31,7 +43,7 @@
                                 <div class="row px-0 w-75 mx-auto">
                                     <div class="col-12  text-center col-lg-4">
                                         <div>
-                                            <img :src="'/storage/' + report.teams[0]?.banner" alt="Team Banner"
+                                            <img :src="report.teams[0] && report.teams[0].banner? '/storage/' + report.teams[0].banner : '/assets/images/404.png'" alt="Team Banner"
                                                 width="50" height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover">
@@ -47,7 +59,7 @@
                                     </div>
                                     <div class="col-12 col-lg-4  text-center">
                                         <div>
-                                            <img :src="'/storage/' + report.teams[1]?.banner" alt="Team Banner"
+                                            <img :src="report.teams[1] && report.teams[1].banner? '/storage/' + report.teams[1].banner :'/assets/images/404.png'" alt="Team Banner"
                                                 width="50" height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover">
@@ -128,15 +140,19 @@
                                             class="text-red">*</span>
                                         </h5>
                                         <div class="ps-5 pe-5 text-start">
-                                            <div class="upload-container">
-                                                <div class="upload-area" x-ref="uploadArea1"
-                                                    @dragover.prevent="$refs.uploadArea1.classList.add('drag-over')"
-                                                    @dragleave.prevent="$refs.uploadArea1.classList.remove('drag-over')"
-                                                    @drop.prevent="handleDrop($event, '1')">
-                                                    <div class="plus-button" @click="$refs.fileInput1.click()">+</div>
+                                            <div class="upload-container ps-5 pe-5" x-data="type1" x-ref="createDisputeInputs"
+                                                  @initiate-upload.window="uploadToServer('/api/media')"
+                                            >
+                                                <div class="d-flex justify-content-start">
+                                                    <div class="upload-area me-2 d-flex justify-content-between" x-ref="uploadArea"></div>
+                                                    <div class="plus-button" @click="$refs.fileInput.click()">+</div>
                                                 </div>
-                                                <input type="file" x-ref="fileInput1" class="file-input" multiple
-                                                    accept="image/*" @change="handleFiles($event, '1')">
+                                                <input type="file" 
+                                                    x-ref="fileInput" 
+                                                    class="file-input" 
+                                                    multiple
+                                                    accept="image/*" 
+                                                    @change="handleFiles($event)">
                                             </div>
                                         </div>
 
@@ -188,7 +204,29 @@
                                             x-html="dispute[reportUI.matchNumber].dispute_description">
                                         </p>
                                         <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span></p>
-
+                                        <div>
+                                            <template x-if="dispute[reportUI.matchNumber]?.dispute_image_videos">
+                                                <div>
+                                                    <template x-for="imgVideo in dispute[reportUI.matchNumber].dispute_image_videos" :key="imgVideo">
+                                                        <div>
+                                                            <template x-if="imgVideo.startsWith('media/img')">
+                                                                <img :src="'/storage/' + imgVideo" class="object-fit-cover border border-primary"                
+                                                                    @click="showImageModal(imgVideo)"
+                                                                    height="100px" width="100px" 
+                                                                />
+                                                            </template>
+                                                            
+                                                            <template x-if="!imgVideo.startsWith('media/img')">
+                                                                <video controls class="prview-item">
+                                                                    <source :src="'/storage/' + imgVideo" type="video/mp4">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </template>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </template>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -292,15 +330,20 @@
                                                     </div>
                                                 </div>
                                                 <p class="my-0 text-start ps-5 pe-5 ">Image/ Video Evidence: <span class="text-red">*<span> </p>
-                                                <div class="upload-container ps-5 pe-5 ">
-                                                    <div class="upload-area" x-ref="uploadArea2"
-                                                        @dragover.prevent="$refs.uploadArea2.classList.add('drag-over')"
-                                                        @dragleave.prevent="$refs.uploadArea2.classList.remove('drag-over')"
-                                                        @drop.prevent="handleDrop($event, '2')">
-                                                        <div class="plus-button" x-on:click="$refs.fileInput2.click()">+</div>
+                                                <div class="upload-container ps-5 pe-5" x-data="type2">
+                                                    <div class="previous-uploads" x-ref="uploadArea"></div>
+                                                    <div class="upload-area" 
+                                                        
+                                                    >
+                                                        <div class="plus-button" @click="$refs.fileInput.click()">+</div>
                                                     </div>
-                                                    <input type="file" x-ref="fileInput2" class="file-input" multiple
-                                                        accept="image/*" @change="handleFiles($event, '2')">
+                                                    <input type="file" 
+                                                        x-ref="fileInput" 
+                                                        class="file-input" 
+                                                        multiple
+                                                        accept="image/*" 
+                                                        @change="handleFiles($event)"
+                                                    >
                                                 </div>
                                                 <div class="my-3 px-3 d-flex justify-content-between">
                                                     <button class="btn btn-light rounded-pill border border-dark" x-on:click="toggleResponseForm('response_form', 'response_decision');">

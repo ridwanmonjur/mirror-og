@@ -21,7 +21,6 @@ class ImageVideo extends Model
     public static function handleMediaUploads(Request $request, string $formName): array
     {
         $fileArray = [];
-        dd($request->files, $request->file);
         if ($request->hasFile($formName)) {
             $files = $request->file($formName);
 
@@ -29,7 +28,7 @@ class ImageVideo extends Model
 
             foreach ($files as $mediaFile) {
                 if ($mediaFile instanceof \Illuminate\Http\UploadedFile) {
-                    $type = str_starts_with($mediaFile->getMimeType(), 'video/') ? 'video' : 'image';
+                    $type = str_starts_with($mediaFile->getMimeType(), 'video/') ? 'vid' : 'img';
                     $path = $mediaFile->store("media/{$type}", 'public'); // Specify disk if needed
 
                     $media = self::create([

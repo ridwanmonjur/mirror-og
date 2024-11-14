@@ -8,12 +8,16 @@
     <title>Tournament Matches</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
-    @vite(['resources/js/libraries/tippy.js', 'resources/sass/libraries/filepond.scss', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/bracket.js'])
+    @vite(['resources/js/libraries/tippy.js', 'resources/sass/libraries/lightgallery.scss', 'resources/js/libraries/lightgallery.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/bracket.js'])
     <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
     @include('__CommonPartials.HeadIcon')
     <style>
     </style>
 </head>
+
+@php
+    $userId = isset($user) ? $user->id : null; 
+@endphp
 
 <body>
     @include('googletagmanager::body')
@@ -24,6 +28,7 @@
         <input type="hidden" id="previousValues" value="{{json_encode($previousValues)}}">
         <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
         <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
+        <input type="hidden" id="hidden_user_id" value="{{ $userId }}">
         <div class="px-4 py-4">
             @include('Organizer.__ManageEventPartials.BracketUpdateList')
         </div>

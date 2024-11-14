@@ -26,7 +26,7 @@
     $eventTierLowerImg = bladeEventTierImage($tier);
     $eventBannerImg = bladeImageNull($event->eventBanner);
     $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
-
+    $userId = isset($user) ? $user->id : null; 
 @endphp
 
 <body style="background: none; ">
@@ -36,6 +36,7 @@
     <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
     <input type="hidden" id="create_url" value="{{ route('event.create') }}">
     <input type="hidden" id="edit_url" value="{{ route('event.edit', $event->id) }}">
+    <input type="hidden" id="hidden_user_id" value="{{ $userId }}">
     <main x-data="alpineDataComponent">
         <br class="d-none-at-desktop">
         <div class="pt-2">

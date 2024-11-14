@@ -39,11 +39,11 @@ Route::middleware('auth')->get('/user', function (Request $request) {
 Route::get('/activity-logs', [ParticipantController::class, 'getActivityLogs'])
     ->name('activity-logs.index');
 
-    Route::prefix('media')->group(function () {
-        Route::post('/media', [ImageVideoController::class, 'upload']);
-        Route::get('stream/{media}', [ImageVideoController::class, 'stream'])->name('media.stream');
-        Route::delete('{media}', [ImageVideoController::class, 'destroy']);
-    });
+Route::prefix('media')->group(function () {
+    Route::post('/', [ImageVideoController::class, 'upload']);
+    Route::get('stream/{media}', [ImageVideoController::class, 'stream'])->name('media.stream');
+    Route::delete('{media}', [ImageVideoController::class, 'destroy']);
+});
 
 Route::put('/interest', [BetaController::class, 'interestedAction'])->name('public.interest.action');
 
