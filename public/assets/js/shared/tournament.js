@@ -1,10 +1,11 @@
-addOnLoad(()=> {
-    window.showLoading();
+// addOnLoad(()=> {
+//     window.showLoading();
+// });
 
-    document.addEventListener('alpine:init', () => {
-        window.Swal.close();
-    }, { once: true });
-})
+// document.addEventListener('alpine:init', () => {
+//     window.Swal.close();
+// }, { once: true });
+
 let previousValues = JSON.parse(document.getElementById('previousValues')?.value);
 
 var bracketItemList = document.querySelectorAll('.codeCANcode.tournament-bracket__item');

@@ -672,7 +672,7 @@ Alpine.data('alpineDataComponent', function () {
         this.getCurrentReportSnapshot(dataset.classNamesWithoutPrecedingDot, newReport, newReportUI);
       });
 
-      window.Swal.close();
+      // Swal.close();
     },
     destroy() {
       if (this.subscribeToMatchStatusesSnapshot) this.subscribeToMatchStatusesSnapshot();
