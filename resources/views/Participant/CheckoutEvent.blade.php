@@ -47,5 +47,5 @@
     
     </div>
     @include('Participant.__CheckoutPartials.CheckoutScripts')
-    <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+    
 </body>

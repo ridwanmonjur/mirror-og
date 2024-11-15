@@ -36,7 +36,6 @@ use App\Http\Requests\Match\ParticipantViewEventRequest;
 
 class ParticipantEventController extends Controller
 {
-
     private $paymentService;
     private $eventMatchService;
 
@@ -84,7 +83,6 @@ class ParticipantEventController extends Controller
             $event = $request->getEvent();
             $user = $request->getStoredUser();
             $existingJoint = $request->getJoinEvent();
-            
             $viewData = $this->eventMatchService->getEventViewData(
                 $event, $user, $existingJoint
             );

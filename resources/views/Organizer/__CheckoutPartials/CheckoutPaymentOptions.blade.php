@@ -150,18 +150,18 @@
             @php
 
             @endphp
-            <div class="flexbox w-75">
+            <div class=" d-flex justify-content-between w-75">
                 <span>Subtotal</span>
                 <span id="subtotal">RM
                     <span class="transform-number"> {{ $fee['entryFee'] }} </span>
                 </span>
             </div>
-            <div class="flexbox w-75">
+            <div class=" d-flex justify-content-between w-75">
                 <span>Event Creation Fee Rate</span>
                 <span id="paymentRate">20%</span>
             </div>
             <br>
-            <div class="flexbox w-75">
+            <div class=" d-flex justify-content-between w-75">
                 <h5> TOTAL </h5>
                 <h5 id="paymentTotal">RM
                     @if ($fee['discountFee'] > 0)

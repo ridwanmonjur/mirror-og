@@ -48,7 +48,7 @@
                     <span>Empty roster</span>
                 @else
                     <ul data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
-                        onclick="goToUrl(event, this)" class="d-flex flex-column flex-start underline_animation">
+                        onclick="goToUrl(event, this)" class="d-flex flex-column flex-start ">
                         @foreach ($joinEvent->roster as $roster)
                             <li style="list-style: none;"    
                             >

@@ -1,4 +1,4 @@
-let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+let csrfToken2 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 let tabButtonBalueValue = localStorage.getItem("tab");
 let currentTabIndexForNextBack = 0;
@@ -642,7 +642,7 @@ async function fetchMembers(event = null) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "X-CSRF-TOKEN": csrfToken
+            "X-CSRF-TOKEN": csrfToken2
         },
         body: JSON.stringify({
             teamId,

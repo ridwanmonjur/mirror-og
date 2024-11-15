@@ -21,5 +21,5 @@
     </main>
 
     @include('Organizer.__CheckoutPartials.CheckoutScripts', ['fee' => $fee, 'event' => $event])
-    <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+    
 </body>

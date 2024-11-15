@@ -10,7 +10,6 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/libraries/tippy.js',
                 'resources/js/libraries/tagify.js',
-                'resources/js/libraries/alpine.js',
                 'resources/js/libraries/file-edit.js',
                 'resources/js/libraries/lightgallery.js',
                 'resources/sass/libraries/lightgallery.scss',
@@ -20,9 +19,10 @@ export default defineConfig({
                 'resources/js/libraries/colorpicker.js',
                 'resources/sass/libraries/colorpicker.scss',
                 'resources/sass/libraries/tagify.scss',
-                'resources/js/pages/chat.js',
-                'resources/js/pages/bracket.js',
-                'resources/js/pages/organizer.js',
+                'resources/js/alpine/chat.js',
+                'resources/js/alpine/bracket.js',
+                'resources/js/alpine/organizer.js',
+                'resources/js/alpine/teamhead.js',
             ],
             refresh: true,
         }),
@@ -35,10 +35,10 @@ export default defineConfig({
             variables: true,
         }),
     ],
-    build: { 
-        minify: true, 
+    build: {
+        minify: true,
         rollupOptions: {
-            output:{
+            output: {
                 manualChunks(id) {
                     if (id.includes('node_modules')) {
                         return id.toString().split('node_modules/')[1].split('/')[0].toString();

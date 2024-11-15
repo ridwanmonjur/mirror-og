@@ -10,7 +10,6 @@ var vite_config_default = defineConfig({
         "resources/js/app.js",
         "resources/js/libraries/tippy.js",
         "resources/js/libraries/tagify.js",
-        "resources/js/libraries/alpine.js",
         "resources/js/libraries/file-edit.js",
         "resources/js/libraries/lightgallery.js",
         "resources/sass/libraries/lightgallery.scss",
@@ -20,8 +19,8 @@ var vite_config_default = defineConfig({
         "resources/js/libraries/colorpicker.js",
         "resources/sass/libraries/colorpicker.scss",
         "resources/sass/libraries/tagify.scss",
-        "resources/js/pages/chat.js",
-        "resources/js/pages/bracket.js"
+        "resources/js/alpine/chat.js",
+        "resources/js/alpine/bracket.js"
       ],
       refresh: true
     }),

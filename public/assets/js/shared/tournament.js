@@ -1,11 +1,18 @@
+addOnLoad(()=> {
+    window.showLoading();
+
+    document.addEventListener('alpine:init', () => {
+        window.Swal.close();
+    }, { once: true });
+})
 let previousValues = JSON.parse(document.getElementById('previousValues')?.value);
+
 var bracketItemList = document.querySelectorAll('.codeCANcode.tournament-bracket__item');
 bracketItemList.forEach(item => {
     item.classList.add('special-item-right');
 });
 
 const eventId = document.getElementById('eventId').value;
-
 
 var bracketteamList = document.querySelectorAll('.codeCANcode.tournament-bracket__match');
 bracketItemList.forEach(item => {
@@ -23,6 +30,9 @@ function updateModalShow(event) {
     event.preventDefault();
     const button = event.currentTarget;
     let { team1_id, team2_id } = button.dataset;
+    console.log({team1_id, team2_id});
+    console.log({team1_id, team2_id});
+    console.log({team1_id, team2_id});
     let parentWithDataset = document.querySelector(`.tournament-bracket__match.${team1_id}.${team2_id}`);
 
     if (
@@ -30,7 +40,7 @@ function updateModalShow(event) {
         parentWithDataset.dataset === null || 
         parentWithDataset.dataset.bracket === null
     ) {
-        toastError("Previous match results not updated");
+        toastError("Dataset match results not updated");
         return;
     }
 
@@ -68,14 +78,14 @@ function updateModalShow(event) {
 }
 
 function reportModalShow(event) {
-    event.stopPropagation();
     event.preventDefault();
-    event.stopPropagation();
     const button = event.currentTarget;
     let { position } = button.dataset;
     let triggerParentsPositionIds = previousValues[position];
     if (!triggerParentsPositionIds) {
-        throw new Error("Positions missing");
+        console.error("Positions missing");
+        console.error("Positions missing");
+        return;
     }
 
     let classNamesWithoutPrecedingDot = triggerParentsPositionIds.join(".");
@@ -86,7 +96,6 @@ function reportModalShow(event) {
         parentWithDataset.dataset === null || 
         parentWithDataset.dataset.bracket === null
     ) {
-        toastError("Previous match results not updated");
         return;
     }
 
@@ -295,3 +304,8 @@ submitBtnElement?.addEventListener('click', function(event) {
 });
 
 const uploadContainers = document.querySelectorAll('.upload-container');
+
+
+function redirectToTeamPage(teamId) {
+    window.location.href = `/view/team/${teamId}`;
+}

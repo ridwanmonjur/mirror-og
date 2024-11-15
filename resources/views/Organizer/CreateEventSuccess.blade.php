@@ -13,5 +13,5 @@
             <br><br>
         </main>
         
-        <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+        
     </body>

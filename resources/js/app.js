@@ -30,6 +30,20 @@ const Toast = Swal.mixin({
     timerProgressBar: true
 })
 
+window.showLoading = ({ title = '', html = '', backdrop = true } = {}) => {
+    return window.Swal.fire({
+      title,
+      html,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false,
+      backdrop: backdrop ? 'rgba(0,0,0,0.7)' : 'transparent',
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+};
+
 
 window.toastError = function (message, error = null) {
     Toast.fire({

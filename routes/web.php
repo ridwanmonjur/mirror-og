@@ -15,6 +15,7 @@ use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantRosterController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
+use App\Http\Controllers\Shared\ImageVideoController;
 use App\Http\Controllers\Shared\SocialController;
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\UserController;
@@ -75,6 +76,7 @@ Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-permission:participant|admin|organizer'], function () {
+        Route::post('/media', [ImageVideoController::class, 'upload']);
         // Route::view('user/{id}/stats', 'Shared.PlayerProfileStats', ['userId' => request('id')])->name('user.stats');
         Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackground.action');
         Route::get('profile/message', [ChatController::class, 'message'])->name('user.message.view');

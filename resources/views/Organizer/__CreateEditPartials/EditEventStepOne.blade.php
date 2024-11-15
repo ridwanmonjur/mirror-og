@@ -40,7 +40,7 @@
                 @endif
             @endforeach
         </div>
-        <div class="flexbox box-width back-next">
+        <div class=" d-flex justify-content-between box-width back-next">
             <div></div>
             <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button"
                 class="oceans-gaming-default-button"> Next &gt; </button>

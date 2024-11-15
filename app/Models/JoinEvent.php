@@ -267,8 +267,9 @@ class JoinEvent extends Model
             ->exists();
     }
 
-    public static function getJoinedByTeamsForSameEvent(string| int $eventId, string| int $userId): ?self
+    public static function getJoinedByTeamsForSameEvent(string| int $eventId, string| int| null $userId): ?self
     {
+        if (!$userId) return null;
         return self::where('event_details_id', $eventId)
             ->where(function ($query) use ($userId) {
                 $query->whereHas('members', function ($query) use ($userId) {

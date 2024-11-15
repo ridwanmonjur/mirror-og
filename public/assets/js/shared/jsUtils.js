@@ -157,7 +157,7 @@ async function storeFetchDataInLocalStorage(url) {
     }
 }
 
-let bodyHeight = null;
+let bodyHeight3 = null;
 
 
 function openTab(evt, activeName, specialElementHeightId = null) {
@@ -173,8 +173,8 @@ function openTab(evt, activeName, specialElementHeightId = null) {
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-    if (typeof bodyHeight === 'undefined' || bodyHeight === null) {
-        bodyHeight = document.body.offsetHeight;
+    if (typeof bodyHeight3 === 'undefined' || bodyHeight3 === null) {
+        bodyHeight3 = document.body.offsetHeight;
     }
     
     let activeElement = document.getElementById(activeName);
@@ -192,7 +192,7 @@ function openTab(evt, activeName, specialElementHeightId = null) {
         let main = document.querySelector('main');
         if (main) {
             main.style.transition = "height 0.5s ease-in-out";
-            main.style.height = bodyHeight + bracketListHeight + 'px';
+            main.style.height = bodyHeight3 + bracketListHeight + 'px';
         }
     }
 }

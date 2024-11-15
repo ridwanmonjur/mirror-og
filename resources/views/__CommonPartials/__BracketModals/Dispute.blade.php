@@ -1,7 +1,21 @@
-<div class="modal fade show" data-show="true" id="disputeModal" tabindex="3" aria-labelledby="disputeModalLabel"
-    aria-hidden="false">
+<div class="modal fade" style="z-index: 999900 !important;" id="imageModal" tabindex="5" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img id="modalImage" class="img-fluid object-fit-cover" alt="Full size image" style="max-height: 70vh;">
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+<template x-if="dispute[reportUI.matchNumber] != null">
+<div class="modal fade show" data-show="true" id="disputeModal" tabindex="3" aria-labelledby="disputeModalLabel">
     <div class="modal-dialog " style="min-width: 90vw;">
         <div class="modal-content " style="background-color: transparent !important; ">
+            
             <div class="modal-body my-3 px-5 ">
                 <div class="row">
                     <div class="{{ 'col-12 col-lg-6 text-center pt-0 pb-2 ps-0 pe-0 pe-lg-5' . 'Team1' . ' ' . 'Team2' }}"
@@ -31,7 +45,7 @@
                                 <div class="row px-0 w-75 mx-auto">
                                     <div class="col-12  text-center col-lg-4">
                                         <div>
-                                            <img :src="'/storage/' + report.teams[0]?.banner" alt="Team Banner"
+                                            <img :src="report.teams[0] && report.teams[0].banner? '/storage/' + report.teams[0].banner : '/assets/images/404.png'" alt="Team Banner"
                                                 width="50" height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover">
@@ -47,7 +61,7 @@
                                     </div>
                                     <div class="col-12 col-lg-4  text-center">
                                         <div>
-                                            <img :src="'/storage/' + report.teams[1]?.banner" alt="Team Banner"
+                                            <img :src="report.teams[1] && report.teams[1].banner? '/storage/' + report.teams[1].banner :'/assets/images/404.png'" alt="Team Banner"
                                                 width="50" height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover">
@@ -63,10 +77,10 @@
                 <template x-if="!dispute[reportUI.matchNumber]">
                     <div>
                         {{-- CREATE FORM --}}
-                        <form method="POST" x-on:submit="submitDisputeForm(event)" id="create">
+                        <form method="POST" x-on:submit="submitDisputeForm(event)" id="createForm" enctype="multipart/form-data">
                             <input type="hidden" name="action" value="create">
                             <input type="hidden" name="event_id" value="{{$event->id}}">
-                            <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber]?.idid">
+                            <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber]?.id">
                             <input type="hidden" name="dispute_teamNumber" x-bind:value="reportUI.teamNumber">
                             <input type="hidden" name="report_id" x-bind:value="report.id">
                             <input type="hidden" name="dispute_userId" value="{{$user?->id}}">
@@ -128,24 +142,29 @@
                                             class="text-red">*</span>
                                         </h5>
                                         <div class="ps-5 pe-5 text-start">
-                                            <div class="upload-container">
-                                                <div class="upload-area" x-ref="uploadArea1"
-                                                    @dragover.prevent="$refs.uploadArea1.classList.add('drag-over')"
-                                                    @dragleave.prevent="$refs.uploadArea1.classList.remove('drag-over')"
-                                                    @drop.prevent="handleDrop($event, '1')">
-                                                    <div class="plus-button" @click="$refs.fileInput1.click()">+</div>
+                                            <div class="upload-container ps-5 pe-5" x-data="type1" x-ref="createDisputeInputs"
+                                                  @initiate-upload.window="uploadToServer('/api/media')"
+                                            >
+                                                <div class="d-flex justify-content-start">
+                                                    <div class="upload-area me-2 d-flex justify-content-between" x-ref="uploadArea"></div>
+                                                    <div class="plus-button" @click="$refs.fileInput.click()">+</div>
                                                 </div>
-                                                <input type="file" x-ref="fileInput1" class="file-input" multiple
-                                                    accept="image/*" @change="handleFiles($event, '1')">
+                                                <input type="file" 
+                                                    x-ref="fileInput" 
+                                                    class="file-input" 
+                                                    multiple
+                                                    accept="image/*" 
+                                                    @change="handleFiles($event)">
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
                             <div class="w-100 mx-auto d-flex justify-content-around">
                                 <button type="button"
-                                    class="btn btn-light btn-large btn-pill border-dark px-5 py-3 rounded-pill px-5 py-2">
+                                    class="btn btn-light btn-large btn-pill border-dark px-5 py-3 rounded-pill px-5 py-2"
+                                    data-bs-toggle="modal" data-bs-target="#reportModal" data-bs-dismiss="modal"    
+                                >
                                     Cancel
                                 </button>
                                 <button type="submit" style="background-color: #686767;"
@@ -166,8 +185,7 @@
                                     <h5 class="text-start my-3"> Dispute Information </h5>
                                     <div class="ps-5 ps-5 text-start">
                                         <p class="my-0"> Disputing Team </p>
-                                        <img :src="'/storage/images/' + report.teams[dispute[reportUI.matchNumber]
-                                            .dispute_teamNumber]?.banner"
+                                        <img :src="'/storage/' + report.teams[dispute[reportUI.matchNumber].dispute_teamNumber]?.banner"
                                             alt="Team Banner" width="50" height="50"
                                             onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                             class="mb-1 border border-2 popover-content-img rounded-circle object-fit-cover">
@@ -185,8 +203,32 @@
                                         <p class="text-primary" style="white-space: pre-wrap;"
                                             x-html="dispute[reportUI.matchNumber].dispute_description">
                                         </p>
-                                        <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span></p>
+                                        
+                                        <div class="mb-2">
+                                            <template x-if="dispute[reportUI.matchNumber]?.dispute_image_videos[0]">
+                                                <div>
+                                                    <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span></p>
 
+                                                    <template x-for="imgVideo in dispute[reportUI.matchNumber].dispute_image_videos" :key="imgVideo">
+                                                        <div>
+                                                            <template x-if="imgVideo.startsWith('media/img')">
+                                                                <img :src="'/storage/' + imgVideo" class="object-fit-cover border border-primary"                
+                                                                    @click="showImageModal(imgVideo)"
+                                                                    height="100px" width="100px" 
+                                                                />
+                                                            </template>
+                                                            
+                                                            <template x-if="!imgVideo.startsWith('media/img')">
+                                                                <video controls class="prview-item">
+                                                                    <source :src="'/storage/' + imgVideo" type="video/mp4">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </template>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </template>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -201,8 +243,7 @@
                                         <div class="ps-5 ps-5 text-start">
                                             <h5 class="text-start my-3"> Counter Explanation (Optional) </h5>
                                             <p class="my-0"> Responding Team </p>
-                                            <img :src="'/storage/images/' + report.teams[dispute[reportUI.matchNumber]
-                                                .response_teamNumber]?.banner"
+                                            <img :src="'/storage/' + report.teams[dispute[reportUI.matchNumber].response_teamNumber]?.banner"
                                                 alt="Team Banner" width="50" height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="mb-1 border border-2 popover-content-img rounded-circle object-fit-cover"
@@ -222,6 +263,31 @@
                                             <p class="text-primary" style="white-space: pre-wrap;"
                                                 x-html="dispute[reportUI.matchNumber].dispute_description">
                                             </p>
+                                            <div class="mb-2">
+                                                <template x-if="dispute[reportUI.matchNumber]?.response_image_videos[0]">
+                                                    <div>
+                                                        <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span></p>
+
+                                                        <template x-for="imgVideo in dispute[reportUI.matchNumber].response_image_videos" :key="imgVideo">
+                                                            <div>
+                                                                <template x-if="imgVideo.startsWith('media/img')">
+                                                                    <img :src="'/storage/' + imgVideo" class="object-fit-cover border border-primary"                
+                                                                        @click="showImageModal(imgVideo)"
+                                                                        height="100px" width="100px" 
+                                                                    />
+                                                                </template>
+                                                                
+                                                                <template x-if="!imgVideo.startsWith('media/img')">
+                                                                    <video controls class="prview-item">
+                                                                        <source :src="'/storage/' + imgVideo" type="video/mp4">
+                                                                        Your browser does not support the video tag.
+                                                                    </video>
+                                                                </template>
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                </template>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -247,15 +313,15 @@
                                     </div>
                                 </template>
                                 <template
-                                    x-if="reportUI.teamNumber != dispute[reportUI.matchNumber].dispute_teamNumber">
+                                    x-if="reportUI.teamNumber != dispute[reportUI.matchNumber].dispute_teamNumber && !dispute[reportUI.matchNumber].resolution_winner">
                                     <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                         <div class="response_decision row  bg-light justify-content-start border border-3 border rounded px-2 py-2">
                                             <div class="mt-3 d-flex align-items-center py-3 pb-4 justify-content-around flex-column">
                                                 <button style="width: 250px;" class="btn btn-danger text-light bg-red px-2 mb-2 py-2 rounded-pill border border-dark" x-on:click="toggleResponseForm('response_decision', 'response_form');">
                                                     Submit Counter Evidence
                                                 </button>
-                                                <form method="POST" x-on:submit="resolveDisputeForm(event)" id="create">
-                                                    <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].matchNumber">
+                                                <form method="POST" x-on:submit="resolveDisputeForm(event)" id="resolveForm">
+                                                    <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
                                                     <input type="hidden" name="action" value="resolve">
                                                     <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
                                                     <input type="hidden" name="resolution_winner" x-bind:value="reportUI.otherTeamNumber">
@@ -272,11 +338,11 @@
 
                                         <div
                                             class="response_form d-none row  bg-light justify-content-start border border-3 border rounded px-2 py-2">
-                                            <form method="POST" x-on:submit="respondDisputeForm(event)" id="respond">
+                                            <form method="POST" x-on:submit="respondDisputeForm(event)" id="respondForm">
                                                 <input type="hidden" name="action" value="respond">
-                                                <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber]?.idid">
+                                                <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber]?.id">
                                                 <input type="hidden" name="response_teamNumber" x-bind:value="reportUI.teamNumber">
-                                                <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
+                                                <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
                                                 <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
                                                 <input type="hidden" name="response_userId" value="{{$user?->id}}">
 
@@ -290,15 +356,21 @@
                                                     </div>
                                                 </div>
                                                 <p class="my-0 text-start ps-5 pe-5 ">Image/ Video Evidence: <span class="text-red">*<span> </p>
-                                                <div class="upload-container ps-5 pe-5 ">
-                                                    <div class="upload-area" x-ref="uploadArea2"
-                                                        @dragover.prevent="$refs.uploadArea2.classList.add('drag-over')"
-                                                        @dragleave.prevent="$refs.uploadArea2.classList.remove('drag-over')"
-                                                        @drop.prevent="handleDrop($event, '2')">
-                                                        <div class="plus-button" @click="$refs.fileInput2.click()">+</div>
+                                                <div class="ps-5 pe-5 text-start">
+                                                <div class="upload-container ps-5 pe-5" x-data="type2" x-ref="respondDisputeInputs"
+                                                    @initiate-upload.window="uploadToServer('/api/media')"
+                                                >
+                                                    <div class="d-flex justify-content-start">
+                                                        <div class="upload-area me-2 d-flex justify-content-between" x-ref="uploadArea"></div>
+                                                        <div class="plus-button" @click="$refs.fileInput.click()">+</div>
                                                     </div>
-                                                    <input type="file" x-ref="fileInput2" class="file-input" multiple
-                                                        accept="image/*" @change="handleFiles($event, '2')">
+                                                    <input type="file" 
+                                                        x-ref="fileInput" 
+                                                        class="file-input" 
+                                                        multiple
+                                                        accept="image/*" 
+                                                        @change="handleFiles($event)">
+                                                    </div>
                                                 </div>
                                                 <div class="my-3 px-3 d-flex justify-content-between">
                                                     <button class="btn btn-light rounded-pill border border-dark" x-on:click="toggleResponseForm('response_form', 'response_decision');">
@@ -356,10 +428,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="ps-5 ps-5 text-start">
-                                                    <form method="POST" x-on:submit="resolveDisputeForm(event)" id="resolve">
+                                                    <form method="POST" x-on:submit="resolveDisputeForm(event)" >
                                                         <input type="hidden" name="action" value="resolve">
                                                         <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
-                                                        <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
+                                                        <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
 
                                                         <input type="hidden" name="resolution_winner" id="resolution_winner_input">
                                                         <input type="hidden" name="resolution_resolved_by" value="disputeLevelEnums['ORGANIZER']">
@@ -405,7 +477,7 @@
                                                         width="60" height="60" onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                         class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
                                                 </div>
-                                                <div class="mt-2 d-block">
+                                                <div class="mt-2 mb-2 d-block">
                                                     <p>
                                                         <span x-text="report.teams[report.realWinners[reportUI.matchNumber]]?.name"> </span>
                                                         has been resolved as the winner.
@@ -435,13 +507,13 @@
 
                                                     <template x-if="userLevelEnums['IS_ORGANIZER'] == report.userLevel">
                                                         <div class="d-inline">
-                                                            <form method="POST" class="d-inline" x-on:submit="resolveDisputeForm(event)" id="resolve">
+                                                            <form method="POST" class="d-inline" x-on:submit="resolveDisputeForm(event)">
                                                                 <input type="hidden" name="action" value="resolve">
                                                                 <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
-                                                                <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
+                                                                <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
                                                                 <input type="hidden" name="already_winner" x-bind:value="dispute[reportUI.matchNumber].resolution_winner">
                                                                 <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['ORGANIZER']">
-                                                                <button type="submit" class="btn py-0 d-inline rounded-pill btn-link text-primary">
+                                                                <button type="submit" class="btn py-0 d-inline rounded-pill bg-red text-light">
                                                                     Change Declaration
                                                                 </button>
                                                             </form>
@@ -456,7 +528,7 @@
                         </template>
                         <br>
                         <div class="text-center">
-                            <button data-bs-dismiss="modal"
+                            <button data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#reportModal" 
                                 class="btn btn-light btn-large btn-pill border-dark px-5 py-3 rounded-pill px-5 py-2">
                                 Return to bracket
                             </button>
@@ -464,10 +536,10 @@
                         <br>
                             <template x-if="!dispute[reportUI.matchNumber]?.resolution_winner">
                                 <div class="text-center">
-                                    <form method="POST" x-on:submit="resolveDisputeForm(event)" id="resolve">
+                                    <form method="POST" x-on:submit="resolveDisputeForm(event)">
                                         <input type="hidden" name="action" value="resolve">
                                         <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
-                                        <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
+                                        <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
                                         <input type="hidden" name="already_winner" x-bind:value="reportUI.otherTeamNumber">
                                         <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['DISPUTEE']">
                                         <button type="submit"
@@ -485,3 +557,5 @@
         </div>
     </div>
 </div>
+            </template>
+

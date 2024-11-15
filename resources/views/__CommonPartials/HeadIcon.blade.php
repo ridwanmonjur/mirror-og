@@ -1,4 +1,3 @@
-<link rel="manifest" href="{{ asset('site.webmanifest') }}">
 
 
 <link rel="icon" type="image/svg+xml" href="{{ asset('assets/images/favicon/favicon.svg') }}">

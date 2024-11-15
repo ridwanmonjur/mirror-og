@@ -17,7 +17,7 @@
     style="width: 35px; height: 28px;"
 >
     @if ($teamId1)
-        <img src="{{ asset('storage/' . $teamBanner1) }}" width="33" height="25"
+        <img src="{{ bladeImageNull($teamBanner1) }}" width="33" height="25"
             onerror="this.src='{{ asset('assets/images/404.png') }}';"
             class=" position-absolute  object-fit-cover me-2" alt="Team View"
             style="z-index: 99;"
@@ -45,7 +45,7 @@
     style="width: 35px; height: 28px;"
 >
     @if ($teamId2)
-        <img src="{{ asset('storage/' . $teamBanner2) }}" width="33" height="25"
+        <img src="{{ bladeImageNull($teamBanner2) }}" width="33" height="25"
             onerror="this.src='{{ asset('assets/images/404.png') }}';"
             class=" position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
             style="z-index: 99;"

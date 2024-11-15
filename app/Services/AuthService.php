@@ -95,7 +95,7 @@ class AuthService {
 
         if ($finduser) {
             if ($finduser->role != $role) {
-                return ['finduser' => null, 'error' =>  sprintf("Only %s can sign in.", strtolower($role))];
+                return ['finduser' => null, 'error' =>  sprintf("Only %ss can sign in with this route.", strtolower($role))];
             }
             // if (!$user->user['email_verified']) {
             //     return ['finduser' => null, 'error' => 'Your Gmail is not verified'];

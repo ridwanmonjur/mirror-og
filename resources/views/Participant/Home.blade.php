@@ -38,7 +38,7 @@
     </main>
     
 
-    <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+    
     <script src="{{ asset('/assets/js/participant/Home.js') }}"></script>
 </body>
 

@@ -1,4 +1,5 @@
 <div>
+
     @include('__CommonPartials.__BracketModals.__Report.ExistingChoices')
     <template x-if="!report.realWinners[reportUI.matchNumber]">
         <div>
@@ -18,7 +19,7 @@
                                     Change Declaration
                                 </button>
                                 <button class="btn border rounded-pill text-light me-3 bg-red" 
-                                    data-bs-toggle="modal" data-bs-target="#disputeModal"
+                                    data-bs-toggle="modal" data-bs-target="#disputeModal" data-bs-dismiss="modal"
                                 > 
                                 Dispute 
                                 </button>
@@ -36,7 +37,7 @@
                             <div class="mt-2 mb-3">
                                 <div class="d-flex justify-content-center">
                                     <button class="btn btn-sm border rounded-pill text-primary border-primary"
-                                        data-bs-toggle="modal" data-bs-target="#disputeModal"
+                                        data-bs-toggle="modal" data-bs-target="#disputeModal" data-bs-dismiss="modal"
                                     > Show dispute </button>
                                 </div>
                             </div>
@@ -95,7 +96,7 @@
                 <div class="mt-2 mb-3">
                 <div class="d-flex justify-content-center">
                     <button class="btn btn-sm border rounded-pill text-primary border-primary"
-                        data-bs-toggle="modal" data-bs-target="#disputeModal"
+                        data-bs-toggle="modal" data-bs-target="#disputeModal" data-bs-dismiss="modal"
                     > Show dispute </button>
                 </div>
             </div>

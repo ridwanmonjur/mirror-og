@@ -46,7 +46,7 @@
         <div class="no-more-data d-none"></div>
         <br><br>
         
-        <script src="{{ asset('/assets/js/jsUtils.js') }}"></script>
+        
         <script src="{{ asset('/assets/js/open/Landing.js') }}"></script>
 
     </main>

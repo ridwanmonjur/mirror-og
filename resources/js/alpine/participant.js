@@ -1,9 +1,6 @@
 import Alpine from "alpinejs";
 import { DateTime } from "luxon";
-let regionDataInput = document.getElementById('region_details_input');
-let regionSelectInput = document.getElementById('region_select_input');
 
-let regionData = JSON.parse(regionDataInput.value.trim());
 let userData = JSON.parse(document.getElementById('initialUserData').value);
 let participantData = JSON.parse(document.getElementById('initialParticipantData').value);
 
