@@ -104,13 +104,19 @@ function addDotsToContainer(key, value) {
     element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
       if (value.realWinners[dottedElementIndex]) {
         if (value.realWinners[dottedElementIndex] == index) {
+          console.log('ok', value.realWinners);
+          console.log('ok', value.realWinners);
           dottedElement.classList.remove('bg-secondary', 'bg-red', 'd-none');
           dottedElement.classList.add("bg-success");
         } else {
+          console.log('yes', value.realWinners);
+          console.log('yes', value.realWinners);
           dottedElement.classList.remove('bg-secondary', 'bg-success', 'd-none');
           dottedElement.classList.add("bg-red");
         }
       } else {
+        console.log('no', value.realWinners);
+        console.log('no', value.realWinners);
         dottedElement.classList.remove('bg-success', 'bg-red', 'd-none');
         dottedElement.classList.add('bg-secondary');
       }
@@ -150,7 +156,9 @@ function getAllMatchStatusesData() {
       }
     });
 
+
     if (!isLoadedActionType) {
+
       Object.entries(allDataList).forEach(([key, value]) => {
         addDotsToContainer(key, value)
       });
@@ -348,21 +356,51 @@ Alpine.data('alpineDataComponent', function () {
       const formData = Object.fromEntries(new FormData(form));
       let {
         id,
-        dispute_matchNumber,
+        match_number,
         resolution_winner,
         resolution_resolved_by,
         already_winner
       } = formData;
 
 
-      if (!id || !dispute_matchNumber || !resolution_resolved_by) {
-        window.toastError('Missing required fields');
-        return;
-      }
+        const missingFields = [];
+        if (!id) missingFields.push('ID');
+        if (!match_number) missingFields.push('Match Number');
+        if (!resolution_resolved_by) missingFields.push('Resolver');
+
+        if (missingFields.length > 0) {
+          window.toastError(`Missing required fields: ${missingFields.join(', ')}`);
+          return;
+        }
+        
 
       if (!resolution_winner) {
         resolution_winner = already_winner == '0' ? '1' : '0';
       }
+
+      console.log({
+        id,
+        match_number,
+        resolution_winner,
+        resolution_resolved_by,
+        already_winner
+      });
+
+      console.log({
+        id,
+        match_number,
+        resolution_winner,
+        resolution_resolved_by,
+        already_winner
+      });
+
+      console.log({
+        id,
+        match_number,
+        resolution_winner,
+        resolution_resolved_by,
+        already_winner
+      });
 
       const disputeRef = doc(db, `event/${eventId}/disputes`, id);
       const updateData = {
@@ -372,19 +410,6 @@ Alpine.data('alpineDataComponent', function () {
       };
 
       await updateDoc(disputeRef, updateData);
-
-      if (already_winner) {
-        this.dispute[this.reportUI.matchNumber] = {
-          ...this.dispute[this.reportUI.matchNumber],
-          ...updateData
-        };
-
-        if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
-          this.setDisabled();
-        }
-
-        return;
-      }
 
 
       const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
@@ -398,7 +423,10 @@ Alpine.data('alpineDataComponent', function () {
           winners: winnerNew,
         });
 
-        this.report.realWinners = [...winnerNew];
+        this.report = {
+          ...this.report,
+          realWinners : [...winnerNew]
+        };
 
         this.dispute[this.reportUI.matchNumber] = {
           ...this.dispute[this.reportUI.matchNumber],
@@ -551,6 +579,7 @@ Alpine.data('alpineDataComponent', function () {
     },
     async init() {
       if (hiddenUserId) {
+      
         const { user, claims } = await initializeFirebaseAuth();
         this.firebaseUser = user;
         this.userClaims = claims;
@@ -569,6 +598,7 @@ Alpine.data('alpineDataComponent', function () {
       }
 
       window.addEventListener('currentReportChange', (event) => {
+        window.showLoading();
 
         let newReport = null, newReportUI = null;
 
@@ -578,6 +608,7 @@ Alpine.data('alpineDataComponent', function () {
           && dataset.team1_position == this.report.teams[0].position
           && dataset.team2_position == this.report.teams[1].position
         ) {
+          window.Swal.close();
           return;
         }
 
@@ -640,6 +671,8 @@ Alpine.data('alpineDataComponent', function () {
 
         this.getCurrentReportSnapshot(dataset.classNamesWithoutPrecedingDot, newReport, newReportUI);
       });
+
+      window.Swal.close();
     },
     destroy() {
       if (this.subscribeToMatchStatusesSnapshot) this.subscribeToMatchStatusesSnapshot();
@@ -656,10 +689,14 @@ Alpine.data('alpineDataComponent', function () {
       let subscribeToCurrentReportDisputesSnapshot = onSnapshot(
         disputeQuery,
         async (disputeSnapshot) => {
-          let allDisputes = [];
+          let allDisputes = [null, null, null];
           disputeSnapshot.docChanges().forEach((change) => {
             let data = change.doc.data();
             let id = change.doc.id;
+            console.log({change:  change.type});
+            console.log({change:  change.type});
+            console.log({change:  change.type});
+
             if (change.type === "added" || change.type === "modified") {
               allDisputes[data['match_number']] = {
                 ...data, id
@@ -667,11 +704,13 @@ Alpine.data('alpineDataComponent', function () {
             }
           });
 
+
           this.dispute = [...allDisputes];
         }
       );
 
       this.subscribeToCurrentReportDisputesSnapshot = subscribeToCurrentReportDisputesSnapshot;
+      window.Swal.close();
     },
 
     getCurrentReportSnapshot(classNamesWithoutPrecedingDot, newReport, newReportUI) {
@@ -738,7 +777,6 @@ Alpine.data('alpineDataComponent', function () {
             })
 
             this.getCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
-
           } else {
             this.report = {
               ...newReport
@@ -749,6 +787,7 @@ Alpine.data('alpineDataComponent', function () {
             }
 
             this.dispute = [null, null, null];
+            window.Swal.close();
           }
         }
       );
@@ -836,14 +875,9 @@ Alpine.data('alpineDataComponent', function () {
             if (docSnap.exists()) {
               let id = docRef.id;
               let data = docSnap.data();
-              this.dispute[disputeDto['match_number']] = {
-                ...data,
-                id
-              }
-            }
-
-            if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
-              this.setDisabled();
+              this.dispute = this.dispute.map((item, index) => 
+                index == disputeDto['match_number'] ? { ...data, id } : item
+              );
             }
 
             window.Toast.fire({
@@ -866,12 +900,17 @@ Alpine.data('alpineDataComponent', function () {
         dispute_teamId,
         response_teamNumber,
         dispute_description,
-        dispute_matchNumber,
+        match_number,
         response_userId
       } = formData;
 
+      let missingFields = [];
       if (!id || !dispute_teamId || !response_teamNumber) {
-        throw new Error('Missing required fields');
+        if (!id) missingFields.push("ID");
+        if (!dispute_teamId) missingFields.push('Disputer Team ID');
+        if (!response_teamNumber) missingFields.push('Response Team ID');
+        window.toastError(`Missing required fields: ${missingFields.join(', ')}`);
+        return;
       }
 
       window.Swal.fire({
@@ -887,6 +926,20 @@ Alpine.data('alpineDataComponent', function () {
         padding: '2em',
       }).then(async (result) => {
         if (result.isConfirmed) {
+          this.$dispatch('initiate-upload');
+            const uploadResult = await new Promise((resolve) => {
+              window.uploadResolve = resolve;
+            });
+
+          let { files } = uploadResult;
+
+          console.log({files});
+          console.log({files});
+          console.log({files});
+          console.log({files});
+          console.log({files});
+          return;
+
           const disputeRef = doc(db, `event/${eventId}/disputes`, id);
 
           const updateData = {
@@ -894,6 +947,7 @@ Alpine.data('alpineDataComponent', function () {
             response_teamNumber: response_teamNumber,
             response_explanation: dispute_description || null,
             response_userId,
+            response_image_videos: files,
             updated_at: serverTimestamp(),
             status: 'responded'
           };
@@ -903,10 +957,10 @@ Alpine.data('alpineDataComponent', function () {
           if (docSnap.exists()) {
             let id = disputeRef.id;
             let data = docSnap.data();
-            this.dispute[dispute_matchNumber] = {
-              ...data,
-              id
-            }
+            
+            this.dispute = this.dispute.map((item, index) => 
+              index == match_number ? { ...data, id } : item
+            );
           }
         } else {
           handleCancelResponse();
@@ -1092,8 +1146,6 @@ const validateDisputeCreation = async (data) => {
   if (!existingDisputes.empty) {
     errors.push('A dispute with this event, match number, and report already exists');
   }
-
-
 
   return errors;
 };

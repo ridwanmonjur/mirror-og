@@ -11,9 +11,11 @@
         </div>
     </div>
 </div>
+<template x-if="dispute[reportUI.matchNumber] != null">
 <div class="modal fade show" data-show="true" id="disputeModal" tabindex="3" aria-labelledby="disputeModalLabel">
     <div class="modal-dialog " style="min-width: 90vw;">
         <div class="modal-content " style="background-color: transparent !important; ">
+            
             <div class="modal-body my-3 px-5 ">
                 <div class="row">
                     <div class="{{ 'col-12 col-lg-6 text-center pt-0 pb-2 ps-0 pe-0 pe-lg-5' . 'Team1' . ' ' . 'Team2' }}"
@@ -78,7 +80,7 @@
                         <form method="POST" x-on:submit="submitDisputeForm(event)" id="createForm" enctype="multipart/form-data">
                             <input type="hidden" name="action" value="create">
                             <input type="hidden" name="event_id" value="{{$event->id}}">
-                            <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber]?.idid">
+                            <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber]?.id">
                             <input type="hidden" name="dispute_teamNumber" x-bind:value="reportUI.teamNumber">
                             <input type="hidden" name="report_id" x-bind:value="report.id">
                             <input type="hidden" name="dispute_userId" value="{{$user?->id}}">
@@ -155,7 +157,6 @@
                                                     @change="handleFiles($event)">
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -184,8 +185,7 @@
                                     <h5 class="text-start my-3"> Dispute Information </h5>
                                     <div class="ps-5 ps-5 text-start">
                                         <p class="my-0"> Disputing Team </p>
-                                        <img :src="'/storage/images/' + report.teams[dispute[reportUI.matchNumber]
-                                            .dispute_teamNumber]?.banner"
+                                        <img :src="'/storage/' + report.teams[dispute[reportUI.matchNumber].dispute_teamNumber]?.banner"
                                             alt="Team Banner" width="50" height="50"
                                             onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                             class="mb-1 border border-2 popover-content-img rounded-circle object-fit-cover">
@@ -203,10 +203,12 @@
                                         <p class="text-primary" style="white-space: pre-wrap;"
                                             x-html="dispute[reportUI.matchNumber].dispute_description">
                                         </p>
-                                        <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span></p>
-                                        <div>
-                                            <template x-if="dispute[reportUI.matchNumber]?.dispute_image_videos">
+                                        
+                                        <div class="mb-2">
+                                            <template x-if="dispute[reportUI.matchNumber]?.dispute_image_videos[0]">
                                                 <div>
+                                                    <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span></p>
+
                                                     <template x-for="imgVideo in dispute[reportUI.matchNumber].dispute_image_videos" :key="imgVideo">
                                                         <div>
                                                             <template x-if="imgVideo.startsWith('media/img')">
@@ -241,8 +243,7 @@
                                         <div class="ps-5 ps-5 text-start">
                                             <h5 class="text-start my-3"> Counter Explanation (Optional) </h5>
                                             <p class="my-0"> Responding Team </p>
-                                            <img :src="'/storage/images/' + report.teams[dispute[reportUI.matchNumber]
-                                                .response_teamNumber]?.banner"
+                                            <img :src="'/storage/' + report.teams[dispute[reportUI.matchNumber].response_teamNumber]?.banner"
                                                 alt="Team Banner" width="50" height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="mb-1 border border-2 popover-content-img rounded-circle object-fit-cover"
@@ -262,6 +263,31 @@
                                             <p class="text-primary" style="white-space: pre-wrap;"
                                                 x-html="dispute[reportUI.matchNumber].dispute_description">
                                             </p>
+                                            <div class="mb-2">
+                                                <template x-if="dispute[reportUI.matchNumber]?.response_image_videos[0]">
+                                                    <div>
+                                                        <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span></p>
+
+                                                        <template x-for="imgVideo in dispute[reportUI.matchNumber].response_image_videos" :key="imgVideo">
+                                                            <div>
+                                                                <template x-if="imgVideo.startsWith('media/img')">
+                                                                    <img :src="'/storage/' + imgVideo" class="object-fit-cover border border-primary"                
+                                                                        @click="showImageModal(imgVideo)"
+                                                                        height="100px" width="100px" 
+                                                                    />
+                                                                </template>
+                                                                
+                                                                <template x-if="!imgVideo.startsWith('media/img')">
+                                                                    <video controls class="prview-item">
+                                                                        <source :src="'/storage/' + imgVideo" type="video/mp4">
+                                                                        Your browser does not support the video tag.
+                                                                    </video>
+                                                                </template>
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                </template>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -287,7 +313,7 @@
                                     </div>
                                 </template>
                                 <template
-                                    x-if="reportUI.teamNumber != dispute[reportUI.matchNumber].dispute_teamNumber">
+                                    x-if="reportUI.teamNumber != dispute[reportUI.matchNumber].dispute_teamNumber && !dispute[reportUI.matchNumber].resolution_winner">
                                     <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                         <div class="response_decision row  bg-light justify-content-start border border-3 border rounded px-2 py-2">
                                             <div class="mt-3 d-flex align-items-center py-3 pb-4 justify-content-around flex-column">
@@ -295,7 +321,7 @@
                                                     Submit Counter Evidence
                                                 </button>
                                                 <form method="POST" x-on:submit="resolveDisputeForm(event)" id="resolveForm">
-                                                    <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].matchNumber">
+                                                    <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
                                                     <input type="hidden" name="action" value="resolve">
                                                     <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
                                                     <input type="hidden" name="resolution_winner" x-bind:value="reportUI.otherTeamNumber">
@@ -314,9 +340,9 @@
                                             class="response_form d-none row  bg-light justify-content-start border border-3 border rounded px-2 py-2">
                                             <form method="POST" x-on:submit="respondDisputeForm(event)" id="respondForm">
                                                 <input type="hidden" name="action" value="respond">
-                                                <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber]?.idid">
+                                                <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber]?.id">
                                                 <input type="hidden" name="response_teamNumber" x-bind:value="reportUI.teamNumber">
-                                                <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
+                                                <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
                                                 <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
                                                 <input type="hidden" name="response_userId" value="{{$user?->id}}">
 
@@ -330,11 +356,12 @@
                                                     </div>
                                                 </div>
                                                 <p class="my-0 text-start ps-5 pe-5 ">Image/ Video Evidence: <span class="text-red">*<span> </p>
-                                                <div class="upload-container ps-5 pe-5" x-data="type2">
-                                                    <div class="previous-uploads" x-ref="uploadArea"></div>
-                                                    <div class="upload-area" 
-                                                        
-                                                    >
+                                                <div class="ps-5 pe-5 text-start">
+                                                <div class="upload-container ps-5 pe-5" x-data="type2" x-ref="respondDisputeInputs"
+                                                    @initiate-upload.window="uploadToServer('/api/media')"
+                                                >
+                                                    <div class="d-flex justify-content-start">
+                                                        <div class="upload-area me-2 d-flex justify-content-between" x-ref="uploadArea"></div>
                                                         <div class="plus-button" @click="$refs.fileInput.click()">+</div>
                                                     </div>
                                                     <input type="file" 
@@ -342,8 +369,8 @@
                                                         class="file-input" 
                                                         multiple
                                                         accept="image/*" 
-                                                        @change="handleFiles($event)"
-                                                    >
+                                                        @change="handleFiles($event)">
+                                                    </div>
                                                 </div>
                                                 <div class="my-3 px-3 d-flex justify-content-between">
                                                     <button class="btn btn-light rounded-pill border border-dark" x-on:click="toggleResponseForm('response_form', 'response_decision');">
@@ -404,7 +431,7 @@
                                                     <form method="POST" x-on:submit="resolveDisputeForm(event)" >
                                                         <input type="hidden" name="action" value="resolve">
                                                         <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
-                                                        <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
+                                                        <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
 
                                                         <input type="hidden" name="resolution_winner" id="resolution_winner_input">
                                                         <input type="hidden" name="resolution_resolved_by" value="disputeLevelEnums['ORGANIZER']">
@@ -450,7 +477,7 @@
                                                         width="60" height="60" onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                         class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
                                                 </div>
-                                                <div class="mt-2 d-block">
+                                                <div class="mt-2 mb-2 d-block">
                                                     <p>
                                                         <span x-text="report.teams[report.realWinners[reportUI.matchNumber]]?.name"> </span>
                                                         has been resolved as the winner.
@@ -483,10 +510,10 @@
                                                             <form method="POST" class="d-inline" x-on:submit="resolveDisputeForm(event)">
                                                                 <input type="hidden" name="action" value="resolve">
                                                                 <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
-                                                                <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
+                                                                <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
                                                                 <input type="hidden" name="already_winner" x-bind:value="dispute[reportUI.matchNumber].resolution_winner">
                                                                 <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['ORGANIZER']">
-                                                                <button type="submit" class="btn py-0 d-inline rounded-pill btn-link text-primary">
+                                                                <button type="submit" class="btn py-0 d-inline rounded-pill bg-red text-light">
                                                                     Change Declaration
                                                                 </button>
                                                             </form>
@@ -501,7 +528,7 @@
                         </template>
                         <br>
                         <div class="text-center">
-                            <button data-bs-dismiss="modal"
+                            <button data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#reportModal" 
                                 class="btn btn-light btn-large btn-pill border-dark px-5 py-3 rounded-pill px-5 py-2">
                                 Return to bracket
                             </button>
@@ -512,7 +539,7 @@
                                     <form method="POST" x-on:submit="resolveDisputeForm(event)">
                                         <input type="hidden" name="action" value="resolve">
                                         <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
-                                        <input type="hidden" name="dispute_matchNumber" x-bind:value="dispute[reportUI.matchNumber].match_number">
+                                        <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
                                         <input type="hidden" name="already_winner" x-bind:value="reportUI.otherTeamNumber">
                                         <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['DISPUTEE']">
                                         <button type="submit"
@@ -530,3 +557,5 @@
         </div>
     </div>
 </div>
+            </template>
+

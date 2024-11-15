@@ -1,4 +1,12 @@
+addOnLoad(()=> {
+    window.showLoading();
+
+    document.addEventListener('alpine:init', () => {
+        window.Swal.close();
+    }, { once: true });
+})
 let previousValues = JSON.parse(document.getElementById('previousValues')?.value);
+
 var bracketItemList = document.querySelectorAll('.codeCANcode.tournament-bracket__item');
 bracketItemList.forEach(item => {
     item.classList.add('special-item-right');
@@ -296,3 +304,8 @@ submitBtnElement?.addEventListener('click', function(event) {
 });
 
 const uploadContainers = document.querySelectorAll('.upload-container');
+
+
+function redirectToTeamPage(teamId) {
+    window.location.href = `/view/team/${teamId}`;
+}
