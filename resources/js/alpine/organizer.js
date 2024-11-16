@@ -74,8 +74,8 @@ function alpineProfileData(userId) {
                         ];
                     }
 
-                    this.next_page = followers?.next_page_url ?
-                        followers?.next_page_url : false;
+                    this.next_page = followers?.next_page_url  ?
+                        true : false;
                 }
             } catch (error) {
                 console.error('Failed to load page:', error);

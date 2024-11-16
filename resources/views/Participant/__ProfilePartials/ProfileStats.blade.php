@@ -77,10 +77,11 @@
                         </template>
 
                         <!-- Pagination -->
-                        <div aria-label="Page navigation" x-cloak x-show="next_page[currentTab]" class="mt-3 d-flex justify-content-center">
-                            <button class="btn  btn-link " x-on:click="loadNextPage">Next page</button>
-                        </div>
-
+                        <template x-if="next_page[currentTab]">
+                            <div aria-label="Page navigation"  class="mt-3 d-flex justify-content-center">
+                                <button class="btn  btn-link " x-on:click="loadNextPage">Next page</button>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>

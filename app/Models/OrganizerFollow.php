@@ -73,7 +73,7 @@ class OrganizerFollow extends Model
             ->with(['participantUser' => function($query) {
                 $query->select('id', 'name', 'email', 'userBanner', 'created_at', 'role');
             }])
-            ->cursorPaginate($perPage, ['*'], 'org_followers_page', $page)
+            ->simplePaginate($perPage, ['*'], 'org_followers_page', $page)
             ->through(function ($follow) {
                 return [
                     'id' => $follow->participantUser->id,

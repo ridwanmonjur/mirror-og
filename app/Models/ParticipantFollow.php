@@ -43,7 +43,7 @@ class ParticipantFollow extends Model
             ->with(['followerUser' => function($query) {
                 $query->select('id', 'name', 'email', 'userBanner', 'created_at', 'role');
             }])
-            ->cursorPaginate($perPage, ['*'], 'followers_page', $page)
+            ->simplePaginate($perPage, ['*'], 'followers_page', $page)
             ->through(function ($follow) {
                 return [
                     'id' => $follow->followerUser->id,
@@ -62,7 +62,7 @@ class ParticipantFollow extends Model
             ->with(['followeeUser' => function($query) {
                 $query->select('id', 'name', 'email', 'userBanner', 'created_at', 'role');
             }])
-            ->cursorPaginate($perPage, ['*'], 'following_page', $page)
+            ->simplePaginate($perPage, ['*'], 'following_page', $page)
             ->through(function ($follow) {
                 return [
                     'id' => $follow->followeeUser->id,

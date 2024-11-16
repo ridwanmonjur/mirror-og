@@ -225,7 +225,7 @@ function alpineProfileData(userId) {
                             ...this.connections,
                             [tab]: [
                                 ...this.connections[tab],
-                                data.connections[tab].data
+                                ...data.connections[tab].data
                             ]
                         } ;
                        
@@ -242,10 +242,15 @@ function alpineProfileData(userId) {
                         } ;
                        
                     }
+                  
 
-                    this.next_page[tab] =  data.connections[tab]?.next_page_url ?
-                        true: false; 
-                    
+                    this.next_page = {
+                        ...this.next_page,
+                        [tab]:  data.connections[tab]?.next_page_url != null ?
+                        true: false
+                    }; 
+
+               
                 }
             } catch (error) {
                 console.error('Failed to load page:', error);
