@@ -1,5 +1,5 @@
 let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-const {
+let {
     userProfileId,
     userProfileBirthday: birthday,
     backgroundApiUrl,
