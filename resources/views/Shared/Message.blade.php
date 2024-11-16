@@ -78,7 +78,7 @@
             </div>
             <div class="chat-input">
                 <input type="text" placeholder="Type a message...">
-                <button x-on:click="sendMessage">
+                <button id="sendMessageBtn" x-on:click="sendMessage">
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                         class="bi bi-telegram" viewBox="0 0 16 16">
                         <path
