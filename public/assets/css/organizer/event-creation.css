@@ -18,7 +18,6 @@ input[type="time"] {
 }
 
 .breadcrumb-top {
-    position: absolute;
     margin-left: 10px;
     margin-right: 10px;
     top: 15vh;
@@ -26,6 +25,7 @@ input[type="time"] {
 
 .back-next button {
     position: absolute;
+    padding: 15px 45px;
 }
 
 .back-next button:nth-child(1) {
@@ -335,7 +335,7 @@ input[type="time"] {
     display: flex;
     justify-content: start;
     margin: 0px 0;
-    padding: 10px;
+    padding-bottom: 10px;
 }
 
 .icon_container {
@@ -408,7 +408,6 @@ input[type="time"] {
 }
 
 .container-border-2 {
-    padding: 20px;
     margin: 0;
 }
 
@@ -425,7 +424,7 @@ input[type="time"] {
     background: transparent;
     padding: 20px;
     text-align: center;
-    height: 300px;
+    height: fit-content;
     border-radius: 20px;
     transition: transform 0.2s;
     text-decoration: none;
@@ -448,7 +447,6 @@ input[type="time"] {
     background: transparent;
     padding: 20px;
     text-align: center;
-    min-height: 250px;
     border-radius: 20px;
 }
 
@@ -504,7 +502,7 @@ color: #43A4D7; */
     flex-direction: row;
     overflow-y: hidden;
     overflow-x: visible;
-    height: 70px;
+    height: 50px;
     justify-content: center;
 }
 
@@ -520,8 +518,7 @@ color: #43A4D7; */
 }
 
 .time-line-box {
-    height: 120px;
-    padding: 30px 0 0;
+    padding: 15px 0 0 5px;
     width: 100%;
 }
 
@@ -840,8 +837,8 @@ input[type="submit"]:active {
 }
 
 .welcome {
-    margin-top: 40px;
-    /* margin-bottom: 80px; */
+    margin-top: 10px;
+    margin-bottom: 40px;
     font-weight: 400;
     color: #2E4B59 !important;
     margin-left: 20px;
@@ -849,7 +846,7 @@ input[type="submit"]:active {
 }
 
 .welcome p {
-    margin: auto 20px;
+    margin: auto;
     font-weight: 400;
     text-overflow: clip;
     font-size: larger;
@@ -920,9 +917,6 @@ body{
         display: block;
     }
 
-    .box_2nd {
-        height: 220px;
-    }
 
     .breadcrumb-top {
         display: none;
@@ -956,7 +950,7 @@ body{
     }
 
     .box_2nd {
-        height: 300px;
+        height: fit-content;
     }
 
     .grid {
@@ -1081,7 +1075,7 @@ body{
 
 }
 
-@media screen and (min-width: 1400px) {
+@media screen and (min-width: 1300px) {
     .grid {
         grid-template-columns: 1fr 1fr 1fr;
     }
@@ -1091,23 +1085,28 @@ body{
     }
 
     .grid-2 {
-        grid-template-columns: 0.25fr 1fr 1fr;
+        grid-template-columns: 0.25fr 1fr 0.75fr;
         justify-content: center !important;
         margin: 0 18vw;
     }
 
     .back-next button {
         position: absolute;
-        top: 70vh;
+        top: 80vh;
+    }
+
+    .box_2nd {
+        height: 260px;
     }
 
     .back-next button:nth-child(1) {
         position: absolute;
-        left: 70px;
+        left: 30%;
+        background-color: white;
     }
 
     .back-next button:nth-child(2) {
         position: absolute;
-        right: 70px;
+        left: 60%;
     }
 }

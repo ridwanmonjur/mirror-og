@@ -19,14 +19,13 @@
 <div id="step-2" class="d-none">
 
     <div class="welcome text-center">
-        <u>
-            <h3>
-                STEP 1: Choose your Event Categories
-            </h3>
-        </u>
+        <h3>
+            STEP 1: Choose your <span class="text-primary">event categories</span>
+        </h3>
+        <br>
         <p>Then, select what kind of event you want to run.</p>
         <div class="box-width">
-            <div class="grid-2-columns box-width" style="margin-top: -20px !important;">
+            <div class="grid-2-columns box-width" >
                 @foreach ($eventTypeList as $gameCategory)
                     @if ($gameCategory->eventDefinitions)
                         <div  
@@ -45,7 +44,10 @@
                                     <u>{{ $gameCategory->eventType }}</u>
                                 </h2>
                                 <span class="inputEventTypeDefinition" class="box-text"
-                                    style="text-align: left;">{{ $gameCategory->eventDefinitions }}</span>
+                                    style="text-align: left;">{!! $gameCategory->eventDefinitions !!}</span>
+                                @if ($gameCategory->eventType == "League")
+                                    <h5 class="text-primary mt-2 text-center fw-bold"> COMING SOON</h5>
+                                @endif 
                             </a>
                         </div>
                     @endif
@@ -56,7 +58,7 @@
             <button onclick="goToNextScreen('step-1', 'none')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-3', 'timeline-1')" type="button"
-                class="oceans-gaming-default-button"> Next &gt; </button>
+                class="oceans-gaming-default-button"> Next&nbsp;&nbsp;  &gt; </button>
         </div>
     </div>
 </div>
@@ -65,61 +67,57 @@
 
 <div id="step-3" class="d-none">
     <div class="welcome text-center">
-        <u>
-            <h3>
-                STEP 1: Choose your Event Categories
-            </h3>
-        </u>
-        <br>
-        <p>Finally, choose a tier for your event.</p>
-        <div class="grid-3-columns box-width">
+         <h3>
+            STEP 1: Choose your <span class="text-primary">event categories</span>
+        </h3>
+        <p class="my-3">Finally, choose a tier for your event.</p>
+        <div class="row  box-width">
             @foreach ($eventTierList as $tierCategory)
                 <section
-                     data-event-tier="{{ $tierCategory->eventTier }}"
+                    data-event-tier="{{ $tierCategory->eventTier }}"
                     data-event-tier-id="{{ $tierCategory->id }}"
-                    class="featured-events"
+                    class="featured-events col-12 col-xl-4 py-0"
                     onclick="handleTierSelection(this)"
                 >
-                    <a href="#" @class([
-                        'event selectable-box box-tier',
+                    <a href="#" 
+                        style="width: fit-content;"
+                        @class([
+                        'event pt-2 selectable-box box-tier ps-3 pe-5 mx-auto',
                         'rounded-box-' . strtolower($tierCategory->eventTier),
                         'color-border-success-dotted' =>
                             $event && $tierCategory->id == $event->event_tier_id,
                     ])>
-                        <div class="event_head_container ">
-                            <img id='starfish' src="{{ asset('storage/' . $tierCategory->tierIcon) }}"
-                                class="inputEventTierImg event_head">
+                        <div class="text-center pt-2 pb-2">
+                            <img id='starfish' height="40" width="80" src="{{ asset('storage/' . $tierCategory->tierIcon) }}"
+                                class="inputEventTierImg object-fit-cover"
+                            > 
+                            <h5 class="ms-2 d-inline"> {{ $tierCategory->eventTier }}</h5>
                         </div>
-                        <br>
-                        <h4 class="inputEventTierTitle text-center">{{ $tierCategory->eventTier }}</h4>
-                        <div style="display: flex; justify-content: start; align-items: center">
+                        <div class="d-flex justify-content-start align-items-center mb-3">
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
                                 src="{{ asset('/assets/images/createEvent/user.png') }}">
 
                             <div>
-                                <span class="inputEventTierPerson">{{ $tierCategory->tierTeamSlot }}</span>
-                                <span>team slots</span>
+                                <span class="d-block inputEventTierPerson text-start m-0">{{ $tierCategory->tierTeamSlot }}</span>
+                                <span class="m-0 d-block">team slots</span>
                             </div>
                         </div>
-                        <br>
-                        <div style="display: flex; justify-content: start; align-items: center">
+                        <div class="d-flex justify-content-start align-items-center mb-3">
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
                                 src="{{ asset('/assets/images/createEvent/trophy.png') }}">
                             <div>
-                                <span class="inputEventTierPrize">RM {{ $tierCategory->tierPrizePool }}</span>
-                                <span>prize pool</span>
+                                <span class="inputEventTierPrize text-start d-block m-0">RM {{ $tierCategory->tierPrizePool }}</span>
+                                <span class="m-0 d-block">prize pool</span>
                             </div>
                         </div>
-                        <br>
-                        <div style="display: flex; justify-content: start; align-items: center">
+                        <div class="d-flex justify-content-start align-items-center mb-3">
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
                                 src="{{ asset('/assets/images/createEvent/dollar.png') }}">
                             <div>
-                                <span class="inputEventTierEntry">RM {{ $tierCategory->tierEntryFee }}</span>
-                                <span>team entry fee</span>
+                                <span class="inputEventTierEntry d-block text-start m-0">RM {{ $tierCategory->tierEntryFee }}</span>
+                                <span class="m-0 d-block">team entry fee</span>
                             </div>
                         </div>
-                        <br>
                     </a>
                 </section>
             @endforeach
@@ -128,42 +126,40 @@
             <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-4', 'timeline-1'); fillStepGameDetailsValues();" type="button"
-                class="oceans-gaming-default-button"> Next &gt; </button>
+                class="oceans-gaming-default-button"> Next&nbsp;&nbsp;  &gt; </button>
         </div>
     </div>
 </div>
 
 <div id="step-4" class="d-none">
-    <div class="welcome text-center" style="margin-bottom: -10px !important;">
-        <u>
-            <h3>
-                STEP 1: Choose your Event Categories
-            </h3>
-        </u>
-        <p>Here are the categories you've chosen for your event.</p>
+    <div class="welcome text-center">
+        <h3>
+            STEP 1: Choose your <span class="text-primary">event categories</span>
+        </h3>
+        <p class="m-3">Here are the categories you've chosen for your event.</p>
     </div>
-    <section class="container-border-2 grid-2" style="justify-content: center !important;">
+    <section class="container-border-2 grid-2 justify-content-center py-0">
         <img id="outputGameTitleImg" {!! trustedBladeHandleImageFailure() !!} width=225 height="100%"
             src="{{ asset('assets/images/createEvent/exclamation.png') }}" alt=""
-            style="margin: auto; border-radius: 20px; width: 225px; border: 1px dotted black; object-fit: cover; ">
+            style="margin: auto; border-radius: 20px; width: 180px; border: 1px dotted black; object-fit: cover; ">
         <div class="box_3rd box_3rd_max_width event_extra mx-auto">
             <h4 id="outputEventTypeTitle">League/ Tier</h4>
-            <p id="outputEventTypeDefinition" style="text-align: left;">Choose your event type...</p>
+            <p class="mt-4 text-center" id="outputEventTypeDefinition">Choose your event type...</p>
         </div>
         <div class="event_extra rounded-box" id="event-tier-display">
             <div class="event_head_container">
                 <img id="outputEventTierImg" src="{{ asset('assets/images/createEvent/question.png') }}"
-                    class="event_head" width="60" height="60">
+                    class="event_head" width="40" height="40"
+                >
             </div>
-            <br>
-            <h4 id="outputEventTierTitle" class="text-center mt-1">Choose a tier</h4>
+            <h4 id="outputEventTierTitle" class="text-center mt-2 mb-2">Choose a tier</h4>
             <div class="event_row">
                 <div class="icon_container me-4 ms-3">
                     <img width="25" height=25 id="outputEventTierImg" src="{{ asset('assets/images/user.png') }}"
                         class="event_icon">
                 </div>
                 <div class="info_container">
-                    <p id="outputEventTierPerson">X</p>
+                    <p class="my-1" id="outputEventTierPerson">X</p>
                     <small>team slots</small>
                 </div>
             </div>
@@ -173,7 +169,7 @@
                         class="event_icon">
                 </div>
                 <div class="info_container">
-                    <p id="outputEventTierPrize">RM Y</p>
+                    <p class="my-1" id="outputEventTierPrize">RM Y</p>
                     <small>prize pool</small>
                 </div>
             </div>
@@ -182,7 +178,7 @@
                     <img width="25" height=25 src="{{ asset('assets/images/dollar.png') }}" class="event_icon">
                 </div>
                 <div class="info_container">
-                    <p id="outputEventTierEntry">RM Z</p>
+                    <p class="my-1" id="outputEventTierEntry">RM Z</p>
                     <small>team entry fee</small>
                 </div>
             </div>
@@ -197,12 +193,10 @@
 </div>
 
 <div class="text-center create d-none" id="step-5">
-    <div class="welcome text-center" style="margin-bottom: 0px !important;">
-        <u>
-            <h5>
-                STEP 2: Fill in your Event Details
-            </h5>
-        </u>
+    <div class="welcome text-center" >
+            <h3>
+                STEP 2: Fill in your <span class="text-primary">event details</span>
+            </h3>
         <p>
             First, when is your event happening?
         </p>
@@ -250,18 +244,16 @@
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button"
                 class="oceans-gaming-default-button">
-                Next &gt; </button>
+                Next&nbsp;&nbsp;  &gt; </button>
         </div>
     </div>
 </div>
 
 <div class="text-center d-none create" id="step-6">
     <div class="welcome text-center">
-        <u>
-            <h5>
-                STEP 2: Fill in your Event Details
-            </h5>
-        </u>
+            <h3>
+                STEP 2: Fill in your <span class="text-primary">event details</span>
+            </h3>
         <p>
             Don't forget to name your event!
         </p>
@@ -279,17 +271,15 @@
         <button onclick="goToNextScreen('step-5', 'timeline-2')" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-7', 'timeline-2')" type="button" class="oceans-gaming-default-button">
-            Next &gt; </button>
+            Next&nbsp;&nbsp;  &gt; </button>
     </div>
 </div>
 
 <div class="text-center d-none create" id="step-7">
     <div class="welcome text-center">
-        <u>
-            <h5>
-                STEP 2: Fill in your Event Details
-            </h5>
-        </u>
+            <h3>
+                STEP 2: Fill in your <span class="text-primary">event details</span>
+            </h3>
         <p>
             Next, what's your event about?
         </p>
@@ -313,17 +303,15 @@
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-8', 'timeline-2'); fillEventTags();" type="button"
             class="oceans-gaming-default-button">
-            Next &gt; </button>
+            Next&nbsp;&nbsp;  &gt; </button>
     </div>
 </div>
 
 <div class="text-center d-none create" id="step-8">
     <div class="welcome text-center">
-        <u>
-            <h5>
-                STEP 2: Fill in your Event Details
-            </h5>
-        </u>
+            <h3>
+                STEP 2: Fill in your <span class="text-primary">event details</span>
+            </h3>
         <p>
             Keywords wil help players find your event!
         </p>
@@ -342,18 +330,16 @@
         <button onclick="goToNextScreen('step-7', 'timeline-2'); fillEventTags();" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-9', 'timeline-2')" type="button" class="oceans-gaming-default-button">
-            Next &gt; </button>
+            Next&nbsp;&nbsp;  &gt; </button>
     </div>
 </div>
 
 <div class="text-center create d-none" id="step-9">
     <div class="welcome text-center"
-        style="margin-bottom: 0px !important; padding-top: 10px !important; padding-bottom: 0px !important;">
-        <u>
-            <h5>
-                STEP 2: Fill in your Event Details
-            </h5>
-        </u>
+        style="padding-top: 10px !important; padding-bottom: 0px !important;">
+            <h3>
+                STEP 2: Fill in your <span class="text-primary">event details</span>
+            </h3>
         <p>
             Finally, some visual aid!
         </p>
@@ -405,7 +391,7 @@
 </div>
 
 <div class="text-center d-none" id="step-launch-1">
-    <div class="welcome" style="margin-bottom: 0px;">
+    <div class="welcome" >
         <u>
             <h5>
                 STEP 3: Launch your event
@@ -594,7 +580,7 @@
 
 
 <div class="text-center d-none" id="step-payment">
-    <div class="welcome" style="margin-bottom: -20px;">
+    <div class="welcome" >
         <u>
             <h5>
                 STEP 4: Complete the Payment

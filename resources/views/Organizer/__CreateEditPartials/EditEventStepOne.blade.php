@@ -1,15 +1,13 @@
 <div id="step-1" class="d-none">
-    <div id="invisible-until-loaded" class="welcome text-center" style="margin-bottom: -60px !important;">
+    <div id="invisible-until-loaded">
         @if (isset($error))
             <p style="color:#EF4444;">{{ $error }}</p>
         @endif
-        <u>
-            <h3>
-                STEP 1: Choose your Event Categories
-            </h3>
-        </u>
-        <p>First, select an esport title</p>
-        <div class="image-scroll-container box-width">
+        <h3>
+            STEP 1: Choose your <span class="text-primary">event categories</span>
+        </h3>
+        <p class="mb-0">First, select an esport title</p>
+        <div class="image-scroll-container box-width py-2">
             @foreach ($eventCategory as $category)
                 @if ($category->gameIcon)
                     <div @class([
@@ -43,7 +41,7 @@
         <div class=" d-flex justify-content-between box-width back-next">
             <div></div>
             <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button"
-                class="oceans-gaming-default-button"> Next &gt; </button>
+                class="oceans-gaming-default-button"> Next&nbsp;&nbsp;  &gt; </button>
         </div>
         <br>
     </div>
