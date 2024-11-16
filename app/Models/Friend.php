@@ -48,7 +48,7 @@ class Friend extends Model
         })
         ->where('status', 'accepted')
         ->with(['user1', 'user2'])
-        ->cursorPaginate($perPage, ['*'], 'friends_page', $page)
+        ->simplePaginate($perPage, ['*'], 'friends_page', $page)
         ->through(function ($friend) use ($userId) {
             $relatedUser = $friend->user1_id != $userId ? $friend->user1 : $friend->user2;
             return [

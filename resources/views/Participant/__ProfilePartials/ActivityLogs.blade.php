@@ -29,6 +29,6 @@
             </button>
         </div>
     </template>
-    <script src="{{ asset('/assets/js/participant/ActivityLogs.js') }}"></script>
+    {{-- <script src="{{ asset('/assets/js/participant/ActivityLogs.js') }}"></script> --}}
     <br>
 </div>
