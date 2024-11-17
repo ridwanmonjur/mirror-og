@@ -145,8 +145,9 @@ class OrganizerEventController extends Controller
     }
 
 
-    public function showSuccess(OrganizerViewEventRequest $request, $id): View
+    public function showSuccess(Request $request, $id): View
     {
+
         try {
             $user = $request->get('user');
             $userId = $user->id;
@@ -281,12 +282,12 @@ class OrganizerEventController extends Controller
                 $eventDetail->makeSignupTables();
 
                 if ($request->livePreview === 'true') {
-                    return redirect('organizer/event/'.$eventDetail->id.'/live');
+                    return redirect('organizer/event/'.$eventId.'/live');
                 }
                 if ($request->goToCheckoutPage === 'yes') {
-                    return redirect('organizer/event/'.$eventDetail->id.'/checkout');
+                    return redirect('organizer/event/'.$eventId.'/checkout');
                 }
-                return redirect('organizer/event/'.$eventDetail->id.'/success');
+                return redirect('organizer/event/'.$eventId.'/success');
             }
             return $this->showErrorOrganizer("Event not found for id: {$id}");
         } catch (TimeGreaterException|EventChangeException $e) {

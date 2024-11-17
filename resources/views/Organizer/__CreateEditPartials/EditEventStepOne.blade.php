@@ -3,10 +3,10 @@
         @if (isset($error))
             <p style="color:#EF4444;">{{ $error }}</p>
         @endif
-        <h3>
+        <h3 class="mt-2 text-center">
             STEP 1: Choose your <span class="text-primary">event categories</span>
         </h3>
-        <p class="mb-0">First, select an esport title</p>
+        <p class="mt-2 mb-0 text-center">First, select an esport title</p>
         <div class="image-scroll-container box-width py-2">
             @foreach ($eventCategory as $category)
                 @if ($category->gameIcon)

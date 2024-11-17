@@ -157,6 +157,63 @@ function handleFile(inputFileId, previewImageId) {
     previewSelectedImage('eventBanner', 'previewImage');
 }
 
+const dropZone = document.querySelector('.banner-upload');
+const fileInput = document.getElementById('eventBanner');
+const previewImage = document.getElementById('previewImage');
+const previewWarning = document.getElementById('preview-image-warning');
+
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, highlight, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, unhighlight, false);
+});
+
+function highlight(e) {
+    dropZone.classList.add('border', 'border-primary');
+}
+
+function unhighlight(e) {
+    dropZone.classList.remove('border', 'border-primary');
+}
+
+dropZone.addEventListener('drop', handleDrop, false);
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+
+    if (files.length) {
+        fileInput.files = files;
+        handleFile('eventBanner', 'previewImage');
+    }
+}
+
+document.querySelector('.upload-button').addEventListener('click', function(e) {
+    e.preventDefault();
+    fileInput.click();
+});
+
+window.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}, false);
+
+window.addEventListener('drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}, false);
+
 function clearLocalStorage() {
     localStorage.clear();
 }

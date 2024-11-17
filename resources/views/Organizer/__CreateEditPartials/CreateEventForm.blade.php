@@ -91,7 +91,7 @@
                             <img id='starfish' height="40" width="80" src="{{ asset('storage/' . $tierCategory->tierIcon) }}"
                                 class="inputEventTierImg object-fit-cover"
                             > 
-                            <h5 class="ms-2 d-inline"> {{ $tierCategory->eventTier }}</h5>
+                            <h5 class="ms-2 d-inline inputEventTierTitle"> {{ $tierCategory->eventTier }}</h5>
                         </div>
                         <div class="d-flex justify-content-start align-items-center mb-3">
                             <img style="width: 25px; height: 25px; margin-right: 20px;"
@@ -149,7 +149,7 @@
         <div class="event_extra rounded-box" id="event-tier-display">
             <div class="event_head_container">
                 <img id="outputEventTierImg" src="{{ asset('assets/images/createEvent/question.png') }}"
-                    class="event_head" width="40" height="40"
+                    class="event_head" width="60" height="40"
                 >
             </div>
             <h4 id="outputEventTierTitle" class="text-center mt-2 mb-2">Choose a tier</h4>
@@ -345,40 +345,40 @@
         </p>
         <br>
         <div class="event-details-form box-width">
-            <div class="form-group">
+            <div class="form-group ">
                 <label for="eventBanner">Event Banner</label>
                 <p class="description">A distinctive banner will help your event stand out (minimum resolution: 1400px
                     x 600px).</p>
-                <div class="banner-upload">
+                <div class="banner-upload mx-auto">
                     <input onchange="handleFile('eventBanner', 'previewImage');" type="file" id="eventBanner"
-                        name="eventBanner" accept="image/*" required>
-                    <div class="banner-preview">
+                        name="eventBanner" accept="image/*" required
+                    >
+                    <div class="banner-preview pt-4 position-relative">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-image">
+                            stroke-linejoin="round" class="feather feather-image z-index-11">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                             <circle cx="8.5" cy="8.5" r="1.5"></circle>
                             <polyline points="21 15 16 10 5 21"></polyline>
                         </svg>
+                        <div class="z-index-11">Supported files: JPEG, JPG and PNG</div><br>
+                        <label class=" upload-button btn btn-primary text-light d-inline rounded-pill py-2 px-3 z-index-11 " for="eventBanner">Upload Image</label><br>
+                        @if ($event)
+                            <img @class([
+                                'd-none' => is_null($event->eventBanner),
+                                'banner-preview-img z-index-4',
+                            ]) src="{{ bladeImageNull($event->eventBanner) }}"
+                                {!! trustedBladeHandleImageFailure() !!} id="previewImage" alt="Preview" 
+                            >
+                        @else
+                            <img class="d-none banner-preview-img z-index-4" id="previewImage" alt="Preview" 
+                                height="auto"
+                            >
+                        @endif
                     </div>
-                    Supported files: JPG and PNG<br>
-                    <label class="upload-button" for="eventBanner">Upload Image</label>
-                    <br>
+                  
                 </div>
-                @if ($event)
-                    @if ($event->eventBanner)
-                    @else
-                        <div style="color: #EF4444;" id="preview-image-warning">Please enter an image</div>
-                    @endif
-                    <img @class([
-                        'd-none' => is_null($event->eventBanner),
-                        'banner-preview-img',
-                    ]) src="{{ bladeImageNull($event->eventBanner) }}"
-                        {!! trustedBladeHandleImageFailure() !!} id="previewImage" alt="Preview" width="350px" height="auto">
-                @else
-                    <img class="d-none banner-preview-img" id="previewImage" alt="Preview" width="350px"
-                        height="auto">
-                @endif
+              
             </div>
         </div>
         <div class=" d-flex justify-content-between box-width back-next">
@@ -391,15 +391,12 @@
 </div>
 
 <div class="text-center d-none" id="step-launch-1">
-    <div class="welcome" >
-        <u>
-            <h5>
-                STEP 3: Launch your event
-            </h5>
-        </u>
+    <div class="welcome mb-2" >
+            <h3>
+                STEP 3: Set your event's <span class="text-primary">visibility</span>
+            </h3>
     </div>
-    <br>
-    <div class="payment-summary">
+    <div class="payment-summary mt-0 ">
         @if ($isEventNotNull)
             @if ($status == 'DRAFT')
                 <div>
@@ -521,7 +518,7 @@
             </div>
         </div>
 
-        @if ($isEventNotNull) 
+        @if ($isEventNotNull || !$editMode) 
             <div class="text-center">
                 <button type="button" class="oceans-gaming-default-button" onclick="saveForLivePreview();">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -551,15 +548,12 @@
 
 
 <div class="text-center d-none" id="step-launch-2">
-    <div class="welcome">
-        <u>
-            <h5>
-                STEP 3: Launch your event
-            </h5>
-        </u>
+    <div class="welcome mb-1">
+            <h3>
+                STEP 3: Set your event's <span class="text-primary">visibility</span>
+            </h3>
     </div>
-    <br>
-    <div class="payment-summary" style="text-align: center">
+    <div class="payment-summary mt-2" style="text-align: center">
         <br>
         <h5>Launch Event Now?</h5>
         <p>You are about to launch your your event to the world.</p>
@@ -580,14 +574,11 @@
 
 
 <div class="text-center d-none" id="step-payment">
-    <div class="welcome" >
-        <u>
-            <h5>
-                STEP 4: Complete the Payment
-            </h5>
-        </u>
-        <br>
-        <div class="payment-summary">
+    <div class="welcome mb-1" >
+            <h3>
+                STEP 4: Complete the <span class="text-primary">payment </span>
+            </h3>
+        <div class="payment-summary mt-2">
             <h5>Payment Summary </h5>
             <div>Event Categories</div>
             <div class="ms-3">Type: <span id="paymentType"> </span></div>

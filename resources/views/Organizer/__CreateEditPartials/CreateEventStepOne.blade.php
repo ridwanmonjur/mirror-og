@@ -1,9 +1,9 @@
 <div id="step-1" class="d-none">
     <div class="welcome text-center" >
-        <h3>
+        <h3 class="mt-2">
             STEP 1: Choose your <span class="text-primary">event categories</span>
         </h3>
-        <p class="mb-0">First, select an esport title</p>
+        <p class="mt-2 mb-0">First, select an esport title</p>
         <div class="image-scroll-container box-width py-2">
             @foreach ($eventCategory as $category)
             @if ($category->gameIcon)
