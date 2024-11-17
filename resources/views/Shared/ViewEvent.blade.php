@@ -171,7 +171,7 @@
                                 
                                  @if ($livePreview)
                                     <button type="button" onclick="goToEditScreen();" class="btn btn-link">
-                                        <u>Resume creating....</u>
+                                        <u>Resume changing this event....</u>
                                     </button>
                                 @else
                                     <form id="followForm" method="POST"

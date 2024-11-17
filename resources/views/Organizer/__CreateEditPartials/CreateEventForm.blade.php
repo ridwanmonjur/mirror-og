@@ -36,7 +36,8 @@
                             @class(['container-border'])
                         >
                             <a href="#" @class([
-                                'box_2nd selectable-box',
+                                'box_2nd selectable-box ',
+                                ' container-border-dotted ' => $gameCategory->eventType == "League",
                                 'color-border-success' =>
                                     $event && $gameCategory->id == $event->event_type_id,
                             ])>
@@ -149,7 +150,7 @@
         <div class="event_extra rounded-box" id="event-tier-display">
             <div class="event_head_container">
                 <img id="outputEventTierImg" src="{{ asset('assets/images/createEvent/question.png') }}"
-                    class="event_head" width="60" height="40"
+                    class="event_head" width="40" height="40"
                 >
             </div>
             <h4 id="outputEventTierTitle" class="text-center mt-2 mb-2">Choose a tier</h4>
@@ -201,16 +202,24 @@
             First, when is your event happening?
         </p>
         <br><br>
-        <div class="event-details-form">
-            <div class="form-group form-group-width mx-auto">
-                <label for="startDate">Date of Event</label>
-                <div class="small-detail">Tell your players when to mark their calendars</div>
-                <div class="grid-2-columns box-date">
+        <div class="event-details-form row mx-auto">
+            <div class="form-group col-12 col-lg-6 mx-auto">
+                <label for="mt-3 startDate">Date of Event</label>
+                <div class="my-3">Tell your players when to mark their calendars</div>
+                 <div class="mx-auto d-flex justify-content-center  ">
+                    <input type="text" id="daterange-display" class="ps-3 rounded-pill" readonly>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi mt-2 ms-3 me-3 bi-calendar-day" viewBox="0 0 16 16">
+                    <path d="M4.684 11.523v-2.3h2.261v-.61H4.684V6.801h2.464v-.61H4v5.332zm3.296 0h.676V8.98c0-.554.227-1.007.953-1.007.125 0 .258.004.329.015v-.613a2 2 0 0 0-.254-.02c-.582 0-.891.32-1.012.567h-.02v-.504H7.98zm2.805-5.093c0 .238.192.425.43.425a.428.428 0 1 0 0-.855.426.426 0 0 0-.43.43m.094 5.093h.672V7.418h-.672z"/>
+                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                    </svg>
+                </div>
+                <div class="box-date d-none">
                     <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
                         <input type="date" id="startDate" onchange="checkValidTime();" name="startDate"
                             value="{{ $isEventNotNull ? $event->startDate : '' }}" placeholder=" Select a start date"
-                            required>
+                            required
+                        >
                     </div>
                     <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
@@ -220,10 +229,17 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group form-group-width mx-auto">
-                <label for="startTime">Time of Event</label>
-                <div class="small-detail">So that your players can set their alarms</div>
-                <div class="grid-2-columns box-date">
+            <div class="form-group col-12 col-lg-6 mx-auto">
+                <label for="mt-3 startTime">Time of Event</label>
+                <div class="my-3">So that your players can set their alarms</div>
+                <div class="mx-auto d-flex justify-content-center  ">
+                    <input type="text" id="timerange-display" class="ps-3 rounded-pill" readonly>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-alarm mt-2 ms-3 me-3" viewBox="0 0 16 16">
+                    <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z"/>
+                    <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"/>
+                    </svg>
+                </div>
+                <div class="box-date d-none">
                     <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
                         <input type="time" id="startTime" onchange="checkValidTime();" name="startTime"
@@ -258,7 +274,6 @@
             Don't forget to name your event!
         </p>
     </div>
-    <br><br>
     <div class="event-details-form box-width">
         <div class="form-group mx-auto">
             <label for="eventName">Name of Event</label>
@@ -284,7 +299,6 @@
             Next, what's your event about?
         </p>
     </div>
-    <br><br>
     <div class="event-details-form box-width">
         <div class="form-group">
             <label for="eventDescription">Event Description</label>
@@ -316,7 +330,6 @@
             Keywords wil help players find your event!
         </p>
     </div>
-    <br><br>
     <div class="event-details-form box-width">
         <div class="form-group">
             <label for="eventTags">Event Tags</label>
@@ -361,7 +374,7 @@
                             <circle cx="8.5" cy="8.5" r="1.5"></circle>
                             <polyline points="21 15 16 10 5 21"></polyline>
                         </svg>
-                        <div class="z-index-11">Supported files: JPEG, JPG and PNG</div><br>
+                        <div style="color: black;" class=" z-index-11">Supported files: JPEG, JPG and PNG</div><br>
                         <label class=" upload-button btn btn-primary text-light d-inline rounded-pill py-2 px-3 z-index-11 " for="eventBanner">Upload Image</label><br>
                         @if ($event)
                             <img @class([
@@ -401,30 +414,30 @@
             @if ($status == 'DRAFT')
                 <div>
                     <h5>Event Status</h5>
-                    <p class="text-success">Your event is currently saved as draft.</p>
+                    <p class="text-success my-2">Your event is currently saved as draft.</p>
                 </div>
             @elseif ($status == 'SCHEDULED')
                 <div>
                     <h5>Event Status</h5>
-                    <p class="text-success">Your {{ $event->sub_action_private }} event is scheduled to launch on:
+                    <p class="text-success my-2">Your {{ $event->sub_action_private }} event is scheduled to launch on:
                         {{ $combinedStr }} at
                         {{ $timePart }}. </p>
                 </div>
             @elseif ($status == 'UPCOMING' || $status == 'ONGOING')
                 <div>
                     <h5>Event Status</h5>
-                    <p class="text-success">Your {{ $event->sub_action_private }} event is live now
+                    <p class="text-success my-2">Your {{ $event->sub_action_private }} event is live now
                     </p>
                 </div>
             @elseif ($status == 'ENDED')
                 <div>
                     <h5>Event Status</h5>
-                    <p class="text-success">Your {{ $event->sub_action_private }} event has already ended
+                    <p class="text-success my-2">Your {{ $event->sub_action_private }} event has already ended
                     </p>
                 </div>
             @elseif ($status == 'PENDING')
             <div>
-                    <p class="text-success"> 
+                    <p class="text-success my-2"> 
                         @if ($event->status == "DRAFT")
                         You chose a draft event.
                         @else
@@ -437,33 +450,37 @@
             @endif
         @endif
         <input @if (!$isEventNotNull || $isEventNotNull && $status == "DRAFT") checked @endif onchange="toggleRadio(this, 'draft'); updateLaunchButton('draft');" type="radio"
-            id="draft" name="launch_visible" value="DRAFT">
+            id="draft" name="launch_visible" value="DRAFT" class="form-check-input"
+        >
         <label for="draft"><u>Save as draft</u></label>
         <div class="radio-indent draft">
-            <p>Save your event and edit it later</p>
+            <p class="my-2 py-0">Save your event and edit it later</p>
         </div>
 
         <!-- public? -->
         <input 
             @if ($isEventNotNull && $status != "DRAFT" && $event->sub_action_private ==  "public" ) checked @endif
             onchange="toggleRadio(this, 'public' ); updateLaunchButton('launch'); launchScheduleDefaultSelected('launch_schedule_default_1');"
-            required type="radio" id="public" name="launch_visible" value="public">
+            required type="radio" id="public" name="launch_visible" value="public"
+            class="form-check-input"
+        >
         <label for="public"><u>Public</u></label><br>
-        <div class="radio-indent public">
-            <p>Everyone can see and join your event</p>
+        <div class="radio-indent py-0 my-0 public">
+            <p class="py-0 my-0">Everyone can see and join your event</p>
         </div>
 
-        <div @class(["radio-indent-hidden", "public", 
+        <div @class(["radio-indent-hidden my-0 py-0", "public", 
             "d-none" => !$isEventNotNull || $status == "DRAFT" || $event->sub_action_private ==  "private"
         ])>
             <input @if ($isEventNotNull && !$event->sub_action_public_date && $event->sub_action_private ==  "public") checked @endif
-                onchange="updateLaunchButton('launch');" type="radio" class="launch_schedule_default_1"
+                onchange="updateLaunchButton('launch');" type="radio" class="launch_schedule_default_1 form-check-input"
                 name="launch_schedule" value="now">
             <label for="sub_action_public"><u>Launch now</u></label><br>
             <input 
                 @if ($isEventNotNull && $event->sub_action_public_date && $event->sub_action_private == "public") checked @endif 
                 onchange="updateLaunchButton('schedule');" type="radio" id="launch_schedule"
-                name="launch_schedule" value="schedule">
+                name="launch_schedule" value="schedule" class="form-check-input"
+            >
             <label for="sub_action_public"><u>Schedule launch</u></label><br>
             <div class="container">
                 <div class="box">
@@ -479,30 +496,36 @@
             </div>
         </div>
         <input
+            disabled
             @if ($isEventNotNull && $status != "DRAFT" && $event->sub_action_private ==  "private" ) checked @endif
             onchange="toggleRadio(this, 'private'); updateLaunchButton('launch'); launchScheduleDefaultSelected('launch_schedule_default_2');"
-            required type="radio" id="private" name="launch_visible" value="private">
-        <label for="private"><u>Private</u></label><br>
-        <div class="radio-indent private">
-            <p>Only players you invite can see and join your event</p>
+            required type="radio" id="private" name="launch_visible" value="private" class="form-check-input mt-3"
+        >
+        <label for="private" class="mt-2">
+            <u>Private</u>
+            <small class="text-primary text-center fw-bold ms-2"> COMING SOON</small>
+        </label><br>
+        <div class="radio-indent py-0 my-0 private">
+            <p class="my-0 py-0">Only players you invite can see and join your event</p>
         </div>
 
-        <div @class(["radio-indent-hidden", "private", 
+        <div @class(["radio-indent-hidden py-0 my-0 ", "private", 
             "d-none" => !$isEventNotNull || $status == "DRAFT" || $event->sub_action_private ==  "public"
         ])>
             <!-- private launch now? -->
             <input
                 @if ($isEventNotNull && !$event->sub_action_public_date && $event->sub_action_private == "private") checked @endif
-                onchange="updateLaunchButton('launch');" type="radio" class="launch_schedule_default_2"
+                onchange="updateLaunchButton('launch');" type="radio" class="launch_schedule_default_2 form-check-input"
                 name="launch_schedule" value="now">
-            <label for="sub_action_public"><u>Launch now</u></label><br>
+            <label class="my-0 py-0" for="sub_action_public"><u>Launch now</u></label><br>
 
             <!-- private launch schedule? -->
             <input 
                 @if ($isEventNotNull && $event->sub_action_public_date && $event->sub_action_private == "private") checked @endif
                 onclick="updateLaunchButton('schedule');" type="radio" id="launch_schedule"
-                name="launch_schedule" value="schedule">
-            <label for="sub_action_public"><u>Schedule launch</u></label><br>
+                name="launch_schedule" value="schedule" class="form-check-input"
+            >
+            <label for="sub_action_public" class="my-0 py-0" ><u>Schedule launch</u></label><br>
             <!-- private launch date? -->
             <div class="container">
                 <div class="box">
@@ -520,7 +543,7 @@
 
         @if ($isEventNotNull || !$editMode) 
             <div class="text-center">
-                <button type="button" class="oceans-gaming-default-button" onclick="saveForLivePreview();">
+                <button type="button" class="oceans-gaming-default-button mt-2  " onclick="saveForLivePreview();">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" class="feather feather-eye">

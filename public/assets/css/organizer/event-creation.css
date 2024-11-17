@@ -416,6 +416,10 @@ input[type="time"] {
     margin: 0;
 }
 
+.container-border-dotted {
+    border : 2px dotted grey !important;
+}
+
 .container-border-2 {
     margin: 0;
 }
@@ -890,7 +894,7 @@ input[type="submit"]:active {
 .radio-indent,
 .radio-indent-hidden {
     margin-left: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 
 .rounded-box-turtle {

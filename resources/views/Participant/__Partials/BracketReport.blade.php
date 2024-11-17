@@ -5,7 +5,7 @@
 @include('__CommonPartials.__BracketModals.Report')
 @include('__CommonPartials.__BracketModals.Dispute')
 <div id="bracket-list" class="position-absolute" style="overflow-x: visible; overflow-y: visible;">
-    @if (isset($bracketList[0]))
+    @if (isset($bracketList['upperBracket']))
 
         <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
         <div class="row mb-2">
