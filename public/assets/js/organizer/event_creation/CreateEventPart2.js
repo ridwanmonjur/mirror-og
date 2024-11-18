@@ -289,6 +289,18 @@ window.onload = function() {
         if (!time) return 'hh:mm';
         return time.split(':').slice(0, 2).join(':');
       };
+
+      function formatTimeAMPM(time) {
+        if (!time) return 'hh:mm';
+        
+        const [hours, minutes] = time.split(':');
+        const hour = parseInt(hours);
+        
+        const period = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour % 12 || 12;
+        
+        return `${displayHour}:${minutes} ${period}`;
+      }
       
 
     console.log({$event});
@@ -342,18 +354,18 @@ window.onload = function() {
     let startTime = $event?.startTime;
     let endTime =  $event?.endTime;
 
-    timerangeDisplay.value = `${formatTime(startTime)} - ${formatTime(endTime)}`;
+    timerangeDisplay.value = `${formatTimeAMPM(startTime)} - ${formatTimeAMPM(endTime)}`;
     timerangeDisplay.onclick = () => {
         return Swal.fire({
           title: 'Select Time Range',
           html: `
-          <div class="mt-3 mb-3">
+          <div class="mt-3 mb-2 mx-3">
             <label for="startTime2" class="form-label">Start Time:</label>
-            <input type="time" id="startTime2" class="form-control" value=${startTime}>
+            <input type="time" id="startTime2" class="form-control rounded-pill" value=${startTime}>
             </div>
-            <div class="mb-3">
+            <div class="mb-2 mx-3 mt-3">
             <label for="endTime2" class="form-label">End Time:</label>
-            <input type="time" id="endTime2" class="form-control" vaule=${endTime}>
+            <input type="time" id="endTime2" class="form-control rounded-pill" value=${endTime}>
             </div>
           `,
           focusConfirm: false,
@@ -386,7 +398,7 @@ window.onload = function() {
                 console.log({startTime, endTime});
                 startTimeInput.value = startTime;
                 endTimeInput.value = endTime;
-                timerangeDisplay.value = `${formatTime(startTime)} - ${formatTime(endTime)}`;
+                timerangeDisplay.value = `${formatTimeAMPM(startTime)} - ${formatTimeAMPM(endTime)}`;
               }
           })
       };
