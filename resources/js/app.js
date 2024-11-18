@@ -113,3 +113,9 @@ window.loadMessage = () => {
 
 window.Toast = Toast;
 window.Swal = Swal;
+
+document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('hidden.bs.modal', function() {
+        document.body.style.paddingRight = '0';
+    });
+});

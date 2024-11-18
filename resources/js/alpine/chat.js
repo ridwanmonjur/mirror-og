@@ -523,6 +523,11 @@ Alpine.data('alpineDataComponent', function () {
 
 Alpine.start();
 
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        document.getElementById('sendMessageBtn').click();
+    }
+});
 
 /*
     -> keep track of rooms' unsent messages

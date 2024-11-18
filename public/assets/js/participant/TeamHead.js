@@ -102,7 +102,6 @@ let newFunction = function () {
         localStorage.setItem('message', errorInput.value);
     }
 
-    // const bgUploadPreview = window.fileUploadPreviewById('file-upload-preview-1');
 
     window.createGradientPicker(document.getElementById('div-gradient-picker'),
         (gradient) => {

@@ -340,7 +340,7 @@ class EventDetail extends Model
                 return $query;
             }
 
-            return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventDefinitions', 'LIKE', "%{$search}%");
+            return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventTags', 'LIKE', "%{$search}%");
         })
         ->with(['tier', 'type', 'game'])
         ->with(['user' => function($q) {
@@ -575,6 +575,7 @@ class EventDetail extends Model
         }
 
         $eventDetail->status = $eventDetail->statusResolved();
+        $eventDetail->willNotify = true;
 
         return $eventDetail;
     }

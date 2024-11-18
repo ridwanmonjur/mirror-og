@@ -11,7 +11,7 @@
         </div>
     </div>
 </div>
-<template x-if="dispute[reportUI.matchNumber] != null">
+<template x-if="dispute[reportUI.matchNumber]">
 <div class="modal fade show" data-show="true" id="disputeModal" tabindex="3" aria-labelledby="disputeModalLabel">
     <div class="modal-dialog " style="min-width: 90vw;">
         <div class="modal-content " style="background-color: transparent !important; ">
@@ -25,11 +25,11 @@
                             <h5 class="text-start my-3"> Event Information </h5>
                             <div class="ps-5 ps-5 text-start">
                                 <p class="my-0"> Name: {{ $event->eventName }} </p>
-                                <p class="my-0">Organizer: {{ $event->user->name }}</p>
+                                <p class="my-0">Organizer: {{ $event->user?->name }}</p>
                                 <br>
                                 <p class="my-0"> Description: {{ $event->eventDescription }}</p>
-                                <p class="my-0">Type: {{ $event->type->eventType }}</p>
-                                <p class="my-0">Tier: {{ $event->tier->eventTier }}</p>
+                                <p class="my-0">Type: {{ $event->type?->eventType }}</p>
+                                <p class="my-0">Tier: {{ $event->tier?->eventTier }}</p>
                                 <p class="mb-3">Region: South East Asia (SEA)</p>
                             </div>
                         </div>
@@ -105,7 +105,7 @@
                                             @foreach ($reasons as $key => $label)
                                                 <div class="mb-3">
                                                     <input type="radio" name="reportReason" id="{{ $key }}"
-                                                        value="{{ $label }}">
+                                                        value="{{ $label }}" class="form-check-input">
                                                     <label class="ms-1 form-check-label" for="{{ $key }}">
                                                         {{ $label }}
                                                     </label>

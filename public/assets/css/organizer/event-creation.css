@@ -18,7 +18,6 @@ input[type="time"] {
 }
 
 .breadcrumb-top {
-    position: absolute;
     margin-left: 10px;
     margin-right: 10px;
     top: 15vh;
@@ -26,6 +25,9 @@ input[type="time"] {
 
 .back-next button {
     position: absolute;
+    padding: 15px 45px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .back-next button:nth-child(1) {
@@ -280,7 +282,7 @@ input[type="time"] {
 .event_head {
     max-width: 5rem;
     position: absolute;
-    top: -2.5rem;
+    top: -2.0rem;
     left: 50%;
     /* Center horizontally */
     transform: translateX(-50%);
@@ -297,7 +299,9 @@ input[type="time"] {
 
 
 .banner-upload {
-    position: relative;
+    height: 200px !important;
+    width: 466.7px;
+    max-width: 80vw;
     text-align: center;
 }
 
@@ -308,34 +312,46 @@ input[type="time"] {
 
 .banner-preview {
     width: 100%;
-    height: 200px;
+    max-width: 80vw;
+    height: 200px !important;
     border: 2px dashed #ccc;
     border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     cursor: pointer;
     margin-top: 10px;
 }
 
+.z-index-4 {
+    z-index: 4 !important;
+}
+
+.z-index-11 {
+    position: relative;
+
+    z-index: 11 !important;
+}
+
 .banner-preview-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     object-fit: cover;
-    max-width: 350px !important;
-    aspect-ratio: 7/3;
+    width: 100%;
+    max-height: 200px;
+    max-width: 80vw;
+
     border: 2px dashed #ccc;
     border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    opacity: 0.4;    
     cursor: pointer;
-    margin-top: 10px;
 }
 
 .event_row {
     display: flex;
     justify-content: start;
     margin: 0px 0;
-    padding: 10px;
+    padding-bottom: 10px;
 }
 
 .icon_container {
@@ -349,15 +365,8 @@ input[type="time"] {
 }
 
 .upload-button {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    z-index: 999 !important;
+   
     align-items: center;
     cursor: pointer;
     border-radius: 20px;
@@ -407,8 +416,11 @@ input[type="time"] {
     margin: 0;
 }
 
+.container-border-dotted {
+    border : 2px dotted grey !important;
+}
+
 .container-border-2 {
-    padding: 20px;
     margin: 0;
 }
 
@@ -425,7 +437,7 @@ input[type="time"] {
     background: transparent;
     padding: 20px;
     text-align: center;
-    height: 300px;
+    height: fit-content;
     border-radius: 20px;
     transition: transform 0.2s;
     text-decoration: none;
@@ -448,7 +460,6 @@ input[type="time"] {
     background: transparent;
     padding: 20px;
     text-align: center;
-    min-height: 250px;
     border-radius: 20px;
 }
 
@@ -504,7 +515,7 @@ color: #43A4D7; */
     flex-direction: row;
     overflow-y: hidden;
     overflow-x: visible;
-    height: 70px;
+    height: 50px;
     justify-content: center;
 }
 
@@ -520,8 +531,7 @@ color: #43A4D7; */
 }
 
 .time-line-box {
-    height: 120px;
-    padding: 30px 0 0;
+    padding: 15px 0 0 5px;
     width: 100%;
 }
 
@@ -596,7 +606,7 @@ color: #43A4D7; */
 
 .status__left__success small,
 .time-line-box-success .status__right small {
-    background-color: rgb(42, 139, 235) !important;
+    background-color: #43a4d7 !important;
     color: white !important;
     height: 20px !important;
 }
@@ -611,7 +621,7 @@ color: #43A4D7; */
 .time-line-box-success .status__right,
 .time-line-box-success .status,
 .time-line-box-success .status__left {
-    border-top: 2px solid rgb(42, 139, 235);
+    border-top: 2px solid #43a4d7;
     content: 'x' !important;
     color: white !important;
     position: relative;
@@ -840,8 +850,8 @@ input[type="submit"]:active {
 }
 
 .welcome {
-    margin-top: 40px;
-    /* margin-bottom: 80px; */
+    margin-top: 10px;
+    margin-bottom: 40px;
     font-weight: 400;
     color: #2E4B59 !important;
     margin-left: 20px;
@@ -849,7 +859,7 @@ input[type="submit"]:active {
 }
 
 .welcome p {
-    margin: auto 20px;
+    margin: auto;
     font-weight: 400;
     text-overflow: clip;
     font-size: larger;
@@ -884,7 +894,7 @@ input[type="submit"]:active {
 .radio-indent,
 .radio-indent-hidden {
     margin-left: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 
 .rounded-box-turtle {
@@ -920,9 +930,6 @@ body{
         display: block;
     }
 
-    .box_2nd {
-        height: 220px;
-    }
 
     .breadcrumb-top {
         display: none;
@@ -956,7 +963,7 @@ body{
     }
 
     .box_2nd {
-        height: 300px;
+        height: fit-content;
     }
 
     .grid {
@@ -1063,6 +1070,8 @@ body{
     .back-next button {
         position: absolute;
         top: 90vh;
+        margin-top: 0;
+        margin-bottom: 0;
     }
 
     .back-next button:nth-child(1) {
@@ -1081,7 +1090,7 @@ body{
 
 }
 
-@media screen and (min-width: 1400px) {
+@media screen and (min-width: 1300px) {
     .grid {
         grid-template-columns: 1fr 1fr 1fr;
     }
@@ -1091,23 +1100,28 @@ body{
     }
 
     .grid-2 {
-        grid-template-columns: 0.25fr 1fr 1fr;
+        grid-template-columns: 0.25fr 1fr 0.75fr;
         justify-content: center !important;
         margin: 0 18vw;
     }
 
     .back-next button {
         position: absolute;
-        top: 70vh;
+        top: 80vh;
+    }
+
+    .box_2nd {
+        height: 260px;
     }
 
     .back-next button:nth-child(1) {
         position: absolute;
-        left: 70px;
+        left: 30%;
+        background-color: white;
     }
 
     .back-next button:nth-child(2) {
         position: absolute;
-        right: 70px;
+        left: 60%;
     }
 }

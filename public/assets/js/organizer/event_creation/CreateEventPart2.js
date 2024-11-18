@@ -1,3 +1,8 @@
+var startDateInput = document.getElementById('startDate');
+var endDateInput = document.getElementById('endDate');
+var startTimeInput = document.getElementById('startTime');
+var endTimeInput = document.getElementById('endTime');
+
 function checkStringNullOrEmptyAndReturn(value) {
     if (value === null || value === undefined) return null;
 
@@ -81,6 +86,11 @@ function fillStepGameDetailsValues() {
     let outputEventTierEntry = document.getElementById('outputEventTierEntry');
 
     setImageSrcFromLocalStorage('eventTierImg', outputEventTierImg);
+    let outputEventTierImgValue = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTierImg');
+    if (outputEventTierImgValue) {
+        outputEventTierImg.style.width = "60px";
+    }
+
     setInnerHTMLFromLocalStorage('eventTierPerson', outputEventTierPerson);
     setInnerHTMLFromLocalStorage('eventTierPrize', outputEventTierPrize);
     setInnerHTMLFromLocalStorage('eventTierEntry', outputEventTierEntry);
@@ -88,14 +98,8 @@ function fillStepGameDetailsValues() {
 }
 
 function checkValidTime() {
-    var startDateInput = document.getElementById('startDate');
-    var endDateInput = document.getElementById('endDate');
-    var startTimeInput = document.getElementById('startTime');
-    var endTimeInput = document.getElementById('endTime');
+  
     const startDateInputValue = startDateInput.value;
-    const endDateInputValue = endDateInput.value;
-    const startTimeInputValue = startTimeInput.value;
-    const endTimeInputValue = endTimeInput.value;
     
     var now = new Date();
     var startDate = new Date(startDateInputValue + " " + startTimeInput.value);
@@ -157,6 +161,63 @@ function handleFile(inputFileId, previewImageId) {
     previewSelectedImage('eventBanner', 'previewImage');
 }
 
+const dropZone = document.querySelector('.banner-upload');
+const fileInput = document.getElementById('eventBanner');
+const previewImage = document.getElementById('previewImage');
+const previewWarning = document.getElementById('preview-image-warning');
+
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, highlight, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, unhighlight, false);
+});
+
+function highlight(e) {
+    dropZone.classList.add('border', 'border-primary');
+}
+
+function unhighlight(e) {
+    dropZone.classList.remove('border', 'border-primary');
+}
+
+dropZone.addEventListener('drop', handleDrop, false);
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+
+    if (files.length) {
+        fileInput.files = files;
+        handleFile('eventBanner', 'previewImage');
+    }
+}
+
+document.querySelector('.upload-button').addEventListener('click', function(e) {
+    e.preventDefault();
+    fileInput.click();
+});
+
+window.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}, false);
+
+window.addEventListener('drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}, false);
+
 function clearLocalStorage() {
     localStorage.clear();
 }
@@ -176,9 +237,7 @@ window.onload = function() {
         type = JSON.parse(container.dataset.type);
         game = JSON.parse(container.dataset.game);
         assetKeyWord = container.dataset.assetKeyWord;
-    } else {
-      
-    }
+    } 
   
     
     clearLocalStorage();
@@ -207,7 +266,147 @@ window.onload = function() {
     else{
         new Tagify(document.querySelector('#eventTags'), []);
     }
+
+    const daterangeDisplay = document.getElementById('daterange-display');
+    const timerangeDisplay = document.getElementById('timerange-display'); 
+
+    function parseDate(dateStr) {
+        if (!dateStr) return null;
+        const [year, month, day] = dateStr.split('-');
+        return new Date(year, month - 1, day);
+    }
+
+    function formatDisplayDate(date) {
+        if (!date) return 'dd/mm/yy';
+        return date.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit'
+        });
+    }
+
+    function formatTime (time)  {
+        if (!time) return 'hh:mm';
+        return time.split(':').slice(0, 2).join(':');
+      };
+
+      function formatTimeAMPM(time) {
+        if (!time) return 'hh:mm';
+        
+        const [hours, minutes] = time.split(':');
+        const hour = parseInt(hours);
+        
+        const period = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour % 12 || 12;
+        
+        return `${displayHour}:${minutes} ${period}`;
+      }
+      
+
+    console.log({$event});
+    console.log({$event});
+    console.log({$event});
+    console.log({$event});
+
+    window.createLitepicker({
+        element: daterangeDisplay,
+        singleMode: false,
+        numberOfMonths: 2,
+        numberOfColumns: 2,
+        startDate: $event?.startDate ? new Date($event.startDate) : null,
+        endDate: $event?.endDate ? new Date($event.endDate) : null,
+        format: 'DD/MM/YY',
+        showTooltip: true,
+        autoApply: true,
+        showWeekNumbers: true,
+        
+        setup: (picker) => {
+            if ($event?.startDate && $event?.endDate) {
+                const startDate = new Date($event.startDate);
+                const endDate = new Date($event.endDate);
+                daterangeDisplay.value = `${formatDisplayDate(startDate)} - ${formatDisplayDate(endDate)}`;
+            } else {
+                daterangeDisplay.value = 'dd/mm/yy - dd/mm/yy';
+            }
+
+            picker.on('selected', (startDate, endDate) => {
+                if (startDate && endDate) {
+                    startDateInput.value = startDate.format('YYYY-MM-DD');
+                    endDateInput.value = endDate.format('YYYY-MM-DD');
+                    
+                    if (!startTimeInput.value) startTimeInput.value = '00:00';
+                    if (!endTimeInput.value) endTimeInput.value = '23:59';
+                    
+                    daterangeDisplay.value = `${startDate.format('DD/MM/YY')} - ${endDate.format('DD/MM/YY')}`;
+                    
+                    startDateInput.dispatchEvent(new Event('change'));
+                    endDateInput.dispatchEvent(new Event('change'));
+                } else {
+                    daterangeDisplay.value = 'dd/mm/yy - dd/mm/yy';
+                }
+            });
+        },
+
+        
+    });
+
+    daterangeDisplay.style.cursor = 'pointer';
+
+    let startTime = $event?.startTime;
+    let endTime =  $event?.endTime;
+
+    timerangeDisplay.value = `${formatTimeAMPM(startTime)} - ${formatTimeAMPM(endTime)}`;
+    timerangeDisplay.onclick = () => {
+        return Swal.fire({
+          title: 'Select Time Range',
+          html: `
+          <div class="mt-3 mb-2 mx-3">
+            <label for="startTime2" class="form-label">Start Time:</label>
+            <input type="time" id="startTime2" class="form-control rounded-pill" value=${startTime}>
+            </div>
+            <div class="mb-2 mx-3 mt-3">
+            <label for="endTime2" class="form-label">End Time:</label>
+            <input type="time" id="endTime2" class="form-control rounded-pill" value=${endTime}>
+            </div>
+          `,
+          focusConfirm: false,
+          showCancelButton: true,
+          confirmButtonText: 'Confirm',
+          confirmButtonColor: '#43A4D7',
+          preConfirm: () => {
+            const startTime = document.getElementById('startTime2').value;
+            const endTime = document.getElementById('endTime2').value;
+            
+            if (!startTime || !endTime) {
+              Swal.showValidationMessage('Please select both start and end times');
+              return false;
+            }
+            
+            if (new Date(startTime) >= new Date(endTime)) {
+              Swal.showValidationMessage('End time must be after start time');
+              return false;
+            }
+          
+            return {
+                startTime, endTime
+            }
+          }}).then(result => {
+            if (result.isConfirmed) {
+                console.log({result})
+                let {startTime, endTime } = result.value;
+                console.log({startTime, endTime});
+                console.log({startTime, endTime});
+                console.log({startTime, endTime});
+                startTimeInput.value = startTime;
+                endTimeInput.value = endTime;
+                timerangeDisplay.value = `${formatTimeAMPM(startTime)} - ${formatTimeAMPM(endTime)}`;
+              }
+          })
+      };
+    
+    
 }
+
 
 document.addEventListener("keydown", function(event) {
     var target = event.target;
@@ -216,4 +415,5 @@ document.addEventListener("keydown", function(event) {
         event.preventDefault();
     }
 });
+
 

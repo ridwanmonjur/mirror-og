@@ -12,9 +12,10 @@
     @vite(['resources/sass/app.scss', 
         'resources/js/app.js', 
         'resources/js/libraries/tagify.js',
-        'resources/sass/libraries/tagify.scss'
+        'resources/sass/libraries/tagify.scss',
+        'resources/js/libraries/lightpicker.js', 
+        'resources/sass/libraries/lightpicker.scss'
     ])    
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.scss">
 
 </head>

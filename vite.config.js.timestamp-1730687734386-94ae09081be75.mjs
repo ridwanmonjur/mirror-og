@@ -14,8 +14,6 @@ var vite_config_default = defineConfig({
         "resources/js/libraries/lightgallery.js",
         "resources/sass/libraries/lightgallery.scss",
         "resources/sass/libraries/file-edit.scss",
-        "resources/js/libraries/file-upload-preview.js",
-        "resources/sass/libraries/file-upload-preview.scss",
         "resources/js/libraries/colorpicker.js",
         "resources/sass/libraries/colorpicker.scss",
         "resources/sass/libraries/tagify.scss",

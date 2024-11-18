@@ -171,7 +171,7 @@
                                 
                                  @if ($livePreview)
                                     <button type="button" onclick="goToEditScreen();" class="btn btn-link">
-                                        <u>Resume creating....</u>
+                                        <u>Resume changing this event....</u>
                                     </button>
                                 @else
                                     <form id="followForm" method="POST"
@@ -276,7 +276,7 @@
                                     <span style="position: relative; top: 5px;"> RM
                                         {{ $event->tier?->tierPrizePool ?? 'No Prize' }} Prize Pool</span>
                                 @else
-                                    <p>Tier PrizePool: Not available</p>
+                                    <span>Tier Prize Pool: Not available</span>
                                 @endif
                             </div>
                             <div>
@@ -292,7 +292,7 @@
                                     <span style="position: relative; top: 5px;">RM
                                         {{ $event->tier?->tierEntryFee ?? 'Free' }} Entry Fees</span>
                                 @else
-                                    <p>Tier Entry Fee: Not available</p>
+                                    <span>Tier Entry Fee: Not available</span>
                                 @endif
                             </div>
                             <div>

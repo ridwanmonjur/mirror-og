@@ -12,7 +12,7 @@
             </div>
             <div class="swiper-slide" id="timeline-launch">
                  <div class="timestamp" onclick="goToNextScreen('step-launch-1', 'timeline-launch')"><span
-                        class="date">Launch</span></div>
+                        class="date">Visibility</span></div>
                 <div class="status" onclick="goToNextScreen('step-launch-1', 'timeline-launch')"><span><small></small></span></div>
             </div>
             <div class="swiper-slide swiper-slide__right" id="timeline-payment">
@@ -29,7 +29,7 @@
             <li class="breadcrumb-item"><a onclick="goToNextScreen('step-1', 'timeline-1')">Categories</a></li>
             <li class="breadcrumb-item"><a onclick="goToNextScreen('step-5', 'timeline-2')">Details</a></li>
             <li class="breadcrumb-item"><a onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">Payment</a></li>
-            <li class="breadcrumb-item"><a onclick="goToNextScreen('step-launch-1', 'timeline-launch')">Launch</a></li>
+            <li class="breadcrumb-item"><a onclick="goToNextScreen('step-launch-1', 'timeline-launch')">Visibility</a></li>
         </ol>
     </nav>
 </div>
