@@ -14,7 +14,7 @@
                 <div class="timestamp"><span class="date">Visibility</span></div>
                 <div class="status status__left__success"><span><small>✔</small></span></div>
             </div>
-            <div class="swiper-slide__right" id="timeline-payment">
+            <div class="swiper-slide swiper-slide__right" id="timeline-payment">
                 <div class="timestamp"><span>Payment</span></div>
                 <div class="status__right"><span><small>✔</small></span></div>
             </div>

@@ -409,7 +409,7 @@
                 STEP 3: Set your event's <span class="text-primary">visibility</span>
             </h3>
     </div>
-    <div class="payment-summary mt-0 ">
+    <div class="payment-summary mt-3 ">
         @if ($isEventNotNull)
             @if ($status == 'DRAFT')
                 <div>
@@ -482,8 +482,8 @@
                 name="launch_schedule" value="schedule" class="form-check-input"
             >
             <label for="sub_action_public"><u>Schedule launch</u></label><br>
-            <div class="container">
-                <div class="box">
+            <div class="container d-flex justify-content-start">
+                <div class="box me-2">
                     <input onchange="updateLaunchButton('schedule');" type="date" id="sub_action_public_date"
                         name="launch_date_public"
                         value="{{ $isEventNotNull ? $event->sub_action_public_date : '' }}">
@@ -541,24 +541,23 @@
             </div>
         </div>
 
-        @if ($isEventNotNull || !$editMode) 
-            <div class="text-center">
-                <button type="button" class="oceans-gaming-default-button mt-2  " onclick="saveForLivePreview();">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="feather feather-eye">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                    &nbsp;&nbsp;
-                    <u id="preview-button-text">Preview your event page</u>
-                </button>
-            </div>
-        @endif
+       
         
     </div>
-    <br>
-
+    @if ($isEventNotNull || !$editMode) 
+        <div class="text-center mt-3">
+            <button type="button" class="btn btn-link border border-3 text-primary border-primary rounded-pill mt-2  " onclick="saveForLivePreview();">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="#43a4d7" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" class="feather feather-eye">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                &nbsp;&nbsp;
+                <span id="preview-button-text" class="text-primary">Preview your event page</span>
+            </button>
+        </div>
+    @endif
     <br>
     <div class=" d-flex justify-content-between box-width back-next">
         <button onclick="goToNextScreen('step-9', 'timeline-2')" type="button"
@@ -576,7 +575,7 @@
                 STEP 3: Set your event's <span class="text-primary">visibility</span>
             </h3>
     </div>
-    <div class="payment-summary mt-2" style="text-align: center">
+    <div class="payment-summary mt-5" style="text-align: center">
         <br>
         <h5>Launch Event Now?</h5>
         <p>You are about to launch your your event to the world.</p>
@@ -590,7 +589,6 @@
             <button onclick="goToPaymentPage()" type="button" class="oceans-gaming-default-button"> Yes, I'm sure
             </button>
         </div>
-        <br>
     </div>
     <br>
 </div>
@@ -601,7 +599,7 @@
             <h3>
                 STEP 4: Complete the <span class="text-primary">payment </span>
             </h3>
-        <div class="payment-summary mt-2">
+        <div class="payment-summary mt-4">
             <h5>Payment Summary </h5>
             <div>Event Categories</div>
             <div class="ms-3">Type: <span id="paymentType"> </span></div>
@@ -628,11 +626,11 @@
                 @if ($event && $event->payment_transaction_id != null)
                     <button class="choose-payment-method"
                         style="background-color: #8CCD39 !important;" type="button">
-                        Paid successfully!
+                        Payment Successful
                     </button>
                 @else
                     <button onclick="setFormValues( {'goToCheckoutPage': 'yes'} ); saveEvent(false);" type="button" class="choose-payment-method">
-                        Go to checkout page
+                        Choose a payment method
                     </button>
                 @endif
                 <button onclick="goToNextScreen('step-1', 'timeline-1');" type="button"

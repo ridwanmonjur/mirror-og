@@ -606,7 +606,7 @@ color: #43A4D7; */
 
 .status__left__success small,
 .time-line-box-success .status__right small {
-    background-color: rgb(42, 139, 235) !important;
+    background-color: #43a4d7 !important;
     color: white !important;
     height: 20px !important;
 }
@@ -621,7 +621,7 @@ color: #43A4D7; */
 .time-line-box-success .status__right,
 .time-line-box-success .status,
 .time-line-box-success .status__left {
-    border-top: 2px solid rgb(42, 139, 235);
+    border-top: 2px solid #43a4d7;
     content: 'x' !important;
     color: white !important;
     position: relative;

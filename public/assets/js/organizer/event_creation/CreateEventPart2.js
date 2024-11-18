@@ -341,6 +341,8 @@ window.onload = function() {
                     
                     startDateInput.dispatchEvent(new Event('change'));
                     endDateInput.dispatchEvent(new Event('change'));
+                } else {
+                    daterangeDisplay.value = 'dd/mm/yy - dd/mm/yy';
                 }
             });
         },
@@ -349,7 +351,6 @@ window.onload = function() {
     });
 
     daterangeDisplay.style.cursor = 'pointer';
-    daterangeDisplay.setAttribute('placeholder', 'dd/mm/yy - dd/mm/yy');
 
     let startTime = $event?.startTime;
     let endTime =  $event?.endTime;

@@ -172,7 +172,6 @@ window.onload = () => {
             document.querySelector("input[name='backgroundGradient']").value = null;
         }
     });
-    // window.fileUploadPreviewById('file-upload-preview-1');
     window.createGradientPicker(document.getElementById('div-gradient-picker'),
         (gradient) => {
             chooseGradient(null, gradient);

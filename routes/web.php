@@ -194,6 +194,7 @@ Route::group(['prefix' => 'organizer'], function () {
             // Success page
             Route::get('event/{id}/success', [OrganizerEventController::class, 'showSuccess'])->middleware('prevent-back-button')
                 ->name('organizer.success.view');
+
             // Live page
             Route::get('event/{event}/live', [OrganizerEventController::class, 'show'])->middleware('prevent-back-button')
                 ->name('organizer.live.view');

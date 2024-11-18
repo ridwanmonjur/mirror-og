@@ -297,6 +297,13 @@ class OrganizerEventController extends Controller
         }
     }
 
+    public function storeNotify(Request $request, $id)
+    {
+        $event = EventDetail::findOrFail($id);
+        $event->update(['willNotify' => $request->notify]);
+        return response()->json(['success' => true, 'message' => 'Notification settings updated successfully']);
+    }
+
     public function destroy($id)
     {
         try {
