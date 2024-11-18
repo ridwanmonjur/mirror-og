@@ -89,7 +89,7 @@
                             $event && $tierCategory->id == $event->event_tier_id,
                     ])>
                         <div class="text-center pt-2 pb-2">
-                            <img id='starfish' height="40" width="80" src="{{ asset('storage/' . $tierCategory->tierIcon) }}"
+                            <img id='starfish' height="40" width="40" src="{{ asset('storage/' . $tierCategory->tierIcon) }}"
                                 class="inputEventTierImg object-fit-cover"
                             > 
                             <h5 class="ms-2 d-inline inputEventTierTitle"> {{ $tierCategory->eventTier }}</h5>

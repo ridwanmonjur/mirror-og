@@ -87,9 +87,7 @@ function fillStepGameDetailsValues() {
 
     setImageSrcFromLocalStorage('eventTierImg', outputEventTierImg);
     let outputEventTierImgValue = checkStringNullOrEmptyAndReturnFromLocalStorage('eventTierImg');
-    if (outputEventTierImgValue) {
-        outputEventTierImg.style.width = "60px";
-    }
+  
 
     setInnerHTMLFromLocalStorage('eventTierPerson', outputEventTierPerson);
     setInnerHTMLFromLocalStorage('eventTierPrize', outputEventTierPrize);
