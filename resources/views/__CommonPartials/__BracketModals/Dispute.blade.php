@@ -105,7 +105,7 @@
                                             @foreach ($reasons as $key => $label)
                                                 <div class="mb-3">
                                                     <input type="radio" name="reportReason" id="{{ $key }}"
-                                                        value="{{ $label }}">
+                                                        value="{{ $label }}" class="form-check-input">
                                                     <label class="ms-1 form-check-label" for="{{ $key }}">
                                                         {{ $label }}
                                                     </label>

@@ -16,8 +16,6 @@
         'resources/js/alpine/participant.js', 
         'resources/js/libraries/lightgallery.js',
         'resources/sass/libraries/lightgallery.scss',   
-        'resources/js/libraries/file-upload-preview.js',
-        'resources/sass/libraries/file-upload-preview.scss',
         'resources/js/libraries/file-edit.js',
         'resources/sass/libraries/file-edit.scss',
         'resources/js/libraries/colorpicker.js',

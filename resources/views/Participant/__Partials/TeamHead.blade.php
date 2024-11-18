@@ -5,8 +5,6 @@
         'resources/js/alpine/teamhead.js', 
         'resources/js/libraries/lightgallery.js',
         'resources/sass/libraries/lightgallery.scss',
-        'resources/js/libraries/file-upload-preview.js',
-        'resources/sass/libraries/file-upload-preview.scss',
         'resources/js/libraries/colorpicker.js',
         'resources/sass/libraries/colorpicker.scss',
         'resources/js/libraries/file-edit.js',
