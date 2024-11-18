@@ -287,14 +287,13 @@ span.placeholder-moves-up {
     height: 38px !important;
 }
 
-.field input:focus,
-.field input:not(:focus):valid {
+.field input:focus {
     border: none !important;
     outline: none !important;
     box-shadow: 0 0 0 1px #43A4D7;
 }
 
-.field input:not(:-webkit-autofill):not(:focus)invalid {
+.field input:not(:-webkit-autofill):not(:focus):invalid {
     border: none !important;
     outline: none !important;
     box-shadow: 0 0 0 1px rgb(186, 183, 183);
@@ -330,12 +329,16 @@ span.placeholder-moves-up {
 /* Adding new CSS for placeholder animation */
 
 input:focus+span.placeholder-moves-up,
-input:not(:focus):valid+span.placeholder-moves-up {
+input:not(:focus):valid + span.placeholder-moves-up {
     transform:  translateY(-50%) ;
     padding: 0px 0px;
     z-index: 99 !important;
     background-color: white;
+}
+
+input:focus+span.placeholder-moves-up {
     color: #43A4D7;
+
 }
 
 
