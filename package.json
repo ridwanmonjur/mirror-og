@@ -24,6 +24,7 @@
         "bootstrap": "^5.0.2",
         "cropperjs": "^1.6.2",
         "firebase": "^10.12.3",
+        "flatpickr": "^4.6.13",
         "litepicker": "^2.0.12",
         "luxon": "^3.5.0",
         "sass-loader": "^14.2.1",

@@ -233,24 +233,37 @@
                 <label for="mt-3 startTime">Time of Event</label>
                 <div class="my-3">So that your players can set their alarms</div>
                 <div class="mx-auto d-flex justify-content-center  ">
-                    <input type="text" id="timerange-display" class="ps-3 rounded-pill" readonly>
+                    <input type="text" id="timerange-display" class="ps-3 rounded-pill dropdown" readonly
+                         data-bs-toggle="dropdown" data-bs-auto-close="false"
+                    >
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-alarm mt-2 ms-3 me-3" viewBox="0 0 16 16">
                     <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z"/>
                     <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"/>
                     </svg>
-                </div>
-                <div class="box-date d-none">
-                    <div class="box">
-                        <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
-                        <input type="time" id="startTime" onchange="checkValidTime();" name="startTime"
-                            value="{{ $isEventNotNull ? $event->startTime : '' }}" placeholder=" Select a start time"
-                            required>
-                    </div>
-                    <div class="box">
-                        <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
-                        <input type="time" id="endTime" name="endTime" onchange="checkValidTime();"
-                            value="{{ $isEventNotNull ? $event->endTime : '' }}" placeholder=" Select an end time"
-                            required>
+                    <div class="dropdown-menu p-3 border border-2 border-primary" style="background: #f9f7ef !important; width: min(400px, 90vw);">
+                        <div class="box">
+                            <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
+                            <div class="flatpickr">
+                                <input type="time" id="startTime" onchange="checkValidTime();setTimeRangeDisplay();" name="startTime"
+                                    value="{{ $isEventNotNull ? $event->startTime : '' }}" 
+                                    class="form-control w-75 border-dark text-dark" required data-input
+                                >
+                                
+                            </div>
+                        </div>
+                        <div class="box mt-3">
+                            <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
+                            <div class="flatpickr">
+                                <input type="time" id="endTime" name="endTime" onchange="checkValidTime();setTimeRangeDisplay();"
+                                    value="{{ $isEventNotNull ? $event->endTime : '' }}" 
+                                    class="form-control w-75 border-dark text-dark" required data-input
+                                >
+                                
+                            </div>
+                        </div>
+                        <div class="mt-3 ms-5">
+                            <button class="btn rounded-pill bg-primary text-light" type="button" onclick="closeDropDown()">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -276,7 +289,8 @@
     </div>
     <div class="event-details-form box-width">
         <div class="form-group mx-auto">
-            <label for="eventName">Pick a good name for your event.</label>
+            <label for="eventName">Name of Event</label>
+            <p class="my-3">Pick a good name for your event.</p>
             <input value="{{ $isEventNotNull ? $event->eventName : '' }}" type="text" id="eventName"
                 name="eventName" placeholder=" Name of Event" required class="@error('title') is-invalid @enderror">
             <p class="description text-end mt-2"><i><span class="character-count-eventName">60</span> characters remaining</i></p>
@@ -302,7 +316,8 @@
     </div>
     <div class="event-details-form box-width">
         <div class="form-group">
-            <label for="eventDescription">Tell the players a little about your event</label>
+            <label for="eventDescription">Event Description</label>
+            <p class="my-3">Tell the players a little about your event</p>
             @if ($isEventNotNull)
                 <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
                     required>{{ $event->eventDescription }}</textarea>
@@ -335,7 +350,7 @@
     <div class="event-details-form box-width">
         <div class="form-group">
             <label for="eventTags">Event Tags</label>
-            <p class="description">Add some relevant keywords to help players find your event more easily</p>
+            <p class="my-3">Add some relevant keywords to help players find your event more easily</p>
             <div class="box">
                 <input type="text" id="eventTags" name="eventTags" placeholder="Add tags" required class="w-100 rounded-pil">
             </div>
@@ -362,8 +377,8 @@
         <div class="event-details-form box-width">
             <div class="form-group ">
                 <label for="eventBanner">Event Banner</label>
-                <p class="description">A distinctive banner will help your event stand out (minimum resolution: 1400px
-                    x 600px).</p>
+                <p class="mt-3" style="font-size: 16px;">A distinctive banner will help your event stand out. </p>
+                <p class="description"><i>Minimum resolution: 1400x600 (16:9)</i></p>
                 <div class="banner-upload mx-auto">
                     <input onchange="handleFile('eventBanner', 'previewImage');" type="file" id="eventBanner"
                         name="eventBanner" accept="image/*" required

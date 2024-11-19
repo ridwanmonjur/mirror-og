@@ -56,7 +56,7 @@
     </div>
     <div class="pass-txt mb-2">
         <div class="remember-checkbox">
-            <input autocomplete="off" type="checkbox" name="" id="">
+            <input autocomplete="off" type="checkbox" class="form-check-input" name="" id="">
             <label class="text-checkbox">Remember me</label>
         </div>
         <a href="{{ route('user.forget.view') }}">Forgot password?</a>

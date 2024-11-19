@@ -113,7 +113,7 @@
                             <div class="px-3 py-1">
                                 <p class="mb-1">Choose a country of origin</p>
                                 {{-- <input id="select2-country2" type="checkbox" name="venue"> --}}
-                                <select id="select2-country2" class="form-control" name="region" style="width: 200px !important;">
+                                <select id="select2-country2" class="form-control form-select" name="region" style="width: 200px !important;">
                                     <option value=""> </option>
                                 </select>
                                  <button id="regionResetButton" type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light" onclick="

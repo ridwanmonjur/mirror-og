@@ -30,7 +30,7 @@
             >
                 @foreach($eventCategoryList as $eventCategoryItem)
                     <div class="px-3 min-w-150px py-1">
-                        <input onchange="setFilterForFetch(event, '{{$eventCategoryItem['gameTitle']}}');" type="checkbox" name="gameTitle[]" value="{{$eventCategoryItem['id']}}">
+                        <input class="form-check-input" onchange="setFilterForFetch(event, '{{$eventCategoryItem['gameTitle']}}');" type="checkbox" name="gameTitle[]" value="{{$eventCategoryItem['id']}}">
                         <label for="gameTitle">{{$eventCategoryItem['gameTitle']}}</label>
                     </div>
                 @endforeach
@@ -55,7 +55,7 @@
                 class="dropdown-menu px-0 py-1 py-0" aria-labelledby="dropdownFilterType">
                 @foreach($eventTypeList as $eventType)
                     <div class="px-3 min-w-150px py-1">
-                        <input onchange="setFilterForFetch(event, '{{$eventType['eventType']}}');" type="checkbox" name="eventType[]" value="{{$eventType['id']}}">
+                        <input onchange="setFilterForFetch(event, '{{$eventType['eventType']}}');" type="checkbox" name="eventType[]" value="{{$eventType['id']}}" class="form-check-input">
                          <label for="eventType">{{$eventType['eventType']}}</label>
                     </div>
                 @endforeach
@@ -80,7 +80,7 @@
             >
                 @foreach($eventTierList as $eventTier)
                     <div class="px-3 min-w-150px py-1">
-                        <input onchange="setFilterForFetch(event, '{{$eventTier['eventTier']}}');" type="checkbox" name="eventTier[]" value="{{$eventTier['id']}}">
+                        <input onchange="setFilterForFetch(event, '{{$eventTier['eventTier']}}');" type="checkbox" name="eventTier[]" value="{{$eventTier['id']}}" class="form-check-input">
                         <label for="eventTier">{{$eventTier['eventTier']}}</label>
                     </div>
                 @endforeach
@@ -105,7 +105,7 @@
                 class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
             >
                 <div class="px-3 py-1 min-w-250px">
-                    <input onchange="setFilterForFetch(event, 'SEA');" type="checkbox" name="venue[]" value="SEA">
+                    <input onchange="setFilterForFetch(event, 'SEA');" type="checkbox" name="venue[]" value="SEA" class="form-check-input">
                     <label for="eventTier">South East Asia (SEA)</label>
                 </div>
             </div>

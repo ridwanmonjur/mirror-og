@@ -1,9 +1,9 @@
 <span class="d-inline p-0 m-0" style="display: inline !important;">
-    <button class="btn btn-link d-inline ps-0" x-on:click="openModal">
+    <span class="cursor-pointer d-inline ps-0" x-on:click="openModal">
         <span data-count="{{ $followersCount }}"> {{ $followersCount }}
             follower{{ bladePluralPrefix($followersCount) }}
         </span>
-    </button>
+    </span>
 </span>
 <!-- Modals -->
 <div id="connectionModal" class="modal fade" tabindex="-1" aria-labelledby="connectionModalLabel" aria-hidden="true">
