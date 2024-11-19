@@ -347,7 +347,7 @@
                         x-model="organizer.industry"
                         style="width: 220px;"
                         placeholder = "Enter your company industry..."
-                        class="form-control border-secondary player-profile__input d-inline" 
+                        class="form-control form-select border-secondary player-profile__input d-inline" 
                     >
                         @foreach([
                             "💻 Technology",

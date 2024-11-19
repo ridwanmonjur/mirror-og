@@ -97,7 +97,7 @@
                                     <div class="px-3 py-1">
                                         <p class="mb-1">Choose a country of origin</p>
                                         {{-- <input id="select2-country2" type="checkbox" name="venue"> --}}
-                                        <select id="select2-country2" class="form-control" name="region"
+                                        <select id="select2-country2" class="form-control form-select" name="region"
                                             style="width: 200px !important;">
                                             <option value=""> </option>
                                         </select>
@@ -130,7 +130,7 @@
                                     aria-labelledby="dropdownFilterSort">
                                     @foreach ([['title' => 'Public (free to apply)', 'value' => 'public'], ['title' => 'Private', 'value' => 'Private (cannot apply)'] ] as $status)
                                         <div class="px-3 py-1" style="width: 200px;">
-                                            <input type="checkbox" name="status" value="{{ $status['value'] }}">
+                                            <input type="checkbox" name="status" class="form-check-input" value="{{ $status['value'] }}">
                                             <label for="status">{{ $status['title'] }}</label>
                                         </div>
                                     @endforeach

@@ -30,7 +30,7 @@
                         <thead>
                             <tr>
                                 <th class="px-3">
-                                    <input type="checkbox" id="selectAll" class="form-check-input">
+                                    <input type="checkbox"  id="selectAll" class="form-check-input">
                                 </th>
                                 <th class="px-3">Email</th>
                                 <th class="px-3">Email verified</th>

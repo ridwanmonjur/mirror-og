@@ -50,7 +50,7 @@
     </div>
     <div class="pass-txt mb-2">
         <div class="remember-checkbox">
-            <input type="checkbox" name="" id="">
+            <input type="checkbox" class="form-check-input" name="" id="">
             <label class="text-checkbox">Remember me</label>
         </div>
         <a href="{{ route('user.forget.view') }}">Forgot password?</a>

@@ -26,7 +26,7 @@ extract($dateArray);
                     </u>
                     <br>
                     <div>
-                        <select class="form-control" style="max-width: 300px; margin: auto;">
+                        <select class="form-control form-select" style="max-width: 300px; margin: auto;">
                             @foreach ($teamList as $team)
                                 <option value="{{$team->id}}">{{ $team->teamName }}</option>
                             @endforeach
