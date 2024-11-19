@@ -344,8 +344,6 @@ window.onload = function() {
                 }
             });
         },
-
-        
     });
 
     daterangeDisplay.style.cursor = 'pointer';
@@ -354,6 +352,31 @@ window.onload = function() {
     let endTime =  $event?.endTime;
 
     timerangeDisplay.value = `${formatTimeAMPM(startTime)} - ${formatTimeAMPM(endTime)}`;
+
+    const timeConfig = {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: false,
+        minuteIncrement: 1
+    };
+
+    const startPicker = window.createFlatpickr("#startTime", {
+        ...timeConfig,
+        onChange: function(selectedDates, dateStr) {
+            checkValidTime();
+            setTimeRangeDisplay();
+        }
+    });
+
+    const endPicker = window.createFlatpickr("#endTime", {
+        ...timeConfig,
+        onChange: function(selectedDates, dateStr) {
+            checkValidTime();
+            setTimeRangeDisplay();
+        }
+    });
+
 }
 
 function closeDropDown() {
