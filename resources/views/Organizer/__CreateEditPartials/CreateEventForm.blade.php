@@ -276,10 +276,11 @@
     </div>
     <div class="event-details-form box-width">
         <div class="form-group mx-auto">
-            <label for="eventName">Name of Event</label>
-            <p class="description">Pick a good name for your event (max. 60 characters)</p>
+            <label for="eventName">Pick a good name for your event.</label>
             <input value="{{ $isEventNotNull ? $event->eventName : '' }}" type="text" id="eventName"
                 name="eventName" placeholder=" Name of Event" required class="@error('title') is-invalid @enderror">
+            <p class="description text-end mt-2"><i><span class="character-count-eventName">60</span> characters remaining</i></p>
+
         </div>
     </div>
     <div class=" d-flex justify-content-between box-width back-next">
@@ -301,8 +302,7 @@
     </div>
     <div class="event-details-form box-width">
         <div class="form-group">
-            <label for="eventDescription">Event Description</label>
-            <p class="description">So, tell us a little bit about your event (max. 3,000 characters)</p>
+            <label for="eventDescription">Tell the players a little about your event</label>
             @if ($isEventNotNull)
                 <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
                     required>{{ $event->eventDescription }}</textarea>
@@ -310,6 +310,8 @@
                 <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
                     required></textarea>
             @endif
+            <p class="description text-end mt-2"><i><span class="character-count-eventDescription">3000</span> characters remaining</i></p>
+
         </div>
     </div>
     <div class=" d-flex justify-content-between box-width back-next">

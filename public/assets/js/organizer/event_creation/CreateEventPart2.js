@@ -415,3 +415,52 @@ document.addEventListener("keydown", function(event) {
 });
 
 
+// Create a file named character-counter.js in your public/js directory
+
+document.addEventListener('DOMContentLoaded', function() {
+    const MAX_EVENT_NAME_CHARS = 60;
+    const MAX_EVENT_DESCRIPTION_CHARS = 3000;
+
+    const eventNameInput = document.getElementById('eventName');
+    const eventDescriptionTextarea = document.getElementById('eventDescription');
+    const eventNameCounter = document.querySelector('.character-count-eventName');
+    const eventDescriptionCounter = document.querySelector('.character-count-eventDescription');
+
+    function updateCharacterCount(element, counter, maxChars) {
+        const remainingChars = maxChars - element.value.length;
+        counter.textContent = remainingChars;
+        
+        if (remainingChars < 1) {
+                element.value = element.value.substring(0, maxChars);
+                window.Swal.fire({
+                    icon: 'error',
+                    title: 'Character Limit Exceeded',
+                    text: `You cannot exceed ${maxChars} characters.`,
+                    confirmButtonColor: '#43a4d7',
+                    confirmButtonText: 'OK'
+                });
+                
+                counter.textContent = '0';
+                counter.parentElement.classList.add('text-danger');
+                return;
+        } else {
+            counter.parentElement.classList.remove('text-danger');
+        }
+    }
+
+    if (eventNameInput) {
+        eventNameInput.addEventListener('input', function() {
+            updateCharacterCount(this, eventNameCounter, MAX_EVENT_NAME_CHARS);
+        });
+        updateCharacterCount(eventNameInput, eventNameCounter, MAX_EVENT_NAME_CHARS);
+    }
+
+    if (eventDescriptionTextarea) {
+        eventDescriptionTextarea.addEventListener('input', function() {
+            updateCharacterCount(this, eventDescriptionCounter, MAX_EVENT_DESCRIPTION_CHARS);
+        });
+
+        updateCharacterCount(eventDescriptionTextarea, eventDescriptionCounter, MAX_EVENT_DESCRIPTION_CHARS);
+    }
+});
+
