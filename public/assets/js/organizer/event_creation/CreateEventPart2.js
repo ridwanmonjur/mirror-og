@@ -2,6 +2,21 @@ var startDateInput = document.getElementById('startDate');
 var endDateInput = document.getElementById('endDate');
 var startTimeInput = document.getElementById('startTime');
 var endTimeInput = document.getElementById('endTime');
+var daterangeDisplay = document.getElementById('daterange-display');
+var timerangeDisplay = document.getElementById('timerange-display');
+
+function formatTimeAMPM(time) {
+    if (!time) return 'hh:mm';
+    
+    const [hours, minutes] = time.split(':');
+    const hour = parseInt(hours);
+    
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    
+    return `${displayHour}:${minutes} ${period}`;
+  }
+  
 
 function checkStringNullOrEmptyAndReturn(value) {
     if (value === null || value === undefined) return null;
@@ -113,6 +128,8 @@ function checkValidTime() {
         } else if (endDate < now) {
             endDateInput.value = ""
         }
+
+        returnl
     }
     
     if (startTimeInput.value === "" || endTimeInput.value === "") {
@@ -126,7 +143,14 @@ function checkValidTime() {
         });
         startDateInput.value = "";
         startTimeInput.value = "";
+
+        return;
     }
+
+}
+
+function setTimeRangeDisplay () {
+    timerangeDisplay.value = `${formatTimeAMPM(startTimeInput.value)} - ${formatTimeAMPM(endTimeInput.value)}`;
 }
 
 function handleFile(inputFileId, previewImageId) {
@@ -265,14 +289,6 @@ window.onload = function() {
         new Tagify(document.querySelector('#eventTags'), []);
     }
 
-    const daterangeDisplay = document.getElementById('daterange-display');
-    const timerangeDisplay = document.getElementById('timerange-display'); 
-
-    function parseDate(dateStr) {
-        if (!dateStr) return null;
-        const [year, month, day] = dateStr.split('-');
-        return new Date(year, month - 1, day);
-    }
 
     function formatDisplayDate(date) {
         if (!date) return 'dd/mm/yy';
@@ -288,23 +304,7 @@ window.onload = function() {
         return time.split(':').slice(0, 2).join(':');
       };
 
-      function formatTimeAMPM(time) {
-        if (!time) return 'hh:mm';
-        
-        const [hours, minutes] = time.split(':');
-        const hour = parseInt(hours);
-        
-        const period = hour >= 12 ? 'PM' : 'AM';
-        const displayHour = hour % 12 || 12;
-        
-        return `${displayHour}:${minutes} ${period}`;
-      }
-      
-
-    console.log({$event});
-    console.log({$event});
-    console.log({$event});
-    console.log({$event});
+    
 
     window.createLitepicker({
         element: daterangeDisplay,
@@ -354,57 +354,14 @@ window.onload = function() {
     let endTime =  $event?.endTime;
 
     timerangeDisplay.value = `${formatTimeAMPM(startTime)} - ${formatTimeAMPM(endTime)}`;
-    timerangeDisplay.onclick = () => {
-        return Swal.fire({
-          title: 'Select Time Range',
-          html: `
-          <div class="mt-3 mb-2 mx-3">
-            <label for="startTime2" class="form-label">Start Time:</label>
-            <input type="time" id="startTime2" class="form-control rounded-pill" value=${startTime}>
-            </div>
-            <div class="mb-2 mx-3 mt-3">
-            <label for="endTime2" class="form-label">End Time:</label>
-            <input type="time" id="endTime2" class="form-control rounded-pill" value=${endTime}>
-            </div>
-          `,
-          focusConfirm: false,
-          showCancelButton: true,
-          confirmButtonText: 'Confirm',
-          confirmButtonColor: '#43A4D7',
-          preConfirm: () => {
-            const startTime = document.getElementById('startTime2').value;
-            const endTime = document.getElementById('endTime2').value;
-            
-            if (!startTime || !endTime) {
-              Swal.showValidationMessage('Please select both start and end times');
-              return false;
-            }
-            
-            if (new Date(startTime) >= new Date(endTime)) {
-              Swal.showValidationMessage('End time must be after start time');
-              return false;
-            }
-          
-            return {
-                startTime, endTime
-            }
-          }}).then(result => {
-            if (result.isConfirmed) {
-                console.log({result})
-                let {startTime, endTime } = result.value;
-                console.log({startTime, endTime});
-                console.log({startTime, endTime});
-                console.log({startTime, endTime});
-                startTimeInput.value = startTime;
-                endTimeInput.value = endTime;
-                timerangeDisplay.value = `${formatTimeAMPM(startTime)} - ${formatTimeAMPM(endTime)}`;
-              }
-          })
-      };
-    
-    
 }
 
+function closeDropDown() {
+    const dropdown = bootstrap.Dropdown.getInstance(timerangeDisplay);
+    if (dropdown) {
+        dropdown.hide();
+    }
+}
 
 document.addEventListener("keydown", function(event) {
     var target = event.target;
