@@ -276,7 +276,8 @@
     </div>
     <div class="event-details-form box-width">
         <div class="form-group mx-auto">
-            <label for="eventName">Pick a good name for your event.</label>
+            <label for="eventName">Name of Event</label>
+            <p class="my-3">Pick a good name for your event.</p>
             <input value="{{ $isEventNotNull ? $event->eventName : '' }}" type="text" id="eventName"
                 name="eventName" placeholder=" Name of Event" required class="@error('title') is-invalid @enderror">
             <p class="description text-end mt-2"><i><span class="character-count-eventName">60</span> characters remaining</i></p>
@@ -302,7 +303,8 @@
     </div>
     <div class="event-details-form box-width">
         <div class="form-group">
-            <label for="eventDescription">Tell the players a little about your event</label>
+            <label for="eventDescription">Event Description</label>
+            <p class="my-3">Tell the players a little about your event</p>
             @if ($isEventNotNull)
                 <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
                     required>{{ $event->eventDescription }}</textarea>
@@ -335,7 +337,7 @@
     <div class="event-details-form box-width">
         <div class="form-group">
             <label for="eventTags">Event Tags</label>
-            <p class="description">Add some relevant keywords to help players find your event more easily</p>
+            <p class="my-3">Add some relevant keywords to help players find your event more easily</p>
             <div class="box">
                 <input type="text" id="eventTags" name="eventTags" placeholder="Add tags" required class="w-100 rounded-pil">
             </div>
@@ -362,8 +364,8 @@
         <div class="event-details-form box-width">
             <div class="form-group ">
                 <label for="eventBanner">Event Banner</label>
-                <p class="description">A distinctive banner will help your event stand out (minimum resolution: 1400px
-                    x 600px).</p>
+                <p class="mt-3" style="font-size: 16px;">A distinctive banner will help your event stand out. </p>
+                <p class="description"><i>Minimum resolution: 1400x600 (16:9)</i></p>
                 <div class="banner-upload mx-auto">
                     <input onchange="handleFile('eventBanner', 'previewImage');" type="file" id="eventBanner"
                         name="eventBanner" accept="image/*" required

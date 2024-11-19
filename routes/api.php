@@ -38,6 +38,8 @@ Route::middleware('auth')->get('/user', function (Request $request) {
 
 Route::get('/activity-logs', [ParticipantController::class, 'getActivityLogs'])
     ->name('activity-logs.index');
+Route::get('/user/{id}/connections', [SocialController::class, 'getConnections'])->name('user.connections.index');
+Route::post('/event/{id}/invitation', [OrganizerInvitationController::class, 'store'])->name('event.invitation.store');
 
 Route::prefix('media')->group(function () {
     Route::post('/', [ImageVideoController::class, 'upload']);
@@ -59,7 +61,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/user/{id}/banner', [UserController::class, 'replaceBanner'])->name('participant.userBanner.action');
         Route::post('/user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
         Route::post('/user/{id}/notifications', [NotificationController::class, 'getMoreNotifications'])->name('user.notifications.more');
-        Route::get('/user/{id}/connections', [SocialController::class, 'getConnections'])->name('user.connections.index');
         Route::post('/card/intent', [StripeController::class,  'stripeCardIntentCreate'])->name('stripe.stripeCardIntentCreate');
 
     });
@@ -103,6 +104,5 @@ Route::group(['prefix' => 'organizer'], function () {
     });
 });
 
-Route::post('/event/{id}/invitation', [OrganizerInvitationController::class, 'store'])->name('event.invitation.store');
 
 // Route::any('/admin', 'AdminController@index')->middleware('check-permission:admin');

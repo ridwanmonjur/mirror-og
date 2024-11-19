@@ -1,18 +1,18 @@
 <div x-data="profileStatsData" class="mt-4">
     <!-- Tabs -->
     <template x-if="role !== 'ORGANIZER'">
-        <div class="">
-            <button class="btn btn-link ps-0 me-4" x-on:click="openModal('followers')">
+        <div class="" style="color: inherit !important;">
+            <span class=" cursor-pointer ps-0 me-4" x-on:click="openModal('followers')">
                 <span x-text="count['followers']"> </span> Followers
-            </button>
-            <button class="btn btn-link ps-0 me-4" x-on:click="openModal('following')">
+            </span>
+            <span class=" cursor-pointer ps-0 me-4" x-on:click="openModal('following')">
                 <span x-text="count['following']"> </span>
                 Following
-            </button>
-            <button class="btn btn-link ps-0 me-4" x-on:click="openModal('friends')">
+            </span>
+            <span class="cursor-pointer ps-0 me-4" x-on:click="openModal('friends')">
                 <span x-text="count['friends']"> </span>
                 Friends
-            </button>
+            </span>
         </div>
     </template>
     <template x-if="role === 'ORGANIZER'">
