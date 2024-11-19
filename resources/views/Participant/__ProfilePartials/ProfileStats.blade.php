@@ -26,15 +26,17 @@
     <!-- Modals -->
     <div id="connectionModal" class="modal fade" tabindex="-1" aria-labelledby="connectionModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg" style="top: 10vh; color: black;">
             <div class="modal-content mx-3">
-                <div class="modal-header my-3">
-                    <h5 class="ms-3" x-text="currentTab?.toUpperCase()">
-                    </h5>
-                    <button type="button" class="btn-close me-3" data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
+              
                 <div class="modal-body mx-3 mb-3">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="ms-3 my-3">
+                            Followers
+                        </h5>
+                        <button type="button" class="btn-close me-3" data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
                     <!-- Profile Info -->
                     <div class="table-responsive">
                         <template x-if="!(currentTab in connections) || !connections[currentTab][0]">

@@ -7,7 +7,7 @@
 </span>
 <!-- Modals -->
 <div id="connectionModal" class="modal fade" tabindex="-1" aria-labelledby="connectionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" style="top: 10vh;">
+    <div class="modal-dialog modal-lg" style="top: 10vh; color: black;">
         <div class="modal-content mx-3">
             <div class="modal-body px-3 mx-3 mb-3">
                 <div class="d-flex justify-content-between">
