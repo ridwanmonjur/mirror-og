@@ -7,16 +7,16 @@
 </span>
 <!-- Modals -->
 <div id="connectionModal" class="modal fade" tabindex="-1" aria-labelledby="connectionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg" style="top: 10vh;">
         <div class="modal-content mx-3">
-            <div class="modal-header my-3">
-                <h5 class="ms-3">
-                    Followers
-                </h5>
-                <button type="button" class="btn-close me-3" data-bs-dismiss="modal" aria-label="Close">
-                </button>
-            </div>
-            <div class="modal-body px-3 mb-3">
+            <div class="modal-body px-3 mx-3 mb-3">
+                <div class="d-flex justify-content-between">
+                    <h5 class="ms-3 my-3">
+                        Followers
+                    </h5>
+                    <button type="button" class="btn-close me-3" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
                 <!-- Profile Info -->
                 <div >
                     <template x-if="!connections[0]">
@@ -24,7 +24,7 @@
                     </template>
                     <template x-if="connections[0]">
                         <div class="table-responsive table">
-                            <table class="member-table responsive table-striped mb-0">
+                            <table style="font-size: normal !important;" class="member-table responsive table-striped mb-0 table-sm">
                                 <tbody>
                                     <template x-for="user in connections" :key="user.id">
                                         <tr>
@@ -48,7 +48,6 @@
                                                 </div>
                                             </td>
                                             <td class="py-1 px-2" x-text="user.email"></td>
-                                            <td clas="py-1 px-2" x-text="user.name"></td>
                                             <td class="py-1 px-2" x-text="formatDate(user.created_at)"></td>
                                         </tr>
                                     </template>

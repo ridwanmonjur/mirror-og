@@ -26,7 +26,7 @@
     <!-- Modals -->
     <div id="connectionModal" class="modal fade" tabindex="-1" aria-labelledby="connectionModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content mx-3">
                 <div class="modal-header my-3">
                     <h5 class="ms-3" x-text="currentTab?.toUpperCase()">
@@ -42,11 +42,11 @@
                         </template>
                         <template x-if="currentTab in connections && connections[currentTab][0]">
                             <div>
-                                <table class="member-table table responsive table-striped mb-0">
+                                <table class="member-table table table-sm responsive table-striped mb-0">
                                     <tbody>
                                         <template x-for="user in connections[currentTab]" :key="user.id">
                                             <tr>
-                                                <td class="text-center px-3 py-3" style="width: 50px;">
+                                                <td class="text-center px-3 py-3 colored-cell" style="width: 50px;">
                                                     <a :href="`/view/${user?.role?.toLowerCase()}/${user.id}` ">
                                                         <svg class="cursor-pointer"
                                                             xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -67,7 +67,6 @@
                                                     </div>
                                                 </td>
                                                 <td class="py-3 px-3" x-text="user.email"></td>
-                                                <td clas="py-3 px-3" x-text="user.name"></td>
                                                 <td class="text-end py-3 px-3" x-text="formatDate(user.created_at)"></td>
                                             </tr>
                                         </template>
