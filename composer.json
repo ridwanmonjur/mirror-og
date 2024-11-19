@@ -14,6 +14,7 @@
         "kreait/laravel-firebase": "^5.9",
         "laravel/framework": "^10.10",
         "laravel/horizon": "^5.27",
+        "laravel/pulse": "^1.2",
         "laravel/socialite": "^5.9",
         "laravel/tinker": "^2.8",
         "opcodesio/log-viewer": "^3.11",
@@ -78,6 +79,9 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "build": [
+            "composer2 install --no-dev --no-scripts  --optimize-autoloader"
         ]
     },
     "extra": {
