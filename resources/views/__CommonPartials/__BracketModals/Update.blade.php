@@ -37,7 +37,7 @@
                                             <option value="">Choose a team</option>
                                         @foreach ($teamList as $team)
                                             <option  value="{{ $team['id'] }}"   data-img-width="40px" data-img-height="100%"
-                                                data-img="{{ '/' . 'storage/' . $team['teamBanner']}}"
+                                                data-img="{{ isset($team['teamBanner']) ? '/storage/' . $team['teamBanner'] : '/assets/images/404.png' }}"
                                             >
                                             <span> {{ $team['teamName'] }} </span>
                                             </option>

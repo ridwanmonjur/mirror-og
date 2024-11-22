@@ -49,7 +49,7 @@
             onerror="this.src='{{ asset('assets/images/404.png') }}';"
             class=" position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
             style="z-index: 99;"
-           data-position="{{$position2}}" 
+            data-position="{{$position2}}" 
             onclick="reportModalShow(event);" 
         >
         

@@ -29,8 +29,9 @@
                         @foreach ($roster as $rosterItem)
                             <li class="d-inline">
                                 <img width="30" height="30" onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                                    src="{{ bladeImageNull( $rosterItem->user->userBanner) }}" alt="User Banner"
-                                    class="mb-2 rounded-circle border border-dark border-2 object-fit-cover me-3">
+                                    src="{{ bladeImageNull( $rosterItem?->user?->userBanner) }}" alt="User Banner"
+                                    class="mb-2 rounded-circle border border-dark border-2 object-fit-cover me-3"
+                                >
                                 {{ $rosterItem->user->name }}
                             </li>
                             <br>
