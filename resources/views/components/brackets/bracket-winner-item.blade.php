@@ -5,7 +5,7 @@
                 <div class="tournament-bracket__match {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} tournament"
                     tabindex="0" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
                     data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}">
-                            <x-brackets.bracket-table :bracket="$bracket" />
+                    <x-brackets.bracket-table :bracket="$bracket" />
 
                     <div class="text-center popover-parent   mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
                     >
@@ -13,12 +13,48 @@
                             style="top: -25px; left: 0px;">
                         </div>
                         <div
-                            class="tournament-bracket__box border-style   {{ $bracket['team2_position'] }} tournament px-2 py-2">
-                            <span>{{ $bracket['team1_position'] }}</span>
+                            class="tournament-bracket__box border-style popover-button  {{ $bracket['team1_position'] }} tournament px-2 py-2"
+                        >
+                            @if ($bracket['team1_id'])
+                                <img src="{{ bladeImageNull($bracket['team1_teamBanner']) }}" width="33" height="25"
+                                    onerror="this.src='{{ asset('assets/images/404.png') }}';"
+                                    class=" position-absolute  object-fit-cover me-2" alt="Team View"
+                                    style="z-index: 99;"
+                                    data-position="{{$bracket['team1_position']}}" 
+                                    onclick="reportModalShow(event);" 
+                                >
+                            @else 
+                                <small 
+                                    data-position="{{$bracket['team1_position']}}" 
+                                    onclick="reportModalShow(event);" 
+                                    class="ms-1 position-absolute popover-button replace_me_with_image" style="z-index: 99;"
+                                >{{$bracket['team1_position']}}</small>
+                            @endif
+                            <span></span>
+                            
+                            <span></span>
                         </div>
                         <div
-                            class="tournament-bracket__box  border-style  {{ $bracket['team2_position'] }} tournament px-2 py-2">
-                            <span>{{ $bracket['team2_position'] }}</span>
+                            class="tournament-bracket__box  border-style popover-button {{ $bracket['team2_position'] }} tournament px-2 py-2"
+                        >
+                            @if ($bracket['team2_id'])
+                                <img src="{{ bladeImageNull($bracket['team2_teamBanner']) }}" width="33" height="25"
+                                    onerror="this.src='{{ asset('assets/images/404.png') }}';"
+                                    class=" position-absolute  object-fit-cover me-2" alt="Team View"
+                                    style="z-index: 99;"
+                                    data-position="{{$bracket['team2_position']}}" 
+                                    onclick="reportModalShow(event);" 
+                                >
+                            @else 
+                                <small 
+                                    data-position="{{$bracket['team2_position']}}" 
+                                    onclick="reportModalShow(event);" 
+                                    class="ms-1 position-absolute  replace_me_with_image" style="z-index: 99;"
+                                >{{$bracket['team2_position']}}</small>
+                            @endif
+                            <span></span>
+                            
+                            <span></span>
                         </div>
                         @if($bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'])
                             <small class="position-absolute winner-label d-none-until-hover" style="left: 100%;">

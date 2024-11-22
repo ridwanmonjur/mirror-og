@@ -31,9 +31,6 @@ function updateModalShow(event) {
     event.preventDefault();
     const button = event.currentTarget;
     let { team1_id, team2_id } = button.dataset;
-    console.log({team1_id, team2_id});
-    console.log({team1_id, team2_id});
-    console.log({team1_id, team2_id});
     let parentWithDataset = document.querySelector(`.tournament-bracket__match.${team1_id}.${team2_id}`);
 
     if (
@@ -134,10 +131,6 @@ function reportModalShow(event) {
     };
 }
 
-// addOnLoad( () => {
-    
- 
-// });
 
 let selectMap = {};
 document.querySelectorAll('[data-dynamic-select]').forEach(select => {
@@ -169,15 +162,21 @@ submitBtnElement?.addEventListener('click', function(event) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+              
                 let isUpperBracketFirstRound = false;
                 let {team1, match, team2} = data.data;
                 let currentMatchDiv = document.querySelector(`.${match.team1_position}.${match.team2_position}`);
+                
+            
+                
                 if (match.stage_name == "upperBracket" && match.inner_stage_name == "eliminator1") {
                     isUpperBracketFirstRound = true;
                 }
 
 
                 let currentMatch = JSON.parse(currentMatchDiv.dataset.bracket);
+            
+
                 currentMatch.id = match.id;
                 currentMatch.winner_id = match.winner_id;
                 currentMatch.team1_id = match.team1_id;
@@ -208,7 +207,9 @@ submitBtnElement?.addEventListener('click', function(event) {
                         bracket :  JSON.stringify(currentMatch)
                     }
                 }
-                
+                console.log({data, currentMatchDiv, currentMatch});
+                console.log({data, currentMatchDiv, currentMatch});
+                console.log({data, currentMatchDiv, currentMatch});
                 const parentElements = currentMatchDiv.querySelectorAll(".popover-parent");
                 
                 let imgs = null, smalls = null;
@@ -219,6 +220,10 @@ submitBtnElement?.addEventListener('click', function(event) {
                     imgs = currentMatchDiv.querySelectorAll(`.popover-button img`);
                     smalls = currentMatchDiv.querySelectorAll(`small.replace_me_with_image`);
                 }
+
+                console.log({imgs, smalls});
+                console.log({imgs, smalls});
+                console.log({imgs, smalls});
 
                 let imgsMap = {}, smallsMap = {};
                 imgs.forEach((img, index)=> {

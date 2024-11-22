@@ -50,7 +50,6 @@ Alpine.data('profileDataComponent', () => {
                         <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
                     `;
                     });
-                    console.log({ p: this.participant.region });
                     choices2.innerHTML = countriesHtml;
                     choices2.selected = this.participant.region;
                 } else {
@@ -137,9 +136,6 @@ function createActivityLogsData(userId, duration) {
                     `/api/activity-logs?userId=${this.userId}&duration=${this.duration}&page=${this.page}`
                 );
                 const data = await response.json();
-                console.log({data});
-                console.log({data});
-                console.log({data});
                 
                 this.items = [...this.items, ...data.items];
                 this.hasMore = data.hasMore;

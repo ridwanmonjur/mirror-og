@@ -37,7 +37,6 @@ Alpine.data('alpineDataComponent', () => ({
                         <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
                     `;
                 });
-                console.log({ c: this.country });
                 choices2.innerHTML = countriesHtml;
                 let option = choices2.querySelector(`option[value='${this.country}']`);
                 option.selected = true;
@@ -95,7 +94,6 @@ Alpine.data('alpineDataComponent', () => ({
         this.fetchCountries();
         var backgroundStyles = styles.backgroundStyles;
         var fontStyles = styles.fontStyles;
-        console.log({ backgroundStyles, fontStyles })
         var banner = document.getElementById('backgroundBanner');
         banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
         banner.querySelectorAll('.form-control').forEach((element) => {
