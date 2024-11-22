@@ -70,12 +70,12 @@ parentElements?.forEach(parent => {
 function addAllTippy() {
 
   const parentSecondElements = document.querySelectorAll(".middle-item");
+
   parentSecondElements?.forEach(parent => {
     const triggers = parent.querySelectorAll(".popover-button");
     triggers.forEach((trigger) => {
       let triggerPositionId = trigger.dataset.position;
       let triggerParentsPositionIds = previousValues[triggerPositionId];
-
       if (triggerParentsPositionIds && Array.isArray(triggerParentsPositionIds)) {
         let triggerClassName = '.popover-middle-content.' + triggerParentsPositionIds.join(".");
         let contentElement = document.querySelector(triggerClassName);
@@ -95,6 +95,7 @@ function addTippyToClass(classAndPositionList) {
     });
   }
 }
+window.addTippyToClass = addTippyToClass;
 
 function addDotsToContainer(key, value) {
   let parent = document.querySelector(`.${key}.popover-middle-content`);
@@ -122,10 +123,6 @@ function addDotsToContainer(key, value) {
   });
 
 }
-
-
-
-
 
 function getAllMatchStatusesData() {
   const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
@@ -573,13 +570,6 @@ Alpine.data('alpineDataComponent', function () {
 
         let dataset = event?.detail ?? null;
 
-        if (dataset && dataset?.position === this.report.position
-          && dataset.team1_position == this.report.teams[0].position
-          && dataset.team2_position == this.report.teams[1].position
-        ) {
-          window.Swal.close();
-          return;
-        }
 
         this.clearSelection();
         if (this.subscribeToMatchStatusesSnapshot)

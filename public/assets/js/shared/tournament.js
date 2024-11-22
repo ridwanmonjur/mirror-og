@@ -27,6 +27,7 @@ bracketBoxList.forEach(item => {
 });
 
 function updateModalShow(event) {
+    window.showLoading();
     event.stopPropagation();
     event.preventDefault();
     const button = event.currentTarget;
@@ -38,6 +39,7 @@ function updateModalShow(event) {
         parentWithDataset.dataset === null || 
         parentWithDataset.dataset.bracket === null
     ) {
+        window.closeLoading();
         toastError("Dataset match results not updated");
         return;
     }
@@ -67,6 +69,7 @@ function updateModalShow(event) {
         selectMap[selectName]?.updateSelectElement(dataset[selectName]);
     })
 
+    window.closeLoading();
     let modal = bootstrap.Modal.getInstance(modalElement);
 
     if (modal) {
@@ -75,9 +78,11 @@ function updateModalShow(event) {
         const modal = new bootstrap.Modal(modalElement);
         modal.show();
     };
+
 }
 
 function reportModalShow(event) {
+    window.showLoading();
     event.preventDefault();
     const button = event.currentTarget;
     let { position } = button.dataset;
@@ -85,6 +90,7 @@ function reportModalShow(event) {
     if (!triggerParentsPositionIds) {
         console.error("Positions missing");
         console.error("Positions missing");
+        window.closeLoading();
         return;
     }
 
@@ -96,6 +102,7 @@ function reportModalShow(event) {
         parentWithDataset.dataset === null || 
         parentWithDataset.dataset.bracket === null
     ) {
+        window.closeLoading();
         return;
     }
 
@@ -122,7 +129,7 @@ function reportModalShow(event) {
     window.dispatchEvent(alpineEvent);
     const modalElement = document.getElementById('reportModal');
     let modal = bootstrap.Modal.getInstance(modalElement);
-
+    window.closeLoading();
     if (modal) {
         modal.show();
     } else {
@@ -144,7 +151,7 @@ const closeBtnElement = document.getElementById('closeBtn');
 
 submitBtnElement?.addEventListener('click', function(event) {
     event.preventDefault();
-
+    window.showLoading();
     const updateFormElementData = new FormData(updateFormElement);
     let jsonObject = {}
     for (let [key, value] of updateFormElementData.entries()) {
@@ -164,66 +171,65 @@ submitBtnElement?.addEventListener('click', function(event) {
             if (data.success) {
               
                 let isUpperBracketFirstRound = false;
+                let isFinalBracket = false;
                 let {team1, match, team2} = data.data;
-                let currentMatchDiv = document.querySelector(`.${match.team1_position}.${match.team2_position}`);
-                
-            
+                let currentMatch = document.querySelector(`.${match.team1_position}.${match.team2_position}`);
                 
                 if (match.stage_name == "upperBracket" && match.inner_stage_name == "eliminator1") {
                     isUpperBracketFirstRound = true;
                 }
 
+                if (match.stage_name == "finals" && match.inner_stage_name == "finals") {
+                    isFinalBracket = true;
+                }
 
-                let currentMatch = JSON.parse(currentMatchDiv.dataset.bracket);
+                let currentDataset = JSON.parse(currentMatch.dataset.bracket);
             
 
-                currentMatch.id = match.id;
-                currentMatch.winner_id = match.winner_id;
-                currentMatch.team1_id = match.team1_id;
-                currentMatch.team2_id = match.team2_id;
-                currentMatch.result= match.result;
-                currentMatch.status= match.status;
+                currentDataset.id = match.id;
+                currentDataset.winner_id = match.winner_id;
+                currentDataset.team1_id = match.team1_id;
+                currentDataset.team2_id = match.team2_id;
+                currentDataset.result= match.result;
+                currentDataset.status= match.status;
 
                 if (team1) {
-                    currentMatch.team1_teamBanner = team1.teamBanner;
+                    currentDataset.team1_teamName = team1.teamName;
+                    currentDataset.team1_teamBanner = team1.teamBanner;
                 } 
 
                 if (team2) {
-                    currentMatch.team2_teamBanner = team2.teamBanner;
+                    currentDataset.team2_teamName = team2.teamName;
+                    currentDataset.team2_teamBanner = team2.teamBanner;
                 }
 
-                if (currentMatch.winner_id == team1_id) {
-                    currentMatch.winner = team1;
+                if (currentDataset.winner_id == team1_id) {
+                    currentDataset.winner = team1;
                 }
 
-                if (currentMatch.winner_id == team2_id) {
-                    currentMatch.winner = team2;
+                if (currentDataset.winner_id == team2_id) {
+                    currentDataset.winner = team2;
                 }
 
-                if (currentMatchDiv.dataset) {
-                    currentMatchDiv.dataset.bracket = JSON.stringify(currentMatch);
+                if (currentMatch.dataset) {
+                    currentMatch.dataset.bracket = JSON.stringify(currentDataset);
                 } else {
                     currentMatch.dataset = {
-                        bracket :  JSON.stringify(currentMatch)
+                        bracket :  JSON.stringify(currentDataset)
                     }
                 }
-                console.log({data, currentMatchDiv, currentMatch});
-                console.log({data, currentMatchDiv, currentMatch});
-                console.log({data, currentMatchDiv, currentMatch});
-                const parentElements = currentMatchDiv.querySelectorAll(".popover-parent");
+
+                const parentElements = currentMatch.querySelectorAll(".popover-parent");
                 
                 let imgs = null, smalls = null;
                 if (isUpperBracketFirstRound) {
-                    imgs = currentMatchDiv.querySelectorAll(`img.popover-button`);
-                    smalls = currentMatchDiv.querySelectorAll(`.popover-button.replace_me_with_image`);
+                    imgs = currentMatch.querySelectorAll(`img.popover-button`);
+                    smalls = currentMatch.querySelectorAll(`.popover-button.replace_me_with_image`);
                 } else {
-                    imgs = currentMatchDiv.querySelectorAll(`.popover-button img`);
-                    smalls = currentMatchDiv.querySelectorAll(`small.replace_me_with_image`);
+                    imgs = currentMatch.querySelectorAll(`.popover-button img`);
+                    smalls = currentMatch.querySelectorAll(`small.replace_me_with_image`);
                 }
 
-                console.log({imgs, smalls});
-                console.log({imgs, smalls});
-                console.log({imgs, smalls});
 
                 let imgsMap = {}, smallsMap = {};
                 imgs.forEach((img, index)=> {
@@ -234,15 +240,14 @@ submitBtnElement?.addEventListener('click', function(event) {
                     smallsMap[img.dataset.position] = index;
                 });
 
-                
                 for (let index=0; index <2; index++) {
                     let team = null;
                     if (index) {
                         team = team2;
-                        position = currentMatch.team2_position;
+                        position = currentDataset.team2_position;
                     } else {
                         team = team1;
-                        position = currentMatch.team1_position;
+                        position = currentDataset.team1_position;
                     }
 
                     let img = imgs[imgsMap[position]];
@@ -288,39 +293,44 @@ submitBtnElement?.addEventListener('click', function(event) {
                
                 closeBtnElement.click();
 
-                const bracketBoxList = currentMatchDiv.querySelectorAll(`.tournament-bracket__box`);
-                let popoverImgs = currentMatchDiv.querySelectorAll('.popover-content-img');
-                let index = 0;
-                bracketBoxList.forEach(bracketBox => {
-                    let banner = index ? team2?.teamBanner : team1?.teamBanner;
-                        let roster = index ? team2?.roster : team1?.roster;
-                        let currentImg = popoverImgs[index];
-                        if (currentImg && 'src' in currentImg) currentImg.src = `/storage/${banner}`;
+                const bracketBoxList = currentMatch.querySelectorAll(`.tournament-bracket__box`);
+                let popoverImgs = currentMatch.querySelectorAll('.popover-img');
+                let popoverTitles = currentMatch.querySelectorAll('.popover-title');
+                let index = 0, isEven = false;
+                while (index < popoverImgs.length) {
+                    let team = isEven? team2: team1;
+                    let banner = team?.teamBanner;
+                    let roster = team?.roster;
+                    let currentImg = popoverImgs[index];
+                    let currentTitle = popoverTitles[index];
+                    if (currentImg) currentImg.src = `/storage/${banner}`;
+                    if (currentTitle) currentTitle.innerText = team?.teamName ?? 'N/A';
 
-                        const rosterContainer = bracketBox.querySelector('.popover-box .col-12.col-lg-7');
-                        if (rosterContainer && roster) {
-                            if (Array.isArray(roster) && roster[0] !== undefined) {
-                                let rosterHtml = '<ul class="d-block ms-0 ps-0">';
-                                roster.forEach(rosterItem => {
-                                    rosterHtml += `
-                                        <li class="d-inline">
-                                            <img width="25" height="25" onerror="this.src='/assets/images/404.png';"
-                                                src="/storage/${rosterItem.user.userBanner}" alt="User Banner"
-                                                class="mb-2 rounded-circle object-fit-cover me-3">
-                                            ${rosterItem.user.name}
-                                        </li>
-                                        <br>
-                                    `;
-                                });
-                                rosterHtml += '</ul>';
-                                rosterContainer.innerHTML = rosterHtml;
-                            } else {
-                                rosterContainer.innerHTML = '<p class="text-muted">The team roster is empty.</p>';
-                            }
+                    const rosterContainer = bracketBoxList[index]?.querySelector('.popover-box .roster-container');
+                    if (rosterContainer && roster) {
+                        if (Array.isArray(roster) && roster[0] !== undefined) {
+                            let rosterHtml = '<ul class="d-block ms-0 ps-0">';
+                            roster.forEach(rosterItem => {
+                                rosterHtml += `
+                                    <li class="d-inline">
+                                        <img width="25" height="25" onerror="this.src='/assets/images/404.png';"
+                                            src="/storage/${rosterItem.user.userBanner}" alt="User Banner"
+                                            class="mb-2 rounded-circle object-fit-cover me-3">
+                                        ${rosterItem.user.name}
+                                    </li>
+                                    <br>
+                                `;
+                            });
+                            rosterHtml += '</ul>';
+                            rosterContainer.innerHTML = rosterHtml;
+                        } else {
+                            rosterContainer.innerHTML = '<p class="text-muted">The team roster is empty.</p>';
                         }
+                    }
 
                     index++;
-                });
+                    isEven = !isEven;
+                }
 
                 if (isUpperBracketFirstRound) {
                     parentElements.forEach(parent => {
@@ -330,19 +340,36 @@ submitBtnElement?.addEventListener('click', function(event) {
                             window.addPopover(parentElement, contentElement, 'mouseenter');
                         }
                     });
-                } else {
-                    
                 }
+                
+                const parentWinner = document.querySelectorAll(`.tournament-bracket__match.middle-item.${currentDataset.winner_next_position}`);
+                const loserWinner = document.querySelectorAll(`.tournament-bracket__match.middle-item.${currentDataset.loser_next_position}`);
+                [...parentWinner, ...loserWinner]?.forEach(parent => {
+                    const triggers = parent.querySelectorAll(".popover-button");
+                    triggers.forEach((trigger) => {
+                        let triggerPositionId = trigger.dataset.position;
+                        let triggerParentsPositionIds = previousValues[triggerPositionId];
+                        if (triggerParentsPositionIds && Array.isArray(triggerParentsPositionIds)) {
+                            let triggerClassName = '.popover-middle-content.' + triggerParentsPositionIds.join(".");
+                            let contentElement = document.querySelector(triggerClassName);
+                            window.addPopover(trigger, contentElement, 'mouseenter');
+                        }
+                    })
+                });
+                
                 window.Toast.fire({
                     icon: 'success',
                     text: data.message
                 });
+
+                window.closeLoading();
 
             } else {
                 window.toastError('Error saving match: ' + data.message);
             }
         })
         .catch(error => {
+            window.closeLoading();
             console.error('Error:', error);
             window.toastError('An error occurred while saving the match.');
         });
@@ -354,3 +381,4 @@ const uploadContainers = document.querySelectorAll('.upload-container');
 function redirectToTeamPage(teamId) {
     window.location.href = `/view/team/${teamId}`;
 }
+

@@ -16,14 +16,15 @@
             <div class="col-12 col-lg-5 text-center border-dark" style="border-right: 2px solid black;">
                 <div >
                     <img src="{{ bladeImageNull($teamBanner) }}" alt="Team Banner" width="100"
+                        data-position="{{$position . 'hi'}}"
                         height="100" onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                        class="popover-team-img object-fit-cover rounded-circle border border-dark border-2"
+                        class="popover-team-img popover-img object-fit-cover rounded-circle border border-dark border-2"
                     >
                     
                 </div>
-                <p class="mt-3 mb-4 py-0 fs-7"> {{$teamName}} </p>
+                <p class="mt-3 mb-4 py-0 fs-7 popover-title" data-position="{{$position . 'hi'}}"> {{$teamName}} </p>
             </div>
-            <div class="col-12 col-lg-7">
+            <div class="roster-container col-12 col-lg-7">
                 @if (isset($roster[0]))
                     <ul class="d-block ms-0 ps-0">
                         @foreach ($roster as $rosterItem)

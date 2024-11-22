@@ -1,4 +1,4 @@
-<!-- tournament-bracket-box.blade.php -->
+{{-- <!-- tournament-bracket-box.blade.php -->
 @props([
     'position',
     'teamBanner',
@@ -16,12 +16,12 @@
                 <div class="text-end">
                     <img src="{{ bladeImageNull($teamBanner) }}" alt="Team Banner" width="100%"
                         height="100%" onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                        class="popover-content-img"
+                        class="popover-img popover-content-img"
                     >
                 </div>
                 <small>{{ $position }}</small>
             </div>
-            <div class="col-12 col-lg-7">
+            <div class="roster-container col-12 col-lg-7">
                 @if (isset($roster[0]))
                     <ul class="d-block ms-0 ps-0">
                         @foreach ($roster as $rosterItem)
@@ -49,4 +49,4 @@
         <span class="replace_me_with_image"> </span>
     @endif
     <span></span>
-</div>
+</div> --}}
