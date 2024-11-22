@@ -81,7 +81,7 @@
             "@php artisan key:generate --ansi"
         ],
         "build": [
-            "composer2 install --no-dev --no-scripts  --optimize-autoloader"
+            "composer2 update --no-dev --no-scripts  --optimize-autoloader"
         ]
     },
     "extra": {

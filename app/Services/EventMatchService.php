@@ -77,11 +77,15 @@ class EventMatchService {
                 ) {
                 $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
                 $user_level = $isOrganizer ? $USER_ENUMS['IS_ORGANIZER'] : null;
-                if ($match->team1_id === $existingJoint?->team_id) $user_level = $USER_ENUMS['IS_TEAM1'];
-                elseif ($match->team2_id === $existingJoint?->team_id) $user_level = $USER_ENUMS['IS_TEAM2'];
-                elseif ($user_level === null) $user_level = $USER_ENUMS['IS_PUBLIC'];
+                
+                if ($existingJoint) {
+                    if ($match->team1_id === $existingJoint->team_id) { $user_level = $USER_ENUMS['IS_TEAM1']; }
+                    elseif ($match->team2_id === $existingJoint->team_id) { $user_level = $USER_ENUMS['IS_TEAM2']; }
+                }
+
+                if (!$user_level) { $user_level = $USER_ENUMS['IS_PUBLIC']; }
+
                 $match->user_level = $user_level;
-                $match->will_json = $user_level !== $USER_ENUMS['IS_PUBLIC'];
                 return data_set($bracketList, $path, [
                     'id' => $match->id,
                     'event_details_id' => $match->event_details_id,
@@ -107,35 +111,16 @@ class EventMatchService {
                     'team1_name' => $match->team1->name ?? null,
                     'team2_name' => $match->team2->name ?? null,
                     'winner_name' => $match->winner->name ?? null,
-                    'will_json' => $match->will_json,
                     'user_level'  => $match->user_level,
                 ]);
 
             
             }, $bracketList);
-            
-            if (empty($bracketList['tournament']['finals']['finals'])) {
-                $bracketList['tournament']['finals']['finals'][] = [
-                    'team1_position' => 'G1',
-                    'team2_position' => 'G2',
-                    'order' => 1,
-                    'winner_next_position' => null,
-                    'loser_next_position' => null,
-                ];
-            }
-            
-            if (empty($bracketList['tournament']['upperBracket']['eliminator1'])) {
-                $bracketList['tournament']['upperBracket']['eliminator1'][] = [
-                    'team1_position' => '',
-                    'team2_position' => '',
-                    'order' => 1,
-                    'winner_next_position' => 'U1',
-                    'loser_next_position' => 'L1',
-                ];
-            }
+         
         } else {
             $bracketList = [];
         };
+        
 
         return [
             'teamList' => $teamList,

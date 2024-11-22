@@ -310,13 +310,18 @@ class OrganizerEventResultsController extends Controller
                 $joinEventId = null;
             }
 
-            $team1?->load(['roster' => function($query) use ($joinEventId) {
-                $query->whereIn('join_events_id', $joinEventId)->with('user');
-            }]);
+            if ($joinEventId && $team1) {
+                $team1->load(['roster' => function($query) use ($joinEventId) {
+                    $query->whereIn('join_events_id', $joinEventId)->with('user');
+                }]);
+            }
             
-            $team2?->load(['roster' => function($query) use ($joinEventId) {
-                $query->whereIn('join_events_id', $joinEventId)->with('user');
-            }]);
+            if ($joinEventId && $team2) {
+                $team2?->load(['roster' => function($query) use ($joinEventId) {
+                    $query->whereIn('join_events_id', $joinEventId)->with('user');
+                }]);
+            }
+
 
             $message = isset($validatedData['id']) 
                 ? 'Match updated successfully' 

@@ -61,10 +61,12 @@ function updateModalShow(event) {
 
     ['team1_position', 'team2_position', 'winner_next_position', 'loser_next_position'].forEach((element)=> {
         let id2 = `${element}_label`;
-        document.getElementById(id2).innerText = dataset[element];
+        let domElement = document.getElementById(id2)
+        if (domElement) 
+            domElement.innerText = dataset[element] ?? '-';
     });
 
-    ['result', 'status', 'team1_id', 'team2_id', 'winner_id'].forEach((selectName)=> {
+    ['team1_id', 'team2_id',].forEach((selectName)=> {
         selectMap[selectName]?.updateSelectElement(dataset[selectName]);
     })
 
@@ -186,8 +188,14 @@ submitBtnElement?.addEventListener('click', function(event) {
                 currentMatch.result= match.result;
                 currentMatch.status= match.status;
 
-                currentMatch.team1_teamBanner = team1.teamBanner;
-                currentMatch.team2_teamBanner = team2.teamBanner;
+                if (team1 && team1.teamBanner) {
+                    currentMatch.team1_teamBanner = team1.teamBanner;
+                } 
+
+                if (team2 && team2.teamBanner ) {
+                    currentMatch.team2_teamBanner = team2.teamBanner;
+                }
+
                 if (currentMatch.winner_id == team1_id) {
                     currentMatch.winner = team1;
                 }
@@ -217,8 +225,16 @@ submitBtnElement?.addEventListener('click', function(event) {
                  
                 
                 for (let index=0; index <2; index++) {
-                    let banner = index ? team2.teamBanner : team1.teamBanner;
+                    if (index == 0 && !team1) {
+                        continue;
+                    }
 
+                    if (index == 1 && !team2) {
+                        continue;
+                    }
+
+                    let banner = index ? team2?.teamBanner : team1?.teamBanner;
+                    if (!banner) continue;
                     if (imgs[index] && 'src' in imgs[index]) {
                         imgs[index].src =  `/storage/${banner}`;
                     } else {
@@ -248,30 +264,32 @@ submitBtnElement?.addEventListener('click', function(event) {
                 let popoverImgs = currentMatchDiv.querySelectorAll('.popover-content-img');
                 let index = 0;
                 bracketBoxList.forEach(bracketBox => {
-                    let banner = index ? team2.teamBanner : team1.teamBanner;
-                    let roster = index ? team2.roster : team1.roster;
-                    let currentImg = popoverImgs[index];
-                    if (currentImg && 'src' in currentImg) currentImg.src = `/storage/${banner}`;
+                    let banner = index ? team2?.teamBanner : team1?.teamBanner;
+                    if (banner) {
+                        let roster = index ? team2.roster : team1.roster;
+                        let currentImg = popoverImgs[index];
+                        if (currentImg && 'src' in currentImg) currentImg.src = `/storage/${banner}`;
 
-                    const rosterContainer = bracketBox.querySelector('.popover-box .col-12.col-lg-7');
-                    if (rosterContainer && roster) {
-                        if (Array.isArray(roster) && roster[0] !== undefined) {
-                            let rosterHtml = '<ul class="d-block ms-0 ps-0">';
-                            roster.forEach(rosterItem => {
-                                rosterHtml += `
-                                    <li class="d-inline">
-                                        <img width="25" height="25" onerror="this.src='/assets/images/404.png';"
-                                            src="/storage/${rosterItem.user.userBanner}" alt="User Banner"
-                                            class="mb-2 rounded-circle object-fit-cover me-3">
-                                        ${rosterItem.user.name}
-                                    </li>
-                                    <br>
-                                `;
-                            });
-                            rosterHtml += '</ul>';
-                            rosterContainer.innerHTML = rosterHtml;
-                        } else {
-                            rosterContainer.innerHTML = '<p class="text-muted">The team roster is empty.</p>';
+                        const rosterContainer = bracketBox.querySelector('.popover-box .col-12.col-lg-7');
+                        if (rosterContainer && roster) {
+                            if (Array.isArray(roster) && roster[0] !== undefined) {
+                                let rosterHtml = '<ul class="d-block ms-0 ps-0">';
+                                roster.forEach(rosterItem => {
+                                    rosterHtml += `
+                                        <li class="d-inline">
+                                            <img width="25" height="25" onerror="this.src='/assets/images/404.png';"
+                                                src="/storage/${rosterItem.user.userBanner}" alt="User Banner"
+                                                class="mb-2 rounded-circle object-fit-cover me-3">
+                                            ${rosterItem.user.name}
+                                        </li>
+                                        <br>
+                                    `;
+                                });
+                                rosterHtml += '</ul>';
+                                rosterContainer.innerHTML = rosterHtml;
+                            } else {
+                                rosterContainer.innerHTML = '<p class="text-muted">The team roster is empty.</p>';
+                            }
                         }
                     }
 

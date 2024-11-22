@@ -70,7 +70,7 @@
                                     </select>
                                 @endif
                             </div>
-                            <div class="input-group mb-2" >
+                            {{-- <div class="input-group mb-2" >
                                 @if(!isset($teamList[0]))
                                     <p>No teams available to select.</p>
                                 @else
@@ -113,7 +113,7 @@
                                     <option value="win">Win</option>
                                     <option value="dispute">Dispute</option>
                                 </select>
-                            </div>
+                            </div> --}}
                         
                     </div>
                     <hr>
