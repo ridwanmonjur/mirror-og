@@ -414,40 +414,11 @@ a:hover {
 }
 
 
-/* popover */
-.popover__title {
-    text-decoration: none;
-    text-align: center;
-}
-
-.popover__wrapper {
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-}
-
-.popover__content {
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-    left: -10%;
-    bottom: 100%;
-    background-color: white;
-    width: auto;
-}
-
-
-.popover__wrapper:hover .popover__content {
-    z-index: 10;
-    opacity: 1;
-    visibility: visible;
-    transition: all 0.5s cubic-bezier(0.75, -0.02, 0.2, 0.97);
-}
-
-.popover__message {
-    text-align: center;
-    padding: 20px 2vw;
-}
+.tippy-box[data-theme~='light'] {
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+  
 
 .modal-content {
     -webkit-border-radius: 10px !important;

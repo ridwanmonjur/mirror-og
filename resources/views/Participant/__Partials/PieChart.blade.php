@@ -12,22 +12,22 @@
 @endphp
 
 
-<div class="ms-3 d-flex flex-column justify-content-between position-relative popover__wrapper rounded">
-    <div class="mx-auto text-center popover__title">
+<div class="ms-3 d-flex flex-column justify-content-between position-relative popover-parent rounded">
+    <div class="mx-auto text-center  popover-button">
         <div class="pie animate no-round" style="{{ $styles }}">{{ $percent }}%</div>
         <p> Total Entry Fee: <u>RM {{ $total }} </u></p>
         <span>Paid: <u class="text-success">RM {{ $exisitngSum }}</u>
             <span>Pending: <u style="color: red;">RM {{ $pedning }} </u> <span></p>
     </div>
-    <div @class(["popover__content" => !$isRedirect, "d-none" => $isRedirect, "pt-0"])>
-        <p class="popover__message  pt-0">
-            <table class="align-start px-3 mx-3 ">
+    <div class="popover-content d-none cursor-pointer bg-light py-2">
+        <div class=" bg-light border-dark border-1 py-3 px-3" style="width: min-content;">
+            <table class="responsive align-start px-3 mx-3 " style="width: min(450px, 95vw);">
                 <thead>
                     <tr>
+                        <th class="pb-2"></th>
                         <th class="pe-3 pb-2">Participant</th>
                         <th class="pe-3 pb-2">Payment</th>
                         <th class="pe-3 pb-2">%</th>
-                        <th class="pb-2">View</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,13 +38,21 @@
                             $individualContributionTotal += $memberContribution;
                         @endphp
                         <tr style="border-collapse: seperate !important; border-spacing: 0 1em !important;">
-                            <td class="pe-3 pb-2">
+                            <td class="ps-0 pe-2 pb-2">
+                                <a href="{{route('public.participant.view', ['id' => $member2->user->id])}}" class="text-right">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                                    </svg>
+                                </a>
+                            </td> 
+                            <td class="pe-3 pb-2" style="width: 200px; ">
                                 <img
                                     class="object-fit-cover rounded-circle me-2 border border-primary random-color-circle" 
                                     src="{{'/storage' . '/' . $member2->user->userBanner}}" width="35" height="35"
                                     {!! trustedBladeHandleImageFailureBanner() !!}
                                 >
-                                {{$member2->user->name}}
+                                <span>{{$member2->user->name}}</span>
                             </td>
                             <td class="pe-3 pb-2">
                                 RM {{$memberContribution ?? 0}}
@@ -52,17 +60,11 @@
                             <td class="pe-2 pb-2">
                                 {{round(($memberContribution?? 0) *100 / $total, 2) ?? 0}}%
                             </td>
-                            <td class="ps-3 pe-2 pb-2">
-                                <a href="{{route('public.participant.view', ['id' => $member2->user->id])}}" class="text-right">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
-                                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
-                                    </svg>
-                                </a>
-                            </td>
+                           
                         </tr>
                     @endforeach
-                   <tr style="border-collapse: seperate !important; border-spacing: 0 1em !important;">
+                   <tr class="mt-3" style="border-collapse: seperate !important; border-spacing: 0 1em !important;">
+                            <td class="pe-3"></td>
                             <td class="pe-3 pb-2">
                                Total paid
                             </td>
@@ -72,9 +74,7 @@
                             <td class="pe-2 pb-2">
                                {{ $percentReal }}%
                             </td>
-                            <td class="ps-3 pe-2 pb-2">
-                                
-                            </td>
+                           
                         </tr>
                 </tbody>
             </table>
@@ -82,10 +82,10 @@
                 <p class="mx-4">Another member made the remaining RM {{$exisitngSum- $individualContributionTotal}} .</p>
                 <p class="mx-4">Existing members paid RM {{$individualContributionTotal}} .</p>
             @endif
-        </p>
+        </div>
        
     </div>
-    <div class="mx-auto text-center">
+    <div class="mx-auto text-center ">
         @if ($joinEvent->payment_status != "completed")
             <button class="btn oceans-gaming-default-button" data-bs-toggle="modal"
                 data-bs-target="{{ '#payModal' . $random_int }}">Contribute </button>
@@ -207,4 +207,3 @@
     </div>
 </div>
 
-<script src="{{ asset('/assets/js/participant/PieChart.js') }}"></script>

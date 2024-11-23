@@ -9,11 +9,6 @@
     height: 6px;
 }
 
-.tippy-box[data-theme~='light'] {
-    background-color: transparent !important;
-    box-shadow: none !important;
-  }
-  
 .form-floating > .form-control {
     padding-bottom: 0 !important;
     /* padding-top: 0 !important; */

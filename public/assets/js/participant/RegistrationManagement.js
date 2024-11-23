@@ -4,6 +4,7 @@ function submitConfirmCancelForm(event, text, id) {
         document.querySelector(`#${id}.${form}`).submit();
     }, null)
 }
+
 let registrationPaymentModalMap = {}; 
 
 function updateInput(input) {
@@ -105,5 +106,20 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             });
         });
+    });
+
+ 
+
+});
+
+addOnLoad(()=> {
+    const parents = document.querySelectorAll('.popover-parent');
+    parents.forEach((parent) => {
+        const contentElement = parent.querySelector(".popover-content");
+        const parentElement = parent.querySelector(".popover-button");
+        console.log({parent, contentElement, parentElement});
+        if (contentElement) {
+            window.addPopover(parentElement, contentElement, 'mouseenter');
+        }
     });
 });
