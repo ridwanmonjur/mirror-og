@@ -345,9 +345,9 @@
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
                         onclick="openTab(event, 'Bracket', 'bracket-list'); ">Bracket</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
-                        onclick="openTab(event, 'Teams'); ">Teams</button>
+                        onclick="openTab(event, 'Teams', 'current-teams'); ">Teams</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
-                        onclick="openTab(event, 'Result'); ">Result</button>
+                        onclick="openTab(event, 'Result', 'current-positions'); ">Result</button>
                 </div>
                 <br>
                 <div id="Overview" class="tabcontent" style="display: block;">
@@ -366,7 +366,7 @@
                      <div style="width: 90%;">
                         @if (isset($teamList[0]))
                             <br>
-                            <table id="current_teams" class="member-table responsive ">
+                            <table id="current-teams" class="member-table responsive ">
                                 <thead>
                                     <tr>
                                         <th> </th>
@@ -412,7 +412,7 @@
                 </div>
                 <div id="Result" class="tabcontent">
                     <h5 class="mb-3"><u>Result</u></h5>
-                    <div class="tab-content pb-4 tab-size outer-tab mx-auto" id="Position">
+                    <div class="tab-content pb-4 tab-size outer-tab mx-auto" id="current-positions">
                         <table class="mx-auto member-table responsive" style="margin-left: 5px;">
                             
                             @if (isset($joinEventAndTeamList[0]))

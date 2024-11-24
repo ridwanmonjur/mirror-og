@@ -487,5 +487,5 @@ tr:nth-child(odd) .colored-cell {
 }
 
 tr:nth-child(even) .colored-cell {
-    background-color: #cccaca;
+    background-color: #c1c1c1;
 }
