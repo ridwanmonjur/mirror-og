@@ -2,9 +2,6 @@
 namespace App\Services;
 
 use Illuminate\Support\Str;
-use App\Mail\VerifyUserMail;
-use App\Mail\ResetPasswordMail;
-use App\Models\EventDetail;
 use App\Models\Organizer;
 use App\Models\Participant;
 use App\Models\User;
@@ -54,18 +51,19 @@ class AuthService {
         throw new \InvalidArgumentException('Invalid registration path');
     }
 
-    public function putRoleInSessionBasedOnRoute($url): void {
+    public function putRoleInSessionBasedOnRoute($url): ?string {
         if (strpos($url, 'organizer') !== false) {
-            Session::put('role', 'ORGANIZER');
+           return "ORGANIZER";
         } elseif (strpos($url, 'participant') !== false) {
-            Session::put('role', 'PARTICIPANT');
+            return "PARTICIPANT";
+        } else {
+            return "ADMIN";
         }
     }
 
-    public function handleUserRedirection(?User $user, ?string $error = null)
+    public function handleUserRedirection(?User $user, ?string $error = null, ?string $role)
     {
-        $role = strtolower(Session::get('role'));
-        Session::forget('role');
+        $role = strtolower($role);
 
         if ($error) {
             return redirect()->route("$role.signin.view")->with("error", $error);

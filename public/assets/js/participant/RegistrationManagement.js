@@ -4,6 +4,7 @@ function submitConfirmCancelForm(event, text, id) {
         document.querySelector(`#${id}.${form}`).submit();
     }, null)
 }
+
 let registrationPaymentModalMap = {}; 
 
 function updateInput(input) {
@@ -27,9 +28,7 @@ function updateInput(input) {
     } else { 
         newValue = newValue.substr(1, 2) + '.' + newValue.substr(3, 2);
     }
-    console.log({
-        plusValue: +newValue
-    })
+   
 
     if (+newValue >= +pending) {
         newValue = pending.toFixed(2);
@@ -42,10 +41,11 @@ function updateInput(input) {
 }
 
 function keydown(input) {
-    let modalId = input.dataset.modalId;
     if (event.key === "Backspace" || event.key === "Delete") { 
         event.preventDefault();
+        document.getElementById('currencyResetInput').click();
     }
+
     if (event.key.length === 1 && !/\d/.test(event.key)) {
         event.preventDefault();
     }
@@ -60,10 +60,18 @@ function putAmount(modalId, inputValue, total, pending, existing) {
     let putAmountTextSpan = document.querySelector('#payModal' + modalId + ' .putAmountClass');
     let pieChart = document.querySelector('#payModal' + modalId + ' .pie');
     inputValue = Number(inputValue);
-    console.log({inputValue, existing, total})
     let percent = ((existing + inputValue) * 100) / total; 
-    console.log({inputValue, existing, total, percent})
-    pieChart.style.setProperty('--p', percent);
+    let color = 'red';
+    if (percent === 0) {
+        color = 'gray';  
+    } else if (percent > 50 && percent < 100) {
+        color = 'orange';
+    } else if (percent >= 100) {
+        color = 'green';
+    }
+
+    pieChart.style.setProperty('--c', color);
+    pieChart.style.setProperty('--p', percent ? percent : 0);
     pieChart.innerText = percent.toFixed(0) + "%" ;
     putAmountTextSpan.innerText = inputValue.toFixed(2);
 }
@@ -105,5 +113,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             });
         });
+    });
+
+ 
+
+});
+
+addOnLoad(()=> {
+    const parents = document.querySelectorAll('.popover-parent');
+    parents.forEach((parent) => {
+        const contentElement = parent.querySelector(".popover-content");
+        const parentElement = parent.querySelector(".popover-button");
+        if (contentElement) {
+            window.addPopover(parentElement, contentElement, 'mouseenter');
+        }
     });
 });

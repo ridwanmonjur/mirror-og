@@ -28,10 +28,11 @@
             <div>
                 <img src="{{ bladeImageNull($teamBanner1) }}" alt="Team Banner" width="100"
                     height="100" onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                    class="border border-4 popover-content-img rounded-circle object-fit-cover"
+                    data-position="{{$position1.'middle'}}"
+                    class="border border-4 popover-img popover-content-img rounded-circle object-fit-cover"
                 >
             </div>
-             <p class="mt-2 mb-0 py-0 text-center">{{$teamName1}}</p>
+             <p class="mt-2 mb-0 py-0 text-center popover-title" data-position="{{$position1. 'middle'}}">{{$teamName1}}</p>
             <div class="{{ 'mt-2 mb-4 py-0 d-flex justify-content-center dotted-score-container ' . $position1 . ' ' . $position2  }}">
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
@@ -49,10 +50,10 @@
             <div >
                 <img src="{{ bladeImageNull($teamBanner2) }}" alt="Team Banner" width="100"
                     height="100" onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                    class="border border-4 popover-content-img rounded-circle object-fit-cover"
+                    data-position="{{$position2. 'middle'}}" class="border border-4 popover-img popover-content-img rounded-circle object-fit-cover"
                 >
             </div>
-            <p class="mt-2 mb-2 py-0 text-center">{{$teamName2}}</p>
+            <p class="mt-2 mb-2 py-0 text-center popover-title" data-position="{{$position2. 'middle'}}">{{$teamName2}}</p>
             <div class="{{ 'mt-2 mb-4 py-0 d-flex justify-content-center dotted-score-container ' . $position1 . ' ' . $position2 }}">
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>

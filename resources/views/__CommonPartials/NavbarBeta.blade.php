@@ -62,7 +62,6 @@
             <li class="nav-item mt-2"
                 onclick="
                     let element = document.getElementById('mobile-navbar');
-                    console.log({element})
                     if (element) element.classList.toggle('d-none');
                 "
             >

@@ -37,9 +37,6 @@ class MatchUpsertRequest extends FormRequest
             'team2_score' => 'nullable|string',
             'team1_position' => 'required|string',
             'team2_position' => 'required|string',
-            'winner_id' => 'nullable',
-            'status' => 'nullable|in:upcoming,ongoing,completed',
-            'result' => 'nullable|in:draw,win,dispute',
             'winner_next_position' => 'nullable|string',
             'loser_next_position' => 'nullable|string',
         ];

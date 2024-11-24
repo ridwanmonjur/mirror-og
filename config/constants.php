@@ -231,4 +231,8 @@ return [
         'IS_ORGANIZER' => 4,
     ],
     'QUEUE_TRIES' => 3,
+    'STRIPE' => [
+        'ZER0' => 0.05,
+        'MINIMUM_RM' => 2.5
+    ]
 ];

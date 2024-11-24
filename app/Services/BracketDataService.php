@@ -23,10 +23,10 @@ class BracketDataService
             'winner_id' => '',
             'status' => 'Upcoming',
             'result' => '',
-            'will_json' => $isOrganizer ? true: false,
             'user_level' => $isOrganizer ? $USER_ENUMS['IS_ORGANIZER']: null
         ];
     }
+
     const PREV_VALUES = [
         32 => [
             'G1' => ['L29', 'L30'],
@@ -248,7 +248,7 @@ class BracketDataService
                         [
                             'team1_position' => 'G1',
                             'team2_position' => 'G2',
-                            'winner_next_position' => null,
+                            'winner_next_position' => 'WIN',
                             'loser_next_position' => null,
                             ...$defaultValues
                         ],
@@ -733,7 +733,7 @@ class BracketDataService
                         [
                             'team1_position' => 'G1',
                             'team2_position' => 'G2',
-                            'winner_next_position' => null,
+                            'winner_next_position' => 'WIN',
                             'loser_next_position' => null,
                             ...$defaultValues
 
@@ -987,7 +987,7 @@ class BracketDataService
                         [
                             'team1_position' => 'G1',
                             'team2_position' => 'G2',
-                            'winner_next_position' => null,
+                            'winner_next_position' => 'WIN',
                             'loser_next_position' => null,
                             ...$defaultValues
                         ],

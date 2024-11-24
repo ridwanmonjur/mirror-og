@@ -142,24 +142,6 @@ let newFunction = function () {
         }
     );
 
-    window.addEventListener(Events.IMAGE_ADDED, async (e) => {
-        const { detail } = e;
-        const file = detail.files[0];
-        const fileContent = await readFileAsBase64(file);
-        await changeBackgroundDesignRequest({
-            backgroundBanner: {
-                filename: file.name,
-                type: file.type,
-                size: file.size,
-                content: fileContent
-            }
-        }, (data) => {
-            backgroundBanner.style.backgroundImage = `url(/storage/${data.data.backgroundBanner})`;
-            backgroundBanner.style.background = 'auto';
-        }, (error) => {
-            console.error(error);
-        })
-    });
 
     window.loadMessage();
 }
@@ -174,31 +156,6 @@ if (typeof window.onload !== 'function') {
         }
         newFunction();
     };
-}
-
-async function changeBackgroundDesignRequest(body, successCallback, errorCallback) {
-    try {
-        const response = await fetch(routes.backgroundApi, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Content-type': 'application/json',
-                'Accept': 'application/json',
-                ...window.loadBearerHeader()
-            },
-            body: JSON.stringify(body),
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            successCallback(data);
-        } else {
-            errorCallback(data.message);
-        }
-    } catch (error) {
-        errorCallback('There was a problem with the request: ' + error);
-    }
 }
 
 let uploadButton = document.getElementById("upload-button");

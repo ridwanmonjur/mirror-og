@@ -70,12 +70,12 @@ parentElements?.forEach(parent => {
 function addAllTippy() {
 
   const parentSecondElements = document.querySelectorAll(".middle-item");
+
   parentSecondElements?.forEach(parent => {
     const triggers = parent.querySelectorAll(".popover-button");
     triggers.forEach((trigger) => {
       let triggerPositionId = trigger.dataset.position;
       let triggerParentsPositionIds = previousValues[triggerPositionId];
-
       if (triggerParentsPositionIds && Array.isArray(triggerParentsPositionIds)) {
         let triggerClassName = '.popover-middle-content.' + triggerParentsPositionIds.join(".");
         let contentElement = document.querySelector(triggerClassName);
@@ -95,6 +95,7 @@ function addTippyToClass(classAndPositionList) {
     });
   }
 }
+window.addTippyToClass = addTippyToClass;
 
 function addDotsToContainer(key, value) {
   let parent = document.querySelector(`.${key}.popover-middle-content`);
@@ -104,19 +105,13 @@ function addDotsToContainer(key, value) {
     element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
       if (value.realWinners[dottedElementIndex]) {
         if (value.realWinners[dottedElementIndex] == index) {
-          console.log('ok', value.realWinners);
-          console.log('ok', value.realWinners);
           dottedElement.classList.remove('bg-secondary', 'bg-red', 'd-none');
           dottedElement.classList.add("bg-success");
         } else {
-          console.log('yes', value.realWinners);
-          console.log('yes', value.realWinners);
           dottedElement.classList.remove('bg-secondary', 'bg-success', 'd-none');
           dottedElement.classList.add("bg-red");
         }
       } else {
-        console.log('no', value.realWinners);
-        console.log('no', value.realWinners);
         dottedElement.classList.remove('bg-success', 'bg-red', 'd-none');
         dottedElement.classList.add('bg-secondary');
       }
@@ -128,10 +123,6 @@ function addDotsToContainer(key, value) {
   });
 
 }
-
-
-
-
 
 function getAllMatchStatusesData() {
   const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
@@ -378,29 +369,6 @@ Alpine.data('alpineDataComponent', function () {
         resolution_winner = already_winner == '0' ? '1' : '0';
       }
 
-      console.log({
-        id,
-        match_number,
-        resolution_winner,
-        resolution_resolved_by,
-        already_winner
-      });
-
-      console.log({
-        id,
-        match_number,
-        resolution_winner,
-        resolution_resolved_by,
-        already_winner
-      });
-
-      console.log({
-        id,
-        match_number,
-        resolution_winner,
-        resolution_resolved_by,
-        already_winner
-      });
 
       const disputeRef = doc(db, `event/${eventId}/disputes`, id);
       const updateData = {
@@ -565,10 +533,8 @@ Alpine.data('alpineDataComponent', function () {
     resetDotsToContainer() {
       let parent = document.getElementById('reportModal');
       let dottedScoreContainer = parent.querySelectorAll('.dotted-score-container');
-      console.log({ dottedScoreContainer });
       dottedScoreContainer.forEach((element) => {
         element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
-          console.log({ dottedElement });
           dottedElement.classList.remove('bg-success', 'bg-red');
           dottedElement.classList.add('bg-secondary');
           if (dottedElementIndex == 2) {
@@ -604,13 +570,6 @@ Alpine.data('alpineDataComponent', function () {
 
         let dataset = event?.detail ?? null;
 
-        if (dataset && dataset?.position === this.report.position
-          && dataset.team1_position == this.report.teams[0].position
-          && dataset.team2_position == this.report.teams[1].position
-        ) {
-          window.Swal.close();
-          return;
-        }
 
         this.clearSelection();
         if (this.subscribeToMatchStatusesSnapshot)
@@ -666,8 +625,6 @@ Alpine.data('alpineDataComponent', function () {
           };
         }
 
-        console.log({ newReport, newReportUI });
-        console.log({ newReport, newReportUI });
 
         this.getCurrentReportSnapshot(dataset.classNamesWithoutPrecedingDot, newReport, newReportUI);
       });
@@ -693,9 +650,6 @@ Alpine.data('alpineDataComponent', function () {
           disputeSnapshot.docChanges().forEach((change) => {
             let data = change.doc.data();
             let id = change.doc.id;
-            console.log({change:  change.type});
-            console.log({change:  change.type});
-            console.log({change:  change.type});
 
             if (change.type === "added" || change.type === "modified") {
               allDisputes[data['match_number']] = {
@@ -933,12 +887,6 @@ Alpine.data('alpineDataComponent', function () {
 
           let { files } = uploadResult;
 
-          console.log({files});
-          console.log({files});
-          console.log({files});
-          console.log({files});
-          console.log({files});
-          return;
 
           const disputeRef = doc(db, `event/${eventId}/disputes`, id);
 

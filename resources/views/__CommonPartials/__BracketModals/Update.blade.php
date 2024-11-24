@@ -37,7 +37,7 @@
                                             <option value="">Choose a team</option>
                                         @foreach ($teamList as $team)
                                             <option  value="{{ $team['id'] }}"   data-img-width="40px" data-img-height="100%"
-                                                data-img="{{ '/' . 'storage/' . $team['teamBanner']}}"
+                                                data-img="{{ isset($team['teamBanner']) ? '/storage/' . $team['teamBanner'] : '/assets/images/404.png' }}"
                                             >
                                             <span> {{ $team['teamName'] }} </span>
                                             </option>
@@ -70,7 +70,7 @@
                                     </select>
                                 @endif
                             </div>
-                            <div class="input-group mb-2" >
+                            {{-- <div class="input-group mb-2" >
                                 @if(!isset($teamList[0]))
                                     <p>No teams available to select.</p>
                                 @else
@@ -113,7 +113,7 @@
                                     <option value="win">Win</option>
                                     <option value="dispute">Dispute</option>
                                 </select>
-                            </div>
+                            </div> --}}
                         
                     </div>
                     <hr>

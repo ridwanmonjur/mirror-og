@@ -1,17 +1,23 @@
-let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const hiddenElement = document.getElementById('hidden-variables');
-    const hiddenVars = {
-        csrfToken: hiddenElement.dataset.csrfToken,
-        finalFee: hiddenElement.dataset.feeFinal,
-        userEmail: hiddenElement.dataset.userEmail,
-        userName: hiddenElement.dataset.userName,
-        stripeCustomerId: hiddenElement.dataset.stripeCustomerId,
-        eventId: hiddenElement.dataset.eventId,
-        stripeKey: hiddenElement.dataset.stripeKey,
-        stripeReturnUrl: hiddenElement.dataset.stripeReturnUrl,
-        stripeIntentUrl: hiddenElement.dataset.stripeIntentUrl
 
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    let variablesDiv = document.getElementById('payment-variables');
+    const paymentVars = {
+        paymentAmount: variablesDiv.dataset.paymentAmount,
+        userEmail: variablesDiv.dataset.userEmail,
+        userName: variablesDiv.dataset.userName,
+        stripeCustomerId: variablesDiv.dataset.stripeCustomerId,
+        joinEventId: variablesDiv.dataset.joinEventId,
+        memberId: variablesDiv.dataset.memberId,
+        teamId: variablesDiv.dataset.teamId,
+        eventId: variablesDiv.dataset.eventId,
+        eventType: variablesDiv.dataset.eventType,
+        stripeKey: variablesDiv.dataset.stripeKey,
+        stripeCardIntentUrl: variablesDiv.dataset.stripeCardIntentUrl,
+        discountCheckoutUrl: variablesDiv.dataset.discountCheckoutUrl,
+        checkoutTransitionUrl: variablesDiv.dataset.checkoutTransitionUrl
     };
+
+    console.log({paymentVars});
 
     document.querySelectorAll('.transform-number').forEach((element) => {
         let text = element.textContent;
@@ -35,7 +41,8 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
         parent.classList.toggle("squared-box");
         element.classList.toggle("rounded-box");
     }
-    let paymentProcessor = new PaymentProcessor(hiddenVars['finalFee']);
+    let amount = paymentVars['paymentAmount'];
+    let paymentProcessor = new PaymentProcessor( amount );
 
     function onChoosePayment(event, type, element) {
         let target = event.currentTarget;
@@ -120,64 +127,152 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
 
     async function initializeStripeCardPayment() {
         try {
-            const response = await fetch(hiddenVars['stripeIntentUrl'], {
+            const response = await fetch(paymentVars['stripeCardIntentUrl'], {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": csrfToken
                 },
                 body: JSON.stringify({
-                    role: "ORGANIZER",
                     paymentAmount: paymentProcessor.getPaymentAmount(),
-                    email: hiddenVars['userEmail'],
-                    name: hiddenVars['userName'],
-                    stripe_customer_id: hiddenVars['stripeCustomerId'],
+                    email: paymentVars['userEmail'],
+                    name: paymentVars['userName'],
+                    stripe_customer_id: paymentVars['stripeCustomerId'],
+                    role: "PARTICIPANT",
                     metadata : {
-                        eventId: hiddenVars['eventId']
+                        joinEventId: paymentVars['joinEventId'],
+                        memberId: paymentVars['memberId'],
+                        teamId: paymentVars['teamId'],
+                        eventId: paymentVars['eventId'],
+                        eventType: paymentVars['eventType']
                     }
                 })
             });
 
             const json = await response.json();
-            let spinner = document.getElementById('spinner-element');
-            spinner?.remove();
-            const clientSecret = json.data.client_secret;
-            elements = stripe.elements({
-                clientSecret,
-                appearance
-            });
+            if (json.success) {
+                let spinner = document.getElementById('spinner-element');
+                spinner?.remove();
+                const clientSecret = json.data.client_secret;
+                let paymenntIntentId = json.data.payment_intent.id;
+                elements = stripe.elements({
+                    clientSecret,
+                    appearance
+                });
 
-            const paymentElement = elements.create("payment", paymentElementOptions);
-            const addressElement = elements.create('address', addressElementOptions);
+                const paymentElement = elements.create("payment", paymentElementOptions);
+                const addressElement = elements.create('address', addressElementOptions);
 
-            addressElement.on('change', (event) => {
-                if (event.complete) {
-                    const address = event.value.address;
-                }
-            })
+                addressElement.on('change', (event) => {
+                    if (event.complete) {
+                        const address = event.value.address;
+                    }
+                })
 
-            paymentElement.mount("#card-element");
-            addressElement.mount("#address-element");
-
-            document.getElementById('submit-button-element').classList.remove('d-none');
-            document.getElementById('payment-summary').classList.remove('d-none');
-
+                paymentElement.mount("#card-element");
+                addressElement.mount("#address-element");
+                let paymentIntentInput =  document.getElementById('payment_intent_id');
+                if (paymentIntentInput) paymentIntentInput.value = paymenntIntentId;
+                document.getElementById('discount-element')?.classList.remove('d-none');
+                document.getElementById('submit-button-element')?.classList.remove('d-none');
+                document.getElementById('payment-summary')?.classList.remove('d-none');
+                
+            } else {
+                alert(json.message)
+            }
         } catch (error) {
+            alert(error.message);
             console.error("Error initializing Stripe Card Payment:", error);
         }
     }
+
+    function validateInput(input) {
+        const amount = +input.dataset.amount;
+        const walletAmount = +input.dataset.wallet;
+        let value = +input.value;
+        console.log({amount, walletAmount,value});
+
+        if (isNaN(value)) {
+            value = 0;
+        }
+
+        if (value === amount || value <= amount - 5) {
+        } else if (value > amount) {
+            value = amount;
+        } else {
+            value = amount - 5;
+        }
+
+        value = Math.min(value, walletAmount);
+
+        input.value = value.toFixed(2); 
+    }
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+    
+        let formData = new FormData(form);
+        let jsonObject = {};   
+        for (let [key, value] of formData.entries()) {
+            jsonObject[key] = value;
+        }
+
+        
+        if (form.checkValidity()) {
+            this.querySelector('button[type="submit"]').disabled = true;
+
+            try {
+                const response = await fetch(paymentVars['discountCheckoutUrl'], {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrfToken
+                    },
+                    body: JSON.stringify(jsonObject)
+                });
+
+                const json = await response.json();
+                this.querySelector('button[type="submit"]').disabled = false;
+
+                if (json.success) {
+                    const {data} = json;
+
+                    if (data.is_payment_completed) {
+                        window.location.href = form.dataset.redirect_url;
+
+                    } else {
+                        document.getElementById('discount-element').classList.remove('d-none');
+                        document.getElementById('submit-button-element').classList.remove('d-none');
+                        document.getElementById('payment-summary').classList.remove('d-none');
+                        document.getElementById('actualPaymentTable').innerText = data.newAmount;
+                        document.getElementById('payment_amount_input').value = data.newAmount;
+                        document.getElementById('wallet_amount').innerText = `RM ${data.wallet_amount}`;
+                    }
+                   
+                }
+                else {
+                    window.toastError(json.message);
+                }
+            } catch (error) {
+                this.querySelector('button[type="submit"]').disabled = false;
+                console.error("Error initializing Stripe Card Payment:", error);
+            }        
+        }
+    }
+
+   
+
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
         try {
-            let addressElement = elements.getElement('address');
-
+            const addressElement = elements.getElement('address');
             const { complete, value: addressValue } = await addressElement.getValue();
 
              if (!complete) {
                     toastError("Please fill the complete address");
                 return;
             }
-
 
             const billingDetails = {
                 address: {
@@ -198,7 +293,7 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
             } = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
-                    return_url: hiddenVars['stripeReturnUrl'],
+                    return_url: paymentVars['checkoutTransitionUrl'],
                     payment_method_data: {
                         billing_details: billingDetails
                     }
@@ -219,7 +314,7 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
         }
     }
 
-    let stripe = Stripe(hiddenVars['stripeKey'])
+    let stripe = Stripe(paymentVars['stripeKey'])
     const appearance = {
         theme: 'flat',
         variables: {
@@ -229,7 +324,7 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
             borderRadius: '0px',
             colorPrimary: 'black',
             colorBackground: '#ffffff',
-            borderRadius: '20px'
+            borderRadius: '20px' 
         },
         rules: {
             '.Input, .Block': {
@@ -246,7 +341,7 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
         mode: 'billing',
         blockPoBox: true,
         fields: {
-            phone: 'always',
+            phone: 'never',
         },
     };
 

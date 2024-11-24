@@ -44,6 +44,10 @@ window.showLoading = ({ title = '', html = '', backdrop = true } = {}) => {
     });
 };
 
+window.closeLoading = () => {
+    window.Swal.close();
+}
+
 
 window.toastError = function (message, error = null) {
     Toast.fire({

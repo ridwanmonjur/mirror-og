@@ -161,31 +161,6 @@ window.onload = () => {
     window.loadMessage();
 }
 
-async function changeBackgroundDesignRequest(body, successCallback, errorCallback) {
-    try {
-        const response = await fetch(backgroundApiUrl, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Content-type': 'application/json',
-                'Accept': 'application/json',
-                ...window.loadBearerHeader()
-            },
-            body: JSON.stringify(body),
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            successCallback(data);
-        } else {
-            errorCallback(data.message);
-        }
-    } catch (error) {
-        errorCallback('There was a problem with the request: ' + error);
-    }
-}
-
 
 function reddirectToLoginWithIntened(route) {
     route = encodeURIComponent(route);

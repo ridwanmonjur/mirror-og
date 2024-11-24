@@ -66,7 +66,6 @@ function scrollIntoView(length, type="top") {
 }
 
 function firstMessageDatAppend (message) {
-    console.log(message, Alpine.raw(message)['createdAtDate']);
     addDate(Alpine.raw(message)['createdAtDate']);
 }
 
@@ -439,7 +438,7 @@ Alpine.data('alpineDataComponent', function () {
 
                 isInitialDataFetched = true;
             }, (error)=>{
-                console.log({error})
+                console.error({error})
                 toastError("Failed to fetch data");
             });
 
@@ -452,10 +451,6 @@ Alpine.data('alpineDataComponent', function () {
             
             if (userId && userId != loggedUserProfile?.id) {
                 this.changeUser(viewUserProfile);
-                // console.log(this.messages, this.currentRoom);
-                // console.log(this.messages, this.currentRoom);
-                // console.log(Alpine.raw(this.messages)[this.currentRoom]);
-                // firstMessageDatAppend(this.messages[this.currentRoom][0]);
             } 
         },
         init() {
