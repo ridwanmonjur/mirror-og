@@ -18,7 +18,6 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
-use Laravel\Dusk\DuskServiceProvider;
 use Opcodes\LogViewer\Facades\LogViewer;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,9 +35,6 @@ class AppServiceProvider extends ServiceProvider
             return new EventMatchService($app->make(BracketDataService::class));
         });
 
-        if ($this->app->environment('local', 'testing')){
-            $this->app->register(DuskServiceProvider::class);
-        }
     }
 
     /**
