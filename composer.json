@@ -104,6 +104,7 @@
             "rm -rf vendor",
             "rm -f .env",
             "cp .env.prod .env",
+            "php artisan session:flush",
             "composer2 install --no-dev --optimize-autoloader",
             "php artisan migrate",
             "npm ci",            
