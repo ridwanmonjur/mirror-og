@@ -58,8 +58,7 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "chgrp -R www-data storage bootstrap/cache",
-            "chmod -R ug+rwx storage bootstrap/cache"
+          
         ],
         "pint": "./vendor/bin/pint",
         "stan": "./vendor/bin/phpstan analyse --memory-limit=2G",
@@ -80,8 +79,36 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ],
+        "dev" : [
+            "@php artisan cache:clear",
+            "@php artisan config:clear",
+            "@php artisan view:clear",
+            "@php artisan route:clear",
+            "@php artisan queue:restart",
+            "./dev.sh"
+        ],
+        "local": [
+            "rm -f .env",
+            "cp .env.example .env", 
+            "composer update",
+            "npm run build",
+            "chmod +x dev.sh stop.sh"
+        ],
+        "npm-build": [
+            "npm install",
+            "npm run build",
+            "rm -rf node_modules"
+        ],
         "build": [
-            "composer2 update --no-dev --no-scripts  --optimize-autoloader"
+            "rm -rf node_modules",
+            "rm -rf vendor",
+            "rm -f .env",
+            "cp .env.prod .env",
+            "composer2 install --no-dev --optimize-autoloader",
+            "php artisan migrate",
+            "npm ci",            
+            "npm run build",
+            "rm -rf node_modules"
         ]
     },
     "extra": {
