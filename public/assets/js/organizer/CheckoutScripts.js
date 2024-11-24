@@ -1,7 +1,6 @@
 let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const hiddenElement = document.getElementById('hidden-variables');
     const hiddenVars = {
-        csrfToken: hiddenElement.dataset.csrfToken,
         finalFee: hiddenElement.dataset.feeFinal,
         userEmail: hiddenElement.dataset.userEmail,
         userName: hiddenElement.dataset.userName,

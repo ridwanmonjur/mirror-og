@@ -14,12 +14,12 @@
                 @csrf
                     <div class="modal-content">
                         <div class="modal-body py-4 px-5">
-                            <h5 class="mt-4 mb-0">Pay using your previous discount coupons!</h5>
+                            <h5 class="mt-4 mb-3 text-success">Pay using your previous discount coupons!</h5>
                             <small> Avoid paying for this event by using refunds and coupons from previous events.</small>
                             <br><br>
                             @if ($isDiscountWallet)
                                 <br> <br>
-                                <p class="text-center">Ooops, no coupons </p> 
+                                <p class="text-center text-red">Ooops, no coupons </p> 
                             @else
                              <p> 
                                 You have <span class="text-success" id="wallet_amount">RM {{$discount_wallet->amount}}</span> of discounts to apply towards this event.
@@ -29,25 +29,16 @@
                                 <input type="hidden" id="member_id" name="member_id" value="{{ $memberId }}">
                                 <input type="hidden" id="joinEventId" name="joinEventId" value="{{ $joinEventId }}">
                                 <input type="hidden" id="payment_intent_id" name="payment_intent_id"> 
-                                <br>
-                                <span class="input-group-text bg-primary text-light" id="inputGroup-sizing-sm">RM </span>
                                 <input 
-                                    data-amount="{{$amount}}"
-                                    data-wallet="{{$discount_wallet->amount}}"
+                                    type="hidden"
+                                    value="{{$amount}}"
                                     name="discount_applied_amount" 
-                                    class="form-control text-auto" 
-                                    type="number" 
-                                    placeholder="0.00"
-                                    default="0.00"
-                                    step=".01"
-                                    pattern="^\d+(?:\.\d{1,2})?$" 
                                 >
                             </div>
-                            <br>
                             <div class="mx-auto text-center">
                                 <button 
                                     type="submit"
-                                    class="mt-2 ms-4 btn rounded-pill text-dark px-4 py-2 btn-success">Apply towards
+                                    class="mt-2 ms-4 btn rounded-pill text-light px-4 py-2 btn-primary">Apply towards
                                     payment
                                 </button>
                                 <button type="button" data-bs-dismiss="modal"

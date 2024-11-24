@@ -7,13 +7,24 @@
     $percentReal = round(($exisitngSum * 100) / $total, 2);
     $percent = floor($percentReal);
     $myMemberId = null;
+    if (!$percent) {
+        $styles = '--p:' . 100 . '; --c:' . 'lightgray';
+    } else {
+        $styles = '--p:' . $percent . ';';
+        $color = 'red';
+        if ($percent > 50 && $percent < 100 ) {
+            $color = 'orange';
+        } else if ($percent >= 100 ) {
+            $color = 'green';
+        }
 
-    $styles = '--p:' . $percent . '; --c:' . ($isInvited ? 'purple' : 'orange');
+        $styles.= '--c:' . $color;
+    }
 @endphp
 
 
 <div class="ms-3 d-flex flex-column justify-content-between position-relative popover-parent rounded">
-    <div class="mx-auto text-center  popover-button">
+    <div class="mx-auto text-center cursor-pointer popover-button">
         <div class="pie animate no-round" style="{{ $styles }}">{{ $percent }}%</div>
         <p> Total Entry Fee: <u>RM {{ $total }} </u></p>
         <span>Paid: <u class="text-success">RM {{ $exisitngSum }}</u>
@@ -155,45 +166,82 @@
                     <input type="hidden" name="memberId" value="{{$myMemberId}}">
                     <div class="modal-content">
                         <div class="modal-body">
-                            <div class="mx-auto text-center">
-                                <div class="pie animate no-round" style="{{ $styles }}">{{ $percent }}%</div>
-                                <p> Total Entry Fee: <u>RM {{ $total }} </u></p>
-                                <span>Paid: <u class="text-success">RM {{ $exisitngSum }}</u>
-                                    <span>Pending: <u style="color: red;">RM {{ $pedning }} </u> <span></p>
+                            <div>
+                                <h5 class="my-2"> Contribute to the entry fee </h5>
+                                <div class="py-2 px-2 border border-2 border-success">
+                                    <div>
+                                        <img {!! trustedBladeHandleImageFailureBanner() !!}
+                                            src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
+                                            class="object-fit-cover me-1" width="30" height="30"
+                                        >
+                                        <p class=" d-inline my-0 ms-2"> {{ $joinEvent->eventDetails->eventName }} </p>
+                                    </div>
+                                    <div class="d-flex pt-2 justify-content-start">
+                                        <img {!! trustedBladeHandleImageFailureBanner() !!} 
+                                            src="{{ bladeImageNull($joinEvent->eventDetails->user->userBanner) }}" width="30"
+                                            height="30" class="me-1 object-fit-cover random-color-circle"
+                                        >
+                                        <div class="ms-2">
+                                            <small class="d-block py-0 my-0">
+                                                {{ $joinEvent->eventDetails->user->name }}
+                                            </small>
+                                            <small
+                                                data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
+                                                class="p-0 my-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">
+                                                {{ $followCounts[$joinEvent->eventDetails->user_id] }}
+                                                follower{{ bladePluralPrefix($followCounts[$joinEvent->eventDetails->user_id]) }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="text-center input-group w-75 mx-auto">
-                                <span class="input-group-text bg-primary text-light" id="inputGroup-sizing-sm">RM </span>
-                                <input data-joinEventId="{{ $joinEvent->id }}" 
-                                    data-pending-amount="{{ $pedning }}"
-                                    data-total-amount="{{ $total }}"
-                                    data-existing-amount="{{ $exisitngSum }}" data-modal-id="{{ $random_int }}"
-                                    name="amount" class="form-control" type="text" default="00.00" value="00.00"
-                                    oninput="moveCursorToEnd(this); updateInput(this);"
-                                    onkeydown="moveCursorToEnd(this); keydown(this); ">
-                                <span data-joinEventId="{{ $joinEvent->id }}" 
-                                    dota-pending-amount="{{ $pedning }}"
-                                    data-total-amount="{{ $total }}"
-                                    data-existing-amount="{{ $exisitngSum }}" data-modal-id="{{ $random_int }}"
-                                    onclick="resetInput(this);" style="background-color: transparent;"
-                                    class="input-group-text cursor-pointer border-0 button-close">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                                        <path
-                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-                                    </svg>
-                                </span>
+                            <div class="mx-auto  my-2">
+                                <div class="row mx-2">
+                                    <div class="col-12 col-lg-5 px-0 mx-0">
+                                        <div class="pie text-center animate no-round me-2" style="{{ $styles }}">{{ $percent }}%</div>
+                                    </div>
+                                    <div class="text-start col-12 col-lg-7 px-0 mx-0">
+                                        <p class="mt-2 mb-1 py-0"> Total Entry Fee: <u>RM {{ $total }} </u></p>
+                                        <small class="my-0 py-0">Paid: <u class="text-success">RM {{ $exisitngSum }}</u> </small>
+                                        <br>
+                                        <small class="my-0 py-0">Pending: <u style="color: red;">RM {{ $pedning }} </u></small>
+                                        <div class="input-group mt-2">
+                                            <span class="input-group-text bg-primary text-light" id="inputGroup-sizing-sm">RM </span>
+                                            <input data-joinEventId="{{ $joinEvent->id }}" 
+                                                data-pending-amount="{{ $pedning }}"
+                                                data-total-amount="{{ $total }}"
+                                                data-existing-amount="{{ $exisitngSum }}" data-modal-id="{{ $random_int }}"
+                                                name="amount" class="form-control" type="text" default="00.00" value="00.00"
+                                                oninput="moveCursorToEnd(this); updateInput(this);"
+                                                onkeydown="moveCursorToEnd(this); keydown(this); "
+                                            >
+                                            <span data-joinEventId="{{ $joinEvent->id }}" 
+                                                dota-pending-amount="{{ $pedning }}"
+                                                data-total-amount="{{ $total }}"
+                                                id="currencyResetInput"
+                                                style="width: 10px; visibility: hidden;"
+                                                data-existing-amount="{{ $exisitngSum }}" data-modal-id="{{ $random_int }}"
+                                                onclick="resetInput(this);" style="background-color: transparent;"
+                                                class="input-group-text cursor-pointer border-0 button-close">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                                    <path
+                                                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                                                </svg>
+                                            </span>
+                                    </div>
+                                    <p class="mt-2 mb-0 py-0"><u>Selected Amount: RM <span class="putAmountClass">00.00 </span> </u></p>
+                                    </div>
+                                </div>
                             </div>
-                            <br>
-                            <p class="text-center"><u>Selected Amount: RM <span class="putAmountClass">00.00 </span> </u>
-                            </p>
-                            <br>
+                            
                             <div class="mx-auto text-center">
                                 <button 
                                     type="submit"
-                                    
                                     class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button">Proceed to
-                                    payment</button>
+                                    payment
+                                    </button>
                                 <br>
                                 <button type="button" data-bs-dismiss="modal"
                                     class="mt-2 btn oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>

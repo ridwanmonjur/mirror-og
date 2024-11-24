@@ -67,7 +67,8 @@
                     <a class="d-flex justify-content-start" href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img {!! trustedBladeHandleImageFailureBanner() !!}
                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
-                            class="object-fit-cover me-1" width="60px" height="40px">
+                            class="object-fit-cover me-1" width="60px" height="40px"
+                        >
                         <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventDetails->eventName }}
                         </span>
                     </a>
@@ -77,7 +78,8 @@
                     class="col-6 col-xl-4 d-flex justify-content-center mx-0 mt-1 px-0">
                     <img {!! trustedBladeHandleImageFailureBanner() !!} 
                         src="{{ bladeImageNull($joinEvent->eventDetails->user->userBanner) }}" width="45"
-                        height="45" class="me-1 object-fit-cover random-color-circle">
+                        height="45" class="me-1 object-fit-cover random-color-circle"
+                    >
                     <div class="d-inline-block text-start me-1">
                         <span
                             class="text-truncate-2-lines h-auto ">{{ $joinEvent->eventDetails->user->name }}</span>

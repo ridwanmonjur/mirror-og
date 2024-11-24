@@ -11,6 +11,7 @@ use App\Models\RosterMember;
 use App\Models\StripePayment;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\UnauthorizedException;
@@ -25,7 +26,7 @@ class ParticipantCheckoutController extends Controller
         $this->stripeClient = $stripeClient;
     }
 
-    public function showCheckout(Request $request): View
+    public function showCheckout(Request $request): RedirectResponse|View
     {
         session()->forget(['successMessageCoupon',  'errorMessageCoupon']);
         $id = $request->id;
@@ -35,7 +36,9 @@ class ParticipantCheckoutController extends Controller
             $user->stripe_customer_id = $user->organizer()->value('stripe_customer_id');
             $discount_wallet = DB::table('user_discounts')
                 ->where('user_id', $user->id)->first();
-            $event = EventDetail::findOrFail($id);
+            $event = EventDetail::with(['tier', 'game'])
+                ->where('id', $id)
+                ->first();
             $isUserSameAsAuth = true;
             $rosterMember = RosterMember::where([
                 'user_id' => $user->id,
@@ -50,6 +53,25 @@ class ParticipantCheckoutController extends Controller
                 return $this->showErrorParticipant(
                     "You are a member of {$request->teamName}, but not a member of this event's roster.",
                 );
+            }
+
+            $participantPaymentSum = ParticipantPayment::select(['join_events_id', 'id', 'payment_amount'])
+                ->where('join_events_id', $request->joinEventId)
+                ->sum('payment_amount');
+
+            $total = (float) $event->tier?->tierEntryFee ;
+            $paymentOptionLower = config("constants.STRIPE.MINIMUM_RM");
+            $paymentOptionHigher = $total - config("constants.STRIPE.MINIMUM_RM");
+
+            if ($request->amount < $paymentOptionLower) {
+                return back()
+                    ->with(['errorMessage' => "If you don't pay full amount, you have to pay higher than RM $paymentOptionLower and lower than RM $paymentOptionHigher."]);
+            }
+
+            $pending = $total - ($participantPaymentSum + $request->amount);
+            if ($pending > config("constants.STRIPE.ZERO") && $request->amount > $paymentOptionHigher) {
+                return back()
+                    ->with(['errorMessage' => "If you don't pay full amount, you have to pay higher than RM $paymentOptionLower and lower than RM $paymentOptionHigher."]);
             }
 
             if (is_null($event->tier)) {
@@ -80,10 +102,11 @@ class ParticipantCheckoutController extends Controller
 
     public function discountCheckout(Request $request)
     {
+        $paymentAmount = (float) $request->payment_amount;
+        $discountAmount = (float) $request->discount_applied_amount ;
+
         DB::beginTransaction();
         try {
-            $discountAmount = (float) $request->discount_applied_amount ;
-            $paymentAmount = (float) $request->payment_amount;
             $newAmount = $paymentAmount - $discountAmount ;
             $isNewAmountZero = $newAmount < 0.05;
             
@@ -173,6 +196,11 @@ class ParticipantCheckoutController extends Controller
                 'message' => $e->getMessage()
             ], 401);
         } catch (Exception $e) {
+            $stripePaymentIntent =
+            $this->stripeClient->retrieveStripePaymentByPaymentId($request?->payment_intent_id);
+            $this->stripeClient?->updatePaymentIntent($stripePaymentIntent->id, [
+                'amount' => $paymentAmount * 100,
+            ]);
           
             DB::rollBack();
 
