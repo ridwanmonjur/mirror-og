@@ -28,15 +28,14 @@ class AuthController extends Controller
 
     public function handleGoogleCallback(Request $request)
     {
-        // @phpstan-ignore-next-line
         $user = Socialite::driver('google')->stateless()->user();
         $role = Session::get('role');
-        // phpcs:enable
 
         ['finduser' => $finduser, 'error' => $error]
             = $this->authService->registerOrLoginUserForSocialAuth($user, 'google', $role);
-
-        return $this->authService->handleUserRedirection($finduser, $error);
+        Session::forget('role');
+        
+        return $this->authService->handleUserRedirection($finduser, $error, $role);
     }
 
     public function handleSteamCallback()
@@ -44,9 +43,10 @@ class AuthController extends Controller
         $user = Socialite::driver('steam')->user();
         $role = Session::get('role');
         ['finduser' => $finduser, 'error' => $error]
-            = $this->authService->registerOrLoginUserForSocialAuth($user, 'steam', $role);
+            = $this->authService->registerOrLoginUserForSocialAuth($user, 'steam', $role); 
+        Session::forget('role');
 
-        return $this->authService->handleUserRedirection($finduser, $error);
+        return $this->authService->handleUserRedirection($finduser, $error, $role);
     }
 
     
@@ -54,13 +54,14 @@ class AuthController extends Controller
     // Steam login
     public function redirectToSteam(Request $request)
     {
-        $this->authService->putRoleInSessionBasedOnRoute($request->url());
+
+        Session::put('role', $this->authService->putRoleInSessionBasedOnRoute($request->url()));
         return Socialite::driver('steam')->redirect();
     }
 
     public function redirectToGoogle(Request $request)
     {
-        $this->authService->putRoleInSessionBasedOnRoute($request->url());
+        Session::put('role', $this->authService->putRoleInSessionBasedOnRoute($request->url()));
         return Socialite::driver('google')->redirect();
     }    
    
