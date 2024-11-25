@@ -374,7 +374,7 @@ footer {
 
 @media (max-width: 560px) {
     main {
-        background-size: cover;
+        background-size: auto 100vh;
     }
 
     .hero img {
@@ -398,7 +398,7 @@ footer {
 
 @media (min-width: 560px) and (max-width: 800px) {
     main {
-        background-size: cover;
+        background-size: auto 100vh;
     }
     
     .league_name p{
@@ -489,6 +489,10 @@ footer {
 /* Tablet styles */
 
 @media (min-width: 800px) and (max-width: 1200px) {
+    main {
+        background-size: 100vw 100vh;
+    }
+
     .nav__items {
         display: flex;
     }

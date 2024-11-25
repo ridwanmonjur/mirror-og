@@ -15,7 +15,7 @@ body {
     justify-content: center;
     /* background-image: url("images/signinbg.png"); */
     background-image: url("./signinbg.png");
-    background-size: 100vw 100vh;
+    background-size: auto 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
@@ -368,6 +368,7 @@ input:not(:-webkit-autofill):invalid + span.placeholder-moves-up {
         height: 100vh;
         display: flex;
         padding: 60px 0;
+        background-size: 100vw 100vh;
         align-items: center;
         justify-content: center;
         background-image: url("./signinbg.png");

@@ -17,7 +17,7 @@ main {
     background-size: cover;
     margin: 0;
     min-height: 100vh;
-    background-size: 100vw 100vh;
+    background-size: auto 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
@@ -458,6 +458,10 @@ tr:nth-child(even) .colored-cell {
 @media screen and (min-width: 990px) {
     .member-section {
         padding-top: 0px;
+    }
+
+    main {
+        background-size: 100vw 100vh;
     }
 }
 

@@ -37,7 +37,7 @@ main{
     align-items: center;
     justify-content: center;
     background-image: url("/assets/images/event-management-bg.png");
-    background-size: 100vw 100vh;
+    background-size: auto 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
@@ -368,6 +368,10 @@ input[type="submit"]:active {
 @media screen and (min-width: 992px) {
     .height-image {
         height: 35vh;
+    }
+
+    main {
+        background-size: 100vw 100vh;
     }
 
     .side-image-absolute-top{

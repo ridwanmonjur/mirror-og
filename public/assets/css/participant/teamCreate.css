@@ -123,6 +123,8 @@ input[type="button"]:hover {
 @media screen and (max-width: 768px) {
     main {
         padding: 20px 30px; /* Adjust padding for smaller screens */
+        background-size: auto 100vh;
+
     }
 
     .welcome p {

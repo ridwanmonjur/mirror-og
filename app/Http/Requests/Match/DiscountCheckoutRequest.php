@@ -88,7 +88,7 @@ class DiscountCheckoutRequest extends FormRequest
                 return;
             }
 
-            if ($pendingAfterDiscount < 0.1) {
+            if ($pendingAfterDiscount < -0.1) {
                 $validator->errors()->add(
                     'amount',
                     "Have you already made another payment in another device/tab?"
