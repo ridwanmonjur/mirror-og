@@ -79,7 +79,6 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/team/member/{id}/update', [ParticipantTeamController::class, 'updateTeamMember'])->name('participant.member.update');
             Route::post('/team/member/{id}/deleteInvite', [ParticipantTeamController::class, 'withdrawInviteMember'])->name('participant.member.deleteInvite');
             Route::post('/team/member/{id}/rejectInvite', [ParticipantTeamController::class, 'rejectInviteMember'])->name('participant.member.rejectInvite');
-            Route::post('event/discountCheckout', action: [ParticipantCheckoutController::class, 'discountCheckout'])->name('stripe.discountCheckout.action');
         });
     });
 });

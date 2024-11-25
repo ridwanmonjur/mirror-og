@@ -67,7 +67,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>1
         <div class="breadcrumb-top">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -85,16 +85,15 @@
         @include('Participant.__Partials.TeamHead') 
     @endif
         <div id="Overview">
-            @if (!$isRedirect)
-                <br>
+            <div @class(['my-2 py-2 ' => session('successMessage') || session('successMessage')])>
                 @if (session('successMessage'))
-                    <div class="text-success text-center">{{session('successMessage')}}</div><br>
+                    <div class="text-success text-center">{{session('successMessage')}}</div>
                 @elseif (session('errorMessage'))
-                    <div class="text-red text-center">{{session('errorMessage')}}</div><br>
-                @else
-                    <br>
+                    <div class="text-red text-center">{{session('errorMessage')}}</div>
                 @endif
-                <div class="tab-size"><b>Outstanding Registrations</b></div><br> <br>
+            </div>
+            @if (!$isRedirect)
+                <div class="tab-size mt-3"><b>Outstanding Registrations</b></div><br> <br>
             @endif
             
             @if (!isset($joinEvents[0]))

@@ -41,7 +41,6 @@
         data-event-type="{{ $event->getRegistrationStatus() }}"
         data-stripe-key="{{ env('STRIPE_KEY') }}"
         data-stripe-card-intent-url="{{ route('stripe.stripeCardIntentCreate') }}"
-        data-discount-checkout-url="{{ route('stripe.discountCheckout.action') }}"
         data-checkout-transition-url="{{ route('participant.checkout.transition') }}"
     >    
     

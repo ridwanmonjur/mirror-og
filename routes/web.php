@@ -146,6 +146,8 @@ Route::group(['prefix' => 'participant'], function () {
             Route::get('event/checkout/transition', [ParticipantCheckoutController::class, 'showCheckoutTransition'])->name('participant.checkout.transition');
             Route::post('event/checkout', [ParticipantCheckoutController::class, 'showCheckout'])->name('participant.checkout.action')
                 ->middleware('prevent-back-history');
+            Route::post('event/discountCheckout', action: [ParticipantCheckoutController::class, 'discountCheckout'])->name('participant.discountCheckout.action');
+
             Route::post('event/confirmOrCancel', [ParticipantEventController::class, 'confirmOrCancel'])->name('participant.confirmOrCancel.action');
 
             // Profile

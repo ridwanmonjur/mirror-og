@@ -203,9 +203,7 @@ class JoinEvent extends Model
         [$invitedIds, $invitedEventOrganizerIds] = $fixJoinEvents($invitedEvents);
         $eventIds = [...$joinIds, ...$invitedIds];
 
-        if (! is_null($eventId)) {
-            $groupedPaymentsByEvent = $groupedPaymentsByEventAndTeamMember = [];
-        } else {
+       
             $groupedPaymentsByEvent = ParticipantPayment::select('join_events_id', DB::raw('SUM(payment_amount) as total_payment_amount'))
                 ->whereIn('join_events_id', $eventIds)
                 ->groupBy('join_events_id')
@@ -220,7 +218,6 @@ class JoinEvent extends Model
                 ->map(function ($group) {
                     return $group->pluck('total_payment_amount', 'team_members_id');
                 });
-        }
 
         return [
             $joinEventOrganizerIds, $joinEvents, $invitedEventOrganizerIds,
