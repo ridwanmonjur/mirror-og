@@ -3,7 +3,7 @@
         <img :src="report.teams[report.realWinners[reportUI.matchNumber]]?.banner ? 
             '/storage/' + report.teams[report.realWinners[reportUI.matchNumber]].banner : 
             '/assets/images/404.png'
-        " alt="Team Banner"
+            " alt="Team Banner"
             width="60" height="60" onerror="this.src='{{ asset('assets/images/404.png') }}';"
             class="ms-0 border border-3 border-primary popover-content-img rounded-circle object-fit-cover">
     </div>

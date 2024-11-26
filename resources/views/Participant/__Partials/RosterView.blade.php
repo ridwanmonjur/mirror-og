@@ -53,8 +53,8 @@
                                 data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
                                 style="list-style: none;"    
                             >
-                                <img class="rounded-circle random-color-circle me-2" width="35" height="35" src="{{$roster->user->userBanner}}" {!!trustedBladeHandleImageFailureBanner()!!}>
-                                <span>{{ $roster->user->name }}</span>
+                                 <img class="rounded-circle random-color-circle me-2 mb-1" width="25" height="25" src="{{$roster->user->userBanner}}" {!!trustedBladeHandleImageFailureBanner()!!}>
+                                <small>{{ $roster->user->name }}</small>
                             </li>
                         @endforeach
                     </ul>

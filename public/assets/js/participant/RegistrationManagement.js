@@ -67,7 +67,7 @@ function putAmount(modalId, inputValue, total, pending, existing) {
     } else if (percent > 50 && percent < 100) {
         color = 'orange';
     } else if (percent >= 100) {
-        color = 'green';
+        color = '#179317';
     }
 
     pieChart.style.setProperty('--c', color);

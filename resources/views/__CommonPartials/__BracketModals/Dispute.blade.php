@@ -153,7 +153,8 @@
                                                     class="file-input" 
                                                     multiple
                                                     accept="image/*" 
-                                                    @change="handleFiles($event)">
+                                                    @change="handleFiles($event)"
+                                                >
                                             </div>
                                         </div>
                                     </div>

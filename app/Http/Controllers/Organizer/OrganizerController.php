@@ -145,7 +145,7 @@ class OrganizerController extends Controller
 
             $userIds = $joinEvents->pluck('user_id')->flatten()->toArray();
             $followCounts = OrganizerFollow::getFollowCounts($userIds);
-            $isFollowing = OrganizerFollow::getIsFollowing($logged_user_id, $userIds);
+            $isFollowing = OrganizerFollow::getIsFollowing($userProfile->id, $userIds);
             $joinEventsHistory = $joinEventsActive = $values = [];
             ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
                 = EventDetail::processEvents($joinEvents, $isFollowing);
