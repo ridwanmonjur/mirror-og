@@ -185,7 +185,9 @@ class JoinEvent extends Model
         $joinEvents = collect();
         $invitedEventOrganizerIds = $joinEventOrganizerIds = $invitedIds = $joinIds = [];
         $withClause = [
-            'eventDetails', 'eventDetails.tier', 'eventDetails.user', 'eventDetails.game', 'members.payments', 'members.user',
+            'eventDetails', 'eventDetails.tier', 'eventDetails.user', 
+            'eventDetails.game', 'members.payments', 'members.user',
+            'roster', 'roster.user'
         ];
 
         if (! is_null($eventId)) {

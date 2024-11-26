@@ -108,11 +108,11 @@ class ParticipantEventController extends Controller
   
     public function registrationManagement(Request $request, $id)
     {
-        $user_id = $request->attributes->get('user')->id;
-        $selectTeam = Team::where('id', $id)->where(function ($q) use ($user_id) {
-            $q->where(function ($query) use ($user_id) {
-                $query->whereHas('members', function ($query) use ($user_id) {
-                    $query->where('user_id', $user_id)->where('status', 'accepted');
+        $logged_user_id = $request->attributes->get('user')->id;
+        $selectTeam = Team::where('id', $id)->where(function ($q) use ($logged_user_id) {
+            $q->where(function ($query) use ($logged_user_id) {
+                $query->whereHas('members', function ($query) use ($logged_user_id) {
+                    $query->where('user_id', $logged_user_id)->where('status', 'accepted');
                 });
             });
         })->with(
@@ -124,7 +124,7 @@ class ParticipantEventController extends Controller
             ]
         )->first();
         $groupedPaymentsByEventAndTeamMember = [];
-        $member = TeamMember::where('user_id', $user_id)->select('id')->first();
+        $member = TeamMember::where('user_id', $logged_user_id)->select('id')->first();
         if ($selectTeam) {
             if ($request->eventId) {
                 $invitationListIds = [];
@@ -142,7 +142,7 @@ class ParticipantEventController extends Controller
 
             $userIds = array_unique(array_merge($joinEventOrganizerIds, $invitedEventOrganizerIds));
             $followCounts = OrganizerFollow::getFollowCounts($userIds);
-            $isFollowing = OrganizerFollow::getIsFollowing($user_id, $userIds);
+            $isFollowing = OrganizerFollow::getIsFollowing($logged_user_id, $userIds);
             ['joinEvents' => $joinEvents, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents]
                 = JoinEvent::processEvents($joinEvents, $isFollowing);
 

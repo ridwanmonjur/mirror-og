@@ -311,12 +311,14 @@ class OrganizerEventResultsController extends Controller
             }
 
             if ($joinEventId && $team1) {
+                // TODO only for first brackets
                 $team1->load(['roster' => function($query) use ($joinEventId) {
                     $query->whereIn('join_events_id', $joinEventId)->with('user');
                 }]);
             }
             
             if ($joinEventId && $team2) {
+                // TODO only for first brackets
                 $team2?->load(['roster' => function($query) use ($joinEventId) {
                     $query->whereIn('join_events_id', $joinEventId)->with('user');
                 }]);

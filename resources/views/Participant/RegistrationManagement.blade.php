@@ -107,7 +107,7 @@
                             <p>You can pay now, or complete payment later...</p>
                         </div>
                     @else  
-                        @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
+                        @include('Participant.__Partials.RosterViewRegister', ['isRegistrationView' => false])
                     @endif
                     @include('Participant.__Partials.PieChart', ['isInvited' => false])
                 @endforeach
@@ -126,7 +126,7 @@
                     @else
                         <div class="event-carousel-styles mx-5 px-5">
                             @foreach ($invitedEvents as $key => $joinEvent)
-                                @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
+                                @include('Participant.__Partials.RosterViewRegister', ['isRegistrationView' => false])
                                 @include('Participant.__Partials.PieChart', ['isInvited' => true])
                             @endforeach
                         </div>

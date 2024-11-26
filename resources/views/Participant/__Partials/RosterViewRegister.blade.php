@@ -53,17 +53,25 @@
                 @if (!isset($joinEvent->roster[0]))
                     <span>Empty roster</span>
                 @else
-                    <ul class="d-flex flex-column flex-start ">
-                        @foreach ($joinEvent->roster as $roster)
-                            <li onclick="goToUrl(event, this)"
-                                data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
-                                style="list-style: none;"    
-                            >
-                                 <img class="rounded-circle random-color-circle me-2 mb-1" width="25" height="25" src="{{$roster->user->userBanner}}" {!!trustedBladeHandleImageFailureBanner()!!}>
-                                <small>{{ $roster->user->name }}</small>
-                            </li>
-                        @endforeach
-                    </ul>
+                    <div class="row d-flex justify-content-center" >
+                        <div class="col-12 col-lg-6">
+                            <ul class="">
+                                @foreach ($joinEvent->roster as $roster)
+                                    <li onclick="goToUrl(event, this)"
+                                        data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
+                                        style="list-style: none;">
+                                        <img class="rounded-circle random-color-circle me-2 mb-1" width="25"
+                                            height="25" src="{{ $roster->user->userBanner }}"
+                                            {!! trustedBladeHandleImageFailureBanner() !!}>
+                                        <small>{{ $roster->user->name }}</small>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="ps-3">sss</div>
+                        </div>
+                    </div>
                 @endif
             </div>
         </a>
