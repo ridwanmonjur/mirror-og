@@ -27,8 +27,8 @@
     <div>
         <small>
             <small x-text="report.userLevel === userLevelEnums['IS_ORGANIZER'] ? 
-            'You have'
-            : report.organizerWinners[reportUI.matchNumber].name + ' has '  
+            'You have '
+            : 'Organizer has '  
             "> </small>   
             chosen
             <small x-text="report.teams[report.organizerWinners[reportUI.matchNumber]].name"> </small>

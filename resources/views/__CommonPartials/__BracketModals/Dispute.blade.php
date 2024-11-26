@@ -11,7 +11,6 @@
         </div>
     </div>
 </div>
-<template x-if="dispute[reportUI.matchNumber]">
 <div class="modal fade show" data-show="true" id="disputeModal" tabindex="3" aria-labelledby="disputeModalLabel">
     <div class="modal-dialog " style="min-width: 90vw;">
         <div class="modal-content " style="background-color: transparent !important; ">
@@ -326,7 +325,9 @@
                                                     <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
                                                     <input type="hidden" name="resolution_winner" x-bind:value="reportUI.otherTeamNumber">
                                                     <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['RESPONDER']">
-                                                    <button type="submit" style="width: 250px;" class="btn d-inline-block btn-light border px-2 mb-2 py-2 border-dark rounded-pill text-dark">
+                                                    <button type="submit" style="width: 250px;" class="btn d-inline-block btn-light border px-2 mb-2 py-2 border-dark rounded-pill text-dark"
+                                                        data-bs-toggle="modal" data-bs-target="#reportModal" data-bs-dismiss="modal" 
+                                                    >
                                                         Concede
                                                     </button>
                                                 </form> 
@@ -373,7 +374,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="my-3 px-3 d-flex justify-content-between">
-                                                    <button class="btn btn-light rounded-pill border border-dark" x-on:click="toggleResponseForm('response_form', 'response_decision');">
+                                                    <button class="btn btn-light rounded-pill border border-dark" data-bs-toggle="modal" data-bs-target="#reportModal" data-bs-dismiss="modal"  x-on:click="toggleResponseForm('response_form', 'response_decision');">
                                                         Cancel
                                                     </button>
                                                     <button class="btn btn-secondary rounded-pill text-light" type="submit">
@@ -557,5 +558,4 @@
         </div>
     </div>
 </div>
-            </template>
 
