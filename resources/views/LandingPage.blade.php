@@ -24,7 +24,8 @@
         <section class="hero">
             <img 
                 onerror="this.onerror=null;this.src='/assets/images/404.png';"
-                src="{{ asset('/assets/images/homepage new header.png') }}" alt="">
+                src="{{ asset('/assets/images/homepage new header.png') }}" alt=""
+            >
         </section>
 
         <div class="text__middle"

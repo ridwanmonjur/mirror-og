@@ -224,6 +224,12 @@ return [
             'cover' => true,
         ],
     ],
+    'DISCOUNT_STATUS' => [
+        'ABSENT' => 1,
+        'INVALID' => 2,
+        'COMPLETE' => 3,
+        'PARTIAL' => 4
+    ],
     'USER_ACCESS' => [
         'IS_TEAM1' => 1,
         'IS_TEAM2' => 2,
@@ -234,5 +240,12 @@ return [
     'STRIPE' => [
         'ZER0' => 0.05,
         'MINIMUM_RM' => 2.5
-    ]
+    ],
+    'ROSTER_SIZE' => 5,
+    'SIGNUP_STATUS' => [
+        'OVER' => 1,
+        'EARLY' => 2,
+        'NORMAL' => 3,
+        'CLOSED' => 4
+    ],
 ];

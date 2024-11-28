@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -21,6 +23,11 @@ class JoinEvent extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'joiner_id', 'id');
+    }
+
+    public function voteStarter(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'vote_starter_id', 'id');
     }
 
     public function users(): BelongsToMany
@@ -52,6 +59,8 @@ class JoinEvent extends Model
     {
         return $this->hasMany(EventJoinResults::class, 'join_events_id', 'id');
     }
+
+  
 
     public function payments(): HasMany
     {
@@ -185,7 +194,13 @@ class JoinEvent extends Model
         $joinEvents = collect();
         $invitedEventOrganizerIds = $joinEventOrganizerIds = $invitedIds = $joinIds = [];
         $withClause = [
-            'eventDetails', 'eventDetails.tier', 'eventDetails.user', 'eventDetails.game', 'members.payments', 'members.user',
+            'eventDetails', 'eventDetails.tier', 'eventDetails.user', 
+            'eventDetails.game', 
+            'members' => function($q) {
+                $q->where('status', 'accepted')
+                    ->with('payments', 'user');
+            },
+            'roster', 'roster.user', 'voteStarter'
         ];
 
         if (! is_null($eventId)) {
@@ -203,9 +218,7 @@ class JoinEvent extends Model
         [$invitedIds, $invitedEventOrganizerIds] = $fixJoinEvents($invitedEvents);
         $eventIds = [...$joinIds, ...$invitedIds];
 
-        if (! is_null($eventId)) {
-            $groupedPaymentsByEvent = $groupedPaymentsByEventAndTeamMember = [];
-        } else {
+       
             $groupedPaymentsByEvent = ParticipantPayment::select('join_events_id', DB::raw('SUM(payment_amount) as total_payment_amount'))
                 ->whereIn('join_events_id', $eventIds)
                 ->groupBy('join_events_id')
@@ -220,7 +233,6 @@ class JoinEvent extends Model
                 ->map(function ($group) {
                     return $group->pluck('total_payment_amount', 'team_members_id');
                 });
-        }
 
         return [
             $joinEventOrganizerIds, $joinEvents, $invitedEventOrganizerIds,
@@ -278,4 +290,41 @@ class JoinEvent extends Model
             })
             ->first();
     }
+
+    public function decideRosterLeaveVote(): array {
+
+        $this->vote_ongoing = true;
+
+        $stayVoteCount = $leaveVouteCount = $totalVoteCount 
+            = $stayRatio = $leaveRatio = 0;
+
+        $this->roster?->each(function ($rosterMember) use (
+                &$stayVoteCount, 
+                &$leaveVoteCount, 
+                &$totalVoteCount
+            ) {
+                $totalVoteCount++;
+                
+                if ($rosterMember->vote_to_quit === 1) {
+                    $leaveVoteCount++;
+                } else {
+                    $stayVoteCount++;
+                }
+            });
+
+        if ($totalVoteCount != 0) {
+            $stayRatio = $stayVoteCount / $totalVoteCount;
+            $leaveRatio = $leaveVouteCount / $totalVoteCount;
+        }
+      
+        if ($leaveRatio > 0.5) {
+            $this->vote_ongoing = false;
+            $this->join_status = "canceled";
+        }
+
+        $this->save();
+
+        return [$leaveRatio, $stayRatio];
+    }
+
 }

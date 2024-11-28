@@ -9,7 +9,7 @@
 body{
     background-image: url("/assets/images/event-creation-bg.png");
     background-size: cover; 
-    background-size: 100vw 100vh;
+    background-size: auto 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
@@ -87,6 +87,10 @@ input[type="submit"],
     }
     main {
         padding: 20px 100px;
+    }
+
+    body {
+        background-size: 100vw 100vh;
     }
     .payment-summary {
         padding-left: 40px;

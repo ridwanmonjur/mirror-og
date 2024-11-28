@@ -15,6 +15,7 @@ use App\Models\JoinEvent;
 use App\Models\Like;
 use App\Models\OrganizerFollow;
 use App\Models\PaymentTransaction;
+use App\Models\RosterMember;
 use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\TeamMember;
@@ -108,11 +109,11 @@ class ParticipantEventController extends Controller
   
     public function registrationManagement(Request $request, $id)
     {
-        $user_id = $request->attributes->get('user')->id;
-        $selectTeam = Team::where('id', $id)->where(function ($q) use ($user_id) {
-            $q->where(function ($query) use ($user_id) {
-                $query->whereHas('members', function ($query) use ($user_id) {
-                    $query->where('user_id', $user_id)->where('status', 'accepted');
+        $logged_user_id = $request->attributes->get('user')->id;
+        $selectTeam = Team::where('id', $id)->where(function ($q) use ($logged_user_id) {
+            $q->where(function ($query) use ($logged_user_id) {
+                $query->whereHas('members', function ($query) use ($logged_user_id) {
+                    $query->where('user_id', $logged_user_id)->where('status', 'accepted');
                 });
             });
         })->with(
@@ -124,7 +125,7 @@ class ParticipantEventController extends Controller
             ]
         )->first();
         $groupedPaymentsByEventAndTeamMember = [];
-        $member = TeamMember::where('user_id', $user_id)->select('id')->first();
+        $member = TeamMember::where('user_id', $logged_user_id)->select('id')->first();
         if ($selectTeam) {
             if ($request->eventId) {
                 $invitationListIds = [];
@@ -142,11 +143,12 @@ class ParticipantEventController extends Controller
 
             $userIds = array_unique(array_merge($joinEventOrganizerIds, $invitedEventOrganizerIds));
             $followCounts = OrganizerFollow::getFollowCounts($userIds);
-            $isFollowing = OrganizerFollow::getIsFollowing($user_id, $userIds);
+            $isFollowing = OrganizerFollow::getIsFollowing($logged_user_id, $userIds);
             ['joinEvents' => $joinEvents, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents]
                 = JoinEvent::processEvents($joinEvents, $isFollowing);
 
-            // dd($joinEvents);
+            $maxRosterSize = config("constants.ROSTER_SIZE");  
+            $signupStatusEnum = config("constants.SIGNUP_STATUS");
 
             return view(
                 'Participant.RegistrationManagement',
@@ -160,7 +162,9 @@ class ParticipantEventController extends Controller
                     'joinEvents',
                     'isFollowing',
                     'isRedirect',
-                    'eventId'
+                    'eventId',
+                    'maxRosterSize',
+                    'signupStatusEnum'
                 )
             );
         }
@@ -355,31 +359,63 @@ class ParticipantEventController extends Controller
     public function confirmOrCancel(Request $request)
     {
         try {
+            $user = $request->attributes->get('user');
             $isToBeConfirmed = $request->join_status === 'confirmed';
+            $rosterMember = RosterMember::where([
+                'join_events_id' => $request->join_event_id,
+                'user_id' => $request->attributes->get('user')?->id
+            ])->first();
+
+            if (!$rosterMember) {
+                return back()->with('errorMessage', 'Must be a member of the roster.');
+            }
             
             $successMessage = $isToBeConfirmed ? 'Your registration is now successfully confirmed!'
-                : 'Your registration is now successfully canceled.';
+                : 'You have started a vote to cancel registratin.';
 
-            $joinEvent = JoinEvent::findOrFail( $request->join_event_id);
-            $team = Team::findOrFail( $joinEvent->team_id);
+            $joinEvent = JoinEvent::where('id', $request->join_event_id)
+                ->with('eventDetails', 'user')
+                ->firstOrFail();
+            $team = Team::where( 'id', $joinEvent->team_id)
+                ->where(["members" => function ($q){
+                    $q->with('user')->where('status', 'accepted'); 
+                }])
+                ->firstOrFail();
             $event = EventDetail::findOrFail($joinEvent->event_details_id);
-            // $isPermitted = true;
             $isPermitted = $joinEvent->payment_status === 'completed' &&
                 ($request->join_status === 'confirmed' || $request->join_status === 'canceled');
 
             if ($isPermitted) {
-                $joinEvent->join_status = $request->join_status;
-                $joinEvent->save();
-
                 if ($isToBeConfirmed) {
+                    $joinEvent->join_status = $request->join_status;
                     $team->confirmTeamRegistration($event);
+                    $joinEvent->save();
                 } else {
-                    $discountsByUserAndType = 
-                        $this->paymentService->refundPaymentsForEvents([$event->id], 0.5);
+                    $voteToQuit = true;
+                    $rosterMember->vote_to_quit = $voteToQuit;
+                    $rosterMember->save();
+                    $joinEvent->vote_starter_id = $user->id;
+                    $joinEvent->vote_ongoing = $user->id;
+                    [$leaveRatio, $stayRatio] = $joinEvent->decideRosterLeaveVote();
+                    
+                    if ($leaveRatio > 0.5) {
+                        $team->load(["members" => function ($q){
+                            $q->with('user')->where('status', 'accepted'); 
+                        }]);
+                        $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$event->id], 0.5);
+                        $team->cancelTeamRegistration($event, $discountsByUserAndType );
+                        $joinEvent->vote_ongoing = false;
+                        $joinEvent->join_status = "canceled";
+                    }
 
-                    $team->cancelTeamRegistration($event, $discountsByUserAndType );
+                    if ($stayRatio > 0.5) {
+                        $joinEvent->vote_ongoing = false;
+                        $joinEvent->join_status = $joinEvent->payment_status == "completed" ? 
+                            "confirmed" : "pending";
+                    }
+
+                    $joinEvent->save();
                 }
-                // dd($joinEvent, $request);
             } else {
                 return back()->with('errorMessage', 'Error operation not permitted.');
             }

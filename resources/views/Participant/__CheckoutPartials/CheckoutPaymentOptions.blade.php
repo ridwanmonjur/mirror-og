@@ -1,12 +1,9 @@
 <div class="row px-5 mb-2" id="payment-discount-view">
     <div class="modal fade" id="discountModal" tabindex="-1"
         aria-labelledby="#discountModal" aria-hidden="true">
-        @php
-            $isDiscountWallet = is_null($discount_wallet);
-        @endphp
         <div class="modal-dialog">
             <form 
-                data-redirect_url="{{route('participant.register.manage', ['id' => $teamId])}}"
+                action="{{route('participant.discountCheckout.action')}}"
                 method="POST"
                 onsubmit="handleSubmit(event);"
                 id="discountPaymentForm"
@@ -17,33 +14,37 @@
                             <h5 class="mt-4 mb-3 text-success">Pay using your previous discount coupons!</h5>
                             <small> Avoid paying for this event by using refunds and coupons from previous events.</small>
                             <br><br>
-                            @if ($isDiscountWallet)
+                            @if ($discountStatusEnums['ABSENT'] == $discountStatus || $discountStatusEnums['INVALID'] == $discountStatus)
                                 <br> <br>
                                 <p class="text-center text-red">Ooops, no coupons </p> 
                             @else
-                             <p> 
-                                You have <span class="text-success" id="wallet_amount">RM {{$discount_wallet->amount}}</span> of discounts to apply towards this event.
-                            </p>
-                            <div class="text-center mx-auto input-group mt-4 w-75">
-                                <input type="hidden" id="payment_amount_input" name="payment_amount" value="{{ $amount }}">
-                                <input type="hidden" id="member_id" name="member_id" value="{{ $memberId }}">
-                                <input type="hidden" id="joinEventId" name="joinEventId" value="{{ $joinEventId }}">
-                                <input type="hidden" id="payment_intent_id" name="payment_intent_id"> 
-                                <input 
-                                    type="hidden"
-                                    value="{{$amount}}"
-                                    name="discount_applied_amount" 
-                                >
-                            </div>
-                            <div class="mx-auto text-center">
-                                <button 
-                                    type="submit"
-                                    class="mt-2 ms-4 btn rounded-pill text-light px-4 py-2 btn-primary">Apply towards
-                                    payment
-                                </button>
-                                <button type="button" data-bs-dismiss="modal"
-                                    class="mt-2 ms-4 py-2 btn oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
-                            </div>
+                                <p> 
+                                    You have <span class="text-success" id="wallet_amount">RM {{$discount_wallet->amount}}</span> in your wallet.
+                                    @if ($discountStatusEnums['COMPLETE'] == $discountStatus)
+                                        <span> You can complete payment of <span>RM {{$payment_amount_min}}</span> with your discount wallet. </span>
+                                        
+                                    @elseif ($discountStatusEnums['PARTIAL'] == $discountStatus)
+                                        <span> You can apply a discount of <span>RM {{$payment_amount_min}}</span> towards reducing your fees. </span>
+                                        <br>
+                                        <span class="text-red"> Because the minimum payment for a transaction is about 2.5 RM, depending on currency rates.</span>
+                                    @endif
+                                </p>
+                                <div class="text-center mx-auto input-group mt-4 w-75">
+                                    <input type="hidden" id="amount" name="amount" value="{{ $amount }}">
+                                    <input type="hidden" id="teamId" name="teamId" value="{{ $teamId }}">
+                                    <input type="hidden" id="member_id" name="member_id" value="{{ $memberId }}">
+                                    <input type="hidden" id="joinEventId" name="joinEventId" value="{{ $joinEventId }}">
+                                    <input type="hidden" id="payment_intent_id" name="payment_intent_id"> 
+                                </div>
+                                <div class="mx-auto text-center">
+                                    <button 
+                                        type="submit"
+                                        class="mt-2 ms-4 btn rounded-pill text-light px-4 py-2 btn-primary">Apply RM {{$payment_amount_min}} towards
+                                        payment
+                                    </button>
+                                    <button type="button" data-bs-dismiss="modal" id="closeDiscountModal"
+                                        class="mt-2 ms-4 py-2 btn oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -82,8 +83,11 @@
                         </div>
                         <div class="col-12 col-lg-6">
                             <div id="discount-element" class="mt-3 d-none">
-                                @if ($isDiscountWallet) 
+                                @if ($discountStatusEnums['ABSENT'] == $discountStatus) 
                                     You have no discount to apply.
+                                @elseif ($discountStatusEnums['INVALID'] == $discountStatus)
+                                        You have RM {{$discount_wallet->amount}} of discounts to apply towards this event.
+                                        But this is not enough for the next transaction.
                                 @else
                                     <span> 
                                         You have RM {{$discount_wallet->amount}} of discounts to apply towards this event.

@@ -371,7 +371,7 @@
                         'Content-Type': 'application/json'
                     }, 
                     body: JSON.stringify({
-                        'teams_id' : {{ $selectTeam->id }},
+                        'team_id' : {{ $selectTeam->id }},
                         'user_id' : {{ $user->id }},
                         'join_events_id': {{ $joinEvent->id }},
                         'team_member_id': memberId
@@ -406,7 +406,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        'teams_id' : {{ $selectTeam->id }},
+                        'team_id' : {{ $selectTeam->id }},
                         'join_events_id': {{ $joinEvent->id }},
                         'team_member_id': memberId
                     })
@@ -441,7 +441,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        'teams_id' : {{ $selectTeam->id }},
+                        'team_id' : {{ $selectTeam->id }},
                         'join_events_id': {{ $joinEvent->id }},
                         'team_member_id': memberId
                     })

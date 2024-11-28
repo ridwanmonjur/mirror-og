@@ -356,7 +356,9 @@ submitBtnElement?.addEventListener('click', function(event) {
                         }
                     })
                 });
-                
+
+                window.updateReportDispute(`${match.team1_position}.${match.team2_position}`, team1.id, team2.id);
+
                 window.Toast.fire({
                     icon: 'success',
                     text: data.message

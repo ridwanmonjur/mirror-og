@@ -10,6 +10,49 @@ import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
 let csrfToken3 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const eventId = document.getElementById('eventId').value;
+
+window.updateReportDispute = async (reportId, team1Id, team2Id) => {
+  const reportRef = doc(db, `event/${eventId}/match_status`, reportId);
+  const docSnap = await getDoc(reportRef);
+  if (docSnap.exists()) {
+    const updateData = {
+      team1Id,
+      team2Id,
+      updated_at: serverTimestamp(),
+    };
+
+    await updateDoc(reportRef, updateData);
+  }
+
+  const disputesRef = collection(db, `events/${eventId}/disputes`);
+  const q = query(disputesRef, where('report_id', '==', reportId));
+  
+  const querySnapshot = await getDocs(q);
+  if (querySnapshot.empty) return ;
+
+  const updatePromises = querySnapshot.docs.map(doc => {
+    const data = doc.data();
+    const updates = {};
+    
+    if (data.dispute_teamNumber == 0) {
+      updates.dispute_teamId = team1Id;
+    } else if (data.dispute_teamNumber == 1) {
+      updates.dispute_teamId = team2Id;
+    }
+    
+    if (data.response_teamNumber == 0) {
+      updates.response_teamId = team1Id;
+    } else if (data.response_teamNumber == 1) {
+      updates.response_teamId = team2Id;
+    }
+    
+    return updateDoc(doc.ref, updates);
+  });
+  
+  await Promise.all(updatePromises);
+  return querySnapshot.size;
+}
 
 let hiddenUserId = document.getElementById('hidden_user_id')?.value;
 async function initializeFirebaseAuth() {
@@ -196,7 +239,6 @@ Alpine.data('alpineDataComponent', function () {
 
   const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums').value);
   const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
-  const eventId = document.getElementById('eventId').value;
   let initialData = {
     firebaseUser: null,
     disputeLevelEnums: {
@@ -390,19 +432,23 @@ Alpine.data('alpineDataComponent', function () {
         await updateDoc(docRef, {
           winners: winnerNew,
         });
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          let id = docRef.id;
+          let data = docSnap.data();
 
-        this.report = {
-          ...this.report,
-          realWinners : [...winnerNew]
-        };
+          this.report = {
+            ...this.report,
+            realWinners : [...winnerNew]
+          };
 
-        this.dispute[this.reportUI.matchNumber] = {
-          ...this.dispute[this.reportUI.matchNumber],
-          ...updateData
-        };
-
-        if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
-          this.setDisabled();
+          this.dispute = this.dispute.map((item, index) => 
+            index == updateData[this.reportUI.matchNumber] ? { ...data, id } : item
+          );
+        
+          if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
+            this.setDisabled(this.reportUI);
+          } 
         }
       } catch (error) {
         console.error("Error adding document: ", error);
@@ -429,6 +475,8 @@ Alpine.data('alpineDataComponent', function () {
         _report['organizerWinners'] = report.organizerWinners;
         _report['team1Winners'] = report.teams[0]?.winners;
         _report['team2Winners'] = report.teams[1]?.winners;
+        _report['team1Id'] = report.teams[0].id;
+        _report['team2Id'] = report.teams[1].id;
         _report['position'] = report.position;
         await setDoc(docRef, _report);
 
@@ -453,8 +501,8 @@ Alpine.data('alpineDataComponent', function () {
         };
 
         if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
-          this.setDisabled();
-        }
+          this.setDisabled(this.reportUI);
+        } 
       } catch (error) {
         console.error("Error adding document: ", error);
       }
@@ -886,8 +934,6 @@ Alpine.data('alpineDataComponent', function () {
             });
 
           let { files } = uploadResult;
-
-
           const disputeRef = doc(db, `event/${eventId}/disputes`, id);
 
           const updateData = {

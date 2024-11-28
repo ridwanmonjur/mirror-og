@@ -15,7 +15,7 @@ main {
     min-height: 100%;
     padding: 0 0;
     background-image: url("/assets/images/event-creation-bg.png");
-    background-size: 100vw 100vh;
+    background-size: auto 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
@@ -225,4 +225,10 @@ input.largerCheckbox {
     font-size: 0.9375rem;
     color: white;
     /* Plus icon color */
+}
+
+@media screen and (min-width: 992px) {
+    main {
+        background-size: 100vw 100vh;
+    }
 }

@@ -10,6 +10,7 @@
                         style="background-color: white; min-width: 400px !important;">
                         <div class="text-center text-uppercase mt-4">
                             <h5> Match Results: <span  x-text="report.position"></span> </h5>
+                            <h5 x-text="report.userLevel"></h5>
                         </div>
                         <div class="col-12 col-lg-4">
                             <div>

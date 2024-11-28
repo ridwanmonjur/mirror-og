@@ -35,11 +35,10 @@ main {
     display: block !important;
     padding: 0px 0px;
     align-items: center;
-    background-size: cover;
     justify-content: center;
     background-image: url("/assets/images/event-management-bg.png");
 
-    background-size: 100vw 100vh;
+    background-size: auto 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
@@ -396,6 +395,7 @@ input[type="submit"]:active {
 
     main {
         padding: 20px 0px;
+        background-size: 100vw 100vh;
     }
 
     .d-none-at-desktop {

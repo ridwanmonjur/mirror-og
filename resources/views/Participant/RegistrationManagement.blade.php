@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/pie-chart.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/timeline.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/registerManage.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/manage_team.css') }}">
-
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/libraries/tippy.js'])
     @include('__CommonPartials.HeadIcon')
 </head>
@@ -22,7 +22,36 @@
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main 
         @style(["height: 95vh" => $isRedirect])
-     class="main2">
+     class="main2"
+     >
+    <div id="blade-data" style="display: none;"
+        data-approve-url="{{ route('participant.roster.approve') }}"
+        data-disapprove-url="{{ route('participant.roster.disapprove') }}"
+        data-user-id="{{ $user->id }}"
+        data-rostercaptain-url="{{ route('participant.roster.captain') }}"
+        data-team-id="{{ $selectTeam->id }}"
+        data-vote-url="{{ route('participant.roster.vote') }}"
+        data-register-url="{{ 
+            $isRedirect 
+            ? route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $joinEvents[0]->eventDetails?->id])
+            : route('participant.register.manage', ['id' => $selectTeam->id])
+        }}"
+    >
+    </div>
+    <div class="modal fade" id="addRosterModal" tabindex="-1" aria-labelledby="addRosterModal" >
+        <div class="modal-dialog modal-lg  modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header ps-4 border-0 pt-3 pb-2">
+                    <h5 class="modal-title  text-primary my-0 py-0 ps-3" id="eventModalLabel"><u>Add Roster Member</u></h5>
+                </div>
+                <div class="modal-body py-0">
+                </div>
+                <div class="modal-footer border-0 mb-3">
+                    <button type="button" class="btn mx-auto rounded-pill btn-primary text-white" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @if ($isRedirect)
         <form method="POST" action="{{ route('participant.memberManage.action') }}">
@@ -67,7 +96,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>1
         <div class="breadcrumb-top">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -85,35 +114,30 @@
         @include('Participant.__Partials.TeamHead') 
     @endif
         <div id="Overview">
-            @if (!$isRedirect)
-                <br>
+            <div @class(['my-2 py-2 ' => session('successMessage') || session('successMessage')])>
                 @if (session('successMessage'))
-                    <div class="text-success text-center">{{session('successMessage')}}</div><br>
+                    <div class="text-success text-center">{{session('successMessage')}}</div>
                 @elseif (session('errorMessage'))
-                    <div class="text-red text-center">{{session('errorMessage')}}</div><br>
-                @else
-                    <br>
+                    <div class="text-red text-center">{{session('errorMessage')}}</div>
                 @endif
-                <div class="tab-size"><b>Outstanding Registrations</b></div><br> <br>
+            </div>
+            @if (!$isRedirect)
+                <div class="tab-size mt-3"><b>Outstanding Registrations</b></div><br> <br>
             @endif
             
             @if (!isset($joinEvents[0]))
                 <p class="tab-size text-start mx-auto ">No events available</p>
             @else
-            <div @class(["event-carousel-styles" => !$isRedirect, "mx-5 px-5"])>
+            {{-- IS REDURECT CHANGE--}}
+            <h1 class="text-center"> REMOVE THE TIMELINE? @leigh </h1>
+            <div @class(["event-carousel-styles", "mx-5 px-5"])>
                 @foreach ($joinEvents as $joinEvent)
-                    @if ($isRedirect) 
-                        <div class="text-center">
-                            <h5><u>Event Registration</u></h5>
-                            <p>You can pay now, or complete payment later...</p>
-                        </div>
-                    @else  
-                        @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
-                    @endif
+                       
+                    @include('Participant.__Partials.RosterViewRegister', ['isRegistrationView' => false])
                     @include('Participant.__Partials.PieChart', ['isInvited' => false])
                 @endforeach
             </div>
-
+            {{-- IS REDURECT CHANGE--}}
             @endif
         </div>
         @if (!$isRedirect)
@@ -127,7 +151,7 @@
                     @else
                         <div class="event-carousel-styles mx-5 px-5">
                             @foreach ($invitedEvents as $key => $joinEvent)
-                                @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
+                                @include('Participant.__Partials.RosterViewRegister', ['isRegistrationView' => false])
                                 @include('Participant.__Partials.PieChart', ['isInvited' => true])
                             @endforeach
                         </div>
@@ -146,6 +170,7 @@
         @else 
             <br><br><br><br><br><br>
         @endif
+        
         <script src="{{ asset('assets/js/participant/RegistrationManagement.js') }}"></script>
 
     </main>

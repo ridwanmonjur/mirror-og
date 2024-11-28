@@ -211,54 +211,7 @@
     async function handleSubmit(event) {
         event.preventDefault();
         const form = event.target;
-    
-        let formData = new FormData(form);
-        let jsonObject = {};   
-        for (let [key, value] of formData.entries()) {
-            jsonObject[key] = value;
-        }
-
-        
-        if (form.checkValidity()) {
-            this.querySelector('button[type="submit"]').disabled = true;
-
-            try {
-                const response = await fetch(paymentVars['discountCheckoutUrl'], {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": csrfToken
-                    },
-                    body: JSON.stringify(jsonObject)
-                });
-
-                const json = await response.json();
-                this.querySelector('button[type="submit"]').disabled = false;
-
-                if (json.success) {
-                    const {data} = json;
-
-                    if (data.is_payment_completed) {
-                        window.location.href = form.dataset.redirect_url;
-
-                    } else {
-                        document.getElementById('discount-element').classList.remove('d-none');
-                        document.getElementById('submit-button-element').classList.remove('d-none');
-                        document.getElementById('payment-summary').classList.remove('d-none');
-                        document.getElementById('actualPaymentTable').innerText = data.newAmount;
-                        document.getElementById('payment_amount_input').value = data.newAmount;
-                        document.getElementById('wallet_amount').innerText = `RM ${data.wallet_amount}`;
-                    }
-                   
-                }
-                else {
-                    window.toastError(json.message);
-                }
-            } catch (error) {
-                this.querySelector('button[type="submit"]').disabled = false;
-                console.error("Error initializing Stripe Card Payment:", error);
-            }        
-        }
+        form.submit();
     }
 
    

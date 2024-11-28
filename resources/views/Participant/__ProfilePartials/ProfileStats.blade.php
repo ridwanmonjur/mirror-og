@@ -48,7 +48,7 @@
                                     <tbody>
                                         <template x-for="user in connections[currentTab]" :key="user.id">
                                             <tr>
-                                                <td class="text-center px-3 py-3 colored-cell" style="width: 50px;">
+                                                <td class="text-center px-3 py-3" style="width: 50px;">
                                                     <a :href="`/view/${user?.role?.toLowerCase()}/${user.id}` ">
                                                         <svg class="cursor-pointer"
                                                             xmlns="http://www.w3.org/2000/svg" width="20" height="20"

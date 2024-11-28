@@ -1,4 +1,5 @@
 import tippy from 'tippy.js';
+import { DateTime } from "luxon";
 
 window.addPopover = function (parent, child, trigger="click") {
     if (!parent) {
@@ -27,4 +28,11 @@ window.addPopover = function (parent, child, trigger="click") {
 
     
    
+}
+
+window.formatDateLuxon = (date) => {
+    if (!date) return 'N/A';
+    return  DateTime
+        .fromISO(date)
+        .toRelative();
 }
