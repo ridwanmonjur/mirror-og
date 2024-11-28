@@ -165,11 +165,11 @@ let uploadedImageList = document.getElementsByClassName("uploaded-image");
 let uploadedImage = uploadedImageList[0];
 let backgroundBanner = document.getElementById("backgroundBanner")
 
-uploadButton2.addEventListener("click", function () {
+uploadButton2?.addEventListener("click", function () {
     imageUpload.click();
 });
 
-imageUpload.addEventListener("change", async function (e) {
+imageUpload?.addEventListener("change", async function (e) {
     const file = e.target.files[0];
 
     if (file) {
