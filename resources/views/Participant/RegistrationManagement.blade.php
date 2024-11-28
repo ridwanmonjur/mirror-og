@@ -129,7 +129,9 @@
                 <p class="tab-size text-start mx-auto ">No events available</p>
             @else
             {{-- IS REDURECT CHANGE--}}
-            <h1 class="text-center"> REMOVE THE TIMELINE? @leigh </h1>
+            @if ($isRedirect)
+                <h1 class="text-center"> REMOVE THE TIMELINE? @leigh </h1>
+            @endif
             <div @class(["event-carousel-styles", "mx-5 px-5"])>
                 @foreach ($joinEvents as $joinEvent)
                        
