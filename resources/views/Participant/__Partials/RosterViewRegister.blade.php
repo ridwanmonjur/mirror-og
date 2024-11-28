@@ -229,7 +229,7 @@
                                                     @endforeach
 
                                                 </div>
-                                                <div class="d-flex justify-content-between my-1"
+                                                <div class="d-flex justify-content-between my-1">
                                                    @foreach ($joinEvent->roster as $roster)
                                                         @if ($roster->vote_to_quit !== null)
                                                             <img 
