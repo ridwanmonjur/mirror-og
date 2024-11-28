@@ -37,8 +37,8 @@ Alpine.data('alpineDataComponent', () => ({
                         <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
                     `;
                 });
-                choices2.innerHTML = countriesHtml;
-                let option = choices2.querySelector(`option[value='${this.country}']`);
+                choices2?.innerHTML = countriesHtml;
+                let option = choices2?.querySelector(`option[value='${this.country}']`);
                 option.selected = true;
             } else {
                 this.errorMessage = "Failed to get data!";
