@@ -50,8 +50,8 @@ Alpine.data('profileDataComponent', () => {
                         <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
                     `;
                     });
-                    choices2.innerHTML = countriesHtml;
-                    choices2.selected = this.participant.region;
+                    choices2?.innerHTML = countriesHtml;
+                    choices2?.selected = this.participant.region;
                 } else {
                     this.errorMessage = "Failed to get data!";
                 }

@@ -297,10 +297,11 @@ async function fetchTeams(event = null) {
 
 async function fetchCountries() {
     try {
+        const choices2 = document.getElementById('select2-country2');
+
         const data = await storeFetchDataInLocalStorage('/countries');
-        if (data?.data) {
+        if (data?.data && choices2) {
             countries = data.data;
-            const choices2 = document.getElementById('select2-country2');
             let countriesHtml = "<option value=''>Choose a country</option>";
             countries.forEach((value) => {
                 countriesHtml += `
@@ -308,7 +309,7 @@ async function fetchCountries() {
                 `;
             });
 
-            choices2.innerHTML = countriesHtml;
+            choices2?.innerHTML = countriesHtml;
         } else {
             errorMessage = "Failed to get data!";
         }
