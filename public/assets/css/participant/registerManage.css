@@ -1,0 +1,32 @@
+.border-Turtle {
+    border: 2px solid #8CCD39 !important;
+}
+
+.border-Starfish {
+    border: 2px solid #CE3C39 !important;
+}
+
+.border-Dolphin{
+    border: 2px solid #43A4D7 !important;
+}
+
+.z-99 {
+    position: relative;
+    z-index: 99;
+}
+
+.captain-crown {
+    transform: translateY(-5px) rotate(-45deg);
+}
+
+.captain-crown:hover{
+    transform: scale(1.05);
+}
+
+.border-red {
+    border: 2px solid red;
+}
+
+.border-green {
+    border: 2px solid green;
+}

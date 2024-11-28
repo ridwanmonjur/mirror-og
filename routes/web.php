@@ -125,6 +125,8 @@ Route::group(['prefix' => 'participant'], function () {
 
             Route::post('/team/roster/approve', [ParticipantRosterController::class, 'approveRosterMember'])->name('participant.roster.approve');
             Route::post('/team/roster/disapprove', [ParticipantRosterController::class, 'disapproveRosterMember'])->name('participant.roster.disapprove');
+            Route::post('/team/roster/vote', [ParticipantRosterController::class, 'voteForEvent'])->name('participant.roster.vote');
+
             Route::post('/team/roster/captain', [ParticipantRosterController::class, 'captainRosterMember'])->name('participant.roster.captain');
             Route::post('/team/roster/deleteCaptain', [ParticipantRosterController::class, 'deleteCaptainRosterMember'])->name('participant.roster.deleteCaptain');
             Route::post('/team/create', [ParticipantTeamController::class, 'teamStore'])->name('participant.team.store');

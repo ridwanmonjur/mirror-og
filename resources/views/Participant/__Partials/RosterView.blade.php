@@ -30,25 +30,19 @@
     </div>
 
     <div @class([
-        'event w-100 mx-auto event-width cursor-pointer visible-until-hover-parent',
+        'event mx-auto event-width cursor-pointer visible-until-hover-parent',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
-    ]) style="margin-bottom : 0; ">
+    ]) style="margin-bottom : 0;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
-            <img {!! trustedBladeHandleImageFailureBanner() !!} @class([
+            <img {!! trustedBladeHandleImageFailureBanner() !!}
+                @class([
                 'opacity-until-hover',
                 'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
             ])
-                style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 200px;"
-                src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;"
-                >
-            <div class="pt-3 mt-2 position-absolute" 
-                style="width: 100%; 
-                    {{-- background-color: red;  --}}
-                    top: 0px; 
-                    overflow-y: scroll; 
-                    overflow-x: hidden;
-                    height: 190px;
-                ">
+                style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
+                src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;">
+            <div class="invisible-until-hover mt-4 ms-4 position-absolute" style="top: 20px;"
+                style="width: 100%; background-color: red;">
 
                 @if (!isset($joinEvent->roster[0]))
                     <span>Empty roster</span>
@@ -70,11 +64,11 @@
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
                 <div class="col-12 col-xl-6  my-1 px-0">
-                    <a class="d-flex justify-content-start"
-                        href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
+                    <a class="d-flex justify-content-start" href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img {!! trustedBladeHandleImageFailureBanner() !!}
                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
-                            class="object-fit-cover me-1" width="60px" height="40px">
+                            class="object-fit-cover me-1" width="60px" height="40px"
+                        >
                         <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventDetails->eventName }}
                         </span>
                     </a>
@@ -82,10 +76,13 @@
                 <div onclick="goToUrl(event, this)"
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id]) }}"
                     class="col-6 col-xl-4 d-flex justify-content-center mx-0 mt-1 px-0">
-                    <img {!! trustedBladeHandleImageFailureBanner() !!} src="{{ bladeImageNull($joinEvent->eventDetails->user->userBanner) }}"
-                        width="45" height="45" class="me-1 object-fit-cover random-color-circle">
+                    <img {!! trustedBladeHandleImageFailureBanner() !!} 
+                        src="{{ bladeImageNull($joinEvent->eventDetails->user->userBanner) }}" width="45"
+                        height="45" class="me-1 object-fit-cover random-color-circle"
+                    >
                     <div class="d-inline-block text-start me-1">
-                        <span class="text-truncate-2-lines h-auto ">{{ $joinEvent->eventDetails->user->name }}</span>
+                        <span
+                            class="text-truncate-2-lines h-auto ">{{ $joinEvent->eventDetails->user->name }}</span>
                         <small
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
                             class="d-block p-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">
@@ -94,10 +91,11 @@
                         </small>
                     </div>
                 </div>
-                <form onclick="event.stopPropagation(); " onsubmit="onFollowSubmit(event)"
+                <form onclick="event.stopPropagation(); " 
+                    onsubmit="onFollowSubmit(event)"
                     id="{{ 'followForm' . $joinEvent->id . $random_int }}"
-                    data-join-event-user ="{{ $joinEvent->eventDetails?->user_id }}" method="POST"
-                    class="col-6 col-xl-2 px-0" action="{{ route('participant.organizer.follow') }}">
+                    data-join-event-user ="{{ $joinEvent->eventDetails?->user_id }}"
+                    method="POST" class="col-6 col-xl-2 px-0" action="{{ route('participant.organizer.follow') }}">
                     @csrf
                     @guest
                         <input type="hidden" name="user_id" value="">
@@ -139,3 +137,5 @@
 </div>
 
 <script src="{{ asset('/assets/js/shared/RosterView.js') }}"></script>
+
+    

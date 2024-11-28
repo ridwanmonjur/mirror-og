@@ -564,7 +564,7 @@ class Team extends Model
 
         $teamMembers = $this->members;
         $memberNotificationDefault = [
-            'team' => ['id' => $this],
+            'team' => ['id' => $this->id],
             'subject' => $data['subject'],
             'links' => [
                 [
@@ -583,7 +583,7 @@ class Team extends Model
         foreach ($teamMembers as $member) {
             $user = $member->user;
             $memberList[] = $user;
-            $discount = $discountsByUserAndType[$member->user_id];
+            $discount = isset($discountsByUserAndType[$member->user_id]) ? $discountsByUserAndType[$member->user_id] : null;
             $discountText = '';
 
             $issetReleasedAmount = isset($discount['released_amount']) && $discount['released_amount'] > 0;

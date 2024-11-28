@@ -1,4 +1,5 @@
 @php
+    $regStatus = $joinEvent->eventDetails->getRegistrationStatus();
     $random_int = rand(0, 999);
     $total = $joinEvent->tier?->tierEntryFee;
     $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
@@ -97,49 +98,121 @@
        
     </div>
     <div class="mx-auto text-center ">
-        @if ($joinEvent->payment_status != "completed")
-            <button class="btn oceans-gaming-default-button" data-bs-toggle="modal"
-                data-bs-target="{{ '#payModal' . $random_int }}">Contribute </button>
+        @if ($joinEvent->isUserPartOfRoster)
+            @if ($signupStatusEnum['CLOSED'] == $regStatus )
+                <p class="text-center"> 
+                    Event start time: {{$joinEvent->eventDetails->getFormattedStartDate()}} 
+                </p>
+            @else
+
+                @if ($joinEvent->payment_status != "completed")
+                    <button class="oceans-gaming-default-button  d-inline-block btn " data-bs-toggle="modal"
+                        data-bs-target="{{ '#payModal' . $random_int }}"
+                    >
+                        {{ $signupStatusEnum['EARLY'] == $regStatus ? 'Early Registration' : 'Normal Registration' }} 
+
+                    </button> <br>
+
+                @endif
+                @if ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "pending")
+                    <form  class="{{'form' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" id="confirmRegistration" method="POST">
+                        @csrf
+                        <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
+                        <input type="hidden" name="join_status" value="confirmed">
+                        <button data-form="{{'form' . $random_int}}" type="button" 
+                            onclick="submitConfirmCancelForm(event, 'Confirm registering this event?', 'confirmRegistration')" 
+                            class="mt-2 btn bg-success py-2 rounded-pill"
+                        >
+                            Confirm Registration
+                        </button>
+                    </form>
+                @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "confirmed" && !$joinEvent->vote_ongoing)
+                    <form class="{{'form' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
+                        @csrf
+                        <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
+                        <input type="hidden" name="join_status" value="canceled">
+                        <button data-form="{{'form' . $random_int}}" type="button" style="background-color: red;" onclick="submitConfirmCancelForm(event, 'Confirm canceling this event?', 'cancelRegistration' )" class="mt-2 btn py-2 text-light rounded-pill">
+                            Cancel Registration
+                        </button> 
+                        <br>
+                        <p class="text-success mt-2">Your registration is confirmed!</p>
+                    </form>
+                @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "canceled")
+                    <button
+                            style="cursor: not-allowed; pointer-events: none;"
+                            class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button px-2">
+                            Registration Canceled
+                        </button>
+                    </form>
+                @endif
+                @if ($joinEvent->vote_ongoing)
+                    <p class="text-red mt-2">A vote to quit is in progress!</p>
+                @else
+                    @if ($joinEvent->totalRosterCount == $maxRosterSize)
+                        <div class="mt-2 text-start text-success">
+                            <span class="me-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                                </svg>
+                            </span>
+                            <span>Roster is filled</span>
+                        </div>
+                    @else
+                        <div class="mt-2 text-start text-red">
+                            <span class="me-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                </svg>       
+                            </span>
+                            <span>Roster is still empty!</span>
+                        </div>
+                    @endif
+                
+                    @if ($joinEvent->payment_status == "completed")
+                        <div class="mt-0 text-start text-success">
+                            <span class="me-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                                </svg>
+                            </span>
+                            <span>Entry fee is fully paid.</span>
+                        </div>
+                    @else
+                        <div class="mt-0 text-start text-red">
+                            <span class="me-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                </svg>       
+                            </span>
+                            <span>Entry fee is not fully paid!</span>
+                        </div>
+                    @endif
+                    @if ($joinEvent->roster_captain_id)
+                        <div class="mt-0 text-start text-success">
+                            <span class="me-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                                </svg>
+                            </span>
+                            <span>Roster captain is appointed.</span>
+                        </div>
+                    @else
+                        <div class="mt-0 text-start text-red">
+                            <span class="me-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                </svg>       
+                            </span>
+                            <span class="me-1">Roster captain is not appointed.</span>
+                            
+                        </div>
+                    @endif
+                @endif
+            @endif
         @else
-            <button style="pointer-events: none; cursor: not-allowed;" class="btn oceans-gaming-default-button oceans-gaming-gray-button px-3">Contribution Full </button>
-        @endif
-        <br>
-        @if ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "pending")
-            <form  class="{{'form' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" id="confirmRegistration" method="POST">
-                @csrf
-                <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
-                <input type="hidden" name="join_status" value="confirmed">
-                <button data-form="{{'form' . $random_int}}" type="button" 
-                    onclick="submitConfirmCancelForm(event, 'Confirm registering this event?', 'confirmRegistration')" 
-                    class="mt-2 btn bg-success py-2 rounded-pill">
-                    Confirm Registration
-                </button>
-            </form>
-        @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "confirmed")
-            <form class="{{'form' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
-                @csrf
-                <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
-                <input type="hidden" name="join_status" value="canceled">
-                <button data-form="{{'form' . $random_int}}" type="button" style="background-color: red;" onclick="submitConfirmCancelForm(event, 'Confirm canceling this event?', 'cancelRegistration' )" class="mt-2 btn py-2 text-light rounded-pill">
-                    Cancel Registration
-                </button> 
-                <br>
-                <p class="text-success mt-2">Your registration is confirmed!</p>
-            </form>
-        @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "canceled")
-               <button
-                    style="cursor: not-allowed; pointer-events: none;"
-                    class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button px-2">
-                    Registration Canceled
-                </button>
-            </form>
-        @else
-            <button 
-                style="cursor: not-allowed !important; pointer-events: none;"
-                style="z-index: 9999;"
-                class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button px-2"
-            >Confirm Registration
-            </button>
+            <p class="text-center text-primary"> 
+                Join the roster to contribute to the entry fee
+            </p>
         @endif
     </div>
     <div class="modal fade" id={{ 'payModal' . $random_int }} tabindex="-1"

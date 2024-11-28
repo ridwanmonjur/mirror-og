@@ -240,5 +240,12 @@ return [
     'STRIPE' => [
         'ZER0' => 0.05,
         'MINIMUM_RM' => 2.5
-    ]
+    ],
+    'ROSTER_SIZE' => 5,
+    'SIGNUP_STATUS' => [
+        'OVER' => 1,
+        'EARLY' => 2,
+        'NORMAL' => 3,
+        'CLOSED' => 4
+    ],
 ];

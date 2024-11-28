@@ -167,24 +167,34 @@ class EventDetail extends Model
         return 'UPCOMING';
     }
 
+    public function getFormattedStartDate()
+    {
+        return Carbon::parse($this->startDate . ' ' . $this->startTime)->diffForHumans();
+    }
+
     public function getRegistrationStatus(): string
     {
         $signupDates = DB::table('event_signup_dates')
             ->where('event_id', $this->id)
             ->first();
 
+
         if (!$signupDates) {
-            return 'closed';
+            return config('constants.SIGNUP_STATUS.CLOSED');
         }
 
         $now = Carbon::now();
 
         if ($now->between($signupDates->signup_open, $signupDates->normal_signup_start_advanced_close)) {
-            return 'early';
+            return config('constants.SIGNUP_STATUS.EARLY');
         } elseif ($now->between($signupDates->normal_signup_start_advanced_close, $signupDates->signup_close)) {
-            return 'normal';
-        } else {
-            return 'closed';
+            return config('constants.SIGNUP_STATUS.NORMAL');
+        // } else {
+        //     return config('constants.SIGNUP_STATUS.CLOSED');
+        // }
+        // MUST REMOVE THIS
+         } else {
+            return config('constants.SIGNUP_STATUS.NORMAL');
         }
     }
 

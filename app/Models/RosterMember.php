@@ -12,6 +12,7 @@ class RosterMember extends Model
     use HasFactory;
 
     protected $table = 'roster_members';
+    protected $fillable = ['user_id', 'join_events_id', 'team_id', 'team_member_id', ];
 
     public function user(): BelongsTo
     {
@@ -63,5 +64,36 @@ class RosterMember extends Model
         }
 
         return $associativeArray;
+    }
+
+    public function countVotes(): array
+    {
+        $totalVoteCount = 0;
+        $stayVoteCount = 0;
+        $leaveVoteCount = 0;
+
+        $totalVoteCount++;
+        
+        if ($this->vote_to_quit === true) {
+            $leaveVoteCount++;
+        } else {
+            $stayVoteCount++;
+        }
+
+        return [$stayVoteCount, $leaveVoteCount, $totalVoteCount];
+    }
+
+    public function getRosterVoteView(
+        string|int $userId, 
+        array &$currentUser
+    ): void {
+        if ($this->user_id == $userId) {
+            $currentUser['isUserPartOfRoster'] = true;
+            $currentUser['memberId'] = $this->team_member_id;
+            $currentUser['vote_to_quit'] = $this->vote_to_quit;
+            $currentUser['rosterId'] = $this->id;
+
+        }
+        
     }
 }
