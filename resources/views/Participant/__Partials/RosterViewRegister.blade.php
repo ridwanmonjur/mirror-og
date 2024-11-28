@@ -92,14 +92,16 @@
                                         data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
                                         style="list-style: none;">
                                        
-                                        <img class="rounded-circle random-color-circle me-2 mb-1" width="25"
-                                            height="25" src="{{ $roster->user->userBanner }}"
-                                            {!! trustedBladeHandleImageFailureBanner() !!}
+                                        <img class="rounded-circle object-fit-cover random-color-circle me-2 mb-1" width="25"
+                                            height="25" 
+                                            src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
+
+                                            {{-- {!! trustedBladeHandleImageFailureBanner() !!} --}}
                                         >
                                          @if ($joinEvent->roster_captain_id == $roster->id)
                                             <img 
                                                 onclick="capatainMemberAction(event);"
-                                                class="z-99 rounded-pill me-0  "
+                                                class="z-99 rounded-pill me-0  captain-crown"
                                                 data-join-event-id="{{ $joinEvent->id }}"
                                                 data-roster-captain-id="0"
                                                 height="20" 
@@ -186,22 +188,24 @@
                                             @if ($joinEvent->isUserPartOfRoster && isset($currentUser['vote_to_quit']) && $currentUser['vote_to_quit'])
                                                 <small class="d-inline-block text-red mb-1"> You voted to quit this event.</small>
                                             @endif
-                                            <div class="d-flex justify-content-between">
-                                                <button 
-                                                    class="btn btn-success text-dark px-3 rounded-pill z-99"
-                                                    data-vote-to-quit="0"
-                                                    data-roster-id="{{ $currentUser['rosterId'] }}"
-                                                    onclick="voteForEvent(event);"
-                                                > Stay
-                                                </button>
-                                                 <button 
-                                                    class="btn bg-red text-white px-3 rounded-pill z-99"
-                                                    data-vote-to-quit="1"
-                                                    data-roster-id="{{ $currentUser['rosterId'] }}"
-                                                    onclick="voteForEvent(event);"
-                                                > Leave
-                                                </button>
-                                            </div>
+                                            @if ($joinEvent->isUserPartOfRoster && !isset($currentUser['vote_to_quit']))
+                                                <div class="d-flex justify-content-between">
+                                                    <button 
+                                                        class="btn btn-success text-dark px-3 rounded-pill z-99"
+                                                        data-vote-to-quit="0"
+                                                        data-roster-id="{{ $currentUser['rosterId'] }}"
+                                                        onclick="voteForEvent(event);"
+                                                    > Stay
+                                                    </button>
+                                                    <button 
+                                                        class="btn bg-red text-white px-3 rounded-pill z-99"
+                                                        data-vote-to-quit="1"
+                                                        data-roster-id="{{ $currentUser['rosterId'] }}"
+                                                        onclick="voteForEvent(event);"
+                                                    > Leave
+                                                    </button>
+                                                </div>
+                                            @endif
                                             <div class="d-flex justify-content-between">
                                                 <span>{{$votes['stayCount']}}</span>
                                                 </span>{{$votes['leaveCount']}}</span>
@@ -210,7 +214,7 @@
                                                 <div class="progress d-flex justify-content-between" style="height: 5px; background-color: #f0f0f0;">
                                                     @foreach ($joinEvent->roster as $roster)
                                                         <div 
-                                                            class="progress-segment {{ $roster->vote_to_quit === 1 ? 'bg-primary' : ($roster->vote_to_quit === 0 ? 'bg-red' : '') }}"
+                                                            class="progress-segment {{ $roster->vote_to_quit === 1 ? 'bg-red' : ($roster->vote_to_quit === 0 ? 'bg-primary' : '') }}"
                                                             style="
                                                                 width: {{ 100 / $votes['totalCount'] }}%; 
                                                                 position: relative;
@@ -232,7 +236,7 @@
                                                                 class="rounded-circle object-fit-cover"
                                                                 width="25" 
                                                                 height="25" 
-                                                                src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : asset('default-avatar.png') }}" 
+                                                                src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
                                                                 {!! trustedBladeHandleImageFailureBanner() !!}
                                                                 style="
                                                                     order: {{ $roster->vote_to_quit === 1 ? 1 : -1 }};
@@ -294,7 +298,10 @@
                 <div onclick="goToUrl(event, this)"
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id]) }}"
                     class="col-6 col-xl-4 d-flex justify-content-center mx-0 mt-1 px-0">
-                    <img {!! trustedBladeHandleImageFailureBanner() !!} src="{{ bladeImageNull($joinEvent->eventDetails->user->userBanner) }}"
+                    <img {!! trustedBladeHandleImageFailureBanner() !!} 
+                
+                        src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
+
                         width="45" height="45" class="me-1 object-fit-cover random-color-circle">
                     <div class="d-inline-block text-start me-1">
                         <span class="text-truncate-2-lines h-auto ">{{ $joinEvent->eventDetails->user->name }}</span>

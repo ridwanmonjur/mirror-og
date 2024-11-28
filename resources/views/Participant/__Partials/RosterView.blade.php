@@ -53,7 +53,10 @@
                                 data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
                                 style="list-style: none;"    
                             >
-                                 <img class="rounded-circle random-color-circle me-2 mb-1" width="25" height="25" src="{{$roster->user->userBanner}}" {!!trustedBladeHandleImageFailureBanner()!!}>
+                                 <img class="rounded-circle object-fit-cover random-color-circle me-2 mb-1" width="25" height="25" 
+                                    src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
+
+                                    {!!trustedBladeHandleImageFailureBanner()!!}>
                                 <small>{{ $roster->user->name }}</small>
                             </li>
                         @endforeach
@@ -77,7 +80,8 @@
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id]) }}"
                     class="col-6 col-xl-4 d-flex justify-content-center mx-0 mt-1 px-0">
                     <img {!! trustedBladeHandleImageFailureBanner() !!} 
-                        src="{{ bladeImageNull($joinEvent->eventDetails->user->userBanner) }}" width="45"
+                        src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
+                        width="45"
                         height="45" class="me-1 object-fit-cover random-color-circle"
                     >
                     <div class="d-inline-block text-start me-1">
