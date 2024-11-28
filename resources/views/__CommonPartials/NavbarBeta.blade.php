@@ -32,17 +32,30 @@
         <line x1="3" y1="18" x2="21" y2="18"></line>
     </svg>
     
-    <div class="nav-buttons">
-        <li class="nav-item" style="list-style-type: none;">
-            <a class="nav-link text-primary me-5 px-4 fw-semibold text-center" href="{{ route('public.closedBeta.view') }}">CLOSED BETA</a>
-        </li>
-        <li class="nav-item" style="list-style-type: none;">
-            <a class="nav-link text-dark me-5 px-4 text-center" href="{{ route('public.about.view') }}">ABOUT</a>
-        </li>
-        <li class="nav-item" style="list-style-type: none;">
-            <a class="nav-link text-dark me-5 ps-5 pe-0 text-center" href="{{ route('public.contact.view') }}">CONTACT US</a>
-        </li>
-    </div>
+   @php
+    $currentRoute = Route::currentRouteName();
+@endphp
+
+<div class="nav-buttons">
+    <li class="nav-item" style="list-style-type: none;">
+        <a class="nav-link {{ $currentRoute === 'public.closedBeta.view' ? 'text-primary' : 'text-dark' }} me-5 px-4 fw-semibold text-center" 
+           href="{{ route('public.closedBeta.view') }}">
+            CLOSED BETA
+        </a>
+    </li>
+    <li class="nav-item" style="list-style-type: none;">
+        <a class="nav-link {{ $currentRoute === 'public.about.view' ? 'text-primary' : 'text-dark' }} me-5 px-4 text-center" 
+           href="{{ route('public.about.view') }}">
+            ABOUT
+        </a>
+    </li>
+    <li class="nav-item" style="list-style-type: none;">
+        <a class="nav-link {{ $currentRoute === 'public.contact.view' ? 'text-primary' : 'text-dark' }} me-5 ps-5 pe-0 text-center" 
+           href="{{ route('public.contact.view') }}">
+            CONTACT US
+        </a>
+    </li>
+</div>
 </nav>
 <nav class="mobile-navbar d-centered-at-mobile d-none py-3" id="mobile-navbar">
      <a href="{{ $routeLogo }}">
