@@ -233,7 +233,7 @@ async function fetchCountries () {
                 `;
             });
 
-            choices2?.innerHTML = countriesHtml;
+            if (choices2) { choices2.innerHTML = countriesHtml; }
         } else {
             errorMessage = "Failed to get data!";
         }

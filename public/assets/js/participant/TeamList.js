@@ -308,8 +308,10 @@ async function fetchCountries() {
                     <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
                 `;
             });
+            if (choices2) {
+                choices2.innerHTML = countriesHtml;
 
-            choices2?.innerHTML = countriesHtml;
+            }
         } else {
             errorMessage = "Failed to get data!";
         }
