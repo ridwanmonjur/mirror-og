@@ -313,10 +313,10 @@ class OrganizerEventController extends Controller
             $teamIdList = JoinEvent::where('event_details_id', $id)->pluck('team_id'); // No need for get() before pluck
 
             $teamList = Team::whereIn('id', $teamIdList)
-            ->with(['members' => function ($query) {
-                $query->where('status', 'accepted')->with('user');
-            }])
-            ->get();
+                ->with(["members" => function ($q){
+                    $q->with('user')->where('status', 'accepted'); 
+                }])
+                ->get();
             $teamList->each(function (Team $team) use ($event, $id) {
                 $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$id], 0);
                 $team->cancelTeamRegistration($event, $discountsByUserAndType, false);

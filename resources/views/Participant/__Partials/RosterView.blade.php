@@ -80,7 +80,7 @@
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id]) }}"
                     class="col-6 col-xl-4 d-flex justify-content-center mx-0 mt-1 px-0">
                     <img {!! trustedBladeHandleImageFailureBanner() !!} 
-                        src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
+                        src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
                         width="45"
                         height="45" class="me-1 object-fit-cover random-color-circle"
                     >
