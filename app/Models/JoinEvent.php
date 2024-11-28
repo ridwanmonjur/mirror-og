@@ -295,7 +295,7 @@ class JoinEvent extends Model
 
         $this->vote_ongoing = true;
 
-        $stayVoteCount = $leaveVouteCount = $totalVoteCount 
+        $stayVoteCount = $leaveVoteCount = $totalVoteCount 
             = $stayRatio = $leaveRatio = 0;
 
         $this->roster?->each(function ($rosterMember) use (
@@ -307,14 +307,13 @@ class JoinEvent extends Model
                 
                 if ($rosterMember->vote_to_quit === 1) {
                     $leaveVoteCount++;
-                } else {
+                } elseif ($rosterMember->vote_to_quit === 0){
                     $stayVoteCount++;
                 }
             });
-
         if ($totalVoteCount != 0) {
             $stayRatio = $stayVoteCount / $totalVoteCount;
-            $leaveRatio = $leaveVouteCount / $totalVoteCount;
+            $leaveRatio = $leaveVoteCount / $totalVoteCount;
         }
       
         if ($leaveRatio > 0.5) {
@@ -322,7 +321,9 @@ class JoinEvent extends Model
             $this->join_status = "canceled";
         }
 
-        $this->save();
+        // dd($totalVoteCount, $leaveVoteCount, $stayVoteCount, $leaveRatio, $stayRatio);
+
+
 
         return [$leaveRatio, $stayRatio];
     }

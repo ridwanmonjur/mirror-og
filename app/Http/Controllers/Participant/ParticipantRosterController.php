@@ -112,16 +112,17 @@ class ParticipantRosterController extends Controller
             $rosterMember->save();
 
             $joinEvent = JoinEvent::where('id', $rosterMember->join_events_id)
-                ->with('roster', 'eventDetails', 'eventDetails.user')
+                ->with(['roster', 'eventDetails', 'eventDetails.user'])
                 ->first();
 
-            $team = Team::where('id', $joinEvent->team_id)
-                ->with(["members" => function ($q){
-                    $q->with('user')->where('status', 'accepted'); 
+                $team = Team::where('id', $joinEvent->team_id)
+                ->with(['members' => function ($query) {
+                    $query->where('status', 'accepted')->with('user');
                 }])
                 ->first();
             $joinEvent->vote_starter_id = $user->id;
-            $leaveRatio = $joinEvent->decideRosterLeaveVote();
+            [$leaveRatio, ] = $joinEvent->decideRosterLeaveVote();
+            $joinEvent->save();
             if ($leaveRatio > 0.5) {
                 $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$joinEvent->eventDetails->id], 0.5);
                 $team->cancelTeamRegistration($joinEvent->eventDetails, $discountsByUserAndType );

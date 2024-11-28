@@ -119,7 +119,7 @@ class ParticipantEventController extends Controller
         })->with(
             $request->eventId ? [] : [
                 'members' => function ($query) {
-                    $query->where('status', 'accepted')->with('user');
+                    $query->where('status', 'accepted')->with(['user']);
                 },
                 'invitationList',
             ]
@@ -372,14 +372,9 @@ class ParticipantEventController extends Controller
             
             $successMessage = $isToBeConfirmed ? 'Your registration is now successfully confirmed!'
                 : 'You have started a vote to cancel registratin.';
-
             $joinEvent = JoinEvent::where('id', $request->join_event_id)
-                ->with('eventDetails', 'user')
                 ->firstOrFail();
             $team = Team::where( 'id', $joinEvent->team_id)
-                ->where(["members" => function ($q){
-                    $q->with('user')->where('status', 'accepted'); 
-                }])
                 ->firstOrFail();
             $event = EventDetail::findOrFail($joinEvent->event_details_id);
             $isPermitted = $joinEvent->payment_status === 'completed' &&
@@ -397,10 +392,11 @@ class ParticipantEventController extends Controller
                     $joinEvent->vote_starter_id = $user->id;
                     $joinEvent->vote_ongoing = $user->id;
                     [$leaveRatio, $stayRatio] = $joinEvent->decideRosterLeaveVote();
-                    
+                    $joinEvent->save();
+                    // dd($joinEvent, $leaveRatio, $stayRatio);
                     if ($leaveRatio > 0.5) {
-                        $team->load(["members" => function ($q){
-                            $q->with('user')->where('status', 'accepted'); 
+                        $team->load(['members' => function ($query) {
+                            $query->where('status', 'accepted')->with('user');
                         }]);
                         $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$event->id], 0.5);
                         $team->cancelTeamRegistration($event, $discountsByUserAndType );
