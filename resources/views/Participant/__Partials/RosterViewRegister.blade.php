@@ -1,4 +1,5 @@
 @php
+    $joinEvent->regStatus = $joinEvent->eventDetails->getRegistrationStatus();
     $random_int = rand(0, 999);
     $joinEvent->isUserPartOfRoster = false;
     $currentUser = ['memberId' => null, 'vote_to_quit' => null, 'rosterId' => null];
@@ -11,6 +12,7 @@
     data-event-details="{{json_encode(
         $joinEvent->eventDetails->only(['id', 'eventBanner', 'eventName', 'user', 'tier', 'game'])
     )}}"
+    data-roster-captain-id="{{$joinEvent->roster_captain_id}}"
     data-follow-counts="{{$followCounts[$joinEvent->eventDetails->user_id]}}"
 >
     <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
@@ -48,10 +50,10 @@
     ]) style="margin-bottom : 0; ">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
             <img {!! trustedBladeHandleImageFailureBanner() !!} @class([
-                'opacity-until-hover',
+                'opacity-until-hover object-fit-cover ',
                 'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
             ])
-                style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 270px;"
+                style="border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 270px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;"
                 >
             <div class="pt-3 mt-2 position-absolute" 
@@ -104,6 +106,8 @@
                                                 class="z-99 rounded-pill me-0  captain-crown"
                                                 data-join-event-id="{{ $joinEvent->id }}"
                                                 data-roster-captain-id="0"
+                                                data-roster-user-id="{{$roster->user_id}}"
+                                                data-roster-user-name="{{$roster->user->name}}"
                                                 height="20" 
                                                 width="20" 
                                                 src="{{asset('assets/images/participants/crown-straight.png')}}"
@@ -128,6 +132,8 @@
                                                         class="z-99 rounded-pill me-1 gear-icon-btn"
                                                         data-join-event-id="{{ $joinEvent->id }}"
                                                         data-roster-captain-id="{{ $roster->id}}"
+                                                        data-roster-user-id="{{$roster->user_id}}"
+                                                        data-roster-user-name="{{$roster->user->name}}"
                                                         height="20" 
                                                         width="20" 
                                                         src="{{asset('assets/images/participants/crown-straight.png')}}"
@@ -138,27 +144,29 @@
 
                                     </li>
                                 @endforeach
-                                @for ($i = 0; $i < $maxRosterSize - $votes['totalCount'] ; $i++)
-                                    <li 
-                                        data-join-event-id="{{ $joinEvent->id }}"
-                                        onclick="addRosterMembers(event);"
-                                        class="z-99 list-unstyled"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"  viewBox="0 0 16 16"
-                                            class="rounded-circle random-color-circle gear-icon-btn me-2 mb-1 d-flex align-items-center justify-content-center"
+                                @if($joinEvent->join_status == "pending")
+                                    @for ($i = 0; $i < $maxRosterSize - $votes['totalCount'] ; $i++)
+                                        <li 
+                                            data-join-event-id="{{ $joinEvent->id }}"
+                                            onclick="addRosterMembers(event);"
+                                            class="z-99 list-unstyled"
                                         >
-                                        <path  stroke="gray" stroke-width="0.65" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                                        </svg>
-                                    </li>
-                                @endfor
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"  viewBox="0 0 16 16"
+                                                class="rounded-circle random-color-circle gear-icon-btn me-2 mb-1 d-flex align-items-center justify-content-center"
+                                            >
+                                            <path  stroke="gray" stroke-width="0.65" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                            </svg>
+                                        </li>
+                                    @endfor
+                                @endif
                             </ul>
                         </div>
                         <div class="col-12 col-lg-6 ps-2 pe-3">
                             <div class="px-0">
                                 @if ($joinEvent->isUserPartOfRoster) 
                                     <div class="text-end">
-                                        <span class="">
-                                              @if ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "confirmed" && !$joinEvent->vote_ongoing)
+                                        <span>
+                                            @if ($joinEvent->join_status == "confirmed" && !$joinEvent->vote_ongoing)
                                                 <form action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
@@ -179,12 +187,31 @@
                                                     </button>
                                                   
                                                 </form>
+                                            @elseif ($joinEvent->join_status == "pending" && !$joinEvent->vote_ongoing) 
+                                                <form class="{{'cancel2form' . $joinEvent->id  }}" action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
+                                                    <input type="hidden" name="join_status" value="canceled">
+                                                    <button 
+                                                        data-join-event-id="{{$joinEvent->id}}"
+                                                        data-form="{{'cancel2form' . $joinEvent->id . 'cancel' }}" 
+                                                        type="button"
+                                                        data-cancel="1"
+                                                        data-join-status="{{$joinEvent->join_status}}"
+                                                        data-registration-status="{{$joinEvent->regStatus}}"
+                                                        onclick="submitConfirmCancelForm(event)" 
+                                                        class="mt-2 btn btn-sm text-light bg-red rounded-pill"
+                                                    >
+                                                        Leave Event
+                                                    </button> 
+                                                    <br>
+                                                </form>
                                             @endif
                                         </span>
                                     </div>
                                     @if ($joinEvent->vote_ongoing)
-                                        <div class="mt-3 border py-2 px-3 border-2 ms-3 ms-lg-0 border-primary">
-                                            <small class="d-inline-block mt-0 mb-1 py-0"> A vote to quit was called by <span class="text-primary">{{$joinEvent?->voteStarter?->name}}.</span> </small>
+                                        <div class="mt-3 border py-2 px-3 border-2 ms-3 ms-lg-0 border-primary bg-translucent">
+                                            <small class="d-inline-block mt-0 mb-1 py-0"> A vote to quit was called by <span style="color: brown;">{{$joinEvent?->voteStarter?->name}}.</span> </small>
                                             @if ($joinEvent->isUserPartOfRoster && isset($currentUser['vote_to_quit']) && $currentUser['vote_to_quit'])
                                                 <small class="d-inline-block text-red mb-1"> You voted to quit this event.</small>
                                             @endif
@@ -193,6 +220,7 @@
                                                     <button 
                                                         class="btn btn-success text-dark px-3 rounded-pill z-99"
                                                         data-vote-to-quit="0"
+                                                        data-join-event-id="{{$joinEvent->id}}"
                                                         data-roster-id="{{ $currentUser['rosterId'] }}"
                                                         onclick="voteForEvent(event);"
                                                     > Stay
@@ -201,6 +229,7 @@
                                                         class="btn bg-red text-white px-3 rounded-pill z-99"
                                                         data-vote-to-quit="1"
                                                         data-roster-id="{{ $currentUser['rosterId'] }}"
+                                                        data-join-event-id="{{$joinEvent->id}}"
                                                         onclick="voteForEvent(event);"
                                                     > Leave
                                                     </button>
@@ -222,8 +251,6 @@
                                                                 cursor: pointer;
                                                                 order: {{ $roster->vote_to_quit === 1 ? 1 : ($roster->vote_to_quit === 0 ? -1 : 0) }};
                                                             "
-                                                            onclick="goToUrl(event, this)"
-                                                            data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
                                                         >
                                                         </div>
                                                     @endforeach
@@ -233,7 +260,7 @@
                                                    @foreach ($joinEvent->roster as $roster)
                                                         @if ($roster->vote_to_quit !== null)
                                                             <img 
-                                                                class="rounded-circle object-fit-cover"
+                                                                class="rounded-circle random-color-circle object-fit-cover"
                                                                 width="25" 
                                                                 height="25" 
                                                                 src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
@@ -244,7 +271,12 @@
                                                                 "
                                                                 onclick="goToUrl(event, this)"
                                                                 data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
-                                                            >   
+                                                            >  
+                                                        @else
+                                                              <div 
+                                                                class="progress--empty"
+                                                            >  
+                                                            </div>
                                                         @endif
                                                     @endforeach
 
@@ -274,7 +306,7 @@
                                             </span>
                                         </div>
                                     @endif
-                                    <div class="text-start">
+                                    <div class="text-start border border-primary bg-translucent text-dark px-2">
                                         <small class="text-dark">You can freely join/leave events until registration is locked!</small>
                                     </div>
                                 @endif

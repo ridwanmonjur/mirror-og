@@ -1,5 +1,4 @@
 @php
-    $regStatus = $joinEvent->eventDetails->getRegistrationStatus();
     $random_int = rand(0, 999);
     $total = $joinEvent->tier?->tierEntryFee;
     $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
@@ -32,8 +31,8 @@
             <span>Pending: <u style="color: red;">RM {{ $pedning }} </u> <span></p>
     </div>
     <div class="popover-content d-none cursor-pointer bg-light py-2">
-        <div class=" bg-light border-dark border-1 py-3 px-3" style="width: min-content;">
-            <table class="responsive align-start px-3 mx-3 " style="width: min(450px, 95vw);">
+        <div class=" bg-light border-dark border-1 py-4 px-3" style="width: min-content;">
+            <table class="responsive table table-striped align-start px-3 mx-3 " style="width: min(450px, 95vw);">
                 <thead>
                     <tr>
                         <th class="pb-2"></th>
@@ -50,26 +49,26 @@
                             $individualContributionTotal += $memberContribution;
                         @endphp
                         <tr style="border-collapse: seperate !important; border-spacing: 0 1em !important;">
-                            <td class="ps-0 pe-2 pb-2">
+                            <td class="ps-3 pe-0 ">
                                 <a href="{{route('public.participant.view', ['id' => $member2->user->id])}}" class="text-right">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" fill="currentColor" viewBox="0 0 16 16">
+                                    <svg class="mt-1" xmlns="http://www.w3.org/2000/svg" width="18" height="19" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
                                     <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
                                     </svg>
                                 </a>
                             </td> 
-                            <td class="pe-3 pb-2" style="width: 200px; ">
+                            <td class="pe-3 " style="width: 200px; ">
                                 <img
                                     class="object-fit-cover rounded-circle me-2 border border-primary random-color-circle" 
-                                    src="{{'/storage' . '/' . $member2->user->userBanner}}" width="35" height="35"
+                                    src="{{'/storage' . '/' . $member2->user->userBanner}}" width="25" height="25"
                                     {!! trustedBladeHandleImageFailureBanner() !!}
                                 >
                                 <span>{{$member2->user->name}}</span>
                             </td>
-                            <td class="pe-3 pb-2">
+                            <td class="pe-3 ">
                                 RM {{$memberContribution ?? 0}}
                             </td>
-                            <td class="pe-2 pb-2">
+                            <td class="pe-2 ">
                                 {{round(($memberContribution?? 0) *100 / $total, 2) ?? 0}}%
                             </td>
                            
@@ -99,39 +98,56 @@
     </div>
     <div class="mx-auto text-center ">
         @if ($joinEvent->isUserPartOfRoster)
-            @if ($signupStatusEnum['CLOSED'] == $regStatus )
+            @if ($signupStatusEnum['TOO_EARLY'] == $joinEvent->regStatus )
                 <p class="text-center"> 
                     Event start time: {{$joinEvent->eventDetails->getFormattedStartDate()}} 
                 </p>
             @else
 
                 @if ($joinEvent->payment_status != "completed")
-                    <button class="oceans-gaming-default-button  d-inline-block btn " data-bs-toggle="modal"
+                    <button class="oceans-gaming-default-button  d-inline-block btn " 
+                        data-bs-toggle="modal"
                         data-bs-target="{{ '#payModal' . $random_int }}"
+                        data-join-event-id="{{ $joinEvent->id }}"
                     >
-                        {{ $signupStatusEnum['EARLY'] == $regStatus ? 'Early Registration' : 'Normal Registration' }} 
+                        {{ $signupStatusEnum['EARLY'] == $joinEvent->regStatus ? 'Early Registration' : 'Normal Registration' }} 
 
                     </button> <br>
 
                 @endif
                 @if ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "pending")
-                    <form  class="{{'form' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" id="confirmRegistration" method="POST">
+                    <form  class="{{'confirmform' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" method="POST">
                         @csrf
                         <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
                         <input type="hidden" name="join_status" value="confirmed">
-                        <button data-form="{{'form' . $random_int}}" type="button" 
-                            onclick="submitConfirmCancelForm(event, 'Confirm registering this event?', 'confirmRegistration')" 
+                        <button 
+                            data-form="{{'confirmform' . $random_int}}" 
+                            type="button" 
+                            data-cancel="0"
+                            data-join-event-id="{{$joinEvent->id}}"
+                            data-join-status="{{$joinEvent->join_status}}"
+                            data-registration-status="{{$joinEvent->regStatus}}"
+                            onclick="submitConfirmCancelForm(event)" 
                             class="mt-2 btn bg-success py-2 rounded-pill"
                         >
                             Confirm Registration
                         </button>
                     </form>
                 @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "confirmed" && !$joinEvent->vote_ongoing)
-                    <form class="{{'form' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
+                    <form class="{{'cancelform' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
                         @csrf
                         <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
                         <input type="hidden" name="join_status" value="canceled">
-                        <button data-form="{{'form' . $random_int}}" type="button" style="background-color: red;" onclick="submitConfirmCancelForm(event, 'Confirm canceling this event?', 'cancelRegistration' )" class="mt-2 btn py-2 text-light rounded-pill">
+                        <button 
+                            data-join-event-id="{{$joinEvent->id}}"
+                            data-form="{{'cancelform' . $random_int}}" 
+                            data-cancel="1"
+                            type="button" 
+                            data-join-status="{{$joinEvent->join_status}}"
+                            data-registration-status="{{$joinEvent->regStatus}}"
+                            onclick="submitConfirmCancelForm(event)" 
+                            class="mt-2 btn py-2 bg-red text-light rounded-pill"
+                        >
                             Cancel Registration
                         </button> 
                         <br>

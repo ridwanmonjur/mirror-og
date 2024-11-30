@@ -1,4 +1,6 @@
 import Alpine from "alpinejs";
+import { DateTime } from "luxon";
+
 
 Alpine.data('alpineDataComponent', () => ({
     select2: null,
@@ -107,4 +109,20 @@ Alpine.data('alpineDataComponent', () => ({
 );
 
 Alpine.start();
+
+
+window.formatDateLuxon = (date) => {
+    if (!date) return 'N/A';
+    return  DateTime
+        .fromISO(date)
+        .toRelative();
+}
+
+window.formatDateMySqlLuxon = (mysqlDate, mysqlTime) => {
+    const dateTime = DateTime.fromSQL(`${mysqlDate} ${mysqlTime}`);
+    const formattedDate = dateTime.toFormat("d MMM yyyy");
+    const formattedTime = dateTime.toFormat("h:mma").toUpperCase();
+    
+    return `${formattedDate} at ${formattedTime}`;
+}
 

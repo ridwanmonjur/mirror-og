@@ -108,11 +108,11 @@ class Team extends Model
         })
             ->with(['members' => function ($query) {
                 $query->where('status', 'accepted');
-            },
+                },
             ])
             ->withCount(['members' => function ($query) {
                 $query->where('status', 'accepted');
-            },
+                },
             ])
             ->get();
 
@@ -308,8 +308,8 @@ class Team extends Model
                 <span class="notification-gray">
                     You have joined 
                     <a href="/view/organizer/{$event->user->id}">
-                        <span class="notification-blue">{$event->user->name}'s</span>
-                    </a>
+                        <span class="notification-blue">{$event->user->name}</span>
+                    </a>'s
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
                     </a>
@@ -340,8 +340,8 @@ class Team extends Model
                         <span class="notification-gray">
                             You have joined 
                             <a href="/view/organizer/{$event->user->id}">
-                                <span class="notification-blue">{$event->user->name}'s</span>
-                            </a>
+                                <span class="notification-blue">{$event->user->name}</span>
+                            </a>'s
                             <a href="/event/{$event->id}">
                                 <span class="notification-blue">{$event->eventName}</span>
                             </a>.
@@ -374,8 +374,8 @@ class Team extends Model
                     </a>
                     has joined
                     <a href="/view/organizer/{$event->user->id}">
-                        <span class="notification-blue">{$event->user->name}'s</span>
-                    </a>
+                        <span class="notification-blue">{$event->user->name}</span>
+                    </a>'s
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
                     </a>.
@@ -454,8 +454,8 @@ class Team extends Model
                         <span class="notification-black">{$this->teamName}</span> 
                     </a> has confirmed registration for  
                     <a href="/view/organizer/{$event->user->id}">
-                        <span class="notification-blue">{$event->user->name}'s</span>
-                    </a>
+                        <span class="notification-blue">{$event->user->name}</span>
+                    </a>'s
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
                     </a>.
@@ -485,8 +485,8 @@ class Team extends Model
                     </a>
                     has confirmed registration for
                     <a href="/view/organizer/{$event->user->id}">
-                        <span class="notification-blue">{$event->user->name}'s</span>
-                    </a>
+                        <span class="notification-blue">{$event->user->name}</span>
+                    </a>'s
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
                     </a>.
@@ -527,8 +527,8 @@ class Team extends Model
                             <span class="notification-black">{$this->teamName}</span> 
                         </a> has canceled registration for
                     <a href="/view/organizer/{$event->user->id}">
-                        <span class="notification-blue">{$event->user->name}'s</span>
-                    </a>
+                        <span class="notification-blue">{$event->user->name}</span>
+                    </a>'s
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
                     </a>.

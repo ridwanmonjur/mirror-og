@@ -41,7 +41,7 @@
             ])
                 style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;">
-            <div class="invisible-until-hover mt-4 ms-4 position-absolute" style="top: 20px;"
+            <div class="invisible-until-hover mt-2 ms-4 position-absolute" style="top: 20px;"
                 style="width: 100%; background-color: red;">
 
                 @if (!isset($joinEvent->roster[0]))

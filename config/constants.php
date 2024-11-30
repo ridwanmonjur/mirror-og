@@ -246,6 +246,6 @@ return [
         'OVER' => 1,
         'EARLY' => 2,
         'NORMAL' => 3,
-        'CLOSED' => 4
+        'TOO_EARLY' => 4
     ],
 ];

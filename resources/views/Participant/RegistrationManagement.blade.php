@@ -30,6 +30,7 @@
         data-user-id="{{ $user->id }}"
         data-rostercaptain-url="{{ route('participant.roster.captain') }}"
         data-team-id="{{ $selectTeam->id }}"
+        data-max-roster-size="{{ $maxRosterSize }}"
         data-vote-url="{{ route('participant.roster.vote') }}"
         data-register-url="{{ 
             $isRedirect 
@@ -64,52 +65,9 @@
         <a class="d-none" id="manageRosterUrl" href="{{route('participant.roster.manage', ['id' => $eventId, 'teamId' => $selectTeam->id, 'redirect' => 'true' ] ) }}"> </a>
         <a class="d-none" id="manageRegistrationUrl" href="{{route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $eventId ] ) }}"> </a>
         <a class="d-none" id="eventUrl" href="{{route('participant.event.view', ['id' => $eventId ] ) }}"> </a>
+        @include('Participant.__Partials.TeamHead', ['isCompactView' => true ]) 
+        <br><br>
 
-        <div class="time-line-box mx-auto" id="timeline-box">
-            <div class="swiper-container text-center">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide swiper-slide__left" id="timeline-1">
-                        <div class="timestamp" onclick="window.toastError('Cannot go back to \'Select Team\'.');"><span
-                                class="cat">Select Team</span></div>
-                        <div class="status__left" onclick="window.toastError('Cannot go back to \'Select Team\'.');">
-                            <span><small></small></span></div>
-                    </div>
-                    <div class="swiper-slide" id="timeline-2">
-                        <div class="timestamp" onclick="document.getElementById('manageMemberButton')?.click();"><span >Manage Members</span></div>
-                        <div class="status" onclick="document.getElementById('manageMemberButton')?.click();">
-                            <span><small></small></span></div>
-                    </div>
-                    <div class="swiper-slide" id="timeline-launch">
-                        <div class="timestamp" onclick="document.getElementById('manageRosterUrl')?.click();"><span
-                                class="date">Manage Roster</span></div>
-                        <div class="status" onclick="document.getElementById('manageRosterUrl')?.click();">
-                            <span><small></small></span></div>
-                    </div>
-                    <div class="swiper-slide swiper-slide__right" id="timeline-payment">
-                        <div class="timestamp text-primary"
-                            onclick="document.getElementById('manageRegistrationUrl').click();">
-                            <span>Manage Registration</span></div>
-                        <div class="status__right"
-                            onclick="document.getElementById('manageRegistrationUrl').click();">
-                            <span><small class="bg-primary"></small></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>1
-        <div class="breadcrumb-top">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a onclick="window.toastError('Cannot go back to \'Select Team\'.');">Select Team</a></li>
-                    <li class="breadcrumb-item"><a onclick="document.getElementById('manageMemberButton')?.click();">Manage Members</a></li>
-                    <li class="breadcrumb-item"><a 
-                            onclick="document.getElementById('manageRosterUrl').click();">Manage Roster</a>
-                    </li>
-                    <li class="breadcrumb-item"><a class="text-primary" 
-                            onclick="document.getElementById('manageRegistrationUrl').click();">Manage Registration</a></li>
-                </ol>
-            </nav>
-        </div>
     @else
         @include('Participant.__Partials.TeamHead') 
     @endif
@@ -129,9 +87,7 @@
                 <p class="tab-size text-start mx-auto ">No events available</p>
             @else
             {{-- IS REDURECT CHANGE--}}
-            @if ($isRedirect)
-                <h1 class="text-center"> REMOVE THE TIMELINE? @leigh </h1>
-            @endif
+           
             <div @class(["event-carousel-styles", "mx-5 px-5"])>
                 @foreach ($joinEvents as $joinEvent)
                        
@@ -162,13 +118,6 @@
             </div>
         @endif
         @if ($isRedirect)
-            <div class="d-flex box-width back-next mb-5">
-                <button type="button"
-                    class="btn border-dark rounded-pill py-2 px-4" onclick="document.getElementById('manageRosterUrl')?.click();"> Back </button>
-                <button type="button" 
-                    class="btn btn-success text-dark rounded-pill py-2 px-4"
-                    onclick="document.getElementById('eventUrl')?.click();">  View Event  </button>
-            </div>
         @else 
             <br><br><br><br><br><br>
         @endif

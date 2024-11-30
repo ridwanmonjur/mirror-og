@@ -12,6 +12,9 @@
     ])
 </head>
 @php
+    if (!isset($isCompactView)) {
+        $isCompactView = false;
+    }
     [   
         'backgroundStyles' => $backgroundStyles, 
         'fontStyles' => $fontStyles, 
@@ -90,9 +93,7 @@
         @else 
             <br>
         @endif
-    {{-- @else --}}
-        {{-- <div class="team-section"> --}}
-    {{-- @endif --}}
+    
         <div :class="{'upload-container': true, }">
             <label class="upload-label">
                 <div class="circle-container">
@@ -268,7 +269,7 @@
                     <span class="ms-2 fs-3"x-show="!isEditMode">{{$selectTeam->country_flag}}</span>
                 </div>
             @else
-                <p>
+                <p class="my-0 py-0">
                     <span class="d-inline">{{$selectTeam->teamDescription}}</span>
                     <span class="d-inline ms-2 fs-3">{{$selectTeam->country_flag}}</span>
                 </p>

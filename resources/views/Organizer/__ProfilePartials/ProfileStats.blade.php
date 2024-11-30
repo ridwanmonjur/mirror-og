@@ -14,7 +14,7 @@
                     <h5 class="ms-3 my-3">
                         Followers
                     </h5>
-                    <button type="button" class="btn-close me-3" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="btn-close me-3 my-3" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <!-- Profile Info -->
