@@ -337,7 +337,7 @@ async function fetchMembers(event = null) {
                     <span>${member?.user?.email}</span>
                 </td>
                 <td class="coloured-cell px-0">
-                    <span>${member?.status} ${member?.updated_at ? member.updated_at: ''} </span>
+                    <span>${member?.status} ${member?.updated_at ? window.formatDateLuxon(member.updated_at): ''} </span>
                 </td>
                 <td class="flag-cell coloured-cell px-3 fs-4">
                     <span>${member?.user?.participant?.region_flag ? member?.user?.participant?.region_flag : '✈︎'} </span>
@@ -350,5 +350,8 @@ async function fetchMembers(event = null) {
     tbodyElement.innerHTML = bodyHtml;  
 };
 
-fetchMembers();
+addOnLoad(()=> {
+    fetchMembers();
+
+})
 fetchCountries();

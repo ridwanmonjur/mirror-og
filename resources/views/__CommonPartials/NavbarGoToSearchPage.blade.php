@@ -36,9 +36,11 @@
     <div class="search-bar d-none-at-mobile">
         <input type="text" name="search" id="search-bar"
             value="{{app('request')->input('search')}}"
-            placeholder="Search for events...">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            placeholder="Search for events..."
+            color="#808080"
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" stroke="#808080" width="20" height="20"
+            viewBox="0 0 24 24" fill="none"  stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" class="feather feather-search">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -66,7 +68,7 @@
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
     </div>
-    <div class="nav-buttons search-bar-mobile d-centered-at-mobile py-2">
+    <div class="nav-buttons search-bar-mobile d-centered-at-mobile py-2" style="font-size: 14px;">
         @guest
             {{-- <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt=""> --}}
             <a class="py-1" href="{{ route('organizer.signin.view') }}">

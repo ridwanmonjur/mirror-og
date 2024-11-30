@@ -61,3 +61,15 @@
 .border-green {
     border: 2px solid green;
 }
+
+.bg-translucent {
+    background: rgb(210, 204, 204, 0.7);
+}
+
+.progress--empty {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    order: 0;
+    cursor: pointer;
+}

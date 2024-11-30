@@ -31,10 +31,8 @@
               
                 <div class="modal-body mx-3 mb-3">
                     <div class="d-flex justify-content-between">
-                        <h5 class="ms-3 my-3">
-                            Followers
-                        </h5>
-                        <button type="button" class="btn-close me-3" data-bs-dismiss="modal" aria-label="Close">
+                        <h5 class="ms-3 my-3" x-text="currentTab.charAt(0).toUpperCase() + currentTab.slice(1).toLowerCase()"></h5>
+                        <button type="button" class="btn-close me-3 my-3" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
                     <!-- Profile Info -->
