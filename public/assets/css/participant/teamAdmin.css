@@ -549,7 +549,7 @@
     visibility: visible;
 }
 
-.d-none-until-hover {
+.d-none-until-hover-parent .d-none-until-hover {
     visibility: hidden;
     overflow: hidden;
     display: none;

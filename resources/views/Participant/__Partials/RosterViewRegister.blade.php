@@ -10,7 +10,7 @@
     id="reg-member-id-{{$joinEvent->id}}"
     data-members-value="{{json_encode($joinEvent->members)}}"
     data-event-details="{{json_encode(
-        $joinEvent->eventDetails->only(['id', 'eventBanner', 'eventName', 'user', 'tier', 'game'])
+        $joinEvent->eventDetails->only(['id', 'eventBanner', 'eventName', 'user', 'tier', 'game', 'startDate', 'startTime'])
     )}}"
     data-roster-captain-id="{{$joinEvent->roster_captain_id}}"
     data-follow-counts="{{$followCounts[$joinEvent->eventDetails->user_id]}}"
@@ -45,7 +45,7 @@
     </div>
 
     <div @class([
-        'event w-100 mx-auto event-width cursor-pointer d-none-until-hover-parent visible-until-hover-parent',
+        'event w-100 mx-auto event-width cursor-pointer visible-until-hover-parent',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
     ]) style="margin-bottom : 0; ">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
@@ -92,7 +92,8 @@
                                     @endphp
                                     <li onclick="goToUrl(event, this)"
                                         data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
-                                        style="list-style: none;">
+                                        class="d-none-until-hover-parent list-unstyled members-hover"
+                                    >
                                        
                                         <img class="rounded-circle object-fit-cover random-color-circle me-2 mb-1" width="25"
                                             height="25" 
@@ -149,7 +150,7 @@
                                         <li 
                                             data-join-event-id="{{ $joinEvent->id }}"
                                             onclick="addRosterMembers(event);"
-                                            class="z-99 list-unstyled"
+                                            class="members-hover z-99 list-unstyled"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"  viewBox="0 0 16 16"
                                                 class="rounded-circle random-color-circle gear-icon-btn me-2 mb-1 d-flex align-items-center justify-content-center"
@@ -188,13 +189,13 @@
                                                   
                                                 </form>
                                             @elseif ($joinEvent->join_status == "pending" && !$joinEvent->vote_ongoing) 
-                                                <form class="{{'cancel2form' . $joinEvent->id  }}" action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
+                                                <form class="members-hover {{'cancel2form' . $joinEvent->id  }}" action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
                                                     <input type="hidden" name="join_status" value="canceled">
                                                     <button 
                                                         data-join-event-id="{{$joinEvent->id}}"
-                                                        data-form="{{'cancel2form' . $joinEvent->id . 'cancel' }}" 
+                                                        data-form="{{'cancel2form' . $joinEvent->id  }}" 
                                                         type="button"
                                                         data-cancel="1"
                                                         data-join-status="{{$joinEvent->join_status}}"

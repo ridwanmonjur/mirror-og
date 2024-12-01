@@ -413,10 +413,12 @@ class ParticipantEventController extends Controller
                     $joinEvent->save();
                 }
             } else {
-                return back()->with('errorMessage', 'Error operation not permitted.');
+                return back()->with('errorMessage', 'Error operation not permitted.')
+                    ->with('scroll', $request->join_event_id) ;
             }
 
-            return back()->with('successMessage', $successMessage);
+            return back()->with('successMessage', $successMessage)
+                ->with('scroll', $request->join_event_id) ;
         } catch (Exception $e) {
             return $this->showErrorParticipant($e->getMessage());
         }

@@ -30,57 +30,62 @@ class ParticipantCheckoutController extends Controller
 
     public function showCheckout(ShowCheckoutRequest $request): RedirectResponse|View
     {
-        session()->forget(['successMessageCoupon', 'errorMessageCoupon']);
-        
-        $user = $request->attributes->get('user');
-        $user->stripe_customer_id = $user->organizer()->value('stripe_customer_id');
-        
-        $discount_wallet = DB::table('user_discounts')
-            ->where('user_id', $user->id)
-            ->first();
-
+        try{
+            session()->forget(['successMessageCoupon', 'errorMessageCoupon']);
             
-        $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
-            'customer' => $user->stripe_customer_id,
-        ]);
-        
-        $discountStatusEnums = config("constants.DISCOUNT_STATUS");
-        $discountStatus = is_null($discount_wallet) || $discount_wallet?->amount < 0 ? $discountStatusEnums['ABSENT']:  $discountStatusEnums['COMPLETE'];
-        $payment_amount_min = $pendingAfterDiscount = 0.0;
+            $user = $request->attributes->get('user');
+            $user->stripe_customer_id = $user->organizer()->value('stripe_customer_id');
+            
+            $discount_wallet = DB::table('user_discounts')
+                ->where('user_id', $user->id)
+                ->first();
 
-        if ($discountStatus != $discountStatusEnums['ABSENT']) {
-            $payment_amount_min = $request->amount;
-            if ($discount_wallet < $request->amount) {
-                $payment_amount_min = min(
-                    $discount_wallet->amount
-                    ($request->total - $request->participantPaymentSum) - config("constants.STRIPE.MINIMUM_RM")
-                );
+                
+            $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
+                'customer' => $user->stripe_customer_id,
+            ]);
+            
+            $discountStatusEnums = config("constants.DISCOUNT_STATUS");
+            $discountStatus = is_null($discount_wallet) || $discount_wallet?->amount < 0 ? $discountStatusEnums['ABSENT']:  $discountStatusEnums['COMPLETE'];
+            $payment_amount_min = $pendingAfterDiscount = 0.0;
 
-                $discountStatus = $discountStatusEnums['PARTIAL'];
-                $pendingAfterDiscount = $request->total - ($request->participantPaymentSum + $payment_amount_min); 
+            if ($discountStatus != $discountStatusEnums['ABSENT']) {
+                $payment_amount_min = $request->amount;
+                if ($discount_wallet < $request->amount) {
+                    $payment_amount_min = min(
+                        $discount_wallet->amount
+                        ($request->total - $request->participantPaymentSum) - config("constants.STRIPE.MINIMUM_RM")
+                    );
 
-                if ($pendingAfterDiscount < config("constants.STRIPE.MINIMUM_RM") ) {
-                    $discountStatus = $discountStatusEnums['INVALID'];
+                    $discountStatus = $discountStatusEnums['PARTIAL'];
+                    $pendingAfterDiscount = $request->total - ($request->participantPaymentSum + $payment_amount_min); 
+
+                    if ($pendingAfterDiscount < config("constants.STRIPE.MINIMUM_RM") ) {
+                        $discountStatus = $discountStatusEnums['INVALID'];
+                    }
                 }
             }
+
+
+            return view('Participant.CheckoutEvent', [
+                'teamId' => $request->teamId,
+                'amount' => $request->amount,
+                'teamName' => $request->teamName,
+                'joinEventId' => $request->joinEventId,
+                'memberId' => $request->memberId,
+                'event' => $request->event,
+                'discount_wallet' => $discount_wallet,
+                'isUser' => true,
+                'livePreview' => 1,
+                'paymentMethods' => $paymentMethods,
+                'payment_amount_min' => $payment_amount_min,
+                'discountStatusEnums' => $discountStatusEnums,
+                'discountStatus' => $discountStatus
+            ]);
+        } catch (Exception $e) {
+            return back()->with('errorMessage', $e->getMessage())
+                ->with('scroll', $request->joinEventId) ;
         }
-
-
-        return view('Participant.CheckoutEvent', [
-            'teamId' => $request->teamId,
-            'amount' => $request->amount,
-            'teamName' => $request->teamName,
-            'joinEventId' => $request->joinEventId,
-            'memberId' => $request->memberId,
-            'event' => $request->event,
-            'discount_wallet' => $discount_wallet,
-            'isUser' => true,
-            'livePreview' => 1,
-            'paymentMethods' => $paymentMethods,
-            'payment_amount_min' => $payment_amount_min,
-            'discountStatusEnums' => $discountStatusEnums,
-            'discountStatus' => $discountStatus
-        ]);
     }
 
     public function discountCheckout(DiscountCheckoutRequest $request)
@@ -138,7 +143,8 @@ class ParticipantCheckoutController extends Controller
 
             return redirect()
                 ->route('participant.register.manage', ['id' => $request->teamId])
-                ->with('successMessage', $message);
+                ->with('successMessage', $message)
+                ->with('scroll', $request->joinEventId) ;
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -152,12 +158,14 @@ class ParticipantCheckoutController extends Controller
 
             return redirect()
                 ->route('participant.register.manage', ['id' => $request->teamId])
-                ->with('errorMessage', $e->getMessage());
+                ->with('errorMessage', $e->getMessage())
+                ->with('scroll', $request->joinEventId) ;
         }
     }
 
     public function showCheckoutTransition(Request $request)
     {
+        $paymentIntent = [];
         DB::beginTransaction();
         try {
             $user = $request->get('user');
@@ -214,7 +222,8 @@ class ParticipantCheckoutController extends Controller
 
                     return redirect()
                         ->route('participant.register.manage', ['id' => $paymentIntent['metadata']['teamId']])
-                        ->with('successMessage', 'Your payment has succeeded!');
+                        ->with('successMessage', 'Your payment has succeeded!')
+                        ->with('scroll', $paymentIntent['metadata']['joinEventId']) ;
                 }
             }
             return $this->showErrorParticipant('Your payment has failed unfortunately!');
