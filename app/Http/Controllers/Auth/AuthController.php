@@ -28,8 +28,9 @@ class AuthController extends Controller
 
     public function handleGoogleCallback(Request $request)
     {
+        $state = decrypt(request('state'));
+        $role = $state['role'];
         $user = Socialite::driver('google')->stateless()->user();
-        $role = Session::get('role');
 
         ['finduser' => $finduser, 'error' => $error]
             = $this->authService->registerOrLoginUserForSocialAuth($user, 'google', $role);
@@ -56,13 +57,18 @@ class AuthController extends Controller
     {
 
         Session::put('role', $this->authService->putRoleInSessionBasedOnRoute($request->url()));
+        Session::save();
         return Socialite::driver('steam')->redirect();
     }
 
     public function redirectToGoogle(Request $request)
     {
-        Session::put('role', $this->authService->putRoleInSessionBasedOnRoute($request->url()));
-        return Socialite::driver('google')->redirect();
+        $role = $this->authService->putRoleInSessionBasedOnRoute($request->url());
+        Session::put('role', $role);
+        Session::save();
+        return Socialite::driver('google')
+            ->with(['state' => encrypt(['role' => $role]) ])
+            ->redirect();
     }    
    
     public function storeUser(Request $request)

@@ -119,6 +119,9 @@ window.formatDateLuxon = (date) => {
 }
 
 window.formatDateMySqlLuxon = (mysqlDate, mysqlTime) => {
+    console.log({mysqlDate, mysqlTime});
+    console.log({mysqlDate, mysqlTime});
+    console.log({mysqlDate, mysqlTime});
     const dateTime = DateTime.fromSQL(`${mysqlDate} ${mysqlTime}`);
     const formattedDate = dateTime.toFormat("d MMM yyyy");
     const formattedTime = dateTime.toFormat("h:mma").toUpperCase();

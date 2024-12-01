@@ -6,11 +6,9 @@ let ROSTER_STATUS_ENUMS = {
     'VOTE_STAY': 4,
     'CAPTAIN_APPROVE': 5,
     'CAPTAIN_REMOVE': 6,
-    'REGISTER_SUCCESS': 7,
-    'REGISTER_ERROR': 8
 };
 
-const successSwal = (html = '') => {
+const successSwal = (html = '', cb) => {
     return Swal.fire({
         html,
         showConfirmButton: true,
@@ -22,6 +20,8 @@ const successSwal = (html = '') => {
         hideClass: {
             popup: 'animate__animated animate__fadeOut animate__faster'
         }
+    }).then(() => {
+        cb();
     });
 };
 
@@ -33,78 +33,146 @@ const actionResponse = {
     [ROSTER_STATUS_ENUMS.VOTE_STAY]: voteNo,
     [ROSTER_STATUS_ENUMS.CAPTAIN_APPROVE]: captainApprove,
     [ROSTER_STATUS_ENUMS.CAPTAIN_REMOVE]: captanRemove,
-    [ROSTER_STATUS_ENUMS.REGISTER_SUCCESS]: registerSuccess,
-    [ROSTER_STATUS_ENUMS.REGISTER_ERROR]: registerError,  
 };
 
-function respondRosterApprove() {
-
-}
-
-function respondRosterDisapprove() {
-
-}
-
-function voteYes() {
+function respondRosterApprove(joinEventId) {
+    const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
+    const {
+        eventDetails: eventDetailsJSON, 
+        membersValue: membersValueJSON, 
+        followCounts,
+        rosterCaptainId
+    } = memberDataContainer.dataset;
+    let eventDetails = JSON.parse(eventDetailsJSON);
+    let membersValue = JSON.parse(membersValueJSON);
     
+    successSwal(`
+        <h5 class="my-4">You have added this user to the roster!</h5>
+        ${drawEventTable(eventDetails, followCounts)}
+        ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId)}
+    `, () => scrollSwal(joinEventId));
 }
 
-function voteNo() {
-
+function respondRosterDisapprove(joinEventId) {
+    const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
+    const {
+        eventDetails: eventDetailsJSON, 
+        membersValue: membersValueJSON, 
+        followCounts,
+        rosterCaptainId
+    } = memberDataContainer.dataset;
+    let eventDetails = JSON.parse(eventDetailsJSON);
+    let membersValue = JSON.parse(membersValueJSON);
+    
+    successSwal(`
+        <h5 class="my-4">You have removed this user from the roster!</h5>
+        ${drawEventTable(eventDetails, followCounts)}
+        ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId)}
+    `, () => scrollSwal(joinEventId));
 }
 
-function captainApprove() {
-
-}
-
-function captanRemove() {
-
-}
-
-function registerSuccess() {
+function voteYes(joinEventId) {
     const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
     const {eventDetails: eventDetailsJSON, followCounts} = memberDataContainer.dataset;
     let eventDetails = JSON.parse(eventDetailsJSON);
     
     successSwal(`
-        <h5 class="my-4">Your team has successfully registered for this event!</h5>
+        <h5 class="my-4">You have voted to stay in this event!</h5>
         ${drawEventTable(eventDetails, followCounts)}
+    `, () => scrollSwal(joinEventId));
+}
+
+function voteNo(joinEventId) {
+    const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
+    const {eventDetails: eventDetailsJSON, followCounts} = memberDataContainer.dataset;
+    let eventDetails = JSON.parse(eventDetailsJSON);
+    
+    successSwal(`
+        <h5 class="my-4">You have voted to leave this roster!</h5>
+        ${drawEventTable(eventDetails, followCounts)}
+        
+    `, () => scrollSwal(joinEventId));
+}
+
+function captainApprove(joinEventId) {
+    const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
+    const {
+        eventDetails: eventDetailsJSON, 
+        membersValue: membersValueJSON, 
+        followCounts,
+        rosterCaptainId
+    } = memberDataContainer.dataset;
+    let eventDetails = JSON.parse(eventDetailsJSON);
+    let membersValue = JSON.parse(membersValueJSON);
+    
+    successSwal(`
+        <h5 class="my-4">You have assigned a new captain!</h5>
+        ${drawEventTable(eventDetails, followCounts)}
+        ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId)}
+    `, () => scrollSwal(joinEventId));
+}
+
+function captanRemove(joinEventId) {
+    const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
+    const {
+        eventDetails: eventDetailsJSON, 
+        membersValue: membersValueJSON, 
+        followCounts,
+        rosterCaptainId
+    } = memberDataContainer.dataset;
+    let eventDetails = JSON.parse(eventDetailsJSON);
+    let membersValue = JSON.parse(membersValueJSON);
+    
+    successSwal(`
+        <h5 class="my-4">You have removed the captaincy successfully</h5>
+        ${drawEventTable(eventDetails, followCounts)}
+        ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId)}
+    `, () => scrollSwal(joinEventId));
+}
+
+function confirmSuccess(successMessage, joinEventId) {
+    const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
+    console.log({memberDataContainer, successMessage, joinEventId});
+    const {eventDetails: eventDetailsJSON, followCounts} = memberDataContainer.dataset;
+    let eventDetails = JSON.parse(eventDetailsJSON);
+    
+    successSwal(`
+        <h5 class="my-4">Success</h5>
+        ${drawEventTable(eventDetails, followCounts)}
+        <p class="text-center text-primary my-4"> ${successMessage} </p>
         <p class="text-center"> The event starts on ${window.formatDateMySqlLuxon(eventDetails.startDate, eventDetails.startTime)} </p>
-    `);
+    `, () => scrollSwal(joinEventId));
 }
 
-function registerError() {
-
-}
 
 function rosterCountCaptainHtmlGenerater(roster, rosterCaptainId) {
     const count = roster.length;
     return `
         <div class="roster-container">
-            <div class="my-3 text-start">Current roster (${count} ${rosterCaptainId} /${getData('maxRosterSize')})</div>
-                ${roster.map(player => 
-                    `<div class="d-flex align-items-center gap-2 my-2">
-                        <img
-                            width="20"
-                            height="20"
-                            onerror="this.onerror = null; this.src= '/assets/images/404.png';"
-                            class="rounded-circle random-color-circle"
-                            src="${player?.user?.userBanner ? '/storage/' + player.user.userBanner : '/assets/images/404.png'}"
-                        >
-                        <small>
-                            ${player.user.name} ${player.id} ${player.user.id}
-                            ${player.id == rosterCaptainId ? `
-                                <img 
-                                class="z-99 rounded-pill me-1 gear-icon-btn"
-                                height="20" 
-                                width="20" 
-                                src="{{asset('assets/images/participants/crown-straight.png')}}"
-                                >
+            <div class="my-3 text-start">Current roster (${count} /${getData('maxRosterSize')})</div>
+            ${roster.map(player => 
+                `<div class="d-flex align-items-center gap-2 my-2">
+                    <img
+                        width="20"
+                        height="20"
+                        onerror="this.onerror = null; this.src= '/assets/images/404.png';"
+                        class="rounded-circle random-color-circle"
+                        src="${player?.user?.userBanner ? '/storage/' + player.user.userBanner : '/assets/images/404.png'}"
+                    >
+                    <small>
+                        ${player.user.name}
+                        ${player.id == rosterCaptainId ? `
+                            <img 
+                            class="z-99 rounded-pill me-1 gear-icon-btn"
+                            height="20" 
+                            width="20" 
+                            src="{{asset('assets/images/participants/crown-straight.png')}}"
+                            >
 
-                            ` : ''}
-                        </small>
-                    </div>`
-                ).join('')}
+                        ` : ''}
+                    </small>
+                </div>`
+            ).join('')}
         </div>`;
 }
 
@@ -286,7 +354,7 @@ function submitConfirmCancelForm(event) {
         ? 'The registration for this event has already been confirmed. Any paid entry fees will NOT be refunded upon cancellation of registration.'
         : 'The registration for this event has not been confirmed. Any paid entry fees will be refunded in full upon cancellation of registration.';
         
-        const messageColor = isConfirmed ? '#FF6B6B' : '#87CEEB';
+        const messageColor = isConfirmed ? 'red' : '#43a4d7';
     
         Swal.fire({
             html: `
@@ -303,7 +371,7 @@ function submitConfirmCancelForm(event) {
             showCancelButton: true,
             confirmButtonText: 'Yes, call a vote to quit',
             cancelButtonText: 'Cancel',
-            confirmButtonColor: '#FF4444',
+            confirmButtonColor: '#43a4d7',
             cancelButtonColor: '#999',
             customClass: {
                 popup: 'custom-popup-class',
@@ -528,22 +596,198 @@ addOnLoad(()=> {
         }
     });
 
-    const savedId = localStorage.getItem('scroll');
+    let savedId = localStorage.getItem('scroll');
+    if (!savedId) savedId = getData('scroll') ;
+    const swal = localStorage.getItem("swal");
+    let successMessage = '', errorMessage = '';
+
+    if (swal) {
+        actionResponse[swal]?.(savedId);
+    } else {
+        console.log({savedId});
+        console.log({savedId});
+        console.log({savedId});
+        successMessage = getData('successMessage') || null;
+        errorMessage = getData('errorMessage') || null;
+        if (successMessage) {
+            confirmSuccess(successMessage, savedId);
+        } else if (errorMessage) {
+            Swal.fire({
+                icon: 'error',
+                text: errorMessage,
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+    }
+
+   
+    
+    // localStorage.clear();
+   
+
+    function initializeRosterTourGuide() {
+
+        const rosterItems = document.querySelectorAll('.members-hover');
+        let currentIndex = 0;
+        let isAutoPlaying = false;
+        let autoPlayInterval;
+      
+        const playButton = document.createElement('button');
+        playButton.id = 'playButton';
+        playButton.classList.add('btn', 'btn-primary', 'text-light', 'px-2', 'py-2', 'btn-sm', 'position-fixed', 'top-50', 'end-0', 'translate-middle-y', 'me-0', 'shadow-sm');        
+        playButton.innerHTML = 'Roster Tour';
+        playButton.style.zIndex = '1043';
+        document.body.appendChild(playButton);
+      
+        function highlightMember(index) {
+        
+            console.log(index)
+            rosterItems.forEach(item => {
+                if (item.classList.contains('d-none-until-hover-parent')) {
+                    item.classList.remove('d-none-until-hover-parent');
+                    item.classList.add('d-none-until-hover-parent2');
+                }
+
+                item.style.border = 'none';
+                item.style.borderRadius = '';
+                item.style.transition = '';
+                item.style.paddingLeft = '5px';
+                item.style.paddingRight = '5px';
+            });
+      
+          const item = rosterItems[index];
+          if (!item) return;
+          item.style.zIndex = '1050';
+          item.style.position = 'relative';
+          item.style.backgroundColor = 'white';
+          item.style.border = '2px solid #43A4D7';
+          item.style.borderRadius = '4px';
+          item.style.transition = 'all 0.3s ease';
+      
+          item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          
+          if (index == 0) return;
+          const prevItem = rosterItems[index-1];
+          prevItem.style.backgroundColor = 'transparent';
+          prevItem.style.zIndex = '1040';
+          prevItem.style.position = 'relative';
+          prevItem.style.border = '2px solid none';
+
+        }
+      
+        function clearHighlight() {
+          rosterItems.forEach(item => {
+            item.style.border = 'none';
+            item.style.borderRadius = '';
+            if (item.classList.contains('d-none-until-hover-parent2')) {
+                item.classList.add('d-none-until-hover-parent');
+            }
+          });
+
+          removeBackdrop();
+        }
+      
+        function startAutoPlay() {
+          if (isAutoPlaying) return;
+          
+          isAutoPlaying = true;
+          playButton.innerHTML = ' Stop Tour';
+          playButton.classList.replace('btn-primary', 'btn-danger');
+          createBackdrop();
+
+          highlightMember(currentIndex);
+          
+          autoPlayInterval = setInterval(() => {
+            console.log(currentIndex);
+            currentIndex = (currentIndex + 1) % rosterItems.length;
+            highlightMember(currentIndex);
+          }, 2000);
+        }
+
+        function createBackdrop() {
+            let backdrop = document.createElement('div');
+            backdrop.id = 'highlight-backdrop';
+            backdrop.style.position = 'fixed';
+            backdrop.style.top = '0';
+            backdrop.style.left = '0';
+            backdrop.style.width = '100%';
+            backdrop.style.height = '100%';
+            backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            backdrop.style.zIndex = '1040';  // Bootstrap modal backdrop z-index
+            backdrop.style.transition = 'opacity 0.3s ease';
+            document.body.appendChild(backdrop);
+        }
+
+        function removeBackdrop() {
+            const backdrop = document.getElementById('highlight-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
+        
+            rosterItems.forEach(item => {
+                item.style.backgroundColor = 'transparent';
+                item.style.zIndex = '1040';
+                item.style.opacity = "1";
+                item.style.position = 'relative';
+                item.style.border = 'none';  
+            });
+        }
+      
+        function stopAutoPlay() {
+          if (!isAutoPlaying) return;
+          
+          isAutoPlaying = false;
+          playButton.innerHTML = 'Roster Management Tour';
+          playButton.classList.replace('btn-danger', 'btn-primary');
+          clearInterval(autoPlayInterval);
+          clearHighlight();
+          removeBackdrop();
+          currentIndex = 0;
+        }
+      
+        playButton.addEventListener('click', () => {
+        console.log(isAutoPlaying);
+        console.log(isAutoPlaying);
+          if (isAutoPlaying) {
+            stopAutoPlay();
+          } else {
+            console.log("hitt2");
+
+            console.log("hitt2");
+            startAutoPlay();
+          }
+        });
+      }
+
+      
+      initializeRosterTourGuide();
+
+      document.querySelectorAll('.tutorial-button').forEach(button3 => {
+        button3.addEventListener('click', () => {
+          document.getElementById('playButton').click();
+        });
+      });
+
+});
+
+function scrollSwal(savedId) {
     if (savedId) {
         const memberDataContainer = document.getElementById('reg-member-id-' + savedId);
-        console.log({memberDataContainer});
-        console.log({memberDataContainer});
-        console.log({memberDataContainer});
+        console.log(savedId, memberDataContainer);
+        console.log(savedId, memberDataContainer);
         if (memberDataContainer) {
             memberDataContainer.scrollIntoView({ 
                 behavior: 'smooth',
                 block: 'center'
             });
             
-            // localStorage.removeItem('scroll');
         }
     }
-});
+
+    localStorage.clear();
+}
 
 let headers = {
     'X-CSRF-TOKEN': csrfToken5,
@@ -836,40 +1080,6 @@ async function capatainMemberAction(event) {
    
 }
 
-// function drawRosters(roster) {
-//     let innerHTML = ``;
-//     innerHTML+=`
-//         <div class="mx-3 py-2 px-3 text-start w-75 x-auto mt-3 mmb-3 border-dark " >
-//             <div>
-//                 <img 
-//                     onerror="this.onerror=null; this.src='/assets/images/404.png';"
-//                     src="${eventDetails?.game?.gameIcon ? '/storage/' + eventDetails.game.gameIcon : '/assets/images/404.png'}"
-//                     class="object-fit-cover rounded-circle me-1" width="30" height="30"
-//                 >
-//                 <p class=" d-inline my-0 ms-2"> ${eventDetails.eventName}</p>
-//             </div>
-//             <div class="d-flex pt-2 justify-content-start">
-//                 <img 
-//                     onerror="this.onerror = null; this.src= '/assets/images/404.png';"
-//                     src="${eventDetails?.user?.userBanner ? '/storage/' + eventDetails.user.userBanner : '/assets/images/404.png'}"
-//                     width="30"
-//                     height="30" class="me-1 object-fit-cover  rounded-circle random-color-circle"
-//                 >
-//                 <div class="ms-2">
-//                     <small class="d-block py-0 my-0">
-//                         ${eventDetails.user.name }
-//                     </small>
-//                     <small
-//                         class="p-0 my-0">
-//                         ${followCounts?? 0} follower${followCounts == 0 || followCounts> 1? 's': ''}
-//                     </small>
-//                 </div>
-//             </div>
-//         </div>
-//     `;
-//     return innerHTML;
-// }
-
 function drawEventTable(eventDetails, followCounts) {
     let innerHTML = ``;
 
@@ -1003,9 +1213,3 @@ function addRosterMembers(event) {
     modalInstance.show();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const buttons = document.querySelectorAll('[bootstrapodal]');
-    buttons.forEach(button => {
-        button.addEventListener('click', () => handleEventMembers(button));
-    });
-});

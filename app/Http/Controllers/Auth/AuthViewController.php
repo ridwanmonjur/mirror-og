@@ -21,6 +21,7 @@ class AuthViewController extends Controller
     {
         if ($request->has('url')) {
             Session::put('intended', $request->input('url'));
+            Session::save();
         }
 
         return view('Auth.ParticipantSignIn');
@@ -30,6 +31,7 @@ class AuthViewController extends Controller
     {
         if ($request->has('url')) {
             Session::put('intended', $request->input('url'));
+            Session::save();
         }
 
         return view('Auth.OrganizerSignIn');

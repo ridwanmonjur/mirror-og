@@ -25,6 +25,7 @@
      class="main2"
      >
     <div id="blade-data" style="display: none;"
+        
         data-approve-url="{{ route('participant.roster.approve') }}"
         data-disapprove-url="{{ route('participant.roster.disapprove') }}"
         data-user-id="{{ $user->id }}"
@@ -37,6 +38,9 @@
             ? route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $joinEvents[0]->eventDetails?->id])
             : route('participant.register.manage', ['id' => $selectTeam->id])
         }}"
+        data-success-message="{{ session('successMessage') }}"
+        data-error-message="{{ session('errorMessage') }}"
+        data-scroll="{{session('scroll')}}"
     >
     </div>
     <div class="modal fade" id="addRosterModal" tabindex="-1" aria-labelledby="addRosterModal" >
