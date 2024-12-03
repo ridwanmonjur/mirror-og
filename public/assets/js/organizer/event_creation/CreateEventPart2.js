@@ -358,7 +358,7 @@ window.onload = function() {
         noCalendar: true,
         dateFormat: "H:i",
         time_24hr: false,
-        minuteIncrement: 1
+        minuteIncrement: 30
     };
 
     const startPicker = window.createFlatpickr("#startTime", {
