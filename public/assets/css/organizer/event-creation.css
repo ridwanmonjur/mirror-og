@@ -3,7 +3,7 @@
 :root {
     --timeline-start-width-desktop: 100px;
     --timeline-start-width-mobile: 60px;
-    --timeline-normal-width-desktop: 200px;
+    --timeline-normal-width-desktop: 12vw;
     --timeline-normal-width-mobile: 120px;
     --navbar-height: 5vh;
 }
@@ -532,9 +532,6 @@ color: #43A4D7; */
     position: relative;
 }
 
-.swiper-slide__left {
-    width: var(--timeline-start-width-mobile) !important;
-}
 
 .time-line-box {
     padding: 15px 0 0 15px;
