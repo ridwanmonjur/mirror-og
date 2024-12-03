@@ -145,7 +145,7 @@ function previewSelectedImage(imageId, previewImageId) {
         
             image.onload = function() {
                 
-                if (image.width < 1400 ) {
+                if (image.width < 1401 ) {
                     Toast.fire({
                         icon: 'error',
                         text: `Image width ${image.width}px is lesser than 1400px`
@@ -155,7 +155,7 @@ function previewSelectedImage(imageId, previewImageId) {
                     return;
                 }
     
-                if (image.height <= 600) {
+                if (image.height < 601) {
                     Toast.fire({
                         icon: 'error',
                         text: `Image height ${image.height} is lesser than 600px`
