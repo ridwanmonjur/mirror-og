@@ -70,7 +70,11 @@ Alpine.data('profileDataComponent', () => {
                 this.participant.age = Number(this.participant.age);
                 const response = await fetch(url, {
                     method: 'POST',
-                    headers: window.loadBearerCompleteHeader(),
+                    headers: {
+                        credentials: 'include',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
                         participant: Alpine.raw(this.participant),
                         user: Alpine.raw(this.user)

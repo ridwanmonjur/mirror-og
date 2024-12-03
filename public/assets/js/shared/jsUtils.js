@@ -57,7 +57,7 @@ function infinteLoadMore(page, ENDPOINT) {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json',
-                ...window.loadBearerHeader()
+                'credentials': 'include'
               },
           })
             .then(response => {
@@ -237,7 +237,9 @@ function setAllNotificationsRead(event) {
         method: 'put',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            ...window.loadBearerCompleteHeader()
+            credentials: 'include',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         },
     })
         .then((response) => response.json())
@@ -334,3 +336,4 @@ function getUrl(inputId, id = null) {
     }
     return url;
 }
+

@@ -9,6 +9,14 @@ const actionMap = {
     'award': deleteAwardAction
 };
 
+function loadBearerCompleteHeader() {
+    return {
+        credentials: 'include',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    };
+}
+ 
 window.onload = () => { window.loadMessage(); }
 
 function reloadUrl(currentUrl, message, tab) {
@@ -70,7 +78,7 @@ function editCreatePosition(event) {
         function(error) { toastError('Error changing position.', error);  }, 
         {
             headers: { 'X-CSRF-TOKEN': csrfToken, 
-                ...window.loadBearerCompleteHeader() 
+                ...loadBearerCompleteHeader() 
             },                     
             body: JSON.stringify({
                 'join_events_id': joinEventId,
@@ -102,7 +110,7 @@ async function addAward(event) {
         },
         function(error) { toastError('Error changing awards.', error);  }, 
         {
-            headers: { 'X-CSRF-TOKEN': csrfToken, ...window.loadBearerCompleteHeader() },    
+            headers: { 'X-CSRF-TOKEN': csrfToken, ...loadBearerCompleteHeader() },    
             body: JSON.stringify({
                 'team_id': Number(teamId),
                 'award_id': Number(awardId),
@@ -131,7 +139,7 @@ async function addAchievement(event) {
         },
         function(error) { toastError('Error changing awards.', error);  }, 
         {
-            headers: { 'X-CSRF-TOKEN': csrfToken, ...window.loadBearerCompleteHeader() },    
+            headers: { 'X-CSRF-TOKEN': csrfToken, ...loadBearerCompleteHeader() },    
             body: JSON.stringify({
                 'team_id': Number(teamId),
                 title,
@@ -157,7 +165,7 @@ async function deleteAwardAction() {
         function(error) { toastError('Error changing awards.', error);  }, 
         {
             method: 'DELETE',
-            headers: { 'X-CSRF-TOKEN': csrfToken, ...window.loadBearerCompleteHeader() },  
+            headers: { 'X-CSRF-TOKEN': csrfToken, ...loadBearerCompleteHeader() },  
         }
     );
 }
@@ -176,7 +184,7 @@ async function deleteAwardAction() {
         function(error) { toastError('Error changing achievements.', error);  }, 
         {
             method: 'DELETE',
-            headers: { 'X-CSRF-TOKEN': csrfToken, ...window.loadBearerCompleteHeader() },  
+            headers: { 'X-CSRF-TOKEN': csrfToken, ...loadBearerCompleteHeader() },  
         }
     );
 }

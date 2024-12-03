@@ -19,7 +19,7 @@ imageUpload?.addEventListener("change", async function (e) {
                 'X-CSRF-TOKEN': csrfToken,
                 'Content-type': 'application/json',
                 'Accept': 'application/json',
-                ...window.loadBearerHeader()
+                'credentials': 'include',
             },
             body: JSON.stringify({
                 file: {

@@ -1,7 +1,7 @@
 function generateHeaders() {
     return {
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        ...window.loadBearerHeader(), 
+        'credentials': 'include', 
         'Accept': 'application/json',
         'Content-Type': 'application/json',
     };

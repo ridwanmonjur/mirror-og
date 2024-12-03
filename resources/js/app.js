@@ -5,20 +5,8 @@ window.Popper = Popper
 import * as bootstrap from 'bootstrap'
 window.bootstrap = bootstrap;
 
-window.loadBearerHeader = function () {
-    return {
-        credentials: 'include'
-    };
-};
 
-window.loadBearerCompleteHeader = function () {
-    return {
-        credentials: 'include',
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
 
-    };
-};
 
 const Toast = Swal.mixin({
     toast: true,

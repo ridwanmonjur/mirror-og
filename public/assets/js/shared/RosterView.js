@@ -34,7 +34,7 @@ async function onFollowSubmit(event) {
             method: form.method,
             body: JSON.stringify(jsonObject),
             headers: {
-                ...window.loadBearerHeader(),
+                'credentials': 'include',
                 'Accept': 'application/json',
                 "Content-Type": "application/json",
             }

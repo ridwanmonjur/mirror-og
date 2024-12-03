@@ -36,7 +36,7 @@ async function submitLikesForm() {
             method: likesForm.method,
             body: jsonString,
             headers: {
-                ...window.loadBearerHeader(),
+                'credentials': 'include',
                 'Accept': 'application/json',
                 "Content-Type": "application/json",
             }
@@ -98,7 +98,7 @@ document.getElementById('followForm').addEventListener('submit', async function(
             method: form.method,
             body: jsonString,
             headers: {
-                ...window.loadBearerHeader(),
+                'credentials': 'include',
                 'Accept': 'application/json',
                 "Content-Type": "application/json",
             }
