@@ -6,6 +6,12 @@
     --timeline-normal-width-desktop: 200px;
     --timeline-normal-width-mobile: 120px;
     --navbar-height: 5vh;
+    --back-next-button: var(--timeline-start-width-desktop);
+}
+
+.textarea-size {
+    resize: none !important;
+    overflow-y: scroll;
 }
 
 .description {
@@ -24,8 +30,9 @@ input[type="time"] {
 }
 
 .back-next button {
+    width: 200px;
     position: absolute;
-    padding: 15px 45px;
+    padding: 10px 45px;
     margin-top: 15px;
     margin-bottom: 15px;
 }
@@ -80,7 +87,6 @@ input[type="time"] {
 
 .form-group .small-detail {
     font-size: 0.875rem;
-    color: #6B6B6B;
 }
 
 .event-details-form {
@@ -211,7 +217,7 @@ input[type="time"] {
 
 .event {
     overflow: visible;
-    width: 300px;
+    width: fit-content;
     background: transparent;
     border: 2px solid rgb(242, 93, 123);
     border-radius: 40px;
@@ -526,7 +532,7 @@ color: #43A4D7; */
     position: relative;
 }
 
-.swiper-slide__left {
+.swiper-slide__left, .swiper-slide__right {
     width: var(--timeline-start-width-mobile) !important;
 }
 
@@ -664,10 +670,15 @@ color: #43A4D7; */
 }
 
 
-.cat {
+.first-item-adjust {
     position: relative;
     left: -40%;
     display: inline-block;
+}
+
+.last-item-adjust {
+    position: relative;
+    left: 40%;
 }
 
 .timestamp {
@@ -935,9 +946,7 @@ body{
         display: none;
     }
 
-    .cat {
-        left: -100%;
-    }
+ 
 
 
 }
@@ -1044,7 +1053,7 @@ body{
         width: var(--timeline-normal-width-desktop);
     }
 
-    .swiper-slide__left {
+    .swiper-slide__left, .swiper-slide__right {
         width: var(--timeline-start-width-desktop) !important;
     }
 
@@ -1064,10 +1073,6 @@ body{
         width: var(--timeline-start-width-desktop) ! important;
     }
 
-    .time-line-box .status__left span:before {
-        left: 12%;
-    }
-
     .time-line-box .status__right {
         width: var(--timeline-start-width-desktop) ! important;
     }
@@ -1081,17 +1086,14 @@ body{
 
     .back-next button:nth-child(1) {
         position: absolute;
-        left: 60px;
-    }
+        left: calc(25% - var(--back-next-button));         }
 
     .back-next button:nth-child(2) {
         position: absolute;
-        right: 60px;
+        left: calc(75% - var(--back-next-button));
     }
 
-    .cat {
-        left: -40%;
-    }
+    
 
 }
 
@@ -1119,14 +1121,5 @@ body{
         height: 260px;
     }
 
-    .back-next button:nth-child(1) {
-        position: absolute;
-        left: 30%;
-        background-color: white;
-    }
-
-    .back-next button:nth-child(2) {
-        position: absolute;
-        left: 60%;
-    }
+    
 }

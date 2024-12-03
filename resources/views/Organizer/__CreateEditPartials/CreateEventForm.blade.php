@@ -81,9 +81,8 @@
                     onclick="handleTierSelection(this)"
                 >
                     <a href="#" 
-                        style="width: fit-content;"
                         @class([
-                        'event pt-2 selectable-box box-tier ps-3 pe-5 mx-auto',
+                        'event pt-2 selectable-box box-tier ps-5 pe-5 mx-auto',
                         'rounded-box-' . strtolower($tierCategory->eventTier),
                         'color-border-success-dotted' =>
                             $event && $tierCategory->id == $event->event_tier_id,
@@ -240,29 +239,31 @@
                     <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z"/>
                     <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"/>
                     </svg>
-                    <div class="dropdown-menu p-3 border border-2 border-primary" style="background: #f9f7ef !important; width: min(400px, 90vw);">
+                    <div class="dropdown-menu p-3 border border-0 shadow-lg" style="border: 1px solid #d3d3d3 !important; background: #FFFFFF !important; width: min(300px, 90vw);">
                         <div class="box">
-                            <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
+                            <div class="small-detail" >Start</div>
                             <div class="flatpickr">
                                 <input type="time" id="startTime" onchange="checkValidTime();setTimeRangeDisplay();" name="startTime"
                                     value="{{ $isEventNotNull ? $event->startTime : '' }}" 
-                                    class="form-control w-75 border-dark text-dark" required data-input
+                                    class="form-control py-1 mx-auto   text-dark" required data-input
+                                    style="border: 1px solid  #d3d3d3 ;"
                                 >
                                 
                             </div>
                         </div>
                         <div class="box mt-3">
-                            <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
+                            <div class="small-detail" >End</div>
                             <div class="flatpickr">
                                 <input type="time" id="endTime" name="endTime" onchange="checkValidTime();setTimeRangeDisplay();"
                                     value="{{ $isEventNotNull ? $event->endTime : '' }}" 
-                                    class="form-control w-75 border-dark text-dark" required data-input
+                                    class="form-control mx-auto py-1   text-dark" required data-input
+                                    style="border: 1px solid  #d3d3d3 ;"
                                 >
                                 
                             </div>
                         </div>
-                        <div class="mt-3 ms-5">
-                            <button class="btn rounded-pill bg-primary text-light" type="button" onclick="closeDropDown()">Close</button>
+                        <div class="mt-3 mx-auto">
+                            <button class="btn rounded-pill bg-primary mx-auto text-light" type="button" onclick="closeDropDown()">Close</button>
                         </div>
                     </div>
                 </div>
@@ -319,10 +320,10 @@
             <label for="eventDescription">Event Description</label>
             <p class="my-3">Tell the players a little about your event</p>
             @if ($isEventNotNull)
-                <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
+                <textarea class="textarea-size" id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
                     required>{{ $event->eventDescription }}</textarea>
             @else
-                <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
+                <textarea class="textarea-size" id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
                     required></textarea>
             @endif
             <p class="description text-end mt-2"><i><span class="character-count-eventDescription">3000</span> characters remaining</i></p>

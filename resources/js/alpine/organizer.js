@@ -124,7 +124,11 @@ Alpine.data('alpineDataComponent', function () {
                 const url = event.target.dataset.url;
                 const response = await fetch(url, {
                     method: 'POST',
-                    headers: window.loadBearerCompleteHeader(),
+                    headers: {
+                        credentials: 'include',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
                         address: Alpine.raw(this.address),
                         userProfile: Alpine.raw(this.userProfile),

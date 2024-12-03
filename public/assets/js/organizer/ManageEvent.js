@@ -31,7 +31,7 @@ function infinteLoadMoreByPost(ENDPOINT, body) {
             headers: {
                 'Accept': 'text/html',
                 "Content-Type": "application/json",
-                ...window.loadBearerHeader()
+                'credentials': 'include',
             },
             body: JSON.stringify(body)
         })
@@ -72,7 +72,7 @@ function loadByPost(ENDPOINT, body) {
         headers: {
             'Accept': 'text/html',
             "Content-Type": "application/json",
-            ...window.loadBearerHeader()
+            'credentials': 'include',
         },
         body: JSON.stringify(body)
     })

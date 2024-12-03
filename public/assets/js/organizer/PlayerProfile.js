@@ -67,7 +67,7 @@ document.getElementById('followFormProfile')?.addEventListener('submit', async f
             method: form.method,
             body: JSON.stringify(jsonObject),
             headers: {
-                ...window.loadBearerHeader(),
+                'credentials': 'include',
                 'Accept': 'application/json',
                 "Content-Type": "application/json",
             }
@@ -225,7 +225,7 @@ imageUpload?.addEventListener("change", async function (e) {
                 'X-CSRF-TOKEN': csrfToken,
                 'Content-type': 'application/json',
                 'Accept': 'application/json',
-                ...window.loadBearerHeader()
+                'credentials': 'include',
             },
             body: JSON.stringify({
                 file: {

@@ -124,6 +124,8 @@ svg{
     background-color: white;
     width: 100%;
     z-index: 999;
+    position: sticky;
+    top: 0;
 }
 
 .mobile-navbar {
