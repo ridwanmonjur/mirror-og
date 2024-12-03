@@ -3,9 +3,10 @@
 :root {
     --timeline-start-width-desktop: 100px;
     --timeline-start-width-mobile: 60px;
-    --timeline-normal-width-desktop: 12vw;
+    --timeline-normal-width-desktop: 200px;
     --timeline-normal-width-mobile: 120px;
     --navbar-height: 5vh;
+    --back-next-button: var(--timeline-start-width-desktop);
 }
 
 .textarea-size {
@@ -217,7 +218,7 @@ input[type="time"] {
 
 .event {
     overflow: visible;
-    width: 300px;
+    width: fit-content;
     background: transparent;
     border: 2px solid rgb(242, 93, 123);
     border-radius: 40px;
@@ -532,9 +533,12 @@ color: #43A4D7; */
     position: relative;
 }
 
+.swiper-slide__left, .swiper-slide__right {
+    width: var(--timeline-start-width-mobile) !important;
+}
 
 .time-line-box {
-    padding: 15px 0 0 15px;
+    padding: 15px 0 0 5px;
     width: 100%;
 }
 
@@ -667,10 +671,15 @@ color: #43A4D7; */
 }
 
 
-.cat {
+.first-item-adjust {
     position: relative;
     left: -40%;
     display: inline-block;
+}
+
+.last-item-adjust {
+    position: relative;
+    left: 40%;
 }
 
 .timestamp {
@@ -938,9 +947,7 @@ body{
         display: none;
     }
 
-    .cat {
-        left: -100%;
-    }
+ 
 
 
 }
@@ -1047,7 +1054,7 @@ body{
         width: var(--timeline-normal-width-desktop);
     }
 
-    .swiper-slide__left {
+    .swiper-slide__left, .swiper-slide__right {
         width: var(--timeline-start-width-desktop) !important;
     }
 
@@ -1067,10 +1074,6 @@ body{
         width: var(--timeline-start-width-desktop) ! important;
     }
 
-    .time-line-box .status__left span:before {
-        left: 12%;
-    }
-
     .time-line-box .status__right {
         width: var(--timeline-start-width-desktop) ! important;
     }
@@ -1084,14 +1087,14 @@ body{
 
     .back-next button:nth-child(1) {
         position: absolute;
-        left: calc(25% - 100px);        
-        background-color: white;
-    }
+        left: calc(25% - var(--back-next-button));         }
 
     .back-next button:nth-child(2) {
         position: absolute;
-        left: calc(75% - 100px);
+        left: calc(75% - var(--back-next-button));
     }
+
+    
 
 }
 

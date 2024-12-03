@@ -81,9 +81,8 @@
                     onclick="handleTierSelection(this)"
                 >
                     <a href="#" 
-                        style="width: fit-content;"
                         @class([
-                        'event pt-2 selectable-box box-tier ps-3 pe-5 mx-auto',
+                        'event pt-2 selectable-box box-tier ps-5 pe-5 mx-auto',
                         'rounded-box-' . strtolower($tierCategory->eventTier),
                         'color-border-success-dotted' =>
                             $event && $tierCategory->id == $event->event_tier_id,
