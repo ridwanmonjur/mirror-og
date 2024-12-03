@@ -8,6 +8,11 @@
     --navbar-height: 5vh;
 }
 
+.textarea-size {
+    resize: none !important;
+    overflow-y: scroll;
+}
+
 .description {
     margin-bottom: 5px;
 }
@@ -24,8 +29,9 @@ input[type="time"] {
 }
 
 .back-next button {
+    width: 200px;
     position: absolute;
-    padding: 15px 45px;
+    padding: 10px 45px;
     margin-top: 15px;
     margin-bottom: 15px;
 }
@@ -531,7 +537,7 @@ color: #43A4D7; */
 }
 
 .time-line-box {
-    padding: 15px 0 0 5px;
+    padding: 15px 0 0 15px;
     width: 100%;
 }
 
@@ -1081,16 +1087,13 @@ body{
 
     .back-next button:nth-child(1) {
         position: absolute;
-        left: 60px;
+        left: calc(25% - 100px);        
+        background-color: white;
     }
 
     .back-next button:nth-child(2) {
         position: absolute;
-        right: 60px;
-    }
-
-    .cat {
-        left: -40%;
+        left: calc(75% - 100px);
     }
 
 }
@@ -1119,14 +1122,5 @@ body{
         height: 260px;
     }
 
-    .back-next button:nth-child(1) {
-        position: absolute;
-        left: 30%;
-        background-color: white;
-    }
-
-    .back-next button:nth-child(2) {
-        position: absolute;
-        left: 60%;
-    }
+    
 }

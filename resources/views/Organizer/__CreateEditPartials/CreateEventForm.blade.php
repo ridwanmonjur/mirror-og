@@ -319,10 +319,10 @@
             <label for="eventDescription">Event Description</label>
             <p class="my-3">Tell the players a little about your event</p>
             @if ($isEventNotNull)
-                <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
+                <textarea class="textarea-size" id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
                     required>{{ $event->eventDescription }}</textarea>
             @else
-                <textarea id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
+                <textarea class="textarea-size" id="eventDescription" name="eventDescription" rows="4" placeholder=" Description for event"
                     required></textarea>
             @endif
             <p class="description text-end mt-2"><i><span class="character-count-eventDescription">3000</span> characters remaining</i></p>
