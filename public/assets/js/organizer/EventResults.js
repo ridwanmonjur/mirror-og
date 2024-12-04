@@ -1,6 +1,6 @@
 let currentUrl = getUrl('currentUrlInput');
 let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-let eventId = document.getElementById('eventId');
+let eventId = document.getElementById('eventId').value;
 var awardToDeleteId = null;
 var achievementToDeleteId = null;
 var actionToTake = null;

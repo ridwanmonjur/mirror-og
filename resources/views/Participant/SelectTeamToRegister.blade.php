@@ -8,7 +8,6 @@
     <title>Select Team to Register</title>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/registerTeam.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/participant/timeline.css') }}">
     @include('__CommonPartials.HeadIcon')
 </head>
 
@@ -16,55 +15,9 @@
     @include('googletagmanager::body')
     @include('__CommonPartials.NavbarGoToSearchPage')
     <input type="hidden" id="eventUrl" value="{{ route('participant.event.view', $id) }}">
-    <main>
-        <div class="time-line-box mx-auto" id="timeline-box">
-            <div class="swiper-container ps-5 text-center">
-                <div class="swiper-wrapper ps-5">
-                    <div class="swiper-slide swiper-slide__left" id="timeline-1">
-                        <div class="timestamp text-primary" onclick="window.toastError('Current tab selected!');"><span
-                                class="cat">Select Team</span></div>
-                        <div class="status__left" onclick="window.toastError('Current tab selected!');">
-                            <span><small class="bg-primary"></small></span></div>
-                    </div>
-                    <div class="swiper-slide" id="timeline-2">
-                        <div class="timestamp" onclick="window.toastError('Please select a team first!');">
-                            <span>Manage Members</span>
-                        </div>
-                        <div class="status" onclick="window.toastError('Please select a team first!');">
-                            <span><small></small></span></div>
-                    </div>
-                    <div class="swiper-slide" id="timeline-launch">
-                        <div class="timestamp" onclick="window.toastError('Please select a team first!');"><span
-                                class="date">Manage Roster</span>
-                            </div>
-                        <div class="status" onclick="window.toastError('Please select a team first!');">
-                            <span><small></small></span></div>
-                    </div>
-                    <div class="swiper-slide swiper-slide__right" id="timeline-payment">
-                        <div class="timestamp"
-                            onclick="window.toastError('Please select a team first!');">
-                            <span>Manage Registration</span>
-                        </div>
-                        <div class="status__right"
-                            onclick="window.toastError('Please select a team first!');">
-                            <span><small></small></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="breadcrumb-top">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a class="text-primary" onclick="window.toastError('Current tab selected!');">Select Team</a></li>
-                    <li class="breadcrumb-item"><a onclick="document.getElementById('selectTeamButtonId')?.click();">Manage Members</a></li>
-                    <li class="breadcrumb-item"><a onclick="document.getElementById('selectTeamButtonId')?.click();">Manage Roster</a></li>
-                    <li class="breadcrumb-item"><a onclick="document.getElementById('selectTeamButtonId')?.click();">Manage Registration</a></li>
-                </ol>
-            </nav>
-        </div>
-        <div class="wrapper-height">
-            <div class="wrapper grid-2-at-screen mx-auto mx-2" style="background-color: #FFFBFB;">
+    <main class="d-flex justify-content-center flex-row">
+        <div class="wrapper-height ">
+            <div class="wrapper grid-2-at-screen mx-auto mx-2">
                 <div>
 
                     <header><u>Select Team to Register</u></header>
@@ -146,13 +99,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="d-flex box-width back-next">
-            <button onclick="goToCancelButton()" type="button"
-                class="btn border-dark rounded-pill py-2 px-4 cursor-pointer"> Back </button>
-            <button form="selectTeam" type="submit" 
-                class="btn btn-primary text-light rounded-pill py-2 px-4"
-                onclick=""> Next &gt; </button>
         </div>
     </main>
     <script src="{{ asset('/assets/js/participant/SelectTeamToRegister.js') }}"></script>

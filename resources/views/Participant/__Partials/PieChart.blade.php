@@ -294,7 +294,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="mx-auto  my-2">
+                            <div class="mx-auto mt-3 mb-2">
                                 <div class="row mx-2">
                                     <div class="col-12 col-lg-5 px-0 mx-0">
                                         <div class="pie text-center animate no-round me-2" style="{{ $styles }}">{{ $percent }}%</div>
@@ -304,7 +304,7 @@
                                         <small class="my-0 py-0">Paid: <u class="text-success">RM {{ $exisitngSum }}</u> </small>
                                         <br>
                                         <small class="my-0 py-0">Pending: <u style="color: red;">RM {{ $pedning }} </u></small>
-                                        <div class="input-group mt-2">
+                                        <div class="input-group mt-3">
                                             <span class="input-group-text bg-primary text-light" id="inputGroup-sizing-sm">RM </span>
                                             <input data-joinEventId="{{ $joinEvent->id }}" 
                                                 data-pending-amount="{{ $pedning }}"
@@ -330,7 +330,7 @@
                                                 </svg>
                                             </span>
                                     </div>
-                                    <p class="mt-2 mb-0 py-0"><u>Selected Amount: RM <span class="putAmountClass">00.00 </span> </u></p>
+                                    <p class="mt-4 mb-3 py-0"><u>Selected Amount: RM <span class="putAmountClass">00.00 </span> </u></p>
                                     </div>
                                 </div>
                             </div>

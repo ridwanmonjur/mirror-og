@@ -237,7 +237,7 @@
                                 </button>
                                 <br><br>
                                 <a href="{{route('participant.register.manage', 
-                                    ['id' => $existingJoint->team_id, 'eventId' => $event->id]
+                                    ['id' => $existingJoint->team_id]
                                 )}}"><u>Manage registration</u></a>
                             @else
                                 @guest

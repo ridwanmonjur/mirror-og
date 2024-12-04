@@ -655,6 +655,8 @@ addOnLoad(()=> {
                 item.style.transition = '';
                 item.style.paddingLeft = '5px';
                 item.style.paddingRight = '5px';
+                item.style.paddingTop = '2px';
+                item.style.paddingBottom = '2px';
             });
       
           const item = rosterItems[index];
@@ -700,8 +702,12 @@ addOnLoad(()=> {
           highlightMember(currentIndex);
           
           autoPlayInterval = setInterval(() => {
-            console.log(currentIndex);
-            currentIndex = (currentIndex + 1) % rosterItems.length;
+            currentIndex = currentIndex + 1;
+            if (currentIndex > rosterItems.length) {
+                stopAutoPlay();
+                return;
+            }
+
             highlightMember(currentIndex);
           }, 2000);
         }
@@ -1133,7 +1139,7 @@ function addRosterMembers(event) {
     let modal = document.getElementById('addRosterModal');
     let modalInstance = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
 
-    let rosterCount = 0;   
+    let rosterCount = 0, pendingMemberCount = 0;   
     let modalBody =  modal.querySelector('.modal-body');
 
     modalBody.innerHTML = `
@@ -1152,6 +1158,8 @@ function addRosterMembers(event) {
                 ${membersValue?.map(member => {
                     rosterCount++;
                     if (rosterMap[member.user.id]) return '';
+                    pendingMemberCount++;
+        
                     return `
                     <tr>
                         <td class="ps-4">
@@ -1205,7 +1213,9 @@ function addRosterMembers(event) {
 
     let teamDisplay = '';
     if (!rosterCount ) {
-        teamDisplay = `<p class='text-center mt-3 pt-3'> No roster members left to be added. </p>`; 
+        teamDisplay = `<p class='text-center mt-3 pt-3'> No team members remaining to be added. </p>`; 
+    } else if (!pendingMemberCount) {
+        teamDisplay = `<p class='text-center mt-3 pt-3'> No roster members remaining to be added. </p>`; 
     }
 
     modalBody.innerHTML += teamDisplay;
