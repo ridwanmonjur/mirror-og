@@ -151,6 +151,7 @@
                                                                         <span class="input-group-text bg-primary text-light"
                                                                             id="basic-addon2">#</span>
                                                                         <input class="form-control"
+                                                                            placeholder="{{'1-'.  $event->tier?->tierTeamSlot }}"
                                                                             style="max-width: 100px !important;"
                                                                             type="number" name="position" min="1"
                                                                             max="{{ $event->tier?->tierTeamSlot }}">
@@ -276,11 +277,14 @@
                                         <form onsubmit="addAward(event);">
                                             <div class="modal-body modal-body-overflow scrollbarline pe-4">
                                                 <div class="mx-auto text-center mt-3">
+
                                                     <h5> Choose an award and team </h5>
                                                     <br>
                                                     <div>
                                                         <input type="hidden" name="eventName"
-                                                            value="{{ $event->eventName ?? 'No name yet' }}">
+                                                            value="{{ $event->eventName ?? 'No name yet' }}"
+                                                        >
+                                                        
                                                         
                                                         <label class="form-check-label fw-bold">
                                                             Choose team

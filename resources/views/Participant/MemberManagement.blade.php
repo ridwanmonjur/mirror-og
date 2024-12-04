@@ -24,7 +24,6 @@
 
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main 
-        @style(["height: 95vh" => $isRedirect])
         class="main2"
     >
         <input type="hidden" id="participantMemberManageUrl" value="{{ route('participant.member.manage', ['id' => $selectTeam->id]) }}">
@@ -35,66 +34,10 @@
         <input type="hidden" id="participantMemberDeleteInviteUrl" value="{{ route('participant.member.deleteInvite', ['id' => ':id']) }}">
         <input type="hidden" id="participantMemberInviteUrl" value="{{ route('participant.member.invite', ['id' => ':id', 'userId' => ':userId']) }}">
 
-        @if ($isRedirect)
-              <form method="POST" action="{{ route('participant.memberManage.action') }}">
-                @csrf
-                <input type="hidden" value="{{$eventId}}" name="eventId">
-                <input type="hidden" value="{{$selectTeam->id}}" name="teamId">
-                <input id="manageMemberButton" type="submit" class="d-none" value="Done">
-                </div>
-            </form>
-            <a class="d-none" id="manageRosterUrl" href="{{route('participant.roster.manage', ['id' => $eventId, 'teamId' => $selectTeam->id, 'redirect' => 'true' ] ) }}"> </a>
-            <a class="d-none" id="manageRegistrationUrl" href="{{route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $eventId ] ) }}"> </a>
-            <div class="time-line-box mx-auto" id="timeline-box">
-                <div class="swiper-container text-center">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide swiper-slide__left" id="timeline-1">
-                            <div class="timestamp" onclick="window.toastError('The selected team cannot be changed!');"><span
-                                    class="cat">Select Team</span></div>
-                            <div class="status__left" onclick="window.toastError('The selected team cannot be changed!');">
-                                <span><small></small></span></div>
-                        </div>
-                        <div class="swiper-slide" id="timeline-2">
-                            <div class="timestamp" onclick="window.toastError('This is the current url.');"><span class="text-primary">Manage Members</span></div>
-                            <div class="status" onclick="window.toastError('This is the current url.');">
-                                <span><small class="bg-primary"></small></span></div>
-                        </div>
-                        <div class="swiper-slide" id="timeline-launch">
-                            <div class="timestamp" onclick="document.getElementById('manageRosterUrl').click();"><span
-                                    class="date">Manage Roster</span></div>
-                            <div class="status" onclick="document.getElementById('manageRosterUrl').click();">
-                                <span><small></small></span></div>
-                        </div>
-                        <div class="swiper-slide swiper-slide__right" id="timeline-payment">
-                            <div class="timestamp"
-                                onclick="document.getElementById('manageRegistrationUrl').click();">
-                                <span>Manage Registration</span></div>
-                            <div class="status__right"
-                                onclick="document.getElementById('manageRegistrationUrl').click();">
-                                <span><small></small></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="breadcrumb-top">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a onclick="window.toastError('The selected team cannot be changed!');">Select Team</a></li>
-                        <li class="breadcrumb-item"><a class="text-primary" onclick="window.toastError('This is the current tab!');">Manage Members</a></li>
-                        <li class="breadcrumb-item"><a
-                                onclick="document.getElementById('manageRosterUrl').click();">Manage Roster</a>
-                        </li>
-                        <li class="breadcrumb-item"><a
-                                onclick="goToNextScreen('step-launch-1', 'timeline-launch')">Manage Registration</a></li>
-                    </ol>
-                </nav>
-            </div>
-        @else
-            @include('Participant.__Partials.TeamHead') 
-            <br>
+        
+        @include('Participant.__Partials.TeamHead') 
+        <br>
 
-        @endif
 
         @include('Participant.__MemberManagementPartials.MemberManagement')
         @if ($isRedirect)
