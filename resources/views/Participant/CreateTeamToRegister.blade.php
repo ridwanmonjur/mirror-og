@@ -20,51 +20,9 @@
         <input type="hidden" id="event_view_route" value="{{ route('participant.event.view', $id) }}">
         <div class="text-center" id="step-0">
             <div class="">
-                <div class="time-line-box mx-auto" id="timeline-box">
-                    <div class="swiper-container ps-5 text-center">
-                        <div class="swiper-wrapper ps-5">
-                            <div class="swiper-slide swiper-slide__left" id="timeline-1">
-                                <div class="timestamp" onclick="window.toastError('Current tab selected!');"><span
-                                        class="cat text-primary">Select Team</span></div>
-                                <div class="status__left" onclick="window.toastError('Current tab selected!');">
-                                    <span><small class="bg-primary"></small></span></div>
-                            </div>
-                            <div class="swiper-slide" id="timeline-2">
-                                <div class="timestamp" onclick="window.toastError('Please select a team first!');">
-                                <span>Manage Members</span></div>
-                                <div class="status" onclick="window.toastError('Please select a team first!');">
-                                    <span><small></small></span></div>
-                            </div>
-                            <div class="swiper-slide" id="timeline-launch">
-                                <div class="timestamp" onclick="window.toastError('Please select a team first!');"><span
-                                        class="date">Manage Roster</span></div>
-                                <div class="status" onclick="window.toastError('Please select a team first!');">
-                                    <span><small></small></span></div>
-                            </div>
-                            <div class="swiper-slide swiper-slide__right" id="timeline-payment">
-                                <div class="timestamp"
-                                    onclick="window.toastError('Please select a team first!');">
-                                    <span>Manage Registration</span></div>
-                                <div class="status__right"
-                                    onclick="window.toastError('Please select a team first!');">
-                                    <span><small></small></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="breadcrumb-top">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a class="text-primary" onclick="window.toastError('Current tab selected!');">Select Team</a></li>
-                            <li class="breadcrumb-item"><a onclick="window.toastError('Please select a team first!');">Manage Members</a></li>
-                            <li class="breadcrumb-item"><a onclick="window.toastError('Please select a team first!');">Manage Roster</a></li>
-                            <li class="breadcrumb-item"><a onclick="window.toastError('Please select a team first!');">Manage Registration</a></li>
-                        </ol>
-                    </nav>
-                </div>
+                
                 <div class="text-center" id="step-0">
-                    <div class="">
+                    <div class="mt-4">
                         <u>
                             <h5>Create & Register Your Team</h5>
                         </u>
@@ -111,13 +69,7 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex box-width back-next">
-            <button onclick="goToCancelButton()" type="button"
-                class="btn border-dark rounded-pill py-2 px-4"> Back </button>
-            <button form="formSubmit" type="submit" 
-                class="btn btn-primary text-light rounded-pill py-2 px-4"
-                onclick=""> Next &gt; </button>
-        </div>
+        
     </main>
     <script src="{{ asset('/assets/js/participant/CreateTeamToRegister.js') }}"></script>
     

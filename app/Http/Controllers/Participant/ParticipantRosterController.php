@@ -28,45 +28,7 @@ class ParticipantRosterController extends Controller
         $this->paymentService = $paymentService;
     }
 
-    public function rosterMemberManagement(Request $request, $id, $teamId)
-    {
-        $user_id = $request->attributes->get('user')->id;
-        $selectTeam = Team::where('id', $teamId)
-            ->whereHas('members', function ($query) use ($user_id) {
-                $query->where('user_id', $user_id)->where('status', 'accepted');
-            })
-            ->first();
-
-        $joinEvent = JoinEvent::where('team_id', intval($teamId))->where('event_details_id', intval($id))->first();
-
-        if ($selectTeam && $joinEvent) {
-            $captain = RosterCaptain::where('join_events_id', $joinEvent->id)->first();
-            $creator_id = $selectTeam->creator_id;
-            $teamMembers = $selectTeam->members->where('status', 'accepted');
-            $memberIds = $teamMembers->pluck('id')->toArray();
-            $rosterMembers = RosterMember::whereIn('team_member_id', $memberIds)
-                ->where('join_events_id', $joinEvent->id)->get();
-
-            $rosterMembersKeyedByMemberId = RosterMember::keyByMemberId($rosterMembers);
-            $isRedirect = $request->redirect === 'true';
-
-            return view(
-                'Participant.RosterManagement',
-                compact(
-                    'selectTeam',
-                    'joinEvent',
-                    'teamMembers',
-                    'creator_id',
-                    'isRedirect',
-                    'rosterMembersKeyedByMemberId',
-                    'rosterMembers',
-                    'id',
-                    'captain'
-                )
-            );
-        }
-        return $this->showErrorParticipant('This event is missing or you need to be a member to view events!');
-    }
+   
 
     public function approveRosterMember(ApproveMemberRequest $request)
     {

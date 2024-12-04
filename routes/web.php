@@ -135,8 +135,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/team/member/{id}/pending', [ParticipantTeamController::class, 'pendingTeamMember'])->name('participant.member.pending');
 
             // Event management
-            Route::get('/event/{id}/team/{teamId}/manage/roster', [ParticipantRosterController::class, 'rosterMemberManagement'])
-                ->middleware('prevent-back-history')->name('participant.roster.manage');
+   
             Route::post('/event/member', [ParticipantTeamController::class, 'teamMemberManagementRedirected'])->name('participant.memberManage.action');
             Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.event.view');
             Route::post('/event/{id}/join/team/select', [ParticipantEventController::class, 'selectTeamToJoinEvent'])->name('participant.selectTeamToJoin.action');

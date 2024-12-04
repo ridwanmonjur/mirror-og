@@ -32,9 +32,11 @@ class OrganizerEventResultsController extends Controller
 
     public function index(Request $request, $id)
     {
-        $event = EventDetail::with(['tier'])
-            ->select(['id', 'eventBanner', 'eventName', 'eventDescription', 'event_tier_id'])
-            ->findOrFail($id);
+        $event = EventDetail::with(['tier', 'user'])
+            ->select(['id', 'eventBanner', 'eventName', 'eventDescription', 'event_tier_id', 'user_id'])
+            ->where('id', $id)
+            ->firstOrFail();
+
 
         $awardList = Award::all();
         $joinEventAndTeamList = EventJoinResults::getEventJoinResults($id);

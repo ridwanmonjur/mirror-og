@@ -23,7 +23,7 @@
             You have joined this event successfully!
             @if ($selectTeam->creator_id == $user->id)
                 <form class="d-inline" method="GET"
-                    action="{{ route('participant.roster.manage', ['id' => $id, 'teamId' => $selectTeam->id]) }}">
+                    action="{{ route('participant.register.manage', ['id' => $id]) }}">
                     <button class="oceans-gaming-default-button oceans-gaming-default-button-link ms-2 me-2" type="submit"
                         style="display: inline !important;">
                         <u> Manage Roster </u>
