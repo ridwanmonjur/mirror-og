@@ -66,7 +66,6 @@
             <input id="manageMemberButton" type="submit" class="d-none" value="Done">
             </div>
         </form>
-        <a class="d-none" id="manageRosterUrl" href="{{route('participant.roster.manage', ['id' => $eventId, 'teamId' => $selectTeam->id, 'redirect' => 'true' ] ) }}"> </a>
         <a class="d-none" id="manageRegistrationUrl" href="{{route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $eventId ] ) }}"> </a>
         <a class="d-none" id="eventUrl" href="{{route('participant.event.view', ['id' => $eventId ] ) }}"> </a>
         @include('Participant.__Partials.TeamHead', ['isCompactView' => true ]) 

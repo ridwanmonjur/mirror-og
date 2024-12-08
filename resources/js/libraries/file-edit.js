@@ -70,10 +70,7 @@ function setupFileInputEditor(selector, cb) {
         fileInput.files = dataTransfer.files;
         cb(blob);
 
-        window.Toast.fire({
-          icon: 'success',
-          text: "Please preview your file! And don't forget to save changes"
-        })
+       
 
         bootstrap.Modal.getOrCreateInstance(modalElement).hide();
       }, 'image/png');

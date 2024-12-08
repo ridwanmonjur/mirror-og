@@ -17,6 +17,7 @@ class EventJoinResults extends Model
     {
         return DB::table('join_events')
             ->where('join_events.event_details_id', '=', $id)
+            ->where('join_status', 'confirmed')
             ->leftJoin('teams', 'join_events.team_id', '=', 'teams.id')
             ->leftJoin('event_join_results', 'join_events.id', '=', 'event_join_results.join_events_id')
             ->select(

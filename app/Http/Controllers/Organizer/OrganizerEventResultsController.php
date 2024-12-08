@@ -39,6 +39,7 @@ class OrganizerEventResultsController extends Controller
 
 
         $awardList = Award::all();
+        
         $joinEventAndTeamList = EventJoinResults::getEventJoinResults($id);
         $awardAndTeamList = AwardResults::getTeamAwardResults($id);
         $achievementsAndTeamList = Achievements::getTeamAchievements($id);
@@ -195,20 +196,23 @@ class OrganizerEventResultsController extends Controller
     {
         try {
             $row = DB::table('awards_results')->where('id', $awardId)->first();
-            [, $memberUserIds] = Team::getResultsTeamMemberIds($row->team_id);
 
             if ($row) {
+                [, $memberUserIds] = Team::getResultsTeamMemberIds($row->team_id);
+
                 DB::table('awards_results')->where('id', $awardId)->delete();
+            
+                dispatch(new HandleResults('DeleteAward', [
+                    'subject_type' => User::class,
+                    'object_type' => AwardResults::class,
+                    'subject_id' => $memberUserIds,
+                    'object_id' => $row->id,
+                    'action' => 'Award',
+                    'teamName' => $request->teamName,
+                ]));
             }
 
-            dispatch(new HandleResults('DeleteAward', [
-                'subject_type' => User::class,
-                'object_type' => AwardResults::class,
-                'subject_id' => $memberUserIds,
-                'object_id' => $row->id,
-                'action' => 'Award',
-                'teamName' => $request->teamName,
-            ]));
+          
 
             return response()->json(['success' => true, 'message' => 'Award deleted successfully'], 200);
         } catch (Exception $e) {

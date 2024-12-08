@@ -4,16 +4,7 @@ function toggleNavbar() {
 }
 
 
-function clearPlaceholder(element) {
-    element.removeAttribute("placeholder");
-}
 
-function restorePlaceholder() {
-    var teamNameInput = document.getElementById("teamName");
-    if (!teamNameInput.value.trim()) {
-        teamNameInput.setAttribute("placeholder", "Team Name");
-    }
-}
 
 var throttle = (func, wait) => {
     let lastTime = 0;

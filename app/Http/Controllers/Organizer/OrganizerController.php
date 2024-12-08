@@ -125,7 +125,8 @@ class OrganizerController extends Controller
                 ->whereNotIn('status', ['DRAFT'.'PENDING'])
                 ->count();
 
-            $teamsCount = JoinEvent::whereIn('event_details_id', function ($query) use ($userProfile) {
+            $teamsCount = JoinEvent::where('join_status', 'confirmed')
+                ->whereIn('event_details_id', function ($query) use ($userProfile) {
                 $query->select('id')
                     ->from('event_details')
                     ->whereNotIn('status', ['DRAFT', 'ENDED', 'PENDING'])

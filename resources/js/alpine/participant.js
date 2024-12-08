@@ -1,8 +1,17 @@
 import Alpine from "alpinejs";
 import { DateTime } from "luxon";
+import { initOffCanvasListeners, resetBg } from "./resetBg";
 
 let userData = JSON.parse(document.getElementById('initialUserData').value);
 let participantData = JSON.parse(document.getElementById('initialParticipantData').value);
+
+
+const myOffcanvas = document.getElementById('profileDrawer');
+myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
+    resetBg(userData?.profile ?? null);
+})
+
+initOffCanvasListeners();
 
 const {
     userProfileId: userId,
@@ -31,9 +40,14 @@ Alpine.data('profileDataComponent', () => {
             this.participant.region_name = countryX?.name.en;
             this.participant.region_flag = countryX?.emoji_flag;
         },
+       
+        restoreAfterEditMode() {
+            this.isEditMode = false;
+            this.reset();
+        },
         reset() {
-            this.user = userData;
-            this.participant = participantData;
+            this.user = {...userData};
+            this.participant = {...participantData};
         },
         async fetchCountries() {
             if (this.isCountriesFetched) return;
