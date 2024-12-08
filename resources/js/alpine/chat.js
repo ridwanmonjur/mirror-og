@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, memoryLocalCache, setDoc, addDoc, onSnapshot, updateDoc, orderBy, doc, query, collection,  where, or } from "firebase/firestore";
+import { initializeFirestore, memoryLocalCache, setDoc, addDoc, onSnapshot, updateDoc, orderBy, doc, query, collection,  where, or, clearIndexedDbPersistence } from "firebase/firestore";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { DateTime } from "luxon";
 
@@ -55,14 +55,12 @@ function humanReadableChatDateFormat(date) {
     return formattedDate;
 }
 
-function scrollIntoView(length, type="top") {
-    if (type="top") {
-        if (length) chatMessages.children[length-1]?.scrollIntoView();
-       
-    } else if (type="bottom") {
-       if (length) chatMessages.children[0]?.scrollIntoView();
+function scrollIntoView() {
+    
+    const chatContainer = document.getElementById('chat-messages');
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    window.scrollTo(0, document.body.scrollHeight);
 
-    }
 }
 
 function firstMessageDatAppend (message) {
@@ -419,7 +417,7 @@ Alpine.data('alpineDataComponent', function () {
                 
                 if (this.currentRoom == id) {
                     appendMessages(results, length);
-                    scrollIntoView(length);
+                    scrollIntoView();
                     let lastMsgInBatch = results[length-1];
                     if (lastMsgInBatch && lastMsgInBatch?.senderId != loggedUserProfile?.id && !lastMsgInBatch.isRead) {
                         const messageRef = doc(db, `room/${this.currentRoom}/message`, lastMsgInBatch.id);
@@ -501,7 +499,7 @@ Alpine.data('alpineDataComponent', function () {
                     length
                 );
                 
-                scrollIntoView(length);
+                scrollIntoView();
             })
 
         },
