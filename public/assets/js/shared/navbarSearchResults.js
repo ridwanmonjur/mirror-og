@@ -81,3 +81,19 @@ function getRandomColorBg() {
 }
 
 applyRandomColorsAndShapes();
+
+let lastScrollTop = 0;  
+let navbar = document.querySelector('.navbar');
+
+window.addEventListener('scroll', function() {
+    let currentScroll = window.scrollY;
+    
+    if (currentScroll > lastScrollTop && currentScroll > 100) {
+        navbar.classList.add('navbar-scrolled');
+    } 
+    else if (currentScroll < lastScrollTop) {
+        navbar.classList.remove('navbar-scrolled');
+    }
+    
+    lastScrollTop = currentScroll;
+});

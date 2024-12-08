@@ -126,7 +126,17 @@ svg{
     z-index: 999;
     position: sticky;
     top: 0;
+    transition: all 0.3s ease-in-out;
 }
+
+.navbar-scrolled {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
 
 .mobile-navbar {
     position: fixed;
@@ -173,19 +183,27 @@ nav svg:active {
 }
 
 .search-bar input {
+    border: 2px solid rgb(135, 131, 131);
     border-radius: 30px;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 90px;
-    width: 600px;
+    width: 500px;
     max-width: 80vw;
+    transition-duration: 500ms;
+    transition-delay: 100ms;
+    transition-timing-function: ease-in;
     /* caret-color: #43A4D7;
 color: #43A4D7; */
 }
 
+.search-bar input:focus {
+    width: 600px;
+}
+
 .search-bar svg {
     position: absolute;
-    top: 12px;
+    top: 8px;
 }
 
 input[type="submit"],
@@ -533,7 +551,10 @@ h5 {
 
     .search-bar svg {
         left: 20px;
+        top: 12px;
+
     }
+
 
     .w-70s {
         width: 70%;
