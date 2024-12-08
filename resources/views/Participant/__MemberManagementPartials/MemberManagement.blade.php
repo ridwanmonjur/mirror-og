@@ -2,33 +2,8 @@
     use Carbon\Carbon;
     $isRedirect = (isset($redirect) && $redirect);
 @endphp
-@if (!$isRedirect)
-    <div class="mb-2 text-success mx-auto text-center">
-        <span>
-            You have joined this event successfully!
-        </span>
-        <a
-            href="{{ route('participant.event.view', ['id' => $eventId]) }}">
-            <button class="oceans-gaming-default-button btn bg-success text-dark btn-success ms-2 me-2" type="submit" style="display: inline !important;">
-                View Event
-            </button>
-        </a>
-   
-        <a
-            href="{{ route('participant.team.manage', ['id' => $eventId]) }}">
-            <button class="oceans-gaming-default-button btn ms-2 me-2" type="submit" style="display: inline !important;">
-                Manage Team
-            </button>
-        </a>
-        <a href={{ route('participant.home.view')}}>
-            <button class="btn btn-link ms-0 me-2" type="submit" style="display: inline !important;">
-                Home Screen
-            </button>
-        </a>
-    
-    </div>
-@endif
-<div @class(["tabs", "d-none" => isset($redirect) && $redirect])>
+
+<div class="tabs">
     <button id="CurrentMembersBtn" class="tab-button inner-tab tab-button-active"
         onclick="showTab(event, 'CurrentMembers', 'inner-tab')">Current Members
     </button>

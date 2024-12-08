@@ -58,7 +58,7 @@
                                 <input type="text" style="height: 100px;" value="" name="teamDescription"
                                     id="teamDescription" placeholder="Write your team description...">
                                 <br> <br>
-                                <input type="submit" onclick="" value="Create & Regjster">
+                                <input type="submit" onclick="" value="Create & Register">
 
                             </div>
                         </form>

@@ -1,5 +1,6 @@
 import Alpine from "alpinejs";
 import { DateTime } from "luxon";
+import { initOffCanvasListeners, resetBg } from "./resetBg";
 
 const input = document.querySelector("#phone");
 window.intlTelInput(input, {
@@ -17,6 +18,14 @@ let initialOrganizer = JSON.parse(document.getElementById('initialOrganizer').va
 let initialAddress = JSON.parse(document.getElementById('initialAddress').value);
 
 if (initialUserProfile?.mobile_no) iti.setNumber(initialUserProfile.mobile_no);
+
+const myOffcanvas = document.getElementById('profileDrawer');
+
+myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
+    resetBg(initialUserProfile?.profile ?? null);
+})
+
+initOffCanvasListeners();
 
 
 function alpineProfileData(userId) {
@@ -164,9 +173,7 @@ Alpine.data('alpineDataComponent', function () {
                 element.style.cssText += fontStyles;
             });
 
-            banner.querySelectorAll('.followCounts').forEach((element) => {
-                element.style.cssText += fontStyles;
-            });
+        
 
 
         },
