@@ -127,14 +127,13 @@ svg{
     position: sticky;
     top: 0;
     transition: all 0.3s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
 }
 
 .navbar-scrolled {
     background-color: rgba(255, 255, 255, 0.85);
-    padding-top: 0px;
-    padding-bottom: 0px;
-    margin-top: 0px !important;
-    margin-bottom: 0px !important;
+    transform: scaleY(1.05) translateY(2px);
 }
 
 
@@ -183,7 +182,7 @@ nav svg:active {
 }
 
 .search-bar input {
-    border: 2px solid rgb(135, 131, 131);
+    border: 2px solid rgb(175, 165, 165);
     border-radius: 30px;
     padding-top: 10px;
     padding-bottom: 10px;
