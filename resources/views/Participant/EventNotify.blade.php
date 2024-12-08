@@ -19,9 +19,7 @@
     <input type="hidden" id="event_view_route" value="{{ route('public.event.view', ['id' => $id]) }}">
 
     {{-- Hidden urls --}}
-    <a class="d-none" id="manageRosterUrl"
-        href="{{ route('participant.roster.manage', ['id' => $id, 'teamId' => $selectTeam->id, 'redirect' => 'true']) }}">
-    </a>
+    
     <a class="d-none" id="manageRegistrationUrl"
         href="{{ route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $id]) }}"> </a>
     <main class="d-flex justify-content-center flex-row">
