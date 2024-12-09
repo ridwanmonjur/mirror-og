@@ -44,45 +44,8 @@ export default defineConfig({
                 manualChunks(id) {
                     // Handle node_modules separately
                     if (id.includes('node_modules')) {
-                        if (
-                            id.includes('@popperjs/core') || 
-                            id.includes('bootstrap') || 
-                            id.includes('sweetalert')
-                        ) {
-                            return 'vendor-core';
-                        }
-
-                        if (id.includes('firebase')) {
-                            return 'vendor-firebase';
-                        }
-
-                        // All other vendor dependencies
-                        return 'vendor-others';
+                        return id.toString().split('node_modules/')[1].split('/')[0].toString();
                     }
-
-                    // Handle your application code
-                    if (id.includes('/resources/')) {
-                        // Library groups
-                        if (id.includes('/libraries/')) {
-                            return 'lib-ui';
-                        }
-
-                        // Alpine components
-                        if (id.includes('/alpine/')) {
-                            return 'alpine-components';
-                        }
-
-                        // Styles
-                        if (id.includes('.scss')) {
-                            if (id.includes('/libraries/')) {
-                                return 'lib-styles';
-                            }
-                            return 'styles';
-                        }
-
-                    }
-
-                    return 'index';
                 }
             }
         }
