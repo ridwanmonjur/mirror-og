@@ -43,7 +43,10 @@ function animateCard() {
             { 
                 delay: stagger(0.15, { start: groupDelay }),
                 duration: 0.5,
-                easing: spring({ damping: 15 })
+                easing: spring({ damping: 15 }),
+                onComplete: () => {
+                    card.dataset.animated = 'complete';
+                }
             }
         );
         
@@ -66,9 +69,7 @@ function animateCard() {
                     delay: stagger(0.2, { start: innerDelay }),
                     duration: 0.3,
                     easing: spring({ damping: 20 }),
-                    onComplete: () => {
-                        card.dataset.animated = 'complete';
-                    }
+                  
                 }
             );
         });
