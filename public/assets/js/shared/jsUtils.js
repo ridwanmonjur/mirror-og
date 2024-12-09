@@ -3,9 +3,6 @@ function toggleNavbar() {
     x.classList.toggle("d-none");
 }
 
-
-
-
 var throttle = (func, wait) => {
     let lastTime = 0;
 
@@ -328,3 +325,25 @@ function getUrl(inputId, id = null) {
     return url;
 }
 
+
+let navbar = document.querySelector('.navbar');
+let lastScrollTop = 0;
+
+navbar.addEventListener('mouseenter', () => {
+    navbar.classList.remove('navbar-scrolled');
+});
+
+window.addEventListener('scroll', throttle(function() {
+    let currentScroll = window.scrollY;
+    
+    if (!navbar.matches(':hover')) {
+        if (currentScroll > lastScrollTop && currentScroll > 100) {
+            navbar.classList.add('navbar-scrolled');
+        } 
+        else if (currentScroll < lastScrollTop) {
+            navbar.classList.remove('navbar-scrolled');
+        }
+    }
+    
+    lastScrollTop = currentScroll;
+}, 300));

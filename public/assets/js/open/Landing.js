@@ -44,3 +44,10 @@ window.onclick = function (event) {
         }
     }
 }
+
+window.onload = () => {
+    console.log("hi");
+    console.log("hi");
+    console.log("hi");
+    window.motion.animateCard();
+}

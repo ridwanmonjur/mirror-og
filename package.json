@@ -15,12 +15,11 @@
     },
     "dependencies": {
         "@easylogic/colorpicker": "^1.10.11",
+        "@motionone/dom": "^10.18.0",
         "@popperjs/core": "^2.11.8",
         "@stripe/stripe-js": "^4.8.0",
         "@yaireo/tagify": "^4.31.3",
         "alpinejs": "^3.13.10",
-        "animate.css": "^4.1.1",
-        "aos": "^3.0.0-beta.6",
         "bootstrap": "^5.0.2",
         "cropperjs": "^1.6.2",
         "firebase": "^10.12.3",

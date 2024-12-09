@@ -9,7 +9,7 @@
     class="d-none"
 >
 </div>
-<img class="mt-4 mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
+<img class="mt-4 mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
 <h5 class="mt-2 mb-0"><u>Sign in to your organizer account</u></h5>
 <form 
     autocomplete="off" 

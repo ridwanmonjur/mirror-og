@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/js/libraries/tagify.js',
                 'resources/js/libraries/file-edit.js',
                 'resources/js/libraries/lightgallery.js',
+                'resources/js/libraries/motion.js',
                 'resources/sass/libraries/lightgallery.scss',
                 'resources/sass/libraries/file-edit.scss',
                 'resources/sass/libraries/lightpicker.scss',
@@ -41,11 +42,52 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks(id) {
+                    // Handle node_modules separately
                     if (id.includes('node_modules')) {
-                        return id.toString().split('node_modules/')[1].split('/')[0].toString();
+                        if (
+                            id.includes('@popperjs/core') || 
+                            id.includes('bootstrap') || 
+                            id.includes('sweetalert')
+                        ) {
+                            return 'vendor-core';
+                        }
+
+                        if (id.includes('firebase')) {
+                            return 'vendor-firebase';
+                        }
+
+                        // All other vendor dependencies
+                        return 'vendor-others';
                     }
+
+                    // Handle your application code
+                    if (id.includes('/resources/')) {
+                        // Library groups
+                        if (id.includes('/libraries/')) {
+                            return 'lib-ui';
+                        }
+
+                        // Alpine components
+                        if (id.includes('/alpine/')) {
+                            return 'alpine-components';
+                        }
+
+                        // Styles
+                        if (id.includes('.scss')) {
+                            if (id.includes('/libraries/')) {
+                                return 'lib-styles';
+                            }
+                            return 'styles';
+                        }
+
+                    }
+
+                    return 'index';
                 }
             }
         }
     },
+    optimizeDeps: {
+        include: ['bootstrap', '@popperjs/core', 'sweetalert2']
+    }
 });

@@ -18,6 +18,11 @@ body {
     background-size: auto 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
+    animation-name: fadeIn;
+    animation-duration: 800ms;
+    opacity: 0.2;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
 }
 
 
@@ -26,7 +31,8 @@ button {
     cursor: pointer;
 }
 
-.section-bottom a, .section-bottoms a{
+.section-bottom a,
+.section-bottoms a {
     color: #43A4D7 !important;
 }
 
@@ -96,17 +102,15 @@ form input::placeholder {
     color: #bfbfbf;
 }
 
-input:-webkit-autofill:placeholder {
-}
+input:-webkit-autofill:placeholder {}
 
-input:-webkit-autofill
-{
+input:-webkit-autofill {
     transition: background-color 5000s ease-in-out 0s;
     border-color: #7cd1ff;
     z-index: -1 !important;
 }
 
-input:focus   {
+input:focus {
     transition: background-color 5000s ease-in-out 0s;
 }
 
@@ -125,9 +129,23 @@ input::selection {
 
 
 @keyframes slide {
-  0% {height: 5px; opacity: 0;  overflow-y: hidden;}
-  50% {height: 12px; opacity: 0.25; overflow-y: hidden;}
-  100% {height: 100%; opacity: 1; overflow-y: visible;}
+    0% {
+        height: 5px;
+        opacity: 0;
+        overflow-y: hidden;
+    }
+
+    50% {
+        height: 12px;
+        opacity: 0.25;
+        overflow-y: hidden;
+    }
+
+    100% {
+        height: 100%;
+        opacity: 1;
+        overflow-y: visible;
+    }
 }
 
 
@@ -158,7 +176,8 @@ input::selection {
     padding-top: 4%;
 }
 
-form input[type="submit"], form input[type="button"] {
+form input[type="submit"],
+form input[type="button"] {
     width: 150px;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -173,7 +192,8 @@ form input[type="submit"], form input[type="button"] {
     /* border-bottom: 2px solid rgba(0, 0, 0, 0.1); */
 }
 
-form input[type="submit"]:hover, form input[type="button"]:hover {
+form input[type="submit"]:hover,
+form input[type="button"]:hover {
     background: #79b0cc;
 }
 
@@ -300,14 +320,15 @@ span.placeholder-moves-up {
     z-index: -1;
 }
 
-.field-error-message, .flash-message {
+.field-error-message,
+.flash-message {
     color: #ED1D24;
     text-align: left;
     margin-top: 5px;
     opacity: 0;
     animation: slide 0.5s ease forwards;
     animation-iteration-count: 1;
-    -prefix-animation: slide 0.5s ease forwards;     
+    -prefix-animation: slide 0.5s ease forwards;
 }
 
 .input__error {
@@ -329,8 +350,8 @@ span.placeholder-moves-up {
 /* Adding new CSS for placeholder animation */
 
 input:focus+span.placeholder-moves-up,
-input:not(:focus):valid + span.placeholder-moves-up {
-    transform:  translateY(-50%) ;
+input:not(:focus):valid+span.placeholder-moves-up {
+    transform: translateY(-50%);
     padding: 0px 0px;
     z-index: 99 !important;
     background-color: white;
@@ -343,16 +364,16 @@ input:focus+span.placeholder-moves-up {
 
 
 
-input:-webkit-autofill +span.placeholder-moves-up {
-    transform:  translateY(-50%) ;
+input:-webkit-autofill+span.placeholder-moves-up {
+    transform: translateY(-50%);
     z-index: 99 !important;
     opacity: 1;
     padding: 0;
     background-color: white;
 }
 
-input:not(:-webkit-autofill):invalid + span.placeholder-moves-up {
-    transform:  translateY(-50%) ;
+input:not(:-webkit-autofill):invalid+span.placeholder-moves-up {
+    transform: translateY(-50%);
     opacity: 1;
     padding: 0;
     background-color: white;
@@ -373,6 +394,7 @@ input:not(:-webkit-autofill):invalid + span.placeholder-moves-up {
         justify-content: center;
         background-image: url("./signinbg.png");
     }
+
     .wrapper {
         width: 500px;
         padding-left: 20px;
@@ -383,5 +405,59 @@ input:not(:-webkit-autofill):invalid + span.placeholder-moves-up {
         border-radius: 40px;
         text-align: center;
         box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
+    }
+}
+
+@keyframes bobbing {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-16px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.motion-logo {
+    display: inline-block;
+    animation: bobbing 1s ease-in-out 2;
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+.motion-logo:hover {
+    animation-play-state: paused;
+}
+
+/* 1. Pulsing button */
+input[type='submit'] {
+    animation: pulse 1s 3;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(52, 152, 219, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0.5;
+    }
+
+    to {
+        opacity: 1;
     }
 }

@@ -2,7 +2,7 @@
 
 @section('signUpbody')
 
-<img class="mt-4  mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
+<img class="mt-4  mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
 <br>
 <h5><u>Success Notification</u></h5>
 <br><br> 

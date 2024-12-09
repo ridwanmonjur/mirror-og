@@ -9,7 +9,7 @@
     @include('__CommonPartials.HeadIcon')
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/common/event-status.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
+    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/libraries/motion.js'])    
     <title>Driftwood</title>
 </head>
 
@@ -48,7 +48,7 @@
         <br><br>
         
         
-        <script src="{{ asset('/assets/js/open/Landing.js') }}"></script>
+        <script type="module" src="{{ asset('/assets/js/open/Landing.js') }}"></script>
 
     </main>
 </body>

@@ -2,10 +2,11 @@
 
 
 @section('signUpbody')
-    <img class="mt-4  mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
+    <img class="mt-4  mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
     <h5><u class="px-2">Create a participant account</u></h5>
     <form autocomplete="off" readonly name="signup-form" id="signup-form" method="post"
-        action="{{ route('participant.signup.action') }}">
+        action="{{ route('participant.signup.action') }}"
+    >
         @csrf
         <div class="flash-message">
             @include('__CommonPartials.Flash')

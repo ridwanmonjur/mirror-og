@@ -2,9 +2,15 @@
 
 @section('signUpbody')
 
-<img class="mt-2  mb-1" src="{{ asset('/assets/images/driftwood logo.png') }}">
+<img class="mt-2  mb-1 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
 <h5 class="mt-2 mb-0"><u>Create an  organizer account</u></h5>
-<form autocomplete="off" readonly name="organizer-signup-form" id="organizer-signup-form" method="post" action="{{route('organizer.signup.action')}}">
+<form 
+    autocomplete="off" 
+    readonly 
+    name="organizer-signup-form" 
+    id="organizer-signup-form" 
+    method="post" 
+    action="{{route('organizer.signup.action')}}">
     @csrf
     <div class="flash-message">
         @include('__CommonPartials.Flash')
