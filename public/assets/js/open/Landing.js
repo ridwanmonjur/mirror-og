@@ -23,6 +23,9 @@ window.addEventListener(
             }
 
             infinteLoadMore(null, ENDPOINT);
+            document.head.insertAdjacentHTML('beforeend', 
+                '<style>.event { opacity: 1 !important }</style>'
+            );
         }
     });
 
