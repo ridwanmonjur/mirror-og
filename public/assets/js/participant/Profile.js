@@ -102,6 +102,13 @@ function visibleElements() {
 }
 
 window.onload = () => {
+    document.querySelectorAll('.opacity-zero').forEach(element => {
+        window.motion.createStaggerChildren(element);
+    });
+
+    window.motion.slideInLeftRight();
+
+
     window.setupFileInputEditor('#changeBackgroundBanner', (file) => {
         if (file) {
             var cachedImage = URL.createObjectURL(file);

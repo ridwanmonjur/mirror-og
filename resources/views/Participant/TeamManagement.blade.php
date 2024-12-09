@@ -58,7 +58,7 @@
                         onclick="carouselWork(2)">
                         &gt;
                     </button>
-                     <div @class(["event-carousel-works", 
+                     <div @class(["event-carousel-works opacity-zero", 
                         "event-carousel-styles" => isset($joinEvents[1]),
                         "d-flex justify-content-center " => !isset($joinEvents[1])
                     ])
@@ -146,11 +146,11 @@
                 </p>
                 <br><br><br>
             @else
-                <div id="activeRostersForm" class="tex-center mx-auto">
+                <div id="activeRostersForm" class="opacity-zero text-center mx-auto">
                     <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $joinCount }} roster{{ bladePluralPrefix($joinCount) }}</p>
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        <div class="d-flex justify-content-center align-items-center    ">
+                        <div class="d-flex justify-content-center align-items-center   opacity-zero ">
                             @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
                             
                         </div>
@@ -166,11 +166,11 @@
                 <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history </p>
                 <br> <br><br> 
             @else
-                <div id="activeRostersForm" class="tex-center mx-auto">
+                <div id="activeRostersForm" class="opacity-zero text-center mx-auto">
                     <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $historyCount }} roster{{ bladePluralPrefix($historyCount) }}</p>
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
-                        <div class="d-flex justify-content-center align-items-center    ">
+                        <div class="d-flex justify-content-center align-items-center   opacity-zero ">
                             @include('Participant.__Partials.RosterView',  ['isRegistrationView' => false])
                             @if (isset($user) && $selectTeam->creator_id == $user->id)
                                 <a

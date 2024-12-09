@@ -144,6 +144,13 @@ let newFunction = function () {
 
 
     window.loadMessage();
+
+    window.motion.slideInLeftRight();
+
+    document.querySelectorAll('.opacity-zero').forEach(element => {
+        window.motion.createStaggerChildren(element);
+    });
+
 }
 
 let oldOnLoad = window.onload;

@@ -95,7 +95,7 @@
                                         class="d-none-until-hover-parent list-unstyled members-hover"
                                     >
                                        
-                                        <img class="rounded-circle object-fit-cover random-color-circle me-2 mb-1" width="25"
+                                        <img class="rounded-circle2 object-fit-cover random-color-circle me-2 mb-1" width="25"
                                             height="25" 
                                             src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
 
@@ -261,7 +261,7 @@
                                                    @foreach ($joinEvent->roster as $roster)
                                                         @if ($roster->vote_to_quit !== null)
                                                             <img 
-                                                                class="rounded-circle random-color-circle object-fit-cover"
+                                                                class="rounded-circle2 random-color-circle object-fit-cover"
                                                                 width="25" 
                                                                 height="25" 
                                                                 src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
@@ -335,7 +335,9 @@
                 
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
 
-                        width="45" height="45" class="me-1 object-fit-cover random-color-circle">
+                        width="45" height="45" 
+                        class="me-1 object-fit-cover rounded-circle2 random-color-circle"
+                    >
                     <div class="d-inline-block text-start me-1">
                         <span class="text-truncate-2-lines h-auto ">{{ $joinEvent->eventDetails->user->name }}</span>
                         <small

@@ -16,6 +16,6 @@
         'resources/js/libraries/lightpicker.js', 
         'resources/sass/libraries/lightpicker.scss'
     ])    
-    
+   
 
 </head>

@@ -145,7 +145,7 @@ function previewSelectedImage(imageId, previewImageId) {
         
             image.onload = function() {
                 
-                if (image.width < 1401 ) {
+                if (!(image.width >= 1400) ) {
                     Toast.fire({
                         icon: 'error',
                         text: `Image width ${image.width}px is lesser than 1400px`
@@ -155,7 +155,7 @@ function previewSelectedImage(imageId, previewImageId) {
                     return;
                 }
     
-                if (image.height < 601) {
+                if (!(image.height >= 600)) {
                     Toast.fire({
                         icon: 'error',
                         text: `Image height ${image.height} is lesser than 600px`
@@ -405,9 +405,9 @@ function goToNextScreen(nextId, nextTimeline) {
         
         if (id === nextId) {
             element.classList.remove("d-none");
-            element.classList.add('fadeIn');
+            if (slideIdIndex %2) element.classList.add('fadeIn')
+            else element.classList.add('fadeOut');
         } else {
-            element.classList.remove('fadeIn');
             element.classList.add("d-none");
         }
     })

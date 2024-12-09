@@ -14,6 +14,7 @@
         'resources/js/app.js', 
         'resources/js/alpine/organizer.js', 
         'resources/js/libraries/lightgallery.js', 
+        'resources/js/libraries/motion.js', 
         'resources/sass/libraries/lightgallery.scss',   
         'resources/js/libraries/colorpicker.js',
         'resources/sass/libraries/colorpicker.scss',
@@ -89,7 +90,7 @@
                 <div class="member-image">
                     <div class="upload-container align-items-center">
                         <label  class="upload-label">
-                            <div class="circle-container">
+                            <div class="circle-container motion-logo">
                                 <div class="uploaded-image"
                                     style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }}  ); background-size: cover; 
                                         z-index: 99; background-repeat: no-repeat; background-position: center; {{$frameStyles}}"
@@ -158,10 +159,10 @@
                         <br>
                     </div>
                     <div x-cloak x-show="!isEditMode">
-                        <h5>
+                        <h5 class="slideInLeft">
                             {{$userProfile->name}}
                         </h5>
-                        <div class="my-2" x-data="profileStatsData"> 
+                        <div class="my-2 slideInRight" x-data="profileStatsData"> 
                             <span class="me-2"> </span>
                             <span class="me-3" x-text="organizer.industry"> </span>
                             <span class="me-1"> 
@@ -278,7 +279,7 @@
                         onclick="carouselWork(2)">
                         &gt;
                     </button>
-                    <div @class(["event-carousel-works", 
+                    <div @class(["event-carousel-works opacity-zero", 
                         "event-carousel-styles" => isset($joinEvents[1]),
                         "d-flex justify-content-center " => !isset($joinEvents[1])
                     ])
@@ -302,7 +303,7 @@
                 </p>
                 <br><br><br>
             @else
-                <div id="activeRostersForm" class="tex-center mx-auto">
+                <div id="activeRostersForm" class="opacity-zero text-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                             @include('Organizer.__Partials.RosterView', ['isRegistrationView' => false])
@@ -318,7 +319,7 @@
                     This profile have no past events
                 </p>
             @else
-                <div id="activeRostersForm" class="tex-center mx-auto">
+                <div id="activeRostersForm" class="opacity-zero text-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)                        
                             @include('Organizer.__Partials.RosterView', ['isRegistrationView' => false])

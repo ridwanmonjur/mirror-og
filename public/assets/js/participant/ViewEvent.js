@@ -137,7 +137,7 @@ document.getElementById('followForm').addEventListener('submit', async function(
 
 addOnLoad(()=> {
     const glowEffect = document.querySelector('.glow-effect');
-    window.motion.animateGlow(glowEffect);
+    if (glowEffect) window.motion.animateGlow(glowEffect);
 
     window.motion.slideInLeftRight();
 })

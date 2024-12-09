@@ -66,7 +66,7 @@
             <div> </div>
             <div>
                 <div>
-                    <div class="mx-2 position-relative rounded-banner-parent">
+                    <div class="mx-2 slideInLeft position-relative rounded-banner-parent">
                         <div class="d-flex justify-content-center d-lg-none">
                             <img class="image-at-top" src="{{ $eventTierLowerImg }}" {!! trustedBladeHandleImageFailureResize() !!}
                                 width="120" height="90">
@@ -74,7 +74,7 @@
                         <a data-fslightbox="lightbox" href="{{ $eventBannerImg }}">
 
                             <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover;"
-                                @class(['slideInLeft rounded-banner height-image ms-0', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
+                                @class([' rounded-banner height-image ms-0', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
                                 alt="" data-fslightbox="lightbox"
                             >
                         </a>
