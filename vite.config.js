@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/js/libraries/tagify.js',
                 'resources/js/libraries/file-edit.js',
                 'resources/js/libraries/lightgallery.js',
+                'resources/js/libraries/motion.js',
                 'resources/sass/libraries/lightgallery.scss',
                 'resources/sass/libraries/file-edit.scss',
                 'resources/sass/libraries/lightpicker.scss',
