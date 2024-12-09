@@ -28,8 +28,8 @@ function animateCard() {
     const cardArray = Array.from(cards);
     
     const groups = [];
-    for (let i = 0; i < cardArray.length; i += 3) {
-        groups.push(cardArray.slice(i, i + 3));
+    for (let i = 0; i < cardArray.length; i += 6) {
+        groups.push(cardArray.slice(i, i + 6));
     }
     
     groups.forEach((group, groupIndex) => {
