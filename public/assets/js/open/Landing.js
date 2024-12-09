@@ -18,8 +18,10 @@ window.addEventListener(
             ENDPOINT += "?search=" + search + "&page=" + page;
         }
 
-        infinteLoadMore(null, ENDPOINT);
-        window.motion.animateCard();
+        infinteLoadMore(null, ENDPOINT, ()=> {
+            window.motion.animateCard();
+        });
+        
 
     }, 100));
 
