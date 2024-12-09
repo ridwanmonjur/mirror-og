@@ -33,7 +33,7 @@ call infinteLoadMore()
 --------------------------------------------
 --------------------------------------------*/
 
-function infinteLoadMore(page, ENDPOINT) {
+function infinteLoadMore(page, ENDPOINT, cbIfDataPresent=null) {
     let noMoreDataElement = document.querySelector('.no-more-data');
     let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
     let hasClass = noMoreDataElement.classList.contains('d-none');
@@ -58,9 +58,11 @@ function infinteLoadMore(page, ENDPOINT) {
                     noMoreDataElement.style.display = 'flex';
                     noMoreDataElement.style.justifyContent = 'center';
                     noMoreDataElement.textContent = "We don't have more data to display";
+                    return;
                 }
         
                 scrollingPaginationElement.insertAdjacentHTML('beforeend', response.html);
+                cbIfDataPresent();
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
