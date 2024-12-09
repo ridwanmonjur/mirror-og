@@ -24,7 +24,7 @@ const createStaggerChildren = (parent, staggerTime = 0.1) => {
 };
 
 function animateCard() {
-    const cards = document.querySelectorAll('.event');
+    const cards = document.querySelectorAll('.event:not([data-animated]');
     const cardArray = Array.from(cards);
     
     const groups = [];
@@ -65,7 +65,10 @@ function animateCard() {
                 {
                     delay: stagger(0.2, { start: innerDelay }),
                     duration: 0.3,
-                    easing: spring({ damping: 20 })
+                    easing: spring({ damping: 20 }),
+                    onComplete: () => {
+                        card.dataset.animated = 'complete';
+                    }
                 }
             );
         });

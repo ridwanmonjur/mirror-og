@@ -6,28 +6,22 @@ var search = null;
 
 window.addEventListener(
     "scroll",
-    (e) => {
-        var windowHeight = window.innerHeight;
-        var documentHeight = document.documentElement.scrollHeight;
-        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    debounce(() => {
 
-        if (scrollTop + windowHeight >= documentHeight - 200) {
-            page++;
-            ENDPOINT = ENDPOINT_OG;
+        page++;
+        ENDPOINT = ENDPOINT_OG;
 
-            if (!search || String(search).trim() == "") {
-                search = null;
-                ENDPOINT += "?page=" + page;
-            } else {
-                ENDPOINT += "?search=" + search + "&page=" + page;
-            }
-
-            infinteLoadMore(null, ENDPOINT);
-            document.head.insertAdjacentHTML('beforeend', 
-                '<style>.event { opacity: 1 !important }</style>'
-            );
+        if (!search || String(search).trim() == "") {
+            search = null;
+            ENDPOINT += "?page=" + page;
+        } else {
+            ENDPOINT += "?search=" + search + "&page=" + page;
         }
-    });
+
+        infinteLoadMore(null, ENDPOINT);
+        window.motion.animateCard();
+
+    }, 100));
 
 
 function myFunction() {
