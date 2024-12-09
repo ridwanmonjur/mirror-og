@@ -1,13 +1,14 @@
 @include('Auth.Layout.HeadTag')
 
 @section('signUpbody')
-    <img class="mt-4  mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
+    <img class="mt-4  mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
     <br>
     <h5><u>Reset Password</u></h5>
     <br>
     <p> Enter your password</p>
     <form autocomplete="off" name="reset-password-form" id="reset-password-form" method="post"
-        action="{{ route('user.reset.action') }}">
+        action="{{ route('user.reset.action') }}"
+        >
         @csrf
         <input type="hidden" name="token" value="{{ $token }}">
         <div class="flash-message">

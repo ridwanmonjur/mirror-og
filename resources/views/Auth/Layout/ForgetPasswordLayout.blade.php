@@ -2,7 +2,7 @@
 
 @section('signUpbody')
 
-<img class="mt-4 mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
+<img class="mt-4 mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
 <header><u>Forgotten Password?</u></header>
 <br>
 <p> Enter your email to reset your password</p>
