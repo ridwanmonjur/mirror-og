@@ -8,7 +8,7 @@
     <title>View Event</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/viewEvent.css') }}">
     @include('__CommonPartials.HeadIcon')
-    @vite(['resources/js/libraries/tippy.js',  'resources/js/alpine/bracket.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/libraries/lightgallery.js', 'resources/sass/libraries/lightgallery.scss'])
+    @vite(['resources/js/libraries/tippy.js',  'resources/js/alpine/bracket.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/libraries/lightgallery.js', 'resources/js/libraries/motion.js', 'resources/sass/libraries/lightgallery.scss'])
      <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/event-status.css') }}">
@@ -52,10 +52,10 @@
         <div>
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }} ">
-                    <img class="side-image-absolute-top" src="{{ $eventTierLowerImg }}" width="80" height="80">
+                    <img class="side-image-absolute-top slideInLeft" src="{{ $eventTierLowerImg }}" width="80" height="80">
                 </div>
                 <div class="{{ 'side-image side-image-' . $eventTierLower }}">
-                    <img class="side-image-absolute-bottom" src="{{ $eventTierLowerImg }}" width="80" height="80">
+                    <img class="side-image-absolute-bottom slideInRight" src="{{ $eventTierLowerImg }}" width="80" height="80">
                 </div>
             @else
                 <div>
@@ -73,10 +73,11 @@
                         </div>
                         <a data-fslightbox="lightbox" href="{{ $eventBannerImg }}">
 
-                        <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover;"
-                            @class(['rounded-banner height-image ms-0', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
-                            alt="" data-fslightbox="lightbox">
-                            </a>
+                            <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover;"
+                                @class(['slideInLeft rounded-banner height-image ms-0', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
+                                alt="" data-fslightbox="lightbox"
+                            >
+                        </a>
                         @if ($event->eventBanner)
                         @else
                             <h5>
@@ -87,7 +88,7 @@
                     </div>
                 </div>
                 <div class="grid-container-two-columns-at-desktop">
-                    <div class="card-text">
+                    <div class="card-text slideInLeft">
                         <div>
                             <br>
                             <div class="d-flex justify-content-between flex-wrap align-items-start pb-3">
@@ -221,7 +222,7 @@
 
                         </div>
                     </div>
-                    <div class="ps-3">
+                    <div class="ps-3 slideInRight">
                         <br>
                         @if (session('errorMessage'))
                             <div class="error-message mt-0">
@@ -244,13 +245,13 @@
                                     <button 
                                         type="button"
                                         onclick="reddirectToLoginWithIntened('{{route('public.event.view', ['id'=> $event->id])}}')"
-                                        class="oceans-gaming-default-button ">
+                                        class="oceans-gaming-default-button glow-effect">
                                         <span>Join</span>
                                     </button>
                                 @endguest
                                 @auth
                                     @if ($user->role == 'PARTICIPANT')
-                                        <button type="submit" class="oceans-gaming-default-button ">
+                                        <button type="submit" class="oceans-gaming-default-button glow-effect">
                                             <span>Join</span>
                                         </button>
                                     @else
@@ -338,7 +339,7 @@
         </div>
         
     </div>
-    <div class="grid-container">
+    <div class="grid-container slideInRight">
             <div></div>
             <div>
                 <div class="tab ms-0 position-relative" style="width: max(60vw, 95%); left: min(2%, 10px); top:20px;">

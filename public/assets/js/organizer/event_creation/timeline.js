@@ -361,7 +361,9 @@ function saveEvent(willGoToNextPage = true) {
     }
 }
 
+
 function goToNextScreen(nextId, nextTimeline) {
+
     document.getElementsByClassName("navbar")[0].scrollIntoView({ behavior: 'smooth' });
 
     const allIDs = [
@@ -398,12 +400,14 @@ function goToNextScreen(nextId, nextTimeline) {
         }
     })
 
-    allIDs.forEach(id => {
+    allIDs.forEach((id, slideIdIndex) => {
         const element = document.querySelector(`#${id}`);
         
         if (id === nextId) {
             element.classList.remove("d-none");
-        } else if (element && !element.classList.contains("d-none")) {
+            element.classList.add('fadeIn');
+        } else {
+            element.classList.remove('fadeIn');
             element.classList.add("d-none");
         }
     })

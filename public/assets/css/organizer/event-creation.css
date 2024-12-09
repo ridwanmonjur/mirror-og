@@ -1123,3 +1123,12 @@ body{
 
     
 }
+
+.fadeIn {
+    animation: simpleShow 0.4s ease forwards;
+}
+
+@keyframes simpleShow {
+    from { opacity: 0;  }
+    to { opacity: 1; }
+}

@@ -76,10 +76,68 @@ function animateCard() {
     });
 }
 
+function animateGlow(glowEffectElement) {
+    animate(glowEffectElement, {
+        boxShadow: [
+            '0 0 0px rgba(0, 123, 255, 0)',
+            '0 0 20px rgba(0, 123, 255, 0.8)',
+            '0 0 0px rgba(0, 123, 255, 0)'
+        ]
+    }, {
+        duration: 3,
+        repeat: 4,
+        easing: 'ease-in-out'
+    });
+}
+
+function slideInLeftRight() {
+    inView('.slideInLeft', ({ target }) => {
+        animate(target, 
+            {
+                opacity: [0, 1],
+                transform: ['translateX(-50px)', 'translateX(0)']
+            },
+            {
+                duration: 0.8,
+                easing: 'ease-out',
+                delay: 0.2
+            }
+        );
+        
+        return false;
+    }, {
+        margin: "0px 0px -100px 0px" 
+    });
+
+    inView('.slideInRight', ({ target }) => {
+        animate(target,
+            {
+                opacity: [0, 1],
+                transform: ['translateX(50px)', 'translateX(0)']
+            },
+            {
+                duration: 0.8,
+                easing: 'ease-out',
+                delay: 0.2
+            }
+        );
+        
+        return false;
+    }, {
+        margin: "0px 0px -100px 0px"
+    });
+
+    document.querySelectorAll('.slideInLeft, .slideInRight').forEach(element => {
+        element.style.opacity = '0';
+    });
+}
+
 
 
 window.motion = {
     createFadeIn,
     createStaggerChildren,
-    animateCard
+    animateCard,
+    animateGlow,
+    slideInLeftRight
 }
