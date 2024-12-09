@@ -134,3 +134,10 @@ document.getElementById('followForm').addEventListener('submit', async function(
         toastError('Error occured.', error);
     }
 });
+
+addOnLoad(()=> {
+    const glowEffect = document.querySelector('.glow-effect');
+    if (glowEffect) window.motion.animateGlow(glowEffect);
+
+    window.motion.slideInLeftRight();
+})

@@ -36,7 +36,7 @@
             <img 
                 {!! trustedBladeHandleImageFailureBanner() !!}
                 @class([
-                'opacity-until-hover ',
+                'opacity-until-hover object-fit-cover me-1',
                 'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
             ])
                 style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
@@ -52,7 +52,7 @@
                         @foreach ($joinEvent->roster as $roster)
                             <li style="list-style: none;"    
                             >
-                                <img class="rounded-circle random-color-circle me-2" width="35" height="35" src="{{$roster->user->userBanner}}" {!!trustedBladeHandleImageFailureBanner()!!}>
+                                <img class="rounded-circle2 object-fit-cover random-color-circle me-2" width="35" height="35" src="{{$roster->user->userBanner}}" {!!trustedBladeHandleImageFailureBanner()!!}>
                                 <span>{{ $roster->user->name }}</span>
                             </li>
                         @endforeach
@@ -78,9 +78,9 @@
                     class="col-6 col-xl-4 d-flex justify-content-center px-0 mx-0 mt-1">
                     <img 
                         {!! trustedBladeHandleImageFailureBanner() !!}
-                        src="{{ bladeImageNull($joinEvent->user->userBanner) }}" width="45" height="45"
-                        class="me-1 object-fit-cover random-color-circle">
-                    <div class="text-start  me-1">
+                        src="{{ bladeImageNull($joinEvent->user->userBanner) }}" width="35" height="35"
+                        class="object-fit-cover random-color-circle rounded-circle2" >
+                    <div class="text-start  ms-1">
                         <span class="text-truncate-2-lines h-auto w-100">{{ $joinEvent->user->name }}</span>
                         <small
                             data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id] : 0 }} "

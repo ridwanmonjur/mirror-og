@@ -19,7 +19,9 @@ window.addEventListener(
         }
 
         infinteLoadMore(null, ENDPOINT, ()=> {
-            window.motion.animateCard();
+            window.motion.animateCard('event', [
+                'cover', 'frame1', 'league_name', 'fs-7'
+            ]);
         });
         
 
@@ -45,8 +47,8 @@ window.onclick = function (event) {
 }
 
 window.onload = () => {
-    console.log("hi");
-    console.log("hi");
-    console.log("hi");
-    window.motion.animateCard();
+
+    window.motion.animateCard('event', [
+        'cover', 'frame1', 'league_name', 'fs-7'
+    ]);
 }

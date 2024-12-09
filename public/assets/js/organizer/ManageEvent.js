@@ -6,6 +6,9 @@ const eventCreateUrl = appData.dataset.eventCreateUrl;
 
 addOnLoad(()=> {
     addTippy();
+    window.motion.animateCard('event-box', [
+        'card-text'
+    ]);
 });
 
 function addTippy() {
@@ -45,6 +48,9 @@ function infinteLoadMoreByPost(ENDPOINT, body) {
                     noMoreDataElement.textContent = "We don't have more data to display";
                 } else {
                     scrollingPaginationElement.innerHTML += response.html ;
+                    window.motion.animateCard('event-box', [
+                        'card-text'
+                    ]);
                 }
 
                 addTippy();

@@ -15,6 +15,7 @@
         'resources/js/app.js', 
         'resources/js/alpine/participant.js', 
         'resources/js/libraries/lightgallery.js',
+        'resources/js/libraries/motion.js',
         'resources/sass/libraries/lightgallery.scss',   
         'resources/js/libraries/file-edit.js',
         'resources/sass/libraries/file-edit.scss',
@@ -126,7 +127,7 @@
             </div>
             <div class="d-flex justify-content-center align-items-start flex-wrap">
                 <div class="member-image align-middle">
-                    <div class="upload-container">
+                    <div class="upload-container  motion-logo">
                         <label class="upload-label">
                             <div class="circle-container">
                                 <div class="uploaded-image"
@@ -156,7 +157,7 @@
                        
                     </div>
                 </div>
-                <div class="member-details">
+                <div class="member-details slideInLeft">
                         <div x-show="errorMessage != null && isEditMode" class="text-red" x-text="errorMessage"> </div>
                         <div x-cloak x-show="isEditMode" style="color: black;">
                             <input 
@@ -352,7 +353,7 @@
             </div>
         </div>
 
-        <div class="tabs">
+        <div class="tabs slideInRight">
             <button class="tab-button  outer-tab tab-button-active"
                 onclick="showTab(event, 'Overview', 'outer-tab')">Overview</button>
             <button class="tab-button outer-tab" onclick="showTab(event, 'Activity', 'outer-tab')">Activity</button>
@@ -376,7 +377,7 @@
                         onclick="carouselWork(2)">
                         &gt;
                     </button>
-                    <div @class(["event-carousel-works", 
+                    <div @class(["event-carousel-works opacity-zero ", 
                         "event-carousel-styles" => isset($joinEvents[1]),
                         "d-flex justify-content-center " => !isset($joinEvents[1])
                     ])
@@ -469,7 +470,7 @@
                 </p>
                 <br><br><br>
             @else
-                <div id="activeRostersForm" class="tex-center mx-auto">
+                <div id="activeRostersForm" class="opacity-zero text-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
@@ -485,7 +486,7 @@
                     This profile have no past events
                 </p>
             @else
-                <div id="activeRostersForm" class="tex-center mx-auto">
+                <div id="activeRostersForm" class="opacity-zero text-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])

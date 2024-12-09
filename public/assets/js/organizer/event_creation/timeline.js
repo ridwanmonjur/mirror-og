@@ -145,7 +145,7 @@ function previewSelectedImage(imageId, previewImageId) {
         
             image.onload = function() {
                 
-                if (image.width < 1401 ) {
+                if (!(image.width >= 1400) ) {
                     Toast.fire({
                         icon: 'error',
                         text: `Image width ${image.width}px is lesser than 1400px`
@@ -155,7 +155,7 @@ function previewSelectedImage(imageId, previewImageId) {
                     return;
                 }
     
-                if (image.height < 601) {
+                if (!(image.height >= 600)) {
                     Toast.fire({
                         icon: 'error',
                         text: `Image height ${image.height} is lesser than 600px`
@@ -361,7 +361,9 @@ function saveEvent(willGoToNextPage = true) {
     }
 }
 
+
 function goToNextScreen(nextId, nextTimeline) {
+
     document.getElementsByClassName("navbar")[0].scrollIntoView({ behavior: 'smooth' });
 
     const allIDs = [
@@ -398,12 +400,14 @@ function goToNextScreen(nextId, nextTimeline) {
         }
     })
 
-    allIDs.forEach(id => {
+    allIDs.forEach((id, slideIdIndex) => {
         const element = document.querySelector(`#${id}`);
         
         if (id === nextId) {
             element.classList.remove("d-none");
-        } else if (element && !element.classList.contains("d-none")) {
+            if (slideIdIndex %2) element.classList.add('fadeIn')
+            else element.classList.add('fadeOut');
+        } else {
             element.classList.add("d-none");
         }
     })

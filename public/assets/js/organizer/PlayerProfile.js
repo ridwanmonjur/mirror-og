@@ -205,6 +205,12 @@ window.onload = () => {
         }
     );
     window.loadMessage();
+
+    document.querySelectorAll('.opacity-zero').forEach(element => {
+        window.motion.createStaggerChildren(element);
+    });
+
+    window.motion.slideInLeftRight();
 }
 
 const uploadButton = document.getElementById("upload-button");

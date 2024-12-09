@@ -9,6 +9,45 @@
     --grid-size: 1fr 1fr; 
 }
 
+.slideInLeft, .slideInRight, .opacity-zero >  * {
+    opacity: 0;
+}
+
+.rounded-circle2{
+    width: 35px !important;
+    height: 35px !important;
+}
+
+@keyframes bobbing {
+    0% {
+        transform: translateY(0);
+    }
+
+    30% {
+        transform: translateY(10px);
+    }
+
+    60% {
+        transform: translateY(6px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+
+.motion-logo {
+    display: inline-block;
+    animation: bobbing 1s ease-in-out 2;
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+.motion-logo:hover {
+    animation-play-state: paused;
+}
+
 .main1 {
     min-height: 60vh;
     display: block !important;

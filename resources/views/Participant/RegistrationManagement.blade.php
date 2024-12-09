@@ -91,7 +91,7 @@
             @else
             {{-- IS REDURECT CHANGE--}}
            
-            <div @class(["event-carousel-styles", "mx-5 px-5"])>
+            <div @class(["event-carousel-styles opacity-zero", "mx-5 px-5"])>
                 @foreach ($joinEvents as $joinEvent)
                        
                     @include('Participant.__Partials.RosterViewRegister', ['isRegistrationView' => false])
@@ -110,7 +110,7 @@
                     @if (!isset($invitedEvents[0]))
                         <p class="tab-size text-start mx-auto">No events available</p>
                     @else
-                        <div class="event-carousel-styles mx-5 px-5">
+                        <div class="event-carousel-styles opacity-zero mx-5 px-5">
                             @foreach ($invitedEvents as $key => $joinEvent)
                                 @include('Participant.__Partials.RosterViewRegister', ['isRegistrationView' => false])
                                 @include('Participant.__Partials.PieChart', ['isInvited' => true])
