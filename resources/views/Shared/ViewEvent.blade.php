@@ -403,7 +403,7 @@
                                                 <span>{{$team->teamName}}</span>
                                             </td>
                                             <td class="colored-cell text-start">{{$team->teamDescription}}</td>
-                                            <td style="font-size: 1.5rem;" class="colored-cell">{{$team->country_flag}}</td>
+                                            <td style="font-size: 1.5rem;" class="colored-cell">{{$team->country_flag ? $team->country_flag : '-'}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
