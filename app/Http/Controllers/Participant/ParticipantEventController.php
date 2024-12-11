@@ -178,7 +178,7 @@ class ParticipantEventController extends Controller
             'teamList' => $selectTeam,
             'teamIdList' => $teamIdList,
         ] = Team::getUserTeamListAndPluckIds($user_id);
-        $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $user_id, 'accepted');
+        $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $user_id);
         if ($hasJoinedOtherTeams) {
             return $this->showErrorParticipant('One of your teams has joined this event already!');
         }
@@ -209,7 +209,7 @@ class ParticipantEventController extends Controller
                 throw new ErrorException('No team has been chosen');
             }
             $isAlreadyMember = TeamMember::isAlreadyMember($teamId, $userId);
-            $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $userId, 'accepted');
+            $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $userId);
             if ($hasJoinedOtherTeams) {
                 throw new Exception('One of your teams has joined this event already!');
             }
@@ -294,7 +294,7 @@ class ParticipantEventController extends Controller
                 'count' => $count,
             ] = Team::getUserTeamListAndCount($user_id);
 
-            $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $user_id, 'accepted');
+            $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $user_id);
             if ($hasJoinedOtherTeams) {
                 throw new Exception('One of your teams has joined this event already!');
             }

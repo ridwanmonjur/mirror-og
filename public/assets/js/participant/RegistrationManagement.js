@@ -39,17 +39,13 @@ function respondRosterApprove(joinEventId) {
     const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
     const {
         eventDetails: eventDetailsJSON, 
-        membersValue: membersValueJSON, 
         followCounts,
-        rosterCaptainId
     } = memberDataContainer.dataset;
     let eventDetails = JSON.parse(eventDetailsJSON);
-    let membersValue = JSON.parse(membersValueJSON);
     
     successSwal(`
         <h5 class="my-4">You have added this user to the roster!</h5>
         ${drawEventTable(eventDetails, followCounts)}
-        ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId)}
     `, () => scrollSwal(joinEventId));
 }
 
@@ -57,17 +53,13 @@ function respondRosterDisapprove(joinEventId) {
     const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
     const {
         eventDetails: eventDetailsJSON, 
-        membersValue: membersValueJSON, 
         followCounts,
-        rosterCaptainId
     } = memberDataContainer.dataset;
     let eventDetails = JSON.parse(eventDetailsJSON);
-    let membersValue = JSON.parse(membersValueJSON);
     
     successSwal(`
         <h5 class="my-4">You have removed this user from the roster!</h5>
         ${drawEventTable(eventDetails, followCounts)}
-        ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId)}
     `, () => scrollSwal(joinEventId));
 }
 
@@ -95,38 +87,16 @@ function voteNo(joinEventId) {
 }
 
 function captainApprove(joinEventId) {
-    const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
-    const {
-        eventDetails: eventDetailsJSON, 
-        membersValue: membersValueJSON, 
-        followCounts,
-        rosterCaptainId
-    } = memberDataContainer.dataset;
-    let eventDetails = JSON.parse(eventDetailsJSON);
-    let membersValue = JSON.parse(membersValueJSON);
-    
     successSwal(`
         <h5 class="my-4">You have assigned a new captain!</h5>
-        ${drawEventTable(eventDetails, followCounts)}
-        ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId)}
+       
     `, () => scrollSwal(joinEventId));
 }
 
 function captanRemove(joinEventId) {
-    const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
-    const {
-        eventDetails: eventDetailsJSON, 
-        membersValue: membersValueJSON, 
-        followCounts,
-        rosterCaptainId
-    } = memberDataContainer.dataset;
-    let eventDetails = JSON.parse(eventDetailsJSON);
-    let membersValue = JSON.parse(membersValueJSON);
-    
+ 
     successSwal(`
         <h5 class="my-4">You have removed the captaincy successfully</h5>
-        ${drawEventTable(eventDetails, followCounts)}
-        ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId)}
     `, () => scrollSwal(joinEventId));
 }
 
@@ -877,7 +847,7 @@ function approveMemberAction(event) {
     event.preventDefault();
     event.stopPropagation();
     let loggedUserId = getData('userId');
-    let {memberId, joinEventId, userId} = element.dataset;
+    let {joinEventId, event, userId} = element.dataset;
     const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
     const {eventDetails: eventDetailsJSON, 
         membersValue: membersValueJSON, 
@@ -906,7 +876,9 @@ function approveMemberAction(event) {
         `,
         showDenyButton: true,
         showCancelButton: false,
-        confirmButtonText: 'Yes, join the roster!',
+        confirmButtonText: userId == loggedUserId ? 
+        'Yes, join the rosterssssss!'   
+        : 'Yes, add this member!',
         denyButtonText: 'No',
         confirmButtonColor: "#43A4D7",
     }).then((result) => {
@@ -930,7 +902,7 @@ function approveMemberAction(event) {
                         'user_id': userId,
                         'join_events_id': joinEventId,
                         'team_member_id': memberId,
-                        'team_id': getData('teamId')
+                        'team_id': getData('teamId'),
                     })
                 }
             );
@@ -974,7 +946,11 @@ async function disapproveMemberAction(event) {
         `,
         showDenyButton: true,
         showCancelButton: false,
-        confirmButtonText: 'Yes, join the roster!',
+        confirmButtonText: 
+            userId == loggedUserId ? 
+            'Yes, leave the roster!'   
+            : 'Yes, remove this member!'
+        ,
         denyButtonText: 'No',
         confirmButtonColor: "#43A4D7",
     }).then((result) => {

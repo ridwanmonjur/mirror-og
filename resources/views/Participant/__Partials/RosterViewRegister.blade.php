@@ -95,7 +95,7 @@
                                         class="d-none-until-hover-parent list-unstyled members-hover"
                                     >
                                        
-                                        <img class="rounded-circle2 object-fit-cover random-color-circle me-2 mb-1" width="25"
+                                        <img class="rounded-circle object-fit-cover random-color-circle me-2 mb-1" width="25"
                                             height="25" 
                                             src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
 
@@ -295,6 +295,7 @@
                                                     onclick="approveMemberAction(event);"
                                                     class="z-99 btn btn-sm rounded-pill btn-success mb-2 text-dark me-3"
                                                     data-join-event-id="{{ $joinEvent->id }}"
+                                                    
                                                     data-user-id="{{$user->id}}"
 
                                                 >

@@ -13,6 +13,21 @@
     opacity: 0;
 }
 
+
+@keyframes slideUp {
+    0% {
+      margin-top: 20px;
+    }
+    
+    100% {
+      margin: 0;
+    }
+  }
+  
+.slide-up {
+    animation: slideUp 2s ease-out forwards;
+}
+
 .rounded-circle2{
     width: 35px !important;
     height: 35px !important;

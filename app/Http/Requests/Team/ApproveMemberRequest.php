@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Team;
 
+use App\Models\JoinEvent;
 use App\Models\TeamMember;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -18,6 +19,14 @@ class ApproveMemberRequest extends FormRequest
     public function authorize(): bool
     {
         $userId = $this->user_id;
+        if (JoinEvent::hasJoinedByOtherTeamsForSameEvent($this->event_id, $userId)) {
+            throw new HttpResponseException(
+                response()->json([
+                    'success' => false,
+                    'message' => 'Team member has joined with another team!',
+                ], Response::HTTP_NOT_FOUND)
+            );
+        };
         $teamMember = TeamMember::where([
             'user_id' => $userId,
             'team_id' => $this->team_id

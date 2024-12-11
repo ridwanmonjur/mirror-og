@@ -4,7 +4,6 @@
         'resources/js/app.js', 
         'resources/js/alpine/teamhead.js', 
         'resources/js/libraries/lightgallery.js',
-        'resources/js/libraries/motion.js',
         'resources/sass/libraries/lightgallery.scss',
         'resources/js/libraries/colorpicker.js',
         'resources/sass/libraries/colorpicker.scss',
@@ -98,7 +97,7 @@
         <div :class="{'upload-container': true, }">
             <label class="upload-label">
                 <div class="circle-container">
-                    <div class="uploaded-image motion-logo "
+                    <div class="uploaded-image"
                         style="background-image: url({{ '/storage' . '/'. $selectTeam->teamBanner  }} ), url({{asset('assets/images/404.png')}}) ; object-fit:cover; {{$frameStyles}}"
                     ></div>
                     <div class="d-flex align-items-center justify-content-center upload-button pt-3">
@@ -122,7 +121,7 @@
             </label>
         </div>
         <div>
-            <div :class="{'team-info': !isEditMode, 'slideInLeft': true}">
+            <div :class="{'team-info': !isEditMode}">
                 @if ($isCreator)
                 <div x-cloak x-show.important="isEditMode">
                     <input type="file" id="image-upload" accept="image/*" style="display: none;">
@@ -265,17 +264,17 @@
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                     </svg>
                 </div>
-                <div class="slideInRight">
+                <div>
                     <span class="ms-2" x-cloak x-show="!isEditMode">{{$selectTeam->teamDescription}}</span>
                     <span class="ms-2 fs-3"x-show="!isEditMode">{{$selectTeam->country_flag}}</span>
                 </div>
             @else
-                <p class="my-0 py-0 slideInRight">
+                <p class="my-0 py-0">
                     <span class="d-inline">{{$selectTeam->teamDescription}}</span>
                     <span class="d-inline ms-2 fs-3">{{$selectTeam->country_flag}}</span>
                 </p>
             @endif
-        <div class="mx-auto text-center mt-1 slideInLeft">
+        <div class="mx-auto text-center mt-1">
             @if (session('successJoin'))
                 <span class="text-success">
                     {{ session('successJoin') }}

@@ -157,7 +157,7 @@
                        
                     </div>
                 </div>
-                <div class="member-details slideInLeft">
+                <div class="member-details slide-up">
                         <div x-show="errorMessage != null && isEditMode" class="text-red" x-text="errorMessage"> </div>
                         <div x-cloak x-show="isEditMode" style="color: black;">
                             <input 

@@ -11,10 +11,23 @@
     opacity: 0;
 }
 
+@keyframes slideUp {
+    0% {
+      margin-top: 100px;
+    }
+    
+    100% {
+      margin: 0;
+    }
+  }
+  
+.slide-up {
+    animation: slideUp 2s ease-out forwards;
+}
+
 .d-none {
     display: none !important;
 }
-
 .d-none-at-mobile,
 .side-image {
     display: none;
