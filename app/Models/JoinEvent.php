@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -268,12 +266,11 @@ class JoinEvent extends Model
     public static function hasJoinedByOtherTeamsForSameEvent(
         string| int $eventId,
         string| int $userId,
-        string $status
     ): bool {
         return self::where('event_details_id', $eventId)
-            ->where(function ($query) use ($userId, $status) {
-                $query->whereHas('members', function ($query) use ($userId, $status) {
-                    $query->where('user_id', $userId)->where('status', $status);
+            ->where(function ($query) use ($userId) {
+                $query->whereHas('roster', function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
                 });
             })
             ->exists();
@@ -284,8 +281,8 @@ class JoinEvent extends Model
         if (!$userId) return null;
         return self::where('event_details_id', $eventId)
             ->where(function ($query) use ($userId) {
-                $query->whereHas('members', function ($query) use ($userId) {
-                    $query->where('user_id', $userId)->where('status', 'accepted');
+                $query->whereHas('roster', function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
                 });
             })
             ->first();

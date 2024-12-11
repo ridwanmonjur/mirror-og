@@ -23,16 +23,16 @@
 @endphp
 
 
-<div class="ms-3 d-flex flex-column justify-content-between position-relative popover-parent rounded">
+<div class="ms-3 d-flex flex-column justify-content-between position-relative  popover-parent rounded">
     <div class="mx-auto text-center cursor-pointer popover-button">
         <div class="pie animate no-round" style="{{ $styles }}">{{ $percent }}%</div>
         <p> Total Entry Fee: <u>RM {{ $total }} </u></p>
         <span>Paid: <u class="text-success">RM {{ $exisitngSum }}</u>
             <span>Pending: <u style="color: red;">RM {{ $pedning }} </u> <span></p>
     </div>
-    <div class="popover-content d-none cursor-pointer bg-light py-2">
+    <div class="popover-content d-none cursor-pointer bg-light py-2 z-999">
         <div class=" bg-light border-dark border-1 py-4 px-3" style="width: min-content;">
-            <table class="responsive table table-striped align-start px-3 mx-3 " style="width: min(450px, 95vw);">
+            <table class="responsive table member-table align-start px-3 mx-3 " style="width: min(450px, 95vw);">
                 <thead>
                     <tr>
                         <th class="pb-2"></th>

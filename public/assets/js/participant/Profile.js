@@ -102,7 +102,7 @@ function visibleElements() {
 }
 
 window.onload = () => {
-    document.querySelectorAll('.opacity-zero').forEach(element => {
+    document.querySelectorAll('.animation-container')?.forEach(element => {
         window.motion.createStaggerChildren(element);
     });
 

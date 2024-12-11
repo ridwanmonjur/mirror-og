@@ -147,7 +147,7 @@ let newFunction = function () {
 
     window.motion.slideInLeftRight();
 
-    document.querySelectorAll('.opacity-zero').forEach(element => {
+    document.querySelectorAll('.animation-container').forEach(element => {
         window.motion.createStaggerChildren(element);
     });
 

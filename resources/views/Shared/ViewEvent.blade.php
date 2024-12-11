@@ -339,7 +339,7 @@
         </div>
         
     </div>
-    <div class="grid-container slideInRight">
+    <div class="grid-container slide-up">
             <div></div>
             <div>
                 <div class="tab ms-0 position-relative" style="width: max(60vw, 95%); left: min(2%, 10px); top:20px;">

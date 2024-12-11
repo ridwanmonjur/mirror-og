@@ -122,7 +122,7 @@
             </label>
         </div>
         <div>
-            <div :class="{'team-info': !isEditMode, 'slideInLeft': true}">
+            <div :class="{'team-info': !isEditMode, '': true}">
                 @if ($isCreator)
                 <div x-cloak x-show.important="isEditMode">
                     <input type="file" id="image-upload" accept="image/*" style="display: none;">
@@ -153,23 +153,23 @@
                     x-cloak 
                     x-show.important="!isEditMode"
                 >
-                    <h3 style="{{$fontStyles}}" class="team-name" id="team-name">{{$selectTeam->teamName}}</h3>
+                    <h3 style="{{$fontStyles}}" class="team-name slideInLeft" id="team-name">{{$selectTeam->teamName}}</h3>
                 </span>
                 @else
-                    <h3 style="{{$fontStyles}}" class="team-name" id="team-name">{{$selectTeam->teamName}}</h3>
+                    <h3 style="{{$fontStyles}}" class="team-name slideInLeft" id="team-name">{{$selectTeam->teamName}}</h3>
                 @endif
                 @auth
                     @if ($user->role == "PARTICIPANT")
-                    <div class="dropdown" data-bs-auto-close="outside">
+                    <div class="dropdown slide-up" data-bs-auto-close="outside">
                         <button
                             x-cloak
                             x-show.important="!isEditMode"
-                            class="gear-icon-btn me-2 position-relative" style="top: 10px;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            class="gear-icon-btn me-2 position-relative z-99" style="top: 10px;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="{{$selectTeam->profile?->fontColor}}" class="bi bi-gear-fill" viewBox="0 0 16 16">
                                 <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
                             </svg>
                         </button>
-                        <div class="dropdown-menu py-0" style="font-size: 0.875rem;" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-menu z-999 py-0" style="font-size: 0.875rem;" aria-labelledby="dropdownMenuButton">
                             <div>
                                 @if (is_null($status))
                                     <form class="dropdown-item" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">

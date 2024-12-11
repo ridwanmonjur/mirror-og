@@ -15,6 +15,11 @@
     z-index: 99;
 }
 
+.z-999 {
+    position: relative;
+    z-index: 999;
+}
+
 .captain-crown {
     transform: translateY(-5px) rotate(-45deg);
 }

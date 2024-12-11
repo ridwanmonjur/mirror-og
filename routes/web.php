@@ -53,7 +53,8 @@ Route::get('logout', [AuthViewController::class, 'logoutAction'])->name('logout.
 
 // Search bar
 Route::get('/event/search', [MiscController::class, 'showLandingPage'])->name('public.search.view');
-Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view');
+Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view')
+    ->middleware('prevent-back-history');
 Route::get('/view/team/{id}', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
 Route::get('/view/participant/{id}', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view')
     ->middleware('prevent-back-history');
@@ -137,7 +138,7 @@ Route::group(['prefix' => 'participant'], function () {
             // Event management
    
             Route::post('/event/member', [ParticipantTeamController::class, 'teamMemberManagementRedirected'])->name('participant.memberManage.action');
-            Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.event.view');
+            Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.event.view')->middleware('prevent-back-history');
             Route::post('/event/{id}/join/team/select', [ParticipantEventController::class, 'selectTeamToJoinEvent'])->name('participant.selectTeamToJoin.action');
             Route::post('/event/{id}/join/team/create', [ParticipantEventController::class, 'createTeamToJoinEvent'])->name('participant.createTeamToJoinEvent.action');
             Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])->middleware('prevent-back-history')
