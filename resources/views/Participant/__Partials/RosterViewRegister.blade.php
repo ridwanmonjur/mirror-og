@@ -295,7 +295,6 @@
                                                     onclick="approveMemberAction(event);"
                                                     class="z-99 btn btn-sm rounded-pill btn-success mb-2 text-dark me-3"
                                                     data-join-event-id="{{ $joinEvent->id }}"
-                                                    
                                                     data-user-id="{{$user->id}}"
 
                                                 >

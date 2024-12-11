@@ -94,7 +94,8 @@ function slideInLeftRight() {
     });
 
     const slideInLeftElements = document.querySelectorAll('.slideInLeft') ;
-    if (Array.isArray(slideInLeftElements) && slideInLeftElements[0]) {
+
+    if (slideInLeftElements[0]) {
         inView(slideInLeftElements, ({ target }) => {
             try {
                 animate(
@@ -114,7 +115,7 @@ function slideInLeftRight() {
 
     const slideInRightElements = document.querySelectorAll('.slideInRight') ;
 
-    if (Array.isArray(slideInRightElements) && slideInRightElements[0]) {
+    if ( slideInRightElements[0]) {
         inView(slideInRightElements, ({ target }) => {
             try {
                 animate(
@@ -131,6 +132,7 @@ function slideInLeftRight() {
             amount: 0.2
         });
     }
+
 
 }
 

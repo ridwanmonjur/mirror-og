@@ -23,10 +23,11 @@ class ApproveMemberRequest extends FormRequest
             throw new HttpResponseException(
                 response()->json([
                     'success' => false,
-                    'message' => 'Team member has joined with another team!',
+                    'message' => 'This user has already joined this event with the roster of another team!',
                 ], Response::HTTP_NOT_FOUND)
             );
         };
+
         $teamMember = TeamMember::where([
             'user_id' => $userId,
             'team_id' => $this->team_id

@@ -38,9 +38,12 @@ window.closeLoading = () => {
 
 
 window.toastError = function (message, error = null) {
-    Toast.fire({
+    Swal.fire({
         icon: 'error',
-        text: message
+        title: 'Error',
+        text: message,
+        confirmButtonColor: '#43a4d7',
+        confirmButtonText: 'OK'
     });
 }
 

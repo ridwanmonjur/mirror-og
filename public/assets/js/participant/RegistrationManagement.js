@@ -858,7 +858,7 @@ function approveMemberAction(event) {
     let membersValue = JSON.parse(membersValueJSON);
 
     const url = getUrl('approve');
-
+    
     Swal.fire({
         html: `
             <h5 class="my-4"> 
@@ -877,7 +877,7 @@ function approveMemberAction(event) {
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: userId == loggedUserId ? 
-        'Yes, join the rosterssssss!'   
+        'Yes, join the roster!'   
         : 'Yes, add this member!',
         denyButtonText: 'No',
         confirmButtonColor: "#43A4D7",
@@ -891,6 +891,7 @@ function approveMemberAction(event) {
                         localStorage.setItem('message', responseData.message);
                         window.location.replace(currentUrl);
                     } else {
+                        
                         toastError(responseData.message);
                     }
                 },
@@ -901,7 +902,7 @@ function approveMemberAction(event) {
                     body: JSON.stringify({
                         'user_id': userId,
                         'join_events_id': joinEventId,
-                        'team_member_id': memberId,
+                        'event_id': eventDetails.id,
                         'team_id': getData('teamId'),
                     })
                 }
