@@ -88,7 +88,7 @@ function voteNo(joinEventId) {
 
 function captainApprove(joinEventId) {
     successSwal(`
-        <h5 class="my-4">You have assigned a new captain!</h5>
+        <p class="mt-4 mb-0 pb-0">You have assigned a new captain!</p>
        
     `, () => scrollSwal(joinEventId));
 }
@@ -96,7 +96,7 @@ function captainApprove(joinEventId) {
 function captanRemove(joinEventId) {
  
     successSwal(`
-        <h5 class="my-4">You have removed the captaincy successfully</h5>
+        <p  class="mt-4 mb-0 pb-0">You have removed the captaincy successfully</p>
     `, () => scrollSwal(joinEventId));
 }
 
@@ -847,7 +847,7 @@ function approveMemberAction(event) {
     event.preventDefault();
     event.stopPropagation();
     let loggedUserId = getData('userId');
-    let {joinEventId, event, userId} = element.dataset;
+    let {joinEventId,  userId} = element.dataset;
     const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
     const {eventDetails: eventDetailsJSON, 
         membersValue: membersValueJSON, 
@@ -994,7 +994,8 @@ async function capatainMemberAction(event) {
     const {eventDetails: eventDetailsJSON, followCounts} = memberDataContainer.dataset;
     let eventDetails = JSON.parse(eventDetailsJSON);
     let heading = '', body = '';
-    if (rosterCaptainId) {
+    if (rosterCaptainId != 0) {
+        
             heading = '<h5 class="text-center my-4">Appoint the captain for this event?</h5>';
             body = `<p class='text-center text-primary mb-2'> Appoint ${rosterUserId == loggedUserId ? 'yourself': 'this user'} as the captain? </p> 
                 <div class='text-center my-3'> 
@@ -1034,9 +1035,10 @@ async function capatainMemberAction(event) {
                 function(responseData) {
                     if (responseData.success) {
                         localStorage.setItem('swal', 
-                            rosterCaptainId ? 
-                                ROSTER_STATUS_ENUMS.CAPTAIN_APPROVE :
-                                ROSTER_STATUS_ENUMS.CAPTAIN_REMOVE
+                            rosterCaptainId == 0 ? 
+                            
+                                ROSTER_STATUS_ENUMS.CAPTAIN_REMOVE:
+                                ROSTER_STATUS_ENUMS.CAPTAIN_APPROVE 
                         );
                         localStorage.setItem('message', responseData.message);
                         localStorage.setItem('scroll', joinEventId);

@@ -12,7 +12,12 @@
 
 .z-99 {
     position: relative;
-    z-index: 999999;
+    z-index: 99;
+}
+
+.z-999 {
+    position: relative;
+    z-index: 999;
 }
 
 .captain-crown {

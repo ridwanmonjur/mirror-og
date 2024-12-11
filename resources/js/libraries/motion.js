@@ -93,48 +93,45 @@ function slideInLeftRight() {
         }
     });
 
-    const elements = document.querySelectorAll('.slideInLeft, .slideInRight');
-    if (!elements.length) {
-        console.warn('No slide animation elements found');
-        return;
+    const slideInLeftElements = document.querySelectorAll('.slideInLeft') ;
+    if (Array.isArray(slideInLeftElements) && slideInLeftElements[0]) {
+        inView(slideInLeftElements, ({ target }) => {
+            try {
+                animate(
+                    target,
+                    createSlideAnimation('left').keyframes,
+                    createSlideAnimation('left').options
+                );
+            } catch (error) {
+                console.error('Error animating slideInLeft:', error);
+            }
+            return false;
+        }, {
+            margin: "0px 0px -100px 0px",
+            amount: 0.2
+        });
     }
 
-    elements.forEach(element => {
-        element.style.opacity = '0';
-        element.style.willChange = 'transform, opacity';
-    });
+    const slideInRightElements = document.querySelectorAll('.slideInRight') ;
 
-    inView('.slideInLeft', ({ target }) => {
-        try {
-            animate(
-                target,
-                createSlideAnimation('left').keyframes,
-                createSlideAnimation('left').options
-            );
-        } catch (error) {
-            console.error('Error animating slideInLeft:', error);
-        }
-        return false;
-    }, {
-        margin: "0px 0px -100px 0px",
-        amount: 0.2
-    });
+    if (Array.isArray(slideInRightElements) && slideInRightElements[0]) {
+        inView(slideInRightElements, ({ target }) => {
+            try {
+                animate(
+                    target,
+                    createSlideAnimation('right').keyframes,
+                    createSlideAnimation('right').options
+                );
+            } catch (error) {
+                console.error('Error animating slideInRight:', error);
+            }
+            return false;
+        }, {
+            margin: "0px 0px -100px 0px",
+            amount: 0.2
+        });
+    }
 
-    inView('.slideInRight', ({ target }) => {
-        try {
-            animate(
-                target,
-                createSlideAnimation('right').keyframes,
-                createSlideAnimation('right').options
-            );
-        } catch (error) {
-            console.error('Error animating slideInRight:', error);
-        }
-        return false;
-    }, {
-        margin: "0px 0px -100px 0px",
-        amount: 0.2
-    });
 }
 
 

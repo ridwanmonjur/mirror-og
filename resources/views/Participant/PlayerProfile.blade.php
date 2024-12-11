@@ -377,7 +377,7 @@
                         onclick="carouselWork(2)">
                         &gt;
                     </button>
-                    <div @class(["event-carousel-works opacity-zero ", 
+                    <div @class(["event-carousel-works animation-container ", 
                         "event-carousel-styles" => isset($joinEvents[1]),
                         "d-flex justify-content-center " => !isset($joinEvents[1])
                     ])
@@ -470,7 +470,7 @@
                 </p>
                 <br><br><br>
             @else
-                <div id="activeRostersForm" class="opacity-zero text-center mx-auto">
+                <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
@@ -486,7 +486,7 @@
                     This profile have no past events
                 </p>
             @else
-                <div id="activeRostersForm" class="opacity-zero text-center mx-auto">
+                <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])

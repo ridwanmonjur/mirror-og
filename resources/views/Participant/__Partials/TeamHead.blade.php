@@ -4,6 +4,7 @@
         'resources/js/app.js', 
         'resources/js/alpine/teamhead.js', 
         'resources/js/libraries/lightgallery.js',
+        'resources/js/libraries/motion.js',
         'resources/sass/libraries/lightgallery.scss',
         'resources/js/libraries/colorpicker.js',
         'resources/sass/libraries/colorpicker.scss',
@@ -97,7 +98,7 @@
         <div :class="{'upload-container': true, }">
             <label class="upload-label">
                 <div class="circle-container">
-                    <div class="uploaded-image"
+                    <div class="uploaded-image motion-logo "
                         style="background-image: url({{ '/storage' . '/'. $selectTeam->teamBanner  }} ), url({{asset('assets/images/404.png')}}) ; object-fit:cover; {{$frameStyles}}"
                     ></div>
                     <div class="d-flex align-items-center justify-content-center upload-button pt-3">
@@ -121,7 +122,7 @@
             </label>
         </div>
         <div>
-            <div :class="{'team-info': !isEditMode}">
+            <div :class="{'team-info': !isEditMode, 'slideInLeft': true}">
                 @if ($isCreator)
                 <div x-cloak x-show.important="isEditMode">
                     <input type="file" id="image-upload" accept="image/*" style="display: none;">
@@ -159,11 +160,11 @@
                 @endif
                 @auth
                     @if ($user->role == "PARTICIPANT")
-                    <div class="dropdown" data-bs-auto-close="outside">
+                    <div class="dropdown z-99" data-bs-auto-close="outside">
                         <button
                             x-cloak
                             x-show.important="!isEditMode"
-                            class="gear-icon-btn me-2 position-relative" style="top: 10px;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            class="gear-icon-btn me-2 position-relative z-99" style="top: 10px;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="{{$selectTeam->profile?->fontColor}}" class="bi bi-gear-fill" viewBox="0 0 16 16">
                                 <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
                             </svg>
@@ -264,17 +265,17 @@
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                     </svg>
                 </div>
-                <div>
+                <div class="slideInRight">
                     <span class="ms-2" x-cloak x-show="!isEditMode">{{$selectTeam->teamDescription}}</span>
                     <span class="ms-2 fs-3"x-show="!isEditMode">{{$selectTeam->country_flag}}</span>
                 </div>
             @else
-                <p class="my-0 py-0">
+                <p class="my-0 py-0 slideInRight">
                     <span class="d-inline">{{$selectTeam->teamDescription}}</span>
                     <span class="d-inline ms-2 fs-3">{{$selectTeam->country_flag}}</span>
                 </p>
             @endif
-        <div class="mx-auto text-center mt-1">
+        <div class="mx-auto text-center mt-1 slideInLeft">
             @if (session('successJoin'))
                 <span class="text-success">
                     {{ session('successJoin') }}
