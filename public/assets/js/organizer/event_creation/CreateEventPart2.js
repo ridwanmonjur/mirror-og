@@ -131,10 +131,41 @@ function checkValidTime() {
 
         returnl
     }
+
     
     if (startTimeInput.value === "" || endTimeInput.value === "") {
         return;
     }
+
+    function isValidTimeInterval(timeString) {
+        const minutes = timeString.split(':')[1];
+        return minutes === '00' || minutes === '30';
+    }
+
+    function convertToHourInterval(timeString) {
+        const [hours, minutes] = timeString.split(':');
+        if (minutes !== '00' && minutes !== '30') {
+            // If minutes are invalid, set to :00
+            return `${hours}:00`;
+        }
+        return timeString;
+    }
+    
+    
+    if (!isValidTimeInterval(startTimeInput.value)) {
+        toastError('Please select a starting time at 30-minute intervals (e.g., 9:00, 9:30, 10:00)');
+        startTimeInput.value = convertToHourInterval(startTimeInput.value);
+
+        return;
+    }
+
+    if (!isValidTimeInterval(endTimeInput.value)) {
+        toastError('Please select an ending time at 30-minute intervals (e.g., 9:00, 9:30, 10:00)');
+        endTimeInput.value = convertToHourInterval(endTimeInput.value);
+
+        return;
+    }
+
     
     if (endDate < startDate) {
         Toast.fire({
