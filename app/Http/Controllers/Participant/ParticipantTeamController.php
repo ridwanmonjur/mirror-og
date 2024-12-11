@@ -228,15 +228,55 @@ class ParticipantTeamController extends Controller
         }
 
         $status = $request->status;
-        $isPermitted = $status === 'left';
-        if (! $isPermitted) {
-            if ($status === 'accepted' || $status === 'rejected') {
-                $isPermitted = $member->status === 'pending' && $request->actor !== $member->actor;
-            }
+        $isSameActor = $request->actor === $member->actor;
+        
+        $permissionRules = [
+            'left' => true,
+            'accepted' => [
+                'pending' => !$isSameActor,
+                'rejected' => $isSameActor,
+                'left' => $isSameActor
+            ],
+            'rejected' => [
+                'pending' => !$isSameActor,
+                'rejected' => $isSameActor,
+                'accepted' => $isSameActor
+            ]
+        ];
+        
+        $errorMessages = [
+            'accepted' => [
+                'pending' => $isSameActor ? "You cannot accept your own pending request" : "",
+                'rejected' => !$isSameActor ? "Only the original requester can accept after rejection" : "",
+                'left' => !$isSameActor ? "Only the original member can accept after leaving" : "",
+                'accepted' => "Request is already accepted"
+            ],
+            'rejected' => [
+                'pending' => $isSameActor ? "You cannot reject your own pending request" : "",
+                'rejected' => !$isSameActor ? "Only the original requester can modify a rejected request" : "",
+                'accepted' => !$isSameActor ? "Only the accepted member can reject their request" : "",
+            ]
+        ];
+        
+        $isPermitted = $permissionRules[$status] ?? false;
+        if (is_array($isPermitted)) {
+            $isPermitted = $isPermitted[$member->status] ?? false;
         }
-
-        if (! $isPermitted) {
-            return response()->json(['success' => false, 'message' => 'This request is not allowed.'], 400);
+        
+        if (!$isPermitted) {
+            $message = "This request is not allowed. ";
+            if (isset($errorMessages[$status][$member->status])) {
+                $message .= $errorMessages[$status][$member->status];
+            }
+            return response()->json([
+                'success' => false, 
+                'message' => trim($message),
+                'details' => [
+                    'requested_status' => $status,
+                    'current_status' => $member->status,
+                    'is_same_actor' => $isSameActor
+                ]
+            ], 400);
         }
 
         $team = Team::where('id', $member->team_id)->first();

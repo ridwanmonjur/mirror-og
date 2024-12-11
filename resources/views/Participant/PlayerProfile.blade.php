@@ -534,7 +534,7 @@
                                     > 
                                     <span>{{$team->teamName}}</span>
                                 </td>
-                                <td style="font-size: 1.5rem;" class="colored-cell">{{$team->country_flag}}</td>
+                                <td style="font-size: 1.5rem;" class="colored-cell">{{$team->country_flag ? $team->country_flag : '-'}}</td>
                                 <td class="colored-cell">{{$team->members_count}}/5</td>
                             </tr>
                         @endforeach
@@ -581,7 +581,7 @@
                                     > 
                                     <span>{{$team->teamName}}</span>
                                 </td>
-                                <td style="font-size: 1.5rem;" class="colored-cell">{{$team->country_flag}}</td>
+                                <td style="font-size: 1.5rem;" class="colored-cell">{{$team->country_flag ? $team->country_flag : '-'}}</td>
                                 <td class="colored-cell">{{$team->members_count}}/5</td>
                             </tr>
                         @endforeach

@@ -16,20 +16,18 @@
 </div>
 <br>
 <div class="tab-content pb-4 inner-tab" id="CurrentMembers">
-    @if (isset($redirect) && $redirect) 
-        <div class="text-center">
-            <h5><u>Currrent Members</u></h5>
-            <p>Manage your current members</p>
-        </div>
-    @endif
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
-        {{ $teamMembersProcessed['accepted']['count'] }} accepted member{{bladePluralPrefix($teamMembersProcessed['accepted']['count'])}}
-        and {{ $teamMembersProcessed['left']['count'] }} removed member{{bladePluralPrefix($teamMembersProcessed['left']['count'])}}
+        {{ $teamMembersProcessed['accepted']['count'] }} present member{{bladePluralPrefix($teamMembersProcessed['accepted']['count'])}}
+        and {{ $teamMembersProcessed['left']['count'] }} past member{{bladePluralPrefix($teamMembersProcessed['left']['count'])}}
     </p>
     <div class="cont mt-3 pt-3 tab-size">
         <table class=" member-table responsive ">
             <tbody class="accepted-member-table">
                 @if ($teamMembersProcessed['accepted']['count'] != 0)
+                    <tr class="st">
+                        <td> </td>
+                        <td> Present Members </td>
+                    </tr>
                     @foreach ($teamMembersProcessed['accepted']['members'] as $member)
                         <tr class="st" id="tr-{{ $member->id }}">
                             @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
@@ -55,6 +53,12 @@
                             </td>
                         </tr>
                     @endforeach
+                @endif
+                @if ($teamMembersProcessed['left']['count'] != 0)
+                    <tr class="st">
+                        <td> </td>
+                        <td class="pt-3"> Past Members </td>
+                    </tr>
                     @foreach ($teamMembersProcessed['left']['members'] as $member)
                         <tr class="st" id="tr-{{ $member->id }}">
                             @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
@@ -77,12 +81,7 @@
     </div>
 </div>
 <div class="tab-content pb-4  inner-tab d-none" id="PendingMembers" data-type="member" style="text-align: center;">
-    @if (isset($redirect) && $redirect) 
-        <div class="text-center">
-            <h5><u>Pending Members</u></h5>
-            <p>Manage your pending members</p>
-        </div>
-    @endif
+   
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
         {{ $teamMembersProcessed['pending']['count'] }} invited and
         and {{ $teamMembersProcessed['rejected']['count'] }} rejected member{{bladePluralPrefix($teamMembersProcessed['rejected']['count'])}}
@@ -93,66 +92,86 @@
                 @if ($teamMembersProcessed['pending']['count'] != 0 || 
                         $teamMembersProcessed['rejected']['count'] != 0 
                     )
-                    @foreach ($teamMembersProcessed['pending']['members'] as $member)
-                        <tr class="st" id="tr-{{ $member->id }}">
-                            @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
-                            <td class="coloured-cell px-3">
-                                Pending {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
-                            </td>
-                            <td>
-                                @if ($user->id == $selectTeam->creator_id && $member->actor == 'user')
-                                    <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
-                                        onclick="approveMember({{ $member->id }})">
-                                        ✔
-                                    </button>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($user->id == $selectTeam->creator_id && $member->actor == 'team' )
-                                    <button id="withdrawInviteMember-{{ '$member->user_id' }}" class="gear-icon-btn"
-                                        onclick="withdrawInviteMember({{ $member->id }})">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                            fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                            <path
-                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                                            <path
-                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                                        </svg>
-                                    </button>
-                                @endif
-                            </td>
+                    @if ($teamMembersProcessed['pending']['count'] != 0)
+                        <tr class="st">
+                            <td> </td>
+                            <td> Invited Members </td>
                         </tr>
-                    @endforeach
-                    @foreach ($teamMembersProcessed['rejected']['members'] as $member)
-                        <tr class="st" id="tr-{{ $member->id }}">
-                            @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
-                            <td class="coloured-cell px-3">
-                                Rejected {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
-                            </td>
-                            <td>
-                                @if ($user->id == $selectTeam->creator_id && $member->actor != 'user' )
-                                    <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
-                                        onclick="approveMember({{ $member->id }})">
-                                        ✔
-                                    </button>
-                                @endif
-                            </td>
-                             <td>
-                                @if ($user->id == $selectTeam->creator_id)
-                                    <button id="withdrawInviteMember-{{ '$member->user_id' }}" class="gear-icon-btn"
-                                        onclick="withdrawInviteMember({{ $member->id }})">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                            fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                            <path
-                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
-                                            <path
-                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
-                                        </svg>
-                                    </button>
-                                @endif
-                            </td>
+                        @foreach ($teamMembersProcessed['pending']['members'] as $member)
+                            <tr class="st" id="tr-{{ $member->id }}">
+                                @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
+                                <td class="coloured-cell px-3">
+                                    @if ($member->actor == "user")
+                                        Player requested to join
+                                    @else
+                                        Sent player invitation
+                                    @endif
+                                    {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
+                                </td>
+                                <td>
+                                    @if ($user->id == $selectTeam->creator_id && $member->actor == 'user')
+                                        <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
+                                            onclick="approveMember({{ $member->id }})">
+                                            <span class="ps-1"> ✔ </span>
+                                        </button>
+                                    @endif
+                               
+                                    @if ($user->id == $selectTeam->creator_id && $member->actor == 'team' )
+                                        <button id="withdrawInviteMember-{{ '$member->user_id' }}" class="gear-icon-btn"
+                                            onclick="withdrawInviteMember({{ $member->id }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                                <path
+                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                            </svg>
+                                        </button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
+                    @if ($teamMembersProcessed['rejected']['count'] != 0)
+                        <tr class="st">
+                            <td> </td>
+                            <td class="pt-3"> Rejected Members </td>
                         </tr>
-                    @endforeach                
+                        @foreach ($teamMembersProcessed['rejected']['members'] as $member)
+                            <tr class="st" id="tr-{{ $member->id }}">
+                                @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
+                                <td class="coloured-cell px-3">
+                                    @if ($member->actor == "user")
+                                        Player rejected the request
+                                    @else
+                                        Rejected the player's request
+                                    @endif
+                                    Rejected {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
+                                </td>
+                                <td>
+                                    @if ($user->id == $selectTeam->creator_id && $member->actor != 'user' )
+                                        <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
+                                            onclick="approveMember({{ $member->id }})">
+                                            <span class="ps-1"> ✔ </span>
+                                        </button>
+                                    @endif
+                               
+                                    @if ($user->id == $selectTeam->creator_id)
+                                        <button id="withdrawInviteMember-{{ '$member->user_id' }}" class="gear-icon-btn"
+                                            onclick="withdrawInviteMember({{ $member->id }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                                <path
+                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                            </svg>
+                                        </button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach 
+                    @endif               
                 @endif
             </tbody>
         </table>

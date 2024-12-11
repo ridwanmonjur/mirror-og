@@ -686,7 +686,7 @@ async function fetchMembers(event = null) {
                         </div>
                     </td>
                     <td class="flag-cell coloured-cell px-3 fs-4">
-                        <span>${user.participant.region_flag}</span>
+                        <span>${user?.participant?.region_flag? user.participant.region_flag: '-'}</span>
                     </td>
                      <td class="coloured-cell px-3">
                         ${user.is_in_team ?
