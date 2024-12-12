@@ -41,18 +41,18 @@
             ])
                 style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventBanner }}" width="100%" height="80%;">
-            <div class="invisible-until-hover mt-4 ms-4 position-absolute text-red" style="top: 20px;"
+            <div class="invisible-until-hover mt-4 ms-4 position-absolute " style="top: 20px;"
                 style="width: 100%; background-color: red;">
 
                 @if (!isset($joinEvent->roster[0]))
                     <span>Empty roster</span>
                 @else
                     <ul data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
-                        onclick="goToUrl(event, this)" class="d-flex flex-column flex-start ">
+                        onclick="goToUrl(event, this)" class="d-flex flex-column align-items-start justify-content-start">
                         @foreach ($joinEvent->roster as $roster)
-                            <li style="list-style: none;"    
+                            <li class="list-unstyled"    
                             >
-                                <img class="rounded-circle2 object-fit-cover random-color-circle me-2" width="35" height="35" src="{{$roster->user->userBanner}}" {!!trustedBladeHandleImageFailureBanner()!!}>
+                                <img class="rounded-circle object-fit-cover random-color-circle me-2" width="35" height="35" src="{{$roster->user->userBanner}}" {!!trustedBladeHandleImageFailureBanner()!!}>
                                 <span>{{ $roster->user->name }}</span>
                             </li>
                         @endforeach
@@ -84,7 +84,7 @@
                         <span class="text-truncate-2-lines h-auto w-100">{{ $joinEvent->user->name }}</span>
                         <small
                             data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id] : 0 }} "
-                            class="{{ 'followCounts' . $joinEvent->user_id }}">
+                            class="d-inline-block {{ 'followCounts' . $joinEvent->user_id }}">
                             {{ $followCounts[$joinEvent->user_id] }}
                             follower{{ bladePluralPrefix($followCounts[$joinEvent->user_id]) }}
                         </small>

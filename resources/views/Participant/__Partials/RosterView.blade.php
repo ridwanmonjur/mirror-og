@@ -47,13 +47,14 @@
                 @if (!isset($joinEvent->roster[0]))
                     <span>Empty roster</span>
                 @else
-                    <ul class="d-flex flex-column flex-start ">
+                <div>
+                    <ul class="d-flex justify-content-start flex-column align-items-start">
                         @foreach ($joinEvent->roster as $roster)
                             <li onclick="goToUrl(event, this)"
                                 data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
                                 style="list-style: none;"    
                             >
-                                 <img class="rounded-circle2 object-fit-cover random-color-circle me-2 mb-1" width="25" height="25" 
+                                 <img class="rounded-circle object-fit-cover random-color-circle ms-1 me-2 mb-1" width="25" height="25" 
                                     src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
 
                                     {!!trustedBladeHandleImageFailureBanner()!!}>
@@ -61,6 +62,7 @@
                             </li>
                         @endforeach
                     </ul>
+                </div>
                 @endif
             </div>
         </a>
