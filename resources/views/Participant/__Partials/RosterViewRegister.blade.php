@@ -261,7 +261,7 @@
                                                    @foreach ($joinEvent->roster as $roster)
                                                         @if ($roster->vote_to_quit !== null)
                                                             <img 
-                                                                class="rounded-circle2 random-color-circle object-fit-cover"
+                                                                class="rounded-circle random-color-circle object-fit-cover"
                                                                 width="25" 
                                                                 height="25" 
                                                                 src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 

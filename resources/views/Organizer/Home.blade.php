@@ -23,14 +23,14 @@
             <img src="{{ asset('/assets/images/events/homepage new header.png') }}" alt="">
         </section>
 
-        <div class="text__middle biggerToSmaller">
+        <div class="text__middle ">
             <p class="head">We've got events happening...</p>
         </div>
 
         <section class="featured-events">
             <!-- EVENTS -->
             <!-- Box 1 -->
-            <a href="{{ route('event.create') }}" class="clickable-box biggerToSmaller" id="imageLink1">
+            <a href="{{ route('event.create') }}" class="clickable-box " id="imageLink1">
                 <div class="event">
                     <div class="event_head_container">
                         Create an Event
@@ -48,7 +48,7 @@
             </a>
 
             <!-- Box 2 -->
-            <a href="{{ route('event.index') }}" class="clickable-box biggerToSmaller" id="imageLink2">
+            <a href="{{ route('event.index') }}" class="clickable-box " id="imageLink2">
                 <div class="event">
                     <div class="event_head_container">
                         Manage your events
@@ -67,7 +67,7 @@
             </a>
 
             <!-- Box 3 -->
-            <a href="#" class="clickable-box biggerToSmaller" id="imageLink3">
+            <a href="#" class="clickable-box " id="imageLink3">
                 <div class="event">
                     <div class="event_head_container">
                         Manage your shop

@@ -4,11 +4,11 @@
         <img width="40px" height="32px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
         Sign In
     </a>
-    <div class="dropdown-menu shado-lg border-secondary py-0" style="font-size: 14px;position: absolute; left: -60px; top: 55px; width: 180px; border-radius: 10px;"
+    <div class="dropdown-menu shadow-lg text-center border rounded-lg py-0" style="border: 2px solid #b3a9a9 !important; position: absolute; left: -60px; top: 55px; border-radius: 10px; font-size: 14px;"
         aria-labelledby="dropdownMenuGuest">
-        <a class="dropdown-item py-navbar  ps-4 align-middle " href="{{ route('organizer.signin.view') }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
-                class="bi bi-card-checklist me-3" viewBox="0 0 16 16">
+        <a class="dropdown-item py-navbar px-0 align-middle " href="{{ route('organizer.signin.view') }}">
+             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-card-checklist me-1" viewBox="0 0 16 16">
                 <path
                     d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z" />
                 <path
@@ -16,9 +16,9 @@
             </svg>
             Organizer
         </a>
-        <a class="dropdown-item py-navbar  ps-4 align-middle " href="{{ route('participant.signin.view') }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
-                class="bi bi-controller me-3" viewBox="0 0 16 16">
+        <a class="dropdown-item py-navbar px-0 align-middle " href="{{ route('participant.signin.view') }}">
+           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-controller me-1" viewBox="0 0 16 16">
                 <path
                     d="M11.5 6.027a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m-1.5 1.5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1m2.5-.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m-1.5 1.5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1m-6.5-3h1v1h1v1h-1v1h-1v-1h-1v-1h1z" />
                 <path

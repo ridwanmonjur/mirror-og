@@ -159,10 +159,10 @@
                         <br>
                     </div>
                     <div x-cloak x-show="!isEditMode">
-                        <h5 class="slideInLeft">
+                        <h5 class="slide-down">
                             {{$userProfile->name}}
                         </h5>
-                        <div class="my-2 slideInRight" x-data="profileStatsData"> 
+                        <div class="my-2 slide-up" x-data="profileStatsData"> 
                             <span class="me-2"> </span>
                             <span class="me-3" x-text="organizer.industry"> </span>
                             <span class="me-1"> 

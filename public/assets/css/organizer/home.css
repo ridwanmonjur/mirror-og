@@ -12,9 +12,6 @@ main {
 
 }
 
-.biggerToSmaller {
-    animation: shrink 0.75s ease-in forwards;
-}
 
 @keyframes shrink {
     0% {
@@ -122,6 +119,8 @@ a {
 }
 
 .event {
+    animation: shrink 0.75s ease-in forwards;
+
     margin-bottom: 3rem;
     margin-left: 20px;
     margin-right: 20px;
