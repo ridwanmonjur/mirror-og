@@ -52,7 +52,7 @@
                         @foreach ($joinEvent->roster as $roster)
                             <li onclick="goToUrl(event, this)"
                                 data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
-                                style="list-style: none;"    
+                                class="list-unstyled"
                             >
                                  <img class="rounded-circle object-fit-cover random-color-circle ms-1 me-2 mb-1" width="25" height="25" 
                                     src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 

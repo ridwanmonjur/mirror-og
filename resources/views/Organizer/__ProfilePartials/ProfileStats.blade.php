@@ -24,11 +24,11 @@
                     </template>
                     <template x-if="connections[0]">
                         <div class="table-responsive table">
-                            <table style="font-size: normal !important;" class="member-table responsive table-striped mb-0 table-sm">
+                            <table style="font-size: normal !important;" class="member-table responsive table mb-0 ">
                                 <tbody>
                                     <template x-for="user in connections" :key="user.id">
                                         <tr>
-                                            <td class="text-center py-1 px-2" style="width: 50px;">
+                                            <td class="text-center py-2 px-2" style="width: 50px;">
                                                 <a :href="`/view/${user?.role?.toLowerCase()}/${user.id}`">
                                                     <svg class="cursor-pointer" xmlns="http://www.w3.org/2000/svg"
                                                         width="20" height="20" fill="currentColor"
@@ -39,16 +39,16 @@
                                                     </svg>
                                                 </a>
                                             </td>
-                                            <td class="py-1 px-2">
+                                            <td class="py-2 px-2">
                                                 <div class="d-flex align-items-center">
                                                     <img :src="'/storage/' + user.userBanner"
-                                                        class="rounded-circle me-3" width="40" height="40"
+                                                        class="rounded-circle object-fit-cover me-3" width="30" height="30"
                                                         onerror="this.src='/assets/images/404.png';">
                                                     <span x-text="user.name"></span>
                                                 </div>
                                             </td>
-                                            <td class="py-1 px-2" x-text="user.email"></td>
-                                            <td class="py-1 px-2" x-text="formatDate(user.created_at)"></td>
+                                            <td class="py-2 px-2" x-text="user.email"></td>
+                                            <td class="py-2 px-2" x-text="formatDate(user.created_at)"></td>
                                         </tr>
                                     </template>
                                 </tbody>

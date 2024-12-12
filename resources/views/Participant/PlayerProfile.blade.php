@@ -369,11 +369,11 @@
                 @if (!isset($joinEvents[0]))
                     <p>No events available!</p>
                 @else
-                    <button class="carousel-button position-absolute" style="top: 100px; left: 20px;"
+                    <button class="carousel-button position-absolute z-999" style="top: 100px; left: 20px;"
                         onclick="carouselWork(-2)">
                         &lt;
                     </button>
-                    <button class="carousel-button position-absolute" style="top: 100px; right: 20px;"
+                    <button class="carousel-button position-absolute z-999" style="top: 100px; right: 20px;"
                         onclick="carouselWork(2)">
                         &gt;
                     </button>

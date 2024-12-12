@@ -46,13 +46,13 @@
                 @if (!isset($joinEvents[0]))
                     <p>No events available!</p>
                 @else
-                    <button @class(["carousel-button position-absolute",
+                    <button @class(["carousel-button position-absolute z-999",
                        "carousel-button-disabled"  => empty($joinEvents[2])
                     ]) style="top: 100px; left: 20px;"
                         onclick="carouselWork(-2)">
                         &lt;
                     </button>
-                    <button @class(["carousel-button position-absolute",
+                    <button @class(["carousel-button position-absolute z-999",
                        "carousel-button-disabled"  => empty($joinEvents[2])
                     ]) style="top: 100px; right: 20px;"
                         onclick="carouselWork(2)">
