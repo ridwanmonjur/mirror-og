@@ -32,24 +32,26 @@
 @endguest
 @auth
     @php
-    
         $teamMember = App\Models\TeamMember::where('team_id', $selectTeam->id)
             ->where('user_id', $user->id)->get();
         if (isset($teamMember[0])) {
             $status = $teamMember[0]->status;
-            if ($status == 'rejected' && $teamMember[0]?->actor == 'user') {
-                $status = 'rejected_me';
+            if ($teamMember[0]?->actor == 'user') {
+                $status .= '_me';
             }
         } else {
             $status = null;
         }
 
         $statusMessage = [
-            'accepted' => "You're a member of this team.",
-            "invited" => "You've been invited to this team.",
+            'accepted' => "This team has accepted you as a member.",
+            'accepted_me' => "You've accepted the request to join this team.",
+            "rejected" => "Your request to join this team has been rejected.",
             "rejected_me" => "You've declined to join this team.",
-            "rejected" => "You've been rejected to this team.",
-            "pending" => "You've requested to join this team."
+            "pending" => "This team has requested you to join them.",
+            "pending_me" => "You've requested to join this team.",
+            "left" => "This team has removed you as a member.",
+            "left_me" => "You've left this team."
         ];
 
         $isCreator = $selectTeam->creator_id == $user->id;
@@ -153,14 +155,14 @@
                     x-cloak 
                     x-show.important="!isEditMode"
                 >
-                    <h3 style="{{$fontStyles}}" class="team-name slideInLeft" id="team-name">{{$selectTeam->teamName}}</h3>
+                    <h3 style="{{$fontStyles}}" class="team-name my-0 py-0" id="team-name">{{$selectTeam->teamName}}</h3>
                 </span>
                 @else
-                    <h3 style="{{$fontStyles}}" class="team-name slideInLeft" id="team-name">{{$selectTeam->teamName}}</h3>
+                    <h3 style="{{$fontStyles}}" class="team-name my-0 py-0" id="team-name">{{$selectTeam->teamName}}</h3>
                 @endif
                 @auth
                     @if ($user->role == "PARTICIPANT")
-                    <div class="dropdown slide-up" data-bs-auto-close="outside">
+                    <div class="dropdown" data-bs-auto-close="outside">
                         <button
                             x-cloak
                             x-show.important="!isEditMode"
@@ -266,17 +268,20 @@
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                     </svg>
                 </div>
-                <div class="slideInRight">
+                <div >
                     <span class="ms-2" x-cloak x-show="!isEditMode">{{$selectTeam->teamDescription}}</span>
                     <span class="ms-2 fs-3"x-show="!isEditMode">{{$selectTeam->country_flag}}</span>
                 </div>
             @else
-                <p class="my-0 py-0 slideInRight">
+                <p class="my-0 py-0">
                     <span class="d-inline">{{$selectTeam->teamDescription}}</span>
                     <span class="d-inline ms-2 fs-3">{{$selectTeam->country_flag}}</span>
                 </p>
             @endif
-        <div class="mx-auto text-center mt-1 slideInLeft">
+        <div> 
+            {{$statusMessage[$status]}}
+        </div>
+        <div class="mx-auto text-center mt-1 ">
             @if (session('successJoin'))
                 <span class="text-success">
                     {{ session('successJoin') }}

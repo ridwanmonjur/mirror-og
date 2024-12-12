@@ -14,38 +14,11 @@
     --grid-size: 1fr 1fr; 
 }
 
-.slideInLeft, .slideInRight, .animation-container >  * {
+.animation-container >  * {
     opacity: 0;
 }
 
 
-@keyframes slideUp {
-    0% {
-      margin-top: 15px;
-    }
-    
-    100% {
-      margin-top: 0;
-    }
-  }
-
-  @keyframes slideDown {
-    0% {
-      margin-bottom: 15px;
-    }
-    
-    100% {
-      margin-bottom: 0;
-    }
-  }
-
-.slide-up {
-    animation: slideUp 2.5s ease-out forwards;
-}
-
-.slide-down {
-    animation: slideDown 2.5s ease-out forwards;
-}
 
 .rounded-circle2{
     width: 30px !important;

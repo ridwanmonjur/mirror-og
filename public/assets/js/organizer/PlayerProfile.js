@@ -210,7 +210,7 @@ window.onload = () => {
         window.motion.createStaggerChildren(element);
     });
 
-    window.motion.slideInLeftRight();
+    // window.motion.slideInLeftRight();
 }
 
 const uploadButton = document.getElementById("upload-button");

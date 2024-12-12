@@ -157,7 +157,7 @@
                        
                     </div>
                 </div>
-                <div class="member-details slide-up">
+                <div class="member-details">
                         <div x-show="errorMessage != null && isEditMode" class="text-red" x-text="errorMessage"> </div>
                         <div x-cloak x-show="isEditMode" style="color: black;">
                             <input 
@@ -353,7 +353,7 @@
             </div>
         </div>
 
-        <div class="tabs slideInRight">
+        <div class="tabs ">
             <button class="tab-button  outer-tab tab-button-active"
                 onclick="showTab(event, 'Overview', 'outer-tab')">Overview</button>
             <button class="tab-button outer-tab" onclick="showTab(event, 'Activity', 'outer-tab')">Activity</button>
