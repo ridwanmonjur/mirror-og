@@ -418,7 +418,7 @@ input:not(:-webkit-autofill):invalid+span.placeholder-moves-up {
     }
 }
 
-.motion-logo {
+/* .motion-logo {
     display: inline-block;
     animation: bobbing 1s ease-in-out 2;
     will-change: transform;
@@ -427,10 +427,10 @@ input:not(:-webkit-autofill):invalid+span.placeholder-moves-up {
 
 .motion-logo:hover {
     animation-play-state: paused;
-}
+} */
 
 /* 1. Pulsing button */
-input[type='submit'] {
+/* input[type='submit'] {
     animation: pulse 1s 3;
 }
 
@@ -446,4 +446,4 @@ input[type='submit'] {
     100% {
         box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
     }
-}
+} */
