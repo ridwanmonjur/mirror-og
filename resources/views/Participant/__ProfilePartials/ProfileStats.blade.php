@@ -42,7 +42,7 @@
                         </template>
                         <template x-if="currentTab in connections && connections[currentTab][0]">
                             <div>
-                                <table class="member-table table table-sm responsive member-table mb-0 fs-7" >
+                                <table class="member-table table responsive member-table mb-0 fs-7" >
                                     <tbody>
                                         <template x-for="user in connections[currentTab]" :key="user.id">
                                             <tr>
