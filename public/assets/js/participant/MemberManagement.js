@@ -53,7 +53,8 @@ let actionMap = {
     'captain': capatainMemberAction,
     'deleteCaptain': deleteCaptainAction,
     'invite': inviteMemberAction,
-    'deleteInvite': withdrawInviteMemberAction
+    'deleteInvite': withdrawInviteMemberAction,
+    'reject': rejectMemberAction
 };
 
 let dialogForMember = new DialogForMember();
@@ -167,6 +168,12 @@ function disapproveMember(memberId) {
     window.dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
 }
 
+function rejectMember(memberId) {
+    dialogForMember.setMemberId(memberId);
+    dialogForMember.setActionName('reject')
+    window.dialogOpen('Continue with rejecting this member?', takeYesAction, takeNoAction)
+}
+
 
 function slideEvents(direction) {
     const eventBoxes = document.querySelectorAll('.event-box');
@@ -225,6 +232,28 @@ async function disapproveMemberAction() {
             headers: generateHeaders(), 
             body: JSON.stringify({
                'actor' : 'team', 'status' : 'left'
+            })
+        }
+    );
+}
+
+async function rejectMemberAction() {
+    const memberId = dialogForMember.getMemberId();
+    const url = getUrl("participantMemberUpdateUrl", memberId);
+    fetchData(url,
+        function(responseData) {
+            if (responseData.success) {
+                let currentUrl = document.getElementById('participantMemberManageUrl').value;
+                reloadUrl(currentUrl, 'PendingMembersBtn');
+            } else {
+                toastError(responseData.message)
+            }
+        },
+        function(error) { toastError('Error disapproving member.', error);}, 
+        {
+            headers: generateHeaders(), 
+            body: JSON.stringify({
+               'actor' : 'team', 'status' : 'rejected'
             })
         }
     );

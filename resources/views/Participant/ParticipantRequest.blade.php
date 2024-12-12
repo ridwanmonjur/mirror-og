@@ -92,20 +92,7 @@
                                             View
                                         </button>
                                     </div>
-                                    <div class="">
-                                        <button id="add-{{ '$teamAndMember->id' }}" class="btn btn-link"
-                                            onclick="approveTeam({{ $teamAndMember->id }})">
-                                            ✔ Approve
-                                        </button>
-                                    </div>
-                                    @if ($teamAndMember->status == 'pending')
-                                        <div class="">
-                                            <button id="remove-{{ $teamAndMember->id }}" class="btn btn-link"
-                                                onclick="disapproveTeam({{ $teamAndMember->id }})">
-                                                ✘ Reject
-                                            </button>
-                                        </div>
-                                    @endif
+                                    
                                 </div>
                             </div>
                         </div>
