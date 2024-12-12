@@ -278,8 +278,10 @@
                     <span class="d-inline ms-2 fs-3">{{$selectTeam->country_flag}}</span>
                 </p>
             @endif
-        <div> 
-            {{$statusMessage[$status]}}
+        @if ($statusMessage && isset($statusMessage[status]))
+            <div> 
+                {{$statusMessage[$status]}}
+            </div>
         </div>
         <div class="mx-auto text-center mt-1 ">
             @if (session('successJoin'))
