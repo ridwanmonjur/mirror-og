@@ -52,7 +52,7 @@
         <div>
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }} ">
-                    <img class="side-image-absolute-top slideInLeft" src="{{ $eventTierLowerImg }}" width="80" height="80">
+                    <img class="side-image-absolute-top " src="{{ $eventTierLowerImg }}" width="80" height="80">
                 </div>
                 <div class="{{ 'side-image side-image-' . $eventTierLower }}">
                     <img class="side-image-absolute-bottom slideInRight" src="{{ $eventTierLowerImg }}" width="80" height="80">
@@ -66,7 +66,7 @@
             <div> </div>
             <div>
                 <div>
-                    <div class="mx-2 slideInLeft position-relative rounded-banner-parent">
+                    <div class="mx-2  position-relative rounded-banner-parent">
                         <div class="d-flex justify-content-center d-lg-none">
                             <img class="image-at-top" src="{{ $eventTierLowerImg }}" {!! trustedBladeHandleImageFailureResize() !!}
                                 width="120" height="90">
@@ -88,7 +88,7 @@
                     </div>
                 </div>
                 <div class="grid-container-two-columns-at-desktop">
-                    <div class="card-text slideInLeft">
+                    <div class="card-text ">
                         <div>
                             <br>
                             <div class="d-flex justify-content-between flex-wrap align-items-start pb-3">
@@ -222,7 +222,7 @@
 
                         </div>
                     </div>
-                    <div class="ps-3 slideInRight">
+                    <div class="ps-3">
                         <br>
                         @if (session('errorMessage'))
                             <div class="error-message mt-0">
@@ -339,7 +339,7 @@
         </div>
         
     </div>
-    <div class="grid-container slide-up">
+    <div class="grid-container">
             <div></div>
             <div>
                 <div class="tab ms-0 position-relative" style="width: max(60vw, 95%); left: min(2%, 10px); top:20px;">

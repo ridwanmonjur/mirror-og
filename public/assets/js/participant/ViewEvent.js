@@ -139,5 +139,5 @@ addOnLoad(()=> {
     const glowEffect = document.querySelector('.glow-effect');
     if (glowEffect) window.motion.animateGlow(glowEffect);
 
-    window.motion.slideInLeftRight();
+    // window.motion.slideInLeftRight();
 })

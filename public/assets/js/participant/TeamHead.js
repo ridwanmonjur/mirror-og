@@ -145,7 +145,7 @@ let newFunction = function () {
 
     window.loadMessage();
 
-    window.motion.slideInLeftRight();
+    // window.motion.slideInLeftRight();
 
     document.querySelectorAll('.animation-container').forEach(element => {
         window.motion.createStaggerChildren(element);

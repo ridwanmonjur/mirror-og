@@ -155,14 +155,14 @@
                     x-cloak 
                     x-show.important="!isEditMode"
                 >
-                    <h3 style="{{$fontStyles}}" class="team-name slideInLeft my-0 py-0" id="team-name">{{$selectTeam->teamName}}</h3>
+                    <h3 style="{{$fontStyles}}" class="team-name my-0 py-0" id="team-name">{{$selectTeam->teamName}}</h3>
                 </span>
                 @else
-                    <h3 style="{{$fontStyles}}" class="team-name slideInLeft my-0 py-0" id="team-name">{{$selectTeam->teamName}}</h3>
+                    <h3 style="{{$fontStyles}}" class="team-name my-0 py-0" id="team-name">{{$selectTeam->teamName}}</h3>
                 @endif
                 @auth
                     @if ($user->role == "PARTICIPANT")
-                    <div class="dropdown slide-up" data-bs-auto-close="outside">
+                    <div class="dropdown" data-bs-auto-close="outside">
                         <button
                             x-cloak
                             x-show.important="!isEditMode"
@@ -268,12 +268,12 @@
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                     </svg>
                 </div>
-                <div class="slideInRight">
+                <div >
                     <span class="ms-2" x-cloak x-show="!isEditMode">{{$selectTeam->teamDescription}}</span>
                     <span class="ms-2 fs-3"x-show="!isEditMode">{{$selectTeam->country_flag}}</span>
                 </div>
             @else
-                <p class="my-0 py-0 slideInRight">
+                <p class="my-0 py-0">
                     <span class="d-inline">{{$selectTeam->teamDescription}}</span>
                     <span class="d-inline ms-2 fs-3">{{$selectTeam->country_flag}}</span>
                 </p>
@@ -281,7 +281,7 @@
         <div> 
             {{$statusMessage[$status]}}
         </div>
-        <div class="mx-auto text-center mt-1 slideInLeft">
+        <div class="mx-auto text-center mt-1 ">
             @if (session('successJoin'))
                 <span class="text-success">
                     {{ session('successJoin') }}

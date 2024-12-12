@@ -106,7 +106,7 @@ window.onload = () => {
         window.motion.createStaggerChildren(element);
     });
 
-    window.motion.slideInLeftRight();
+    // window.motion.slideInLeftRight();
 
 
     window.setupFileInputEditor('#changeBackgroundBanner', (file) => {
