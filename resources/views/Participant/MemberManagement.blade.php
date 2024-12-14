@@ -53,6 +53,5 @@
         @endif
     </main>
     
-    <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
     <script src="{{ asset('/assets/js/participant/MemberManagement.js') }}"></script>
 </body>

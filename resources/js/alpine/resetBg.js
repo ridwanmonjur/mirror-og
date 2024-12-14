@@ -56,6 +56,10 @@ function resetBg(initialData) {
         element.style.color = newFontColor;
     });
 
+    document.querySelectorAll(".form-color").forEach((element) => {
+        element.style.color = newFontColor;
+    });
+
     backgroundBanner.style.color = newFontColor;
 
     backgroundBanner.querySelectorAll('.form-control').forEach((element) => {

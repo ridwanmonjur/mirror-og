@@ -33,28 +33,76 @@
 @auth
     @php
         $teamMember = App\Models\TeamMember::where('team_id', $selectTeam->id)
-            ->where('user_id', $user->id)->get();
-        if (isset($teamMember[0])) {
-            $status = $teamMember[0]->status;
-            if ($teamMember[0]?->actor == 'user') {
+            ->where('user_id', $user->id)->first();
+        if (isset($teamMember)) {
+            $status = $teamMember->status;
+            if ($teamMember?->actor == 'user') {
                 $status .= '_me';
-            }
+            } else {
+                if ($status) $status .= '_team';
+            } 
         } else {
             $status = null;
         }
 
-        $statusMessage = [
-            'accepted' => "This team has accepted you as a member.",
-            'accepted_me' => "You've accepted the request to join this team.",
-            "rejected" => "Your request to join this team has been rejected.",
-            "rejected_me" => "You've declined to join this team.",
-            "pending" => "This team has requested you to join them.",
-            "pending_me" => "You've requested to join this team.",
-            "left" => "This team has removed you as a member.",
-            "left_me" => "You've left this team."
-        ];
+       $statusMessage = [
+        'accepted_team' => [
+            'text' => 'Your Team',
+            'badge' => ''
+        ],
+        'accepted_me' => [
+            'text' => 'Your Team',
+            'badge' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-award" viewBox="0 0 16 16">
+                <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702z"/>
+                <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1z"/>
+            </svg>'
+        ],
+        'rejected_team' => [
+            'text' => 'Your request has been rejected.',
+            'badge' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+            </svg>'
+        ],
+        'rejected_me' => [
+            'text' => "You've declined to join.",
+            'badge' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+            </svg>'
+        ],
+        'pending_team' => [
+            'text' => 'This team has requested you to join them.',
+            'badge' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-clock" viewBox="0 0 16 16">
+                <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+            </svg>'
+        ],
+        'pending_me' => [
+            'text' => "You've requested to join.",
+            'badge' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-clock" viewBox="0 0 16 16">
+                <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+            </svg>'
+        ],
+        'left_team' => [
+            'text' => 'This team has removed you as a member.',
+            'badge' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-box-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+                <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+            </svg>'
+        ],
+        'left_me' => [
+            'text' => "You've left this team.",
+            'badge' => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-box-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+                <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+            </svg>'
+        ]
+    ];
 
         $isCreator = $selectTeam->creator_id == $user->id;
+        // $countsTeamHead = $selectTeam->getMembersAndTeamCount();
     @endphp
 @endauth
 <main class="main1" 
@@ -73,6 +121,11 @@
         data-font-styles="<?php echo $fontStyles; ?>"
     >
     </div>
+    <input type="hidden" id="currentMemberUrl" value="{{ url()->current() }}">
+    <input type="hidden" name="isRedirectInput" id="isRedirectInput" value="{{isset($redirect) && $redirect}}">
+    <input type="hidden" id="participantMemberUpdateUrl" value="{{ route('participant.member.update', ['id' => ':id']) }}">
+    <input type="hidden" id="participantMemberDeleteInviteUrl" value="{{ route('participant.member.deleteInvite', ['id' => ':id']) }}">
+    <input type="hidden" id="participantMemberInviteUrl" value="{{ route('participant.member.invite', ['id' => ':id', 'userId' => ':userId']) }}">
 
     <input type="hidden" id="teamData" value="{{json_encode($selectTeam)}}">
     <input type="file" id="backgroundInput" class="d-none"> 
@@ -126,40 +179,37 @@
         <div>
             <div :class="{'team-info': !isEditMode, '': true}">
                 @if ($isCreator)
-                <div x-cloak x-show.important="isEditMode">
-                    <input type="file" id="image-upload" accept="image/*" style="display: none;">
-                    <br>
-                    <div x-show="errorMessage != null" class="text-red" x-text="errorMessage"> </div>
-                    <div>
-                        <input 
-                            placeholder="Enter your team name..."
-                            style="width: 200px;"
-                            class="form-control border-secondary player-profile__input d-inline me-4 d-inline" 
-                            x-model="teamName"
-                            autocomplete="off"
-                            autocomplete="nope"
-                            type="text"
-                        >
-                        <span class="d-inline-flex justify-between" style="color: black !important;">
-                            <svg
-                                class="me-2 mt-3" 
-                                xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
-                            </svg>
-                            <select x-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;" class="d-inline form-select"  data-placeholder="Select a country" x-model="country"> 
-                            </select>
-                        </span>
+                    <div x-cloak x-show.important="isEditMode">
+                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                        <br>
+                        <div x-show="errorMessage != null" class="text-red" x-text="errorMessage"> </div>
+                        <div>
+                            <input 
+                                placeholder="Enter your team name..."
+                                style="width: 200px;"
+                                class="form-control border-secondary player-profile__input d-inline me-4 d-inline" 
+                                x-model="teamName"
+                                autocomplete="off"
+                                autocomplete="nope"
+                                type="text"
+                            >
+                            <span class="d-inline-flex justify-between" style="color: black !important;">
+                                <svg
+                                    class="me-2 mt-3" 
+                                    xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                                </svg>
+                                <select x-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;" class="d-inline form-select"  data-placeholder="Select a country" x-model="country"> 
+                                </select>
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <span
-                    x-cloak 
-                    x-show.important="!isEditMode"
-                >
-                    <h3 style="{{$fontStyles}}" class="team-name mt-2 py-0" id="team-name">{{$selectTeam->teamName}}</h3>
-                </span>
-                @else
-                    <h3 style="{{$fontStyles}}" class="team-name mt-2 py-0" id="team-name">{{$selectTeam->teamName}}</h3>
+                   
                 @endif
+                    <h3  x-cloak x-show.important="!isEditMode" style="{{$fontStyles}}" class="team-name ms-0 me-2 mt-2 py-0" id="team-name">
+                        {{$selectTeam->teamName}}
+                    </h3>
+
                 @auth
                     @if ($user->role == "PARTICIPANT")
                     <div class="dropdown" data-bs-auto-close="outside">
@@ -173,24 +223,11 @@
                         </button>
                         <div class="dropdown-menu border border-secondary shadow-lg z-999 py-0" style="font-size: 0.875rem;" aria-labelledby="dropdownMenuButton">
                             <div>
-                                @if (is_null($status))
-                                    <form class="dropdown-item py-2" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
-                                        @csrf()
-                                        <button style="font-size: 0.875rem;" class="btn btn-link" type="submit">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
-                                            <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
-                                            </svg>
-                                            <span class="ms-2"> Join Team </span>
-                                        </button>
-                                    </form>
-                                @else 
+                                @if ($isCreator)
                                     <p class="w-100 btn btn-light rounded-none h-100 py-2 my-0" style="background: white;">
                                         <small class="ms-2">  
-                                            @if ($isCreator)
                                                 You've created this team
-                                            {{-- @else
-                                                {{$statusMessage[$status]}} --}}
-                                            @endif
+                                            
                                         </small>
                                     </p>
                                     <hr class="py-0 my-0">
@@ -203,7 +240,7 @@
                                 </svg>
                                 <span class="ms-2"> Team Profile </span>
                             </a>
-                            @if ($status == "accepted" || $status == "accepted_me")
+                            @if ($status == "accepted_team" || $status == "accepted_me")
                                 <a class="dropdown-item py-2" href="/participant/team/{{ $selectTeam->id }}/register">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
                                     <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/>
@@ -235,9 +272,121 @@
                                 </svg>
                             </button>
                         @endif
+                        @if ($status == "accepted_me" || $status == "accepted_team")
+                            <button 
+                                x-cloak
+                                x-show="!isEditMode"
+                                style="top: 10px; background-color: transparent; "
+                                class="me-2 badge  btn bg-primary text-white  px-2 position-relative" 
+                            >
+                                <svg style="position: relative; top: -1px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color  bi-award" viewBox="0 0 16 16">
+                                    <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702z"/>
+                                    <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1z"/>
+                                </svg> 
+                                <span> Your team </span>
+                            </button>
+                        @elseif ($status == "left_team")
+                            <button 
+                                x-cloak
+                                x-show="!isEditMode"
+                                style="top: 10px; background-color: #299e29; "
+                                class="me-2 badge  btn  text-white px-2 position-relative" 
+                            >
+                                <svg style="position: relative; top: -1px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color  bi-award" viewBox="0 0 16 16">
+                                    <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702z"/>
+                                    <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1z"/>
+                                </svg> 
+                                <span> Your previous team </span>
+                            </button>
+                        @elseif ($status == "left_me" )
+                            <button 
+                                x-cloak
+                                x-show="!isEditMode"
+                                style="top: 10px; background-color: #299e29; "
+                                class="me-2 badge  btn  text-white px-2 position-relative" 
+                            >
+                                <svg style="position: relative; top: -1px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color  bi-award" viewBox="0 0 16 16">
+                                    <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702z"/>
+                                    <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1z"/>
+                                </svg> 
+                                <span> Your previous team </span>
+                            </button>
+                                <button x-cloak class="btn btn-primary bg-light badge btn-link position-relative py-2" 
+                                    type="button" style="top: 10px;" onclick="approveMember({{$teamMember->id}})"
+                                >
+                                    <span class="text-primary"> Rejoin team! </span>
+                                </button>
+                        @endif
                     </div>
                     @endif
                 @endauth
+                @if (is_null($status))
+                    <form x-show.important="!isEditMode" x-cloak class="d-inline-block pt-1 px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
+                        @csrf()
+                        <button style="font-size: 0.875rem;" class="btn btn-primary bg-light btn-sm btn-link" type="submit">
+                            <span> Join Team </span>
+                        </button>
+                    </form>
+                @elseif ($status == "pending_me")
+                    <div x-show.important="!isEditMode" x-cloak class="d-inline-block pt-1 px-0" >
+                         <button style="font-size: 0.875rem;" class="btn btn-primary bg-light btn-sm btn-link" type="button">
+                            <span> Requested, wait please... </span>
+                        </button>
+                        <button class="gear-icon-btn mt-0 ms-1"
+                            onclick="withdrawInviteMember({{ $teamMember->id }})">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path
+                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                <path
+                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                            </svg>
+                        </button>
+                    </div>
+                    {{-- <span  x-show.important="!isEditMode" x-cloak class="d-inline-block mt-2 ps-2 ms-0 me-2 pt-2 badge rounded-pill border form-color d-inline"></span> --}}
+
+                @elseif ($status == "pending_team" )
+                    <div x-show.important="!isEditMode" x-cloak class="d-inline-block pt-1 px-0" >
+                        <button onclick="approveMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn btn-success bg-light btn-sm btn-link me-1" type="button">
+                            <span class="text-success"> Yes, join team </span>
+                        </button>
+                        <button onclick="rejectMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn border border-danger bg-light btn-sm  btn-link" type="button">
+                            <span class="text-red">Reject</span>
+                        </button>
+                    </div>
+                    {{-- <span  x-show.important="!isEditMode" x-cloak class="d-inline-block mt-2 ps-2 ms-0 me-2 pt-2 badge rounded-pill border form-color d-inline"></span> --}}
+                @elseif ($status == "rejected_me" )
+                    <div x-show.important="!isEditMode" x-cloak class="d-inline-block pt-1 px-0" >
+                        <button 
+                            class="me-2 btn btn-sm text-red bg-light py-1 px-2" 
+                            style="border: 1px solid red; pointer-events: none;"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                            <span> Rejected team</span>
+                        </button>
+                        <button onclick="approveMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn border border-success bg-light btn-sm " type="button">
+                            <span class="text-success">Change decision</span>
+                        </button>
+                    </div>
+                @elseif ($status == "rejected_team" )
+                    <div x-show.important="!isEditMode" x-cloak class="d-inline-block pt-1 px-0" >
+                        <button 
+                            disabled
+                            style="pointer-events: none; border: none;"
+                            class="me-2 btn-sm bg-light text-red py-1 px-2" 
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                            <span> Rejected by team </span>
+                        </button>
+                        {{-- <small>Perhaps, they will change their mind in future.</small> --}}
+                    </div>
+                @endif
             </div>
         </div>
             @if ($isCreator)
@@ -270,19 +419,23 @@
                 </div>
                 <div >
                     <span class="ms-2" x-cloak x-show="!isEditMode">{{$selectTeam->teamDescription}}</span>
-                    <span class="ms-2 fs-3"x-show="!isEditMode">{{$selectTeam->country_flag}}</span>
+                    <span class="ms-2 mt-2 fs-3"x-show="!isEditMode">{{$selectTeam->country_flag}}</span>
+                    {{-- <span x-show.important="!isEditMode" x-cloak class="d-inline-block pt-0 px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}"> --}}
+                      
+                    {{-- </span> --}}
                 </div>
             @else
                 <p class="my-0 py-0">
                     <span class="d-inline">{{$selectTeam->teamDescription}}</span>
                     <span class="d-inline ms-2 fs-3">{{$selectTeam->country_flag}}</span>
+                    {{-- <span x-show.important="!isEditMode" x-cloak class="d-inline-block pt-1 px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
+                        <button style="font-size: 0.875rem;" class="btn btn-primary bg-light btn-sm btn-link" type="submit">
+                            {!!$statusMessage[$status]['badge']!!} {{$statusMessage[$status]['text']}}
+                        </button>
+                    </span> --}}
                 </p>
             @endif
-        @if ($statusMessage && isset($statusMessage[$status]))
-            <div> 
-                {{$statusMessage[$status]}}
-            </div>
-        @endif
+       
         <div class="mx-auto text-center mt-1 ">
             @if (session('successJoin'))
                 <span class="text-success">
@@ -297,6 +450,7 @@
     </div>
 </main>
 @include('Participant.__Partials.BackgroundModal')
+    <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
 
 <script src="{{ asset('/assets/js/participant/TeamHead.js') }}"></script>
         
