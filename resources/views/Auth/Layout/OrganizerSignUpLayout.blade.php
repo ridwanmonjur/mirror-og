@@ -3,7 +3,7 @@
 @section('signUpbody')
 
 <img class="mt-2  mb-1 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
-<h5 class="mt-2 mb-0"><u>Create an  organizer account</u></h5>
+<h5 class="mt-2 mb-0">Create an <span class="text-primary">organizer account</span></h5>
 <form 
     autocomplete="off" 
     readonly 
@@ -70,7 +70,12 @@
     <div class="sign-txt">By continuing, you agree to Driftwood's <a href="#">Terms of Use</a>. Read our <a href="#">Privacy Policy</a>.</div>
 
     <div class="section-bottoms">
-        <p>Already have an account? <a href="{{ route('organizer.signin.view') }}">Sign in</a></p>
+        <p class="py-0 my-0">Already have an account? <a href="{{ route('organizer.signin.view') }}">Sign in</a></p>
+    </div>
+    <div>
+        <a  href="{{ route('participant.signup.view') }}">
+            <button type="button" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to participant</button>
+        </a>
     </div>
 
 </form>

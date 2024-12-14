@@ -14,10 +14,10 @@ body {
     align-items: center;
     justify-content: center;
     /* background-image: url("images/signinbg.png"); */
-    background-image: url("./signinbg.png");
-    background-size: auto 100vh;
+    background: #a5c0d4 !important;
+    /* background-size: auto 100vh;
     background-attachment: fixed;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
 
 }
 
@@ -220,13 +220,21 @@ form input[type="button"]:hover {
 }
 
 .straight-line {
+    position: relative;
+    top: -8px;
     width: 200px;
     height: 1px;
     border-bottom: 1px solid black;
 }
 
+.straight-line-or {
+    position: relative;
+    z-index: 999;
+    background-color: white !important;
+}
+
 .btn-login {
-    height: 33px;
+    padding: 5px 10px;
     background-color: #fff;
     display: flex;
     align-items: center;
@@ -234,6 +242,7 @@ form input[type="button"]:hover {
     text-align: left;
     border-radius: 30px;
     margin-bottom: 15px;
+    border: 1px solid rgb(167, 166, 166);
 }
 
 .btn-login:hover {
