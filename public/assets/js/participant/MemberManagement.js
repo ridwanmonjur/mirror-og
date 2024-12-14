@@ -159,7 +159,7 @@ function withdrawInviteMember(memberId, teamId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setTeamId(teamId);
     dialogForMember.setActionName('deleteInvite')
-    window.dialogOpen('Are you sure you want to delete your invite to this member??', takeYesAction, takeNoAction)
+    window.dialogOpen('Are you sure you want to delete your invite to this member?', takeYesAction, takeNoAction)
 }
 
 function disapproveMember(memberId) {

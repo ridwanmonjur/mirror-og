@@ -449,6 +449,7 @@ function updateInput(input) {
     let ogTotal = Number(input.dataset.totalAmount);
     let pending = Number(input.dataset.pendingAmount);
     let modalId = input.dataset.modalId;
+    let minimumRMValue = getData('paymentLower');
 
     if (!(registrationPaymentModalMap.hasOwnProperty(modalId))) {
         registrationPaymentModalMap[modalId] = 0;
@@ -465,7 +466,8 @@ function updateInput(input) {
     } else { 
         newValue = newValue.substr(1, 2) + '.' + newValue.substr(3, 2);
     }
-   
+    
+        
 
     if (+newValue >= +pending) {
         newValue = pending.toFixed(2);
@@ -474,6 +476,14 @@ function updateInput(input) {
     registrationPaymentModalMap[modalId] ++;
     
     input.value = newValue;
+    if (newValue > Number(minimumRMValue)) {
+        let paymentProceedButton = document.getElementById('paymentProceedButton');
+        if (paymentProceedButton.classList.contains('btn-secondary')) {
+            paymentProceedButton.classList.remove('btn-secondary');
+            paymentProceedButton.classList.add('btn-primary');
+        }
+    }
+
     putAmount(input.dataset.modalId, newValue, ogTotal, pending, Number(input.dataset.existingAmount));
 }
 
@@ -517,6 +527,12 @@ function resetInput(button) {
     let input = document.querySelector('#payModal' + button.dataset.modalId + " input[name='amount']");
     registrationPaymentModalMap[button.dataset.modalId] = 0;
     input.value = input.defaultValue;
+    let paymentProceedButton = document.getElementById('paymentProceedButton');
+    if (paymentProceedButton.classList.contains('btn-primary')) {
+        paymentProceedButton.classList.remove('btn-primary');
+        paymentProceedButton.classList.add('btn-secondary');
+    }
+
     putAmount(button.dataset.modalId, 0.00, Number(button.dataset.totalAmount), Number(button.dataset.pendingAmount), Number(button.dataset.existingAmount));
 }
 

@@ -11,6 +11,7 @@ let sortKeysInput = document.getElementById("sortKeys");
 
 let teamListServer = document.getElementById('teamListServer');
 let userIdServer = document.getElementById('userIdServer');
+
 let membersCountServer = document.getElementById('membersCountServer');
 let countServer = document.getElementById('countServer');
 let teamListServerValue = JSON.parse(teamListServer.value);

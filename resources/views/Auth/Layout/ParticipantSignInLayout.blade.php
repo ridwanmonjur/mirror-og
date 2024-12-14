@@ -10,7 +10,7 @@
 >
 </div>
 <img class="mt-4 motion-logo mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
-<h5 class="px-2"><u>Sign in to your participant account</u></h5>
+<h5 class="px-2">Sign in to your <span class="text-primary">participant account</span></h5>
 <form 
     autocomplete="off" 
     readonly 
@@ -82,7 +82,12 @@
 </form>
 
 <div class="section-bottom">
-    <p>New to Driftwood? <a href="{{ route('participant.signup.view') }}">Create an account</a></p>
+    <p class="py-0 my-0">New to Driftwood? <a href="{{ route('participant.signup.view') }}">Create an account</a></p>
+</div>
+<div>
+    <a  href="{{ route('organizer.signin.view') }}">
+        <button type="button" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to organizer</button>
+    </a>
 </div>
 <script src="{{ asset('/assets/js/participant/signin.js') }}"></script>
 

@@ -112,6 +112,15 @@ Alpine.data('alpineDataComponent', () => ({
         banner.querySelectorAll('.form-control').forEach((element) => {
             element.style.cssText += fontStyles;
         });
+
+
+        banner.querySelectorAll(".form-color").forEach((element) => {
+            element.style.cssText += fontStyles;
+            if (teamData?.profile?.borderColor) {
+                element.style.border = `1px solid ${teamData.profile.borderColor}`;
+            }
+        });
+
     }
 })
 );

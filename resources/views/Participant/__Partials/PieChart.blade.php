@@ -338,8 +338,8 @@
                             <div class="mx-auto text-center">
                                 <button 
                                     type="submit"
-                                    class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button">Proceed to
-                                    payment
+                                    id="paymentProceedButton"
+                                    class="mt-2 btn rounded-pill text-white py-2 px-3 btn-secondary">Proceed to payment
                                     </button>
                                 <br>
                                 <button type="button" data-bs-dismiss="modal"

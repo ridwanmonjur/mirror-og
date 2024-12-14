@@ -80,10 +80,6 @@ class Team extends Model
         $teamList = self::whereHas('members', function ($query) use ($user_id) {
             $query->where('user_id', $user_id)->where('status', 'accepted');
         })
-            ->with(['members' => function ($query) {
-                $query->where('status', 'accepted');
-            },
-            ])
             ->get();
 
         $teamIdList = $teamList->pluck('id')->toArray();

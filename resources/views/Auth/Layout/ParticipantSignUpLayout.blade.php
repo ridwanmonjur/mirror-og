@@ -3,7 +3,7 @@
 
 @section('signUpbody')
     <img class="mt-4  mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
-    <h5><u class="px-2">Create a participant account</u></h5>
+    <h5 class="px-2">Create a <span class="text-primary">participant account</span></h5>
     <form autocomplete="off" readonly name="signup-form" id="signup-form" method="post"
         action="{{ route('participant.signup.action') }}"
     >
@@ -58,7 +58,12 @@
                 href="#">Privacy Policy</a>.</div>
 
         <div class="section-bottoms">
-            <p>Already have an account? <a href="{{ route('participant.signin.view') }}">Sign in</a></p>
+            <p class="my-0 py-0">Already have an account? <a href="{{ route('participant.signin.view') }}">Sign in</a></p>
+        </div>
+        <div>
+            <a  href="{{ route('organizer.signup.view') }}">
+                <button type="button" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to organizer</button>
+            </a>
         </div>
 
     </form>

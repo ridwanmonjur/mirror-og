@@ -230,3 +230,257 @@ function reddirectToLoginWithIntened(route) {
 function redirectToProfilePage(userId) {
     window.location.href = routes.profile.replace(':id', userId);
 }
+
+let csrfToken2 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+let tabButtonBalueValue = localStorage.getItem("tab");
+let currentTabIndexForNextBack = 0;
+if (tabButtonBalueValue !== null || tabButtonBalueValue!== undefined){
+    if (tabButtonBalueValue === "PendingMembersBtn") {
+        currentTabIndexForNextBack = 1;
+    }
+
+    if (tabButtonBalueValue === "NewMembersBtn") {
+        currentTabIndexForNextBack = 2;
+    }
+}
+
+function goBackScreens () {
+    if (currentTabIndexForNextBack <=0 ) {
+        Toast.fire({
+            'icon': 'success',
+            'text': 'Notifications sent already!'
+        });
+    } else {
+        let tabs = document.querySelectorAll('.tab-content');
+        console.log({tabs, tabsChildren: tabs});
+        for (let tabElement of tabs) {
+            tabElement.classList.add('d-none');
+        }
+
+        currentTabIndexForNextBack--;
+        tabs[currentTabIndexForNextBack].classList.remove('d-none');
+    }
+}
+
+function goNextScreens () {
+    if (currentTabIndexForNextBack >= 2) {
+        document.getElementById('manageRosterUrl').click();
+    } else {
+
+        let tabs = document.querySelectorAll('.tab-content');
+        console.log({tabs, tabsChildren: tabs, currentTabIndexForNextBack});
+
+        for (let tabElement of tabs) {
+            tabElement.classList.add('d-none');
+        }
+
+        currentTabIndexForNextBack++;
+        tabs[currentTabIndexForNextBack].classList.remove('d-none');
+    }
+}
+
+let actionMap = {
+    'approve': approveMemberAction,
+    'disapprove': disapproveMemberAction,
+    'invite': inviteMemberAction,
+    'deleteInvite': withdrawInviteMemberAction,
+    'reject': rejectMemberAction
+};
+
+let dialogForMember = new DialogForMember();
+
+function generateHeaders() {
+    return {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        'credentials': 'include', 
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    };
+}
+
+
+addOnLoad( () => { window.loadMessage(); } )
+
+
+function reloadUrl(currentUrl) {
+    if (currentUrl.includes('?')) {
+        currentUrl = currentUrl.split('?')[0];
+    } 
+
+    localStorage.setItem('success', 'true');
+    localStorage.setItem('message', 'Successfully updated user.');
+    window.location.replace(currentUrl);
+}
+
+function toastError(message, error = null) {
+    console.error(error)
+    Toast.fire({
+        icon: 'error',
+        text: message
+    });
+}
+
+function takeYesAction() {
+    console.log({
+        memberId: dialogForMember.getMemberId(),
+        action: dialogForMember.getActionName()
+    })
+
+    const actionFunction = actionMap[dialogForMember.getActionName()];
+    if (actionFunction) {
+        actionFunction();
+    } else {
+        Toast.fire({
+            icon: 'error',
+            text: "No action found."
+        })
+    }
+} 
+
+function takeNoAction() {
+    dialogForMember.reset();
+}
+
+function approveMember(memberId) {
+    dialogForMember.setMemberId(memberId);
+    dialogForMember.setActionName('approve')
+    window.dialogOpen('Continue with accepting team?', takeYesAction, takeNoAction)
+}
+
+function inviteMember(memberId, teamId) {
+    dialogForMember.setMemberId(memberId);
+    dialogForMember.setTeamId(teamId);
+    dialogForMember.setActionName('invite')
+    window.dialogOpen('Are you sure you want to send invite to this team?', takeYesAction, takeNoAction)
+}
+
+function withdrawInviteMember(memberId, teamId) {
+    dialogForMember.setMemberId(memberId);
+    dialogForMember.setTeamId(teamId);
+    dialogForMember.setActionName('deleteInvite')
+    window.dialogOpen('Are you sure you want to delete your invite to this team?', takeYesAction, takeNoAction)
+}
+
+function disapproveMember(memberId) {
+    dialogForMember.setMemberId(memberId);
+    dialogForMember.setActionName('disapprove')
+    window.dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
+}
+
+function rejectMember(memberId) {
+    dialogForMember.setMemberId(memberId);
+    dialogForMember.setActionName('reject')
+    window.dialogOpen('Continue with rejecting this team?', takeYesAction, takeNoAction)
+}
+
+
+
+function approveMemberAction() {
+    const memberId = dialogForMember.getMemberId();
+    const url = getUrl('participantMemberUpdateUrl', memberId);
+
+    fetchData(url,
+        function(responseData) {
+            if (responseData.success) {
+                let currentUrl = document.getElementById('currentMemberUrl').value;
+                reloadUrl(currentUrl);
+            } else {
+                toastError(responseData.message);
+            }
+        },
+        function(error) { toastError('Error accepting member.', error);},  
+        {
+            headers: generateHeaders(), 
+            body: JSON.stringify({
+               'actor' : 'user', 'status' : 'accepted'
+            })
+        }
+    );
+}
+
+async function disapproveMemberAction() {
+    const memberId = dialogForMember.getMemberId();
+    const url = getUrl("participantMemberUpdateUrl", memberId);
+    fetchData(url,
+        function(responseData) {
+            if (responseData.success) {
+                let currentUrl = document.getElementById('currentMemberUrl').value;
+                reloadUrl(currentUrl);
+            } else {
+                toastError(responseData.message)
+            }
+        },
+        function(error) { toastError('Error disapproving member.', error);}, 
+        {
+            headers: generateHeaders(), 
+            body: JSON.stringify({
+               'actor' : 'team', 'status' : 'left'
+            })
+        }
+    );
+}
+
+async function rejectMemberAction() {
+    const memberId = dialogForMember.getMemberId();
+    const url = getUrl("participantMemberUpdateUrl", memberId);
+    fetchData(url,
+        function(responseData) {
+            if (responseData.success) {
+                let currentUrl = document.getElementById('currentMemberUrl').value;
+                reloadUrl(currentUrl);
+            } else {
+                toastError(responseData.message)
+            }
+        },
+        function(error) { toastError('Error disapproving member.', error);}, 
+        {
+            headers: generateHeaders(), 
+            body: JSON.stringify({
+               'actor' : 'user', 'status' : 'rejected'
+            })
+        }
+    );
+}
+
+
+async function inviteMemberAction() {
+    const memberId = dialogForMember.getMemberId();
+    const teamId = dialogForMember.getTeamId();
+    const urlTemplate = document.getElementById('participantMemberInviteUrl').value;
+    const url = urlTemplate.replace(':userId', memberId).replace(':id', teamId);
+
+    fetchData(
+        url,
+        function(responseData) {
+            if (responseData.success) {
+                let currentUrl = document.getElementById('currentMemberUrl').value;
+            } else {
+               toastError(responseData.message);
+            }
+        },
+        function(error) { toastError('Error inviting members.', error); }, 
+        {  headers: generateHeaders(),  }
+    );
+}
+
+async function withdrawInviteMemberAction() {
+    const memberId = dialogForMember.getMemberId();
+    
+    const urlTemplate = document.getElementById('participantMemberDeleteInviteUrl').value;
+    const url = urlTemplate.replace(':id', memberId);
+
+    fetchData(
+        url,
+        function(responseData) {
+            if (responseData.success) {
+                let currentUrl = document.getElementById('currentMemberUrl').value;
+                reloadUrl(currentUrl);
+            } else {
+                toastError(responseData.message);
+            }
+        },
+        function(error) { toastError('Error deleting invite members.', error);}, 
+        {  headers: generateHeaders()  }
+    );
+}

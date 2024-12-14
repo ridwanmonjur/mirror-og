@@ -10,7 +10,7 @@
 >
 </div>
 <img class="mt-4 mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
-<h5 class="mt-2 mb-0"><u>Sign in to your organizer account</u></h5>
+<h5 class="mt-2 mb-0">Sign in to your <span class="text-primary">organizer account</span></h5>
 <form 
     autocomplete="off" 
     readonly 
@@ -61,7 +61,7 @@
             href="#">Privacy Policy</a>.</div>
     <div class="section-or">
         <div class="straight-line"></div>
-        <p>or</p>
+        <p class="straight-line-or px-4">        or        </p>
         <div class="straight-line"></div>
     </div>
 
@@ -69,16 +69,20 @@
         <img class="image-login" src="{{ asset('/assets/images/auth/google.svg') }}" alt="">
         <p>Continue with Google</p>
     </button>
-    <button class="btn-login btn-steam" class="btn-login" onclick="redirectToSteam();">
+    <button class="btn-login btn-steam" onclick="redirectToSteam();">
         <img class="image-login" src="{{ asset('/assets/images/auth/steam.svg') }}" alt="">
         <p>Continue with Steam</p>
     </button>
 </form>
 
 <div class="section-bottom">
-    <p>New to Driftwood? <a href="{{ route('organizer.signup.view') }}">Create an account</a></p>
+    <p class="py-0 my-0">New to Driftwood? <a href="{{ route('organizer.signup.view') }}">Create an account</a></p>
 </div>
-
+<div>
+    <a  href="{{ route('participant.signin.view') }}">
+        <button type="button" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to participant</button>
+    </a>
+</div>
 <script src="{{ asset('/assets/js/organizer/signin.js') }}"></script>
 
 @endsection

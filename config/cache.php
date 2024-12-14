@@ -16,7 +16,10 @@ return [
     */
 
     'default' => env('CACHE_DRIVER', 'file'),
-
+    'ttl' => 3600,
+    'keys' => [
+        'team_member_counts' => 'team:%s:member_counts'
+    ],
     /*
     |--------------------------------------------------------------------------
     | Cache Stores

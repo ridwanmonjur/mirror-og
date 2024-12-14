@@ -32,6 +32,7 @@
         data-rostercaptain-url="{{ route('participant.roster.captain') }}"
         data-team-id="{{ $selectTeam->id }}"
         data-max-roster-size="{{ $maxRosterSize }}"
+        data-payment-lower="{{$paymentLowerMin}}"
         data-vote-url="{{ route('participant.roster.vote') }}"
         data-register-url="{{ 
             $isRedirect 

@@ -149,6 +149,7 @@ class ParticipantEventController extends Controller
 
             $maxRosterSize = config("constants.ROSTER_SIZE");  
             $signupStatusEnum = config("constants.SIGNUP_STATUS");
+            $paymentLowerMin = config("constants.STRIPE.MINIMUM_RM");
 
             return view(
                 'Participant.RegistrationManagement',
@@ -164,6 +165,7 @@ class ParticipantEventController extends Controller
                     'isRedirect',
                     'eventId',
                     'maxRosterSize',
+                    'paymentLowerMin',
                     'signupStatusEnum'
                 )
             );
@@ -178,6 +180,7 @@ class ParticipantEventController extends Controller
             'teamList' => $selectTeam,
             'teamIdList' => $teamIdList,
         ] = Team::getUserTeamListAndPluckIds($user_id);
+
         $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $user_id);
         if ($hasJoinedOtherTeams) {
             return $this->showErrorParticipant('One of your teams has joined this event already!');
