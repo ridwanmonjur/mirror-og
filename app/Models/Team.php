@@ -305,7 +305,7 @@ class Team extends Model
                     You have joined 
                     <a href="/view/organizer/{$event->user->id}">
                         <span class="notification-blue">{$event->user->name}</span>
-                    </a>'s
+                    </a>'s event.
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
                     </a>
@@ -319,6 +319,7 @@ class Team extends Model
 
             foreach ($teamMembers as $member) {
                 $memberList[] = $member->user;
+                $address = $member->user->id == $userId ? 'You': $member->user->name;
                 $allEventLogs[] = [
                     'action' => 'join',
                     'created_at' => now(),
@@ -334,19 +335,18 @@ class Team extends Model
                                 alt="Team banner for {$this->teamName}">
                         </a>
                         <span class="notification-gray">
-                            You have joined 
+                            {$address} have joined 
                             <a href="/view/organizer/{$event->user->id}">
                                 <span class="notification-blue">{$event->user->name}</span>
-                            </a>'s
+                            </a>'s event,
                             <a href="/event/{$event->id}">
                                 <span class="notification-blue">{$event->eventName}</span>
-                            </a>.
+                            </a>. Please register your roster and complete registration for this event.
                         </span>
                     HTML,
                 ];
             }
             
-        $rosterCaptain = $teamMembers[0];
 
         $organizerList = [$event->user];
 
@@ -368,13 +368,13 @@ class Team extends Model
                     <a href="/view/team/{$this->id}">
                         <span class="notification-black">{$this->teamName}</span> 
                     </a>
-                    has joined
+                    has signed up for
                     <a href="/view/organizer/{$event->user->id}">
                         <span class="notification-blue">{$event->user->name}</span>
-                    </a>'s
+                    </a>'s event,
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
-                    </a>.
+                    </a>. 
                 </span>
             HTML,
             'links' => [
@@ -392,12 +392,7 @@ class Team extends Model
             'event_details_id' => $event->id,
         ]);
 
-        RosterMember::bulkCreateRosterMembers($joinEvent->id, $teamMembers, $this->id);
-        RosterCaptain::insert([
-            'team_member_id' => $rosterCaptain->id,
-            'join_events_id' => $joinEvent->id,
-            'teams_id' => $this->id,
-        ]);
+        RosterMember::userJoinEventRoster($joinEvent->id, $teamMembers, $this->id, $userId);
 
         return [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs];
     }
@@ -451,10 +446,10 @@ class Team extends Model
                     </a> has confirmed registration for  
                     <a href="/view/organizer/{$event->user->id}">
                         <span class="notification-blue">{$event->user->name}</span>
-                    </a>'s
+                    </a>'s event,
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
-                    </a>.
+                    </a>. Your registration is completed and all ready to go.
                 </span>
             HTML;
         }
@@ -482,10 +477,10 @@ class Team extends Model
                     has confirmed registration for
                     <a href="/view/organizer/{$event->user->id}">
                         <span class="notification-blue">{$event->user->name}</span>
-                    </a>'s
+                    </a>'s event,
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
-                    </a>.
+                    </a>. They have confirmed their positions for this event.
                 </span>
             HTML,
             'links' => [
@@ -524,7 +519,7 @@ class Team extends Model
                         </a> has canceled registration for
                     <a href="/view/organizer/{$event->user->id}">
                         <span class="notification-blue">{$event->user->name}</span>
-                    </a>'s
+                    </a>'s event,
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
                     </a>.
@@ -535,7 +530,7 @@ class Team extends Model
             $data['refundString'] = 'all';
             $data['cacnelOrgHtml'] = <<<HTML
                 <span>
-                    <span class="notification-black">You have canceled your event </span>    
+                    <span class="notification-black">You have canceled your event, </span>    
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
                     </a>.

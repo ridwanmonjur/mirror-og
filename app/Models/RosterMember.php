@@ -19,12 +19,12 @@ class RosterMember extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public static function bulkCreateRosterMembers(int| string $joinEventId, Collection $teamMembers, int|string $teamId): bool
+    public static function userJoinEventRoster(int| string $joinEventId, Collection $teamMembers, int|string $teamId, int|string $userId): bool
     {
         $data = [];
 
         foreach ($teamMembers as $member) {
-            if ($member->status === 'accepted') {
+            if ($member->status === 'accepted' && $member->user_id == $userId) {
                 $data[] = [
                     'join_events_id' => $joinEventId,
                     'user_id' => $member->user_id,
