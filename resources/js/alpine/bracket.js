@@ -141,10 +141,14 @@ function addTippyToClass(classAndPositionList) {
 window.addTippyToClass = addTippyToClass;
 
 function addDotsToContainer(key, value) {
+  console.log({value});
+  console.log({value});
+  console.log({value});
   let parent = document.querySelector(`.${key}.popover-middle-content`);
   let table = document.querySelector(`.${key}.tournament-bracket__table`);
   let dottedScoreContainer = parent?.querySelectorAll('.dotted-score-container');
   let dottedScoreBox = parent?.querySelectorAll('.dotted-score-box');
+  let statusBox = parent?.querySelectorAll('.status-box');
   let dottedScoreTable = table?.querySelectorAll('.dotted-score-box');
   console.log({dottedScoreTable});
   dottedScoreContainer?.forEach((element, index) => {
@@ -170,6 +174,13 @@ function addDotsToContainer(key, value) {
 
   dottedScoreTable?.forEach((element, index) => {
     element.innerHTML = value['score'][index];
+  });
+
+  statusBox?.forEach((element, index) => {
+    if ('completeMatchStatus' in value) {
+      element.innerHTML = value['completeMatchStatus'];
+
+    }
   });
 
 }
@@ -269,7 +280,8 @@ Alpine.data('alpineDataComponent', function () {
       organizerWinners: [null, null, null],
       realWinners: [null, null, null],
       userLevel: userLevelEnums['IS_PUBLIC'],
-      matchStatus: ['ONGOING', null, null],
+      completeMatchStatus: 'UPCOMING',
+      matchStatus: ['UPCOMING', null, null],
       teams: [
         {
           winners: [null, null, null],
@@ -314,8 +326,14 @@ Alpine.data('alpineDataComponent', function () {
         matchStatus: [...this.report.matchStatus],
         realWinners: [...this.report.realWinners],
         teams: [...this.report.teams],
-        position: this.report.position
+        position: this.report.position,
+        completeMatchStatus: matchNumber == 2 ? "ENDED": "ONGOING"
       };
+
+      update.matchStatus[matchNumber] = "ENDED";
+      if (matchNumber != 2) {
+        update.matchStatus[matchNumber+1] = "ONGOING";
+      }
 
       if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
         update.organizerWinners[matchNumber] = selectedTeamIndex;
@@ -364,8 +382,14 @@ Alpine.data('alpineDataComponent', function () {
             matchStatus: [...this.report.matchStatus],
             realWinners: [...this.report.realWinners],
             teams: [...this.report.teams],
-            position: this.report.position
+            position: this.report.position,
+            completeMatchStatus: matchNumber == 2 ? "ENDED": "ONGOING"
           };
+    
+          update.matchStatus[matchNumber] = "ENDED";
+          if (matchNumber != 2) {
+            update.matchStatus[matchNumber+1] = "ONGOING";
+          }
 
           if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
             let otherIndex = this.report.realWinners[matchNumber] === "1" ? "0" : "1";
@@ -402,7 +426,6 @@ Alpine.data('alpineDataComponent', function () {
         already_winner
       } = formData;
 
-
         const missingFields = [];
         if (!id) missingFields.push('ID');
         if (!match_number) missingFields.push('Match Number');
@@ -435,10 +458,22 @@ Alpine.data('alpineDataComponent', function () {
 
       try {
         let winnerNew = [...this.report.realWinners];
+        let updatedRemaining = {
+          matchStatus: [...this.report.matchStatus],
+          completeMatchStatus: match_number == 2 ? "ENDED": "ONGOING"
+        };
+  
+        updatedRemaining.matchStatus[match_number] = "ENDED";
+        if (match_number != 2) {
+          updatedRemaining.matchStatus[Number(match_number)+1] = "ONGOING";
+        }
+        
         winnerNew[this.reportUI.matchNumber] = resolution_winner;
         await updateDoc(docRef, {
           winners: winnerNew,
+          ...updatedRemaining
         });
+
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           let id = docRef.id;
@@ -485,6 +520,7 @@ Alpine.data('alpineDataComponent', function () {
         _report['team1Id'] = report.teams[0].id;
         _report['team2Id'] = report.teams[1].id;
         _report['position'] = report.position;
+        _report['completeMatchStatus'] = report.completeMatchStatus;
         await setDoc(docRef, _report);
 
         this.report = {
@@ -492,6 +528,7 @@ Alpine.data('alpineDataComponent', function () {
           organizerWinners: _report.organizerWinners,
           id: _report['id'],
           matchStatus: _report.matchStatus,
+          completeMatchStatus: _report.completeMatchStatus,
           realWinners: _report.realWinners,
           teams: [
             {
@@ -736,6 +773,7 @@ Alpine.data('alpineDataComponent', function () {
               organizerWinners,
               team1Winners,
               team2Winners,
+              completeMatchStatus
             } = data;
 
             if (!score) {
@@ -747,6 +785,7 @@ Alpine.data('alpineDataComponent', function () {
               organizerWinners,
               id: reportSnapshot.id,
               matchStatus,
+              completeMatchStatus,
               realWinners,
               teams: [
                 {
