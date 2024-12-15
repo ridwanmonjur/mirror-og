@@ -32,7 +32,12 @@ function updateModalShow(event) {
     event.preventDefault();
     const button = event.currentTarget;
     let { team1_id, team2_id } = button.dataset;
-    let parentWithDataset = document.querySelector(`.tournament-bracket__match.${team1_id}.${team2_id}`);
+    let parentWithDataset  = null;
+    if (team2_id) {
+        parentWithDataset = document.querySelector(`.tournament-bracket__match.${team1_id}.${team2_id}`);
+    } else {
+        parentWithDataset = document.querySelector(`.tournament-bracket__match.${team1_id}.finals`);
+    }
 
     if (
         parentWithDataset === null || 
@@ -70,14 +75,44 @@ function updateModalShow(event) {
     })
 
     window.closeLoading();
-    let modal = bootstrap.Modal.getInstance(modalElement);
+    
+   
 
-    if (modal) {
+    try {
+        // First, check if element exists and has correct structure
+        if (!modalElement || !modalElement.classList) {
+            console.error('Invalid modal element:', modalElement);
+            return;
+        }
+    
+        // Check if a modal instance already exists
+        let existingModal = bootstrap.Modal.getInstance(modalElement);
+        if (existingModal) {
+            console.log('Using existing modal instance');
+            existingModal.show();
+            return;
+        }
+    
+        // If no existing instance, create new one with explicit config
+        let modal = new bootstrap.Modal(modalElement, {
+            backdrop: true,
+            keyboard: true,
+            focus: true
+        });
+        
+        console.log('New modal instance created:', modal);
         modal.show();
-    } else {
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
-    };
+    
+    } catch (error) {
+        console.error('Modal error:', error);
+        console.log('Modal element details:', {
+            element: modalElement,
+            hasClassList: Boolean(modalElement?.classList),
+            id: modalElement?.id,
+            classes: modalElement?.className
+        });
+    }
+    
 
 }
 
@@ -128,14 +163,11 @@ function reportModalShow(event) {
     });
     window.dispatchEvent(alpineEvent);
     const modalElement = document.getElementById('reportModal');
-    let modal = bootstrap.Modal.getInstance(modalElement);
+    let modal = bootstrap.Modal.getOrCreateInstance(modalElement);
     window.closeLoading();
     if (modal) {
         modal.show();
-    } else {
-        modal = new bootstrap.Modal(modalElement);
-        modal.show();
-    };
+    } 
 }
 
 
@@ -173,13 +205,18 @@ submitBtnElement?.addEventListener('click', function(event) {
                 let isUpperBracketFirstRound = false;
                 let isFinalBracket = false;
                 let {team1, match, team2} = data.data;
-                let currentMatch = document.querySelector(`.${match.team1_position}.${match.team2_position}`);
+                let currentMatch = null;
+                if (match.team2_position) {
+                    currentMatch = document.querySelector(`.${match.team1_position}.${match.team2_position}`);
+                } else {
+                    currentMatch = document.querySelector(`.${match.team1_position}.finals`);
+                }
                 
                 if (match.stage_name == "upperBracket" && match.inner_stage_name == "eliminator1") {
                     isUpperBracketFirstRound = true;
                 }
 
-                if (match.stage_name == "finals" && match.inner_stage_name == "finals") {
+                if (match.stage_name == "finals" ) {
                     isFinalBracket = true;
                 }
 
@@ -357,8 +394,10 @@ submitBtnElement?.addEventListener('click', function(event) {
                     })
                 });
 
-                window.updateReportDispute(`${match.team1_position}.${match.team2_position}`, team1.id, team2.id);
-
+                if (match.team2_position) {
+                    window.updateReportDispute(`${match.team1_position}.${match.team2_position}`, team1.id, team2.id);
+                }
+                
                 window.Toast.fire({
                     icon: 'success',
                     text: data.message

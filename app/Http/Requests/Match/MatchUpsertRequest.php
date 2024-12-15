@@ -33,10 +33,8 @@ class MatchUpsertRequest extends FormRequest
             'order' => 'nullable|integer',
             'team1_id' => 'nullable',
             'team2_id' => 'nullable',
-            'team1_score' => 'nullable|string',
-            'team2_score' => 'nullable|string',
             'team1_position' => 'required|string',
-            'team2_position' => 'required|string',
+            'team2_position' => 'nullable|string',
             'winner_next_position' => 'nullable|string',
             'loser_next_position' => 'nullable|string',
         ];

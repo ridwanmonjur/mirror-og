@@ -70,6 +70,7 @@ class EventMatchService {
                 $isOrganizer,
                 $USER_ENUMS
             )[$tournamentTypeFinal];
+            // dd($bracketList);
             $bracketList = $event->matches->reduce(function ($bracketList, $match) use (
                     $existingJoint, 
                     $isOrganizer,

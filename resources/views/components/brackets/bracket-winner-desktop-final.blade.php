@@ -30,38 +30,10 @@
             data-position="{{$position1}}" 
             onclick="reportModalShow(event);" 
             class="cursor-pointer ms-1 position-absolute  replace_me_with_image" style="z-index: 99;"
-        >{{$position1}}</small>
+        >?</small>
      @endif
     <span></span>
      
     <span></span>
 </div>
 
-
-<div
-    class="{{ 'tournament-bracket__box  position-relative mx-auto popover-button tournament bg-light ' 
-        . 'data-position-'. $position2
-    }}"
-    data-position="{{$position2}}"
-    style="width: 35px; height: 28px;"
->
-    @if ($teamId2)
-        <img src="{{ bladeImageNull($teamBanner2) }}" width="33" height="25"
-            onerror="this.src='{{ asset('assets/images/404.png') }}';"
-            class="cursor-pointer position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
-            style="z-index: 99;"
-            data-position="{{$position2}}" 
-            onclick="reportModalShow(event);" 
-        >
-        
-    @else 
-        <small class="cursor-pointer ms-1 position-absolute replace_me_with_image" 
-            style="z-index: 99;"
-            data-position="{{$position2}}" 
-            onclick="reportModalShow(event);" 
-        >{{$position2}}</small>
-     @endif
-    <span></span>
-     
-    <span></span>
-</div>

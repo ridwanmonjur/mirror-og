@@ -11,7 +11,6 @@
     'teamName2',
     'winner_next_position',
     'loser_next_position',
-    'status'
 ])
  <div class="{{'popover-middle-content text-center d-none py-0 px-0 ' . $position1 . ' ' . $position2 }}" 
     style="opacity: 1; z-index: 999 !important; "
@@ -22,7 +21,7 @@
     >
         <div class="text-center text-uppercase" >
             <h5> {{$winner_next_position}} </h5>
-            <p class="text-success">{{$status}}</p>
+            <p class="text-success">UPCOMING</p>
         </div>
         <div class="col-12 col-lg-4">
             <div>

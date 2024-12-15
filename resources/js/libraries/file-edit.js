@@ -23,7 +23,7 @@ function setupFileInputEditor(selector, cb) {
     reader.onload = function (e) {
 
       if (modalElement) {
-        bootstrap.Modal.getOrCreateInstance(modalElement).show();
+        bootstrap.Modal.getOrCreateInstance(modalElement)?.show();
       }
 
       imagePreview.src = e.target.result;
@@ -72,7 +72,7 @@ function setupFileInputEditor(selector, cb) {
 
        
 
-        bootstrap.Modal.getOrCreateInstance(modalElement).hide();
+        bootstrap.Modal.getOrCreateInstance(modalElement)?.hide();
       }, 'image/png');
 
     });

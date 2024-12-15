@@ -47,10 +47,9 @@
                 </div>
             </div>
 
-            @foreach ($bracketList['finals']['finals'] as $order => $bracket)
-                <x-brackets.bracket-winner-item :bracket="$bracket" :stageName="'finals'" :innerStageName="'finals'" :order="$order"
-                    :wire:key="'upperBracket'. 'eliminator1'. $loop->index" />
-            @endforeach
+           <x-brackets.bracket-winner-item :bracket="$bracketList['finals']['finals'][0]" :stageName="'finals'" :innerStageName="'finals'" :order="0"
+                :winner="$bracketList['finals']['winner'][0]"
+            />
 
         </div>
         <h5 class="mb-2 text-start"><u>Lower bracket</u></h5>
