@@ -32,10 +32,13 @@ function updateModalShow(event) {
     event.preventDefault();
     const button = event.currentTarget;
     let { team1_id, team2_id } = button.dataset;
+    let team2VisibleContainer = document.querySelector('.team2-toggle');
     let parentWithDataset  = null;
     if (team2_id) {
+        team2VisibleContainer.classList.remove('d-none');
         parentWithDataset = document.querySelector(`.tournament-bracket__match.${team1_id}.${team2_id}`);
     } else {
+        team2VisibleContainer.classList.add('d-none');
         parentWithDataset = document.querySelector(`.tournament-bracket__match.${team1_id}.finals`);
     }
 
