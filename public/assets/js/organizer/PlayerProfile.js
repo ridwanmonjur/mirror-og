@@ -206,9 +206,9 @@ window.onload = () => {
     );
     window.loadMessage();
 
-    document.querySelectorAll('.animation-container').forEach(element => {
-        window.motion.createStaggerChildren(element);
-    });
+    // document.querySelectorAll('.animation-container').forEach(element => {
+    //     window.motion.createStaggerChildren(element);
+    // });
 
     // window.motion.slideInLeftRight();
 }

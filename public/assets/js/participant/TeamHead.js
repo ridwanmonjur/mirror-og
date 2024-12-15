@@ -147,9 +147,9 @@ let newFunction = function () {
 
     // window.motion.slideInLeftRight();
 
-    document.querySelectorAll('.animation-container').forEach(element => {
-        window.motion.createStaggerChildren(element);
-    });
+    // document.querySelectorAll('.animation-container').forEach(element => {
+    //     window.motion.createStaggerChildren(element);
+    // });
 
 }
 
