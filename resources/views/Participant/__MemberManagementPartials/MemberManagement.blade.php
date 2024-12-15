@@ -29,7 +29,7 @@
                         <td> Present Members </td>
                     </tr>
                     @foreach ($teamMembersProcessed['accepted']['members'] as $member)
-                        <tr class="st" id="tr-{{ $member->id }}">
+                        <tr class="st invisible-until-hover-parent" id="tr-{{ $member->id }}">
                             @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
                             <td class="coloured-cell px-3">
                                 Accepted {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
@@ -42,7 +42,7 @@
                                     </button>
                                 @endif
                             </td>
-                            <td>
+                            <td >
                                 @if (!$captain || $member->id != $captain->team_member_id)
                                     <button id="captain-{{ $member->id }}" class="gear-icon-btn invisible-until-hover"
                                         onclick="captainMember({{ $member->id }}, {{ $selectTeam->id }})">
