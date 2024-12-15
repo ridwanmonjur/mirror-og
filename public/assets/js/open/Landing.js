@@ -18,11 +18,13 @@ window.addEventListener(
             ENDPOINT += "?search=" + search + "&page=" + page;
         }
 
-        infinteLoadMore(null, ENDPOINT, ()=> {
+        infinteLoadMore(null, ENDPOINT
+            // , ()=> {
             // window.motion.animateCard('event', [
             //     'cover', 'frame1', 'league_name', 'fs-7'
             // ]);
-        });
+            // }
+        );
         
 
     }, 100));
@@ -46,9 +48,9 @@ window.onclick = function (event) {
     }
 }
 
-window.onload = () => {
+// window.onload = () => {
 
     // window.motion.animateCard('event', [
     //     'cover', 'frame1', 'league_name', 'fs-7'
     // ]);
-}
+// }
