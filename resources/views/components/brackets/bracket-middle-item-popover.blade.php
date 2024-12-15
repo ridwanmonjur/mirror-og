@@ -21,7 +21,7 @@
     >
         <div class="text-center text-uppercase" >
             <h5> {{$winner_next_position}} </h5>
-            <p class="text-success">UPCOMING</p>
+            <p class="text-success status-box">UPCOMING</p>
         </div>
         <div class="col-12 col-lg-4">
             <div>
