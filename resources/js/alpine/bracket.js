@@ -142,9 +142,12 @@ window.addTippyToClass = addTippyToClass;
 
 function addDotsToContainer(key, value) {
   let parent = document.querySelector(`.${key}.popover-middle-content`);
-  let dottedScoreContainer = parent.querySelectorAll('.dotted-score-container');
-  let dottedScoreBox = parent.querySelectorAll('.dotted-score-box');
-  dottedScoreContainer.forEach((element, index) => {
+  let table = document.querySelector(`.${key}.tournament-bracket__table`);
+  let dottedScoreContainer = parent?.querySelectorAll('.dotted-score-container');
+  let dottedScoreBox = parent?.querySelectorAll('.dotted-score-box');
+  let dottedScoreTable = table?.querySelectorAll('.dotted-score-box');
+  console.log({dottedScoreTable});
+  dottedScoreContainer?.forEach((element, index) => {
     element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
       if (value.realWinners[dottedElementIndex]) {
         if (value.realWinners[dottedElementIndex] == index) {
@@ -161,7 +164,11 @@ function addDotsToContainer(key, value) {
     })
   });
 
-  dottedScoreBox.forEach((element, index) => {
+  dottedScoreBox?.forEach((element, index) => {
+    element.innerHTML = value['score'][index];
+  });
+
+  dottedScoreTable?.forEach((element, index) => {
     element.innerHTML = value['score'][index];
   });
 
@@ -514,7 +521,7 @@ Alpine.data('alpineDataComponent', function () {
     showImageModal(imgPath) {
       const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageModal'));
       document.getElementById('modalImage').src = '/storage/' + imgPath;
-      modal.show();
+      if (modal) modal.show();
     },
     selectTeamToWin(event, index) {
       this.clearSelection();

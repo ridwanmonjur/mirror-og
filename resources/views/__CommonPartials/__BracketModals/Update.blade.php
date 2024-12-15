@@ -14,8 +14,6 @@
                     <input type="hidden" id="order" name="order" >
                     <input type="hidden" id="team1_position" name="team1_position" >
                     <input type="hidden" id="team2_position" name="team2_position" >
-                    <input type="hidden" id="team1_score" name="team1_score" value="0">
-                    <input type="hidden" id="team2_score" name="team2_score" value="0">
                     <input type="hidden"  id="winner_next_position" name="winner_next_position">
                     <input type="hidden"  id="loser_next_position" name="loser_next_position">
                     

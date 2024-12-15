@@ -1,5 +1,5 @@
 @props(['bracket'])
- <table class="tournament-bracket__table mx-auto">
+ <table class="tournament-bracket__table mx-auto {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }}">
      <thead class="sr-only">
          <tr>
              <th>Country</th>
@@ -8,7 +8,7 @@
      </thead>
      <tbody class="tournament-bracket__content">
          <tr class="tournament-bracket__team tournament-bracket__team--winner">
-             <td class="tournament-bracket__country {{ $bracket['team2_position'] }}">
+             <td class="tournament-bracket__country ">
                  <abbr class="tournament-bracket__code me-2"
                      title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }}
                  </abbr>
@@ -22,7 +22,7 @@
              </td>
          </tr>
          <tr class="tournament-bracket__team">
-             <td class="tournament-bracket__country  {{ $bracket['team2_position'] }}">
+             <td class="tournament-bracket__country ">
                  <abbr class="tournament-bracket__code"
                      title="{{ $bracket['team2_position'] }}">{{ $bracket['team2_position'] }}</abbr>
                  @if ($bracket['team2_id'])
@@ -32,7 +32,7 @@
 
              </td>
              <td class="tournament-bracket__score mb-2">
-                 <span class="tournament-bracket__number">0</span>
+                 <span class="tournament-bracket__number dotted-score-box">0</span>
              </td>
          </tr>
      </tbody>

@@ -278,8 +278,8 @@ function registrationManage(event) {
                 const modal = document.querySelector(modalId);
     
                 if (modal) {
-                    const bootstrapModal =  bootstrap.Modal.getInstance(modal);
-                    bootstrapModal.show();
+                    const bootstrapModal =  bootstrap.Modal.getOrCreateInstance(modal);
+                    if (bootstrapModal) bootstrapModal.show();
                 }
             }
 
@@ -1149,7 +1149,7 @@ function addRosterMembers(event) {
     let rosterMap = JSON.parse(rosterMapJSON);
     
     let modal = document.getElementById('addRosterModal');
-    let modalInstance = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
+    let modalInstance = bootstrap.Modal.getOrCreateInstance(modal) ;
 
     let rosterCount = 0, pendingMemberCount = 0;   
     let modalBody =  modal.querySelector('.modal-body');
@@ -1227,7 +1227,7 @@ function addRosterMembers(event) {
     if (!rosterCount ) {
         teamDisplay = `<p class='text-center mt-3 pt-3'> No team members remaining to be added. </p>`; 
     } else if (!pendingMemberCount) {
-        teamDisplay = `<p class='text-center mt-3 pt-3'> No roster members remaining to be added. </p>`; 
+        teamDisplay = `<p class='text-center mt-3 pt-3'> No team members remaining to be added. </p>`; 
     }
 
     modalBody.innerHTML += teamDisplay;

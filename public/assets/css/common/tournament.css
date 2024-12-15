@@ -587,7 +587,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     border-color: var(--border2-color);
 }
 .tournament-bracket__team--winner .tournament-bracket__number {
-    background-color: #FFF176;
+    background-color: #F5F5F5;
     border-color: var(--border2-color);
 }
 
@@ -728,3 +728,11 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     }
 }
 
+.finals-width {
+    width: 45px;
+    height: 45px;
+}
+
+.z-99 {
+    z-index: 99 !important;
+}

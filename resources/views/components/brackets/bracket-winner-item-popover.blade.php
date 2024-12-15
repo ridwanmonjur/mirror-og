@@ -1,52 +1,63 @@
-{{-- <!-- tournament-bracket-box.blade.php -->
+<!-- tournament-bracket-box.blade.php -->
 @props([
-    'position',
-    'teamBanner',
-    'teamId',
-    'roster' => []
+    'currentPosition',
+    'position1',
+    'teamBanner1',
+    'teamName1',
+    'teamId1',
+    'position2',
+    'teamBanner2',
+    'teamId2',
+    'teamName2',
+    'winner_next_position',
+    'loser_next_position',
 ])
-
-<div
-    class="tournament-bracket__box popover-parent position-relative {{ $position }} tournament bg-light"
-    style="width: 32px; height: 28px;"
+ <div class="{{'popover-middle-content text-center d-none py-0 px-0 ' . $position1 . ' ' . $position2 }}" 
+    style="opacity: 1; z-index: 999 !important; "
 >
-    <div class="popover-content d-none" style="opacity: 1; z-index: 999 !important;">
-        <div class="popover-box row justify-content-start px-2 pt-2 pb-2" style="min-width: 400px; background: white !important;">
-            <div class="col-12 col-lg-5 text-end">
-                <div class="text-end">
-                    <img src="{{ bladeImageNull($teamBanner) }}" alt="Team Banner" width="100%"
-                        height="100%" onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                        class="popover-img popover-content-img"
-                    >
-                </div>
-                <small>{{ $position }}</small>
+   
+    <div class="popover-box row bg-dark justify-content-start border border-dark border rounded px-2 py-2" 
+        style="min-width: 400px !important;"
+    >
+        <div class="text-center text-uppercase" >
+            <h5 class="text-light"> {{$winner_next_position}} </h5>
+            <p class="text-success">UPCOMING</p>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div>
+                <img src="{{ bladeImageNull($teamBanner1) }}" alt="Team Banner" width="100"
+                    height="100" onerror="this.src='{{ asset('assets/images/404.png') }}';"
+                    data-position="{{$position1.'middle'}}"
+                    class="border border-4 popover-img popover-content-img rounded-circle object-fit-cover"
+                >
             </div>
-            <div class="roster-container col-12 col-lg-7">
-                @if (isset($roster[0]))
-                    <ul class="d-block ms-0 ps-0">
-                        @foreach ($roster as $rosterItem)
-                            <li class="d-inline">
-                                <img width="25" height="25" onerror="this.src='{{ asset('assets/images/404.png') }}';"
-                                    src="{{ bladeImageNull($rosterItem->user->userBanner) }}" alt="User Banner"
-                                    class="mb-2 rounded-circle object-fit-cover me-3">
-                                {{ $rosterItem->user->name }}
-                            </li>
-                            <br>
-                        @endforeach
-                    </ul>
-                @else
-                    <p class="text-muted">The team roster is empty.</p>
-                @endif
+             <p class="mt-2 mb-0 py-0 text-center popover-title" data-position="{{$position1. 'middle'}}">{{$teamName1}}</p>
+            <div class="{{ 'mt-2 mb-4 py-0 d-flex justify-content-center dotted-score-container ' . $position1 . ' ' . $position2  }}">
+                <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
+                <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
+                <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score d-none"></div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div class="d-flex justify-content-center align-items-center h-100">
+                <h1 class="pe-4 dotted-score-box text-light">0</h1>
+                <h1 class="text-light">-</h3>
+                <h1 class="ps-4 dotted-score-box text-light">0</h1>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div >
+                <img src="{{ bladeImageNull($teamBanner2) }}" alt="Team Banner" width="100"
+                    height="100" onerror="this.src='{{ asset('assets/images/404.png') }}';"
+                    data-position="{{$position2. 'middle'}}" class="border border-4 popover-img popover-content-img rounded-circle object-fit-cover"
+                >
+            </div>
+            <p class="mt-2 mb-2 py-0 text-center popover-title" data-position="{{$position2. 'middle'}}">{{$teamName2}}</p>
+            <div class="{{ 'mt-2 mb-4 py-0 d-flex justify-content-center dotted-score-container ' . $position1 . ' ' . $position2 }}">
+                <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
+                <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
+                <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score d-none"></div>
             </div>
         </div>
     </div>
-    @if ($teamId)
-        <img src="{{ bladeImageNull($teamBanner) }}" width="100%" height="25"
-            onerror="this.src='{{ asset('assets/images/404.png') }}';"
-            class="popover-button position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
-            style="z-index: 99;">
-    @else
-        <span class="replace_me_with_image"> </span>
-    @endif
-    <span></span>
-</div> --}}
+</div>
