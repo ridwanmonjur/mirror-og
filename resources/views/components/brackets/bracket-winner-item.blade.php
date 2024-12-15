@@ -49,9 +49,9 @@
         </div>
     </div>
     <div class="tournament-bracket__round tournament-bracket__round--gold d-none d-lg-block">
-        <div class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
+        <div class="tournament-bracket__list  tournament-bracket__joined-list tournament-bracket__joined-even-list">
             <div class="tournament-bracket__item tournament">
-                <div class="tournament-bracket__match tournament finals  {{ $winner['team1_position'] }} " tabindex="0"
+                <div class="tournament-bracket__match middle-item tournament finals  {{ $winner['team1_position'] }} " tabindex="0"
                      data-bracket="{{ json_encode($winner) }}" data-stage_name="{{ $stageName }}"
                     data-inner_stage_name="winner" data-order="{{ $order }}"
                 >
