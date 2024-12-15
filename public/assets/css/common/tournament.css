@@ -736,3 +736,8 @@ tournament-bracket__round:last-child .tournament-bracket__list {
 .z-99 {
     z-index: 99 !important;
 }
+
+.replace_me_with_image {
+    min-width: 35px;
+    text-align: start !important;
+}
