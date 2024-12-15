@@ -10,9 +10,9 @@ main {
     background-size: 100vw 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    animation-name: fadeIn;
+    /* animation-name: fadeIn; */
     animation-duration: 1000ms;
-    opacity: 0.5;
+    /* opacity: 0.5; */
     animation-timing-function: linear;
     animation-fill-mode: forwards;
 }
@@ -144,7 +144,7 @@ main {
     border-radius: 42px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     padding-bottom: 20px;
-    opacity: 0;
+    /* opacity: 0; */
 }
 
 .event_1 {

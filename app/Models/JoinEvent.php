@@ -58,7 +58,9 @@ class JoinEvent extends Model
         return $this->hasMany(EventJoinResults::class, 'join_events_id', 'id');
     }
 
-  
+    public function captain(): BelongsTo {
+        return $this->belongsTo(RosterMember::class, 'roster_captain_id', 'id');
+    }
 
     public function payments(): HasMany
     {

@@ -114,14 +114,20 @@ function confirmSuccess(successMessage, joinEventId) {
     `, () => scrollSwal(joinEventId));
 }
 
-
-function rosterCountCaptainHtmlGenerater(roster, rosterCaptainId) {
-    const count = roster.length;
+// if (rosterMap[member.user.id]) return '';
+function rosterCountCaptainHtmlGenerater(roster, rosterCaptainId, rosterMap) {
+    const count = roster.reduce((sum, player)=> {
+        if (!rosterMap[player.user.id])  sum+=1;
+        return sum;
+    }, 0);
     return `
         <div class="roster-container">
-            <div class="my-3 text-start">Current roster (${count} /${getData('maxRosterSize')})</div>
-            ${roster.map(player => 
-                `<div class="d-flex align-items-center gap-2 my-2">
+            <div class="my-3 text-start">Current roster (${count}/${getData('maxRosterSize')})</div>
+            ${roster.map(player =>  {
+
+                if (!rosterMap[player.user.id])  return '';
+
+                return `<div class="d-flex align-items-center gap-2 my-2">
                     <img
                         width="20"
                         height="20"
@@ -133,21 +139,23 @@ function rosterCountCaptainHtmlGenerater(roster, rosterCaptainId) {
                         ${player.user.name}
                         ${player.id == rosterCaptainId ? `
                             <img 
-                            class="z-99 rounded-pill me-1 gear-icon-btn"
+                            class="z-99 rounded-pill me-1 ms-2 gear-icon-btn"
                             height="20" 
                             width="20" 
-                            src="{{asset('assets/images/participants/crown-straight.png')}}"
+                            src="/assets/images/participants/crown-straight.png"
                             >
 
                         ` : ''}
                     </small>
-                </div>`
+                </div>` }
             ).join('')}
         </div>`;
 }
 
-function rosterHtmlGenerater (roster) {
-    return roster.map(player => 
+function rosterHtmlGenerater (roster, rosterMap) {
+    return roster.map(player => {
+        if (rosterMap[roster.user.id]) return '';
+        return (
         `<div class="d-flex align-items-center gap-2 mb-2">
             <img
                 width="25"
@@ -157,7 +165,8 @@ function rosterHtmlGenerater (roster) {
                 src="${player?.user?.userBanner ? '/storage/' + player.user.userBanner : '/assets/images/404.png'}"
             >
             <span>${player.user.name}</span>
-        </div>`
+        </div>`)
+    }
     ).join('')
 };
 
@@ -221,7 +230,7 @@ function registrationManage(event) {
                 <p class="text-muted mb-3">Confirming your registration now will lock in the current roster as your team's official roster for this event and secure your slot.</p>
                 <p class="text-muted mb-2">The following players are in the current roster for this event:</p>
                 <div class="border rounded p-3 text-start">
-                    ${rosterHtmlGenerater(membersValue)}
+                    ${rosterHtmlGenerater(membersValue, rosterMap)}
                 </div>
                 <p class="text-primary mt-3 mb-0">Lock in this roster and confirm your registration now?</p>
             `,
@@ -255,7 +264,7 @@ function registrationManage(event) {
                 <p class="text-muted mb-3">Confirming your registration now will lock in the current roster as your team's official roster for this event.</p>
                 <p class="text-muted mb-2">The following players are in the current roster for this event:</p>
                 <div class="border rounded p-3 text-start">
-                    ${rosterHtmlGenerater(membersValue)}
+                    ${rosterHtmlGenerater(membersValue, rosterMap)}
                 </div>
                 <p class="text-primary mt-3 mb-0">Lock in this roster and confirm your registration now?</p>
             `,
@@ -301,6 +310,9 @@ function submitConfirmCancelForm(event) {
     const {eventDetails: eventDetailsJSON, membersValue: membersValueJSON, followCounts} = memberDataContainer.dataset;
     let eventDetails = JSON.parse(eventDetailsJSON);
     let membersValue = JSON.parse(membersValueJSON);
+    const rosterMapContainer = document.getElementById('roster-id-list-' + joinEventId);
+    let { rosterMap: rosterMapJSON } = rosterMapContainer.dataset;
+    let rosterMap = JSON.parse(rosterMapJSON);
     
     function submitForm() {
         document.querySelector(`.${form}`).submit();
@@ -390,7 +402,7 @@ function submitConfirmCancelForm(event) {
                 <p class="text-muted mb-3">Confirming your registration now will lock in the current roster as your team's official roster for this event and secure your slot.</p>
                 <p class="text-muted mb-2">The following players are in the current roster for this event:</p>
                 <div class="border rounded p-3 text-start">
-                    ${rosterHtmlGenerater(membersValue)}
+                    ${rosterHtmlGenerater(membersValue, rosterMap)}
                 </div>
                 <p class="text-primary mt-3 mb-0">Lock in this roster and confirm your registration now?</p>
             `,
@@ -419,7 +431,7 @@ function submitConfirmCancelForm(event) {
                 <p class="text-muted mb-3">Confirming your registration now will lock in the current roster as your team's official roster for this event.</p>
                 <p class="text-muted mb-2">The following players are in the current roster for this event:</p>
                 <div class="border rounded p-3 text-start">
-                    ${rosterHtmlGenerater(membersValue)}
+                    ${rosterHtmlGenerater(membersValue, rosterMap)}
                 </div>
                 <p class="text-primary mt-3 mb-0">Lock in this roster and confirm your registration now?</p>
             `,
@@ -872,6 +884,9 @@ function approveMemberAction(event) {
     } = memberDataContainer.dataset;
     let eventDetails = JSON.parse(eventDetailsJSON);
     let membersValue = JSON.parse(membersValueJSON);
+    const rosterMapContainer = document.getElementById('roster-id-list-' + joinEventId);
+    let { rosterMap: rosterMapJSON } = rosterMapContainer.dataset;
+    let rosterMap = JSON.parse(rosterMapJSON);
 
     const url = getUrl('approve');
     
@@ -886,7 +901,7 @@ function approveMemberAction(event) {
                 
             </h5>
             ${drawEventTable(eventDetails, followCounts)}
-            ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId)}
+            ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId, rosterMap)}
             <small class="text-center mt-4 mb-3 d-block text-red"> You can freely leave and join a roster as long as registration has not been confirmed. </small>
             <small class="text-center text-red d-block "> Once registration is confirmed, the roster is locked in and no changes can be made to the roster. </small>
         `,
@@ -945,7 +960,9 @@ async function disapproveMemberAction(event) {
     } = memberDataContainer.dataset;
     let eventDetails = JSON.parse(eventDetailsJSON);
     let membersValue = JSON.parse(membersValueJSON);
-
+    const rosterMapContainer = document.getElementById('roster-id-list-' + joinEventId);
+    let { rosterMap: rosterMapJSON } = rosterMapContainer.dataset;
+    let rosterMap = JSON.parse(rosterMapJSON);
     Swal.fire({
         html: `
             
@@ -957,7 +974,7 @@ async function disapproveMemberAction(event) {
             }
             </h5>
             ${drawEventTable(eventDetails, followCounts)}
-            ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId)}
+            ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId, rosterMap)}
             <small class="text-center mt-4 mb-3 d-block text-red"> You can freely leave and join a roster as long as registration has not been confirmed. </small>
             <small class="text-center text-red d-block "> Once registration is confirmed, the roster is locked in and no changes can be made to the roster. </small>
         `,
