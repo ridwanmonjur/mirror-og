@@ -16,11 +16,11 @@
     style="opacity: 1; z-index: 999 !important; "
 >
    
-    <div class="popover-box row justify-content-start border border-dark border rounded px-2 py-2" 
-        style="background-color: white; min-width: 400px !important;"
+    <div class="popover-box row bg-dark justify-content-start border border-dark border rounded px-2 py-2" 
+        style="min-width: 400px !important;"
     >
         <div class="text-center text-uppercase" >
-            <h5> {{$winner_next_position}} </h5>
+            <h5 class="text-light"> {{$winner_next_position}} </h5>
             <p class="text-success">UPCOMING</p>
         </div>
         <div class="col-12 col-lg-4">
@@ -40,9 +40,9 @@
         </div>
         <div class="col-12 col-lg-4">
             <div class="d-flex justify-content-center align-items-center h-100">
-                <h1 class="pe-4 dotted-score-box">0</h1>
-                <h1>-</h3>
-                <h1 class="ps-4 dotted-score-box">0</h1>
+                <h1 class="pe-4 dotted-score-box text-light">0</h1>
+                <h1 class="text-light">-</h3>
+                <h1 class="ps-4 dotted-score-box text-light">0</h1>
             </div>
         </div>
         <div class="col-12 col-lg-4">
