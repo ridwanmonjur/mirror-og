@@ -347,9 +347,9 @@ Alpine.data('alpineDataComponent', function () {
         if (otherTeamWinner) {
           if (otherTeamWinner === selectedTeamIndex) {
             update.realWinners[matchNumber] = selectedTeamIndex;
-            update.score = this.calcScores(update);
           }
         }
+        update.score = this.calcScores(update);
 
       }
 
@@ -406,8 +406,8 @@ Alpine.data('alpineDataComponent', function () {
             if (otherIndex) {
               update.teams[teamNumber].winners[matchNumber] = otherIndex;
               update.realWinners[matchNumber] = otherIndex;
-              update.score = this.calcScores(update);
             }
+            update.score = this.calcScores(update);
           }
 
           await this.saveReport(update);
@@ -511,7 +511,7 @@ Alpine.data('alpineDataComponent', function () {
 
       try {
         let _report = {};
-        _report['score'] = [report.score[0] ?? "0", report.score[1] ?? "0"];
+        _report['score'] = [report?.score[0] ?? "0", report?.score[1] ?? "0"];
         _report['matchStatus'] = report.matchStatus;
         _report['realWinners'] = report.realWinners;
         _report['organizerWinners'] = report.organizerWinners;
