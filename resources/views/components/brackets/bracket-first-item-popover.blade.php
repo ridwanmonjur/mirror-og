@@ -55,7 +55,7 @@
             onclick="reportModalShow(event);" 
         >
     @else 
-        <span data-position="{{$position}}" class="replace_me_with_image popover-button"></span>
+        <span data-position="{{$position}}" class="replace_me_with_image cursor-pointer popover-button" style="z-index: 99;"></span>
      @endif
     <span></span>
 </div>
