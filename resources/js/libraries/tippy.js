@@ -20,9 +20,23 @@ window.addPopover = function (parent, child, trigger="click") {
             // hideOnClick: false,
             // trigger: 'click',
             interactive: true,
+            hideOnClick: false,
+            delay: [50, 0],
             theme: 'light',
             zIndex: 9999,
-            appendTo: document.body
+            appendTo: document.body,
+            // onMouseLeave: (instance, event) => {
+            //     // Only hide if we're not moving to another tooltip
+            //     const relatedTarget = event.relatedTarget;
+            //     const isMovingToTippy = relatedTarget && (
+            //         relatedTarget.classList.contains('popover-button') ||
+            //         relatedTarget.closest('.popover-button')
+            //     );
+                
+            //     if (!isMovingToTippy) {
+            //         instance.hide();
+            //     }
+            // }
         });
     }
 
