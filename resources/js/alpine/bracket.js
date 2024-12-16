@@ -281,7 +281,7 @@ Alpine.data('alpineDataComponent', function () {
       realWinners: [null, null, null],
       userLevel: userLevelEnums['IS_PUBLIC'],
       completeMatchStatus: 'UPCOMING',
-      matchStatus: ['UPCOMING', null, null],
+      matchStatus: ['UPCOMING', 'UPCOMING', 'UPCOMING'],
       teams: [
         {
           winners: [null, null, null],
