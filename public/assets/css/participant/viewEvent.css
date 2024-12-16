@@ -8,7 +8,9 @@
 }
 
 
-
+img.fslightbox-source{
+    aspect-ratio: 12/3 !important;
+}
 
 
 .d-none {

@@ -19,6 +19,11 @@
 } */
 
 
+img.fslightbox-source{
+    aspect-ratio: 1/1;
+ }
+ 
+
 
 .rounded-circle2{
     width: 30px !important;

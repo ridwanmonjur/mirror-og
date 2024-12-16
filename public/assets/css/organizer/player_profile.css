@@ -517,6 +517,8 @@ tr:nth-child(even) .colored-cell {
      margin-right: 20px !important;
 }
 
-
+img.fslightbox-source{
+   aspect-ratio: 1/1;
+}
 
 
