@@ -60,7 +60,7 @@
                                                 <td class="py-2 px-3">
                                                     <div class="d-flex align-items-center">
                                                         <img :src="'/storage/' + user.userBanner"
-                                                            class="rounded-circle me-3" width="25" height="25"
+                                                            class="rounded-circle border border-primary me-3" width="25" height="25"
                                                             onerror="this.src='/assets/images/404.png';"
                                                         >
                                                         <span x-text="user.name"></span>
