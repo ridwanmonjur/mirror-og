@@ -1,4 +1,4 @@
-import { createApp, reactive } from "petite-vue";
+import { createApp, reactive, nextTick } from "petite-vue";
 import { initializeApp } from "firebase/app";
 import { initializeFirestore, memoryLocalCache, setDoc, getDoc, addDoc, onSnapshot, updateDoc, orderBy, doc, query, collection, where, or, clearIndexedDbPersistence } from "firebase/firestore";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
@@ -23,10 +23,6 @@ const db = initializeFirestore(app, {
 let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 const chatInput = document.querySelector(".chat-input input");
-const sendButton = document.querySelector(".chat-input button");
-const chatMessages = document.querySelector(".chat-messages");
-const chatItems = document.querySelectorAll(".chat-item");
-const chatUserName = document.querySelector(".chat-user-name");
 
 const fetchFirebaseUsersInputRoute = document.querySelector("#fetchFirebaseUsersInput");
 const viewUserProfileInput = document.querySelector("#viewUserProfile");
@@ -48,31 +44,21 @@ function humanReadableChatDateFormat(date) {
     return formattedDate;
 }
 
-function scrollIntoView() {
-
-    const chatContainer = document.getElementById('chat-messages');
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-    window.scrollTo(0, document.body.scrollHeight);
-
+const scrollIntoView = () => {
+    const chatContainer = document.querySelector('.chat-messages');
+    if (!chatContainer) return;
+    
+    const lastMessage = chatContainer.lastElementChild;
+    if (lastMessage) {
+        lastMessage.scrollIntoView({ behavior: 'smooth' });
+    } 
 }
 
-function addDate(date, prepend = false) {
-    const dateDivContainer = document.createElement("div");
-    const dateDiv = document.createElement("small");
-    dateDivContainer.classList.add("d-flex", "justify-content-center", "my-3");
-    dateDiv.classList.add("mx-auto", "px-3", 'py-1', "rounded-pill");
-    dateDiv.style.backgroundColor = "white";
-    dateDiv.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.2)";
-    dateDiv.innerText = humanReadableChatDateFormat(date);
-    dateDivContainer.appendChild(dateDiv);
-    chatMessages.appendChild(dateDivContainer);
-}
 
 const userStore = reactive({
     pagination: [],
     users: [],
     async fetchProspectiveChatters(event = null) {
-        console.log("hi");
         if (event == null && this.users[0]) {
             return;
         }
@@ -105,28 +91,25 @@ const userStore = reactive({
 const chatStore = reactive({
     chatMessageList: [],
     chatSnapshots: null,
+    currentRoomObj: null,
     messagesLength: 0,
-    resetMessages() {
-        this.messagesLength = 0;
-        this.chatMessageList = [];
-    },
-    async getMessages(id) {
-
+   
+     async getMessages(id) {
         let q = query(
             collection(db, `room/${id}/message`),
-            orderBy("createdAt", "desc")
+            orderBy("createdAt", "asc")
         );
 
         let isInitialDataFetched = false;
         let prevCreatedAt = null;
-        let length = 0;
-        let results = [];
+       
         q = query(q);
 
         let subscribeToChat = onSnapshot(q, {
             includeMetadata: true,
         }, async (snapshot) => {
-
+            let length = 0;
+            let results = [];
 
             snapshot.docChanges().forEach(async (change) => {
 
@@ -136,7 +119,6 @@ const chatStore = reactive({
                         ...change.doc.data(),
                     };
 
-                    console.log({ results });
                     if (objectDoc['senderId'] == loggedUserProfile.id) {
                         objectDoc['className'] = ['message', 'reply'];
                         objectDoc['isMe'] = true;
@@ -164,48 +146,35 @@ const chatStore = reactive({
 
                     prevCreatedAt = objectDoc['createdAtDate'];
                     length++;
-
-                    if (isInitialDataFetched) {
-                        results.push(objectDoc);
-                    } else {
-                        results.unshift(objectDoc);
-                    }
+                    results.push(objectDoc);
                 }
 
             });
 
-
-            this.messagesLength = this.messagesLength ? this.messagesLength + length : length;
-
-            this.chatMessageList = [...(this.chatMessageList || []), ...results];
-
-            // if (this.currentRoom == id) {
-            //     // this.appendMessages(results, length);
-            //     scrollIntoView();
-            //     let lastMsgInBatch = results[length-1];
-            //     if (lastMsgInBatch && lastMsgInBatch?.senderId != loggedUserProfile?.id && !lastMsgInBatch.isRead) {
-            //         const messageRef = doc(db, `room/${this.currentRoom}/message`, lastMsgInBatch.id);
-            //         await updateDoc(messageRef, {
-            //             isRead: true
-            //         });
-            //     } 
-            // } else {
-            //     let lastMsgInBatch = results[length-1];
-            //     if (lastMsgInBatch && (lastMsgInBatch.senderId != loggedUserProfile.id && !lastMsgInBatch.isRead)) {
-            //         const element = document.querySelector(`[data-identity-for-read="${id}"]`);
-            //         element.style.backgroundColor = 'black';
-            //         element.querySelector('.bi-bell-fill').classList.remove('d-none');
-            //     }
-            // }
-
+            if (isInitialDataFetched) {
+                this.messagesLength = this.messagesLength ? this.messagesLength + length : length;
+                let newArray = [ ...this.chatMessageList , ...results ];
+                this.chatMessageList = newArray;
+            } else {
+                this.messagesLength = length;
+                this.chatMessageList = [ ...results ];
+    
+            }
+           
+         
             isInitialDataFetched = true;
         }, (error) => {
             console.error({ error })
             toastError("Failed to fetch data");
         });
-
         this.chatSnapshots = subscribeToChat;
     },
+
+    resetChatSnapshot() {
+        if (this.chatSnapshots) {
+            this.chatSnapshots();
+        }
+    }
 });
 
 // chatMessageList put in roomStore
@@ -214,11 +183,11 @@ const roomStore = reactive({
     oldRooms: [],
     currentRoom: null,
     roomSnapshot: null,
-
-    initDB() {
-        let isInitialDataFetched = false;
+    currentRoomObj: null,
+    async initDB() {
         let roomUserIdMap = {};
         let currentUserId = loggedUserProfile?.id;
+        let length = 0;
         let rooms = [], userIdList = [];
         const roomCollectionRef = collection(db, 'room');
 
@@ -230,8 +199,7 @@ const roomStore = reactive({
         );
 
         let subscribeToRoomSnapshot = onSnapshot(roomQ, async (rommSnapshot) => {
-            let length = 0;
-
+            
             rommSnapshot.docChanges().forEach((change) => {
                 if (change.type === "added") {
                     let data = change.doc.data();
@@ -244,17 +212,12 @@ const roomStore = reactive({
                         data.otherRoomMemberId = data.user2;
                     }
 
-                    if (isInitialDataFetched) {
-                        rooms.unshift(data);
-                    } else {
-                        rooms.push(data);
-                    }
+                    
+                    rooms.push(data);
 
                     length++;
                 }
-                if (change.type === "modified") {
-                    console.log("Modified city: ", change.doc.data());
-                }
+               
             });
 
             let route = fetchFirebaseUsersInputRoute.value;
@@ -281,15 +244,10 @@ const roomStore = reactive({
                 room['otherRoomMember'] = roomUserIdMap[room['otherRoomMemberId']];
             }
 
-            let currentRoomIndex = 0;
             // params 
             if (viewUserProfile?.id) {
 
-                if (viewUserProfile.id in roomUserIdMap) {
-                    currentRoomIndex = rooms.findIndex(room =>
-                        room.otherRoomMemberId == viewUserProfile.id
-                    );
-                } else {
+                if (!(viewUserProfile.id in roomUserIdMap)) {
                     roomUserIdMap[viewUserProfile.id] = viewUserProfile;
                     let newRoomData = {
                         user1: Number(loggedUserProfile.id).toString(),
@@ -306,48 +264,49 @@ const roomStore = reactive({
                         id: newRoomData.user1 + '.' + newRoomData.user2
                     });
 
-                    currentRoomIndex = length;
+                    return;
                 }
 
-            } else {
-                currentRoomIndex = 0
-            }
+            } 
 
-            this.roomUserIdMap = { ...roomUserIdMap };
-            this.oldRooms = [...rooms];
-            this.currentRoom = currentRoomIndex;
-            console.log({ oldRooms: rooms, currentRoomIndex });
-            chatStore.getMessages(rooms[currentRoomIndex].id);
+            let currentRoomIndex = rooms.findIndex(room =>
+                room.otherRoomMemberId == viewUserProfile.id
+            );
 
-            scrollIntoView();
+            if (currentRoomIndex !=-1) {
+                this.roomUserIdMap = { ...roomUserIdMap };
+                this.oldRooms = [...rooms];
+                this.currentRoomObj = rooms[currentRoomIndex];
+                this.currentRoom = currentRoomIndex;
+                chatStore.getMessages(rooms[currentRoomIndex].id);
+                setTimeout(() => { scrollIntoView(); }, 300);
+            } 
         });
 
         this.roomSnapshot = subscribeToRoomSnapshot;
     },
-    async changeUser(user) {
-        window.location.href=`/profile/message?userId=${user.id}`;
+    resetRoomSnapshot() {
+        if (this.roomSnapshot) this.roomSnapshot();
+    },
+     async changeUser(user) {
+        window.location.href = `/profile/message?userId=${user.id}`;
     },
     async setCurrentRoom(index) {
+        chatStore.resetChatSnapshot();
         this.currentRoom = index;
+        this.currentRoomObj = this.oldRooms[index];
         if (index != null) {
-            chatStore.chatSnapshots();
-            chatStore.resetMessages();
-            await chatStore.getMessages(this.oldRooms[index].id);
+            // chatStore.chatSnapshots();
+            await chatStore.getMessages(this.insideCurrentRoom(index).id);
         }
 
-        console.log({ unread: this.currentRoomObj.unread });
-
-        if (this.currentRoomObj.unread == loggedUserProfile.id) {
-            await setDoc(doc(db, "room", this.currentRoomObj.id), {
-                unread: null
-            });
-        }
-
+        scrollIntoView();
     },
-    get currentRoomObj() {
-        if (this.currentRoom != null) return this.oldRooms[this.currentRoom];
+    insideCurrentRoom(index) {
+        if (index != null) return this.oldRooms[index];
         else return null;
-    }
+    },
+    
 });
 
 function DateDividerComponent(props) {
@@ -406,15 +365,13 @@ function ChatListComponent() {
                     window.toastError("New chat still being updated...")
                 }
 
-                await addDoc(collection(db, `room/${this.currentRoomObj.id}/message`), {
+                await addDoc(collection(db, `room/${roomStore.currentRoomObj.id}/message`), {
                     senderId: loggedUserProfile.id,
                     text: value,
                     createdAt: new Date(),
                 });
 
-                await setDoc(doc(db, "room", this.currentRoomObj.id), {
-                    unread: this.currentRoomObj.otherRoomMember
-                });
+               
 
             } catch (err) {
                 console.error(err);
@@ -467,14 +424,12 @@ function RoomComponent() {
                 .fromFormat(date, "yyyy-MM-dd HH:mm:ss")
                 .toRelative();
 
-            console.log({ newDate });
-            console.log({ newDate });
-            console.log({ newDate });
 
             return newDate;
         },
-        mounted() {
-            roomStore.initDB();
+        async mounted() {
+            await roomStore.initDB();
+          
         }
     }
 }
@@ -489,11 +444,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }).mount('#app');
 });
 
-// window.loadPetiteView = () => {
-//     createApp({
-//         // ChatContainerComponent,
-//         // ChatListComponent,
-//         // OtherUsersComponent,
-//         RoomComponent
-//     }).mount("#app");
-// }
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        document.getElementById('sendMessageBtn').click();
+    }
+});

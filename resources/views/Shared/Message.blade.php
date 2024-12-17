@@ -14,8 +14,8 @@
         <input type="hidden" id="fetchFirebaseUsersInput" value="{{ route('user.firebase.readAll') }}">
         <input type="hidden" id="viewUserProfile" value="{{json_encode($userProfile?->only(['id', 'name', 'mobile_no']))}}">
         <input type="hidden" id="loggedUserProfile" value="{{json_encode($user)}}">
-        <div class="sidebar col-12 col-lg-5 col-xl-4 m-0 p-0" @vue:mounted="mounted" id="room-component" v-scope="RoomComponent()">
-            <div class="sidebar-header">
+        <div  class="sidebar col-12 col-lg-5 col-xl-4 m-0 p-0" @vue:mounted="mounted" id="room-component" v-scope="RoomComponent()">
+            <div class="sidebar-header" >
                 <h2 id="initDB" class="my-0">Chat List</h2>
                 {{-- TODO --}}
                 <button v-on:click="fetchProspectiveChatters(null);" class="add-chat" data-bs-toggle="modal" data-bs-target="#other-users-component">
@@ -25,28 +25,26 @@
                     </svg>
                 </button>
             </div>
-            <div class="chat-list" >
-                    <div v-for="(room, key) in oldRooms" :key="room.id" v-bind:data-identity-for-read="room.id" v-on:click="setCurrentRoom(key)" 
-                        v-bind:class="{'chat-item': true, 'bg-primary' : currentRoomObj?.id == room?.id }"
-                    >
-                            <img v-if="room?.otherRoomMember?.userBanner != null" {!! trustedBladeHandleImageFailure() !!} v-bind:src="'/storage/' + room?.otherRoomMember?.userBanner" width="50" height="50"
-                                class="object-fit-cover rounded-circle me-3">
-                            <div v-else class="avatar me-3"
-                                v-text="room.otherRoomMember?.name ? room.otherRoomMember?.name?.charAt(0)?.toUpperCase(): room?.otherRoomMember?.email[0]?.toUpperCase()">
-                            </div>
-                        <div class="chat-info">
-                            <h3 v-text="room?.otherRoomMember?.name"></h3>
-                            <p class="status my-0">
-                                <span v-text="formatDate(room.otherRoomMember?.updated_at)"></span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill mt-1 ms-2 d-none" viewBox="0 0 16 16">
-                                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"/>
-                                </svg>
-                            </p>
+            <div  class="room-list">
+                <div v-for="(room, key) in oldRooms" :key="room.id" v-bind:data-identity-for-read="room.id" v-on:click="setCurrentRoom(key)" 
+                    v-bind:class="{'chat-item': true, 'bg-primary' : currentRoomObj?.id == room?.id }"
+                >
+                        <img v-if="room?.otherRoomMember?.userBanner != null" {!! trustedBladeHandleImageFailure() !!} v-bind:src="'/storage/' + room?.otherRoomMember?.userBanner" width="50" height="50"
+                            class="object-fit-cover rounded-circle me-3">
+                        <div v-else class="avatar me-3"
+                            v-text="room.otherRoomMember?.name ? room.otherRoomMember?.name?.charAt(0)?.toUpperCase(): room?.otherRoomMember?.email[0]?.toUpperCase()">
                         </div>
-                       
+                    <div class="chat-info">
+                        <h3 v-text="room?.otherRoomMember?.name"></h3>
+                        <p class="status my-0">
+                            <span v-text="formatDate(room.otherRoomMember?.updated_at)"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill mt-1 ms-2 d-none" viewBox="0 0 16 16">
+                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"/>
+                            </svg>
+                        </p>
                     </div>
                     
-                 
+                </div>
             </div>
         </div>
        <div id="chat-component" v-scope="ChatListComponent()" class="chat-container position-relative col-12 d-flex col-lg-7 col-xl-8 m-0 p-0" style="overflow: hidden;">
