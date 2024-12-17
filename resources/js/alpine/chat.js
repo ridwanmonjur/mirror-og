@@ -39,10 +39,7 @@ let fetchFirebaseUsersRoute = fetchFirebaseUsersInputRoute?.value;
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-function humanReadableChatTimeFormat(date) {
-    const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-    return formattedTime
-}
+
 
 function humanReadableChatDateFormat(date) {
     if (!date) return "Error occurred";
@@ -64,19 +61,10 @@ function scrollIntoView() {
 }
 
 function firstMessageDatAppend (message) {
-    addDate(Alpine.raw(message)['createdAtDate']);
+    addDate(message['createdAtDate']);
 }
 
-function appendMessages(messages, length) {
-    for (let i = 0; i < length; i++) {
-        const message = messages[i];
-        if (message['isLastDateShow'] ) {
-            addDate(message['lastDate']);
-        }
 
-        appendOrPrependMessageItem(message);
-    }
-}
 
 function prependMessages(messages, length) {
     for (let i = 0; i < length; i++) {
@@ -85,7 +73,7 @@ function prependMessages(messages, length) {
             addDate(message['lastDate']);
         }
     
-        appendOrPrependMessageItem(message, true);
+        // appendOrPrependMessageItem(message, true);
     }
 }
 
@@ -101,44 +89,6 @@ function addDate(date, prepend = false) {
     chatMessages.appendChild(dateDivContainer);
 }
 
-function appendOrPrependMessageItem(message, prepend = false) {
-    let { text, createdAtDate, className, sender } = message;
-    const messageDiv = document.createElement("div");
-    messageDiv.classList.add(...className);
-    let avatarDiv;
-    if (sender?.userBanner) {
-        avatarDiv = document.createElement("img");
-        avatarDiv.src = `/storage/${sender?.userBanner}`;
-        avatarDiv.height = "50";
-        avatarDiv.onerror = () => {
-            avatarDiv.src = '/assets/images/404.png';
-        }
-        avatarDiv.width = "50";
-        avatarDiv.classList.add('object-fit-cover', 'rounded-circle');
-    } else {
-        avatarDiv = document.createElement("div");
-        avatarDiv.classList.add("avatar");
-        avatarDiv.textContent = sender.name ?
-            sender.name?.charAt(0)?.toUpperCase() : sender.email[0]?.toUpperCase();
-    }
-    avatarDiv.classList.add('me-2');
-    const messageContentDiv = document.createElement("div");
-    messageContentDiv.classList.add("message-content", 'w-75');
-    messageContentDiv.textContent = text;
-    const timestampSpan = document.createElement("span");
-    timestampSpan.classList.add("timestamp");
-    timestampSpan.textContent = humanReadableChatTimeFormat(createdAtDate);
-    messageContentDiv.appendChild(timestampSpan);
-    messageDiv.appendChild(avatarDiv);
-    messageDiv.appendChild(messageContentDiv);
-
-    if (prepend) {
-        chatMessages.prepend(messageDiv); // Prepend the message
-    } else {
-        chatMessages.appendChild(messageDiv); // Append the message
-    }
-}
-
 
 Alpine.data('alpineDataComponent', function () {
     return {
@@ -148,6 +98,7 @@ Alpine.data('alpineDataComponent', function () {
         newRoom: null,
         oldRooms: [],
         messages: {},
+        chatMessageList: [],
         currentId: null,
         chats: [],
         prospectiveChats: {
@@ -158,8 +109,25 @@ Alpine.data('alpineDataComponent', function () {
         roomSnapshot: null,
         chatSnapshots: [],
         messagesLength: {},
+        humanReadableChatTimeFormat(date) {
+            const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+            return formattedTime
+        },
+        appendMessages(messages, length) {
+            for (let i = 0; i < length; i++) {
+                const message = messages[i];
+                if (message['isLastDateShow'] ) {
+                    // addDate(message['lastDate']);
+                }
+        
+        
+                // appendOrPrependMessageItem(message);
+            }
+            console.log({messages});
+            if (length) this.chatMessageList = messages;
+        
+        },
         changeUser(user) {
-            user = Alpine.raw(user);  
 
             if (user?.id && user?.id == loggedUserProfile?.id) {
                 window.toastError("You can't send messages to yourself");
@@ -167,7 +135,7 @@ Alpine.data('alpineDataComponent', function () {
             }
 
             if (user?.id in this.roomUserIdMap) {
-                let currentRoomObject = Alpine.raw(this.oldRooms)?.filter((value)=>{
+                let currentRoomObject = this.oldRooms?.filter((value)=>{
                     return value.otherRoomMemberId == user?.id;
                 });
                 
@@ -178,7 +146,7 @@ Alpine.data('alpineDataComponent', function () {
                     window.toastError("Current room is missing...")
                 }
             } else {
-                chatMessages.innerHTML = '';
+                // chatMessages.innerHTML = '';
                 window.dialogOpen("Are you sure you want to start a new chat with this person ?", 
                     async () => {
                         this.currentRoom = "newRoom";
@@ -328,10 +296,8 @@ Alpine.data('alpineDataComponent', function () {
                 }
                 this.roomUserIdMap = {...roomUserIdMap };
                
-                    for (let room of rooms) {
-                        await this.getMessages(room['id']);
-                    }
-                    this.oldRooms = [...rooms];
+                   
+                this.oldRooms = [...rooms];
                 isInitialDataFetched = true;
                 await this.startChat();
             });
@@ -380,7 +346,7 @@ Alpine.data('alpineDataComponent', function () {
                             window.alert("Some error occurred");
                         }
 
-                        objectDoc['sender'] = Alpine.raw(this.roomUserIdMap)[objectDoc['senderId']];
+                        objectDoc['sender'] = this.roomUserIdMap[objectDoc['senderId']];
                         let currentDate = objectDoc['createdAt'].toDate();
                         objectDoc['createdAtDate'] = currentDate;
 
@@ -416,7 +382,7 @@ Alpine.data('alpineDataComponent', function () {
                 this.messages[id] = [...(this.messages[id] || []), ...results];
                 
                 if (this.currentRoom == id) {
-                    appendMessages(results, length);
+                    this.appendMessages(results, length);
                     scrollIntoView();
                     let lastMsgInBatch = results[length-1];
                     if (lastMsgInBatch && lastMsgInBatch?.senderId != loggedUserProfile?.id && !lastMsgInBatch.isRead) {
@@ -460,12 +426,12 @@ Alpine.data('alpineDataComponent', function () {
                     return;
                 }
 
-                let currentRoomObject = Alpine.raw(this.oldRooms).filter((value)=>{
+                let currentRoomObject = this.oldRooms?.filter((value)=>{
                     return value.id == this.currentRoom;
                 });
 
                 this.currentRoomObject = currentRoomObject[0];
-                chatMessages.innerHTML = '';
+                // chatMessages.innerHTML = '';
                 let length =  this.messagesLength[this.currentRoom];
                 let messages = this.messages[this.currentRoom]; 
                 if (isNaN(length))  {
@@ -491,10 +457,10 @@ Alpine.data('alpineDataComponent', function () {
                 
                 element.style.backgroundColor = '#72777F';
                 console.log({messages, 0: messages[0]});
-                firstMessageDatAppend(messages[0]);
+                // firstMessageDatAppend(messages[0]);
 
 
-                appendMessages(
+                this.appendMessages(
                     messages,
                     length
                 );
@@ -521,23 +487,3 @@ document.addEventListener('keydown', function(event) {
         document.getElementById('sendMessageBtn').click();
     }
 });
-
-/*
-    -> keep track of rooms' unsent messages
-    -> keep track of online users
-    1) if you send a message, you can't be unread. all read.
-        check if the same for others. 
-        1) check if online from locally fetched list. if not make unread other guy
-        2) if other guy online:
-            1) on the same room: unread = false; 
-            2) in different rooms: no action
-
-
-*/
-
-// document.querySelector('.chat-messages').addEventListener("scroll", (_e) => {
-            //     // Alpine.throttle(() => 
-            //         this.handleScrollChat()
-            //         // , 100 
-            //     // );
-            // });
