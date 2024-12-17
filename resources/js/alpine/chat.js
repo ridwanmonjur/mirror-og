@@ -30,6 +30,7 @@ const chatMessages = document.querySelector(".chat-messages");
 const chatItems = document.querySelectorAll(".chat-item");
 const chatUserName = document.querySelector(".chat-user-name");
 
+
 const fetchFirebaseUsersInputRoute = document.querySelector("#fetchFirebaseUsersInput");
 const viewUserProfileInput = document.querySelector("#viewUserProfile");
 const loggedUserProfileInput = document.querySelector("#loggedUserProfile");

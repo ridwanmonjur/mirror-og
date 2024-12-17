@@ -14,7 +14,7 @@
         <input type="hidden" id="fetchFirebaseUsersInput" value="{{ route('user.firebase.readAll') }}">
         <input type="hidden" id="viewUserProfile" value="{{json_encode($userProfile?->only(['id', 'name', 'mobile_no']))}}">
         <input type="hidden" id="loggedUserProfile" value="{{json_encode($user)}}">
-        <div class="sidebar col-12 col-lg-5 col-xl-4 m-0 p-0" >
+        <div class="sidebar col-12 col-lg-5 col-xl-4 m-0 p-0" @vue:mounted="mounted" id="room-component" v-scope="RoomComponent()">
             <div class="sidebar-header">
                 <h2 id="initDB" class="my-0">Chat List</h2>
                 {{-- TODO --}}
@@ -25,7 +25,7 @@
                     </svg>
                 </button>
             </div>
-            <div class="chat-list" @vue:mounted="mounted" id="room-component" v-scope="RoomComponent()">
+            <div class="chat-list" >
                     <div v-for="(room, key) in oldRooms" :key="room.id" v-bind:data-identity-for-read="room.id" v-on:click="setCurrentRoom(key)" 
                         v-bind:class="{'chat-item': true, 'bg-primary' : currentRoomObj?.id == room?.id }"
                     >
@@ -72,7 +72,14 @@
                
             </div>
             <div class="chat-messages" id="chat-messages" style="overflow-y: auto;">
-                <div :key="message.id" v-for="message in chatMessageList" :class="message.className">
+                <template :key="message.id" v-for="(message, index) in chatMessageList" >
+                    <div v-scope="DateDividerComponent({ 
+                        date: message['createdAtDate'],
+                        index: index,
+                        shouldShowDate: message['isLastDateShow'] 
+                    })">
+                    </div>
+                    <div :class="message.className">
                     <img 
                         v-if="message.sender?.userBanner"
                         :src="`/storage/${message.sender.userBanner}`"
@@ -95,7 +102,8 @@
                         <span v-text="message.text"></span>
                         <span class="timestamp" v-text="humanReadableChatTimeFormat(message.createdAtDate)"></span>
                     </div>
-                </div>
+                    </div>
+                </template>
             </div>
             <div class="chat-input">
                 <input type="text" placeholder="Type a message...">
@@ -108,8 +116,7 @@
                 </button>
             </div>
         </div>
-        {{-- 
-        <div  class="modal fade" id="other-users-component" tabindex="-1" aria-labelledby="other-users-componentLabel" aria-hidden="true">
+        <div v-scope="OtherUsersComponent()" class="modal fade" id="other-users-component" tabindex="-1" aria-labelledby="other-users-componentLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -142,7 +149,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                        <tr v-for="chat in prospectiveChats?.data?? []" :key="chat.name + chat.id" class="border-none" style="vertical-align: center !important;">
+                                        <tr v-for="chat in users?? []" :key="chat.name + chat.id" class="border-none" style="vertical-align: center !important;">
                                             <th scope="row"></th>
                                             <td>
                                                 <img class="object-fit-cover rounded-circle" height="40" width="40" {!!trustedBladeHandleImageFailure()!!} v-bind:src="'/storage/' + chat?.userBanner" >
@@ -158,7 +165,7 @@
                                 </tbody>
                             </table>
                             <ul class="pagination cursor-pointer py-3">
-                                    <li v-for="link in prospectiveChats?.links?? []" :key="link.label" v-on:click="if (link.url) { fetchProspectiveChatters(event); }" v-bind:data-url="link.url" :class="{'page-item': true, 'active': link.active, 'disabled': link.url}" > 
+                                    <li v-for="link in pagination ?? []" :key="link.label" v-on:click="if (link.url) { fetchProspectiveChatters(event); }" v-bind:data-url="link.url" :class="{'page-item': true, 'active': link.active, 'disabled': link.url}" > 
                                         <a 
                                             onclick="event.preventDefault()"
                                             :class="{
@@ -176,7 +183,6 @@
                     </div>
                 </div>
             </div>
-             --}}
         </div>
     </div>
 </body>
