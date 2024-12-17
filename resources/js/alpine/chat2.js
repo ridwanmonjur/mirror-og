@@ -1,6 +1,6 @@
 import { createApp, reactive } from "petite-vue";
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, memoryLocalCache, setDoc, addDoc, onSnapshot, updateDoc, orderBy, doc, query, collection,  where, or, clearIndexedDbPersistence } from "firebase/firestore";
+import { initializeFirestore, memoryLocalCache, setDoc, getDoc, addDoc, onSnapshot, updateDoc, orderBy, doc, query, collection, where, or, clearIndexedDbPersistence } from "firebase/firestore";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { DateTime } from "luxon";
 
@@ -41,15 +41,15 @@ function humanReadableChatDateFormat(date) {
     if (!date) return "Error occurred";
     const year = date?.getFullYear();
     let monthFromDate = date?.getMonth();
-    const month = monthNames [monthFromDate] ?? null;
+    const month = monthNames[monthFromDate] ?? null;
     const day = date?.getDate()?.toString()?.padStart(2, '0');
-    
-    const formattedDate = `${day} ${month} ${year}`;    
+
+    const formattedDate = `${day} ${month} ${year}`;
     return formattedDate;
 }
 
 function scrollIntoView() {
-    
+
     const chatContainer = document.getElementById('chat-messages');
     chatContainer.scrollTop = chatContainer.scrollHeight;
     window.scrollTo(0, document.body.scrollHeight);
@@ -68,20 +68,124 @@ function addDate(date, prepend = false) {
     chatMessages.appendChild(dateDivContainer);
 }
 
+const chatStore = reactive({
+    chatMessageList: [],
+    chatSnapshots: null,
+    messagesLength: 0,
+    resetMessages() {
+        this.messagesLength = 0;
+        this.chatMessageList = [];
+    },
+    async getMessages(id) {
+
+        let q = query(
+            collection(db, `room/${id}/message`),
+            orderBy("createdAt", "desc")
+        );
+
+        let isInitialDataFetched = false;
+        let prevCreatedAt = null;
+        let length = 0;
+        let results = [];
+        q = query(q);
+
+        let subscribeToChat = onSnapshot(q, {
+            includeMetadata: true,
+        }, async (snapshot) => {
+         
+
+            snapshot.docChanges().forEach(async (change) => {
+
+                if (change.type === "added") {
+                    let objectDoc = {
+                        id: change.doc.id,
+                        ...change.doc.data(),
+                    };
+
+                    console.log({results});
+                    if (objectDoc['senderId'] == loggedUserProfile.id) {
+                        objectDoc['className'] = ['message', 'reply'];
+                        objectDoc['isMe'] = true;
+                    } else if (objectDoc['senderId'] != loggedUserProfile.id) {
+                        objectDoc['className'] = ['message'];
+                        objectDoc['isMe'] = false;
+                    } else {
+                        window.alert("Some error occurred");
+                    }
+
+                    objectDoc['sender'] = roomStore.roomUserIdMap[objectDoc['senderId']];
+                    let currentDate = objectDoc['createdAt'].toDate();
+                    objectDoc['createdAtDate'] = currentDate;
+
+
+                    if (length) {
+                        if (currentDate?.getDate() != prevCreatedAt?.getDate() 
+                            || currentDate ?.getMonth() != prevCreatedAt?.getMonth()
+                            || currentDate?.getYear() != prevCreatedAt?.getYear()
+                        ) {
+                            objectDoc['isLastDateShow'] = true;
+                            objectDoc['lastDate'] = prevCreatedAt;
+                        } 
+                    } 
+
+                    prevCreatedAt = objectDoc['createdAtDate'];
+                    length++;
+                   
+                    if (isInitialDataFetched) {
+                        results.push(objectDoc);
+                    } else {
+                        results.unshift(objectDoc);
+                    }
+                }
+
+            });
+
+            
+            this.messagesLength = this.messagesLength ? this.messagesLength + length: length;
+            
+            this.chatMessageList = [...(this.chatMessageList || []), ...results];
+            
+                // if (this.currentRoom == id) {
+                //     // this.appendMessages(results, length);
+                //     scrollIntoView();
+                //     let lastMsgInBatch = results[length-1];
+                //     if (lastMsgInBatch && lastMsgInBatch?.senderId != loggedUserProfile?.id && !lastMsgInBatch.isRead) {
+                //         const messageRef = doc(db, `room/${this.currentRoom}/message`, lastMsgInBatch.id);
+                //         await updateDoc(messageRef, {
+                //             isRead: true
+                //         });
+                //     } 
+                // } else {
+                //     let lastMsgInBatch = results[length-1];
+                //     if (lastMsgInBatch && (lastMsgInBatch.senderId != loggedUserProfile.id && !lastMsgInBatch.isRead)) {
+                //         const element = document.querySelector(`[data-identity-for-read="${id}"]`);
+                //         element.style.backgroundColor = 'black';
+                //         element.querySelector('.bi-bell-fill').classList.remove('d-none');
+                //     }
+                // }
+
+            isInitialDataFetched = true;
+        }, (error)=>{
+            console.error({error})
+            toastError("Failed to fetch data");
+        });
+
+        this.chatSnapshots = subscribeToChat;
+    },
+});
 
 // chatMessageList put in roomStore
 const roomStore = reactive({
-    chatMessageList: [],
-    roomUserIdMap: {}, 
+    roomUserIdMap: {},
     oldRooms: [],
     currentRoom: null,
     roomSnapshot: null,
+   
     initDB() {
         let isInitialDataFetched = false;
         let roomUserIdMap = {};
         let currentUserId = loggedUserProfile?.id;
         let rooms = [], userIdList = [];
-        let length = 0;
         const roomCollectionRef = collection(db, 'room');
 
         const roomQ = query(roomCollectionRef,
@@ -92,7 +196,9 @@ const roomStore = reactive({
         );
 
         let subscribeToRoomSnapshot = onSnapshot(roomQ, async (rommSnapshot) => {
-            rommSnapshot.docChanges().forEach( (change) => {
+        let length = 0;
+
+            rommSnapshot.docChanges().forEach((change) => {
                 if (change.type === "added") {
                     let data = change.doc.data();
                     data['id'] = change.doc.id;
@@ -140,52 +246,140 @@ const roomStore = reactive({
             for (let room of rooms) {
                 room['otherRoomMember'] = roomUserIdMap[room['otherRoomMemberId']];
             }
-            this.roomUserIdMap = {...roomUserIdMap };
-           
-            console.log({rooms});
-            console.log({rooms});
-            console.log({rooms});
-            this.oldRooms = [...rooms];
-        });
 
-        
+            let currentRoomIndex = 0;
+            // params 
+            if ( viewUserProfile?.id ) {
+
+                if (viewUserProfile.id in roomUserIdMap) {
+                    currentRoomIndex = rooms.findIndex(room => 
+                        room.otherRoomMemberId == viewUserProfile.id
+                    );
+                } else {
+                    roomUserIdMap[viewUserProfile.id] = viewUserProfile;
+                    let newRoomData = {
+                        user1: Number(loggedUserProfile.id).toString(),
+                        user2: Number(viewUserProfile.id).toString(),
+                        otherRoomMember: { ...viewUserProfile },
+                        otherRoomMemberId: viewUserProfile.id,
+                    }
+
+                    let roomId = newRoomData.user1 + '.' + newRoomData.user2;
+                    await setDoc(doc(db, "room", roomId), {
+                        user1: newRoomData.user1,
+                        user2: newRoomData.user2,
+                        createdAt: new Date(),
+                        id: newRoomData.user1 + '.' + newRoomData.user2
+                    });
+
+                    currentRoomIndex = length;
+                }
+              
+            } else {
+                currentRoomIndex = 0
+            }
+
+            this.roomUserIdMap = { ...roomUserIdMap };
+            this.oldRooms = [ ...rooms ];
+            this.currentRoom = currentRoomIndex;
+            console.log({oldRooms: rooms, currentRoomIndex});
+            chatStore.getMessages(rooms[currentRoomIndex].id);
+
+            scrollIntoView();
+        });
 
         this.roomSnapshot = subscribeToRoomSnapshot;
     },
+    async setCurrentRoom(index) {
+        this.currentRoom = index;
+        if (index != null) {
+            chatStore.chatSnapshots();
+            chatStore.resetMessages();
+            await chatStore.getMessages( this.oldRooms[index].id );
+        }
+
+    },
     get currentRoomObj() {
-        return this.roomStore.oldRooms[this.roomStore.currentRoom]
-      }
+        if (this.currentRoom != null) return this.oldRooms[this.currentRoom];
+        else return null;
+    }
 });
-
-
 
 
 function ChatListComponent() {
     // chatMessageList put in component
     return {
-        chatMessageList: roomStore.chatMessageList,
-        currentRoomObj: roomStore.currentRoomObj,
+        get chatMessageList() {
+            return chatStore.chatMessageList;
+        },
+        get currentRoomObj() {
+            return roomStore.currentRoomObj;
+        },
+        get currentRoom () {
+            return roomStore.currentRoom;
+        },
         humanReadableChatTimeFormat(date) {
             const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
             return formattedTime
         },
+        async sendMessage() {
+            let value = chatInput?.value;
+            
+            if (this.currentRoom === null ) {
+                window.toastError("Choose a conversation first!");
+                return;
+            }
+
+            if ( String(value).trim() == "") {
+                window.toastError("Empty messages!")
+                return;
+            }
+
+            try{
+                if (this.currentRoom == null) {
+                   window.toastError("New chat still being updated...")
+                }
+
+                await addDoc(collection(db,  `room/${this.currentRoomObj.id}/message`), {
+                    senderId: loggedUserProfile.id,
+                    text: value,
+                    createdAt: new Date(),
+                    isRead: false,
+                });
+
+            } catch(err){
+                console.error(err);
+            }
+
+            chatInput.value = "";
+        },
     }
+}
+
+function SendMessage() {
+    
 }
 
 
 function OtherUsersComponent() {
     return {
-      
+
     }
 }
 
 function RoomComponent() {
     return {
-        get oldRooms () {
+        get oldRooms() {
             return roomStore.oldRooms;
         },
-        get currentRoom () {
+        get currentRoom() {
             return roomStore.currentRoom;
+        },
+        get currentRoomObj() {
+            return roomStore.currentRoomObj;
+        },
+        setCurrentRoom(roomIndex) {
+            roomStore.setCurrentRoom(roomIndex);
         },
         formatDate(date) {
             if (!date) return "N/A"
@@ -193,16 +387,13 @@ function RoomComponent() {
                 .fromFormat(date, "yyyy-MM-dd HH:mm:ss")
                 .toRelative();
 
-            console.log({newDate});
-            console.log({newDate});
-            console.log({newDate});
+            console.log({ newDate });
+            console.log({ newDate });
+            console.log({ newDate });
 
             return newDate;
         },
         mounted() {
-            console.log("hi");
-            console.log("hi");
-            console.log("hi");
             roomStore.initDB();
         }
     }
@@ -212,6 +403,9 @@ function RoomComponent() {
 document.addEventListener('DOMContentLoaded', () => {
     createApp({
         RoomComponent,
+        ChatListComponent,
+        OtherUsersComponent,
+        
         // Add other components here
     }).mount('#app');
 });

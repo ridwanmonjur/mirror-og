@@ -408,6 +408,7 @@ Alpine.data('alpineDataComponent', function () {
 
             this.chatSnapshots.push(subscribeToChat);
         },
+        
        startChat(){
             let url = new URL(window?.location?.href);
             let searchParams = new URLSearchParams(url?.search);
