@@ -307,7 +307,7 @@ Alpine.data('alpineDataComponent', function () {
 
         formatDate(date) {
             return DateTime
-                .fromISO(date)
+                .fromJSDate(date)
                 .toRelative();
         },
         

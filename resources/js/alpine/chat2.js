@@ -142,9 +142,10 @@ const roomStore = reactive({
             }
             this.roomUserIdMap = {...roomUserIdMap };
            
-               
+            console.log({rooms});
+            console.log({rooms});
+            console.log({rooms});
             this.oldRooms = [...rooms];
-            isInitialDataFetched = true;
         });
 
         
@@ -157,22 +158,11 @@ const roomStore = reactive({
 });
 
 
-function ChatContainer() {
-    return {
-        $template: '#chat-parent-component',
-        fetchData: () => roomStore.initDB(),
-    
-        mounted() {
-            this.fetchData();
-        }
-    }
-}
 
 
-function ChatList() {
+function ChatListComponent() {
     // chatMessageList put in component
     return {
-        $template: '#chat-component',
         chatMessageList: roomStore.chatMessageList,
         currentRoomObj: roomStore.currentRoomObj,
         humanReadableChatTimeFormat(date) {
@@ -183,23 +173,54 @@ function ChatList() {
 }
 
 
-function OtherUsers() {
+function OtherUsersComponent() {
     return {
-      $template: '#other-users-component',
       
     }
 }
 
 function RoomComponent() {
     return {
-      $template: '#room-component',
-      oldRooms: roomStore.oldRooms,
+        get oldRooms () {
+            return roomStore.oldRooms;
+        },
+        get currentRoom () {
+            return roomStore.currentRoom;
+        },
+        formatDate(date) {
+            if (!date) return "N/A"
+            let newDate = DateTime
+                .fromFormat(date, "yyyy-MM-dd HH:mm:ss")
+                .toRelative();
+
+            console.log({newDate});
+            console.log({newDate});
+            console.log({newDate});
+
+            return newDate;
+        },
+        mounted() {
+            console.log("hi");
+            console.log("hi");
+            console.log("hi");
+            roomStore.initDB();
+        }
     }
 }
 
-createApp({
-    ChatContainer,
-    ChatList,
-    OtherUsers,
-    RoomComponent
-}).mount('#app')
+
+document.addEventListener('DOMContentLoaded', () => {
+    createApp({
+        RoomComponent,
+        // Add other components here
+    }).mount('#app');
+});
+
+// window.loadPetiteView = () => {
+//     createApp({
+//         // ChatContainerComponent,
+//         // ChatListComponent,
+//         // OtherUsersComponent,
+//         RoomComponent
+//     }).mount("#app");
+// }
