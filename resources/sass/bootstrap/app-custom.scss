@@ -198,6 +198,10 @@ color: #43A4D7; */
     width: 600px;
 }
 
+input#search-bar:focus + svg {
+    stroke: black !important;
+}
+
 .search-bar svg {
     position: absolute;
     top: 8px;

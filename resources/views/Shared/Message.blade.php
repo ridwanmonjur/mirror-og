@@ -28,7 +28,7 @@
             </div>
             <div class="chat-list">
                 <template x-for="room in oldRooms" :key="room.id">
-                    <div x-bind:data-identity-for-read="room.id" x-on:click="currentRoom = room?.id" class="chat-item">
+                    <div x-bind:data-identity-for-read="room.id" x-on:click="currentRoom = room?.id" :class="{'chat-item': true, 'bg-primary' : currentRoom == room?.id }">
                         <template x-if="room?.otherRoomMember?.userBanner != null">
                             <img {!! trustedBladeHandleImageFailure() !!} x-bind:src="'/storage/' + room?.otherRoomMember?.userBanner" width="50" height="50"
                                 class="object-fit-cover rounded-circle me-3">
