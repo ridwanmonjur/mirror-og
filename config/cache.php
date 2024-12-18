@@ -18,7 +18,9 @@ return [
     'default' => env('CACHE_DRIVER', 'file'),
     'ttl' => 3600,
     'keys' => [
-        'team_member_counts' => 'team:%s:member_counts'
+        'user_team_follows' => 'user%s:team', 
+        'user_team_member' => 'user%s:team:member',
+        'team_member_count' => 'team:member_count',
     ],
     /*
     |--------------------------------------------------------------------------

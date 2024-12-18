@@ -67,7 +67,7 @@ Alpine.data('alpineDataComponent', () => ({
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': csrfToken,
+                    'X-CSRF-TOKEN': csrfToken77,
                     'Content-type': 'application/json',
                     'Accept': 'application/json',
                 },

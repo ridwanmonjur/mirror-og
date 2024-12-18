@@ -12,8 +12,13 @@ const styles = {
     fontStyles: storage.dataset.fontStyles
 };
 
+const statusMap = {
+    successJoin: storage.dataset.successJoin,
+    errorJoin: storage.dataset.errorJoin
+};
+
 let teamData = JSON.parse(document.getElementById('teamData').value);
-let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+let csrfToken77 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 
 let colorOrGradient = null;
@@ -142,6 +147,18 @@ let newFunction = function () {
         }
     );
 
+    if (statusMap['successJoin']) {
+        window.Swal.fire({
+            icon: 'success',
+            confirmButtonColor: "#43A4D7",
+            text: statusMap['successJoin']
+        });
+    }
+    
+    if (statusMap['errorJoin']) {
+        toastError(statusMap['errorJoin'])
+    }
+
 
     window.loadMessage();
 
@@ -186,7 +203,7 @@ imageUpload?.addEventListener("change", async function (e) {
             const response = await fetch(routes.teamBanner, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': csrfToken,
+                    'X-CSRF-TOKEN': csrfToken77,
                 },
                 body: formData,
             });
@@ -231,7 +248,6 @@ function redirectToProfilePage(userId) {
     window.location.href = routes.profile.replace(':id', userId);
 }
 
-let csrfToken2 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 let tabButtonBalueValue = localStorage.getItem("tab");
 let currentTabIndexForNextBack = 0;
@@ -292,7 +308,7 @@ let dialogForMember = new DialogForMember();
 
 function generateHeaders() {
     return {
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        'X-CSRF-TOKEN': csrfToken77,
         'credentials': 'include', 
         'Accept': 'application/json',
         'Content-Type': 'application/json',

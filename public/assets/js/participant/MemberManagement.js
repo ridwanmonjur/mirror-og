@@ -1,53 +1,7 @@
-let csrfToken2 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+let csrfToken99 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-let tabButtonBalueValue = localStorage.getItem("tab");
-let currentTabIndexForNextBack = 0;
-if (tabButtonBalueValue !== null || tabButtonBalueValue!== undefined){
-    if (tabButtonBalueValue === "PendingMembersBtn") {
-        currentTabIndexForNextBack = 1;
-    }
 
-    if (tabButtonBalueValue === "NewMembersBtn") {
-        currentTabIndexForNextBack = 2;
-    }
-}
-
-function goBackScreens () {
-    if (currentTabIndexForNextBack <=0 ) {
-        Toast.fire({
-            'icon': 'success',
-            'text': 'Notifications sent already!'
-        });
-    } else {
-        let tabs = document.querySelectorAll('.tab-content');
-        console.log({tabs, tabsChildren: tabs});
-        for (let tabElement of tabs) {
-            tabElement.classList.add('d-none');
-        }
-
-        currentTabIndexForNextBack--;
-        tabs[currentTabIndexForNextBack].classList.remove('d-none');
-    }
-}
-
-function goNextScreens () {
-    if (currentTabIndexForNextBack >= 2) {
-        document.getElementById('manageRosterUrl').click();
-    } else {
-
-        let tabs = document.querySelectorAll('.tab-content');
-        console.log({tabs, tabsChildren: tabs, currentTabIndexForNextBack});
-
-        for (let tabElement of tabs) {
-            tabElement.classList.add('d-none');
-        }
-
-        currentTabIndexForNextBack++;
-        tabs[currentTabIndexForNextBack].classList.remove('d-none');
-    }
-}
-
-let actionMap = {
+actionMap = {
     'approve': approveMemberAction,
     'disapprove': disapproveMemberAction,
     'captain': capatainMemberAction,
@@ -57,7 +11,7 @@ let actionMap = {
     'reject': rejectMemberAction
 };
 
-let dialogForMember = new DialogForMember();
+dialogForMember = new DialogForMember();
 
 
 
@@ -671,7 +625,7 @@ async function fetchMembers(event = null) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "X-CSRF-TOKEN": csrfToken2
+            "X-CSRF-TOKEN": csrfToken99
         },
         body: JSON.stringify({
             teamId,

@@ -300,12 +300,14 @@ img.fslightbox-source{
     scroll-snap-align: start;
 }
 
+.w-75-lg-60 {
+    width: 75%;
+}
 
 .team-info {
     display: flex;
     justify-content: space-around;
     align-items: flex-start;
-    margin: 20px;
 }
 
 .showcase,
@@ -635,7 +637,7 @@ img.fslightbox-source{
 }
 
 @media screen and (min-width: 992px) {
-
+   
     .main1 { 
         min-height: 50vh;
     }
@@ -690,6 +692,10 @@ img.fslightbox-source{
 @media screen and (min-width: 1100px) {
     .event-carousel-styles {
         grid-template-columns: 1fr 1fr
+    }
+
+    .w-75-lg-60 {
+        width: 60%;
     }
 }
 
