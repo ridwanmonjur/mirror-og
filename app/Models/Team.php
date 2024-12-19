@@ -354,14 +354,14 @@ class Team extends Model
                     You have joined 
                     <a href="/view/organizer/{$event->user->id}">
                         <span class="notification-blue">{$event->user->name}</span>
-                    </a>'s event.
+                    </a>'s event,
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
                     </a>
-                    with a team named 
+                    with your team, 
                     <a href="/view/team/{$this->id}">
                         <span class="notification-blue">{$this->teamName}</span>
-                    </a>.
+                    </a>. Please complete and confirm your registration for this event.
                 </span>
             HTML;
 
@@ -390,7 +390,7 @@ class Team extends Model
                             </a>'s event,
                             <a href="/event/{$event->id}">
                                 <span class="notification-blue">{$event->eventName}</span>
-                            </a>. Please register your roster and complete registration for this event.
+                            </a>. 
                         </span>
                     HTML,
                 ];
@@ -423,7 +423,7 @@ class Team extends Model
                     </a>'s event,
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
-                    </a>. 
+                    </a>. After signing up, they must complete and confirm registration for this event.
                 </span>
             HTML,
             'links' => [
@@ -529,7 +529,7 @@ class Team extends Model
                     </a>'s event,
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
-                    </a>. They have confirmed their positions for this event.
+                    </a>. They have confirmed their registrations for this event.
                 </span>
             HTML,
             'links' => [
@@ -554,10 +554,10 @@ class Team extends Model
                         <a href="/view/team/{$this->id}">
                             <span class="notification-black">{$this->teamName}</span> 
                         </a> has canceled registration for
-                        your
+                        your event, 
                         <a href="/event/{$event->id}">
                             <span class="notification-blue">{$event->eventName}</span>
-                        </a>.
+                        </a>. They will be refunded a part of their fees according to tournament rules.
                 </span>
                 HTML;
             $data['cacnelMemeberHtml'] = <<<HTML
@@ -571,7 +571,7 @@ class Team extends Model
                     </a>'s event,
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
-                    </a>.
+                    </a>. You will be refunded a part of your fees according to tournament rules.
                 </span>
             HTML;
         } else {
@@ -582,7 +582,7 @@ class Team extends Model
                     <span class="notification-black">You have canceled your event, </span>    
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
-                    </a>.
+                    </a>. You will be refunded a part of your fees according to tournament rules.
                 </span>
                 HTML;
             $data['cacnelMemeberHtml'] = <<<HTML
@@ -592,7 +592,7 @@ class Team extends Model
                         <span class="notification-black">{$event->user->name}</span> 
                     </a> has canceled the event: <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
-                    </a>.
+                    </a>. You will be refunded a part of your fees according to tournament rules.
                 </span>
             HTML;
         }

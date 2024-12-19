@@ -215,14 +215,14 @@
                 <div class="box-date d-none">
                     <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
-                        <input type="date" id="startDate" onchange="checkValidTime();" name="startDate"
+                        <input type="date" id="startDate" onchange="checkValidDate();" name="startDate"
                             value="{{ $isEventNotNull ? $event->startDate : '' }}" placeholder=" Select a start date"
                             required
                         >
                     </div>
                     <div class="box">
                         <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
-                        <input type="date" id="endDate" onchange="checkValidTime();" name="endDate"
+                        <input type="date" id="endDate" onchange="checkValidDate();" name="endDate"
                             value="{{ $isEventNotNull ? $event->endDate : '' }}" placeholder=" Select an end date"
                             required>
                     </div>
@@ -243,7 +243,7 @@
                         <div class="box">
                             <div class="small-detail" >Start</div>
                             <div class="flatpickr">
-                                <input type="time" id="startTime" onchange="checkValidTime();setTimeRangeDisplay();" name="startTime"
+                                <input type="time" id="startTime" onchange="checkValidStartTime();setTimeRangeDisplay();" name="startTime"
                                     value="{{ $isEventNotNull ? $event->startTime : '' }}" 
                                     class="form-control py-1 mx-auto   text-dark" required data-input
                                     style="border: 1px solid  #d3d3d3 ;"
@@ -254,7 +254,7 @@
                         <div class="box mt-3">
                             <div class="small-detail" >End</div>
                             <div class="flatpickr">
-                                <input type="time" id="endTime" name="endTime" onchange="checkValidTime();setTimeRangeDisplay();"
+                                <input type="time" id="endTime" name="endTime" onchange="checkValidEndTime();setTimeRangeDisplay();"
                                     value="{{ $isEventNotNull ? $event->endTime : '' }}" 
                                     class="form-control mx-auto py-1   text-dark" required data-input
                                     style="border: 1px solid  #d3d3d3 ;"
