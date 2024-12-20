@@ -20,7 +20,7 @@ export default defineConfig({
                 'resources/js/libraries/colorpicker.js',
                 'resources/sass/libraries/colorpicker.scss',
                 'resources/sass/libraries/tagify.scss',
-                'resources/js/alpine/chat.js',
+                'resources/js/alpine/chat2.js',
                 'resources/js/alpine/bracket.js',
                 'resources/js/alpine/organizer.js',
                 'resources/js/alpine/participant.js',
