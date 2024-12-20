@@ -38,6 +38,7 @@
         $isCreator = false;
         $status = "not_signed";
         $statusMessage = "Please sign in!";
+        $acceptedTeamMemberCount = $leftPlusAcceptedTeamMemberCount = 0;
     @endphp
 @endguest
 @auth
