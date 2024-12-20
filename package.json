@@ -26,6 +26,7 @@
         "flatpickr": "^4.6.13",
         "litepicker": "^2.0.12",
         "luxon": "^3.5.0",
+        "petite-vue": "^0.4.1",
         "sass-loader": "^14.2.1",
         "sweetalert2": "^11.10.8",
         "tippy.js": "^6.3.7"

@@ -9,9 +9,12 @@ use App\Models\OrganizerFollow;
 use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\TeamMember;
+use App\Models\TeamProfile;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Io238\ISOCountries\Models\Country;
 
@@ -99,6 +102,60 @@ class ParticipantTeamController extends Controller
             );
         }
         return $this->showErrorParticipant('This event is missing or cannot be retrieved!');
+    }
+
+    public function teamFollow(Request $request, $id) {
+        try {
+
+            $user = $request->attributes->get('user');
+            $selectTeam = Team::where('id', $id)
+                ->select(['id'])
+                
+                ->first();
+            $profile = TeamProfile::where('team_id', $id)
+                ->select(['id', 'team_id', 'follower_count'])
+                ->first();
+            
+            $exisitngFollowCount = DB::table('team_follows')                 
+                ->where('team_id', $selectTeam->id)                 
+                ->select(['id', 'team_id'])
+                ->count();
+
+
+            $result = DB::table('team_follows')
+                ->where('user_id', $user->id)
+                ->where('team_id', $selectTeam->id)
+                ->delete();
+            
+            if ($result > 0) {
+                $statusMessage =  'Unfollowed the team!';
+                $profile->follower_count = $exisitngFollowCount - 1;
+            
+            } else {
+                $statusMessage =  'Followed the team!';
+            }
+            
+            if ($result === 0) {
+                DB::table('team_follows')->insert([
+                    'user_id' => $user->id,
+                    'team_id' => $selectTeam->id
+                ]);
+
+                $profile->follower_count = $exisitngFollowCount + 1;
+
+            }
+          
+            $profile->save();
+            
+            $cacheKey = sprintf(config('cache.keys.user_team_follows'), $user->id);
+            Cache::forget($cacheKey);
+            session()->flash('successJoin', $statusMessage);
+            return back();
+        }  catch(Exception $e) {
+            session()->flash('errorJoin', $e->getMessage());
+            return back();
+        }
+        
     }
 
     public function teamMemberManagementRedirected(Request $request)

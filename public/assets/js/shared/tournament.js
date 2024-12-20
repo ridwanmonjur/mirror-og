@@ -300,6 +300,8 @@ submitBtnElement?.addEventListener('click', function(event) {
                             newSmall.className = 'popover-button ms-1 position-absolute  replace_me_with_image ';
                             newSmall.style.zIndex = '99';
                             newSmall.dataset.position = position;
+                            newSmall.addEventListener('click', reportModalShow);
+
                         }
 
                         continue;
@@ -326,6 +328,7 @@ submitBtnElement?.addEventListener('click', function(event) {
                         img.className = 'popover-button position-absolute d-none-when-hover object-fit-cover me-2';
                         img.alt = 'Team View';
                         img.style.zIndex = '99';
+                        img.addEventListener('click', reportModalShow);
                     }
 
 
@@ -397,7 +400,8 @@ submitBtnElement?.addEventListener('click', function(event) {
                     })
                 });
 
-                if (match.team2_position) {
+                console.log()
+                if (match.team2_position && team2 && team1) {
                     window.updateReportDispute(`${match.team1_position}.${match.team2_position}`, team1.id, team2.id);
                 }
                 

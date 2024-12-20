@@ -110,7 +110,7 @@ function fillStepGameDetailsValues() {
     setInnerHTMLFromLocalStorage('eventTierTitle', outputEventTierTitle);
 }
 
-function checkValidTime() {
+function checkValidDateTime() {
   
     const startDateInputValue = startDateInput.value;
     
@@ -129,7 +129,7 @@ function checkValidTime() {
             endDateInput.value = ""
         }
 
-        returnl
+        return;
     }
 
     
@@ -137,21 +137,7 @@ function checkValidTime() {
         return;
     }
 
-    function isValidTimeInterval(timeString) {
-        const minutes = timeString.split(':')[1];
-        return minutes === '00' || minutes === '30';
-    }
-
-    function convertToHourInterval(timeString) {
-        const [hours, minutes] = timeString.split(':');
-        if (minutes !== '00' && minutes !== '30') {
-            // If minutes are invalid, set to :00
-            return `${hours}:00`;
-        }
-        return timeString;
-    }
-    
-    
+   
     if (!isValidTimeInterval(startTimeInput.value)) {
         toastError('Please select a starting time at 30-minute intervals (e.g., 9:00, 9:30, 10:00)');
         startTimeInput.value = convertToHourInterval(startTimeInput.value);
@@ -179,6 +165,72 @@ function checkValidTime() {
     }
 
 }
+
+function checkValidStartTime() {
+    if (startTimeInput.value === "") {
+        return;
+    }
+
+    if (!isValidTimeInterval(startTimeInput.value)) {
+        toastError('Please select a starting time at 30-minute intervals (e.g., 9:00, 9:30, 10:00)');
+        startTimeInput.value = convertToHourInterval(startTimeInput.value);
+
+        return;
+    }
+}
+
+function checkValidEndTime() {
+    if (endTimeInput.value === "") {
+        return;
+    }
+
+    if (!isValidTimeInterval(endTimeInput.value)) {
+        toastError('Please select a starting time at 30-minute intervals (e.g., 9:00, 9:30, 10:00)');
+        endTimeInput.value = convertToHourInterval(endTimeInput.value);
+
+        return;
+    }
+}
+
+
+function checkValidDate() {
+  
+    const startDateInputValue = startDateInput.value;
+    
+    var now = new Date();
+    var startDate = new Date(startDateInputValue);
+    var endDate = new Date(endDateInput.value );
+    
+    if (startDate < now || endDate <= now) {
+        Toast.fire({
+            icon: 'error',
+            text: "Start date or end date cannot be earlier than current date."
+        });
+        if (startDate < now) {
+            startDateInput.value = ""
+        } else if (endDate < now) {
+            endDateInput.value = ""
+        }
+
+        return;
+    }
+
+}
+
+function isValidTimeInterval(timeString) {
+    const minutes = timeString.split(':')[1];
+    return minutes === '00' || minutes === '30';
+}
+
+function convertToHourInterval(timeString) {
+    const [hours, minutes] = timeString.split(':');
+    if (minutes !== '00' && minutes !== '30') {
+        // If minutes are invalid, set to :00
+        return `${hours}:00`;
+    }
+    return timeString;
+}
+
 
 function setTimeRangeDisplay () {
     timerangeDisplay.value = `${formatTimeAMPM(startTimeInput.value)} - ${formatTimeAMPM(endTimeInput.value)}`;
@@ -395,7 +447,7 @@ window.onload = function() {
     const startPicker = window.createFlatpickr("#startTime", {
         ...timeConfig,
         onChange: function(selectedDates, dateStr) {
-            checkValidTime();
+            checkValidStartTime();
             setTimeRangeDisplay();
         }
     });
@@ -403,7 +455,7 @@ window.onload = function() {
     const endPicker = window.createFlatpickr("#endTime", {
         ...timeConfig,
         onChange: function(selectedDates, dateStr) {
-            checkValidTime();
+            checkValidEndTime();
             setTimeRangeDisplay();
         }
     });

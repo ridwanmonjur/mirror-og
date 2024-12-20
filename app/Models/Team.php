@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Notifications\EventCancelNotification;
 use App\Notifications\EventConfirmNotification;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
@@ -61,6 +63,53 @@ class Team extends Model
     public function activities(): MorphMany
     {
         return $this->morphMany(ActivityLogs::class, 'subject');
+    }
+
+    public function findTeamFollowerByUserId(int $userId)
+    {
+        $cacheKey = sprintf( config('cache.keys.user_team_follows'), $userId);
+        
+        return Cache::remember($cacheKey, now()->addSeconds(config('cache.ttl')), function () use ($userId) {
+            return DB::table('team_follows')
+                ->where('team_id', $this->id)
+                ->where('user_id', $userId)
+                ->exists();
+        });
+    }
+
+    public function findTeamMemberByUserId(int $userId)
+    {
+        $cacheKey = sprintf(config('cache.keys.user_team_member'), $userId);
+        
+        return Cache::remember($cacheKey, now()->addSeconds(config('cache.ttl')), function () use ($userId) {
+            return TeamMember::where('team_id', $this->id)
+                ->where('user_id', $userId)
+                ->first();
+        });
+    }
+
+    function getMembersAndTeamCount() {
+        $cacheKey = sprintf(config('cache.keys.team_member_count'), $this->id);
+    
+        return Cache::remember($cacheKey, now()->addSeconds(config('cache.ttl')), function () {
+            $this->loadCount([
+                'members as accepted_count' => function ($query) {
+                    $query->where('status', 'accepted');
+                },
+                'members as left_count' => function ($query) {
+                    $query->where('status', 'left');
+                },
+            ]);
+
+            return [
+                'accepted' => $this->accepted_count,
+                'left_plus_accepted' => $this->accepted_count + $this->left_count,
+            ];
+        });
+    }
+
+    public function createdAtHumaReadable() {
+        return Carbon::parse($this->created_at)->format('j F, Y');
     }
 
     public static function getTeamAndMembersByTeamId(int| string $teamId): ?self
@@ -305,14 +354,14 @@ class Team extends Model
                     You have joined 
                     <a href="/view/organizer/{$event->user->id}">
                         <span class="notification-blue">{$event->user->name}</span>
-                    </a>'s event.
+                    </a>'s event,
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
                     </a>
-                    with a team named 
+                    with your team, 
                     <a href="/view/team/{$this->id}">
                         <span class="notification-blue">{$this->teamName}</span>
-                    </a>.
+                    </a>. Please complete and confirm your registration for this event.
                 </span>
             HTML;
 
@@ -341,7 +390,7 @@ class Team extends Model
                             </a>'s event,
                             <a href="/event/{$event->id}">
                                 <span class="notification-blue">{$event->eventName}</span>
-                            </a>. Please register your roster and complete registration for this event.
+                            </a>. 
                         </span>
                     HTML,
                 ];
@@ -374,7 +423,7 @@ class Team extends Model
                     </a>'s event,
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
-                    </a>. 
+                    </a>. After signing up, they must complete and confirm registration for this event.
                 </span>
             HTML,
             'links' => [
@@ -480,7 +529,7 @@ class Team extends Model
                     </a>'s event,
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
-                    </a>. They have confirmed their positions for this event.
+                    </a>. They have confirmed their registrations for this event.
                 </span>
             HTML,
             'links' => [
@@ -505,10 +554,10 @@ class Team extends Model
                         <a href="/view/team/{$this->id}">
                             <span class="notification-black">{$this->teamName}</span> 
                         </a> has canceled registration for
-                        your
+                        your event, 
                         <a href="/event/{$event->id}">
                             <span class="notification-blue">{$event->eventName}</span>
-                        </a>.
+                        </a>. They will be refunded a part of their fees according to tournament rules.
                 </span>
                 HTML;
             $data['cacnelMemeberHtml'] = <<<HTML
@@ -522,7 +571,7 @@ class Team extends Model
                     </a>'s event,
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
-                    </a>.
+                    </a>. You will be refunded a part of your fees according to tournament rules.
                 </span>
             HTML;
         } else {
@@ -533,7 +582,7 @@ class Team extends Model
                     <span class="notification-black">You have canceled your event, </span>    
                     <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
-                    </a>.
+                    </a>. You will be refunded a part of your fees according to tournament rules.
                 </span>
                 HTML;
             $data['cacnelMemeberHtml'] = <<<HTML
@@ -543,7 +592,7 @@ class Team extends Model
                         <span class="notification-black">{$event->user->name}</span> 
                     </a> has canceled the event: <a href="/event/{$event->id}">
                         <span class="notification-blue">{$event->eventName}</span>
-                    </a>.
+                    </a>. You will be refunded a part of your fees according to tournament rules.
                 </span>
             HTML;
         }

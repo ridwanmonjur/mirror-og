@@ -13,7 +13,7 @@ class TeamProfile extends Model
 
     protected $table = 'team_profile';
 
-    protected $fillable = ['frameColor', 'backgroundColor', 'backgroundGradient', 'fontColor', 'team_id'];
+    protected $fillable = ['frameColor', 'backgroundColor', 'backgroundGradient', 'fontColor', 'follower_count', 'team_id'];
 
     public function generateStyles(): array
     {
