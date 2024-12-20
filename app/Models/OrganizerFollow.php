@@ -67,12 +67,17 @@ class OrganizerFollow extends Model
             ->exists();
     }
 
-    public static function getOrganizerFollowersPaginate($userId, $perPage, $page = 1)
+    public static function getOrganizerFollowersPaginate($userId, $perPage, $page = 1, $search = null)
     {
         return self::where('organizer_user_id', $userId)
             ->with(['participantUser' => function($query) {
                 $query->select('id', 'name', 'email', 'userBanner', 'created_at', 'role');
             }])
+            ->when($search, function($query) use ($search) {
+                $query->whereHas('participantUser', function($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%");
+                });
+            })
             ->simplePaginate($perPage, ['*'], 'org_followers_page', $page)
             ->through(function ($follow) {
                 return [

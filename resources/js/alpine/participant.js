@@ -222,12 +222,77 @@ function alpineProfileData(userId) {
             }
         },
 
+        async resetSearch(tab) {
+            const searchInput = document.getElementById('search-connections');
+            searchInput.value = "";
+            await this.loadSearch();
+            this.currentTab = tab;
+        },
+
+        async blockUser(connectionId) {
+
+        },
+
+        async starUnstarUser(connectionId) {
+
+        },
+
+        async reportUser(connectionId) {
+
+        },
+
+        async searchUser(connectionId) {
+
+        },
+
+        async loadSearch () {
+            let page = 0;
+            const searchInput = document.getElementById('search-connections');
+            let tab = this.currentTab;
+            if (tab in this.page) {
+                page = this.page[tab];
+            } 
+
+            let url = `/api/user/${this.userId}/connections?type=${tab}&page=${page}&role=${this.role}`;
+            let searchValue = searchInput.value.trim();
+            if (searchValue != "") {
+                url += `&search=${searchValue}`;
+            }
+
+            const response = await fetch( url );
+            const data = await response.json();
+            if (tab in data.connections)  {
+                
+                this.page = {
+                    ...this.page,
+                    [tab]: 1
+                };
+
+                this.connections = {
+                    ...this.connections,
+                    [tab]: data.connections[tab].data
+                } ;
+
+                this.next_page = {
+                    ...this.next_page,
+                    [tab]:  data.connections[tab]?.next_page_url != null ?
+                    true: false
+                }; 
+            }
+
+        },
+
         async loadPage(page) {
+            const searchInput = document.getElementById('search-connections');
             try {
                 let tab = this.currentTab;
-                const response = await fetch(
-                    `/api/user/${this.userId}/connections?type=${tab}&page=${page}&role=${this.role}`
-                );
+                let url = `/api/user/${this.userId}/connections?type=${tab}&page=${page}&role=${this.role}`;
+                let searchValue = searchInput.value.trim();
+                if (searchValue != "") {
+                    url += `&search=${searchValue}`;
+                }
+
+                const response = await fetch( url );
                 const data = await response.json();
                 if (tab in data.connections)  {
                     if (this.page[tab]) {

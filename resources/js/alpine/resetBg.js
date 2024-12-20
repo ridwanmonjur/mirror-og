@@ -93,6 +93,16 @@ function initOffCanvasListeners() {
         let modalBackdrop =  document.querySelector('.modal-backdrop');
         modalBackdrop.style.opacity = '0';
     });
+
+    const cropperModal = document.getElementById('cropperModal');
+    cropperModal.addEventListener('hide.bs.modal', () => {
+        let modalBackdrop =  document.querySelector('.modal-backdrop');
+        modalBackdrop.style.opacity = '0';
+    });
+    cropperModal.addEventListener('shown.bs.modal', () => {
+        let modalBackdrop =  document.querySelector('.modal-backdrop');
+        modalBackdrop.style.opacity = '0.5';
+    });
     
 }
 

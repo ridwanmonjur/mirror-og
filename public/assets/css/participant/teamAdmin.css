@@ -779,3 +779,16 @@ img.fslightbox-source{
     border-radius: 50%;
 
 }
+
+.dropdown-stats {
+    font-weight: lighter !important;
+}
+
+.dropdown-stats .dropdown-menu {
+    border-radius: 10px;
+}
+
+.dropdown-stats  .dropdown-item  {
+    font-size: 13px;
+
+}

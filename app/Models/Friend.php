@@ -40,13 +40,23 @@ class Friend extends Model
             ->first();
     }
 
-    public static function getFriendsPaginate($userId, $perPage, $page = 1)
+    public static function getFriendsPaginate($userId, $perPage, $page = 1, $search = null)
     {
         return self::where(function ($query) use ($userId) {
             $query->where('user1_id', $userId)
                   ->orWhere('user2_id', $userId);
         })
         ->where('status', 'accepted')
+        ->where(function ($query) use ($search) {
+            if ($search) {
+                $query->whereHas('user1', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('user2', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%");
+                });
+            }
+        })
         ->with(['user1', 'user2'])
         ->simplePaginate($perPage, ['*'], 'friends_page', $page)
         ->through(function ($friend) use ($userId) {

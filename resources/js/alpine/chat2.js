@@ -1,4 +1,4 @@
-import { createApp, reactive, nextTick } from "petite-vue";
+import { createApp, reactive } from "petite-vue";
 import { initializeApp } from "firebase/app";
 import { initializeFirestore, memoryLocalCache, setDoc, getDoc, addDoc, onSnapshot, updateDoc, orderBy, doc, query, collection, where, or, clearIndexedDbPersistence } from "firebase/firestore";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
