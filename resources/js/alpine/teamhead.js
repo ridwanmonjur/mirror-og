@@ -125,8 +125,6 @@ Alpine.data('alpineDataComponent', () => ({
 })
 );
 
-Alpine.start();
-
 
 window.formatDateLuxon = (date) => {
     if (!date) return 'N/A';
@@ -136,9 +134,6 @@ window.formatDateLuxon = (date) => {
 }
 
 window.formatDateMySqlLuxon = (mysqlDate, mysqlTime) => {
-    console.log({mysqlDate, mysqlTime});
-    console.log({mysqlDate, mysqlTime});
-    console.log({mysqlDate, mysqlTime});
     const dateTime = DateTime.fromSQL(`${mysqlDate} ${mysqlTime}`);
     const formattedDate = dateTime.toFormat("d MMM yyyy");
     const formattedTime = dateTime.toFormat("h:mma").toUpperCase();
@@ -146,3 +141,8 @@ window.formatDateMySqlLuxon = (mysqlDate, mysqlTime) => {
     return `${formattedDate} at ${formattedTime}`;
 }
 
+Alpine.data('followerFormComponent', () => {
+
+});
+
+Alpine.start();

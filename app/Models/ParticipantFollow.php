@@ -37,12 +37,17 @@ class ParticipantFollow extends Model
             ->first();
     }
 
-    public static function getFollowersPaginate($userId, $perPage, $page = 1)
+    public static function getFollowersPaginate($userId, $perPage, $page = 1, $search = null)
     {
         return self::where('participant_followee', $userId)
             ->with(['followerUser' => function($query) {
                 $query->select('id', 'name', 'email', 'userBanner', 'created_at', 'role');
             }])
+            ->when($search, function($query) use ($search) {
+                $query->whereHas('followerUser', function($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%");
+                });
+            })
             ->simplePaginate($perPage, ['*'], 'followers_page', $page)
             ->through(function ($follow) {
                 return [
@@ -56,12 +61,17 @@ class ParticipantFollow extends Model
             });
     }
 
-    public static function getFollowingPaginate($userId, $perPage, $page = 1)
+    public static function getFollowingPaginate($userId, $perPage, $page = 1, $search = null)
     {
         return self::where('participant_follower', $userId)
             ->with(['followeeUser' => function($query) {
                 $query->select('id', 'name', 'email', 'userBanner', 'created_at', 'role');
             }])
+            ->when($search, function($query) use ($search) {
+                $query->whereHas('followeeUser', function($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%");
+                });
+            })
             ->simplePaginate($perPage, ['*'], 'following_page', $page)
             ->through(function ($follow) {
                 return [

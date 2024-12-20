@@ -295,24 +295,45 @@ class SocialController extends Controller
         $type = $request->input('type', 'all');
         $role = $request->input('role', 'ORGANIZER');
         $page = $request->input('page', 1);
+        $search = $request->input('search');
         $perPage = 5;
         $response = [];
 
         if ($type === 'all') {
             if ($role == 'ORGANIZER') {
                 $response['count'] = [
-                    'followers' => OrganizerFollow::getOrganizerFollowersPaginate($id, $perPage)
+                    'followers' => OrganizerFollow::getOrganizerFollowersPaginate($id, $perPage, $search)
                 ];
             } else {
                 $response['count'] = [
                     'followers' => ParticipantFollow::where('participant_followee', $id)
+                        ->when($search, function($query) use ($search) {
+                            $query->whereHas('followerUser', function($q) use ($search) {
+                                $q->where('name', 'LIKE', "%{$search}%");
+                            });
+                        })
                         ->count(),
                     'following' => ParticipantFollow::where('participant_follower', $id)
+                        ->when($search, function($query) use ($search) {
+                            $query->whereHas('followeeUser', function($q) use ($search) {
+                                $q->where('name', 'LIKE', "%{$search}%");
+                            });
+                        })
                         ->count(),
                     'friends' =>  Friend::where(function ($query) use ($id) {
                         $query->where('user1_id', $id)
                             ->orWhere('user2_id', $id);
                     })
+                        ->when($search, function($query) use ($search) {
+                            $query->where(function($q) use ($search) {
+                                $q->whereHas('user1', function($q1) use ($search) {
+                                    $q1->where('name', 'LIKE', "%{$search}%");
+                                })
+                                ->orWhereHas('user2', function($q2) use ($search) {
+                                    $q2->where('name', 'LIKE', "%{$search}%");
+                                });
+                            });
+                        })
                         ->where('status', 'accepted')
                         ->count()
                 ];
@@ -320,10 +341,10 @@ class SocialController extends Controller
         } else {
             $data = match($type) {
                 'followers' => $role == 'ORGANIZER' 
-                    ? OrganizerFollow::getOrganizerFollowersPaginate($id, $perPage, $page)
-                    : ParticipantFollow::getFollowersPaginate($id, $perPage, $page),
-                'following' => ParticipantFollow::getFollowingPaginate($id, $perPage, $page),
-                'friends' => Friend::getFriendsPaginate($id, $perPage, $page),
+                    ? OrganizerFollow::getOrganizerFollowersPaginate($id, $perPage, $page, $search)
+                    : ParticipantFollow::getFollowersPaginate($id, $perPage, $page, $search),
+                'following' => ParticipantFollow::getFollowingPaginate($id, $perPage, $page, $search),
+                'friends' => Friend::getFriendsPaginate($id, $perPage, $page, $search),
                 default => throw new \InvalidArgumentException('Invalid connection type')
             };
             $response['connections'] = [$type => $data];

@@ -120,7 +120,7 @@
         <div :class="{'upload-container': true, }">
             <label class="upload-label">
                 <div class="circle-container">
-                    <div class="uploaded-image motion-logo "
+                    <div class="uploaded-image motion-logo mt-3"
                         style="background-image: url({{ '/storage' . '/'. $selectTeam->teamBanner  }} ), url({{asset('assets/images/404.png')}}) ; object-fit:cover; {{$frameStyles}}"
                     ></div>
                     <div class="d-flex align-items-center justify-content-center upload-button pt-3">
