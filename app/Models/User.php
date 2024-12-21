@@ -102,6 +102,50 @@ class User extends Authenticatable
         return $this->morphMany(ActivityLogs::class, 'subject');
     }
 
+    public function stars(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'stars', 'user_id', 'starred_user_id')
+            ->withTimestamps();
+    }
+
+    public function starredBy(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'stars', 'starred_user_id', 'user_id')
+            ->withTimestamps();
+    }
+
+    public function blocks(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'blocks', 'user_id', 'blocked_user_id')
+            ->withTimestamps();
+    }
+
+    public function blockedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'blocks', 'blocked_user_id', 'user_id')
+            ->withTimestamps();
+    }
+
+    public function reportsMade(): HasMany
+    {
+        return $this->hasMany(Report::class, 'reporter_id');
+    }
+
+    public function reportsReceived(): HasMany
+    {
+        return $this->hasMany(Report::class, 'reported_user_id');
+    }
+
+    public function hasStarred(User $user): bool
+    {
+        return $this->stars()->where('starred_user_id', $user->id)->exists();
+    }
+
+    public function hasBlocked(User $user): bool
+    {
+        return $this->blocks()->where('blocked_user_id', $user->id)->exists();
+    }
+
     public static function getParticipants(Request $request): Builder
     {
         $teamId = $request->input('teamId');

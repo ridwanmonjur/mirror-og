@@ -15,11 +15,13 @@ use App\Models\Like;
 use App\Models\OrganizerFollow;
 use App\Models\Participant;
 use App\Models\ParticipantFollow;
+use App\Models\Report;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -353,6 +355,89 @@ class SocialController extends Controller
         return response()->json($response);
     }
 
-  
+    public function toggleStar(Request $request, $id): JsonResponse
+    {
+        $authenticatedUser = $request->attributes->get('user');
+        $user = User::where('id', $id)
+            ->select('id')
+            ->first();
+        
+        if ($authenticatedUser->hasStarred($user)) {
+            $authenticatedUser->stars()->detach($user);
+            $message = 'User unstarred successfully';
+        } else {
+            $authenticatedUser->stars()->attach($user);
+            $message = 'User starred successfully';
+        }
+
+        return response()->json([
+            'message' => $message,
+            'is_starred' => $authenticatedUser->hasStarred($user)
+        ]);
+    }
+
+    public function toggleBlock(Request $request, $id): JsonResponse
+    {
+        $authenticatedUser = $request->attributes->get('user');
+        $user = User::where('id', $id)
+            ->select('id')
+            ->first();
+        
+        if ($authenticatedUser->hasBlocked($user)) {
+            $authenticatedUser->blocks()->detach($user);
+            $message = 'User unblocked successfully';
+        } else {
+            $authenticatedUser->blocks()->attach($user);
+            // Also remove any existing stars when blocking
+            $authenticatedUser->stars()->detach($user);
+            $message = 'User blocked successfully';
+        }
+
+        return response()->json([
+            'message' => $message,
+            'is_blocked' => $authenticatedUser->hasBlocked($user)
+        ]);
+    }
+
+    public function report(Request $request, $id): JsonResponse
+    {
+        $authenticatedUser = $request->attributes->get('user');
+        $user = User::where('id', $id)
+            ->select('id')
+            ->first();
+
+        $validated = $request->validate([
+            'reason' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000'
+        ]);
+
+        $report = Report::create([
+            'reporter_id' => auth()->id(),
+            'reported_user_id' => $user->id,
+            'reason' => $validated['reason'],
+            'description' => $validated['description'] ?? null,
+            'status' => 'pending'
+        ]);
+
+        return response()->json([
+            'message' => 'Report submitted successfully',
+            'report' => $report
+        ], 201);
+    }
+
+    public function getStats(Request $request, $id): JsonResponse
+    {
+        $authenticatedUser = $request->attributes->get('user');
+        $user = User::where('id', $id)
+            ->select('id')
+            ->first();
+
+        $user = $request->attributes->get('user');
+        return response()->json([
+            'stars_count' => $user->starredBy()->count(),
+            'is_starred' => $authenticatedUser->hasStarred($user) ,
+            'is_blocked' => $authenticatedUser->hasBlocked($user) ,
+        ]);
+    }
 
 }
