@@ -72,4 +72,24 @@ class Friend extends Model
         });
     }
 
+    public static function getFriendCount(string| int $id, string $search = null) {
+        return self::where(function ($query) use ($id) {
+            $query->where('user1_id', $id)
+                ->orWhere('user2_id', $id);
+        })
+            ->when($search, function($query) use ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->whereHas('user1', function($q1) use ($search) {
+                        $q1->where('name', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('user2', function($q2) use ($search) {
+                        $q2->where('name', 'LIKE', "%{$search}%");
+                    });
+                });
+            })
+            ->where('status', 'accepted')
+            ->count();
+    }
+
+
 }
