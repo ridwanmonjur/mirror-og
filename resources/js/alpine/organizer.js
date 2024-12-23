@@ -1,6 +1,7 @@
 import Alpine from "alpinejs";
 import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "./resetBg";
+import { alpineProfileData, openModal } from "./followers";
 
 const input = document.querySelector("#phone");
 window.intlTelInput(input, {
@@ -28,73 +29,6 @@ myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
 initOffCanvasListeners();
 
 
-function alpineProfileData(userId) {
-    return () => ({
-        role: "ORGANIZER",
-        userId: userId,
-        profile: {},
-        connections: [],
-        count: 0,
-        page: 0,
-        next_page: false,
-        initialFetch: false,
-        async openModal() {
-            if (!this.connections[0] && !this.initialFetch) {
-                await this.loadPage(1);
-            }
-
-            let modalElement = document.getElementById("connectionModal");
-            window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
-            this.initialFetch = true;
-        },
-
-        async loadNextPage() {
-            if (this.next_page) {
-                await this.loadPage(this.page + 1);
-            }
-        },
-        formatDate(date) {
-            return DateTime
-                .fromISO(date)
-                .toRelative();
-        },
-
-        async loadPage(page) {
-            try {
-                const response = await fetch(
-                    `/api/user/${this.userId}/connections?type=followers&page=${page}&role=${this.role}`
-                );
-
-                const data = await response.json();
-                let { followers } = data?.connections;
-                if (!followers) return;
-                if (followers) {
-                    if (this.page) {
-                        this.page += 1;
-                        this.connections = [
-                            ...this.connections,
-                            ...followers.data
-                        ];
-
-                    } else {
-                        this.page = 1;
-                        this.connections = [
-                            ...followers.data
-                        ];
-                    }
-
-                    this.next_page = followers?.next_page_url  ?
-                        true : false;
-                }
-            } catch (error) {
-                console.error('Failed to load page:', error);
-            }
-        },
-
-    });
-}
-
-Alpine.data('profileStatsData', alpineProfileData(initialUserProfile.id));
 
 Alpine.data('alpineDataComponent', function () {
     return ({
@@ -173,12 +107,12 @@ Alpine.data('alpineDataComponent', function () {
                 element.style.cssText += fontStyles;
             });
 
-        
-
-
         },
 
     })
 })
+
+Alpine.data('profileData', alpineProfileData(initialUserProfile.id, initialUserProfile.role));
+window.openModal = openModal;
 
 Alpine.start();

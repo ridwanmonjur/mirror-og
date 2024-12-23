@@ -120,8 +120,8 @@
 
         <div :class="{'upload-container': true, }">
             <label class="upload-label">
-                <div class="circle-container">
-                    <div class="uploaded-image motion-logo mt-3"
+                <div class="circle-container mt-3">
+                    <div class="uploaded-image motion-logo "
                         style="background-image: url({{ '/storage' . '/'. $selectTeam->teamBanner  }} ), url({{asset('assets/images/404.png')}}) ; object-fit:cover; {{$frameStyles}}"
                     ></div>
                     <div class="d-flex align-items-center justify-content-center upload-button pt-3">
@@ -406,9 +406,11 @@
                     </svg>
                     <span>{{$acceptedTeamMemberCount}}/{{$leftPlusAcceptedTeamMemberCount}} Members </span>
                 </div>
-                <div class="col-12 col-lg-4 text-center mx-auto"> 
+                <div onclick="openModal('followers')" class="position-relative col-12 col-lg-4 text-center mx-auto cursor-pointer"
+                    style="z-index: 999 !important; "
+                > 
                     <span class="me-2"> 🙋‍♂️ </span>
-                    <span>{{ is_null($selectTeam?->profile?->follower_count) ? 0 : $selectTeam?->profile?->follower_count }} Followers</span>
+                    <span >{{ is_null($selectTeam?->profile?->follower_count) ? 0 : $selectTeam?->profile?->follower_count }} Followers</span>
                 </div>
                 <div class="col-12 col-lg-4 text-center mx-auto"> 
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi me-2 bi-calendar-date" viewBox="0 0 16 16">
@@ -420,10 +422,14 @@
             
             </div>
             @if ($status == "accepted_me" || $status == "accepted_team")
-                <div x-cloak x-show="!isEditMode" class="position-absolute d-flex w-100 justify-content-end py-0 my-0 mt-2" style="bottom: 20px;">
-                    <button class="bg-red px-3 btn rounded-pill btn-sm py-2 text-white "
+                <div  class="position-absolute d-flex w-100 justify-content-end py-0 my-0 mt-2" style="bottom: 20px;">
+                    <button x-cloak x-show="!isEditMode" class="bg-red px-3 btn rounded-pill btn-sm py-2 text-white "
                         onclick="disapproveMember({{ $teamMember->id }})"
                     >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-box-arrow-in-right me-1" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>
+                        <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                        </svg>
                         Leave Team
                     </button>
                 </div>
@@ -432,8 +438,9 @@
        
     </div>
 </main>
+@include('Shared.ProfileStatsModal')
 @include('Participant.__Partials.BackgroundModal')
-    <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
+<script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
 
 <script src="{{ asset('/assets/js/participant/TeamHead.js') }}"></script>
 

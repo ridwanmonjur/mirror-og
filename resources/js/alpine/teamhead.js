@@ -1,6 +1,7 @@
 import Alpine from "alpinejs";
 import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "./resetBg";
+import { alpineProfileData, openModal } from "./followers";
 
 const myOffcanvas = document.getElementById('profileDrawer');
 myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
@@ -141,8 +142,8 @@ window.formatDateMySqlLuxon = (mysqlDate, mysqlTime) => {
     return `${formattedDate} at ${formattedTime}`;
 }
 
-Alpine.data('followerFormComponent', () => {
-
-});
+let role = "TEAM";
+Alpine.data('profileData', alpineProfileData(teamData.id, role));
+window.openModal = openModal;
 
 Alpine.start();
