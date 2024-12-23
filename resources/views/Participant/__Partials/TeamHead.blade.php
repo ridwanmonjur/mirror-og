@@ -438,7 +438,7 @@
        
     </div>
 </main>
-@include('Shared.ProfileStatsModal')
+@include('__CommonPartials.ProfileStatsModal')
 @include('Participant.__Partials.BackgroundModal')
 <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
 

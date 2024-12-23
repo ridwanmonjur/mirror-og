@@ -175,7 +175,7 @@
                                     </span>
                                 </span>
                             </span>
-                            @include('Shared.ProfileStatsModal')
+                            @include('__CommonPartials.ProfileStatsModal')
 
                         </div>
                         @if ($isOwnProfile)

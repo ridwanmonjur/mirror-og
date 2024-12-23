@@ -79,3 +79,17 @@ function getRandomColorBg() {
 }
 
 applyRandomColorsAndShapes();
+
+function applyRandomBorderColor() {
+  const circles = document.querySelectorAll('.random-border-circle');
+
+  circles.forEach(circle => {
+      const randomColor = getRandomColor();
+      circle.style.borderColor = randomColor;
+      circle.style.borderWidth = '2px';
+      circle.style.borderStyle = 'solid';
+      circle.style.borderRadius = '50%';
+  });
+};
+
+applyRandomBorderColor();

@@ -295,6 +295,9 @@ class SocialController extends Controller
 
     public function getConnections(Request $request, $id)
     {
+        $loggedUser = $request->attributes->get('user');
+        $loggedUserId = $loggedUser?->id;
+        $loggedUserRole = $loggedUser?->role; 
         $type = $request->input('type', 'all');
         $role = $request->input('role', 'ORGANIZER');
         $page = $request->input('page', 1);
@@ -323,7 +326,7 @@ class SocialController extends Controller
             $data = match($type) {
                 'followers' => $followers,
                 'following' => ParticipantFollow::getFollowingPaginate($id, $perPage, $page, $search),
-                'friends' => Friend::getFriendsPaginate($id, $perPage, $page, $search),
+                'friends' => Friend::getFriendsPaginate($id, $loggedUserId, $loggedUserRole, $perPage, $page, $search),
                 default => throw new \InvalidArgumentException('Invalid connection type')
             };
             $response['connections'] = [$type => $data];

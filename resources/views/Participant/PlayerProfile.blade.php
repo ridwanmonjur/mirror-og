@@ -362,7 +362,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @include('Shared.ProfileStatsModal')
+                            @include('__CommonPartials.ProfileStatsModal')
                         </div>
                         <br><br>
 
