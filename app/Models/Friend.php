@@ -63,27 +63,27 @@ class Friend extends Model
                   ->orWhere('user2_id', $userId);
         })
         ->where('status', 'accepted')
-        ->leftJoin('friends as logged_user_friends', function($join) use ($loggedUserId) {
-            $join->where(function($query) use ($loggedUserId) {
-                $query->where('logged_user_friends.user1_id', $loggedUserId)
-                      ->orWhere('logged_user_friends.user2_id', $loggedUserId);
-            })
-            ->where('logged_user_friends.status', ['accepted', 'pending']);
-        })
-        ->leftJoin('blocks', function($join) use ($loggedUserId, $userId) {
-            $join->where('block.user1_id', $loggedUserId)
-                ->where('block.blocked_user_id', $userId);
-        })
-        ->leftJoin('reports', function($join) use ($loggedUserId, $userId) {
-            $join->where('reports.reporter_id', $loggedUserId)
-                ->where('reports.reported_user_id', $userId);
-        })
-        ->when($loggedUserRole === 'ORGANIZER', function ($query) use ($loggedUserId, $userId) {
-            $query->leftJoin('organizer_follows', 'participant_user_id' , $loggedUserId);
-        })
-        ->when($loggedUserRole === 'PARTICIPANT', function ($query) use ($loggedUserId, $userId) {
-            $query->leftJoin('participant_follows', 'prganizer_user_id' , $loggedUserId);
-        })
+        // ->leftJoin('friends as logged_user_friends', function($join) use ($loggedUserId) {
+        //     $join->where(function($query) use ($loggedUserId) {
+        //         $query->where('logged_user_friends.user1_id', $loggedUserId)
+        //               ->orWhere('logged_user_friends.user2_id', $loggedUserId);
+        //     })
+        //     ->where('logged_user_friends.status', ['accepted', 'pending']);
+        // })
+        // ->leftJoin('blocks', function($join) use ($loggedUserId, $userId) {
+        //     $join->where('block.user1_id', $loggedUserId)
+        //         ->where('block.blocked_user_id', $userId);
+        // })
+        // ->leftJoin('reports', function($join) use ($loggedUserId, $userId) {
+        //     $join->where('reports.reporter_id', $loggedUserId)
+        //         ->where('reports.reported_user_id', $userId);
+        // })
+        // ->when($loggedUserRole === 'ORGANIZER', function ($query) use ($loggedUserId, $userId) {
+        //     $query->leftJoin('organizer_follows', 'participant_user_id' , $loggedUserId);
+        // })
+        // ->when($loggedUserRole === 'PARTICIPANT', function ($query) use ($loggedUserId, $userId) {
+        //     $query->leftJoin('participant_follows', 'prganizer_user_id' , $loggedUserId);
+        // })
         
         ->where(function ($query) use ($search) {
             if ($search) {

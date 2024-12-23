@@ -70,12 +70,12 @@
                                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                                     </svg>
                                 </span>
-                                <input id="search-connections" @input.debounce="loadSearch" type="search" class=" form-control ps-3 border-start-0 ps-0 pe-4" placeholder="Search..." aria-label="Search">
+                                <input id="search-connections" @input.debounce="loadSearch" type="search" class=" form-control ps-2 border-start-0 ps-0 pe-4" placeholder="Search..." aria-label="Search">
                             </div>
                         </div>
                     </div>
                     <!-- Profile Info -->
-                    <div class="table-responsive">
+                    <div>
                         <template x-if="!connections || !connections[0]">
                             <div>
                                 <br>
@@ -84,77 +84,73 @@
                         </template>
                         <template x-if="connections || connections[0]">
                             <div>
-                                <table class="member-table table responsive member-table mb-0 fs-7" >
-                                    <tbody>
-                                        <template x-for="user in connections" :key="user.id">
-                                            <tr>
-                                                <td class="text-center px-3 py-2" style="width: 50px;">
+                                <div class="mt-3 px-0 justify-content-center grid-2-columns mx-auto " >
+                                    <template x-for="(user, index) in connections" :key="user.id">
+                                        
+                                        <div class=" border border-secondary mx-3 mb-3 py-4 px-2" 
+                                            style="border-radius: 20px; padding-top: 10px; padding-bottom: 10px;"
+                                        >                                            
+                                            <div class=" d-flex align-items-start justify-content-between">
+                                                <div class="d-flex align-items-start">
                                                     <a :href="`/view/${user?.role?.toLowerCase()}/${user.id}` ">
-                                                        <svg class="cursor-pointer"
-                                                            xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                            fill="currentColor" viewBox="0 0 16 16">
-                                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                                                            <path
-                                                                d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                                                        </svg>
-                                                    </a>
-                                                </td>
-                                                <td class="py-2 px-3">
-                                                    <div class="d-flex align-items-center">
                                                         <img :src="'/storage/' + user.userBanner"
-                                                            class="rounded-circle object-fit-cover border border-primary me-3" width="25" height="25"
-                                                            onerror="this.src='/assets/images/404.png';"
-                                                        >
-                                                        <span x-text="user.name"></span>
-                                                    </div>
-                                                </td>
-                                                <td class="py-2 px-3" x-text="user.email"></td>
-                                                <td class="py-2 px-3" x-text="formatDate(user.created_at)"></td>
-                                                <td>
-                                                    <div class="dropdown  dropdown-stats">
-                                                        <button class="btn btn-light border-0 shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                                <circle cx="12" cy="12" r="1"></circle>
-                                                                <circle cx="19" cy="12" r="1"></circle>
-                                                                <circle cx="5" cy="12" r="1"></circle>
-                                                            </svg>
-                                                        </button>
-                                                        <ul class="dropdown-menu  dropdown-menu-end" style="padding: 2px ;">
-                                                            <li>
-                                                                <a class="dropdown-item ms-0 py-1" href="#">
-                                                                    <svg class="me-1 mt-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                                                                    </svg>
-                                                                    Send Messages
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a class="dropdown-item ms-0 py-1 " href="#">
-                                                                    <svg class="me-1 mt-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                                        <circle cx="12" cy="12" r="10"></circle>
-                                                                        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
-                                                                    </svg>
-                                                                    Block Chat
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a class="dropdown-item ms-0 report-item py-1 " href="#">
-                                                                    <svg class="text-red me-1 mt-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                                        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-                                                                        <line x1="4" y1="22" x2="4" y2="15"></line>
-                                                                    </svg>
-                                                                    <span class="text-red py-0 my-0"> Report User </span>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                        class="rounded-circle object-fit-cover border border-secondary me-2"
+                                                        width="70" height="70"
+                                                        onerror="this.src='/assets/images/404.png';">
+                                                    </a>
+                                                    
+                                                    <div class="text-start">
+                                                        <h6 class="card-title mb-1  text-truncate" x-text="user.name"></h6>
+                                                        <p class="card-text mb-0 mt-2" style="color: gray;" x-text="user.email"></p>
+                                                        <div class="mt-2">
+                                                            <button class="btn btn-primary btn-sm px-3 text-light rounded-pill me-2">Add Friend </button>
+                                                            <button class="btn btn-primary btn-sm px-3 text-light rounded-pill">Follow </button>
 
-                                                </td>
-                                            </tr>
-                                        </template>
-                                    </tbody>
-                                </table>
-                              
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="dropdown">
+                                                    <button class="btn btn-link px-0 border-0 shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <circle cx="12" cy="12" r="1"></circle>
+                                                            <circle cx="19" cy="12" r="1"></circle>
+                                                            <circle cx="5" cy="12" r="1"></circle>
+                                                        </svg>
+                                                    </button>
+                                                    <ul class="dropdown-menu  dropdown-menu-end" style="padding: 2px ;">
+                                                        <li>
+                                                            <a class="dropdown-item ms-0 py-1" href="#">
+                                                                <svg class="me-1 mt-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                                                </svg>
+                                                                Send Messages
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item ms-0 py-1 " href="#">
+                                                                <svg class="me-1 mt-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                                                                </svg>
+                                                                Block Chat
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item ms-0 report-item py-1 " href="#">
+                                                                <svg class="text-red me-1 mt-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                                                    <line x1="4" y1="22" x2="4" y2="15"></line>
+                                                                </svg>
+                                                                <span class="text-red py-0 my-0"> Report User </span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
                             </div>
                         </template>
 
