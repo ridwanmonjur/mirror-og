@@ -298,7 +298,7 @@ class SocialController extends Controller
         $role = $request->input('role', 'ORGANIZER');
         $page = $request->input('page', 1);
         $search = $request->input('search');
-        $perPage = 5;
+        $perPage = 6;
         $response = [];
 
         if ($type === 'all') {
