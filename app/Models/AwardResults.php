@@ -16,7 +16,7 @@ class AwardResults extends Model
     {
         return DB::table('join_events')
             ->where('join_events.event_details_id', '=', $id)
-            ->where('join_events.join_status', '=', 'confirmed')
+            // ->where('join_events.join_status', '=', 'confirmed')
             ->leftJoin('teams', 'join_events.team_id', '=', 'teams.id')
             ->join('awards_results', 'join_events.id', '=', 'awards_results.join_events_id')
             ->join('awards', 'awards_results.award_id', '=', 'awards.id')
@@ -25,6 +25,7 @@ class AwardResults extends Model
                 'join_events.id as id1',
                 'join_events.event_details_id',
                 'join_events.team_id',
+                'join_events.join_status',
                 'teams.*',
                 'awards_results.id as results_id',
                 'awards_results.award_id',

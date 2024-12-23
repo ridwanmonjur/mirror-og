@@ -344,7 +344,25 @@
                             </span>
                         </div>
                         <div class="mt-4 my-2 text-wrap">
-                            @include('Participant.__ProfilePartials.ProfileStats')
+                            <div x-data="profileStatsData" class="mt-4">
+                                <!-- Tabs -->
+                                <div x-cloak x-show="!loading">
+                                    <div class="" style="color: inherit !important;">
+                                        <span class=" cursor-pointer ps-0 me-4" x-on:click="openModal('followers')">
+                                            <span x-text="count['followers']  ?? '0'"> </span> Followers
+                                        </span>
+                                        <span class=" cursor-pointer ps-0 me-4" x-on:click="openModal('following')">
+                                            <span x-text="count['following'] ?? '0'"> </span>
+                                            Following
+                                        </span>
+                                        <span class="cursor-pointer ps-0 me-4" x-on:click="openModal('friends')">
+                                            <span x-text="count['friends'] ?? '0'"> </span>
+                                            Friends
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            @include('__CommonPartials.ProfileStatsModal')
                         </div>
                         <br><br>
 

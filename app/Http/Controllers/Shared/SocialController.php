@@ -13,13 +13,16 @@ use App\Models\Friend;
 use App\Models\JoinEvent;
 use App\Models\Like;
 use App\Models\OrganizerFollow;
+use App\Models\TeamFollow;
 use App\Models\Participant;
 use App\Models\ParticipantFollow;
+use App\Models\Report;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -292,59 +295,38 @@ class SocialController extends Controller
 
     public function getConnections(Request $request, $id)
     {
+        $loggedUser = $request->attributes->get('user');
+        $loggedUserId = $loggedUser?->id;
+        $loggedUserRole = $loggedUser?->role; 
         $type = $request->input('type', 'all');
         $role = $request->input('role', 'ORGANIZER');
         $page = $request->input('page', 1);
         $search = $request->input('search');
-        $perPage = 5;
+        $perPage = 6;
         $response = [];
 
         if ($type === 'all') {
-            if ($role == 'ORGANIZER') {
+            if ($role == 'PARTICIPANT') {
                 $response['count'] = [
-                    'followers' => OrganizerFollow::getOrganizerFollowersPaginate($id, $perPage, $search)
+                    'followers' => ParticipantFollow::getFollowerCount($id, $search),
+                    'following' => ParticipantFollow::getFolloweeCount($id, $search),
+                    'friends' =>  Friend::getFriendCount($id, $search)
                 ];
-            } else {
-                $response['count'] = [
-                    'followers' => ParticipantFollow::where('participant_followee', $id)
-                        ->when($search, function($query) use ($search) {
-                            $query->whereHas('followerUser', function($q) use ($search) {
-                                $q->where('name', 'LIKE', "%{$search}%");
-                            });
-                        })
-                        ->count(),
-                    'following' => ParticipantFollow::where('participant_follower', $id)
-                        ->when($search, function($query) use ($search) {
-                            $query->whereHas('followeeUser', function($q) use ($search) {
-                                $q->where('name', 'LIKE', "%{$search}%");
-                            });
-                        })
-                        ->count(),
-                    'friends' =>  Friend::where(function ($query) use ($id) {
-                        $query->where('user1_id', $id)
-                            ->orWhere('user2_id', $id);
-                    })
-                        ->when($search, function($query) use ($search) {
-                            $query->where(function($q) use ($search) {
-                                $q->whereHas('user1', function($q1) use ($search) {
-                                    $q1->where('name', 'LIKE', "%{$search}%");
-                                })
-                                ->orWhereHas('user2', function($q2) use ($search) {
-                                    $q2->where('name', 'LIKE', "%{$search}%");
-                                });
-                            });
-                        })
-                        ->where('status', 'accepted')
-                        ->count()
-                ];
-            }
+            } 
         } else {
+            $followers = null;
+            if ($role === "ORGANIZER") {
+                $followers = OrganizerFollow::getOrganizerFollowersPaginate($id, $perPage, $page, $search);
+            } elseif ($role === "PARTICIPANT") {
+                $followers = ParticipantFollow::getFollowersPaginate($id, $perPage, $page, $search);
+            } else {
+                $followers = TeamFollow::getFollowersPaginate($id, $perPage, $page, $search);
+            }
+            
             $data = match($type) {
-                'followers' => $role == 'ORGANIZER' 
-                    ? OrganizerFollow::getOrganizerFollowersPaginate($id, $perPage, $page, $search)
-                    : ParticipantFollow::getFollowersPaginate($id, $perPage, $page, $search),
+                'followers' => $followers,
                 'following' => ParticipantFollow::getFollowingPaginate($id, $perPage, $page, $search),
-                'friends' => Friend::getFriendsPaginate($id, $perPage, $page, $search),
+                'friends' => Friend::getFriendsPaginate($id, $loggedUserId, $loggedUserRole, $perPage, $page, $search),
                 default => throw new \InvalidArgumentException('Invalid connection type')
             };
             $response['connections'] = [$type => $data];
@@ -353,6 +335,89 @@ class SocialController extends Controller
         return response()->json($response);
     }
 
-  
+    public function toggleStar(Request $request, $id): JsonResponse
+    {
+        $authenticatedUser = $request->attributes->get('user');
+        $user = User::where('id', $id)
+            ->select('id')
+            ->first();
+        
+        if ($authenticatedUser->hasStarred($user)) {
+            $authenticatedUser->stars()->detach($user);
+            $message = 'User unstarred successfully';
+        } else {
+            $authenticatedUser->stars()->attach($user);
+            $message = 'User starred successfully';
+        }
+
+        return response()->json([
+            'message' => $message,
+            'is_starred' => $authenticatedUser->hasStarred($user)
+        ]);
+    }
+
+    public function toggleBlock(Request $request, $id): JsonResponse
+    {
+        $authenticatedUser = $request->attributes->get('user');
+        $user = User::where('id', $id)
+            ->select('id')
+            ->first();
+        
+        if ($authenticatedUser->hasBlocked($user)) {
+            $authenticatedUser->blocks()->detach($user);
+            $message = 'User unblocked successfully';
+        } else {
+            $authenticatedUser->blocks()->attach($user);
+            // Also remove any existing stars when blocking
+            $authenticatedUser->stars()->detach($user);
+            $message = 'User blocked successfully';
+        }
+
+        return response()->json([
+            'message' => $message,
+            'is_blocked' => $authenticatedUser->hasBlocked($user)
+        ]);
+    }
+
+    public function report(Request $request, $id): JsonResponse
+    {
+        $authenticatedUser = $request->attributes->get('user');
+        $user = User::where('id', $id)
+            ->select('id')
+            ->first();
+
+        $validated = $request->validate([
+            'reason' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000'
+        ]);
+
+        $report = Report::create([
+            'reporter_id' => auth()->id(),
+            'reported_user_id' => $user->id,
+            'reason' => $validated['reason'],
+            'description' => $validated['description'] ?? null,
+            'status' => 'pending'
+        ]);
+
+        return response()->json([
+            'message' => 'Report submitted successfully',
+            'report' => $report
+        ], 201);
+    }
+
+    public function getStats(Request $request, $id): JsonResponse
+    {
+        $authenticatedUser = $request->attributes->get('user');
+        $user = User::where('id', $id)
+            ->select('id')
+            ->first();
+
+        $user = $request->attributes->get('user');
+        return response()->json([
+            'stars_count' => $user->starredBy()->count(),
+            'is_starred' => $authenticatedUser->hasStarred($user) ,
+            'is_blocked' => $authenticatedUser->hasBlocked($user) ,
+        ]);
+    }
 
 }

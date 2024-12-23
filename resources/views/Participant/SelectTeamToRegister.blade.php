@@ -47,7 +47,7 @@
                                     <div class="px-0 py-0 mx-0 my-2 cursor-pointer"
                                         onclick="selectOption(this, '{{ addslashes($item->teamName) }}', '{{ $item->id }}')">
                                         <img src="{{ '/storage' . '/' . $item->teamBanner }}" width="35px"
-                                            height="35px" class="rounded-circle object-fit-cover"
+                                            height="35px" class="rounded-circle border border-secondary object-fit-cover"
                                             onerror="this.onerror=null;this.src='/assets/images/404.png';">
                                         <a class="d-inline" data-team-id="{{ $item->id }}">{{ $item->teamName }}
                                         </a>

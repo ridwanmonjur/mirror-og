@@ -1,6 +1,7 @@
 import Alpine from "alpinejs";
 import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "./resetBg";
+import { alpineProfileData, openModal } from "./followers";
 
 let userData = JSON.parse(document.getElementById('initialUserData').value);
 let participantData = JSON.parse(document.getElementById('initialParticipantData').value);
@@ -154,7 +155,7 @@ function createActivityLogsData(userId, duration) {
         async loadMore() {
             try {
                 const response = await fetch(
-                    `/api/activity-logs?userId=${this.userId}&duration=${this.duration}&page=${this.page}`
+                    `/api/activity-logs?userId=${userId}&duration=${this.duration}&page=${this.page}`
                 );
                 const data = await response.json();
                 
@@ -180,16 +181,10 @@ activityTypes.forEach(type => {
     Alpine.data(`${type}Activities`, createActivityLogsData(userId, type));
 });
 
-function alpineProfileData(userId) {
+function alpineProfileStatsData(userId, role) {
     return () => ({
-        role: "PARTICIPANT",
-        userId: userId,
-        profile: {},
-        connections: {},
         count: {},
-        page: {},
-        next_page: {},
-        currentTab: 'followers',
+        loading: true,
         
         async init() {
             await this.loadInitialData();
@@ -197,157 +192,24 @@ function alpineProfileData(userId) {
         
         async loadInitialData() {
             try {
-                const response = await fetch(`/api/user/${this.userId}/connections?type=all&role=${this.role}`);
+                const response = await fetch(`/api/user/${userId}/connections?type=all&role=${role}`);
                 const data = await response.json();
                 this.count = data.count;
+                this.loading = false;
             } catch (error) {
                 console.error('Failed to load profile data:', error);
             }
         },
         
-        async openModal(type) {
-            this.currentTab = type;
-
-            if (!this.connections[type]) {
-                await this.loadPage(1);
-            } 
-            
-            let modalElement = document.getElementById("connectionModal");
-            window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
+        openModal(type) {
+            openModal(type);
         },
-
-        async loadNextPage(){
-            if (this.next_page[this.currentTab]) {
-                await this.loadPage(this.page[this.currentTab] + 1);
-            }
-        },
-
-        async resetSearch(tab) {
-            const searchInput = document.getElementById('search-connections');
-            searchInput.value = "";
-            await this.loadSearch();
-            this.currentTab = tab;
-        },
-
-        async blockUser(connectionId) {
-
-        },
-
-        async starUnstarUser(connectionId) {
-
-        },
-
-        async reportUser(connectionId) {
-
-        },
-
-        async searchUser(connectionId) {
-
-        },
-
-        async loadSearch () {
-            let page = 0;
-            const searchInput = document.getElementById('search-connections');
-            let tab = this.currentTab;
-            if (tab in this.page) {
-                page = this.page[tab];
-            } 
-
-            let url = `/api/user/${this.userId}/connections?type=${tab}&page=${page}&role=${this.role}`;
-            let searchValue = searchInput.value.trim();
-            if (searchValue != "") {
-                url += `&search=${searchValue}`;
-            }
-
-            const response = await fetch( url );
-            const data = await response.json();
-            if (tab in data.connections)  {
-                
-                this.page = {
-                    ...this.page,
-                    [tab]: 1
-                };
-
-                this.connections = {
-                    ...this.connections,
-                    [tab]: data.connections[tab].data
-                } ;
-
-                this.next_page = {
-                    ...this.next_page,
-                    [tab]:  data.connections[tab]?.next_page_url != null ?
-                    true: false
-                }; 
-            }
-
-        },
-
-        async loadPage(page) {
-            const searchInput = document.getElementById('search-connections');
-            try {
-                let tab = this.currentTab;
-                let url = `/api/user/${this.userId}/connections?type=${tab}&page=${page}&role=${this.role}`;
-                let searchValue = searchInput.value.trim();
-                if (searchValue != "") {
-                    url += `&search=${searchValue}`;
-                }
-
-                const response = await fetch( url );
-                const data = await response.json();
-                if (tab in data.connections)  {
-                    if (this.page[tab]) {
-                        let newTab = this.page[tab];
-                        newTab++;
-                        this.page = {
-                            ...this.page,
-                            [tab]: newTab
-                        };
-
-                        this.connections = {
-                            ...this.connections,
-                            [tab]: [
-                                ...this.connections[tab],
-                                ...data.connections[tab].data
-                            ]
-                        } ;
-                       
-                       
-                    } else {
-                        this.page = {
-                            ...this.page,
-                            [tab]: 1
-                        };
-
-                        this.connections = {
-                            ...this.connections,
-                            [tab]: data.connections[tab].data
-                        } ;
-                       
-                    }
-                  
-
-                    this.next_page = {
-                        ...this.next_page,
-                        [tab]:  data.connections[tab]?.next_page_url != null ?
-                        true: false
-                    }; 
-
-               
-                }
-            } catch (error) {
-                console.error('Failed to load page:', error);
-            }
-        },
-        formatDate(date) {
-            return  DateTime
-                .fromISO(date)
-                .toRelative();
-        }
-
     });
 }
 
-Alpine.data('profileStatsData', alpineProfileData(userId));
+let role = "PARTICIPANT";
+Alpine.data('profileData', alpineProfileData(userId, role));
+Alpine.data('profileStatsData', alpineProfileStatsData(userId, role));
 
 
 Alpine.start();

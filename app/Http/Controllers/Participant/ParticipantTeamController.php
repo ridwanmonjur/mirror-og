@@ -149,7 +149,6 @@ class ParticipantTeamController extends Controller
             
             $cacheKey = sprintf(config('cache.keys.user_team_follows'), $user->id);
             Cache::forget($cacheKey);
-            session()->flash('successJoin', $statusMessage);
             return back();
         }  catch(Exception $e) {
             session()->flash('errorJoin', $e->getMessage());

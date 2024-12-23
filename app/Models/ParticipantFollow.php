@@ -85,5 +85,25 @@ class ParticipantFollow extends Model
             });
     }
 
+    public static function getFollowerCount(string| int $id, string $search = null) {
+        return self::where('participant_followee', $id)
+            ->when($search, function($query) use ($search) {
+                $query->whereHas('followerUser', function($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%");
+                });
+            })
+            ->count();
+    }
+
+    public static function getFolloweeCount(string| int $id, string $search = null) {
+        return self::where('participant_follower', $id)
+            ->when($search, function($query) use ($search) {
+                $query->whereHas('followeeUser', function($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%");
+                });
+            })
+            ->count();
+    }
+
 
 }

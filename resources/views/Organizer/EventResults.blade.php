@@ -53,14 +53,14 @@
                             <div>
                                 <img {!! trustedBladeHandleImageFailureBanner() !!}
                                     src="{{ '/storage' . '/'.  $event->eventBanner }}"
-                                    class="object-fit-cover rounded-circle me-1" width="30" height="30"
+                                    class="object-fit-cover border border-primary rounded-circle me-1" width="30" height="30"
                                 >
                                 <p class=" d-inline my-0 ms-2"> {{ $event->eventName }} </p>
                             </div>
                             <div class="d-flex mt-3 mb-2 justify-content-start">
                                 <img {!! trustedBladeHandleImageFailureBanner() !!} 
                                     src="{{ '/storage' . '/'. $event?->user?->userBanner }}" width="30"
-                                    height="30" class="me-1 rounded-circle object-fit-cover random-color-circle"
+                                    height="30" class="me-1 border border-warning rounded-circle object-fit-cover "
                                 >
                                 <div class="ms-2">
                                     <small class="d-block py-0 my-0">
@@ -102,6 +102,10 @@
                                         </th>
 
                                         <th class="text-start" >
+                                            Join Status
+                                        </th>
+
+                                        <th class="text-start" >
                                             Team Created
                                         </th>
                                        
@@ -120,7 +124,7 @@
                                                     </svg>
                                                 </td>
                                                 
-                                                <td class="coloured-cell px-2 text-start" style="width: 40%;">
+                                                <td class="coloured-cell px-2 text-start" style="width: 30%;">
                                                     <img
                                                         class="rounded-circle d-inline-block object-fit-cover me-3"
                                                         src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"
@@ -130,10 +134,14 @@
                                                     > 
                                                     {{ $joinEventAndTeam->teamName }}
                                                 </td>
-                                                   <td class="coloured-cell text-start px-2 w-25">
+                                                   <td class="coloured-cell text-start px-2 ">
                                                     {{ $joinEventAndTeam->position ? $joinEventAndTeam->position : '-' }}
                                                 </td>
-                                                <td class="coloured-cell px-2 text-start w-25">
+                                                </td>
+                                                   <td class="coloured-cell text-start px-2 ">
+                                                    {{ $joinEventAndTeam->join_status }}
+                                                </td>
+                                                <td class="coloured-cell px-2 text-start ">
                                                     {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
                                                 </td>
                                             
@@ -230,6 +238,9 @@
                                          <th class="text-start">
                                             Team Name
                                         </th>
+                                          <th class="text-start">
+                                            Team Status
+                                        </th>
                                         <th class="text-start">
                                             Award
                                         </th>
@@ -262,6 +273,9 @@
                                                         width="40"
                                                         > 
                                                         {{ $joinEventAndTeam->teamName }}
+                                                    </td>
+                                                    <td  class="coloured-cell text-start px-2">
+                                                        {{ $joinEventAndTeam->join_status }}
                                                     </td>
                                                     <td class="coloured-cell text-start px-2">
                                                         @if (is_null($joinEventAndTeam->awards_image))
@@ -400,15 +414,16 @@
                                         <th class="text-start">
                                             Team Name
                                         </th>
-                                       
+                                          <th class="text-start">
+                                            Join Status
+                                        </th>
                                         <th class="text-start">
                                             Achievement
                                         </th>
+                                       
                                         <th class="text-start">
                                             Description
                                         </th>
-                                      
-                                     
                                       
                                     </thead>
                                     <tbody class="accepted-member-table text-start">
@@ -424,7 +439,7 @@
                                                                 d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
                                                         </svg>
                                                     </td>
-                                                    <td class="coloured-cell px-2 text-start w-25">
+                                                    <td class="coloured-cell px-2 text-start ">
                                                         <img
                                                         class="rounded-circle d-inline-block object-fit-cover me-3"
                                                         src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"
@@ -434,14 +449,16 @@
                                                         > 
                                                         {{ $joinEventAndTeam->teamName }}
                                                     </td>
-                                                    <td class="coloured-cell text-center px-2 w-25"> 
+                                                    <td class="coloured-cell text-center px-2"> 
+                                                        {{ $joinEventAndTeam->join_status }} 
+                                                    </td>
+                                                    <td class="coloured-cell text-center px-2 "> 
                                                         {{ $joinEventAndTeam->achievements_title ? $joinEventAndTeam->achievements_title : '' }} 
                                                         ({{ \Carbon\Carbon::parse($joinEventAndTeam->achievements_created_at)->format('Y') }})
                                                     </td>
                                                     <td class="coloured-cell px-2 text-start" style="width: 40%;">
                                                         {{ $joinEventAndTeam->achievements_description }}
                                                     </td>
-                                                    
                                                    
                                                     <td class="colorless-col text-center  px-1 ps-2 pt-2 text-lg-start text-center">
                                                         <svg onclick="deleteAchievement({{ $joinEventAndTeam->achievements_id }})"

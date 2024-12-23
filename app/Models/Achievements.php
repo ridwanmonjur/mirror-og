@@ -21,13 +21,14 @@ class Achievements extends Model
     {
         return DB::table('join_events')
             ->where('join_events.event_details_id', '=', $id)
-            ->where('join_status', 'confirmed')
+            // ->where('join_status', 'confirmed')
             ->leftJoin('teams', 'join_events.team_id', '=', 'teams.id')
             ->join('achievements', 'join_events.id', '=', 'achievements.join_event_id')
             ->select(
                 'join_events.id as id1',
                 'join_events.event_details_id',
                 'join_events.team_id',
+                'join_events.join_status',
                 'teams.*',
                 'achievements.id as achievements_id',
                 'achievements.title as achievements_title',

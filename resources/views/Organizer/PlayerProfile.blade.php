@@ -162,13 +162,21 @@
                         <h5 >
                             {{$userProfile->name}}
                         </h5>
-                        <div class="my-2" x-data="profileStatsData"> 
+                        <div class="my-2"> 
                             <span class="me-2"> </span>
                             <span class="me-3" x-text="organizer.industry"> </span>
                             <span class="me-1"> 
                                 🙋‍♂️
                             </span>
-                            @include('Organizer.__ProfilePartials.ProfileStats')
+                            <span class="d-inline p-0 m-0" style="display: inline !important;">
+                                <span class="cursor-pointer d-inline ps-0" onclick="openModal('followers')">
+                                    <span data-count="{{ $followersCount }}"> {{ $followersCount }}
+                                        follower{{ bladePluralPrefix($followersCount) }}
+                                    </span>
+                                </span>
+                            </span>
+                            @include('__CommonPartials.ProfileStatsModal')
+
                         </div>
                         @if ($isOwnProfile)
                             <div class="text-center">

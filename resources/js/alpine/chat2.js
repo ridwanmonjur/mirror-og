@@ -419,7 +419,7 @@ function RoomComponent() {
             await userStore.fetchProspectiveChatters(event);
         },
         formatDate(date) {
-            if (!date) return "N/A"
+            if (!date) return "Not active recently"
             let newDate = DateTime
                 .fromFormat(date, "yyyy-MM-dd HH:mm:ss")
                 .toRelative();
