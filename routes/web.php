@@ -55,7 +55,8 @@ Route::get('logout', [AuthViewController::class, 'logoutAction'])->name('logout.
 Route::get('/event/search', [MiscController::class, 'showLandingPage'])->name('public.search.view');
 Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view')
     ->middleware('prevent-back-history');
-Route::get('/view/team/{id}', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
+Route::get('/view/team/{id}', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view')
+    ->middleware('prevent-back-history');
 Route::get('/view/participant/{id}', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view')
     ->middleware('prevent-back-history');
 Route::get('/view/organizer/{id}', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view')

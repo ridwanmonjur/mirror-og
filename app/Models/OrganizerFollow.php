@@ -67,27 +67,55 @@ class OrganizerFollow extends Model
             ->exists();
     }
 
-    public static function getOrganizerFollowersPaginate($userId, $perPage, $page = 1, $search = null)
+    public static function getOrganizerFollowersPaginate($userId, $loggedUserId, $perPage, $page = 1, $search = null)
     {
-        return self::where('organizer_user_id', $userId)
-            ->with(['participantUser' => function($query) {
-                $query->select('id', 'name', 'email', 'userBanner', 'created_at', 'role');
-            }])
-            ->when($search, function($query) use ($search) {
-                $query->whereHas('participantUser', function($q) use ($search) {
-                    $q->where('name', 'LIKE', "%{$search}%");
-                });
-            })
-            ->simplePaginate($perPage, ['*'], 'org_followers_page', $page)
-            ->through(function ($follow) {
-                return [
-                    'id' => $follow->participantUser->id,
-                    'name' => $follow->participantUser->name,
-                    'email' => $follow->participantUser->email,
-                    'userBanner' => $follow->participantUser->userBanner,
-                    'created_at' => $follow->created_at,
-                    'role' => $follow->participantUser->role,
-                ];
+        $select = [
+            'users.id',
+            'users.name',
+            'users.email',
+            'users.userBanner',
+            'users.created_at',
+            'users.role',
+        ];
+
+        $ogQuery = self::select($select)
+            ->where('organizer_follows.organizer_user_id', $userId)
+            ->join('users', 'organizer_follows.participant_user_id', '=', 'users.id')
+            ->when(trim($search), function ($q) use ($search) {
+                $q->where('users.name', 'LIKE', "%" . trim($search) . "%");
             });
+        
+        if($loggedUserId) {
+            $ogQuery->addSelect([
+                'logged_user_friends.id as friend_id',
+                'logged_user_friends.status as logged_friendship_status',
+                DB::raw('COALESCE ( og_follows.id, p_follows.id ) as logged_follow_status'),
+                'blocks.id as logged_block_status',
+                
+            ])
+            ->leftJoin('friends as logged_user_friends', function($join) use ($loggedUserId) {
+                $join->on('logged_user_friends.user2_id', '=', 'users.id')
+                    ->where('logged_user_friends.user1_id', $loggedUserId)
+                    ->whereIn('logged_user_friends.status', ['accepted', 'pending']);
+            })
+            ->leftJoin('blocks', function($join) use ($loggedUserId) {
+                $join->on('blocks.blocked_user_id', '=', 'users.id')
+                    ->where('blocks.user_id', $loggedUserId);
+            })
+            ->selectRaw('EXISTS(SELECT 1 FROM reports WHERE reporter_id = ? AND reported_user_id = users.id) as logged_block_status', [$loggedUserId])
+            ->leftJoin('organizer_follows as og_follows', function($join) use ($loggedUserId) {
+                $join->on('og_follows.organizer_user_id', '=', 'users.id')
+                    ->where('og_follows.participant_user_id', $loggedUserId);
+            })
+            ->leftJoin('participant_follows as p_follows', function($join) use ($loggedUserId) {
+                $join->on('p_follows.participant_followee', '=', 'users.id')
+                    ->where('p_follows.participant_follower', $loggedUserId);
+            });
+        }
+
+        return $ogQuery->simplePaginate($perPage, ['*'], 'org_followers_page', $page);
+
+            
+            
     }
 }

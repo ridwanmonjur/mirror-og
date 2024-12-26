@@ -36,6 +36,7 @@
     @php
         $teamMember = null;
         $isCreator = false;
+        $loggedUserId = null;
         $status = "not_signed";
         $statusMessage = "Please sign in!";
         $acceptedTeamMemberCount = $leftPlusAcceptedTeamMemberCount = 0;
@@ -54,15 +55,14 @@
             $status = null;
         }
 
-        $isCreator = $selectTeam->creator_id == $user->id;
+        $loggedUserId = $user->id;
+        $isCreator = $selectTeam->creator_id == $loggedUserId;
         ['accepted' => $acceptedTeamMemberCount, 'left_plus_accepted' => $leftPlusAcceptedTeamMemberCount] = $selectTeam->getMembersAndTeamCount();
     @endphp
 @endauth
 <main class="main1"
     id="backgroundBanner" class="member-section px-2 py-2"
-    @style([
-        "background-size: cover; background-repeat: no-repeat; min-height: 35vh;"
-    ])
+    
 >
 
     <div class="team-head-storage d-none"
@@ -74,6 +74,7 @@
         data-route-background-api="{{ route('user.userBackgroundApi.action', ['id' => $selectTeam->id]) }}"
         data-background-styles="<?php echo $backgroundStyles; ?>"
         data-font-styles="<?php echo $fontStyles; ?>"
+        data-logged-user-id="{{ $loggedUserId }}"
     >
     </div>
     <input type="hidden" id="currentMemberUrl" value="{{ url()->current() }}">
@@ -410,7 +411,7 @@
                     style="z-index: 999 !important; "
                 > 
                     <span class="me-2"> 🙋‍♂️ </span>
-                    <span >{{ is_null($selectTeam?->profile?->follower_count) ? 0 : $selectTeam?->profile?->follower_count }} Followers</span>
+                    <span >{{ is_null($selectTeam?->profile?->follower_count) ? 0 . ' Followers'  : $selectTeam->profile->follower_count. ' Follower'. bladePluralPrefix($selectTeam->profile->follower_count) }} </span>
                 </div>
                 <div class="col-12 col-lg-4 text-center mx-auto"> 
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi me-2 bi-calendar-date" viewBox="0 0 16 16">

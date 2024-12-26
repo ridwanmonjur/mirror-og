@@ -134,7 +134,7 @@ class BetaController extends Controller
 
         return view('VerifyInterestedUser')
             ->with('success', 'verified_now')
-            ->with('email', $user->email);;
+            ->with('email', $user->email);
     }
 
     public function viewOnboardBeta (Request $request) {

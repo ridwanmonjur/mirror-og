@@ -89,7 +89,7 @@ class SocialController extends Controller
             $friend = Friend::checkFriendship($validatedData['deleteUserId'], $user->id);
             $friend?->deleteOrFail();
 
-            User::where('id', $request->input('deleteUserId'))->select("id")->firstOrFail();;
+            User::where('id', $request->input('deleteUserId'))->select("id")->firstOrFail();
 
             session()->flash('successMessage', 'Your request has been deleted.');
 
@@ -295,9 +295,6 @@ class SocialController extends Controller
 
     public function getConnections(Request $request, $id)
     {
-        $loggedUser = $request->attributes->get('user');
-        $loggedUserId = $loggedUser?->id;
-        $loggedUserRole = $loggedUser?->role; 
         $type = $request->input('type', 'all');
         $role = $request->input('role', 'ORGANIZER');
         $page = $request->input('page', 1);
@@ -308,25 +305,35 @@ class SocialController extends Controller
         if ($type === 'all') {
             if ($role == 'PARTICIPANT') {
                 $response['count'] = [
-                    'followers' => ParticipantFollow::getFollowerCount($id, $search),
-                    'following' => ParticipantFollow::getFolloweeCount($id, $search),
-                    'friends' =>  Friend::getFriendCount($id, $search)
+                    'followers' => ParticipantFollow::getFollowerCount($id),
+                    'following' => ParticipantFollow::getFolloweeCount($id),
+                    'friends' =>  Friend::getFriendCount($id)
                 ];
             } 
         } else {
+            if ($request->has('loggedUserId')) {
+                $loggedUser = User::where('id', $request->input('loggedUserId'))
+                    ->select(['id', 'role'])
+                    ->firstOrFail();
+                
+                $loggedUserId = $loggedUser?->id;
+            } else {
+                $loggedUserId = null;
+            }
+
             $followers = null;
             if ($role === "ORGANIZER") {
-                $followers = OrganizerFollow::getOrganizerFollowersPaginate($id, $perPage, $page, $search);
+                $followers = OrganizerFollow::getOrganizerFollowersPaginate($id, $loggedUserId, $perPage, $page, $search);
             } elseif ($role === "PARTICIPANT") {
-                $followers = ParticipantFollow::getFollowersPaginate($id, $perPage, $page, $search);
+                $followers = ParticipantFollow::getFollowersPaginate($id, $loggedUserId, $perPage, $page, $search);
             } else {
-                $followers = TeamFollow::getFollowersPaginate($id, $perPage, $page, $search);
+                $followers = TeamFollow::getFollowersPaginate($id,  $loggedUserId, $perPage, $page, $search);
             }
             
             $data = match($type) {
                 'followers' => $followers,
-                'following' => ParticipantFollow::getFollowingPaginate($id, $perPage, $page, $search),
-                'friends' => Friend::getFriendsPaginate($id, $loggedUserId, $loggedUserRole, $perPage, $page, $search),
+                'following' => ParticipantFollow::getFollowingPaginate($id, $loggedUserId, $perPage, $page, $search),
+                'friends' => Friend::getFriendsPaginate($id, $loggedUserId,  $perPage, $page, $search),
                 default => throw new \InvalidArgumentException('Invalid connection type')
             };
             $response['connections'] = [$type => $data];

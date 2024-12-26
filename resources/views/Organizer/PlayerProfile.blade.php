@@ -25,20 +25,21 @@
 @php
     use Carbon\Carbon;
     $isUserSame = false;
-      [   
-            'backgroundStyles' => $backgroundStyles, 
-            'fontStyles' => $fontStyles, 
-            'frameStyles' => $frameStyles
-        ] = $userProfile->profile?->generateStyles();
+    [   
+        'backgroundStyles' => $backgroundStyles, 
+        'fontStyles' => $fontStyles, 
+        'frameStyles' => $frameStyles
+    ] = $userProfile->profile?->generateStyles();
+    $loggedUserId = null;
 @endphp
 @auth
     @php
         if (!isset($user)) {
             $user = auth()->user();
         }
-
+        
+        $loggedUserId = $user->id;
         $isUserSame = $user->id == $userProfile->id;
-      
     @endphp
 @endauth
 <body>
@@ -53,6 +54,7 @@
             class="d-none"
             data-profile-route="{{ route('public.organizer.view', ['id' => ':id']) }}"
             data-login-route="{{ route('participant.signin.view') }}"
+            data-logged-user-id="{{ $loggedUserId }}"
         >
         </div>
         <div class="profile-storage d-none"
@@ -70,9 +72,7 @@
         {{-- <form action="{{route('organizer.profile.update')}}" method="POST">  --}}
         <div>
             <div id="backgroundBanner" class="member-section px-2 pt-2"
-                @style([
-                    "background-size: cover; background-repeat: no-repeat;"
-                ])
+               
             > 
                  <div class="d-flex justify-content-end py-0 my-0 mb-2">
                     <button 

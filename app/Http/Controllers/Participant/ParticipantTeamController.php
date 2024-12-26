@@ -110,11 +110,17 @@ class ParticipantTeamController extends Controller
             $user = $request->attributes->get('user');
             $selectTeam = Team::where('id', $id)
                 ->select(['id'])
-                
                 ->first();
+
             $profile = TeamProfile::where('team_id', $id)
                 ->select(['id', 'team_id', 'follower_count'])
                 ->first();
+            
+            if (!$profile) {
+                $profile = new TeamProfile();
+                $profile->follower_count = 0;
+                $profile->team_id = $selectTeam->id;
+            }
             
             $exisitngFollowCount = DB::table('team_follows')                 
                 ->where('team_id', $selectTeam->id)                 

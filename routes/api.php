@@ -38,7 +38,8 @@ Route::middleware('auth')->get('/user', function (Request $request) {
 
 Route::get('/activity-logs', [ParticipantController::class, 'getActivityLogs'])
     ->name('activity-logs.index');
-Route::get('/user/{id}/connections', [SocialController::class, 'getConnections'])->name('user.connections.index');
+Route::get('/user/{id}/connections', [SocialController::class, 'getConnections'])->name('user.connections.index')
+    ->middleware('prevent-back-history');
 Route::post('/event/{id}/invitation', [OrganizerInvitationController::class, 'store'])->name('event.invitation.store');
 
 Route::prefix('media')->group(function () {

@@ -36,8 +36,8 @@ main {
 
 .member-section {
     margin: 0;
-    padding-top: 20px;
-    min-height: 35vh !important;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .team-logo-container {
@@ -454,7 +454,7 @@ tr:nth-child(even) .colored-cell {
 }
 
 
-@media screen and (min-width: 990px) {
+@media screen and (min-width: 1000px) {
     .member-section {
         padding-top: 0px;
     }
