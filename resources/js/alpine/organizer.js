@@ -112,7 +112,14 @@ Alpine.data('alpineDataComponent', function () {
     })
 })
 
-Alpine.data('profileData', alpineProfileData(initialUserProfile.id, initialUserProfile.role));
+const loggedUserId = document.querySelector('#routeContainer').getAttribute('data-logged-user-id');
+
+Alpine.data('profileData', alpineProfileData(initialUserProfile.id, loggedUserId, initialUserProfile.role));
 window.openModal = openModal;
+window.onpageshow = function(event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+};
 
 Alpine.start();

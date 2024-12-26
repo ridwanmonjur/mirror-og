@@ -103,8 +103,56 @@
                                                         <h6 class="card-title mb-1  text-truncate" x-text="user.name"></h6>
                                                         <p class="card-text mb-0 mt-2" style="color: gray;" x-text="user.email"></p>
                                                         <div class="mt-2">
-                                                            <button class="btn btn-primary btn-sm px-3 text-light rounded-pill me-2">Add Friend </button>
-                                                            <button class="btn btn-primary btn-sm px-3 text-light rounded-pill">Follow </button>
+
+                                                        <button 
+                                                            x-cloak 
+                                                            x-show="user.role =='PARTICIPANT' && !user.logged_friendship_status" 
+                                                            class="btn btn-primary btn-sm px-3 text-light rounded-pill me-2"
+                                                            data-action="friend-request"
+                                                            data-route="participant.friends.update"
+                                                            :data-inputs='JSON.stringify({"addUserId": user.id})'>
+                                                            Add Friend
+                                                        </button>
+
+                                                        <button 
+                                                            x-cloak 
+                                                            x-show="user.role =='PARTICIPANT' && user.logged_friendship_status == 'pending'" 
+                                                            class="btn border-primary bg-light btn-sm px-3 text- rounded-pill me-2"
+                                                            data-action="cancel-request"
+                                                            data-route="participant.friends.update"
+                                                            :data-inputs='JSON.stringify({"deleteUserId": user.id})'>
+                                                            Sent Request
+                                                        </button>
+
+                                                        <button 
+                                                            x-cloak 
+                                                            x-show="user.role =='PARTICIPANT' && user.logged_friendship_status == 'accepted'" 
+                                                            class="btn btn-success text-dark btn-sm px-3 rounded-pill me-2"
+                                                            data-action="unfriend"
+                                                            data-route="participant.friends.update"
+                                                            :data-inputs='JSON.stringify({"updateUserId": user.id, "updateStatus": "left"})'>
+                                                            Friends
+                                                        </button>
+
+                                                        <button 
+                                                            x-cloak 
+                                                            x-show="!user.logged_follow_status" 
+                                                            class="btn btn-primary btn-sm px-3 text-light rounded-pill"
+                                                            data-action="unfollow"
+                                                            data-route="participant.participant.follow"
+                                                            :data-inputs='JSON.stringify({"participant_id": user.id})'>
+                                                            Follow
+                                                        </button>
+
+                                                        <button 
+                                                            x-cloak 
+                                                            x-show="user.logged_follow_status" 
+                                                            class="btn btn-success btn-sm px-3 text-dark rounded-pill"
+                                                            data-action="follow"
+                                                            data-route="participant.participant.follow"
+                                                            :data-inputs='JSON.stringify({"participant_id": user.id})'>
+                                                            Following
+                                                        </button>
 
                                                         </div>
                                                     </div>

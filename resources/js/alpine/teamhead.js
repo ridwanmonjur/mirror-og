@@ -143,7 +143,14 @@ window.formatDateMySqlLuxon = (mysqlDate, mysqlTime) => {
 }
 
 let role = "TEAM";
-Alpine.data('profileData', alpineProfileData(teamData.id, role));
+const storage = document.querySelector('.team-head-storage');
+const loggedUserId = storage.dataset.loggedUserId;
+Alpine.data('profileData', alpineProfileData(teamData.id, loggedUserId, role));
 window.openModal = openModal;
+window.onpageshow = function(event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+};
 
 Alpine.start();

@@ -28,6 +28,7 @@
 @php
     use Carbon\Carbon;
     $isUserSame = false;
+    $loggedUserId = null;
 
     [   
         'backgroundStyles' => $backgroundStyles, 
@@ -42,7 +43,8 @@
         if (!isset($user)) {
             $user = auth()->user();
         }
-
+        
+        $loggedUserId = $user->id;
         $isUserSame = $user?->id == $userProfile->id;
     @endphp
 @endauth
@@ -58,6 +60,7 @@
         data-background-styles="{{ $backgroundStyles }}"
         data-font-styles="{{ $fontStyles }}"
         data-is-user-same="{{ $isUserSame }}"
+        data-logged-user-id="{{ $loggedUserId }}"
         data-user-banner-url="{{ route('participant.userBanner.action', ['id' => $userProfile->id]) }}"
         data-asset-carousel-js="{{ asset('/assets/js/participant/carousel.js') }}"
         class="d-none laravel-data-storage"
@@ -67,9 +70,7 @@
 
         @include('Participant.__ProfilePartials.Forms')
         <div id="backgroundBanner" class="member-section px-2 pt-2"
-            @style([
-                "background-size: cover; background-repeat: no-repeat;"
-            ])
+          
             x-data="profileDataComponent"
         >
             @if($isOwnProfile) 
@@ -349,7 +350,7 @@
                                 <div x-cloak x-show="!loading">
                                     <div class="" style="color: inherit !important;">
                                         <span class=" cursor-pointer ps-0 me-4" x-on:click="openModal('followers')">
-                                            <span x-text="count['followers']  ?? '0'"> </span> Followers
+                                            <span x-text="count['followers']  ?? '0'"> </span> Follower<span x-text="count['followers'] > 1 || count['followers'] === 0 ? 's' : ''"></span>  
                                         </span>
                                         <span class=" cursor-pointer ps-0 me-4" x-on:click="openModal('following')">
                                             <span x-text="count['following'] ?? '0'"> </span>
@@ -357,7 +358,7 @@
                                         </span>
                                         <span class="cursor-pointer ps-0 me-4" x-on:click="openModal('friends')">
                                             <span x-text="count['friends'] ?? '0'"> </span>
-                                            Friends
+                                            Friend<span x-text="count['friends'] > 1 || count['friends'] === 0? 's' : ''"></span>  
                                         </span>
                                     </div>
                                 </div>

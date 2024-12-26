@@ -15,22 +15,7 @@ var backgroundBanner = document.getElementById("backgroundBanner")
 let backgroundColorInputValue = document.getElementById('backgroundColorInput')?.value;
 let fontColorInputValue = document.getElementById('fontColorInput')?.value;
 
-var mediaQueryList = window.matchMedia("(min-width: 600px)");
 
-function handleMediaChange(e) {
-    if (e.matches) {
-        var elementWidth = backgroundBanner.clientWidth;
-        var elementHeight = elementWidth / 3;
-        backgroundBanner.style.backgroundSize = `${elementWidth}px ${elementHeight}px`;
-        backgroundBanner.style.backgroundRepeat = 'no-repeat';
-        backgroundBanner.style.backgroundPosition = 'center';
-    } else {
-        backgroundBanner.style.backgroundSize = 'cover';
-    }
-}
-
-mediaQueryList.addListener(handleMediaChange);
-handleMediaChange(mediaQueryList);
 
 let colorOrGradient = null;
 function applyBackground(event, colorOrGradient) {
