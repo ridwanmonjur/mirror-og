@@ -112,6 +112,7 @@ Route::group(['prefix' => 'participant'], function () {
        
             // Friends
             Route::post('/friends', [SocialController::class, 'updateFriend'])->name('participant.friends.update');
+            
             Route::post('/follow', [SocialController::class, 'followParticipant'])->name('participant.participant.follow');
 
             // Team management
