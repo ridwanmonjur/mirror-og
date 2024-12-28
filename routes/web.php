@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\AuthViewController;
 use App\Http\Controllers\Auth\AuthResetAndVerifyController;
 use App\Http\Controllers\Open\BetaController;
 use App\Http\Controllers\Open\MiscController;
@@ -28,9 +27,6 @@ Route::get('/home', [MiscController::class, 'showLandingPage'])->name('public.la
 Route::view('/closedbeta', 'ClosedBeta')->name('public.closedBeta.view');
 Route::view('/about', 'About')->name('public.about.view');
 Route::view('/contact', 'Contact')->name('public.contact.view');
-// Route::get('/login', function () {
-//     return redirect(route('filament.admin.auth.login'));
-// })->name('login');
 
 // Forget, reset password
 Route::view('/forget-password', 'Auth.ForgetPassword')->name('user.forget.view');
@@ -49,7 +45,7 @@ Route::get('/countries', [MiscController::class, 'countryList'])->name('country.
 Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
 
 // Logout
-Route::get('logout', [AuthViewController::class, 'logoutAction'])->name('logout.action');
+Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
 
 // Search bar
 Route::get('/event/search', [MiscController::class, 'showLandingPage'])->name('public.search.view');
@@ -67,7 +63,6 @@ Route::group(['prefix' => 'admin'], function () {
         // Beta onboarding
         Route::get('/onboardBeta', [BetaController::class, 'viewOnboardBeta'])->name('admin.onboardBeta.view');
         Route::post('/onboardBeta', [BetaController::class, 'postOnboardBeta'])->name('admin.onboardBeta.action');
- 
         Route::get('/profile', [OrganizerController::class, 'viewOwnProfile'])->name('admin.profile.view')
             ->middleware('prevent-back-history');
     });
@@ -82,13 +77,15 @@ Route::group(['middleware' => 'auth'], function () {
         // Route::view('user/{id}/stats', 'Shared.PlayerProfileStats', ['userId' => request('id')])->name('user.stats');
         Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackground.action');
         Route::get('profile/message', [ChatController::class, 'message'])->name('user.message.view');
+        Route::get('settings', [UserController::class, 'settings'])->name('user.settings.view');
+
     });
 });
 
 /* THIS IS THE PARTICIPANT VIEW */
 Route::group(['prefix' => 'participant'], function () {
     // Normal login
-    Route::get('/signin', [AuthViewController::class, 'participantSignIn'])
+    Route::get('/signin', [AuthController::class, 'participantSignIn'])
         ->name('participant.signin.view')
         ->middleware('prevent-back-history')
         ->middleware('guest');
@@ -165,7 +162,7 @@ Route::group(['prefix' => 'participant'], function () {
 /* THIS IS THE ORGANIZER VIEW */
 Route::group(['prefix' => 'organizer'], function () {
     // Normal login
-    Route::get('/signin', [AuthViewController::class, 'organizerSignin'])
+    Route::get('/signin', [AuthController::class, 'organizerSignin'])
         ->name('organizer.signin.view')
         ->middleware('prevent-back-history')
         ->middleware('guest');

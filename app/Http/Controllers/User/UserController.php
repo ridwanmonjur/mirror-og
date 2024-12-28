@@ -74,4 +74,11 @@ class UserController extends Controller
             return back();
         }
     }
+
+
+    public function settings(Request $request) {
+        return view('Shared.Settings');
+    }
+
+
 }
