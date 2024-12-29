@@ -63,6 +63,7 @@ document.getElementById('followFormProfile')?.addEventListener('submit', async f
         for (let [key, value] of formData.entries()) {
             jsonObject[key] = value;
         }
+        
         let response = await fetch(form.action, {
             method: form.method,
             body: JSON.stringify(jsonObject),
@@ -99,6 +100,11 @@ document.getElementById('followFormProfile')?.addEventListener('submit', async f
 
         [...followCounts].forEach((followCount) => {
             followCount.dataset.count = count;
+
+            if (count < 0) {
+                window.location.reload();
+            }
+
             if (count == 1) {
                 followCount.innerHTML = '1 follower';
             } else if (count == 0) {
@@ -109,7 +115,7 @@ document.getElementById('followFormProfile')?.addEventListener('submit', async f
         })
     } catch (error) {
         followButton.style.setProperty('pointer-events', 'auto');
-        toastError('Error occured.', error);
+        toastError('Error occured.');
     }
 });
 

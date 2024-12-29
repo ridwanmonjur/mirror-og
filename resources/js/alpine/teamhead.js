@@ -145,7 +145,7 @@ window.formatDateMySqlLuxon = (mysqlDate, mysqlTime) => {
 let role = "TEAM";
 const storage = document.querySelector('.team-head-storage');
 const loggedUserId = storage.dataset.loggedUserId;
-Alpine.data('profileData', alpineProfileData(teamData.id, loggedUserId, role));
+Alpine.data('profileData', alpineProfileData(teamData.id, loggedUserId, false, role));
 window.openModal = openModal;
 window.onpageshow = function(event) {
     if (event.persisted) {

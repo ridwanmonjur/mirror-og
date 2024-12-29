@@ -77,7 +77,9 @@ class UserController extends Controller
 
 
     public function settings(Request $request) {
-        return view('Shared.Settings');
+        $user = $request->attributes->get('user');
+
+        return view('Shared.Settings', $user);
     }
 
 

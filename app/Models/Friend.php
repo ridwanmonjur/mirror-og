@@ -79,11 +79,18 @@ class Friend extends Model
                 'blocks.id as logged_block_status',
                 
             ])
+            
             ->leftJoin('friends as logged_user_friends', function($join) use ($loggedUserId) {
-               $join->on('logged_user_friends.user2_id', '=', 'other_user.id')
-                   ->where('logged_user_friends.user1_id', $loggedUserId)
-                   ->whereIn('logged_user_friends.status', ['accepted', 'pending']);
-           })
+                $join->on(function($q) use ($loggedUserId) {
+                    $q->on('logged_user_friends.user2_id', '=', 'other_user.id')
+                      ->where('logged_user_friends.user1_id', '=', $loggedUserId)
+                      ->orWhere(function($query) use ($loggedUserId) {
+                          $query->on('logged_user_friends.user1_id', '=', 'other_user.id')
+                                ->where('logged_user_friends.user2_id', '=', $loggedUserId);
+                      });
+                })
+                ->whereIn('logged_user_friends.status', ['accepted', 'pending']);
+            })
            ->leftJoin('blocks', function($join) use ($loggedUserId) {
                $join->on('blocks.blocked_user_id', '=', 'other_user.id')
                    ->where('blocks.user_id', $loggedUserId);

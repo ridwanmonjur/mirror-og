@@ -1,4 +1,4 @@
-function alpineProfileData(userOrTeamId, loggedUserId, role) {
+function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
     return () => ({
         connections: [],
         page: null,
@@ -21,66 +21,148 @@ function alpineProfileData(userOrTeamId, loggedUserId, role) {
             await this.loadSearch();
         },
 
-        async makeFormRequest(e) {
+        async followRequest(e) {
             const button = e.currentTarget;
             if (!button) return;
-        
+
             const action = button.dataset.action;
             const route = button.dataset.route;
-            const inputs = JSON.parse(button.dataset.inputs || '{}');
+            const role = button.dataset.role ;
+            const inputId = button.dataset.inputs ;
         
             try {
-                switch (action) {
-                    case 'friend-request':
-                        await makeRequest(route, 'POST', { addUserId: inputs.addUserId });
-                        this.connections = this.connections.map((friend)=> {
-                            return friend.id == inputs.addUserId ? friend : {
-                                ...friend,
-                                logged_friendship_status: 'pending' 
-                            };
-                        })
+               
+                const actionMap = {
+                    'PARTICIPANT': {
+                        property: 'participant_id',
+                    },
+                    'ORGANIZER': {
+                        property: 'organizer_id',
+                    },
+                    
+                };
 
-                        break;
-        
-                    case 'cancel-request':
-                        await makeRequest(route, 'POST', { deleteUserId: inputs.deleteUserId });
-                        this.connections = this.connections.map((friend)=> {
-                            return friend.id == inputs.addUserId ? friend : {
-                                ...friend,
-                                logged_friendship_status: null 
-                            };
-                        })
-
-                        break;
-        
-                    case 'unfriend':
-                        await makeRequest(route, 'POST', { 
-                            updateUserId: inputs.updateUserId, 
-                            updateStatus: inputs.updateStatus 
-                        });
-                       
-                        this.connections = this.connections.map((friend)=> {
-                            return friend.id == inputs.addUserId ? friend : {
-                                ...friend,
-                                logged_friendship_status: null 
-                            };
-                        })
-
-                        break;
-        
-                    case 'follow':
-                    case 'unfollow':
-                        await makeRequest(route, 'POST', { participant_id: inputs.participant_id });
-                        // Toggle follow button state
-                        const isFollowing = action === 'unfollow';
-                        button.dataset.action = isFollowing ? 'follow' : 'unfollow';
-                        button.classList.toggle('btn-primary', !isFollowing);
-                        button.classList.toggle('btn-success', isFollowing);
-                        button.classList.toggle('text-light', !isFollowing);
-                        button.classList.toggle('text-dark', isFollowing);
-                        button.textContent = isFollowing ? 'Following' : 'Follow';
-                        break;
+                const { property: inputPropertyName } = actionMap[role];
+                let inputObject = {
+                    [inputPropertyName]: inputId,
                 }
+                const data = await makeRequest(route, 'POST', inputObject);
+                
+                if (isUserSame) {
+                    const followerSpanAlt = document.querySelector('span[data-following-stats]');
+                    const statsData = followerSpanAlt.dataset.followingStats;
+                    let followingCount = parseInt(statsData);
+
+                    if (data.isFollowing) {
+                        followingCount+=1;
+                    } else {
+                        followingCount-=1;
+                    }
+
+                    followerSpanAlt.dataset.followerStats = followingCount;
+                    followerSpanAlt.textContent = `${followingCount} following`;
+                    followerSpanAlt.dataset.followingStats = followingCount;
+                    if (this.currentTab == 'following') {
+                        this.connections = this.connections.filter((user) => {
+                            return user.id != inputId
+                        });
+                        }
+                }
+
+                if (!isUserSame || this.currentTab != 'following') {
+                    this.connections = this.connections.map((user)=> {
+                        return user.id == inputId ? {
+                            ...user,
+                            logged_follow_status: data.isFollowing 
+                        } : user;
+                    })
+                }
+                     
+            } catch (error) {
+                // Handle errors (you might want to show a notification to the user)
+                console.error('Operation failed:', error);
+                alert('Failed to process your request. Please try again later.');
+            }
+        },
+
+        async friendRequest(e) {
+            const button = e.currentTarget;
+            if (!button) return;
+
+            const action = button.dataset.action;
+            const route = button.dataset.route;
+            const inputId = button.dataset.inputs;
+            debugger
+        
+            try {
+              
+                const actionMap = {
+                    'friend-request': {
+                        status: 'pending',
+                        property: 'addUserId',
+                        additionalObject : {}
+                    },
+                    'cancel-request': {
+                        status: null,
+                        property: 'deleteUserId',
+                        additionalObject : {}
+                    },
+                    'unfriend': {
+                        status:  'left',
+                        property: 'updateUserId',
+                        
+                    }
+                };                        
+
+                const { status: newStatus, property: inputPropertyName } = actionMap[action] || {};
+
+                let inputObject = {
+                    [inputPropertyName]: inputId,
+                    ...(newStatus && { updateStatus: newStatus })
+
+                }
+
+                await makeRequest(route, 'POST', inputObject);
+
+                if (isUserSame) {
+                    if (action == 'unfriend') {
+
+                        const friendSpanAlt = document.querySelector('span[data-friends-stats]');
+                        const statsData = friendSpanAlt.dataset.friendsStats;
+                        let freindCount = parseInt(statsData);
+
+                        freindCount-=1;
+                        if (freindCount  < 0) {
+                            window.location.reload();
+                        }
+                        
+                        friendSpanAlt.dataset.followerStats = freindCount;
+                        friendSpanAlt.textContent = `${freindCount} friends`;
+                        friendSpanAlt.dataset.followingStats = freindCount;
+                    }
+
+                    
+
+                    if (this.currentTab == 'friends') {
+                        this.connections = this.connections.filter((user) => {
+                            return user.id != inputId
+                        });
+                    }
+                }
+                
+
+                if (!isUserSame || this.currentTab != 'friends') {
+                    this.connections = this.connections.map((user)=> {
+                        return user.id == inputId ? {
+                            ...user,
+                            logged_friendship_status: newStatus 
+                        } : user;
+                    })
+                }
+
+
+        
+                    
             } catch (error) {
                 // Handle errors (you might want to show a notification to the user)
                 console.error('Operation failed:', error);

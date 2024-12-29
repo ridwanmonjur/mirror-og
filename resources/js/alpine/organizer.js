@@ -114,7 +114,7 @@ Alpine.data('alpineDataComponent', function () {
 
 const loggedUserId = document.querySelector('#routeContainer').getAttribute('data-logged-user-id');
 
-Alpine.data('profileData', alpineProfileData(initialUserProfile.id, loggedUserId, initialUserProfile.role));
+Alpine.data('profileData', alpineProfileData(initialUserProfile.id, loggedUserId, false, initialUserProfile.role));
 window.openModal = openModal;
 window.onpageshow = function(event) {
     if (event.persisted) {

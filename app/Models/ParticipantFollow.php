@@ -37,17 +37,15 @@ class ParticipantFollow extends Model
             'blocks.id as logged_block_status',
         ])
         ->leftJoin('friends as logged_user_friends', function($join) use ($loggedUserId) {
-            $join->whereIn('logged_user_friends.status', ['accepted', 'pending'])
-                ->where(function($q) use ($loggedUserId) {
-                    $q->where(function($inner) use ($loggedUserId) {
-                        $inner->where('logged_user_friends.user1_id', $loggedUserId)
-                            ->where('logged_user_friends.user2_id', '=', 'users.id');
-                    })
-                    ->orWhere(function($inner) use ($loggedUserId) {
-                        $inner->where('logged_user_friends.user2_id', $loggedUserId)
-                            ->where('logged_user_friends.user1_id', '=', 'users.id');
-                    });
-                });
+            $join->on(function($q) use ($loggedUserId) {
+                $q->on('logged_user_friends.user2_id', '=', 'users.id')
+                  ->where('logged_user_friends.user1_id', '=', $loggedUserId)
+                  ->orWhere(function($query) use ($loggedUserId) {
+                      $query->on('logged_user_friends.user1_id', '=', 'users.id')
+                            ->where('logged_user_friends.user2_id', '=', $loggedUserId);
+                  });
+            })
+            ->whereIn('logged_user_friends.status', ['accepted', 'pending']);
         })
         ->leftJoin('blocks', function($join) use ($loggedUserId) {
             $join->where('blocks.user_id', $loggedUserId)
@@ -103,7 +101,7 @@ class ParticipantFollow extends Model
         return $followQuery->simplePaginate($perPage, ['*'], 'followers_page', $page);
     }
 
-    public static function getBothOrganizerAndParticipantFollowQuery(int|string $userId,  $search = null) {
+    public static function getBothOrganizerAndParticipantFollowingQuery(int|string $userId,  $search = null) {
         $select = [
             'users.id',
             'users.name',
@@ -145,7 +143,8 @@ class ParticipantFollow extends Model
 
     public static function getFollowingPaginate(int|string $userId, int|string|null $loggedUserId, $perPage, $page = 1, $search = null)  
     {
-        [$organizerFollowers, $participantFollowers] = self::getBothOrganizerAndParticipantFollowQuery($userId, $search);
+        [$organizerFollowers, $participantFollowers] = self::getBothOrganizerAndParticipantFollowingQuery($userId, $search);
+        
         if($loggedUserId) {
             self::addLoggedUserInfo($organizerFollowers, $loggedUserId);
             self::addLoggedUserInfo($participantFollowers, $loggedUserId);
@@ -153,8 +152,9 @@ class ParticipantFollow extends Model
         $followQuery = $organizerFollowers->union($participantFollowers);
 
 
-    return $followQuery->simplePaginate($perPage, ['*'], 'following_page', $page);
-}
+        return $followQuery->simplePaginate($perPage, ['*'], 'following_page', $page);
+    }
+    
     public static function getFollowerCount(string| int $id) {
         return self::join('users', function($join) use ($id) {
                 $join->on('participant_follows.participant_follower', '=', 'users.id')
@@ -163,8 +163,8 @@ class ParticipantFollow extends Model
             ->count();
     }
 
-    public static function getFolloweeCount(string| int $id) {
-        [$organizerFollowers, $participantFollowers] = self::getBothOrganizerAndParticipantFollowQuery($id, null);
+    public static function getFollowingCount(string| int $id) {
+        [$organizerFollowers, $participantFollowers] = self::getBothOrganizerAndParticipantFollowingQuery($id, null);
         $followQuery = $organizerFollowers->union($participantFollowers);
 
         return $followQuery->count();

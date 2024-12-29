@@ -1,0 +1,58 @@
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+.btn-size {
+    width: 200px;
+}
+
+.bg-white{
+    background: white;
+}
+
+
+main {
+    min-height: 115vh;
+    display: block !important;
+    padding: 0px 0px;
+    align-items: center;
+    justify-content: center;
+    background-image: url("/assets/images/event-management-bg.png");
+
+    background-size: auto 100vh;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+.accordion-button, .border-0 {
+    outline: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.accordion-item:first-child {
+    border-radius: 40px 40px 0 0 !important;
+}
+
+
+.accordion-item:last-child {
+    border-radius: 0 0 40px 40px  !important;
+}
+
+.accordion-item {
+    /* border-radius: 40px 40px 0 0 !important; */
+}
+
+@media screen and (min-width: 992px) {
+   
+
+    main {
+        padding: 20px 0px;
+        background-size: 100vw 100vh;
+    }
+}
