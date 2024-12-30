@@ -26,6 +26,12 @@ table.responsive thead {
     display: table-header-group !important;
 }
 
+
+.btn-sm-size {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
 .btn-size {
     width: auto;
     padding-left: 10px;

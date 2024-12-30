@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    if (urlParams.has('history_limit')) {
+    if (urlParams.has('page_next')) {
         document.querySelector('[data-bs-target="#collapseTwo"]')?.click();
         
         document.querySelector('[data-bs-target="#nestedCollapse3"]')?.click();

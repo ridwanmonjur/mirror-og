@@ -86,8 +86,11 @@ class UserController extends Controller
 
     public function settings(Request $request) {
         $user = $request->attributes->get('user');
-        $limit_methods = $request->input('methods_limit', 5); // 10
-        $limit_history = $request->input('history_limit', 2); // 100
+        $limit_methods = $request->input('methods_limit', 10); // 10
+        $limit_history = 30; // 100
+        $page_history = intval($request->input('history_page', 1)); // 100
+        $page_next = $request->input('page_next'); // 100
+        $count_history = $limit_history * $page_history;
 
         $paramsMethods = [
             'customer' => $user->stripe_customer_id,
@@ -96,15 +99,17 @@ class UserController extends Controller
         ];
 
         $paramsHisotry = [
-            'customer' => $user->stripe_customer_id,
+            'query' => "customer:'{$user->stripe_customer_id}' AND status:'succeeded'",
             'limit' => $limit_history + 1,
         ];
 
-        $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
-        $paymentHistory = $this->stripeClient->retrieveStripePaymentsByCustomer($paramsHisotry);
+        if ($page_next != null) {
+            $paramsHisotry['page'] = $page_next;
+        }
 
+        $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
+        $paymentHistory = $this->stripeClient->searchStripePaymenst($paramsHisotry);
         $hasMorePayments = array_key_exists($limit_methods, $paymentMethods->data);
-        $hasMoreHistory = array_key_exists($limit_history, $paymentHistory->data);
 
         return view('Shared.Settings', [
             'user' => $user,
@@ -112,8 +117,10 @@ class UserController extends Controller
             'paymentHistory' => $paymentHistory,
             'limit_methods' => $limit_methods,
             'limit_history' => $limit_history,
+            'count_history' => $count_history,
+            'page_history' => $page_history,
             'hasMorePayments' => $hasMorePayments,
-            'hasMoreHistory' => $hasMoreHistory  
+            'hasMoreHistory' => $paymentHistory->has_more  
         ]);
     }
 
