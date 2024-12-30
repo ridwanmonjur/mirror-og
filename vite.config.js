@@ -25,6 +25,8 @@ export default defineConfig({
                 'resources/js/alpine/organizer.js',
                 'resources/js/alpine/participant.js',
                 'resources/js/alpine/teamhead.js',
+                'resources/js/alpine/settings.js',
+
             ],
             refresh: true,
         }),
