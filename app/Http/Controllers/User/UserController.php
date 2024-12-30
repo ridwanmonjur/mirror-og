@@ -111,18 +111,20 @@ class UserController extends Controller
         if ($user->stripe_customer_id) {
             $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
             $paymentHistory = $this->stripeClient->searchStripePaymenst($paramsHisotry);
+            $hasMorePayments = array_key_exists($limit_methods, $paymentMethods->data);
+            hasMoreHistory = $paymentHistory->has_more ;
         } else {
             $paymentMethods = new Collection();
             $paymentHistory = new Collection();
+            $hasMorePayments = $hasMoreHistory = false;
         }
     
-        $hasMorePayments = array_key_exists($limit_methods, $paymentMethods->data);
         $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
         return view('Shared.Settings', 
             compact('user', 'paymentMethods', 'paymentHistory', 'limit_methods', 
-            'limit_history', 'count_history', 'page_history', 'hasMorePayments', 'settingsAction'
+            'limit_history', 'count_history', 'page_history', 'hasMorePayments', 'settingsAction', 'hasMoreHistory'
         ))
-            ->with('hasMoreHistory', $paymentHistory->has_more);
+            ->with('hasMoreHistory', );
     }
 
     public function changeSettings(Request $request) {
