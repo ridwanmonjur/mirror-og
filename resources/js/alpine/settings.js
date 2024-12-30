@@ -18,6 +18,7 @@ const isValidEmail = (email) => {
     return emailRegex.test(email);
 };
 
+let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 let userProfile = JSON.parse(document.getElementById('initialUserProfile').value);
 console.log(userProfile);
@@ -27,9 +28,12 @@ function AccountComponent() {
     return {
         emailAddress: userProfile.email,
         recoveryAddress: userProfile.recoveryAddress,
-        async changeEmailAddress() {
+        async changeEmailAddress(event) {
             try {
-                
+                let button = event.currentTarget;
+                let {eventType, route} = button.dataset;
+                console.log({eventType});
+                console.log({eventType});
                 const { value: currentEmailInput } = await Swal.fire({
                     showCancelButton: true,
                     confirmButtonColor: '#43A4D7',
@@ -40,7 +44,7 @@ function AccountComponent() {
                             <h5 class="modal-heading text-center"> Enter a new email address </h5>
                             <div class="mx-3 text-start mt-4">
                                 <input type="email" 
-                                    id="swal-current-email" 
+                                    id="swal-new-email" 
                                     class="form-control border-primary" 
                                     placeholder="Enter new email"
                                 >
@@ -53,7 +57,7 @@ function AccountComponent() {
                     didOpen: () => Swal.getConfirmButton().focus(),
 
                     preConfirm: () => {
-                        const input = document.getElementById('swal-current-email');
+                        const input = document.getElementById('swal-new-email');
                         const error = document.getElementById('current-email-error');
                         const value = input.value.trim();
                         
@@ -75,11 +79,25 @@ function AccountComponent() {
                     }
                 });
                 
-              
-                Toast.fire({
-                    icon: 'success',
-                    text: `Email updated successfully to '${currentEmailInput}'!` 
-                });
+                if (value) {
+                    await fetch(route, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": csrfToken
+                        },
+                        body: JSON.stringify({
+                            eventType,
+                            newEmail: currentEmailInput
+                        })
+                    });
+
+                    Toast.fire({
+                        icon: 'success',
+                        text: `Email updated successfully to '${currentEmailInput}'!` 
+                    });
+                }
+           
                
                 
              

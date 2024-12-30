@@ -55,7 +55,7 @@ class UserController extends Controller
                 $profile = UserProfile::where('user_id', $user->id)->firstOrNew();
                 $profile->user_id = $user->id;
             }
-            
+
             $oldBanner = $profile->backgroundBanner;
             if ($request->backgroundBanner) {
                 $user->uploadBackgroundBanner($request, $profile);
@@ -72,7 +72,7 @@ class UserController extends Controller
                 return response()->json(['success' => true, 'message' => 'Succeeded', 'data' => $profile], 201);
             }
 
-        return back();
+            return back();
         } catch (Exception $e) {
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
@@ -83,8 +83,8 @@ class UserController extends Controller
         }
     }
 
-
-    public function settings(Request $request) {
+    public function settings(Request $request)
+    {
         $user = $request->attributes->get('user');
         $limit_methods = $request->input('methods_limit', 10); // 10
         $limit_history = 30; // 100
@@ -110,19 +110,25 @@ class UserController extends Controller
         $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
         $paymentHistory = $this->stripeClient->searchStripePaymenst($paramsHisotry);
         $hasMorePayments = array_key_exists($limit_methods, $paymentMethods->data);
-
-        return view('Shared.Settings', [
-            'user' => $user,
-            'paymentMethods' => $paymentMethods,
-            'paymentHistory' => $paymentHistory,
-            'limit_methods' => $limit_methods,
-            'limit_history' => $limit_history,
-            'count_history' => $count_history,
-            'page_history' => $page_history,
-            'hasMorePayments' => $hasMorePayments,
-            'hasMoreHistory' => $paymentHistory->has_more  
-        ]);
+        $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
+        return view('Shared.Settings', 
+            compact('user', 'paymentMethods', 'paymentHistory', 'limit_methods', 
+            'limit_history', 'count_history', 'page_history', 'hasMorePayments', 'settingsAction'
+        ))
+            ->with('hasMoreHistory', $paymentHistory->has_more);
     }
 
+    public function changeSettings(Request $request) {
+        $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
+        foreach ($settingsAction as $route => $config) {
+            if ($config['key'] === $request->eventType) {
+                $function = $config['action'];
+                if (method_exists($this, $function)) {
+                    $this->$function();
+                    return;
+                }
+            }
+        }
+    }
 
 }

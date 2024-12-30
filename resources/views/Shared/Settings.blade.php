@@ -34,7 +34,9 @@
                                     <p class="py-0 my-0"> Email Address </p>
                                     <small class="text-primary">{{ $user->email }}</small>
                                 </div>
-                                <button v-on:click="changeEmailAddress()"
+                                <button v-on:click="changeEmailAddress(event)"
+                                    data-route="{{route('user.settings.action')}}"
+                                    data-event-type="{{ $settingsAction['CHANGE_EMAIL']['key'] }}"
                                     class="btn btn-sm btn-white btn-size border-secondary py-2 px-3 rounded-pill"
                                     style="background: white;">
                                     Change Email Address
