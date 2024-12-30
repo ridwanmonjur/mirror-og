@@ -112,7 +112,7 @@ class UserController extends Controller
             $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
             $paymentHistory = $this->stripeClient->searchStripePaymenst($paramsHisotry);
             $hasMorePayments = array_key_exists($limit_methods, $paymentMethods->data);
-            hasMoreHistory = $paymentHistory->has_more ;
+            $hasMoreHistory = $paymentHistory->has_more ;
         } else {
             $paymentMethods = new Collection();
             $paymentHistory = new Collection();
