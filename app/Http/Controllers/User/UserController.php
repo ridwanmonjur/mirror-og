@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\UserProfile;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -107,8 +108,14 @@ class UserController extends Controller
             $paramsHisotry['page'] = $page_next;
         }
 
-        $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
-        $paymentHistory = $this->stripeClient->searchStripePaymenst($paramsHisotry);
+        if ($user->stripe_customer_id) {
+            $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
+            $paymentHistory = $this->stripeClient->searchStripePaymenst($paramsHisotry);
+        } else {
+            $paymentMethods = new Collection();
+            $paymentHistory = new Collection();
+        }
+    
         $hasMorePayments = array_key_exists($limit_methods, $paymentMethods->data);
         $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
         return view('Shared.Settings', 
