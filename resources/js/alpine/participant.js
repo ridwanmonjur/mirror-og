@@ -1,7 +1,7 @@
 import Alpine from "alpinejs";
 import { DateTime } from "luxon";
-import { initOffCanvasListeners, resetBg } from "./resetBg";
-import { alpineProfileData, openModal } from "./followers";
+import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
+import { alpineProfileData, openModal } from "../custom/followers";
 
 let userData = JSON.parse(document.getElementById('initialUserData').value);
 let participantData = JSON.parse(document.getElementById('initialParticipantData').value);
@@ -210,7 +210,7 @@ function alpineProfileStatsData(userId, role) {
 }
 
 let role = "PARTICIPANT";
-Alpine.data('profileData', alpineProfileData(userId, loggedUserId, role));
+Alpine.data('profileData', alpineProfileData(userId, loggedUserId, userId == loggedUserId, role));
 Alpine.data('profileStatsData', alpineProfileStatsData( userId,  role));
 window.onpageshow = function(event) {
     if (event.persisted) {

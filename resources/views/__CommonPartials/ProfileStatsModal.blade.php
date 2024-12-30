@@ -109,8 +109,10 @@
                                                             x-show="user.role =='PARTICIPANT' && !user.logged_friendship_status" 
                                                             class="btn btn-primary btn-sm px-3 text-light rounded-pill me-2"
                                                             data-action="friend-request"
-                                                            data-route="participant.friends.update"
-                                                            :data-inputs='JSON.stringify({"addUserId": user.id})'>
+                                                            x-on:click="friendRequest(event)"
+                                                            x-bind:data-route="'/participant/friends'"
+                                                            x-bind:data-inputs='user.id'
+                                                        >
                                                             Add Friend
                                                         </button>
 
@@ -119,9 +121,11 @@
                                                             x-show="user.role =='PARTICIPANT' && user.logged_friendship_status == 'pending'" 
                                                             class="btn border-primary bg-light btn-sm px-3 text- rounded-pill me-2"
                                                             data-action="cancel-request"
-                                                            data-route="participant.friends.update"
-                                                            :data-inputs='JSON.stringify({"deleteUserId": user.id})'>
-                                                            Sent Request
+                                                            x-on:click="friendRequest(event)"
+                                                            x-bind:data-route="'/participant/friends'"
+                                                            x-bind:data-inputs='user.id'
+                                                        >
+                                                            Pending
                                                         </button>
 
                                                         <button 
@@ -129,28 +133,39 @@
                                                             x-show="user.role =='PARTICIPANT' && user.logged_friendship_status == 'accepted'" 
                                                             class="btn btn-success text-dark btn-sm px-3 rounded-pill me-2"
                                                             data-action="unfriend"
-                                                            data-route="participant.friends.update"
-                                                            :data-inputs='JSON.stringify({"updateUserId": user.id, "updateStatus": "left"})'>
+                                                            x-on:click="friendRequest(event)"
+                                                            x-bind:data-route="'/participant/friends'"
+                                                            x-bind:data-inputs='user.id'
+                                                        >
                                                             Friends
                                                         </button>
 
                                                         <button 
                                                             x-cloak 
                                                             x-show="!user.logged_follow_status" 
+                                                            type="button"
                                                             class="btn btn-primary btn-sm px-3 text-light rounded-pill"
                                                             data-action="unfollow"
-                                                            data-route="participant.participant.follow"
-                                                            :data-inputs='JSON.stringify({"participant_id": user.id})'>
+                                                            x-on:click="followRequest(event)"
+                                                            x-bind:data-role='user.role'
+                                                            x-bind:data-route="user.role === 'PARTICIPANT' ? '/participant/follow' : '/api/participant/organizer/follow'"
+                                                            x-bind:data-inputs="user.id"
+                                                            >
                                                             Follow
                                                         </button>
 
                                                         <button 
                                                             x-cloak 
+                                                            type="button"
                                                             x-show="user.logged_follow_status" 
                                                             class="btn btn-success btn-sm px-3 text-dark rounded-pill"
                                                             data-action="follow"
-                                                            data-route="participant.participant.follow"
-                                                            :data-inputs='JSON.stringify({"participant_id": user.id})'>
+                                                            x-bind:data-role='user.role'
+                                                            x-on:click="followRequest(event)"
+                                                            x-bind:data-route="user.role === 'PARTICIPANT' ? '/participant/follow' : '/api/participant/organizer/follow'"
+                                                            x-bind:data-inputs="user.id"
+  
+                                                        >
                                                             Following
                                                         </button>
 

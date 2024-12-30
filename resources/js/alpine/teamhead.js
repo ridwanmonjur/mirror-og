@@ -1,7 +1,7 @@
 import Alpine from "alpinejs";
 import { DateTime } from "luxon";
-import { initOffCanvasListeners, resetBg } from "./resetBg";
-import { alpineProfileData, openModal } from "./followers";
+import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
+import { alpineProfileData, openModal } from "../custom/followers";
 
 const myOffcanvas = document.getElementById('profileDrawer');
 myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
@@ -145,7 +145,7 @@ window.formatDateMySqlLuxon = (mysqlDate, mysqlTime) => {
 let role = "TEAM";
 const storage = document.querySelector('.team-head-storage');
 const loggedUserId = storage.dataset.loggedUserId;
-Alpine.data('profileData', alpineProfileData(teamData.id, loggedUserId, role));
+Alpine.data('profileData', alpineProfileData(teamData.id, loggedUserId, false, role));
 window.openModal = openModal;
 window.onpageshow = function(event) {
     if (event.persisted) {

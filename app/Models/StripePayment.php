@@ -6,6 +6,7 @@ use Stripe\Collection;
 use Stripe\Customer;
 use Stripe\Invoice;
 use Stripe\PaymentIntent;
+use Stripe\SearchResult;
 use Stripe\StripeClient;
 
 class StripePayment
@@ -63,6 +64,16 @@ class StripePayment
         }
 
         return new Collection();
+    }
+
+    public function searchStripePaymenst($arr): SearchResult
+    {
+        if (array_key_exists('query', $arr) && !empty($arr['query'])) {
+
+        return $this->stripeClient->paymentIntents->search($arr);
+        }
+
+        return new SearchResult();
     }
 
     public function retrieveStripePaymentByPaymentId(string| int | null $paymentId): ?PaymentIntent

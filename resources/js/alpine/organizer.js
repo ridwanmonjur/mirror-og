@@ -1,7 +1,7 @@
 import Alpine from "alpinejs";
 import { DateTime } from "luxon";
-import { initOffCanvasListeners, resetBg } from "./resetBg";
-import { alpineProfileData, openModal } from "./followers";
+import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
+import { alpineProfileData, openModal } from "../custom/followers";
 
 const input = document.querySelector("#phone");
 window.intlTelInput(input, {
@@ -114,7 +114,7 @@ Alpine.data('alpineDataComponent', function () {
 
 const loggedUserId = document.querySelector('#routeContainer').getAttribute('data-logged-user-id');
 
-Alpine.data('profileData', alpineProfileData(initialUserProfile.id, loggedUserId, initialUserProfile.role));
+Alpine.data('profileData', alpineProfileData(initialUserProfile.id, loggedUserId, false, initialUserProfile.role));
 window.openModal = openModal;
 window.onpageshow = function(event) {
     if (event.persisted) {

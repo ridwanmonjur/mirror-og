@@ -330,7 +330,6 @@ class OrganizerEventResultsController extends Controller
                 }]);
             }
 
-
             $message = isset($validatedData['id']) 
                 ? 'Match updated successfully' 
                 : 'Match created successfully';

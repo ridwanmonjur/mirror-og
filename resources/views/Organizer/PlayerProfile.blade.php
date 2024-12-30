@@ -169,8 +169,8 @@
                                 🙋‍♂️
                             </span>
                             <span class="d-inline p-0 m-0" style="display: inline !important;">
-                                <span class="cursor-pointer d-inline ps-0" onclick="openModal('followers')">
-                                    <span data-count="{{ $followersCount }}"> {{ $followersCount }}
+                                <span data-follower-stats="{{$followersCount}}" class="cursor-pointer d-inline ps-0"  onclick="openModal('followers')">
+                                    <span data-count="{{ $followersCount }}" @class(['followCounts' . $userProfile->id])> {{ $followersCount }}
                                         follower{{ bladePluralPrefix($followersCount) }}
                                     </span>
                                 </span>
@@ -547,7 +547,7 @@
                 <div x-cloak x-show.important="!isEditMode">
                     <p class="mt-2"> 
                         <svg width="25px" height="25px" viewBox="0 0 1024 1024" class="icon me-3 cursor-pointer" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M512 599.6L107.9 311.1v19.7L512 619.3l404.1-288.6V311L512 599.6z" fill="#E73B37"></path><path d="M63.9 187v650h896.2V187H63.9z m852.2 598.5L672.2 611.3l-13.8 9.8L899.1 793H125.5l240.6-171.8-13.8-9.8-244.4 174.5V231h808.2v554.5z" fill="#39393A"></path><path d="M512.9 536.7m-10 0a10 10 0 1 0 20 0 10 10 0 1 0-20 0Z" fill="#E73B37"></path></g></svg>
-                        <span>{{$userProfile->demo_email}}</span> 
+                        <span>{{$userProfile->demo_email ?? 'Contact email not provided'}}</span> 
                     </p>
                     <template x-if="organizer.website_link">
                         <p class="mt-2"> 

@@ -50,6 +50,8 @@ const scrollIntoView = () => {
     
     const lastMessage = chatContainer.lastElementChild;
     if (lastMessage) {
+        // maybe
+        // { behavior: 'smooth', 'bottom': true }
         lastMessage.scrollIntoView({ behavior: 'smooth' });
     } 
 }
