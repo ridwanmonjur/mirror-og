@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\BannerUpdateRequest;
+use App\Models\StripePayment;
 use App\Models\TeamProfile;
 use App\Models\User;
 use App\Models\UserProfile;
@@ -13,6 +14,13 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+    private $stripeClient;
+
+    public function __construct(StripePayment $stripeClient)
+    {
+        $this->stripeClient = $stripeClient;
+    }
+
     public function replaceBanner(Request $request)
     {
         try {
@@ -78,8 +86,35 @@ class UserController extends Controller
 
     public function settings(Request $request) {
         $user = $request->attributes->get('user');
+        $limit_methods = $request->input('methods_limit', 5); // 10
+        $limit_history = $request->input('history_limit', 2); // 100
 
-        return view('Shared.Settings', $user);
+        $paramsMethods = [
+            'customer' => $user->stripe_customer_id,
+            'limit' => $limit_methods + 1,
+            'type' => 'card',
+        ];
+
+        $paramsHisotry = [
+            'customer' => $user->stripe_customer_id,
+            'limit' => $limit_history + 1,
+        ];
+
+        $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
+        $paymentHistory = $this->stripeClient->retrieveStripePaymentsByCustomer($paramsHisotry);
+
+        $hasMorePayments = array_key_exists($limit_methods, $paymentMethods->data);
+        $hasMoreHistory = array_key_exists($limit_history, $paymentHistory->data);
+
+        return view('Shared.Settings', [
+            'user' => $user,
+            'paymentMethods' => $paymentMethods,
+            'paymentHistory' => $paymentHistory,
+            'limit_methods' => $limit_methods,
+            'limit_history' => $limit_history,
+            'hasMorePayments' => $hasMorePayments,
+            'hasMoreHistory' => $hasMoreHistory  
+        ]);
     }
 
 

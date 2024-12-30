@@ -65,6 +65,15 @@ class StripePayment
         return new Collection();
     }
 
+    public function retrieveStripePaymentsByCustomer($arr): Collection
+    {
+        if (array_key_exists('customer', $arr) && ! empty($arr['customer'])) {
+            return $this->stripeClient->paymentIntents->all($arr);
+        }
+
+        return new Collection();
+    }
+
     public function retrieveStripePaymentByPaymentId(string| int | null $paymentId): ?PaymentIntent
     {
         if ($paymentId) {

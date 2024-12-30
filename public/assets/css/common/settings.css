@@ -7,8 +7,29 @@
     font-family: "Poppins", sans-serif;
 }
 
+.badge-size {
+    width: 95px;
+}
+
+.badge-size svg{
+    margin-top: 1px;
+    margin-right: 5px;
+}
+
+.d-grid {
+    display: grid;
+    grid-template-columns: 1;
+    gap: 10px;
+}
+
+table.responsive thead {
+    display: table-header-group !important;
+}
+
 .btn-size {
-    width: 200px;
+    width: auto;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .bg-white{
@@ -49,10 +70,18 @@ main {
 }
 
 @media screen and (min-width: 992px) {
-   
+    .btn-size {
+        width: 200px;
+    }
+
+
+    .d-grid {
+        grid-template-columns: 10fr 2fr;
+    }
 
     main {
         padding: 20px 0px;
         background-size: 100vw 100vh;
     }
 }
+

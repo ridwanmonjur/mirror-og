@@ -9,6 +9,7 @@ export default defineConfig({
                 'resources/sass/app.scss',
                 'resources/js/app.js',
                 'resources/js/libraries/tippy.js',
+                'resources/js/libraries/petite-vue.js',
                 'resources/js/libraries/lightpicker.js',
                 'resources/js/libraries/tagify.js',
                 'resources/js/libraries/file-edit.js',
