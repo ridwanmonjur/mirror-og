@@ -281,7 +281,7 @@ const roomStore = reactive({
                 this.currentRoomObj = rooms[currentRoomIndex];
                 this.currentRoom = currentRoomIndex;
                 chatStore.getMessages(rooms[currentRoomIndex].id);
-                setTimeout(() => { scrollIntoView(); }, 300);
+                setTimeout(() => { scrollIntoView(); }, 500);
             } 
         });
 
@@ -302,7 +302,7 @@ const roomStore = reactive({
             await chatStore.getMessages(this.insideCurrentRoom(index).id);
         }
 
-        scrollIntoView();
+        setTimeout(() => { scrollIntoView(); }, 500);
     },
     insideCurrentRoom(index) {
         if (index != null) return this.oldRooms[index];
@@ -373,7 +373,7 @@ function ChatListComponent() {
                     createdAt: new Date(),
                 });
 
-               
+               scrollIntoView();
 
             } catch (err) {
                 console.error(err);
