@@ -177,7 +177,7 @@
                                                        style="padding: 2px ;">
                                                        <li>
 
-                                                           <a class="dropdown-item ms-0 py-1" href="{{route('user.message.view', ['userId' => $userProfile->id] )}}">
+                                                           <a class="dropdown-item ms-0 py-1" x-bind:href="'/profile/message/?userId=' + user.id">
                                                                <svg class="me-1 mt-1"
                                                                    xmlns="http://www.w3.org/2000/svg" width="13"
                                                                    height="13" viewBox="0 0 24 24" fill="none"
