@@ -108,16 +108,21 @@
                                                                    x-bind:data-inputs='user.id'>
                                                                    Add Friend
                                                                </button>
-
-                                                               <button x-cloak
-                                                                   x-show="user.role =='PARTICIPANT' && user.logged_friendship_status == 'pending'"
-                                                                   class="btn border-primary bg-light btn-sm px-3 text- rounded-pill me-2"
-                                                                   data-action="cancel-request"
-                                                                   x-on:click="friendRequest(event)"
-                                                                   x-bind:data-route="'/participant/friends'"
-                                                                   x-bind:data-inputs='user.id'>
-                                                                   Pending
-                                                               </button>
+                                                                
+                                                                <a :href="`/view/${user?.role?.toLowerCase()}/${user.id}`">
+                                                                    <button x-cloak
+                                                                        x-show="user.role =='PARTICIPANT' && (user.logged_friendship_status == 'pending' || user.logged_friendship_status == 'left')"
+                                                                        class="btn border-primary bg-light btn-sm px-3 text- rounded-pill me-2"
+                                                                        data-action="cancel-request"
+                                                                        {{-- x-on:click="friendRequest(event)" --}}
+                                                                        type="button"
+                                                                        x-bind:data-route="'/participant/friends'"
+                                                                        x-bind:data-inputs='user.id'
+                                                                        x-text="user.logged_friendship_status == 'pending' ? 'Pending' : 'Not Friends'"    
+                                                                    >
+                                                                    </button>
+                                                                </a>
+                                                            
 
                                                                <button x-cloak
                                                                    x-show="user.role =='PARTICIPANT' && user.logged_friendship_status == 'accepted'"
