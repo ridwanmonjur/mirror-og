@@ -6,6 +6,12 @@
 @import 'tippy.js/dist/tippy.css';
 @import 'tippy.js/themes/light.css';
 
+.special-font-signinin {
+  letter-spacing: 0.1em;
+  transform: translateY(1.10);
+  text-transform: uppercase;
+  font-size: small !important;
+}
 
 .text-justify {
   text-align: justify;
