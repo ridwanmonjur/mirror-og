@@ -19,7 +19,7 @@ return [
     'ttl' => 3600,
     'keys' => [
         'user_team_follows' => 'user%s:team', 
-        'user_team_member' => 'user%s:team:member',
+        'user_team_member' => 'user%s:team%s:member',
         'team_member_count' => 'team:member_count',
     ],
     /*

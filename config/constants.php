@@ -248,9 +248,11 @@ return [
         'NORMAL' => 3,
         'TOO_EARLY' => 4
     ],
+
     'SETTINGS_ROUTE_ACTION' => [
         'CHANGE_EMAIL' => ['key' => 1, 'action' => 'changeEmail'],
         'CHANGE_RECOVERY_EMAIL' => ['key' => 2, 'action' => 'changeRecoveryEmail'],
-        'CHANGE_PASSWORD' => ['key' => 3, 'action' => 'changePassword']
+        'CHANGE_PASSWORD' => ['key' => 3, 'action' => 'changePassword'],
+        'COMPARE_PASSWORD' => ['key' => 4, 'action' => 'comparePassword']
     ]
 ];

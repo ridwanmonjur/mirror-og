@@ -1,13 +1,6 @@
 import { createApp, reactive } from "petite-vue";
 import Swal from "sweetalert2";
 
-const FormModal = Swal.mixin({
-    showCancelButton: true,
-    confirmButtonColor: '#43A4D7',
-    reverseButtons: true,
-    allowInputAutoFocus: false
-    
-});
 
 document.querySelectorAll('.search-bar').forEach((element)=> {
     element.remove();
@@ -18,22 +11,25 @@ const isValidEmail = (email) => {
     return emailRegex.test(email);
 };
 
+function setErrorCurrentPassword (errorMessage) {
+    const error = document.getElementById('current-password-error');
+    error.classList.remove('d-none');
+    error.textContent = errorMessage;
+}
+
+
 let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 let userProfile = JSON.parse(document.getElementById('initialUserProfile').value);
-console.log(userProfile);
-console.log(userProfile);
-console.log(userProfile);
 function AccountComponent() {
     return {
+        isPasswordNull: userProfile.isPasswordNull,
         emailAddress: userProfile.email,
-        recoveryAddress: userProfile.recoveryAddress,
+        recoveryAddress: userProfile.recovery_email,
         async changeEmailAddress(event) {
             try {
                 let button = event.currentTarget;
                 let {eventType, route} = button.dataset;
-                console.log({eventType});
-                console.log({eventType});
                 const { value: currentEmailInput } = await Swal.fire({
                     showCancelButton: true,
                     confirmButtonColor: '#43A4D7',
@@ -48,7 +44,9 @@ function AccountComponent() {
                                     class="form-control border-primary" 
                                     placeholder="Enter new email"
                                 >
-                                <div class="invalid-feedback" id="current-email-error"></div>
+                                <div class="text-red text-center mt-3 d-none" id="current-email-error">
+                                
+                                </div>
                             </div>
                         </div>
                     `,
@@ -61,17 +59,18 @@ function AccountComponent() {
                         const error = document.getElementById('current-email-error');
                         const value = input.value.trim();
                         
-                        input.classList.remove('text-red');
                         error.textContent = '';
                         
                         if (!value) {
-                            input.classList.add('text-red');
-                            error.textContent = 'Please enter your new email';
+                            error.classList.remove('d-none');
+
+                            error.textContent = 'Please enter your new email!';
                             return false;
                         }
                         if ( !isValidEmail(value) ) {
-                            input.classList.add('text-red');
-                            error.textContent = 'New email does not match';
+                            error.classList.remove('d-none');
+
+                            error.textContent = 'New email does not match!';
                             return false;
                         }
                         
@@ -79,8 +78,8 @@ function AccountComponent() {
                     }
                 });
                 
-                if (value) {
-                    await fetch(route, {
+                if (currentEmailInput) {
+                    let data = await fetch(route, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -92,54 +91,201 @@ function AccountComponent() {
                         })
                     });
 
-                    Toast.fire({
-                        icon: 'success',
-                        text: `Email updated successfully to '${currentEmailInput}'!` 
-                    });
+                    data = await data.json();
+
+                    if (data.success) {
+                        Toast.fire({
+                            icon: 'success',
+                            text: `Email updated successfully to '${currentEmailInput}'!` 
+                        });
+
+                        this.emailAddress = currentEmailInput;
+                    } else {
+                        if (data.message != null) {
+                            toastError(data.message);
+                        } else {
+                            toastError('Failed to update email');
+                        }
+                    }
+
+
                 }
            
-               
-                
-             
-        
             } catch (error) {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Failed to update email',
-                    text: error.message
-                });
+                toastError('Failed to update email');
             }
         },
-        async changePassword() {
+        async changeRecoveryEmailAddress(event) {
             try {
-                const { value: currentPasswordInput } = await Swal.fire({
-                   focusConfirm: true,
+                let button = event.currentTarget;
+                let {eventType, route} = button.dataset;
+                const { value: recoveryEmailInput } = await Swal.fire({
                     showCancelButton: true,
                     confirmButtonColor: '#43A4D7',
                     reverseButtons: true,
-                    
+                   
                     html: `
                         <div class="pt-4 pb-3">
-                            <h5 class="modal-heading text-center">Verify Current Password</h5>
+                            <h5 class="modal-heading text-center"> Enter a new email address </h5>
                             <div class="mx-3 text-start mt-4">
-                                <input type="password" 
-                                    id="swal-current-password" 
+                                <input type="email" 
+                                    id="swal-new-email" 
                                     class="form-control border-primary" 
-                                    placeholder="Enter current password"
-                                    autoComplete="new-password"
-
+                                    placeholder="Enter new email"
                                 >
-                                <div class="invalid-feedback" id="current-password-error"></div>
+                                <div class="text-red text-center mt-3 d-none" id="current-email-error">
+                                
+                                </div>
                             </div>
                         </div>
                     `,
                     showCancelButton: true,
                     confirmButtonText: 'Next',
+                    didOpen: () => Swal.getConfirmButton().focus(),
+
+                    preConfirm: () => {
+                        const input = document.getElementById('swal-new-email');
+                        const error = document.getElementById('current-email-error');
+                        const value = input.value.trim();
+                        
+                        error.textContent = '';
+                        
+                        if (!value) {
+                            error.classList.remove('d-none');
+
+                            error.textContent = 'Please enter your recovery email!';
+                            return false;
+                        }
+                        if ( !isValidEmail(value) ) {
+                            error.classList.remove('d-none');
+
+                            error.textContent = 'Recovery email is not valid!';
+                            return false;
+                        }
+                        
+                        return value;
+                    }
                 });
+                
+                if (recoveryEmailInput) {
+                    let data = await fetch(route, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": csrfToken
+                        },
+                        body: JSON.stringify({
+                            eventType,
+                            newRecoveryEmail: recoveryEmailInput
+                        })
+                    });
+
+                    data = await data.json();
+
+                    if (data.success) {
+                        Toast.fire({
+                            icon: 'success',
+                            text: `Email updated successfully to '${recoveryEmailInput}'!` 
+                        });
+
+                        this.recoveryAddress = recoveryEmailInput;
+                    } else {
+                        if (data.message != null) {
+                            toastError(data.message);
+                        } else {
+                            toastError('Failed to update email');
+                        }
+                    }
+                }
+           
+            } catch (error) {
+                toastError('Failed to update email');
+            }
+        },
+        async changePassword(event) {
+            try {
+                let button = event.currentTarget;
+                let {eventOneType, eventTwoType, route} = button.dataset;
+
+                if (!this.isPasswordNull) {
+                    const { value: currentPasswordInput, isConfirmed, isDenied } = await Swal.fire({
+                        focusConfirm: true,
+                        showCancelButton: true,
+                        confirmButtonColor: '#43A4D7',
+                        reverseButtons: true,
+                        
+                        html: `
+                            <div class="pt-4 pb-3">
+                                <h5 class="modal-heading text-center">Verify Current Password</h5>
+                                <div class="mx-3 text-start mt-4">
+                                    <input type="password" 
+                                        id="swal-current-password" 
+                                        class="form-control border-primary" 
+                                        placeholder="Enter current password"
+                                        autoComplete="new-password"
+
+                                    >
+                                    <div class="text-center mt-2 text-red d-none" id="current-password-error"></div>
+                                </div>
+                            </div>
+                        `,
+                        allowOutsideClick: false,
+                        showCancelButton: true,
+                        confirmButtonText: 'Next',
+                        preConfirm: async () => {
+                            const input = document.getElementById('swal-current-password');
+                            const error = document.getElementById('current-password-error');
+                            const value = input.value.trim();
+                            
+                            error.textContent = '';
+                            
+                            if (!value) {
+                                error.classList.remove('d-none');
+    
+                                error.textContent = 'Please enter your new email!';
+                                return false;
+                            }
+
+                            try {
+                                let data = await fetch(route, {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "X-CSRF-TOKEN": csrfToken
+                                    },
+                                    body: JSON.stringify({
+                                        eventType: eventOneType,
+                                        currentPassword: value
+                                    })
+                                });
         
-                if (!currentPasswordInput) return; 
-        
-                const { value: newPasswordInput } = await FormModal.fire({
+                                data = await data.json();
+                                console.log({data});
+                                console.log({data});
+                                console.log({data});
+                                console.log({data});
+                                if (!data || !data.success) {
+                                    setErrorCurrentPassword("This password is incorrect!");
+                                    return false;
+                                }
+                            } catch (error2) {
+                                setErrorCurrentPassword("Your current password is incorrect!");
+                                return false;
+                            }
+                            
+                            return value;
+                        }
+                    });
+
+                    if (!isConfirmed && !isDenied) {
+                        return;
+                    }
+                }  
+                const { value: newPasswordInput } = await Swal.fire({
+                    showCancelButton: true,
+                    confirmButtonColor: '#43A4D7',
+                    reverseButtons: true,
+                    allowInputAutoFocus: false,
                     html: `
                         <div class="pt-4 pb-3">
                             <h5 class="text-center">Enter New Password</h5>
@@ -151,7 +297,6 @@ function AccountComponent() {
                                     autoComplete="new-password"
     
                                 >
-                                <div class="invalid-feedback" id="new-password-error"></div>
                                 
                                 <input type="password" 
                                     id="swal-confirm-password" 
@@ -160,7 +305,7 @@ function AccountComponent() {
                                     autoComplete="new-password"
 
                                 >
-                                <div class="invalid-feedback" id="confirm-password-error"></div>
+                                <div class="d-none text-red mt-2 text-center" id="new-password-error"></div>
                             </div>
                         </div>
                     `,
@@ -170,37 +315,33 @@ function AccountComponent() {
                         const newPassword = document.getElementById('swal-new-password');
                         const confirmPassword = document.getElementById('swal-confirm-password');
                         const newError = document.getElementById('new-password-error');
-                        const confirmError = document.getElementById('confirm-password-error');
                         
                         const newValue = newPassword.value.trim();
                         const confirmValue = confirmPassword.value.trim();
                         
-                        newPassword.classList.remove('text-red');
-                        confirmPassword.classList.remove('text-red');
                         newError.textContent = '';
-                        confirmError.textContent = '';
                         
                         if (!newValue) {
-                            newPassword.classList.add('text-red');
+                            newError.classList.remove('d-none');
                             newError.textContent = 'Please enter a new password';
                             return false;
                         }
                         
-                        if (newValue.length < 8) {
-                            newPassword.classList.add('text-red');
+                        if (newValue.length < 6) {
+                            newError.classList.remove('d-none');
                             newError.textContent = 'Password must be at least 8 characters long';
                             return false;
                         }
                         
                         if (!confirmValue) {
-                            confirmPassword.classList.add('text-red');
-                            confirmError.textContent = 'Please confirm your new password';
+                            newError.classList.remove('d-none');
+                            newError.textContent = 'Please confirm your new password';
                             return false;
                         }
                         
                         if (newValue !== confirmValue) {
-                            confirmPassword.classList.add('text-red');
-                            confirmError.textContent = 'Passwords do not match';
+                            newError.classList.remove('d-none');
+                            newError.textContent = 'Passwords do not match';
                             return false;
                         }
                         
@@ -209,12 +350,33 @@ function AccountComponent() {
                 });
         
                 if (!newPasswordInput) return; 
+
+                let newData = await fetch(route, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrfToken
+                    },
+                    body: JSON.stringify({
+                        eventType: eventTwoType,
+                        newPassword: newPasswordInput
+                    })
+                });
+
+                newData = await newData.json();
+
+                if (!newData.success) {
+                    toastError('Failed to update email');
+                    return;
+                }
         
-                
+        
                 Toast.fire({
                     icon: 'success',
                     text: 'Password updated successfully!'
                 });
+                this.isPasswordNull = false;
+
         
             } catch (error) {
                 Toast.fire({

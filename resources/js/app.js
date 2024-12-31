@@ -77,7 +77,16 @@ window.loadMessage = () => {
     let message = localStorage.getItem('message');
 
     if (tab) {
-        document.getElementById(tab)?.click();
+        let tabElement = document.getElementById(tab);
+        if (tabElement) {
+            tabElement.click();
+            window.scrollTo(
+                {
+                    bottom: tabElement.getBoundingClientRect().bottom,
+                    behavior: 'smooth' 
+                }
+            )
+        }
     }
 
     if (success === 'true' && message) {

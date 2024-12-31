@@ -79,19 +79,19 @@ class Team extends Model
 
     public function findTeamMemberByUserId(int $userId)
     {
-        $cacheKey = sprintf(config('cache.keys.user_team_member'), $userId);
+        // $cacheKey = sprintf(config('cache.keys.user_team_member'), $userId, $this->id);
         
-        return Cache::remember($cacheKey, now()->addSeconds(config('cache.ttl')), function () use ($userId) {
+        // return Cache::remember($cacheKey, now()->addSeconds(config('cache.ttl')), function () use ($userId) {
             return TeamMember::where('team_id', $this->id)
                 ->where('user_id', $userId)
                 ->first();
-        });
+        // });
     }
 
     function getMembersAndTeamCount() {
-        $cacheKey = sprintf(config('cache.keys.team_member_count'), $this->id);
+        // $cacheKey = sprintf(config('cache.keys.team_member_count'), $this->id);
     
-        return Cache::remember($cacheKey, now()->addSeconds(config('cache.ttl')), function () {
+        // return Cache::remember($cacheKey, now()->addSeconds(config('cache.ttl')), function () {
             $this->loadCount([
                 'members as accepted_count' => function ($query) {
                     $query->where('status', 'accepted');
@@ -105,7 +105,7 @@ class Team extends Model
                 'accepted' => $this->accepted_count,
                 'left_plus_accepted' => $this->accepted_count + $this->left_count,
             ];
-        });
+        // });
     }
 
     public function createdAtHumaReadable() {

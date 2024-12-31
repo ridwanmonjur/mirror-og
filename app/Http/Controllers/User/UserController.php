@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Exceptions\SettingsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\BannerUpdateRequest;
+use App\Http\Requests\User\UpdateSettingsRequest;
 use App\Models\StripePayment;
 use App\Models\TeamProfile;
 use App\Models\User;
 use App\Models\UserProfile;
+use App\Services\SettingsService;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -16,10 +20,12 @@ use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
     private $stripeClient;
+    private $settingsService;
 
-    public function __construct(StripePayment $stripeClient)
+    public function __construct(StripePayment $stripeClient, SettingsService $settingsService)
     {
         $this->stripeClient = $stripeClient;
+        $this->settingsService = $settingsService;
     }
 
     public function replaceBanner(Request $request)
@@ -87,6 +93,7 @@ class UserController extends Controller
     public function settings(Request $request)
     {
         $user = $request->attributes->get('user');
+        $user->is_null_password = empty($user->password);
         $limit_methods = $request->input('methods_limit', 10); // 10
         $limit_history = 30; // 100
         $page_history = intval($request->input('history_page', 1)); // 100
@@ -127,17 +134,24 @@ class UserController extends Controller
             ->with('hasMoreHistory', );
     }
 
-    public function changeSettings(Request $request) {
-        $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
-        foreach ($settingsAction as $route => $config) {
-            if ($config['key'] === $request->eventType) {
-                $function = $config['action'];
-                if (method_exists($this, $function)) {
-                    $this->$function();
-                    return;
-                }
-            }
+    public function changeSettings(UpdateSettingsRequest $request): JsonResponse
+    {
+        try {
+            $result = $this->settingsService->changeSettings($request);
+            
+            return response()->json($result);
+        } catch (SettingsException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An unexpected error occurred'
+            ], 500);
         }
     }
 
+  
 }

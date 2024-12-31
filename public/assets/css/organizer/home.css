@@ -124,7 +124,7 @@ a {
     margin-left: 20px;
     margin-right: 20px;
     height: 430px;
-    background: transparent;
+    background: rgba(255, 255, 255, 0.4);
     border: 2px solid rgb(8, 20, 58);
     border-radius: 40px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);

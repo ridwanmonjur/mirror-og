@@ -408,7 +408,7 @@
                     <span>{{$acceptedTeamMemberCount}}/{{$leftPlusAcceptedTeamMemberCount}} Members </span>
                 </div>
                 <div onclick="openModal('followers')" class="position-relative col-12 col-lg-4 text-center mx-auto cursor-pointer"
-                    style="z-index: 999 !important; "
+                    style="z-index: 998 !important; "
                 > 
                     <span class="me-2"> 🙋‍♂️ </span>
                     <span data-follower-stats="{{ is_null($selectTeam?->profile?->follower_count) ? 0 : $selectTeam->profile->follower_count}}" >{{ is_null($selectTeam?->profile?->follower_count) ? 0 . ' Followers'  : $selectTeam->profile->follower_count. ' Follower'. bladePluralPrefix($selectTeam->profile->follower_count) }} </span>

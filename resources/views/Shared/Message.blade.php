@@ -195,5 +195,4 @@
 </body>
 <script src="{{ asset('/assets/js/shared/BackgroundModal.js') }}"></script>
 
-<script src="{{ asset('/assets/js/chat.js') }}"></script>
 </html>
