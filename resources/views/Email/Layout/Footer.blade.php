@@ -5,8 +5,7 @@
             <tr>
                 <td style="padding:0;width:50%;" align="left">
                     <p style="margin:0;font-size:11.5px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;">
-                        &reg; Kuala Lumpur, Malaysia 2024<br /><a href="http://www.example.com"
-                            style="color:#ffffff !important;text-decoration:underline;">Unsubscribe</a>
+                        &reg; Kuala Lumpur, Malaysia 2024<br />
                     </p>
                 </td>
                 <td style="padding:0;width:50%;" align="right">

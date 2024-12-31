@@ -92,7 +92,6 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
             const action = button.dataset.action;
             const route = button.dataset.route;
             const inputId = button.dataset.inputs;
-            debugger
         
             try {
               

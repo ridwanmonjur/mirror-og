@@ -69,7 +69,6 @@ class AuthService {
             return redirect()->route("$role.signin.view")->with("error", $error);
         }
 
-
         if (!$user) {
             return redirect()->route("$role.signin.view")->with('key', 'User does not exist!');
         }

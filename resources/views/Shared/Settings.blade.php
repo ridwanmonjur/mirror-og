@@ -20,19 +20,21 @@
             <div class="accordion accordion-flush " id="accordionExample">
                 <div v-scope="AccountComponent()" class="accordion-item border-0 pb-0 mb-0">
                     <h1 class="accordion-header " id="headingOne">
-                        <div class="accordion-button pt-4 pb-4 rounded-pill border collapsed border-0 bg-white" type="button"
+                        <div class="accordion-button pt-4 pb-4 rounded-pill border 
+                            zcollapsed 
+                        border-0 bg-white" type="button"
                             data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
                             aria-controls="collapseOne">
                             <b>Account details and security </b>
                         </div>
                     </h1>
-                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                         <div class="accordion-body border-0">
                             <div
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
                                     <p class="py-0 my-0"> Email Address </p>
-                                    <small class="text-primary">{{ $user->email }}</small>
+                                    <small class="text-primary" v-text="emailAddress"></small>
                                 </div>
                                 <button v-on:click="changeEmailAddress(event)"
                                     data-route="{{route('user.settings.action')}}"
@@ -47,7 +49,11 @@
                                 <div>
                                     <p class="py-0 my-0"> Password </p>
                                 </div>
-                                <button v-on:click="changePassword()"
+                                <button v-on:click="changePassword(event)"
+                                    dat-is-password-null="{{$user->is_null_password}}"
+                                    data-route="{{route('user.settings.action')}}"
+                                    data-event-one-type="{{ $settingsAction['COMPARE_PASSWORD']['key'] }}"
+                                    data-event-two-type="{{ $settingsAction['CHANGE_PASSWORD']['key'] }}"
                                     class="btn btn-sm btn-size text-light bg-secondary py-2 px-3 rounded-pill">
                                     Change Password
                                 </button>
@@ -56,9 +62,13 @@
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
                                     <p class="py-0 my-0"> Account Recovery </p>
-                                    <small class="text-primary">{{ $user->recovery_email }}</small>
+                                    <small class="text-primary" v-text="recoveryAddress"></small>
                                 </div>
-                                <button class="btn btn-size btn-sm border-primary py-2 rounded-pill">
+                                <button v-on:click="changeRecoveryEmailAddress(event)"
+                                    class="btn btn-size btn-sm border-primary py-2 rounded-pill"
+                                    data-route="{{route('user.settings.action')}}"
+                                    data-event-type="{{ $settingsAction['CHANGE_RECOVERY_EMAIL']['key'] }}"
+                                >
                                     Change Recovery Email
                                 </button>
                             </div>
@@ -77,17 +87,17 @@
                 </div>
                 <div class="accordion-item accordion-flush border-0">
                     <h2 class="accordion-header pb-2 border-0" id="headingTwo">
-                        <div class="accordion-button  pt-4 pb-4 rounded-pill collapsed border-0 bg-white"
+                        <div class="accordion-button  pt-4 pb-4 rounded-pill zcollapsed border-0 bg-white"
                             type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
                             aria-controls="collapseTwo">
                             <b>Payment info</b>
                         </div>
                     </h2>
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+                    <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                         <div class="accordion-body border-0 py-0 pt-n2">
                             <!-- First nested accordion -->
                             <div class="accordion" id="nestedAccordion1">
-                                <div class="accordion-item border-0">
+                                {{-- <div class="accordion-item border-0">
                                     <h3 class="accordion-header  border-top border-1 "
                                         id="nestedHeading1">
                                         <div class="px-0 accordion-button border-0 collapsed show py-4 bg-white"
@@ -113,7 +123,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <!-- Second nested accordion -->
                             <div class="accordion" id="nestedAccordion2">
@@ -318,6 +328,5 @@
 </body>
 <script src="{{ asset('/assets/js/shared/BackgroundModal.js') }}"></script>
 
-<script src="{{ asset('/assets/js/chat.js') }}"></script>
 
 </html>

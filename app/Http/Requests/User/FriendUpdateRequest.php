@@ -29,7 +29,7 @@ class FriendUpdateRequest extends FormRequest
             'deleteUserId' => 'sometimes|exists:users,id',
             'addUserId' => 'sometimes|exists:users,id',
             'updateUserId' => 'sometimes|exists:users,id',
-            'updateStatus' => 'sometimes|in:left,accepted,rejected'
+            'updateStatus' => 'sometimes|in:left,accepted,rejected,pending'
          ];
      }
 
