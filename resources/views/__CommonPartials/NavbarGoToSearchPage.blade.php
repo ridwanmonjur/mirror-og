@@ -48,7 +48,24 @@
     </div>
     <div class="nav-buttons">
         @guest
-            @include('__CommonPartials.__Navbar.NavbarGuest')
+           <div class="dropdown" data-reference="parent" data-bs-auto-close="outside" data-bs-offset="-80,-80">
+            <a href="#" role="button" class="btn dropdown-toggle px-3   " id="dropdownMenuGuest" data-bs-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="true" >
+                <img width="30px" height="24px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
+                <span class="pt-2 ms-1">Sign In</span>
+            </a>
+            <div class="dropdown-menu shadow-lg text-start border rounded-lg py-0" style=" position: absolute; left: -60px; top: 55px; border-radius: 5px;"
+                aria-labelledby="dropdownMenuGuest">
+                <a class="dropdown-item py-navbar px-1 ps-3  special-font-signinin align-middle " href="{{ route('organizer.signin.view') }}">
+                    <svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.53 11.06L15.47 10l-4.88 4.88-2.12-2.12-1.06 1.06L10.59 17l5.94-5.94zM19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path></g></svg>
+                    Organizer
+                </a>
+                <a class="dropdown-item py-navbar special-font-signinin  px-1 ps-3 align-middle " href="{{ route('participant.signin.view') }}">
+                <svg class="me-1" version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" xml:space="preserve" width="20px" height="20px" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css"> .st0{fill:none;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;} </style> <path d="M11.5,28H2.2c0.6-2,2.2-3.5,4.2-4.1c2.7-0.7,4.5-3.1,4.5-5.8c0-0.4-0.2-0.7-0.5-0.9C9,16.4,8.1,14.7,8,12.9 c0-0.7,0.5-1.4,1.2-1.6l1.1-0.4c0.4-0.1,0.7-0.5,0.7-0.9V6.8c1.8,2.5,4.4,4.2,7.3,4.9C18.1,12.1,18,12.5,18,13c0,1.8-1,3.4-2.5,4.3 c-0.3,0.2-0.5,0.5-0.5,0.9c0,1.7,0.8,3.3,2,4.4c1.5-0.2,2.9-0.3,4.3-0.1c-0.5-0.2-0.9-0.4-1.4-0.5c-1.6-0.4-2.7-1.7-2.9-3.2 c1.8-1.3,3-3.4,3-5.7c0-0.6,0.4-1,1-1c0.6,0,1-0.4,1-1V8.7c0-3.4-2.5-6.3-5.8-6.7c-2-0.2-4,0.5-5.4,2C9.8,3.9,8.9,4.2,8,4.9 C6.7,5.8,6,7.3,6,9v3.8c0,0,0,0.1,0,0.1c0,0,0,0.1,0,0.1c0,0,0,0.1,0,0.1c0.1,2.2,1.2,4.3,2.9,5.6c-0.2,1.6-1.4,2.9-3,3.3 c-3,0.8-5.2,3.1-5.8,6.1c-0.1,0.5,0,0.9,0.3,1.3C0.8,29.8,1.2,30,1.7,30h10.2C11.3,29.5,11.2,28.6,11.5,28z"></path> <path d="M26,20c-1.2,0-2.3,0.3-3.3,1h-4.4c-1-0.7-2.1-1-3.3-1c-3.3,0-6,2.7-6,6s2.7,6,6,6c1.2,0,2.3-0.3,3.3-1h4.4 c1,0.7,2.1,1,3.3,1c3.3,0,6-2.7,6-6S29.3,20,26,20z M17,27h-1v1c0,0.6-0.4,1-1,1s-1-0.4-1-1v-1h-1c-0.6,0-1-0.4-1-1s0.4-1,1-1h1v-1 c0-0.6,0.4-1,1-1s1,0.4,1,1v1h1c0.6,0,1,0.4,1,1S17.6,27,17,27z M25.7,27.7c-0.1,0.1-0.2,0.2-0.3,0.2C25.3,28,25.1,28,25,28 c-0.1,0-0.1,0-0.2,0c-0.1,0-0.1,0-0.2-0.1c-0.1,0-0.1-0.1-0.2-0.1c0,0-0.1-0.1-0.1-0.1c-0.1-0.1-0.2-0.2-0.2-0.3S24,27.1,24,27 c0-0.3,0.1-0.5,0.3-0.7c0.3-0.3,0.7-0.4,1.1-0.2c0.1,0.1,0.2,0.1,0.3,0.2c0.2,0.2,0.3,0.4,0.3,0.7C26,27.3,25.9,27.5,25.7,27.7z M28,25.2c0,0.1,0,0.1-0.1,0.2c0,0.1,0,0.1-0.1,0.2c0,0-0.1,0.1-0.1,0.1C27.5,25.9,27.3,26,27,26c-0.1,0-0.1,0-0.2,0 c-0.1,0-0.1,0-0.2-0.1c-0.1,0-0.1-0.1-0.2-0.1c0,0-0.1-0.1-0.1-0.1C26.1,25.5,26,25.3,26,25c0-0.3,0.1-0.5,0.3-0.7 c0.4-0.4,1-0.4,1.4,0c0,0,0.1,0.1,0.1,0.1c0,0.1,0.1,0.1,0.1,0.2c0,0.1,0,0.1,0.1,0.2c0,0.1,0,0.1,0,0.2S28,25.1,28,25.2z"></path> </g></svg>
+                    Participant
+                </a>
+            </div>
+        </div>
         @endguest
         @auth
             @include('__CommonPartials.__Navbar.NavbarAuth')

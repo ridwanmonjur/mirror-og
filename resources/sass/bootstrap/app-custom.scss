@@ -14,12 +14,12 @@ div.navbar-placeholder {
 
 }
 
-nav.navbar .dropdown-item:first-child:hover{
-    border-radius: 10px 10px 0 0;
+nav.navbar .dropdown-item:first-child, nav.navbar .dropdown-item:first-child:hover{
+    border-radius: 4px 4px 0 0 !important;
 }
 
-nav.navbar .dropdown-item:last-child:hover{
-    border-radius: 0px 0px 10px 10px;
+nav.navbar .dropdown-item:last-child, nav.navbar .dropdown-item:last-child:hover{
+    border-radius: 0px 0px 4px 4px !important;
 }
 
 svg{
@@ -127,8 +127,9 @@ svg{
     z-index: 999;
     position: sticky;
     top: 0;
+    padding-top: 12px;
+    padding-bottom: 12px;
     transition: all 0.3s ease-in-out;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
 }
 
@@ -184,10 +185,10 @@ nav svg:active {
 .search-bar input {
     border: 2px solid rgb(175, 165, 165);
     border-radius: 30px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
     padding-left: 90px;
-    width: 500px;
+    width: 400px;
     max-width: 80vw;
     transition-duration: 500ms;
     transition-delay: 100ms;
@@ -206,7 +207,8 @@ input#search-bar:focus + svg {
 
 .search-bar svg {
     position: absolute;
-    top: 8px;
+    top: 5px;
+    stroke: rgb(175, 165, 165) !important;
 }
 
 input[type="submit"],
@@ -554,7 +556,7 @@ h5 {
 
     .search-bar svg {
         left: 20px;
-        top: 12px;
+        top: 8px;
 
     }
 
