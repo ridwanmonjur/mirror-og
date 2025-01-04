@@ -64,7 +64,7 @@
 </div>
 
 <div class="dropdown" data-reference="parent" data-bs-auto-close="outside" data-bs-offset="-80,-80">
-    <a href="#" role="button" class="btn" id="dropdownMenuLinkSignedIn" data-bs-toggle="dropdown"
+    <a href="#" role="button" class="btn m-0 p-0" id="dropdownMenuLinkSignedIn" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
         @if($user->userBanner)
             <img

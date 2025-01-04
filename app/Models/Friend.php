@@ -75,6 +75,7 @@ class Friend extends Model
             $query->addSelect([
                 'logged_user_friends.id as friend_id',
                 'logged_user_friends.status as logged_friendship_status',
+                'logged_user_friends.actor_id as logged_friendship_actor',
                 DB::raw('COALESCE ( og_follows.id, p_follows.id ) as logged_follow_status'),
                 'blocks.id as logged_block_status',
                 
@@ -88,8 +89,7 @@ class Friend extends Model
                           $query->on('logged_user_friends.user1_id', '=', 'other_user.id')
                                 ->where('logged_user_friends.user2_id', '=', $loggedUserId);
                       });
-                })
-                ->whereIn('logged_user_friends.status', ['accepted', 'pending']);
+                });
             })
            ->leftJoin('blocks', function($join) use ($loggedUserId) {
                $join->on('blocks.blocked_user_id', '=', 'other_user.id')

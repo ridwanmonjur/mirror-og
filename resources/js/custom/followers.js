@@ -3,6 +3,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
         connections: [],
         page: null,
         next_page: null,
+        loggedUserId,
         currentTab: 'followers',
         role,
         
@@ -31,7 +32,35 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
             const inputId = button.dataset.inputs ;
         
             try {
-               
+                const courseMap = {
+                    'unfollow': {
+                        swalText: "Are you sure you want to unfollow this user?",
+                        swalAction: 'Unfollow!'
+                    },
+                    'follow': {
+                        swalText: "Are you sure you want to follow this user?",
+                        swalAction: 'Follow!'
+                    }
+                };
+                
+                const { swalText, swalAction } = courseMap[action] || {};
+
+                const result = await window.Swal.fire({
+                    title: 'Are you sure?',
+                    text: swalText,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#43a4d7',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: swalAction,
+                    cancelButtonText: 'No'
+                });
+                
+                if (!result.isConfirmed) {
+                    return;
+                }
+
+                
                 const actionMap = {
                     'PARTICIPANT': {
                         property: 'participant_id',
@@ -96,24 +125,68 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
             try {
               
                 const actionMap = {
+                    'reject-request': {
+                        status: 'rejected',
+                        property: 'updateUserId',
+                        swalText: "Are you sure you want to reject this friend request?",
+                        swalAction: 'Reject!'
+                    },
                     'friend-request': {
                         status: 'pending',
                         property: 'addUserId',
-                        additionalObject : {}
+                        swalText: "Are you sure you want to send this friend request?",
+                        swalAction: 'Send!'
                     },
                     'cancel-request': {
                         status: null,
                         property: 'deleteUserId',
-                        additionalObject : {}
+                        swalText: "Are you sure you want to delete this friend request?",
+                        swalAction: 'Delete!'
                     },
                     'unfriend': {
                         status:  'left',
                         property: 'updateUserId',
-                        
+                        swalText: "Are you sure you want to unfriend this person?",
+                        swalAction: 'Unfriend!'
+                    },
+                    'acceptt-pending-request': {
+                        status:  'accepted',
+                        property: 'updateUserId',
+                        swalText: "Are you sure you want to accept this friend request?",
+                        swalAction: 'Accept!'
+                    },
+                    'acceptt-rejected-request': {
+                        status:  'accepted',
+                        property: 'updateUserId',
+                        swalText: "Are you sure you want to accept this rejected request?",
+                        swalAction: 'Accept!'
+                    },
+                    'acceptt-left-request': {
+                        status:  'accepted',
+                        property: 'updateUserId',
+                        swalText: "Are you sure you want to re-friend this person?",
+                        swalAction: 'Accept!'
                     }
                 };                        
 
-                const { status: newStatus, property: inputPropertyName } = actionMap[action] || {};
+                const { status: newStatus, property: inputPropertyName, swalText, swalAction } = actionMap[action] || {};
+
+                console.log({swalAction})
+
+                const result = await window.Swal.fire({
+                    title: 'Are you sure?',
+                    text: swalText,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#43a4d7',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: swalAction,
+                    cancelButtonText: 'No'
+                });
+
+                if (!result.isConfirmed) {
+                    return
+                }
 
                 let inputObject = {
                     [inputPropertyName]: inputId,
@@ -124,13 +197,17 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
                 await makeRequest(route, 'POST', inputObject);
 
                 if (isUserSame) {
-                    if (action == 'unfriend') {
-
+                    if (action == 'unfriend' || newStatus == 'accepted') {
                         const friendSpanAlt = document.querySelector('span[data-friends-stats]');
                         const statsData = friendSpanAlt.dataset.friendsStats;
                         let freindCount = parseInt(statsData);
 
-                        freindCount-=1;
+                        if (action == 'unfriend') {
+                            freindCount-=1;
+                        } else {
+                            freindCount+=1;
+
+                        }
                         if (freindCount  < 0) {
                             window.location.reload();
                         }
@@ -139,8 +216,6 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
                         friendSpanAlt.textContent = `${freindCount} friends`;
                         friendSpanAlt.dataset.followingStats = freindCount;
                     }
-
-                    
 
                     if (this.currentTab == 'friends') {
                         this.connections = this.connections.filter((user) => {
@@ -154,13 +229,11 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
                     this.connections = this.connections.map((user)=> {
                         return user.id == inputId ? {
                             ...user,
-                            logged_friendship_status: newStatus 
+                            logged_friendship_status: newStatus,
+                            logged_friendship_actor: loggedUserId 
                         } : user;
                     })
                 }
-
-
-        
                     
             } catch (error) {
                 // Handle errors (you might want to show a notification to the user)
@@ -169,20 +242,40 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
             }
         },
 
-        async blockUser(connectionId) {
+        async blockRequest(e) {
+            const button = e.currentTarget;
+            if (!button) return;
 
-        },
+            const action = button.dataset.action;
+            const route = button.dataset.route;
+            const role = button.dataset.role ;
+            const inputId = button.dataset.inputs ;
+        
+            try {
+                const data = await makeRequest(route, 'POST', JSON.stringify({}));
+                
+                if (isUserSame) {
+                     if (this.currentTab == 'following') {
+                        this.connections = this.connections.filter((user) => {
+                            return user.id != inputId
+                        });
+                        }
+                }
 
-        async starUnstarUser(connectionId) {
-
-        },
-
-        async reportUser(connectionId) {
-
-        },
-
-        async searchUser(connectionId) {
-
+                if (!isUserSame || this.currentTab != 'following') {
+                    this.connections = this.connections.map((user)=> {
+                        return user.id == inputId ? {
+                            ...user,
+                            logged_follow_status: data.isFollowing 
+                        } : user;
+                    })
+                }
+                     
+            } catch (error) {
+                // Handle errors (you might want to show a notification to the user)
+                console.error('Operation failed:', error);
+                alert('Failed to process your request. Please try again later.');
+            }
         },
 
         async loadSearch () {

@@ -89,14 +89,14 @@ class OrganizerFollow extends Model
             $ogQuery->addSelect([
                 'logged_user_friends.id as friend_id',
                 'logged_user_friends.status as logged_friendship_status',
+                'logged_user_friends.actor_id as logged_friendship_actor',
                 DB::raw('COALESCE ( og_follows.id, p_follows.id ) as logged_follow_status'),
                 'blocks.id as logged_block_status',
                 
             ])
             ->leftJoin('friends as logged_user_friends', function($join) use ($loggedUserId) {
                 $join->on('logged_user_friends.user2_id', '=', 'users.id')
-                    ->where('logged_user_friends.user1_id', $loggedUserId)
-                    ->whereIn('logged_user_friends.status', ['accepted', 'pending']);
+                    ->where('logged_user_friends.user1_id', $loggedUserId);
             })
             ->leftJoin('blocks', function($join) use ($loggedUserId) {
                 $join->on('blocks.blocked_user_id', '=', 'users.id')
