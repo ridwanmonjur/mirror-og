@@ -112,9 +112,9 @@ Alpine.data('alpineDataComponent', function () {
     })
 })
 
-const loggedUserId = document.querySelector('#routeContainer').getAttribute('data-logged-user-id');
+const {loggedUserId, loggedUserRole} = document.querySelector('#routeContainer').dataset;
 
-Alpine.data('profileData', alpineProfileData(initialUserProfile.id, loggedUserId, false, initialUserProfile.role));
+Alpine.data('profileData', alpineProfileData(initialUserProfile.id, loggedUserId, false, "ORGANIZER", loggedUserRole));
 window.openModal = openModal;
 window.onpageshow = function(event) {
     if (event.persisted) {

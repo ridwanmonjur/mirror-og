@@ -57,7 +57,7 @@
                 >
                     <x-brackets.bracket-table :bracket="$winner" />
                     <div class="text-center mx-auto popover-parent tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
-                        style="z-index: 999; top: 50%; left: -70%">
+                        style="z-index: 998; top: 50%; left: -70%">
                         
                           <x-brackets.bracket-winner-desktop-final :position1="$winner['team1_position']" :teamBanner1="$winner['team1_teamBanner']" :teamId1="$winner['team1_id']"
                             :position2="$winner['team2_position']" :teamBanner2="$winner['team2_teamBanner']" :teamId2="$winner['team2_id']" 

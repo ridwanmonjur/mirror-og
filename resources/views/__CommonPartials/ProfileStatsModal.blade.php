@@ -81,37 +81,58 @@
                                                        <h6 class="card-title mb-1  text-truncate" x-text="user.name">
                                                        </h6>
                                                        <p class="card-text mb-0 mt-2" style="color: gray;"
-                                                           x-text="user.email"></p>
-                                                       @if (!isset($user) || $user?->role !== 'ORGANIZER')
-                                                           <div class="mt-2">
+                                                           x-text="user.email">
+                                                        </p>
+                                                        <div class="mt-2"> 
+                                                            <div x-cloak x-show.important="loggedUserRole != 'ORGANIZER' && user.role != 'ORGANIZER'">
                                                                 <template x-if="user.logged_friendship_status == 'accepted'">
                                                                     <div class="d-inline mx-0 px-0">
                                                                         <button x-cloak
-                                                                            class="btn btn-success text-dark btn-sm px-3 rounded-pill mb-1"
-                                                                            style="pointer-events: none;"
-                                                                         >
-                                                                            Friends
+                                                                            class="btn btn-success text-dark btn-sm px-3 rounded-pill mb-1 dropdown-toggle dropdown-show"
+                                                                            role="button" id="dropdownMenuLink"
+                                                                            x-bind:data-role="user.role"
+                                                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                                                        >
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-check-fill me-1" viewBox="0 0 16 16">
+                                                                                <path fill-rule="evenodd" d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"></path>
+                                                                                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"></path>
+                                                                            </svg>
+                                                                            <span>Friends</span>
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ms-2 bi bi-chevron-down" viewBox="0 0 16 16">
+                                                                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                                                                            </svg>
                                                                         </button>
-                                                                        <svg 
-                                                                            class="rounded me-2 cursor-pointer rounded-circle "
-                                                                            style="border: 1px solid red;"
-                                                                            data-action="unfriend"
-                                                                            x-on:click="friendRequest(event)"
-                                                                            x-bind:data-route="'/participant/friends'"
-                                                                            x-bind:data-inputs='user.id'
-                                                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" viewBox="0 0 16 16">
-                                                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                                                                        </svg>
+                                                                        <div class="dropdown-menu py-0" aria-labelledby="dropdownMenuLink">
+                                                                            <button class="dropdown-item cursor-pointer  px-4 py-2" 
+                                                                                data-action="unfriend"
+                                                                                x-on:click="friendRequest(event)"
+                                                                                x-bind:data-route="'/participant/friends'"
+                                                                                x-bind:data-inputs='user.id'
+                                                                                x-bind:data-role="user.role"
+                                                                            >
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                                                                    class="bi bi-person-x-fill me-2" viewBox="0 0 16 16">
+                                                                                    <path fill-rule="evenodd"
+                                                                                        d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708" />
+                                                                                </svg>
+                                                                                <span> Remove friendship</span>
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
                                                                 </template>
                                                                 <template x-if="!user.logged_friendship_status">
                                                                     <div class="d-inline mx-0 px-0">
-                                                                         <button x-cloak
+                                                                        <button x-cloak
                                                                             class="btn btn-primary btn-sm px-3 text-light rounded-pill me-2 mb-1"
                                                                             data-action="friend-request"
                                                                             x-on:click="friendRequest(event)"
                                                                             x-bind:data-route="'/participant/friends'"
+                                                                            x-bind:data-role="user.role"
                                                                             x-bind:data-inputs='user.id'>
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle me-1" viewBox="0 0 16 16">
+                                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                                                            </svg>
                                                                             Add Friend
                                                                         </button>
                                                                     </div>
@@ -128,6 +149,7 @@
                                                                                     type="button"
                                                                                     x-bind:data-route="'/participant/friends'"
                                                                                     x-bind:data-inputs='user.id'
+                                                                                    x-bind:data-role="user.role"
                                                                                 >
                                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
                                                                                     <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
@@ -141,8 +163,9 @@
                                                                                     type="button"
                                                                                     x-bind:data-route="'/participant/friends'"
                                                                                     x-bind:data-inputs='user.id'
+                                                                                    x-bind:data-role="user.role"
                                                                                 >
-                                                                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                                                                                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                                                                                     </svg>
                                                                                     Reject
@@ -157,6 +180,7 @@
                                                                             data-action="accept-after-reject-request"
                                                                             x-bind:data-route="'/participant/friends'"
                                                                             x-bind:data-inputs='user.id'
+                                                                            x-bind:data-role="user.role"
                                                                         >
                                                                             Rejected User
                                                                         </button>
@@ -168,10 +192,11 @@
                                                                             data-action="accept-after-left-request"
                                                                             x-bind:data-route="'/participant/friends'"
                                                                             x-bind:data-inputs='user.id'
+                                                                            x-bind:data-role="user.role"
                                                                         >
                                                                             Not Friends
                                                                         </button>
-                                                                       
+                                                                    
                                                                     </div>
                                                                 </template>
 
@@ -181,27 +206,25 @@
                                                                             <div class="d-inline mx-0 px-0">
                                                                                 <button x-cloak
                                                                                     x-show="user.logged_friendship_status == 'pending'"
-                                                                                    class="btn border-primary  btn-sm px-3 text-primary rounded-pill me-1 mb-1"
-                                                                                    style="pointer-events: none;"
+                                                                                    class="btn btn-sm px-3 text-red rounded-pill me-1 mb-1"
                                                                                     type="button"
+                                                                                    x-bind:data-route="'/participant/friends'"
+                                                                                    x-bind:data-inputs='user.id'
+                                                                                    data-action="cancel-request"
+                                                                                    x-on:click="friendRequest(event)" 
+                                                                                    type="button"
+                                                                                    style="border: 1px solid red;"
                                                                                     x-bind:data-route="'/participant/friends'"
                                                                                     x-bind:data-inputs='user.id'
                                                                                 >
-                                                                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
-                                                                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
+                                                                                    <svg 
+                                                                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash me-2" viewBox="0 0 16 16">
+                                                                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                                                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
                                                                                     </svg>
-                                                                                    Request Sent
+                                                                                    Cancel request
                                                                                 </button>
-                                                                                <svg 
-                                                                                   data-action="cancel-request"
-                                                                                    x-on:click="friendRequest(event)" 
-                                                                                    type="button"
-                                                                                    x-bind:data-route="'/participant/friends'"
-                                                                                    x-bind:data-inputs='user.id'
-                                                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash me-2" viewBox="0 0 16 16">
-                                                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                                                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                                                                                </svg>
+                                                                                
                                                                             </div>
                                                                         </template>
                                                                         <template x-if="user.logged_friendship_status == 'left'">
@@ -243,7 +266,7 @@
                                                                                 >
                                                                                     Rejected User
                                                                                 </button>
-                                                                                 <button x-cloak
+                                                                                <button x-cloak
                                                                                     class="btn bg-primary border-primary text-white btn-sm px-3  rounded-pill me-1 mb-1"
                                                                                     data-action="acceptt-left-request"
                                                                                     x-on:click="friendRequest(event)" 
@@ -261,39 +284,53 @@
                                                                     </div>
                                                                 </template>
 
-                                                               <button x-cloak x-show="!user.logged_follow_status"
-                                                                   type="button"
-                                                                   class="btn btn-primary btn-sm px-3 text-light rounded-pill mb-1"
-                                                                   data-action="follow"
-                                                                   x-on:click="followRequest(event)"
-                                                                   x-bind:data-role='user.role'
-                                                                   x-bind:data-route="user.role === 'PARTICIPANT' ?
-                                                                       '/participant/follow' :
-                                                                       '/api/participant/organizer/follow'"
-                                                                   x-bind:data-inputs="user.id">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi me-1 bi-eyeglasses" viewBox="0 0 16 16">
-                                                                    <path d="M4 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4m2.625.547a3 3 0 0 0-5.584.953H.5a.5.5 0 0 0 0 1h.541A3 3 0 0 0 7 8a1 1 0 0 1 2 0 3 3 0 0 0 5.959.5h.541a.5.5 0 0 0 0-1h-.541a3 3 0 0 0-5.584-.953A2 2 0 0 0 8 6c-.532 0-1.016.208-1.375.547M14 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0"/>
-                                                                    </svg>
-                                                                   Follow
-                                                               </button>
+                                                                <button x-cloak x-show="!user.logged_follow_status"
+                                                                    type="button"
+                                                                    class="btn btn-primary btn-sm px-3 text-light rounded-pill mb-1"
+                                                                    data-action="follow"
+                                                                    x-on:click="followRequest(event)"
+                                                                    x-bind:data-role='user.role'
+                                                                    x-bind:data-route="user.role === 'PARTICIPANT' ?
+                                                                        '/participant/follow' :
+                                                                        '/api/participant/organizer/follow'"
+                                                                    x-bind:data-inputs="user.id">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi me-1 bi-eyeglasses" viewBox="0 0 16 16">
+                                                                        <path d="M4 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4m2.625.547a3 3 0 0 0-5.584.953H.5a.5.5 0 0 0 0 1h.541A3 3 0 0 0 7 8a1 1 0 0 1 2 0 3 3 0 0 0 5.959.5h.541a.5.5 0 0 0 0-1h-.541a3 3 0 0 0-5.584-.953A2 2 0 0 0 8 6c-.532 0-1.016.208-1.375.547M14 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0"/>
+                                                                        </svg>
+                                                                    Follow
+                                                                </button>
 
-                                                               <button x-cloak type="button"
-                                                                   x-show="user.logged_follow_status"
-                                                                   class="btn btn-success btn-sm px-3 text-dark rounded-pill mb-1"
-                                                                   data-action="unfollow" 
-                                                                   x-bind:data-role='user.role'
-                                                                   x-on:click="followRequest(event)"
-                                                                   x-bind:data-route="user.role === 'PARTICIPANT' ?
-                                                                       '/participant/follow' :
-                                                                       '/api/participant/organizer/follow'"
-                                                                   x-bind:data-inputs="user.id">
-                                                                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi me-1 bi-sunglasses" viewBox="0 0 16 16">
-                                                                    <path d="M3 5a2 2 0 0 0-2 2v.5H.5a.5.5 0 0 0 0 1H1V9a2 2 0 0 0 2 2h1a3 3 0 0 0 3-3 1 1 0 1 1 2 0 3 3 0 0 0 3 3h1a2 2 0 0 0 2-2v-.5h.5a.5.5 0 0 0 0-1H15V7a2 2 0 0 0-2-2h-2a2 2 0 0 0-1.888 1.338A2 2 0 0 0 8 6a2 2 0 0 0-1.112.338A2 2 0 0 0 5 5zm0 1h.941c.264 0 .348.356.112.474l-.457.228a2 2 0 0 0-.894.894l-.228.457C2.356 8.289 2 8.205 2 7.94V7a1 1 0 0 1 1-1"/>
-                                                                    </svg>Following
-                                                               </button>
+                                                                <button x-cloak type="button"
+                                                                    x-show="user.logged_follow_status"
+                                                                    class="btn btn-success btn-sm px-3 text-dark rounded-pill mb-1"
+                                                                    data-action="unfollow" 
+                                                                    x-bind:data-role='user.role'
+                                                                    x-on:click="followRequest(event)"
+                                                                    x-bind:data-route="user.role === 'PARTICIPANT' ?
+                                                                        '/participant/follow' :
+                                                                        '/api/participant/organizer/follow'"
+                                                                    x-bind:data-inputs="user.id">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi me-1 bi-sunglasses" viewBox="0 0 16 16">
+                                                                        <path d="M3 5a2 2 0 0 0-2 2v.5H.5a.5.5 0 0 0 0 1H1V9a2 2 0 0 0 2 2h1a3 3 0 0 0 3-3 1 1 0 1 1 2 0 3 3 0 0 0 3 3h1a2 2 0 0 0 2-2v-.5h.5a.5.5 0 0 0 0-1H15V7a2 2 0 0 0-2-2h-2a2 2 0 0 0-1.888 1.338A2 2 0 0 0 8 6a2 2 0 0 0-1.112.338A2 2 0 0 0 5 5zm0 1h.941c.264 0 .348.356.112.474l-.457.228a2 2 0 0 0-.894.894l-.228.457C2.356 8.289 2 8.205 2 7.94V7a1 1 0 0 1 1-1"/>
+                                                                        </svg>Following
+                                                                </button>
+                                                            </div>
+                                                            <div x-cloak x-show.important="loggedUserRole == 'ORGANIZER' || user.role == 'ORGANIZER'">
+                                                                 <a :href="`/view/${user?.role?.toLowerCase()}/${user.id}`">
+                                                                    <button x-cloak type="button"
+                                                                        class="btn border-primary btn-sm px-3 text-primary rounded-pill mb-1"
+                                                                    >
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye me-1" viewBox="0 0 16 16">
+                                                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                                                                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                                                                        </svg>
+                                                                        View user
+                                                                    </button>
+                                                                </a>
+                                                            </div>
 
-                                                           </div>
-                                                       @endif
+
+                                                        </div>
                                                    </div>
 
                                                </div>

@@ -30,7 +30,7 @@
         'fontStyles' => $fontStyles, 
         'frameStyles' => $frameStyles
     ] = $userProfile->profile?->generateStyles();
-    $loggedUserId = null;
+    $loggedUserId = $loggedUserRole = null;
 @endphp
 @auth
     @php
@@ -39,6 +39,7 @@
         }
         
         $loggedUserId = $user->id;
+        $loggedUserRole = $user->role; 
         $isUserSame = $user->id == $userProfile->id;
     @endphp
 @endauth
@@ -55,6 +56,7 @@
             data-profile-route="{{ route('public.organizer.view', ['id' => ':id']) }}"
             data-login-route="{{ route('participant.signin.view') }}"
             data-logged-user-id="{{ $loggedUserId }}"
+            data-logged-user-role="{{ $loggedUserRole }}"
         >
         </div>
         <div class="profile-storage d-none"

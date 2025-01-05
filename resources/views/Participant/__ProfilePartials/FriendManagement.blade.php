@@ -45,9 +45,12 @@
                             <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
                         </svg>
                         <span>Friends</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ms-3 bi bi-chevron-down" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                        </svg>
                     </button>
                     <div class="dropdown-menu py-0" aria-labelledby="dropdownMenuLink">
-                        <a class="dropdown-item cursor-pointer  px-4 " style="padding-top: 12px; padding-bottom: 12px;"
+                        <a class="dropdown-item cursor-pointer  px-4 py-2" 
                             onclick="formRequestSubmitById('Are you sure you want to remove this person as your friend?' ,'leftFriendRequest')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-person-x-fill me-2" viewBox="0 0 16 16">
@@ -88,7 +91,7 @@
             @elseif ($friend->status == 'left')
                 <button type="button" style="background: #D8DADF" role="button" id="dropdownMenuLink"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @class([
-                        'rounded-pill bg-light border-dark text-dark btn text-dark px-2 py-2 me-2 mt-1',
+                        'rounded-pill bg-light border-dark text-dark btn text-dark px-3 py-2 me-2 mt-1',
                         'dropdown-toggle' => $friend->actor_id == $user->id,
                     ])>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -97,11 +100,13 @@
                             d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708" />
                     </svg>
                     <span>Not friends</span>
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ms-3 bi bi-chevron-down" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                        </svg>
                 </button>
                 @if ($friend->actor_id == $user->id)
                     <div class="dropdown-menu py-0 mt-1" aria-labelledby="dropdownMenuLink">
-                        <a class="dropdown-item cursor-pointer  cursor-pointer px-4 "
-                            style="padding-top: 12px; padding-bottom: 12px;"
+                        <a class="dropdown-item cursor-pointer  cursor-pointer py-2 px-4 "
                             onclick="formRequestSubmitById('Are you sure you want to accept this person as your friend?' ,'acceptFriendRequest')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-person-check-fill me-2" viewBox="0 0 16 16">

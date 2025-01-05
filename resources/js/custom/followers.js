@@ -1,4 +1,4 @@
-function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
+function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRole) {
     return () => ({
         connections: [],
         page: null,
@@ -6,6 +6,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
         loggedUserId,
         currentTab: 'followers',
         role,
+        loggedUserRole,
         
         async loadNextPage(){
             if (this.next_page) {
@@ -28,9 +29,13 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
 
             const action = button.dataset.action;
             const route = button.dataset.route;
-            const role = button.dataset.role ;
+            const buttonRole = button.dataset.role ;
             const inputId = button.dataset.inputs ;
-        
+            if (buttonRole == "PARTICIPANT" && loggedUserRole == "ORGANIZER") {
+                window.toastError("Organizer cannot follow any participant!");
+                return;
+            }
+
             try {
                 const courseMap = {
                     'unfollow': {
@@ -61,17 +66,16 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
                 }
 
                 
-                const actionMap = {
+                const userRoleMap = {
                     'PARTICIPANT': {
                         property: 'participant_id',
                     },
                     'ORGANIZER': {
                         property: 'organizer_id',
                     },
-                    
                 };
 
-                const { property: inputPropertyName } = actionMap[role];
+                const { property: inputPropertyName } = userRoleMap[buttonRole];
                 let inputObject = {
                     [inputPropertyName]: inputId,
                 }
@@ -117,10 +121,20 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
         async friendRequest(e) {
             const button = e.currentTarget;
             if (!button) return;
+            const buttonRole = button.dataset.role ;
 
             const action = button.dataset.action;
             const route = button.dataset.route;
             const inputId = button.dataset.inputs;
+            if (buttonRole == "ORGANIZER") {
+                window.toastError("Cannot befriend any organizer!");
+                return;
+            }
+
+            if (loggedUserRole == "ORGANIZER") {
+                window.toastError("Organizer cannot befriend any participant!");
+                return;
+            }
         
             try {
               
@@ -248,7 +262,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role) {
 
             const action = button.dataset.action;
             const route = button.dataset.route;
-            const role = button.dataset.role ;
+            const buttonRole = button.dataset.role ;
             const inputId = button.dataset.inputs ;
         
             try {

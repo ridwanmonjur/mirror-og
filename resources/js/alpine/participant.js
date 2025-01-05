@@ -18,7 +18,8 @@ const {
     userProfileId: userId,
     backgroundStyles,
     fontStyles,
-    loggedUserId
+    loggedUserId,
+    loggedUserRole
 } = document.querySelector('.laravel-data-storage').dataset;
 
 console.log({loggedUserId});
@@ -210,7 +211,7 @@ function alpineProfileStatsData(userId, role) {
 }
 
 let role = "PARTICIPANT";
-Alpine.data('profileData', alpineProfileData(userId, loggedUserId, userId == loggedUserId, role));
+Alpine.data('profileData', alpineProfileData(userId, loggedUserId, userId == loggedUserId, role, loggedUserRole));
 Alpine.data('profileStatsData', alpineProfileStatsData( userId,  role));
 window.onpageshow = function(event) {
     if (event.persisted) {
