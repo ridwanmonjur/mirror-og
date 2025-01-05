@@ -1,7 +1,7 @@
 import Alpine from "alpinejs";
 import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
-import { alpineProfileData, openModal } from "../custom/followers";
+import { alpineProfileData, openModal, reportFormData } from "../custom/followers";
 
 let userData = JSON.parse(document.getElementById('initialUserData').value);
 let participantData = JSON.parse(document.getElementById('initialParticipantData').value);
@@ -218,5 +218,8 @@ window.onpageshow = function(event) {
         window.location.reload();
     }
 };
+
+Alpine.data('reportData', reportFormData());
+
 
 Alpine.start();

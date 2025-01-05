@@ -260,16 +260,18 @@ class SocialController extends Controller
         if ($authenticatedUser->hasBlocked($user)) {
             $authenticatedUser->blocks()->detach($user);
             $message = 'User unblocked successfully';
+            $isBlocked = false;
         } else {
             $authenticatedUser->blocks()->attach($user);
             // Also remove any existing stars when blocking
             $authenticatedUser->stars()->detach($user);
             $message = 'User blocked successfully';
+            $isBlocked = true;
         }
 
         return response()->json([
             'message' => $message,
-            'is_blocked' => $authenticatedUser->hasBlocked($user)
+            'is_blocked' => $isBlocked
         ]);
     }
 
@@ -311,6 +313,19 @@ class SocialController extends Controller
             'stars_count' => $user->starredBy()->count(),
             'is_starred' => $authenticatedUser->hasStarred($user) ,
             'is_blocked' => $authenticatedUser->hasBlocked($user) ,
+        ]);
+    }
+
+    function getReports(Request $request, $id)  {
+        $user = User::findOrFail($id);
+    
+        $reports = Report::where('reported_user_id', $user->id)
+            ->with('reporter:id,name')  // Optionally include reporter details
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        return response()->json([
+            'reports' => $reports
         ]);
     }
 

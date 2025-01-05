@@ -1,3 +1,112 @@
+import { DateTime } from "luxon";
+
+function reportFormData ()  {
+    return () => ({
+        willShowReports: true,
+        reports: [],
+        errors: {},
+        loading: false,
+        user: null,
+        reasons: [
+            'Inappropriate Content',
+            'Harassment',
+            'Fake Account',
+            'Hate Speech',
+            'Other'
+        ],
+        formData: {
+            reason: '',
+            description: ''
+        },
+        errors: {},
+        loading: false,
+
+        async fetchReports() {
+            try {
+              const response = await fetch('/api/user/' + this.user.id + '/reports');
+              if (!response.ok) throw new Error('Failed to fetch reports');
+              let { reports } = await response.json();
+              this.reports = reports;
+            } catch (error) {
+              console.error('Error:', error);
+              this.reports = [];
+            }
+        },
+
+        async submitReport() {
+            this.loading = true;
+            this.errors = {};
+
+            try {
+                const response = await fetch(`/api/user/${this.user.id}/report`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify(this.formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    if (response.status === 422) {
+                        this.errors = data.errors;
+                        return;
+                    }
+                    throw new Error(data.message || 'An error occurred');
+                }
+
+                // Success
+                this.reset();
+                this.fetchReports();
+                alert('Report submitted successfully');
+            } catch (error) {
+                console.error('Error submitting report:', error);
+                alert('Failed to submit report. Please try again.');
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        toggleWillShowReports() {
+            this.willShowReports = !this.willShowReports;
+        },
+
+        reset() {
+            this.showForm = false;
+            this.formData = {
+                reason: '',
+                description: ''
+            };
+            this.errors = {};
+        },
+
+        formatDate(date) {
+            return  DateTime
+                .fromISO(date)
+                .toRelative();
+        },
+
+        init() {
+           
+            window.addEventListener('report-selected', async (event) => {
+                let element = document.getElementById('reportUserModal')
+                let modal = new window.bootstrap.Modal(element);
+                modal.show();
+                this.user = event.detail;
+                await this.fetchReports();
+                console.log({user: this.user});
+                console.log({user: this.user});
+                console.log({user: this.user});
+                console.log({user: this.user});
+            });
+        },
+
+        
+    });
+};
+
 function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRole) {
     return () => ({
         connections: [],
@@ -31,10 +140,6 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
             const route = button.dataset.route;
             const buttonRole = button.dataset.role ;
             const inputId = button.dataset.inputs ;
-            if (buttonRole == "PARTICIPANT" && loggedUserRole == "ORGANIZER") {
-                window.toastError("Organizer cannot follow any participant!");
-                return;
-            }
 
             try {
                 const courseMap = {
@@ -121,20 +226,10 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
         async friendRequest(e) {
             const button = e.currentTarget;
             if (!button) return;
-            const buttonRole = button.dataset.role ;
 
             const action = button.dataset.action;
             const route = button.dataset.route;
             const inputId = button.dataset.inputs;
-            if (buttonRole == "ORGANIZER") {
-                window.toastError("Cannot befriend any organizer!");
-                return;
-            }
-
-            if (loggedUserRole == "ORGANIZER") {
-                window.toastError("Organizer cannot befriend any participant!");
-                return;
-            }
         
             try {
               
@@ -260,30 +355,25 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
             const button = e.currentTarget;
             if (!button) return;
 
-            const action = button.dataset.action;
+            const status = button.dataset.status;
             const route = button.dataset.route;
-            const buttonRole = button.dataset.role ;
             const inputId = button.dataset.inputs ;
         
             try {
-                const data = await makeRequest(route, 'POST', JSON.stringify({}));
-                
-                if (isUserSame) {
-                     if (this.currentTab == 'following') {
-                        this.connections = this.connections.filter((user) => {
-                            return user.id != inputId
-                        });
-                        }
-                }
+                let data = await makeRequest(route, 'POST', JSON.stringify({}));
+     
+                console.log({data});
 
-                if (!isUserSame || this.currentTab != 'following') {
-                    this.connections = this.connections.map((user)=> {
-                        return user.id == inputId ? {
-                            ...user,
-                            logged_follow_status: data.isFollowing 
-                        } : user;
-                    })
+                if (!('is_blocked' in data)) {
+                    return;
                 }
+      
+                this.connections = this.connections.map((user)=> {
+                    return user.id == inputId ? {
+                        ...user,
+                        logged_block_status: data.is_blocked,
+                    } : user;
+                })
                      
             } catch (error) {
                 // Handle errors (you might want to show a notification to the user)
@@ -367,10 +457,19 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
                 console.error('Failed to load page:', error);
             }
         },
+
         formatDate(date) {
             return  DateTime
                 .fromISO(date)
                 .toRelative();
+        },
+
+        triggerReportSelection(event) {
+            let button = event.currentTarget;
+            const {userId, userName, userBanner} = button.dataset;
+            window.dispatchEvent(new CustomEvent('report-selected', {
+                detail: { id: userId, userName, userBanner }
+            }));
         },
 
         init() {
@@ -424,5 +523,6 @@ const openModal = (type) => {
 
 export {
     alpineProfileData,
-    openModal
+    openModal,
+    reportFormData
 };
