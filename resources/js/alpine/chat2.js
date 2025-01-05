@@ -271,7 +271,7 @@ const roomStore = reactive({
 
             } 
 
-            let currentRoomIndex = rooms.findIndex(room =>
+            let currentRoomIndex = rooms?.findIndex(room =>
                 room.otherRoomMemberId == viewUserProfile.id
             );
 

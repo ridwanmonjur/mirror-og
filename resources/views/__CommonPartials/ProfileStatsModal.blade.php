@@ -392,9 +392,9 @@
                                                             x-bind:data-user-banner="user?.userBanner"  
                                                             data-bs-dismiss="modal" aria-haspopup="true"
                                                        >
-                                                           <a class="dropdown-item ms-0 report-item py-1 "
+                                                           <a class="dropdown-item ms-0 text-red report-item py-1 "
                                                                href="#">
-                                                               <svg class="text-dark me-1 mt-1"
+                                                               <svg class="text-red me-1 mt-1"
                                                                    xmlns="http://www.w3.org/2000/svg" width="13"
                                                                    height="13" viewBox="0 0 24 24" fill="none"
                                                                    stroke="currentColor" stroke-width="2"
@@ -405,7 +405,7 @@
                                                                    <line x1="4" y1="22" x2="4"
                                                                        y2="15"></line>
                                                                </svg>
-                                                               <span class="text-dark py-0 my-0"> Report User </span>
+                                                               <span class="text-red py-0 my-0"> Report User </span>
                                                            </a>
                                                        </li> 
                                                    </ul>

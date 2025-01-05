@@ -32,12 +32,12 @@
                         <img v-if="room?.otherRoomMember?.userBanner != null" {!! trustedBladeHandleImageFailure() !!} v-bind:src="'/storage/' + room?.otherRoomMember?.userBanner" width="50" height="50"
                             class="object-fit-cover rounded-circle me-3">
                         <div v-else class="avatar me-3"
-                            v-text="room.otherRoomMember?.name ? room.otherRoomMember?.name?.charAt(0)?.toUpperCase(): room?.otherRoomMember?.email[0]?.toUpperCase()">
+                            v-text="room?.otherRoomMember?.name ? room.otherRoomMember.name?.charAt(0)?.toUpperCase(): room?.otherRoomMember?.email[0]?.toUpperCase()">
                         </div>
                     <div class="chat-info">
                         <h3 v-text="room?.otherRoomMember?.name"></h3>
                         <p class="status my-0">
-                            <span v-text="formatDate(room.otherRoomMember?.updated_at)"></span>
+                            <span v-text="formatDate(room?.otherRoomMember?.updated_at)"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill mt-1 ms-2 d-none" viewBox="0 0 16 16">
                                 <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"/>
                             </svg>
@@ -51,10 +51,10 @@
             <div class="chat-header w-100">
                 <h2 class="chat-user-name my-0">
                     <span v-show="currentRoomObj?.otherRoomMember?.name != null">
-                        <img v-if="currentRoomObj.otherRoomMember?.userBanner != null" {!! trustedBladeHandleImageFailure() !!} v-bind:src="'/storage/' + currentRoomObj?.otherRoomMember?.userBanner" width="50" height="50"
+                        <img v-if="currentRoomObj?.otherRoomMember?.userBanner != null" {!! trustedBladeHandleImageFailure() !!} v-bind:src="'/storage/' + currentRoomObj?.otherRoomMember?.userBanner" width="50" height="50"
                                     class="object-fit-cover rounded-circle me-3">
                         <span v-else class="avatar d-inline-flex justify-content-center align-items-center rounded-circle me-3" style="width: 50px; height: 50px;"
-                            v-text="currentRoomObj.otherRoomMember?.name ? currentRoomObj.otherRoomMember?.name?.charAt(0)?.toUpperCase(): '-'">
+                            v-text="currentRoomObj?.otherRoomMember?.name ? currentRoomObj.otherRoomMember?.name?.charAt(0)?.toUpperCase(): '-'">
                         </span>
                     </span>
                     <span 
