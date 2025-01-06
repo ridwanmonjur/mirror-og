@@ -372,6 +372,8 @@ function ChatListComponent() {
                 if (!('is_blocked' in data)) {
                     return;
                 }
+
+                window.location.reload();
                      
             } catch (error) {
                 // Handle errors (you might want to show a notification to the user)
@@ -511,6 +513,7 @@ function ReportBlockComponent () {
               if (!response.ok) throw new Error('Failed to fetch reports');
               let { reports } = await response.json();
               this.reports = reports;
+              this.willShowReports = true;
             } catch (error) {
               console.error('Error:', error);
               this.reports = [];
