@@ -105,6 +105,7 @@
                                                                         <div class="dropdown-menu py-0" aria-labelledby="dropdownMenuLink">
                                                                             <button class="dropdown-item cursor-pointer  px-4 py-2" 
                                                                                 data-action="unfriend"
+                                                                                type="button"
                                                                                 x-on:click="friendRequest(event)"
                                                                                 x-bind:data-route="'/participant/friends'"
                                                                                 x-bind:data-inputs='user.id'
