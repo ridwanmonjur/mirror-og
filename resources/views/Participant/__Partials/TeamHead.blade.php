@@ -18,8 +18,7 @@
         $teamMember = $selectTeam->findTeamMemberByUserId($user->id);
         $isUserFollowingTeam = $selectTeam->findTeamFollowerByUserId($user->id);
     } else {
-        $role = null;
-        $teamMember = null;
+        $role = $teamMember = null;
         $isUserFollowingTeam = false;
     }
 
@@ -75,6 +74,7 @@
         data-background-styles="<?php echo $backgroundStyles; ?>"
         data-font-styles="<?php echo $fontStyles; ?>"
         data-logged-user-id="{{ $loggedUserId }}"
+        data-logged-user-role="{{ $role }}"
     >
     </div>
     <input type="hidden" id="currentMemberUrl" value="{{ url()->current() }}">

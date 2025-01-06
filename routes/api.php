@@ -53,7 +53,7 @@ Route::put('/interest', [BetaController::class, 'interestedAction'])->name('publ
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
         Route::get('/user/firebase-token', [FirebaseController::class, 'createToken']);
-        Route::get('/user/{id}/stats', [SocialController::class, 'getStats'])->name('users.stats');
+        Route::get('/user/{id}/reports', [SocialController::class, 'getReports'])->name('users.report.view');
 
         Route::post('/user/likes', [ParticipantEventController::class, 'likeEvent'])->name('participant.events.like');
         Route::post('/user/participants', [ParticipantController::class, 'searchParticipant'])->name('user.teams.index');

@@ -20,9 +20,11 @@
             <div class="accordion accordion-flush " id="accordionExample">
                 <div v-scope="AccountComponent()" class="accordion-item border-0 pb-0 mb-0">
                     <h1 class="accordion-header " id="headingOne">
-                        <div class="accordion-button pt-4 pb-4 rounded-pill border 
+                        <div class="accordion-button pb-4 rounded-pill border 
                             zcollapsed 
-                        border-0 bg-white" type="button"
+                            border-0 bg-white"
+                            style="padding-top: 35px;"
+                            type="button"
                             data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
                             aria-controls="collapseOne">
                             <b>Account details and security </b>

@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .map(cb => cb.value);
 
         if (checkedIds.length === 0) {
-            alert('Please select at least one user.');
+            window.toastError('Please select at least one user.');
             return;
         }
 

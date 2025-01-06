@@ -1,7 +1,7 @@
 import Alpine from "alpinejs";
 import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
-import { alpineProfileData, openModal } from "../custom/followers";
+import { alpineProfileData, openModal, reportFormData } from "../custom/followers";
 
 let userData = JSON.parse(document.getElementById('initialUserData').value);
 let participantData = JSON.parse(document.getElementById('initialParticipantData').value);
@@ -18,7 +18,8 @@ const {
     userProfileId: userId,
     backgroundStyles,
     fontStyles,
-    loggedUserId
+    loggedUserId,
+    loggedUserRole
 } = document.querySelector('.laravel-data-storage').dataset;
 
 console.log({loggedUserId});
@@ -210,12 +211,15 @@ function alpineProfileStatsData(userId, role) {
 }
 
 let role = "PARTICIPANT";
-Alpine.data('profileData', alpineProfileData(userId, loggedUserId, userId == loggedUserId, role));
+Alpine.data('profileData', alpineProfileData(userId, loggedUserId, userId == loggedUserId, role, loggedUserRole));
 Alpine.data('profileStatsData', alpineProfileStatsData( userId,  role));
 window.onpageshow = function(event) {
     if (event.persisted) {
         window.location.reload();
     }
 };
+
+Alpine.data('reportData', reportFormData());
+
 
 Alpine.start();

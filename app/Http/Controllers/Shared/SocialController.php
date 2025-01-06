@@ -87,97 +87,19 @@ class SocialController extends Controller
 
     public function followParticipant(Request $request)
     {
-        $PARTICIPANT_FOLLOW_ACTION = "participant_follow";
-
-        $user = $request->attributes->get('user');
-        $userId = $user->id;
-        $participantId = $request->participant_id;
-        $existingFollow = ParticipantFollow::checkFollow($user->id, $participantId);
-        if ($existingFollow) {
-            ActivityLogs::findActivityLog([
-                'subject_type' => User::class,
-                'subject_id' => $user->id,
-                'object_type' => ParticipantFollow::class,
-                'object_id' => $existingFollow->id,
-                'action' => $PARTICIPANT_FOLLOW_ACTION,
-            ])->delete();
-           
-            $existingFollow->delete();
-
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => "Successfully unfollowed user.",
-                    'isFollowing' => false,
-                ]);
-            }
-
-            $message = 'Successfully unfollowed the participant';
-            session()->flash('successMessage', $message);
-            return back();
-        } else {
-            DB::beginTransaction();
-            
-            try {
-                $updateUser = User::where('id', $participantId)
-                        ->select(['id', 'userBanner', 'name'])
-                        ->firstOrFail();
-
-                $follow = ParticipantFollow::create([
-                    'participant_follower' => $userId,
-                    'participant_followee' => $participantId,
-                ]);
-
-                $message = 'Successfully followed the participant';
-                ActivityLogs::createActivityLogs([
-                    'subject_type' => User::class,
-                    'subject_id' => [$user->id],
-                    'object_type' => ParticipantFollow::class,
-                    'object_id' => $follow->id,
-                    'action' => $PARTICIPANT_FOLLOW_ACTION,
-                    'log' =>  <<<HTML
-                    <a href="/view/participant/{$updateUser->id}" alt="Follow Image link"> 
-                        <img class="object-fit-cover rounded-circle me-2" 
-                            width='30' height='30'  
-                            alt="Profile picture of {$user->name}"
-                            src="/storage/{$updateUser->userBanner}" 
-                            onerror="this.src='/assets/images/404.png';"
-                        >
-                    </a>
-                    <span class="notification-gray me-2">
-                        You started  following another player,
-                        <a href="/view/participant/$updateUser->id" alt="Follow link"> 
-                            <span class="notification-blue">{$updateUser->name}</span>  
-                        </a>.
-                    </span>
-                    HTML,
-
-                ]); 
-                DB::commit();
-
-                if ($request->expectsJson()) {
-                    return response()->json([
-                        'success' => true,
-                        'isFollowing' => true,
-
-                        'message' => "Successfully followed user."
-                    ]);
-                }
-
-                session()->flash('successMessage', $message);
-                return back();
-            } catch (Exception $e) {
-                if ($request->expectsJson()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => $e->getMessage()
-                    ]);
-                }
-
-                DB::rollBack();
-                session()->flash('errorMessage', $e->getMessage());
-            }
+        $result = $this->socialService->handleParticipantFollow($request);
+        
+        if ($request->expectsJson()) {
+            return response()->json($result);
         }
+    
+        if ($result['success']) {
+            session()->flash('successMessage', $result['message']);
+        } else {
+            session()->flash('errorMessage', $result['message']);
+        }
+        
+        return back();
     }
 
     public function getConnections(Request $request, $id)
@@ -257,19 +179,29 @@ class SocialController extends Controller
             ->select('id')
             ->first();
         
+        if ($authenticatedUser->id == $user->id) {
+
+            return response()->json([
+                'message' => "Can't block yourself",
+                'is_blocked' => "False"
+            ], 404);
+        }
+        
         if ($authenticatedUser->hasBlocked($user)) {
             $authenticatedUser->blocks()->detach($user);
             $message = 'User unblocked successfully';
+            $isBlocked = false;
         } else {
             $authenticatedUser->blocks()->attach($user);
-            // Also remove any existing stars when blocking
+
             $authenticatedUser->stars()->detach($user);
             $message = 'User blocked successfully';
+            $isBlocked = true;
         }
 
         return response()->json([
             'message' => $message,
-            'is_blocked' => $authenticatedUser->hasBlocked($user)
+            'is_blocked' => $isBlocked
         ]);
     }
 
@@ -299,18 +231,18 @@ class SocialController extends Controller
         ], 201);
     }
 
-    public function getStats(Request $request, $id): JsonResponse
-    {
-        $authenticatedUser = $request->attributes->get('user');
-        $user = User::where('id', $id)
-            ->select('id')
-            ->first();
+   
 
-        $user = $request->attributes->get('user');
+    function getReports(Request $request, $id)  {
+        $user = User::findOrFail($id);
+    
+        $reports = Report::where('reported_user_id', $user->id)
+            ->with('reporter:id,name')  // Optionally include reporter details
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
         return response()->json([
-            'stars_count' => $user->starredBy()->count(),
-            'is_starred' => $authenticatedUser->hasStarred($user) ,
-            'is_blocked' => $authenticatedUser->hasBlocked($user) ,
+            'reports' => $reports
         ]);
     }
 

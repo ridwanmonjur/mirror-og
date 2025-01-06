@@ -128,7 +128,7 @@ const chatStore = reactive({
                         objectDoc['className'] = ['message'];
                         objectDoc['isMe'] = false;
                     } else {
-                        window.alert("Some error occurred");
+                        window.toastError("Some error occurred");
                     }
 
                     objectDoc['sender'] = roomStore.roomUserIdMap[objectDoc['senderId']];
@@ -246,8 +246,9 @@ const roomStore = reactive({
                 room['otherRoomMember'] = roomUserIdMap[room['otherRoomMemberId']];
             }
 
+
             // params 
-            if (viewUserProfile?.id) {
+            if (viewUserProfile && 'id' in viewUserProfile) {
 
                 if (!(viewUserProfile.id in roomUserIdMap)) {
                     roomUserIdMap[viewUserProfile.id] = viewUserProfile;
@@ -271,16 +272,18 @@ const roomStore = reactive({
 
             } 
 
-            let currentRoomIndex = rooms.findIndex(room =>
+            let currentRoomIndex = (rooms && viewUserProfile) ? rooms.findIndex(room =>
                 room.otherRoomMemberId == viewUserProfile.id
-            );
+            ): 0;
 
             if (currentRoomIndex !=-1) {
                 this.roomUserIdMap = { ...roomUserIdMap };
                 this.oldRooms = [...rooms];
                 this.currentRoomObj = rooms[currentRoomIndex];
                 this.currentRoom = currentRoomIndex;
-                chatStore.getMessages(rooms[currentRoomIndex].id);
+                if (rooms && rooms[currentRoomIndex]) {
+                    chatStore.getMessages(rooms[currentRoomIndex].id);
+                }
                 setTimeout(() => { scrollIntoView(); }, 500);
             } 
         });
@@ -345,6 +348,38 @@ function ChatListComponent() {
         get currentRoom() {
             return roomStore.currentRoom;
         },
+        triggerReportSelection(event) {
+         
+            let button = event.currentTarget;
+            const {userId, userName, userBanner} = button.dataset;
+            window.dispatchEvent(new CustomEvent('report-selected', {
+                detail: { id: userId, userName, userBanner }
+            }));
+        },
+        async blockRequest(e) {
+            const button = e.currentTarget;
+            if (!button) return;
+
+            const status = button.dataset.status;
+            const route = button.dataset.route;
+            const inputId = button.dataset.inputs ;
+        
+            try {
+                let data = await makeRequest(route, 'POST', JSON.stringify({}));
+     
+                console.log({data});
+
+                if (!('is_blocked' in data)) {
+                    return;
+                }
+                     
+            } catch (error) {
+                // Handle errors (you might want to show a notification to the user)
+                console.error('Operation failed:', error);
+                window.toastError('Failed to process your request. Please try again later.');
+            }
+        },
+  
         humanReadableChatTimeFormat(date) {
             const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
             return formattedTime
@@ -365,6 +400,18 @@ function ChatListComponent() {
             try {
                 if (this.currentRoom == null) {
                     window.toastError("New chat still being updated...")
+                }
+
+                if (this.currentRoomObj?.otherRoomMember?.i_blocked_them) {
+                    window.toastError('You have blocked this user and can\'t send message this room.');
+                    chatInput.value = "";
+                    return;
+                } 
+                
+                if (this.currentRoomObj?.otherRoomMember?.they_blocked_me) {
+                    window.toastError('This user has blocked you and you can\'t send message this room.');
+                    chatInput.value = "";
+                    return;
                 }
 
                 await addDoc(collection(db, `room/${roomStore.currentRoomObj.id}/message`), {
@@ -437,12 +484,157 @@ function RoomComponent() {
 }
 
 
+function ReportBlockComponent () {
+    return {
+        willShowReports: true,
+        reports: [],
+        errors: {},
+        loading: false,
+        user: null,
+        reasons: [
+            'Inappropriate Content',
+            'Harassment',
+            'Fake Account',
+            'Hate Speech',
+            'Other'
+        ],
+        formData: {
+            reason: '',
+            description: ''
+        },
+        errors: {},
+        loading: false,
+
+        async fetchReports() {
+            try {
+              const response = await fetch('/api/user/' + this.user.id + '/reports');
+              if (!response.ok) throw new Error('Failed to fetch reports');
+              let { reports } = await response.json();
+              this.reports = reports;
+            } catch (error) {
+              console.error('Error:', error);
+              this.reports = [];
+            }
+        },
+
+        async submitReport(event) {
+            event.preventDefault();
+            this.loading = true;
+            this.errors = {};
+
+            try {
+                const response = await fetch(`/api/user/${this.user.id}/report`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify(this.formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    if (response.status === 422) {
+                        this.errors = data.errors;
+                        return;
+                    }
+                    throw new Error(data.message || 'An error occurred');
+                }
+
+                // Success
+                this.reset();
+                this.fetchReports();
+                window.Toast.fire({
+                    'icon': 'success',
+                    'text': 'Report submitted successfully'
+                });
+            } catch (error) {
+                console.error('Error submitting report:', error);
+                window.toastError('Failed to submit report. Please try again.');
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        toggleWillShowReports() {
+            console.log("zzzzz");
+            console.log("zzzzz");
+            console.log("zzzzz");
+            this.willShowReports = !this.willShowReports;
+        },
+
+        reset() {
+            this.showForm = false;
+            this.formData = {
+                reason: '',
+                description: ''
+            };
+            this.errors = {};
+        },
+
+        formatDate(date) {
+            return  DateTime
+                .fromISO(date)
+                .toRelative();
+        },
+
+        mounted() {
+            console.log("zzzz");
+            console.log("zzzz");
+            console.log("zzzz");
+            window.addEventListener('report-selected', async (event) => {
+                console.log("zzzz");
+                console.log("zzzz");
+                console.log("tttt");
+                console.log("tttt");
+                let element = document.getElementById('reportUserModal')
+                let modal = new window.bootstrap.Modal(element);
+                modal.show();
+                this.user = event.detail;
+                await this.fetchReports();
+                console.log({user: this.user});
+                console.log({user: this.user});
+                console.log({user: this.user});
+                console.log({user: this.user});
+            });
+        }
+    }
+}
+
+
+async function makeRequest(url, method, data) {
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error making request:', error);
+        throw error;
+    }
+}
+
+  
+
 document.addEventListener('DOMContentLoaded', () => {
     createApp({
         RoomComponent,
         ChatListComponent,
         OtherUsersComponent,
-        DateDividerComponent
+        DateDividerComponent,
+        ReportBlockComponent
     }).mount('#app');
 });
 

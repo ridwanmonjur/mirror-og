@@ -28,7 +28,7 @@
 @php
     use Carbon\Carbon;
     $isUserSame = false;
-    $loggedUserId = null;
+    $loggedUserId = $loggedUserRole = null;
 
     [   
         'backgroundStyles' => $backgroundStyles, 
@@ -45,6 +45,7 @@
         }
         
         $loggedUserId = $user->id;
+        $loggedUserRole = $user->role;
         $isUserSame = $user?->id == $userProfile->id;
     @endphp
 @endauth
@@ -61,6 +62,7 @@
         data-font-styles="{{ $fontStyles }}"
         data-is-user-same="{{ $isUserSame }}"
         data-logged-user-id="{{ $loggedUserId }}"
+        data-logged-user-role="{{ $loggedUserRole }}"
         data-user-banner-url="{{ route('participant.userBanner.action', ['id' => $userProfile->id]) }}"
         data-asset-carousel-js="{{ asset('/assets/js/participant/carousel.js') }}"
         class="d-none laravel-data-storage"
