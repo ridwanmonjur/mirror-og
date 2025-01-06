@@ -144,6 +144,11 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
             const buttonRole = button.dataset.role ;
             const inputId = button.dataset.inputs ;
 
+            if (inputId == loggedUserId) {
+                window.toastError("Cannot follow yourself");
+                return;
+            }
+
             try {
                 const courseMap = {
                     'unfollow': {
@@ -233,7 +238,10 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
             const action = button.dataset.action;
             const route = button.dataset.route;
             const inputId = button.dataset.inputs;
-        
+            if (inputId == loggedUserId) {
+                window.toastError("Cannot befriend yourself");
+                return;
+            }
             try {
               
                 const actionMap = {
