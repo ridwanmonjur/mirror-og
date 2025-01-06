@@ -250,188 +250,192 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div v-scope="ReportBlockComponent()" id="report-block-component" @vue:mounted="mounted">
-        <div class="modal  " id="reportUserModal" tabindex="-1">
-            <div class="modal-dialog modal-lg mb-0">
-                <div class="modal-content  pt-3 pb-0 px-3">
-                    <div class="modal-body px-3 mx-3 pt-0 mt-0">
-                        <div v-on:click="toggleWillShowReports" 
-                            class="mt-2 text-red ms-0 cursor-pointer"
-                            v-if="!willShowReports">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
-                            </svg> Back to reports
-                        </div>
 
-                        <div v-else>
-                            <h5 class="mt-4 mb-0 d-block pt-0 pb-3 text-primary text-start">
-                                <img v-bind:src="'/storage/' + user?.userBanner"
-                                    class="rounded-circle object-fit-cover border border-primary me-2" width="35"
-                                    height="35" onerror="this.src='/assets/images/404.png';">
-                                <span>Past Reports against </span>
-                                <span v-text="user?.userName"> </span>
-                            </h5>
-
-                            <div class="d-flex justify-content-between mb-2">
-                                <button class="btn btn-primary text-light px-3 mb-2 rounded-pill"
-                                    v-on:click="toggleWillShowReports">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" viewBox="0 0 16 16" class="bi bi-plus-lg me-1">
-                                        <path
-                                            d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1" />
-                                    </svg>
-                                    Make a new report
-                                </button>
-                                <button class="me-2 btn ps-0 text-dark rounded-pill "
-                                    data-bs-target="#connectionModal" data-bs-dismiss="modal" data-bs-toggle="modal">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" class="bi bi-chevron-left d-inline" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
-                                    </svg>
-                                    <span> Go Back </span>
-                                </button>
-
+        <div v-scope="ReportBlockComponent()" id="reportUserModal" @vue:mounted="mounted"  class="modal" >
+            <div id="reportUserModal" tabindex="-1">
+                <div class="modal-dialog modal-lg mb-0">
+                    <div class="modal-content  pt-3 pb-0 px-3">
+                        <div class="modal-body px-3 mx-3 pt-0 mt-0">
+                            <div v-on:click="toggleWillShowReports" class="mt-2 text-red ms-0 cursor-pointer"
+                                v-if="!willShowReports">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                                </svg> Back to reports
                             </div>
-                            <div v-if="!reports?.[0]">
-                                <div class="card mt-3 mb-5">
-                                    No reports available.
+
+                            <div v-else>
+                                <h5 class="mt-4 mb-0 d-block pt-0 pb-3 text-primary text-start">
+                                    <img v-bind:src="'/storage/' + user?.userBanner"
+                                        class="rounded-circle object-fit-cover border border-primary me-2"
+                                        width="35" height="35" onerror="this.src='/assets/images/404.png';">
+                                    <span>Past Reports against </span>
+                                    <span v-text="user?.userName"> </span>
+                                </h5>
+
+                                <div class="d-flex justify-content-between mb-2">
+                                    <button class="btn btn-primary text-light px-3 mb-2 rounded-pill"
+                                        v-on:click="toggleWillShowReports">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" viewBox="0 0 16 16" class="bi bi-plus-lg me-1">
+                                            <path
+                                                d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1" />
+                                        </svg>
+                                        Make a new report
+                                    </button>
+                                    <button class="me-2 btn ps-0 text-dark rounded-pill "
+                                        data-bs-target="#connectionModal" data-bs-dismiss="modal"
+                                        data-bs-toggle="modal">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-chevron-left d-inline"
+                                            viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                                        </svg>
+                                        <span> Go Back </span>
+                                    </button>
+
                                 </div>
-                            </div>
-                            <template v-for="(report, key) in reports" :key="report.id">
-                                <div class="card mb-3">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <h6 class="mb-0" v-text="'Report #' + (Number(key)+1)"></h6>
+                                <div v-if="!reports?.[0]">
+                                    <div class="card mt-3 mb-5">
+                                        No reports available.
                                     </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <div class="d-flex justify-content-between">
-                                                <div>
-                                                    <small class="text-muted">Reported by</small>
-                                                    <p class="mb-0 fw-medium">
-                                                        <img src="{{ asset('storage/' . ($user?->userBanner ?? '')) }}"
-                                                            class="rounded-circle object-fit-cover border border-secondary me-1"
-                                                            width="25" height="25"
-                                                            onerror="this.src='{{ asset('assets/images/404.png') }}'">
-                                                        <span>{{ $user?->name }} </span>
-                                                    </p>
-                                                </div>
-                                                <div class="text-end">
-                                                    <small class="text-muted">Date</small>
-                                                    <p class="mb-0" v-text="formatDate(report.created_at)"></p>
+                                </div>
+                                <template v-for="(report, key) in reports" :key="report.id">
+                                    <div class="card mb-3">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <h6 class="mb-0" v-text="'Report #' + (Number(key)+1)"></h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <div class="d-flex justify-content-between">
+                                                    <div>
+                                                        <small class="text-muted">Reported by</small>
+                                                        <p class="mb-0 fw-medium">
+                                                            <img src="{{ asset('storage/' . ($user?->userBanner ?? '')) }}"
+                                                                class="rounded-circle object-fit-cover border border-secondary me-1"
+                                                                width="25" height="25"
+                                                                onerror="this.src='{{ asset('assets/images/404.png') }}'">
+                                                            <span>{{ $user?->name }} </span>
+                                                        </p>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <small class="text-muted">Date</small>
+                                                        <p class="mb-0" v-text="formatDate(report.created_at)"></p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div class="mb-0">
-                                            <small class="text-muted">Reason</small>
-                                            <p class="mb-2 fw-medium" v-text="report.reason"></p>
+                                            <div class="mb-0">
+                                                <small class="text-muted">Reason</small>
+                                                <p class="mb-2 fw-medium" v-text="report.reason"></p>
 
-                                            <small class="text-muted">Description</small>
-                                            <p class="mb-0" v-text="report.description"></p>
-                                        </div>
+                                                <small class="text-muted">Description</small>
+                                                <p class="mb-0" v-text="report.description"></p>
+                                            </div>
 
-                                        {{-- <div class="mt-3 border-top pt-3">
+                                            {{-- <div class="mt-3 border-top pt-3">
                                             <small class="text-muted d-block">Admin Notes</small>
                                             <p 
                                                 class="text-muted fst-italic mb-0" 
                                                 v-text="report.admin_notes || 'No admin notes available'"
                                             ></p>
                                         </div> --}}
-                                    </div>
-                                    {{-- <div class="card-footer text-muted">
+                                        </div>
+                                        {{-- <div class="card-footer text-muted">
                                         <small v-text="'Last updated: ' + formatDate(report.updated_at)"></small>
                                     </div> --}}
-                                </div>
-                            </template>
-                        </div>
-
-                        <div v-show="!willShowReports">
-                            <div class="border-0  mt-2 mb-0">
-                                <h5 class="d-inline-block py-2 text-start text-primary">
-                                    Writing a report</h5>
+                                    </div>
+                                </template>
                             </div>
 
-                            <h5 class="my-0 d-inline-block pt-0 pb-3 text-primary text-start">
-                                <img :src="'/storage/' + user?.userBanner"
-                                    class="rounded-circle object-fit-cover border border-primary me-2" width="35"
-                                    height="35" onerror="this.src='/assets/images/404.png';">
+                            <div v-show="!willShowReports">
+                                <div class="border-0  mt-2 mb-0">
+                                    <h5 class="d-inline-block py-2 text-start text-primary">
+                                        Writing a report</h5>
+                                </div>
 
-                                <span v-text="user?.userName"> </span>
-                            </h5>
-                            <p style="color: gray;"><i> We are so sorry for your experience. Please let us know what we
-                                    can do to help.</i> </p>
+                                <h5 class="my-0 d-inline-block pt-0 pb-3 text-primary text-start">
+                                    <img :src="'/storage/' + user?.userBanner"
+                                        class="rounded-circle object-fit-cover border border-primary me-2"
+                                        width="35" height="35" onerror="this.src='/assets/images/404.png';">
 
-                            <form v-on:submit="submitReport">
-                                <div class="mb-3">
-                                    <p class="form-label  d-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                            fill="inherit" class="bi bi-exclamation-triangle ms-1 me-2"
-                                            viewBox="0 0 16 16">
-                                            <path
-                                                d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z" />
-                                            <path
-                                                d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
-                                        </svg>
-                                        Please mention your reason for reporting this user.
-                                    </p>
-                                    <div v-for="reason in reasons" :key="reason">
-                                        <div class="form-check">
-                                            <input type="radio" class="form-check-input "
-                                                v-bind:id="'reason_' + reason" style="color: gray !important;"
-                                                name="reason" v-bind:value="reason" v-model="formData.reason"
-                                                v-bind:class="{ 'is-invalid': errors.reason }" required>
-                                            <label class="form-check-label" v-bind:for="'reason_' + reason"
-                                                v-text="reason"></label>
+                                    <span v-text="user?.userName"> </span>
+                                </h5>
+                                <p style="color: gray;"><i> We are so sorry for your experience. Please let us know
+                                        what we
+                                        can do to help.</i> </p>
+
+                                <form v-on:submit="submitReport(event)">
+                                    <div class="mb-3">
+                                        <p class="form-label  d-block">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="inherit" class="bi bi-exclamation-triangle ms-1 me-2"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z" />
+                                                <path
+                                                    d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                                            </svg>
+                                            Please mention your reason for reporting this user.
+                                        </p>
+                                        <div v-for="reason in reasons" :key="reason">
+                                            <div class="form-check">
+                                                <input type="radio" class="form-check-input "
+                                                    v-bind:id="'reason_' + reason" style="color: gray !important;"
+                                                    name="reason" v-bind:value="reason" v-model="formData.reason"
+                                                    v-bind:class="{ 'is-invalid': errors.reason }" required>
+                                                <label class="form-check-label" v-bind:for="'reason_' + reason"
+                                                    v-text="reason"></label>
+                                            </div>
                                         </div>
+
+                                        <!-- Other Reason Input (shows only when 'Other' is selected) -->
+                                        <div v-show="formData.reason === 'Other'" class="mt-2">
+                                            <input type="text" class="form-control"
+                                                placeholder="Please specify the reason" v-model="formData.otherReason"
+                                                :required="formData.reason === 'Other'">
+                                        </div>
+                                        <div class="invalid-feedback" v-text="errors.reason"></div>
                                     </div>
 
-                                    <!-- Other Reason Input (shows only when 'Other' is selected) -->
-                                    <div v-show="formData.reason === 'Other'" class="mt-2">
-                                        <input type="text" class="form-control"
-                                            placeholder="Please specify the reason" v-model="formData.otherReason"
-                                            :required="formData.reason === 'Other'">
+                                    <div class="mb-3">
+                                        <p class="form-label text-dark d-block">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                fill="inherit" class="ms-1 me-2 bi bi-exclamation-octagon"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z" />
+                                                <path
+                                                    d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                                            </svg>
+                                            Please explain your report in more detail.
+                                        </p>
+                                        <textarea class="form-control" v-bind:class="{ 'is-invalid': errors.description }" id="description"
+                                            v-model="formData.description" rows="4"></textarea>
+                                        <div class="invalid-feedback" v-text="errors.description"></div>
                                     </div>
-                                    <div class="invalid-feedback" v-text="errors.reason"></div>
-                                </div>
 
-                                <div class="mb-3">
-                                    <p class="form-label text-dark d-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                            fill="inherit" class="ms-1 me-2 bi bi-exclamation-octagon"
-                                            viewBox="0 0 16 16">
-                                            <path
-                                                d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z" />
-                                            <path
-                                                d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
-                                        </svg>
-                                        Please explain your report in more detail.
-                                    </p>
-                                    <textarea class="form-control" v-bind:class="{ 'is-invalid': errors.description }" id="description"
-                                        v-model="formData.description" rows="4"></textarea>
-                                    <div class="invalid-feedback" v-text="errors.description"></div>
-                                </div>
-
-                                <div class="d-flex justify-content-center  my-4">
-                                    <button type="button" class="btn btn-secondary px-3 text-white rounded-pill me-4"
-                                        v-on:click="reset()" data-bs-target="#connectionModal"
-                                        data-bs-dismiss="modal" data-bs-toggle="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-primary text-light px-3 rounded-pill"
-                                        v-bind:disabled="loading">
-                                        <span v-show="loading" class="spinner-border spinner-border-sm me-1"></span>
-                                        Submit Report
-                                    </button>
-                                </div>
-                            </form>
+                                    <div class="d-flex justify-content-center  my-4">
+                                        <button type="button"
+                                            class="btn btn-secondary px-3 text-white rounded-pill me-4"
+                                            v-on:click="reset()" data-bs-target="#connectionModal"
+                                            data-bs-dismiss="modal" data-bs-toggle="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary text-light px-3 rounded-pill"
+                                            v-bind:disabled="loading">
+                                            <span v-show="loading"
+                                                class="spinner-border spinner-border-sm me-1"></span>
+                                            Submit Report
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </body>
 <script src="{{ asset('/assets/js/shared/BackgroundModal.js') }}"></script>

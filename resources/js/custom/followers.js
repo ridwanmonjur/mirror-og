@@ -60,7 +60,10 @@ function reportFormData ()  {
                 // Success
                 this.reset();
                 this.fetchReports();
-                toastSuccess('Report submitted successfully');
+                window.Toast.fire({
+                    'icon': 'success',
+                    'text': 'Report submitted successfully'
+                });
             } catch (error) {
                 console.error('Error submitting report:', error);
                 window.toastError('Failed to submit report. Please try again.');

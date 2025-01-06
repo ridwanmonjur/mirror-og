@@ -478,9 +478,7 @@ function RoomComponent() {
         },
         async mounted() {
             await roomStore.initDB();
-            let element = document.getElementById('reportUserModal');
-            let modal = new window.bootstrap.Modal(element);
-            modal.show();
+          
         }
     }
 }
@@ -519,7 +517,8 @@ function ReportBlockComponent () {
             }
         },
 
-        async submitReport() {
+        async submitReport(event) {
+            event.preventDefault();
             this.loading = true;
             this.errors = {};
 
@@ -546,7 +545,10 @@ function ReportBlockComponent () {
                 // Success
                 this.reset();
                 this.fetchReports();
-                toastSuccess('Report submitted successfully');
+                window.Toast.fire({
+                    'icon': 'success',
+                    'text': 'Report submitted successfully'
+                });
             } catch (error) {
                 console.error('Error submitting report:', error);
                 window.toastError('Failed to submit report. Please try again.');
