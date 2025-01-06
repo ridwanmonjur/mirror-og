@@ -36,12 +36,26 @@
                         </div>
                     <div class="chat-info">
                         <h3 v-text="room?.otherRoomMember?.name"></h3>
-                        <p class="status my-0">
-                            <span v-text="formatDate(room?.otherRoomMember?.updated_at)"></span>
+                        <p class="status my-0" >
+                            <span  v-bind:class="{'text-white fw-bold' : currentRoomObj?.id == room?.id }" v-text="formatDate(room?.otherRoomMember?.updated_at)"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill mt-1 ms-2 d-none" viewBox="0 0 16 16">
                                 <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"/>
                             </svg>
+                            <small  v-bind:class="{'text-white fw-bold' : currentRoomObj?.id == room?.id }" class="text-red" v-if="room?.otherRoomMember.i_blocked_them">  
+                                <svg class="me-1 ms-4"
+                                    xmlns="http://www.w3.org/2000/svg" width="13"
+                                    height="13" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10">
+                                    </circle>
+                                    <line x1="4.93" y1="4.93" x2="19.07"
+                                        y2="19.07"></line>
+                                </svg>
+                                Blocked 
+                            </small>
                         </p>
+                        
                     </div>
                     
                 </div>
@@ -52,7 +66,7 @@
                 <h2 class="chat-user-name my-0">
                     <span v-show="currentRoomObj?.otherRoomMember?.name != null">
                         <img v-if="currentRoomObj?.otherRoomMember?.userBanner != null" {!! trustedBladeHandleImageFailure() !!} v-bind:src="'/storage/' + currentRoomObj?.otherRoomMember?.userBanner" width="50" height="50"
-                                    class="object-fit-cover rounded-circle me-3">
+                            class="object-fit-cover rounded-circle me-3">
                         <span v-else class="avatar d-inline-flex justify-content-center align-items-center rounded-circle me-3" style="width: 50px; height: 50px;"
                             v-text="currentRoomObj?.otherRoomMember?.name ? currentRoomObj.otherRoomMember?.name?.charAt(0)?.toUpperCase(): '-'">
                         </span>
@@ -124,9 +138,9 @@
             </div>
         </div>
         <div v-scope="OtherUsersComponent()" class="modal fade" id="other-users-component" tabindex="-1" aria-labelledby="other-users-componentLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content  px-4 py-2">
+                    <div class="px-4 pt-4   border-0">
                         <h5 class="modal-title" id="staticBackdropLabel">Start a new chat</h5>
                     </div>
                     <div class="modal-body py-4 pv-3">
@@ -146,7 +160,7 @@
                         </div>
                         <br>
                         <div class="tab-size"> 
-                            <table class="table responsive ">
+                            <table class="table table-borderless table-sm table-striped responsive ">
                                 <thead>
                                     <tr>
                                         <th scope="col"></th>
@@ -159,13 +173,14 @@
                                         <tr v-for="chat in users?? []" :key="chat.name + chat.id" class="border-none" style="vertical-align: center !important;">
                                             <th scope="row"></th>
                                             <td>
-                                                <img class="object-fit-cover rounded-circle" height="40" width="40" {!!trustedBladeHandleImageFailure()!!} v-bind:src="'/storage/' + chat?.userBanner" >
+                                                <img class="object-fit-cover border border-primary rounded-circle" height="40" width="40" {!!trustedBladeHandleImageFailure()!!} v-bind:src="'/storage/' + chat?.userBanner" >
                                                 <span class="ms-3" v-text="chat?.name"> </span>
                                             </td>
                                             <td class="pt-3 pb-2" v-text="chat?.role.toLowerCase()"></td>
                                             <td class="text-center pt-3 pb-2 cursor-pointer"  data-bs-dismiss="modal" v-on:click="changeUser(chat)">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-send-fill cursor-pointer" viewBox="0 0 16 16">
-                                                <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z"/>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-text text-primary" viewBox="0 0 16 16">
+                                                <path d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a22 22 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105"/>
+                                                <path d="M4 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8m0 2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5"/>
                                                 </svg>
                                             </td>
                                         </tr>

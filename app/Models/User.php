@@ -122,21 +122,9 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    public function blockedBy(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'blocks', 'blocked_user_id', 'user_id')
-            ->withTimestamps();
-    }
+   
 
-    public function reportsMade(): HasMany
-    {
-        return $this->hasMany(Report::class, 'reporter_id');
-    }
-
-    public function reportsReceived(): HasMany
-    {
-        return $this->hasMany(Report::class, 'reported_user_id');
-    }
+  
 
     public function hasStarred(User $user): bool
     {

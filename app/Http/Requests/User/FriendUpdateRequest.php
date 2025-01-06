@@ -37,9 +37,9 @@ class FriendUpdateRequest extends FormRequest
     {
        
             $validator->after(function ($validator) {
+            $user = $this->attributes->get('user');
 
             if (isset($this->updateStatus) && isset($this->updateUserId)) {
-                $user = $this->attributes->get('user');
                 $friend = Friend::checkFriendship($this->updateUserId, $user->id);
                 $status = $this->updateStatus;
                 

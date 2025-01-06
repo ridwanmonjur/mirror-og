@@ -8,6 +8,7 @@ use App\Models\OrganizerFollow;
 use Illuminate\Support\Str;
 use App\Models\Organizer;
 use App\Models\Participant;
+use App\Models\ParticipantFollow;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -72,12 +73,17 @@ class SocialService {
                 $result = ['type' => 'successMessage', 'message' => 'Your request has been deleted.'];
             }
             elseif (isset($validatedData['addUserId'])) {
+                if ($user->id == $validatedData['addUserId']) {
+                    throw new Exception('You are befriending yourself!');
+                }
+
                 Friend::create([
                     'user1_id' => $user->id,
                     'user2_id' => intval($validatedData['addUserId']),
                     'status' => 'pending',
                     'actor_id' => $user->id,
                 ]);
+
                 $result = ['type' => 'successMessage', 'message' => 'Successfully created a friendship'];
             }
             else {
@@ -155,4 +161,83 @@ class SocialService {
             </span>
         HTML;
     }
+
+    public function handleParticipantFollow(Request $request)
+    {
+        $PARTICIPANT_FOLLOW_ACTION = "participant_follow";
+
+        $user = $request->attributes->get('user');
+        $userId = $user->id;
+        $participantId = $request->participant_id;
+        $existingFollow = ParticipantFollow::checkFollow($user->id, $participantId);
+        
+        if ($existingFollow) {
+            ActivityLogs::findActivityLog([
+                'subject_type' => User::class,
+                'subject_id' => $user->id,
+                'object_type' => ParticipantFollow::class,
+                'object_id' => $existingFollow->id,
+                'action' => $PARTICIPANT_FOLLOW_ACTION,
+            ])->delete();
+           
+            $existingFollow->delete();
+
+            return [
+                'success' => true,
+                'message' => "Successfully unfollowed the participant",
+                'isFollowing' => false,
+            ];
+        } 
+
+        DB::beginTransaction();
+        try {
+            $updateUser = User::where('id', $participantId)
+                    ->select(['id', 'userBanner', 'name'])
+                    ->firstOrFail();
+
+            $follow = ParticipantFollow::create([
+                'participant_follower' => $userId,
+                'participant_followee' => $participantId,
+            ]);
+
+            ActivityLogs::createActivityLogs([
+                'subject_type' => User::class,
+                'subject_id' => [$user->id],
+                'object_type' => ParticipantFollow::class,
+                'object_id' => $follow->id,
+                'action' => $PARTICIPANT_FOLLOW_ACTION,
+                'log' =>  <<<HTML
+                <a href="/view/participant/{$updateUser->id}" alt="Follow Image link"> 
+                    <img class="object-fit-cover rounded-circle me-2" 
+                        width='30' height='30'  
+                        alt="Profile picture of {$user->name}"
+                        src="/storage/{$updateUser->userBanner}" 
+                        onerror="this.src='/assets/images/404.png';"
+                    >
+                </a>
+                <span class="notification-gray me-2">
+                    You started  following another player,
+                    <a href="/view/participant/$updateUser->id" alt="Follow link"> 
+                        <span class="notification-blue">{$updateUser->name}</span>  
+                    </a>.
+                </span>
+                HTML,
+            ]); 
+            DB::commit();
+
+            return [
+                'success' => true,
+                'message' => "Successfully followed the participant",
+                'isFollowing' => true,
+            ];
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
 }

@@ -43,18 +43,40 @@ class ChatController extends Controller
     public function getFirebaseUsers(Request $request)
     {
         $users = null;
+        $loggedUserId = $request->attributes->get('user')->id;
+
+        $select = [
+            'users.id', 'users.name', 'users.role', 'users.userBanner', 
+        ];
 
         if ($request->has('userIdList')) {
             $userIdList = $request->userIdList;
 
             $users = $users = DB::table('users')
                 ->leftJoin('firebase_user_active_at', 'users.id', '=', 'firebase_user_active_at.user_id')
+                ->leftJoin('blocks', function($join) use ($loggedUserId) {
+                    $join->on('users.id', '=', 'blocks.blocked_user_id')
+                         ->where('blocks.user_id', $loggedUserId)
+                    ->orOn('users.id', '=', 'blocks.user_id')
+                         ->where('blocks.blocked_user_id', $loggedUserId);
+                })
                 ->whereIn('users.id', $userIdList)
-                ->select('users.id', 'users.name', 'users.role', 'users.userBanner', 'firebase_user_active_at.updated_at')
+                ->select($select)
+                ->addSelect([
+                    'firebase_user_active_at.updated_at',
+                    DB::raw('CASE 
+                        WHEN blocks.user_id = ' . $loggedUserId . ' THEN true 
+                        ELSE false 
+                    END as i_blocked_them'),
+                    DB::raw('CASE 
+                        WHEN blocks.blocked_user_id = ' . $loggedUserId . ' THEN true 
+                        ELSE false 
+                    END as they_blocked_me')
+                ])
                 ->get();
         } elseif ($request->has('searchQ')) {
             $searchQ = $request->searchQ;
-            $usersQ = User::select(['id', 'name', 'role', 'userBanner']);
+            $usersQ = User::select($select);
             if ($searchQ) {
                 $usersQ->where('name', 'LIKE', "%{$searchQ}%");
             }

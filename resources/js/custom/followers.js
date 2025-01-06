@@ -60,10 +60,10 @@ function reportFormData ()  {
                 // Success
                 this.reset();
                 this.fetchReports();
-                alert('Report submitted successfully');
+                toastSuccess('Report submitted successfully');
             } catch (error) {
                 console.error('Error submitting report:', error);
-                alert('Failed to submit report. Please try again.');
+                window.toastError('Failed to submit report. Please try again.');
             } finally {
                 this.loading = false;
             }
@@ -219,7 +219,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
             } catch (error) {
                 // Handle errors (you might want to show a notification to the user)
                 console.error('Operation failed:', error);
-                alert('Failed to process your request. Please try again later.');
+                window.toastError('Failed to process your request. Please try again later.');
             }
         },
 
@@ -347,7 +347,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
             } catch (error) {
                 // Handle errors (you might want to show a notification to the user)
                 console.error('Operation failed:', error);
-                alert('Failed to process your request. Please try again later.');
+                window.toastError('Failed to process your request. Please try again later.');
             }
         },
 
@@ -378,7 +378,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
             } catch (error) {
                 // Handle errors (you might want to show a notification to the user)
                 console.error('Operation failed:', error);
-                alert('Failed to process your request. Please try again later.');
+                window.toastError('Failed to process your request. Please try again later.');
             }
         },
 

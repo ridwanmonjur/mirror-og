@@ -30,6 +30,7 @@ class ParticipantFollow extends Model
 
     public static function addLoggedUserInfo($query, $loggedUserId)
     {
+
         return $query->addSelect([
             'logged_user_friends.id as friend_id',
             'logged_user_friends.actor_id as logged_friendship_actor',
@@ -48,8 +49,8 @@ class ParticipantFollow extends Model
             });
         })
         ->leftJoin('blocks', function($join) use ($loggedUserId) {
-            $join->where('blocks.user_id', $loggedUserId)
-                ->where('blocks.blocked_user_id', '=', 'users.id');
+            $join->on('blocks.blocked_user_id', '=', 'users.id')
+                 ->where('blocks.user_id', '=', $loggedUserId);
         })
         ->selectRaw('EXISTS(SELECT 1 FROM reports WHERE reporter_id = ? AND reported_user_id = users.id) as logged_report_status', [$loggedUserId])
         ->leftJoin('organizer_follows as og_follows', function($join) use ($loggedUserId) {

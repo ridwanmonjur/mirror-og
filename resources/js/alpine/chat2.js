@@ -128,7 +128,7 @@ const chatStore = reactive({
                         objectDoc['className'] = ['message'];
                         objectDoc['isMe'] = false;
                     } else {
-                        window.alert("Some error occurred");
+                        window.toastError("Some error occurred");
                     }
 
                     objectDoc['sender'] = roomStore.roomUserIdMap[objectDoc['senderId']];
@@ -246,8 +246,9 @@ const roomStore = reactive({
                 room['otherRoomMember'] = roomUserIdMap[room['otherRoomMemberId']];
             }
 
+
             // params 
-            if (viewUserProfile?.id) {
+            if (viewUserProfile && 'id' in viewUserProfile) {
 
                 if (!(viewUserProfile.id in roomUserIdMap)) {
                     roomUserIdMap[viewUserProfile.id] = viewUserProfile;
@@ -271,16 +272,18 @@ const roomStore = reactive({
 
             } 
 
-            let currentRoomIndex = rooms?.findIndex(room =>
+            let currentRoomIndex = (rooms && viewUserProfile) ? rooms.findIndex(room =>
                 room.otherRoomMemberId == viewUserProfile.id
-            );
+            ): 0;
 
             if (currentRoomIndex !=-1) {
                 this.roomUserIdMap = { ...roomUserIdMap };
                 this.oldRooms = [...rooms];
                 this.currentRoomObj = rooms[currentRoomIndex];
                 this.currentRoom = currentRoomIndex;
-                chatStore.getMessages(rooms[currentRoomIndex].id);
+                if (rooms && rooms[currentRoomIndex]) {
+                    chatStore.getMessages(rooms[currentRoomIndex].id);
+                }
                 setTimeout(() => { scrollIntoView(); }, 500);
             } 
         });
@@ -365,6 +368,18 @@ function ChatListComponent() {
             try {
                 if (this.currentRoom == null) {
                     window.toastError("New chat still being updated...")
+                }
+
+                if (this.currentRoomObj?.otherRoomMember?.i_blocked_them) {
+                    window.toastError('You have blocked this user and can\'t send message this room.');
+                    chatInput.value = "";
+                    return;
+                } 
+                
+                if (this.currentRoomObj?.otherRoomMember?.they_blocked_me) {
+                    window.toastError('This user has blocked you and you can\'t send message this room.');
+                    chatInput.value = "";
+                    return;
                 }
 
                 await addDoc(collection(db, `room/${roomStore.currentRoomObj.id}/message`), {

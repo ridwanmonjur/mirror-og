@@ -84,6 +84,7 @@ class OrganizerFollow extends Model
             ->when(trim($search), function ($q) use ($search) {
                 $q->where('users.name', 'LIKE', "%" . trim($search) . "%");
             });
+
         
         if($loggedUserId) {
             $ogQuery->addSelect([

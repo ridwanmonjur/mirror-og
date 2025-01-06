@@ -178,10 +178,10 @@
                 document.getElementById('payment-summary')?.classList.remove('d-none');
                 
             } else {
-                alert(json.message)
+                window.toastError(json.message)
             }
         } catch (error) {
-            alert(error.message);
+            window.toastError(error.message);
             console.error("Error initializing Stripe Card Payment:", error);
         }
     }

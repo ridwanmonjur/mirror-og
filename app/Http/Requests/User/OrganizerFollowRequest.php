@@ -18,8 +18,10 @@ class OrganizerFollowRequest extends FormRequest
             ->where('role', 'ORGANIZER')
             ->select(['id', 'role', 'name'])
             ->firstOrFail();
-
-        return $this->attributes->get('user')->role === 'PARTICIPANT';
+            
+        $user = $this->attributes->get('user');
+        return $user->role === 'PARTICIPANT' 
+            && $this->organizer_id !== $user->id;
     }
 
     /**
