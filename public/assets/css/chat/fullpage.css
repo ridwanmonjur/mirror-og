@@ -156,8 +156,14 @@ body {
     background: none;
     border: none;
     font-size: 1.125rem;
+    z-index: 999 !important;
     cursor: pointer;
     color: white;
+}
+
+.menu-btn svg {
+    z-index: -1;
+    position: relative;
 }
 
 .chat-messages {
