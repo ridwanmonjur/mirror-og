@@ -46,7 +46,7 @@ class UserResource extends Resource
                 //     ->maxLength(255),
                 // Forms\Components\TextInput::make('google_id')
                     // ->maxLength(255),
-                Forms\Components\TextInput::make('userBanner')
+                Forms\Components\FileUpload::make('userBanner')
                     ->maxLength(255),
                 // Forms\Components\TextInput::make('steam_id')
                 //     ->maxLength(255),
@@ -69,6 +69,8 @@ class UserResource extends Resource
                 Tables\Actions\DeleteAction::make()
             ])
             ->columns([
+                Tables\Columns\ImageColumn::make('userBanner')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
@@ -99,8 +101,7 @@ class UserResource extends Resource
                     ->searchable(),
                 // Tables\Columns\TextColumn::make('google_id')
                 //     ->searchable(),
-                Tables\Columns\TextColumn::make('userBanner')
-                    ->searchable(),
+                
                 // Tables\Columns\TextColumn::make('steam_id')
                 //     ->searchable(),
                 Tables\Columns\TextColumn::make('stripe_customer_id')

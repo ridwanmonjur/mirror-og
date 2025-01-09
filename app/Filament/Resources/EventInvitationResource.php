@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\EventCategoryResource\Pages;
-use App\Filament\Resources\EventCategoryResource\RelationManagers;
-use App\Models\EventCategory;
+use App\Filament\Resources\EventInvitationResource\Pages;
+use App\Filament\Resources\EventInvitationResource\RelationManagers;
+use App\Models\EventInvitation;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class EventCategoryResource extends Resource
+class EventInvitationResource extends Resource
 {
-    protected static ?string $model = EventCategory::class;
+    protected static ?string $model = EventInvitation::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,14 +23,14 @@ class EventCategoryResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('gameTitle')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('gameIcon')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('eventDefinitions')
-                    ->maxLength(255),
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name'),
+                Forms\Components\TextInput::make('organizer_user_id')
+                    ->numeric(),
+                Forms\Components\Select::make('event_id')
+                    ->relationship('event', 'id'),
+                Forms\Components\TextInput::make('participant_user_id')
+                    ->numeric(),
+                Forms\Components\Select::make('team_id')
+                    ->relationship('team', 'name'),
             ]);
     }
 
@@ -38,13 +38,13 @@ class EventCategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('gameTitle')
-                    ->searchable(),
-                Tables\Columns\ImageColumn::make('gameIcon')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('eventDefinitions')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('user.name')
+                Tables\Columns\TextColumn::make('organizer_user_id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('event.id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('participant_user_id')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -55,6 +55,9 @@ class EventCategoryResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('team.name')
+                    ->numeric()
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -79,9 +82,9 @@ class EventCategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEventCategories::route('/'),
-            'create' => Pages\CreateEventCategory::route('/create'),
-            'edit' => Pages\EditEventCategory::route('/{record}/edit'),
+            'index' => Pages\ListEventInvitations::route('/'),
+            'create' => Pages\CreateEventInvitation::route('/create'),
+            'edit' => Pages\EditEventInvitation::route('/{record}/edit'),
         ];
     }
 }

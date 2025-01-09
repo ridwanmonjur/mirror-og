@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\EventCategoryResource\Pages;
-use App\Filament\Resources\EventCategoryResource\RelationManagers;
-use App\Models\EventCategory;
+use App\Filament\Resources\ImageVideoResource\Pages;
+use App\Filament\Resources\ImageVideoResource\RelationManagers;
+use App\Models\ImageVideo;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class EventCategoryResource extends Resource
+class ImageVideoResource extends Resource
 {
-    protected static ?string $model = EventCategory::class;
+    protected static ?string $model = ImageVideo::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,14 +23,17 @@ class EventCategoryResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('gameTitle')
+                Forms\Components\TextInput::make('file_path')
+                    ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('gameIcon')
+                Forms\Components\TextInput::make('file_type')
+                    ->required(),
+                Forms\Components\TextInput::make('mime_type')
+                    ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('eventDefinitions')
-                    ->maxLength(255),
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name'),
+                Forms\Components\TextInput::make('size')
+                    ->required()
+                    ->numeric(),
             ]);
     }
 
@@ -38,13 +41,12 @@ class EventCategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('gameTitle')
+                Tables\Columns\TextColumn::make('file_path')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('gameIcon')
+                Tables\Columns\TextColumn::make('file_type'),
+                Tables\Columns\TextColumn::make('mime_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('eventDefinitions')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('user.name')
+                Tables\Columns\TextColumn::make('size')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -79,9 +81,9 @@ class EventCategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEventCategories::route('/'),
-            'create' => Pages\CreateEventCategory::route('/create'),
-            'edit' => Pages\EditEventCategory::route('/{record}/edit'),
+            'index' => Pages\ListImageVideos::route('/'),
+            'create' => Pages\CreateImageVideo::route('/create'),
+            'edit' => Pages\EditImageVideo::route('/{record}/edit'),
         ];
     }
 }
