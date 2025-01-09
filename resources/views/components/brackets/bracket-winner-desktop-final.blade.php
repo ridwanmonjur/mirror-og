@@ -29,8 +29,8 @@
         <small 
             data-position="{{$position1}}" 
             onclick="reportModalShow(event);" 
-            class="cursor-pointer ms-1 position-absolute  replace_me_with_image" style="z-index: 99;"
-        >?</small>
+            class="cursor-pointer ms-1 position-absolute  cursor-pointer me-3 py-2 replace_me_with_image" style="z-index: 99;"
+        >&nbsp;&nbsp;&nbsp;?</small>
      @endif
     <span></span>
      
