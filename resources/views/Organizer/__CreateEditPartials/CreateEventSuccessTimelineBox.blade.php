@@ -1,4 +1,4 @@
-<br><br>
+<div class="d-inline-block my-2"> </div>
 <div class="time-line-box time-line-box-success" id="timeline-box">
     <div class="swiper-container text-center">
         <div class="swiper-wrapper">
