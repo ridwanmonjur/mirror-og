@@ -93,6 +93,9 @@ window.onload = () => {
 
     // window.motion.slideInLeftRight();
 
+    document.getElementById('changeBackgroundBanner').addEventListener('click', (event)=> {
+        event.currentTarget.value = '';
+    });
 
     window.setupFileInputEditor('#changeBackgroundBanner', (file) => {
         if (file) {

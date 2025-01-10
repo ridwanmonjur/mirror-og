@@ -561,6 +561,11 @@ color: #43A4D7; */
     align-items: center;
 }
 
+.time-line-box {
+    cursor: pointer !important;
+}
+
+
 .time-line-box .swiper-slide__left .timestamp{
     align-items: start !important;
     margin-left: -40px;
@@ -695,11 +700,13 @@ color: #43A4D7; */
 
 .background-active-timeline {
     background: #43A4D7 !important;
+    cursor: default !important;
+
 }
 
 .font-color-active-timeline {
     color: #43A4D7;
-    text-decoration: underline;
+    cursor: default !important;
 }
 
 .oceans-gaming-default-button-base,

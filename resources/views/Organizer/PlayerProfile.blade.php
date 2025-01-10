@@ -191,7 +191,7 @@
                         @else
                             <div class="text-center">
                                 <form id="followFormProfile" method="POST"
-                                    class="d-inline me-3"
+                                    class="d-inline me-3 followFormProfile"
                                     action="{{ route('participant.organizer.follow') }}">
                                     @csrf
                                     @auth

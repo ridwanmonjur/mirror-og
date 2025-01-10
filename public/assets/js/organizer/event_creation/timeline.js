@@ -169,12 +169,19 @@ function previewSelectedImage(imageId, previewImageId) {
                     previewImage.classList.remove("d-none");
                     let element = document.getElementById('preview-image-warning');
                     if (element) element.classList.add('d-none');
+                    console.log("hi")
                     previewImage.src = e.target.result;
+                    Toast.fire({
+                        icon: 'success',
+                        text: `Successfully uploaded file!`
+                    })
                 }
             };
 
         };
         reader.readAsDataURL(file);
+    } else {
+        window.toastError("File not submitted properly!");
     }
 }
 

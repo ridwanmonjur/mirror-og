@@ -90,7 +90,7 @@
                         </small>
                     </div>
                 </div>
-                <form id="{{ 'followForm' . $joinEvent->id . $random_int }}" method="POST" class="col-6 col-xl-2 px-0"
+                <form id="{{ 'followForm' . $joinEvent->id . $random_int }}" method="POST" class="col-6 followFormProfile col-xl-2 px-0"
                     action="{{ route('participant.organizer.follow') }}">
                     @csrf
                     @guest

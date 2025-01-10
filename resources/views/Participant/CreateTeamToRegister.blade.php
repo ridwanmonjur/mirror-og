@@ -18,11 +18,11 @@
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
         <input type="hidden" id="event_view_route" value="{{ route('participant.event.view', $id) }}">
-        <div class="text-center" id="step-0">
-            <div class="">
+        <div class="text-center h-100" id="step-0">
+            <div class="d-flex align-items-center justify-content-center w-100 h-100">
                 
                 <div class="text-center" id="step-0">
-                    <div class="mt-4">
+                    <div >
                         <u>
                             <h5>Create & Register Your Team</h5>
                         </u>

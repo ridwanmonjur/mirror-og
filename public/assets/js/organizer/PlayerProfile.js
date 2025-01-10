@@ -47,7 +47,8 @@ function reddirectToLoginWithIntened(route) {
 }
 
 
-document.getElementById('followFormProfile')?.addEventListener('submit', async function (event) {
+document.querySelectorAll('.followFormProfile')?.forEach((elementOuter) => {
+    elementOuter.addEventListener('submit', async function (event) {
     event.preventDefault();
     let followButtons = document.getElementsByClassName("followButton" + initialUserProfile.id);
     let followCounts = document.getElementsByClassName("followCounts" + initialUserProfile.id);
@@ -117,7 +118,7 @@ document.getElementById('followFormProfile')?.addEventListener('submit', async f
         followButton.style.setProperty('pointer-events', 'auto');
         toastError('Error occured.');
     }
-});
+})});
 
 let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -164,7 +165,9 @@ function visibleElements() {
 }
 window.onload = () => {
     localStorage.setItem('isInited', "false");
-
+    document.getElementById('changeBackgroundBanner').addEventListener('click', (event)=> {
+        event.currentTarget.value = '';
+    });
 
     window.setupFileInputEditor('#changeBackgroundBanner', (file) => {
         if (file) {
@@ -225,6 +228,7 @@ const imageUpload = document.getElementById("image-upload");
 const uploadedImageList = document.getElementsByClassName("uploaded-image");
 const uploadedImage = uploadedImageList[0];
 uploadButton2?.addEventListener("click", function () {
+    imageUpload.value = "";
     imageUpload.click();
 });
 imageUpload?.addEventListener("change", async function (e) {
@@ -254,6 +258,7 @@ imageUpload?.addEventListener("change", async function (e) {
         if (data.success) {
             uploadedImageList[0].style.backgroundImage = `url(${data.data.fileName})`;
             uploadedImageList[1].style.backgroundImage = `url(${data.data.fileName})`;
+            window.location.reload();
         } else {
             console.error('Error updating member status:', data.message);
         }

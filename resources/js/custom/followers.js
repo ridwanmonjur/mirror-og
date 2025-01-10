@@ -366,7 +366,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
             const button = e.currentTarget;
             if (!button) return;
 
-            const status = button.dataset.status;
+            // const status = button.dataset.status;
             const route = button.dataset.route;
             const inputId = button.dataset.inputs ;
         
@@ -387,6 +387,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
                 })
                      
             } catch (error) {
+
                 // Handle errors (you might want to show a notification to the user)
                 console.error('Operation failed:', error);
                 window.toastError('Failed to process your request. Please try again later.');
@@ -510,6 +511,9 @@ async function makeRequest(url, method, data) {
         });
 
         if (!response.ok) {
+            if (response.status == 401) {
+                window.toastError("Unauthorized! Please login first!");
+            }
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 

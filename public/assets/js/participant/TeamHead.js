@@ -84,6 +84,10 @@ function visibleElements() {
 }
 
 let newFunction = function () {
+    document.getElementById('changeBackgroundBanner').addEventListener('click', (event)=> {
+        event.currentTarget.value = '';
+    });
+
     window.setupFileInputEditor('#changeBackgroundBanner', (file) => {
         if (file) {
             var cachedImage = URL.createObjectURL(file);
@@ -190,6 +194,7 @@ let uploadedImage = uploadedImageList[0];
 let backgroundBanner = document.getElementById("backgroundBanner")
 
 uploadButton2?.addEventListener("click", function () {
+    imageUpload.value = "";
     imageUpload.click();
 });
 
@@ -213,6 +218,7 @@ imageUpload?.addEventListener("change", async function (e) {
             if (data.success) {
                 uploadedImageList[0].style.backgroundImage = `url(/storage/${data.data.fileName})`;
                 uploadedImageList[1].style.backgroundImage = `url(/storage/${data.data.fileName})`;
+                window.location.reload();
             } else {
                 console.error('Error updating member status:', data.message);
             }

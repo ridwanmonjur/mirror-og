@@ -55,8 +55,6 @@ class SocialService {
             ]));
         }
 
-        
-
         return [
             'message' => $message,
             'isFollowing' => $isFollowing,
