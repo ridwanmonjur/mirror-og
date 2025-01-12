@@ -9,7 +9,7 @@
                        <h5 class="ms-3 my-3"
                            x-text="currentTab.charAt(0).toUpperCase() + currentTab.slice(1).toLowerCase()"></h5>
                    </div>
-                   <div class="d-flex justify-content-between flex-wrap mt-2 mb-3">
+                   <div class="d-flex user-select-none justify-content-between flex-wrap mt-2 mb-3">
                        <button class="btn btn-link py-0" data-bs-dismiss="modal" aria-label="Close">
                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                class="bi bi-chevron-left" viewBox="0 0 16 16">
@@ -64,7 +64,7 @@
                        </template>
                        <template x-if="connections || connections[0]">
                            <div>
-                               <div class="mt-3 px-0 justify-content-center grid-2-columns mx-auto ">
+                               <div class="mt-3 px-0 justify-content-center grid-2-columns mx-auto user-select-none ">
                                    <template x-for="(user, index) in connections" :key="user.id">
 
                                        <div class=" border border-secondary mx-3 mb-3 pt-3 pb-2 px-3"

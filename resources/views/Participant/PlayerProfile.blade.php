@@ -160,7 +160,7 @@
                        
                     </div>
                 </div>
-                <div class="member-details">
+                <div class="member-details user-select-none ">
                         <div x-show="errorMessage != null && isEditMode" class="text-red" x-text="errorMessage"> </div>
                         <div x-cloak x-show="isEditMode" style="color: black;">
                             <input 

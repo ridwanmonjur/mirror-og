@@ -160,7 +160,7 @@
                         </svg>
                         <br>
                     </div>
-                    <div x-cloak x-show="!isEditMode">
+                    <div x-cloak x-show="!isEditMode" class="user-select-none ">
                         <h5 >
                             {{$userProfile->name}}
                         </h5>

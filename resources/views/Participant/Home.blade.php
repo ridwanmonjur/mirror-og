@@ -25,6 +25,7 @@
             <img 
                 src="{{ asset('/assets/images/homepage new header.png') }}"
                 alt=""
+                class="user-select-none"
             >
         </section>
 
