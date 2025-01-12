@@ -331,21 +331,21 @@ function getUrl(inputId, id = null) {
 let navbar = document.querySelector('.navbar');
 let lastScrollTop = 0;
 
-navbar.addEventListener('mouseenter', () => {
-    navbar.classList.remove('navbar-scrolled');
-});
+// navbar.addEventListener('mouseenter', () => {
+//     navbar.classList.remove('navbar-scrolled');
+// });
 
-window.addEventListener('scroll', throttle(function() {
-    let currentScroll = window.scrollY;
+// window.addEventListener('scroll', throttle(function() {
+//     let currentScroll = window.scrollY;
     
-    if (!navbar.matches(':hover')) {
-        if (currentScroll > lastScrollTop && currentScroll > 100) {
-            navbar.classList.add('navbar-scrolled');
-        } 
-        else if (currentScroll < lastScrollTop) {
-            navbar.classList.remove('navbar-scrolled');
-        }
-    }
+//     if (!navbar.matches(':hover')) {
+//         if (currentScroll > lastScrollTop && currentScroll > 100) {
+//             navbar.classList.add('navbar-scrolled');
+//         } 
+//         else if (currentScroll < lastScrollTop) {
+//             navbar.classList.remove('navbar-scrolled');
+//         }
+//     }
     
-    lastScrollTop = currentScroll;
-}, 300));
+//     lastScrollTop = currentScroll;
+// }, 300));
