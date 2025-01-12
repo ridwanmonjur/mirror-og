@@ -500,9 +500,14 @@ function updateInput(input) {
 }
 
 function keydown(input) {
+    let joinEventId = input.dataset.joineventid;
+    console.log({joinEventId, input});
+    console.log({joinEventId, input});
+    console.log({joinEventId, input});
     if (event.key === "Backspace" || event.key === "Delete") { 
         event.preventDefault();
-        document.getElementById('currencyResetInput').click();
+
+        document.querySelector(`#currencyResetInput[data-joinEventId='${joinEventId}']`).click();
     }
 
     if (event.key.length === 1 && !/\d/.test(event.key)) {

@@ -26,7 +26,7 @@
                                 <path
                                     d="M3.05 3.05a7 7 0 0 0 0 9.9.5.5 0 0 1-.707.707 8 8 0 0 1 0-11.314.5.5 0 0 1 .707.707m2.122 2.122a4 4 0 0 0 0 5.656.5.5 0 1 1-.708.708 5 5 0 0 1 0-7.072.5.5 0 0 1 .708.708m5.656-.708a.5.5 0 0 1 .708 0 5 5 0 0 1 0 7.072.5.5 0 1 1-.708-.708 4 4 0 0 0 0-5.656.5.5 0 0 1 0-.708m2.122-2.12a.5.5 0 0 1 .707 0 8 8 0 0 1 0 11.313.5.5 0 0 1-.707-.707 7 7 0 0 0 0-9.9.5.5 0 0 1 0-.707zM10 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0" />
                             </svg>
-                            {{ $joinEvent->status }} {{$joinEvent->captain?->team_member_id}}
+                            {{ $joinEvent->status }} 
                         </small>
                     </li>
                 </ul>
@@ -318,7 +318,7 @@
         </a>
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
-                <div class="col-12 col-xl-6  my-1 px-2">
+                <div class="col-12 col-xl-6  my-1 px-0">
                     <a class="d-flex justify-content-start"
                         href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img {!! trustedBladeHandleImageFailureBanner() !!}
@@ -330,7 +330,7 @@
                 </div>
                 <div onclick="goToUrl(event, this)"
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id]) }}"
-                    class="col-6 col-xl-4 d-flex justify-content-center mx-0 mt-1 px-0">
+                    class="col-6 col-xl-4 d-flex justify-content-start mx-0 mt-1 px-0">
                     <img {!! trustedBladeHandleImageFailureBanner() !!} 
                 
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
@@ -351,7 +351,7 @@
                 <form onclick="event.stopPropagation(); " onsubmit="onFollowSubmit(event)"
                     id="{{ 'followForm' . $joinEvent->id . $random_int }}"
                     data-join-event-user ="{{ $joinEvent->eventDetails?->user_id }}" method="POST"
-                    class="col-6 col-xl-2 px-0" action="{{ route('participant.organizer.follow') }}">
+                    class="col-6 col-xl-2 px-0 justify-content-end text-end" action="{{ route('participant.organizer.follow') }}">
                     @csrf
                     @guest
                         <input type="hidden" name="user_id" value="">
