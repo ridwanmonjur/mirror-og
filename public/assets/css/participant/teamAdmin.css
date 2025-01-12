@@ -204,6 +204,10 @@ img.fslightbox-source{
     flex-wrap: wrap;
     width: min(90vw, 1000px);
     margin: auto;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .tab-size {

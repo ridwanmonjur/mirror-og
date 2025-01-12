@@ -64,7 +64,7 @@
     
 >
 
-    <div class="team-head-storage d-none"
+    <div class="team-head-storage d-none user-select-none "
         data-success-join="{{session('successJoin')}}"
         data-error-join="{{session('errorJoin')}}"
         data-route-signin="{{ route('participant.signin.view') }}"
@@ -146,7 +146,7 @@
             </label>
         </div>
         <div>
-            <div :class="{'team-info': !isEditMode, '': true}">
+            <div :class="{'team-info user-select-none ': !isEditMode, '': true}">
                 @if ($isCreator)
                     <div x-cloak x-show.important="isEditMode">
                         <input type="file" id="image-upload" accept="image/*" style="display: none;">
@@ -398,7 +398,7 @@
                     <span class="d-inline ms-2 fs-5">{{$selectTeam->country_flag}}</span>
                 </p>
             @endif
-            <div x-cloak x-show="!isEditMode" class="row w-75-lg-60 py-2 mb-2">
+            <div x-cloak x-show="!isEditMode" class="row w-75-lg-60 py-2 mb-2 user-select-none ">
                 <div class="col-12 col-lg-4 text-center mx-auto"> 
                     <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                         width="25px" height="25px" viewBox="0 0 96.979 96.979" xml:space="preserve" class="me-2"

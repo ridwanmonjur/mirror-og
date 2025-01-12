@@ -21,7 +21,7 @@
     >
         <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
         
-        <section class="hero">
+        <section class="hero user-select-none">
             <img 
                 onerror="this.onerror=null;this.src='/assets/images/404.png';"
                 src="{{ asset('/assets/images/homepage new header.png') }}" alt=""
