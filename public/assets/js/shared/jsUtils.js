@@ -192,17 +192,17 @@ function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
     const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
     tabContents.forEach(content => {
         content.classList.add("d-none");
-        // content.style.opacity = "0";
+        content.style.opacity = "0";
     });
 
     const selectedTab = document.getElementById(tabName);
     if (selectedTab) {
         selectedTab.classList.remove('d-none');
         
-        // setTimeout(() => {
-        //     selectedTab.style.transition = "opacity 0.5s ease-in-out";
-        //     selectedTab.style.opacity = "1";
-        // }, 10);
+        setTimeout(() => {
+            selectedTab.style.transition = "opacity 0.5s ease-in-out";
+            selectedTab.style.opacity = "1";
+        }, 10);
     }
 
     const tabButtons = document.querySelectorAll(`.tab-button-active.${extraClassNameToFilter}`);
