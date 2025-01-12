@@ -236,7 +236,7 @@ img.fslightbox-source{
     border-bottom: 2px solid #000;
 }
 .tab-button:active {
-    border: 2px solid #000;
+    border-bottom: 2px solid #000;
 }
 
 .event-carousel-styles {
