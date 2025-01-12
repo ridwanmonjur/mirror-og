@@ -448,7 +448,7 @@
     <div class="modal  "
         id="reportUserModal"
         tabindex="-1" >
-        <div class="modal-dialog modal-lg mb-0">
+        <div class="modal-dialog modal-lg mb-0" style="color: black !important;">
             <div class="modal-content  pt-3 pb-0 px-3">
                 <div class="modal-body px-3 mx-3 pt-0 mt-0">
                     <div 
@@ -466,7 +466,7 @@
                        
                       
 
-                    <div x-cloak x-show="willShowReports">
+                    <div x-cloak x-show="willShowReports" >
                         <h5 class="mt-4 mb-0 d-block pt-0 pb-3 text-primary text-start">
                                 <img :src="'/storage/' + user?.userBanner"
                                 class="rounded-circle object-fit-cover border border-primary me-2"
@@ -579,8 +579,8 @@
                         
                         <form @submit.prevent="submitReport">
                             <div class="mb-3">
-                                <p class="form-label  d-block">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="inherit" class="bi bi-exclamation-triangle ms-1 me-2" viewBox="0 0 16 16">
+                                <p class="form-label text-red d-block">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-exclamation-triangle ms-1 me-2" viewBox="0 0 16 16">
                             <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
                             <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
                             </svg>
@@ -620,8 +620,8 @@
                             </div>
 
                             <div class="mb-3">
-                                <p class="form-label text-dark d-block">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="inherit" class="ms-1 me-2 bi bi-exclamation-octagon" viewBox="0 0 16 16">
+                                <p class="form-label text-red d-block">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="ms-1 me-2 bi bi-exclamation-octagon" viewBox="0 0 16 16">
                                 <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
                                 <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
                                 </svg>

@@ -30,9 +30,9 @@
         <span>Paid: <u class="text-success">RM {{ $exisitngSum }}</u>
             <span>Pending: <u style="color: red;">RM {{ $pedning }} </u> <span></p>
     </div>
-    <div class="popover-content d-none cursor-pointer bg-light py-2 z-999">
-        <div class=" bg-light border-dark border-1 py-4 px-3" style="width: min-content;">
-            <table class="responsive table table-borderless member-table align-start px-3 mx-3 " style="width: min(450px, 95vw);">
+    <div class="popover-content border border-1 d-none cursor-pointer z-999" style="background: white;">
+        <div class="border border-1 py-4 px-3" style="background: white; width: min-content;">
+            <table class="responsive table table-borderless member-table align-start px-3 mx-3 popover-display2"    >
                 <thead>
                     <tr>
                         <th class="pb-2"></th>

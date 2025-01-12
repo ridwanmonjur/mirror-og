@@ -78,3 +78,14 @@
     order: 0;
     cursor: pointer;
 }
+
+.popover-display2 {
+    width: 320px;
+}
+
+
+@media screen and (min-width: 992px) {
+    .popover-display2 {
+        width: 450px !important;
+    }
+}
