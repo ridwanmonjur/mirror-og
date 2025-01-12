@@ -395,7 +395,7 @@ function ChatListComponent() {
             }
 
             if (String(value).trim() == "") {
-                window.toastError("Empty messages!")
+                window.toastError("Please do not send empty messages!")
                 return;
             }
 

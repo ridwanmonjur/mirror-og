@@ -310,6 +310,7 @@ function handleDrop(e) {
 
 document.querySelector('.upload-button').addEventListener('click', function(e) {
     e.preventDefault();
+    fileInput.value = '';
     fileInput.click();
 });
 

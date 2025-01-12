@@ -32,7 +32,7 @@
     </div>
     <div class="popover-content d-none cursor-pointer bg-light py-2 z-999">
         <div class=" bg-light border-dark border-1 py-4 px-3" style="width: min-content;">
-            <table class="responsive table member-table align-start px-3 mx-3 " style="width: min(450px, 95vw);">
+            <table class="responsive table table-borderless member-table align-start px-3 mx-3 " style="width: min(450px, 95vw);">
                 <thead>
                     <tr>
                         <th class="pb-2"></th>

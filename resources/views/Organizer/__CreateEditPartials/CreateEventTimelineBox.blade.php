@@ -1,24 +1,25 @@
+<div class="d-inline-block my-2"> </div>
 <div class="time-line-box" id="timeline-box">
     <div class="swiper-container text-center">
         <div class="swiper-wrapper">
             <div class="swiper-slide swiper-slide__left" id="timeline-1">
-                <div class="timestamp" onclick="goToNextScreen('step-1', 'timeline-1')">
-                    <span class="first-item-adjust">Categories</span>
+                <div class="timestamp btn " onclick="goToNextScreen('step-1', 'timeline-1')">
+                    <span class="final">Categories</span>
                 </div>
                 <div class="status__left" onclick="goToNextScreen('step-1', 'timeline-1')"><span><small></small></span></div>
             </div>
             <div class="swiper-slide" id="timeline-2">
-                <div class="timestamp" onclick="goToNextScreen('step-5', 'timeline-2')"><span>Details</span></div>
+                <div class="timestamp btn " onclick="goToNextScreen('step-5', 'timeline-2')"><span>Details</span></div>
                 <div class="status" onclick="goToNextScreen('step-5', 'timeline-2')"><span><small></small></span></div>
             </div>
             <div class="swiper-slide" id="timeline-launch">
-                 <div class="timestamp" onclick="goToNextScreen('step-launch-1', 'timeline-launch')"><span
+                 <div class="timestamp btn " onclick="goToNextScreen('step-launch-1', 'timeline-launch')"><span
                         class="date">Visibility</span></div>
                 <div class="status" onclick="goToNextScreen('step-launch-1', 'timeline-launch')"><span><small></small></span></div>
             </div>
             <div class="swiper-slide swiper-slide__right" id="timeline-payment">
-                <div class="timestamp" onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">
-                    <span class="last-item-adjust">Payment</span>
+                <div class="timestamp btn " onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();">
+                    <span class="final">Payment</span>
                 </div>
                 <div class="status__right" onclick="goToNextScreen('step-payment', 'timeline-payment'); fillStepPaymentValues();"><span><small></small></span></div>
             </div>

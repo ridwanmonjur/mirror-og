@@ -85,6 +85,49 @@ svg{
     border-color: #2E4B59;
 }
 
+html {
+    width: 100vw !important;
+    position: relative !important;
+    overflow-x: hidden !important;
+}
+
+body {
+    width: 100% !important;
+    overflow-y: scroll !important;
+    padding-right: 0 !important; /* Prevent Bootstrap modal padding */
+}
+
+/* Handle both SweetAlert2 and Bootstrap modal */
+body.swal2-shown:not(.swal2-no-backdrop),
+body.modal-open.swal2-shown,
+body.modal-open,
+.swal2-container,
+.modal,
+.modal-backdrop,
+.fixed-top,
+.navbar-fixed-top {
+    padding-right: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Ensure modals don't cause shifts */
+.modal-open .modal {
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 0 !important;
+}
+
+/* Optional: If you have fixed elements that also shift */
+.modal-open .fixed-top,
+.modal-open .sticky-top {
+    padding-right: 0 !important;
+}
+.user-select-none {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
 
 .container {
     display: flex;

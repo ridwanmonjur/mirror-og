@@ -5,6 +5,7 @@ const imageUpload = document.getElementById("image-upload");
 const uploadedImageList = document.getElementsByClassName("uploaded-image");
 const uploadedImage = uploadedImageList[0];
 uploadButton2?.addEventListener("click", function () {
+    imageUpload.value = "";
     imageUpload.click();
 });
 
@@ -39,7 +40,7 @@ imageUpload?.addEventListener("change", async function (e) {
                 hyperLinkElement.setAttribute('href', data.data.fileName);
             });
             window.refreshFsLightbox();
-
+            window.location.reload();
         } else {
             console.error('Error updating member status:', data.message);
         }

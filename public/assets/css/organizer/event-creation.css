@@ -561,6 +561,22 @@ color: #43A4D7; */
     align-items: center;
 }
 
+.time-line-box {
+    cursor: pointer !important;
+}
+
+
+.time-line-box .swiper-slide__left .timestamp{
+    align-items: start !important;
+    margin-left: -40px;
+}
+
+.time-line-box .swiper-slide__right .timestamp{
+    align-items: end !important;
+    margin-left: 40px;
+    
+}
+
 .time-line-box .status {
     padding: 0px 10px;
     display: flex;
@@ -615,10 +631,7 @@ color: #43A4D7; */
     background-color: #43a4d7 !important;
     color: white !important;
     height: 20px !important;
-}
 
-.status__left__success small,
-.time-line-box-success .status__right small {
     padding-bottom: 15px !important;
     padding-left: 5px !important;
     padding-right: 15px !important;
@@ -670,16 +683,8 @@ color: #43A4D7; */
 }
 
 
-.first-item-adjust {
-    position: relative;
-    left: -40%;
-    display: inline-block;
-}
 
-.last-item-adjust {
-    position: relative;
-    left: 40%;
-}
+
 
 .timestamp {
     width: 100%;
@@ -695,11 +700,13 @@ color: #43A4D7; */
 
 .background-active-timeline {
     background: #43A4D7 !important;
+    cursor: default !important;
+
 }
 
 .font-color-active-timeline {
     color: #43A4D7;
-    text-decoration: underline;
+    cursor: default !important;
 }
 
 .oceans-gaming-default-button-base,

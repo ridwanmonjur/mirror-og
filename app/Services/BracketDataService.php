@@ -25,7 +25,7 @@ class BracketDataService
 
     const PREV_VALUES = [
         32 => [
-            'WIN' => ['G1', 'G2'],
+            'FINAL' => ['G1', 'G2'],
             'G1' => ['U29', 'U30'],
             'G2' => ['L59', 'L60'],
             //
@@ -140,7 +140,7 @@ class BracketDataService
             'L60' => ['U29', 'U30'],
         ],
         16 => [
-            'WIN' => ['G1', 'G2'],
+            'FINAL' => ['G1', 'G2'],
             'G1' => ['U13', 'U14'],
             'G2' => ['L27', 'L28'],
             //
@@ -201,7 +201,7 @@ class BracketDataService
             'L28' => ['U13', 'U14'],
         ],
         8 => [
-            'WIN' => ['G1', 'G2'],
+            'FINAL' => ['G1', 'G2'],
             'G1' => ['U5', 'U6'],
             'G2' => ['L11', 'L12'],
             //
@@ -246,12 +246,12 @@ class BracketDataService
                     'finals' => [[
                         'team1_position' => 'G1',
                         'team2_position' => 'G2',
-                        'winner_next_position' => 'WIN',
+                        'winner_next_position' => 'FINAL',
                         'loser_next_position' => null,
                         ...$defaultValues
                     ]],
                     'winner' => [[
-                        'team1_position' => 'WIN',
+                        'team1_position' => 'FINAL',
                         'team2_position' => null,
                         'winner_next_position' => null,
                         'loser_next_position' => null,
@@ -736,13 +736,13 @@ class BracketDataService
                     'finals' => [[                       
                         'team1_position' => 'G1',
                         'team2_position' => 'G2',
-                        'winner_next_position' => 'WIN',
+                        'winner_next_position' => 'FINAL',
                         'loser_next_position' => null,
                         ...$defaultValues
 
                     ]],
                     'winner' => [[
-                        'team1_position' => 'WIN',
+                        'team1_position' => 'FINAL',
                         'team2_position' => null,
                         'winner_next_position' => null,
                         'loser_next_position' => null,
@@ -995,12 +995,12 @@ class BracketDataService
                     'finals' => [[
                         'team1_position' => 'G1',
                         'team2_position' => 'G2',
-                        'winner_next_position' => 'WIN',
+                        'winner_next_position' => 'FINAL',
                         'loser_next_position' => null,
                         ...$defaultValues
                     ]],
                     'winner' => [[
-                        'team1_position' => 'WIN',
+                        'team1_position' => 'FINAL',
                         'team2_position' => null,
                         'winner_next_position' => null,
                         'loser_next_position' => null,

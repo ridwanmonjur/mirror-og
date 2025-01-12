@@ -19,20 +19,20 @@
                        </button>
                        <template x-if="role === 'PARTICIPANT'">
                            <ul class="nav " id="connectionTabs" role="tablist">
-                               <li :class="{ 'btn nav-item ms-0 px-4 py-2 ': true, ' text-primary ': currentTab == 'followers' }"
+                               <li :class="{ 'btn nav-item user-select-none ms-0 px-4 py-2 ': true, ' text-primary ': currentTab == 'followers' }"
                                    role="presentation" id="followers-tab" data-bs-toggle="tab"
                                    data-bs-target="#followers" type="button" role="tab"
                                    x-on:click="resetSearch('followers');"
                                 >
                                    Followers 
                                </li>
-                               <li :class="{ 'btn nav-item px-4 py-2': true, ' text-primary ': currentTab == 'following' }"
+                               <li :class="{ 'btn nav-item user-select-none px-4 py-2': true, ' text-primary ': currentTab == 'following' }"
                                    role="presentation" id="following-tab" data-bs-toggle="tab"
                                    data-bs-target="#following" type="button" role="tab"
                                    x-on:click="resetSearch('following');">
                                    Following
                                </li>
-                               <li :class="{ 'btn nav-item px-4 py-2 ': true, ' text-primary ': currentTab == 'friends' }"
+                               <li :class="{ 'btn nav-item user-select-none px-4 py-2 ': true, ' text-primary ': currentTab == 'friends' }"
                                    role="presentation" id="friends-tab" data-bs-toggle="tab" data-bs-target="#friends"
                                    type="button" role="tab" x-on:click="resetSearch('friends');">
                                    Friends
