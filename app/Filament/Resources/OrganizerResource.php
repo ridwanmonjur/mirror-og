@@ -28,7 +28,11 @@ class OrganizerResource extends Resource
                 Forms\Components\TextInput::make('companyDescription')
                     ->maxLength(255),
                 Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
+                    ->relationship('user', 'name',
+                    
+                    fn ($query) => $query->where('role', 'ORGANIZER')
+                    
+                    )
                     ->required(),
                 Forms\Components\TextInput::make('stripe_customer_id')
                     ->maxLength(255),

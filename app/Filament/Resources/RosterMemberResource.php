@@ -24,7 +24,9 @@ class RosterMemberResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
+                    ->relationship('user', 'name',
+                    fn ($query) => $query->where('role', 'PARTICIPANT')
+                    )
                     ->required(),
                 Forms\Components\TextInput::make('join_events_id')
                     ->required()
@@ -32,9 +34,11 @@ class RosterMemberResource extends Resource
                 Forms\Components\TextInput::make('team_member_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('team_id')
+                Forms\Components\Select::make('team_id')
                     ->required()
-                    ->numeric(),
+                    ->relationship('team', 'teamName',
+                    fn ($query) => $query->whereNotNull('teamName')
+                ),
                 Forms\Components\Toggle::make('vote_to_quit'),
             ]);
     }
@@ -60,7 +64,7 @@ class RosterMemberResource extends Resource
                 Tables\Columns\TextColumn::make('team_member_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('team_id')
+                Tables\Columns\TextColumn::make('team.teamName')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('vote_to_quit')

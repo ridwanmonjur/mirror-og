@@ -63,25 +63,27 @@
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
                 <div class="col-12 col-xl-6 d-flex justify-content-start d my-1 px-0">
-                    <a class="d-flex justify-content-start"
+                    <a class="d-flex justify-content-start align-items-center"
                         href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
 
                         <img 
                             {!! trustedBladeHandleImageFailureBanner() !!} style="max-width: 50px; "
                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
-                            class="object-fit-cover" width="60px" height="40px">
-                        <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventName }} </span>
+                            class="object-fit-cover me-1 " width="35px" height="40px"
+                            style="object-position: center;"    
+                        >
+                        <span class="text-truncate text-start"> {{ $joinEvent->eventName }} </span>
                     </a>
                 </div>
                 <div onclick="goToUrl(event, this)"
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->user->id]) }}"
-                    class="col-6 col-xl-4 d-flex justify-content-center px-0 mx-0 mt-1">
+                    class="col-6 col-xl-4 d-flex justify-content-start align-items-center px-0 mx-0 mt-1">
                     <img 
                         {!! trustedBladeHandleImageFailureBanner() !!}
                         src="{{ bladeImageNull($joinEvent->user->userBanner) }}" width="35" height="35"
                         class="object-fit-cover random-color-circle rounded-circle2" >
                     <div class="text-start  ms-1">
-                        <span class="text-truncate-2-lines h-auto w-100">{{ $joinEvent->user->name }}</span>
+                        <span class="text-truncate h-auto w-100">{{ $joinEvent->user->name }}</span>
                         <small
                             data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id] : 0 }} "
                             class="d-inline-block {{ 'followCounts' . $joinEvent->user_id }}">
@@ -90,7 +92,7 @@
                         </small>
                     </div>
                 </div>
-                <form id="{{ 'followForm' . $joinEvent->id . $random_int }}" method="POST" class="col-6 followFormProfile col-xl-2 px-0"
+                <form id="{{ 'followForm' . $joinEvent->id . $random_int }}" method="POST" class="col-6 followFormProfile col-xl-2 justify-content-end text-end px-0"
                     action="{{ route('participant.organizer.follow') }}">
                     @csrf
                     @guest

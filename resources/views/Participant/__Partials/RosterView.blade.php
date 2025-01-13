@@ -69,20 +69,20 @@
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
                 <div class="col-12 col-xl-6  my-1 px-0">
-                    <a class="d-flex align-items-center justify-content-start" href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
+                    <a class="d-flex h-100 align-items-center align-items-center justify-content-start" href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img {!! trustedBladeHandleImageFailureBanner() !!}
                             style="object-position: center;"
 
                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
                             class="object-fit-cover me-2" width="35px" height="40px"
                         >
-                        <span class="text-truncate-2-lines text-start"> {{ $joinEvent->eventDetails->eventName }}
+                        <span class="text-truncate text-start"> {{ $joinEvent->eventDetails->eventName }}
                         </span>
                     </a>
                 </div>
                 <div onclick="goToUrl(event, this)"
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id]) }}"
-                    class="col-6 col-xl-4 d-flex justify-content-start mx-0 mt-1 px-0">
+                    class="col-6 col-xl-4 d-flex justify-content-start align-items-center mx-0 mt-1 px-0">
                     <img {!! trustedBladeHandleImageFailureBanner() !!} 
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
                         width="45"
@@ -91,7 +91,7 @@
                     >
                     <div class="d-inline-block text-start me-1">
                         <span
-                            class="text-truncate-2-lines h-auto ">{{ $joinEvent->eventDetails?->user?->name }}</span>
+                            class="text-truncate h-auto ">{{ $joinEvent->eventDetails?->user?->name }}</span>
                         <small
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
                             class="d-block p-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">
@@ -104,7 +104,7 @@
                     onsubmit="onFollowSubmit(event)"
                     id="{{ 'followForm' . $joinEvent->id . $random_int }}"
                     data-join-event-user ="{{ $joinEvent->eventDetails?->user_id }}"
-                    method="POST" class="col-6 col-xl-2 px-0 justify-content-end text-end " action="{{ route('participant.organizer.follow') }}">
+                    method="POST" class="col-6 col-xl-2 px-0 align-items-center justify-content-end h-100 align-middle text-end " action="{{ route('participant.organizer.follow') }}">
                     @csrf
                     @guest
                         <input type="hidden" name="user_id" value="">

@@ -24,11 +24,15 @@ class OrganizerFollowResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('participant_user_id')
-                    ->relationship('participantUser', 'name')
+                    ->relationship('participantUser', 'name',
+                    fn ($query) => $query->where('role', 'PARTICIPANT')  
+                    )
                     ->required(),
-                Forms\Components\TextInput::make('organizer_user_id')
+                Forms\Components\Select::make('organizer_user_id')
                     ->required()
-                    ->numeric(),
+                    ->relationship('organizer', 'name',
+                    fn ($query) => $query->where('role', 'ORGANIZER')             
+                ),
             ]);
     }
 
@@ -38,8 +42,9 @@ class OrganizerFollowResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('participantUser.name')
                     ->numeric()
+                    ->label('Participant')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('organizer_user_id')
+                Tables\Columns\TextColumn::make('organizer.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

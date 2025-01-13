@@ -25,17 +25,17 @@ class UserProfileResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('backgroundColor')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('backgroundBanner')
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('backgroundBanner')
+                    ->image(),
                 Forms\Components\TextInput::make('backgroundGradient')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('fontColor')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('frameColor')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('user_id')
+                Forms\Components\Select::make('user_id')
                     ->required()
-                    ->numeric(),
+                    ->relationship('user', 'name'),
             ]);
     }
 
@@ -45,7 +45,7 @@ class UserProfileResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('backgroundColor')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('backgroundBanner')
+                Tables\Columns\ImageColumn::make('backgroundBanner')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('backgroundGradient')
                     ->searchable(),
@@ -53,7 +53,7 @@ class UserProfileResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('frameColor')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
             ])

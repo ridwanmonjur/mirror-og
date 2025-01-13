@@ -23,9 +23,9 @@ class ImageVideoResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('file_path')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('file_path')
+                    ->image()
+                    ->video(),
                 Forms\Components\TextInput::make('file_type')
                     ->required(),
                 Forms\Components\TextInput::make('mime_type')
@@ -41,8 +41,7 @@ class ImageVideoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('file_path')
-                    ->searchable(),
+                Tables\Columns\ImageColumn::make('file_path'),
                 Tables\Columns\TextColumn::make('file_type'),
                 Tables\Columns\TextColumn::make('mime_type')
                     ->searchable(),

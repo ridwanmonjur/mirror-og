@@ -24,10 +24,13 @@ class TeamMemberResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
+                    ->relationship('user', 'name',
+                    fn ($query) => $query->where('role', 'PARTICIPANT') 
+                    )
                     ->required(),
                 Forms\Components\Select::make('team_id')
-                    ->relationship('team', 'id')
+                    ->relationship('team', 'teamName',
+                    )
                     ->required(),
                 Forms\Components\TextInput::make('status')
                     ->required(),
@@ -43,7 +46,7 @@ class TeamMemberResource extends Resource
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('team.id')
+                Tables\Columns\TextColumn::make('team.teamName')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

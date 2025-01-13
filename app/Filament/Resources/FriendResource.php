@@ -44,12 +44,15 @@ class FriendResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('user1.name')
+                    ->label('User 1')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user2.name')
+                    ->label('User 2')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('actor_id')
+                Tables\Columns\TextColumn::make('actor.name')
+                    ->label('Actor')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

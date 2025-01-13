@@ -23,12 +23,16 @@ class ParticipantFollowResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('participant_follower')
+                Forms\Components\Select::make('participant_follower')
+                    ->relationship('followerUser', 'name',
+                    fn ($query) => $query->where('role', 'PARTICIPANT')  
+                    )
+                    ->required(),
+                Forms\Components\Select::make('participant_followee')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('participant_followee')
-                    ->required()
-                    ->numeric(),
+                    ->relationship('followeeUser', 'name',
+                        fn ($query) => $query->where('role', 'PARTICIPANT')  
+                    ),
             ]);
     }
 
@@ -36,10 +40,10 @@ class ParticipantFollowResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('participant_follower')
+                Tables\Columns\TextColumn::make('followerUser.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('participant_followee')
+                Tables\Columns\TextColumn::make('followeeUser.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

@@ -16,6 +16,8 @@ class InterestedUser extends Model
         'pass_text'
     ];
 
+    protected $table = 'interested_user';
+
     /**
      * Get the user associated with the interested record
      */

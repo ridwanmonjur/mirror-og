@@ -52,7 +52,7 @@ class JoinEventResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('eventDetails.id')
+                Tables\Columns\TextColumn::make('eventDetails.eventName')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -63,7 +63,7 @@ class JoinEventResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('team.id')
+                Tables\Columns\TextColumn::make('team.teamName')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('joiner_id')

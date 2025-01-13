@@ -23,12 +23,15 @@ class StarsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('starred_user_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('user_id')
+                    ->relationship('user', 'name',
+                    )
+                    ->required(),
+                Forms\Components\Select::make('starred_user_id')
+                    ->relationship('starredUser', 'name',
+                    )
+                    ->required(),
+                
             ]);
     }
 
@@ -36,10 +39,10 @@ class StarsResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('starred_user_id')
+                Tables\Columns\TextColumn::make('starredUser.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

@@ -23,12 +23,14 @@ class TeamCaptainResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('team_member_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('teams_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('team_member_id')
+                ->relationship('user', 'name',
+                fn ($query) => $query->where('role', 'PARTICIPANT') 
+                )
+                ->required(),
+                Forms\Components\Select::make('teams_id')
+                    ->relationship('team', 'teamName')
+                    ->required(),
             ]);
     }
 
@@ -36,10 +38,11 @@ class TeamCaptainResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('team_member_id')
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Member')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('teams_id')
+                Tables\Columns\TextColumn::make('team.teamName')
                     ->numeric()
                     ->sortable(),
             ])

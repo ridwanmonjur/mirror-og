@@ -25,17 +25,20 @@ class TeamProfileResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('backgroundColor')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('backgroundBanner')
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('backgroundBanner')
+                    ->image(),
                 Forms\Components\TextInput::make('backgroundGradient')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('fontColor')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('frameColor')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('team_id')
+                Forms\Components\Select::make('team_id')
                     ->required()
-                    ->numeric(),
+                    ->relationship('team', 
+                        'teamName',
+                        fn ($query) => $query->whereNotNull('teamName')
+                    ),
                 Forms\Components\TextInput::make('follower_count')
                     ->required()
                     ->numeric()
@@ -49,7 +52,7 @@ class TeamProfileResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('backgroundColor')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('backgroundBanner')
+                Tables\Columns\ImageColumn::make('backgroundBanner')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('backgroundGradient')
                     ->searchable(),
@@ -57,7 +60,7 @@ class TeamProfileResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('frameColor')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('team_id')
+                Tables\Columns\TextColumn::make('team.teamName')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('follower_count')

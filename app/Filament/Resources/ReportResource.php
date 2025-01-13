@@ -28,6 +28,8 @@ class ReportResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('reported_user_id')
                     ->relationship('reportedUser', 'name')
+                    ->label('Reported User')
+
                     ->required(),
                 Forms\Components\TextInput::make('reason')
                     ->required()
@@ -49,6 +51,7 @@ class ReportResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('reportedUser.name')
+                    ->label('Reported User')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('reason')

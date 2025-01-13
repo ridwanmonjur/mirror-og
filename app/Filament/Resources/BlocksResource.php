@@ -28,6 +28,7 @@ class BlocksResource extends Resource
                     ->relationship('user', 'name'),
                 Forms\Components\Select::make('blocked_user_id')
                     ->required()
+                    ->label('Blocked User')
                     ->relationship('blockedUser', 'name')
             ]);
     }
@@ -41,6 +42,7 @@ class BlocksResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('blockedUser.name')
                     ->numeric()
+                    ->label('Blocked User')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

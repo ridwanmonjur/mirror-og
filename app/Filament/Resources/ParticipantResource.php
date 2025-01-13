@@ -24,7 +24,9 @@ class ParticipantResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
+                    ->relationship('user', 'name',
+                    fn ($query) => $query->where('role', 'PARTICIPANT') 
+                    )
                     ->required(),
                 Forms\Components\TextInput::make('nickname')
                     ->maxLength(255),

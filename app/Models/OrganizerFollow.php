@@ -30,7 +30,7 @@ class OrganizerFollow extends Model
 
     public function organizer(): BelongsTo
     {
-        return $this->belongsTo(Organizer::class);
+        return $this->belongsTo(User::class, 'organizer_user_id');
     }
 
     public static function getFollowCounts(array| null $userIds): array

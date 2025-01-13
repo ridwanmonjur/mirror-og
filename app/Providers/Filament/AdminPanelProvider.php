@@ -6,8 +6,11 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationBuilder;
 use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
+use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -25,38 +28,78 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->navigationGroups([
-                // Primary operations
-                NavigationGroup::make()
-                    ->label('Event Results')
-                    ->icon('heroicon-o-building')
-                    ->items([
-                        \App\Filament\Resources\EventDetailResource::class,
-                        \App\Filament\Resources\AchievementsResource::class,
-                        \App\Filament\Resources\AwardResultsResource::class,
-                    ])
-                    ->collapsible(false),
-
-                // Financial section
-                NavigationGroup::make()
-                    ->label('Event Setup')
-                    ->icon('heroicon-o-currency-dollar')
-                    ->items([
-                        \App\Filament\Resources\EventTierResource::class,
-                        \App\Filament\Resources\EventCategoryResource::class,
-                        \App\Filament\Resources\AchievementsResource::class,
-                        \App\Filament\Resources\AwardResource::class,
-                    ]),
-                // Reporting
-                NavigationGroup::make()
-                    ->label('Profile')
-                    ->icon('heroicon-o-chart-bar')
-                    ->items([
-                        \App\Filament\Resources\ActivityLogsResource::class,
-                        \App\Filament\Resources\AddressResource::class,
-                        \App\Filament\Resources\AwardResultsResource::class,
-                    ]),
-            ])
+            
+            ->navigation(function (NavigationBuilder $builder): NavigationBuilder {
+                return $builder
+                    ->item(
+                        NavigationItem::make('Dashboard')
+                            ->icon('heroicon-o-home')
+                            ->activeIcon('heroicon-s-home')
+                            ->isActiveWhen(fn (): bool => request()->routeIs('filament.admin.pages.dashboard'))
+                            ->url(fn (): string => Dashboard::getUrl())
+                    )
+                    ->groups([
+                        NavigationGroup::make('User')
+                        ->items([
+                            ...\App\Filament\Resources\UserResource::getNavigationItems(),
+                            ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
+                            ...\App\Filament\Resources\ParticipantResource::getNavigationItems(),
+                            ...\App\Filament\Resources\OrganizerResource::getNavigationItems(),
+                            ...\App\Filament\Resources\UserProfileResource::getNavigationItems(),
+                            ...\App\Filament\Resources\UserDiscountResource::getNavigationItems(),
+                        ]),
+                        NavigationGroup::make('Team')
+                        ->items([
+                            ...\App\Filament\Resources\TeamResource::getNavigationItems(),
+                            ...\App\Filament\Resources\TeamProfileResource::getNavigationItems(),
+                            ...\App\Filament\Resources\TeamCaptainResource::getNavigationItems(),
+                            ...\App\Filament\Resources\TeamMemberResource::getNavigationItems(),
+                            ...\App\Filament\Resources\RosterMemberResource::getNavigationItems(),
+                        ]),
+                        NavigationGroup::make('Event Results')
+                            ->items([
+                                ...\App\Filament\Resources\EventDetailResource::getNavigationItems(),
+                                ...\App\Filament\Resources\AchievementsResource::getNavigationItems(),
+                                ...\App\Filament\Resources\AwardResultsResource::getNavigationItems(),
+                                // ...\App\Filament\Resources\EventJoinResultsResource::getNavigationItems(),
+                                ...\App\Filament\Resources\MatchesResource::getNavigationItems(),
+                            ])
+                            ->collapsible(false),
+                        
+                        NavigationGroup::make('Event Join & Organize')
+                            ->items([
+                                ...\App\Filament\Resources\JoinEventResource::getNavigationItems(),
+                                ...\App\Filament\Resources\ParticipantPaymentResource::getNavigationItems(),
+                                ...\App\Filament\Resources\PaymentTransactionResource::getNavigationItems(),
+                                ...\App\Filament\Resources\PaymentIntentResource::getNavigationItems(),
+                                ...\App\Filament\Resources\DiscountResource::getNavigationItems(),
+                            ]),
+         
+                        NavigationGroup::make('Event Setup')
+                            ->items([
+                                ...\App\Filament\Resources\EventTypeResource::getNavigationItems(),
+                                ...\App\Filament\Resources\EventTierResource::getNavigationItems(),
+                                ...\App\Filament\Resources\EventCategoryResource::getNavigationItems(),
+                                ...\App\Filament\Resources\AchievementsResource::getNavigationItems(),
+                                ...\App\Filament\Resources\AwardResource::getNavigationItems(),
+                                ...\App\Filament\Resources\DiscountResource::getNavigationItems(),
+                                ...\App\Filament\Resources\EventSignupResource::getNavigationItems(),
+                                ...\App\Filament\Resources\EventTierSignupResource::getNavigationItems(),
+                            ]),
+         
+                   
+                        NavigationGroup::make(label: 'Social')
+                            ->items([
+                                ...\App\Filament\Resources\BlocksResource::getNavigationItems(),
+                                ...\App\Filament\Resources\ReportResource::getNavigationItems(),
+                                ...\App\Filament\Resources\FriendResource::getNavigationItems(),
+                                ...\App\Filament\Resources\LikeResource::getNavigationItems(),
+                                ...\App\Filament\Resources\TeamFollowResource::getNavigationItems(),
+                                ...\App\Filament\Resources\OrganizerFollowResource::getNavigationItems(),
+                                ...\App\Filament\Resources\StarsResource::getNavigationItems(),
+                            ]),
+                    ]);
+            })
             ->id('admin')
             ->path('admin')
             ->login()

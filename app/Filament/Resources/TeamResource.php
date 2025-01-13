@@ -26,14 +26,16 @@ class TeamResource extends Resource
                 Forms\Components\TextInput::make('teamName')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('creator_id')
+                Forms\Components\Select::make('creator_id')
                     ->required()
-                    ->numeric(),
+                    ->relationship('user', 'name', 
+                    fn ($query) => $query->where('role', 'PARTICIPANT') 
+                ),
                 Forms\Components\TextInput::make('teamDescription')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('teamBanner')
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('teamBanner')
+                    ->image(),
                 Forms\Components\TextInput::make('country')
                     ->required()
                     ->maxLength(255),
@@ -52,7 +54,8 @@ class TeamResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('teamName')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('creator_id')
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Team Creator')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -65,8 +68,7 @@ class TeamResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('teamDescription')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('teamBanner')
-                    ->searchable(),
+                Tables\Columns\ImageColumn::make('teamBanner'),
                 Tables\Columns\TextColumn::make('country')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('country_name')

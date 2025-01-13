@@ -23,9 +23,11 @@ class TeamFollowResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('team_id')
-                    ->required()
-                    ->numeric(),
+               Forms\Components\Select::make('team_id')
+                    ->relationship('team', 'teamName',
+                    fn ($query) => $query->whereNotNull('teamName') 
+                    )
+                    ->required(),
                 Forms\Components\Select::make('user_id')
                     ->relationship('user', 'name')
                     ->required(),
@@ -36,7 +38,7 @@ class TeamFollowResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('team_id')
+                Tables\Columns\TextColumn::make('team.teamName')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')

@@ -23,12 +23,14 @@ class LikeResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('event_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('user_id')
+                    ->relationship('user', 'name', 
+                    fn ($query) => $query->where('role', 'PARTICIPANT') 
+                    ),
+                Forms\Components\Select::make('event_id')
+                    ->relationship('event', 'eventName',
+                    fn ($query) => $query->whereNotNull('eventName') 
+                ),
             ]);
     }
 
@@ -36,10 +38,10 @@ class LikeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('event_id')
+                Tables\Columns\TextColumn::make('event.eventName')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
