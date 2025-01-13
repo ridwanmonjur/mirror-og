@@ -21,17 +21,17 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (!Schema::hasTable('conversations')) {
+        // if (!Schema::hasTable('conversations')) {
 
-            Schema::create('conversations', function (Blueprint $table) {
-                $table->id();
-                $table->enum('status', ['request', 'accepted', 'blocked'])->default('request');
-                $table->timestamps();
-                $table->foreignId('user1_id')->constrained('users')->onDelete('cascade');
-                $table->foreignId('user2_id')->constrained('users')->onDelete('cascade');
-                $table->foreignId('initiator_id')->constrained('users')->onDelete('cascade');
-            });
-        }
+        //     Schema::create('conversations', function (Blueprint $table) {
+        //         $table->id();
+        //         $table->enum('status', ['request', 'accepted', 'blocked'])->default('request');
+        //         $table->timestamps();
+        //         $table->foreignId('user1_id')->constrained('users')->onDelete('cascade');
+        //         $table->foreignId('user2_id')->constrained('users')->onDelete('cascade');
+        //         $table->foreignId('initiator_id')->constrained('users')->onDelete('cascade');
+        //     });
+        // }
 
         if (!Schema::hasTable('messages')) {
             Schema::create('messages', function (Blueprint $table) {
