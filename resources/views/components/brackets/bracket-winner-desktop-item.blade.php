@@ -29,7 +29,7 @@
         <small 
             data-position="{{$position1}}" 
             onclick="reportModalShow(event);" 
-            class="cursor-pointer ms-1 position-absolute  replace_me_with_image" style="z-index: 99;"
+            class="cursor-pointer ms-1 position-absolute py-3 replace_me_with_image" style="z-index: 99;"
         >{{$position1}}</small>
      @endif
     <span></span>
@@ -55,7 +55,7 @@
         >
         
     @else 
-        <small class="cursor-pointer ms-1 position-absolute replace_me_with_image" 
+        <small class="cursor-pointer ms-1 py-2 position-absolute replace_me_with_image" 
             style="z-index: 99;"
             data-position="{{$position2}}" 
             onclick="reportModalShow(event);" 

@@ -94,9 +94,12 @@ function AccountComponent() {
                     data = await data.json();
 
                     if (data.success) {
-                        Toast.fire({
+                        Swal.fire({
+                            confirmButtonColor: '#43A4D7',
+                            reverseButtons: true,
                             icon: 'success',
-                            text: `Email updated successfully to '${currentEmailInput}'!` 
+                            title: 'Email changed successfully!',
+                            text: `Email updated successfully to '${currentEmailInput}'! A verification email has been sent to your new email. Please verify your new email.` 
                         });
 
                         this.emailAddress = currentEmailInput;

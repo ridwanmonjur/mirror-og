@@ -6,7 +6,7 @@
                 <div class="{{ ' text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}"
                     style="opacity: 1; z-index: 999 !important; ">
 
-                    <div class="popover-box row justify-content-start border border-dark border px-2 py-2"
+                    <div class="user-select-none popover-box row justify-content-start border border-dark border px-2 py-2"
                         style="background-color: white; min-width: 400px !important; border-radius: 25px !important;">
                         <div class="text-center text-uppercase mt-4">
                             <h5> Match Results: <span  x-text="report.position"></span> </h5>
@@ -54,7 +54,7 @@
                         </div>
                         <br>
                         <hr>
-                        <div class="row px-0 mx-auto">
+                        <div class=" user-select-none row px-0 mx-auto">
                             <div class="col-1 col-xl-2 px-0 h-100 d-flex justify-content-center align-items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" 
                                     x-bind:class="{ 'd-none': reportUI.matchNumber === 0 }"
