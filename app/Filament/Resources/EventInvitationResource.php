@@ -23,14 +23,15 @@ class EventInvitationResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('organizer_user_id')
-                    ->numeric(),
+                Forms\Components\Select::make('organizer_user_id')
+                    ->relationship('organizer', 'name'),
                 Forms\Components\Select::make('event_id')
-                    ->relationship('event', 'id'),
-                Forms\Components\TextInput::make('participant_user_id')
-                    ->numeric(),
+                    ->relationship('event', 'eventName', fn ($query) => $query->whereNotNull('eventName')),
+              
+                Forms\Components\Select::make('participant_user_id')
+                    ->relationship('participant', 'name'),
                 Forms\Components\Select::make('team_id')
-                    ->relationship('team', 'name'),
+                    ->relationship('team', 'teamName'),
             ]);
     }
 
@@ -38,13 +39,16 @@ class EventInvitationResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('organizer_user_id')
+                Tables\Columns\TextColumn::make('organizer.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('event.id')
+                Tables\Columns\TextColumn::make('event.eventName')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('participant_user_id')
+                Tables\Columns\TextColumn::make('participant.name')
+                    ->numeric()
+                    ->sortable(),
+                    Tables\Columns\TextColumn::make('team.teamName')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -55,9 +59,7 @@ class EventInvitationResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('team.name')
-                    ->numeric()
-                    ->sortable(),
+                
             ])
             ->filters([
                 //

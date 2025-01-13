@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::dropIfExists('conversations');
         Schema::dropIfExists('dispute_image_video');
         Schema::dropIfExists('messages');
-
     }
 
     /**
@@ -24,27 +23,38 @@ return new class extends Migration
     {
         if (!Schema::hasTable('conversations')) {
 
-        Schema::create('conversations', function (Blueprint $table) {
-            $table->id();
-            $table->enum('status', ['request', 'accepted', 'blocked'])->default('request');
-            $table->timestamps();
-            $table->foreignId('user1_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('user2_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('initiator_id')->constrained('users')->onDelete('cascade');
-        });
-    }
+            Schema::create('conversations', function (Blueprint $table) {
+                $table->id();
+                $table->enum('status', ['request', 'accepted', 'blocked'])->default('request');
+                $table->timestamps();
+                $table->foreignId('user1_id')->constrained('users')->onDelete('cascade');
+                $table->foreignId('user2_id')->constrained('users')->onDelete('cascade');
+                $table->foreignId('initiator_id')->constrained('users')->onDelete('cascade');
+            });
+        }
 
-    if (!Schema::hasTable('messages')) {
-    Schema::create('messages', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-        $table->foreignId('conversation_id')->constrained('conversations')->onDelete('cascade');
-        $table->text('text');
-        $table->timestamp('expiry_date')->nullable();
-        $table->timestamps();
-        $table->foreignId('reply_id')->nullable()->constrained('messages')->onDelete('set null');
-        $table->timestamp('read_at')->nullable();
-    });
-    }
+        if (!Schema::hasTable('messages')) {
+            Schema::create('messages', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+                $table->foreignId('conversation_id')->constrained('conversations')->onDelete('cascade');
+                $table->text('text');
+                $table->timestamp('expiry_date')->nullable();
+                $table->timestamps();
+                $table->foreignId('reply_id')->nullable()->constrained('messages')->onDelete('set null');
+                $table->timestamp('read_at')->nullable();
+            });
+        }
+
+        if (!Schema::hasTable('dispute_image_video')) {
+            Schema::create('dispute_image_video', function (Blueprint $table) {
+                $table->id();
+                $table->morphs('imageable');
+                $table->foreignId('image_video_id')->constrained()->onDelete('cascade');
+                $table->enum('type', ['dispute', 'response']);
+                // To distinguish between dispute and response media
+                $table->timestamps();
+            });
+        }
     }
 };

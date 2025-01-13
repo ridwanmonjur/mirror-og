@@ -29,7 +29,7 @@
                     </svg>
                 </button>
             </div>
-            <div class="room-list">
+            <div class="room-list user-select-none ">
                 <div v-for="(room, key) in oldRooms" v-bind:key="room.id" v-bind:data-identity-for-read="room.id"
                     v-on:click="setCurrentRoom(key)"
                     v-bind:class="{'chat-item': true, 'bg-primary' : currentRoomObj?.id == room?.id }">

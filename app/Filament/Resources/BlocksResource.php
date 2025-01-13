@@ -23,12 +23,12 @@ class BlocksResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
+                Forms\Components\Select::make('user_id')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('blocked_user_id')
+                    ->relationship('user', 'name'),
+                Forms\Components\Select::make('blocked_user_id')
                     ->required()
-                    ->numeric(),
+                    ->relationship('blockedUser', 'name')
             ]);
     }
 
@@ -36,10 +36,10 @@ class BlocksResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('blocked_user_id')
+                Tables\Columns\TextColumn::make('blockedUser.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

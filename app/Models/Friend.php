@@ -27,6 +27,11 @@ class Friend extends Model
         return $this->belongsTo(User::class, 'user2_id', 'id');
     }
 
+    public function actor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user2_id', 'id');
+    }
+
 
     public static function checkFriendship(string|int $userProfileId, string|int $logged_user_id): ?self
     {

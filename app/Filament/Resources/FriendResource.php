@@ -24,14 +24,16 @@ class FriendResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('user1_id')
+                    ->label('User 1')
                     ->relationship('user1', 'name')
                     ->required(),
                 Forms\Components\Select::make('user2_id')
-                    ->relationship('user2', 'name')
+                ->label('User 1')    
+                ->relationship('user2', 'name')
                     ->required(),
-                Forms\Components\TextInput::make('actor_id')
+                Forms\Components\Select::make('actor_id')
                     ->required()
-                    ->numeric(),
+                    ->relationship('actor', 'name'),
                 Forms\Components\TextInput::make('status')
                     ->required(),
             ]);

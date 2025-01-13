@@ -23,9 +23,8 @@ class EventJoinResultsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('join_events_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('join_events_id')
+                    ->relationship('joinEvent', 'id'),
                 Forms\Components\TextInput::make('position')
                     ->required()
                     ->numeric(),

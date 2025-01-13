@@ -4,14 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class EventJoinResults extends Model
 {
     use HasFactory;
-
+    public $timestamps = false;
     protected $table = 'event_join_results';
+    protected $fillable = ['join_events_id', 'position'];
+
+    public  function joinEvent() : BelongsTo {
+        return $this->belongsTo(EventDetail::class, 'event_id');
+    }
 
     public static function getEventJoinResults(int| string $id): Collection
     {
