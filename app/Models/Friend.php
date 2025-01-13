@@ -28,8 +28,6 @@ class Friend extends Model
     }
 
 
-
-
     public static function checkFriendship(string|int $userProfileId, string|int $logged_user_id): ?self
     {
         return self::where(function ($query) use ($userProfileId, $logged_user_id) {

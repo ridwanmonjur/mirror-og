@@ -34,7 +34,7 @@ class EventDetailResource extends Resource
                 Forms\Components\TextInput::make('eventDescription')
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('eventBanner')
-                    ->maxLength(255),
+                    ->image(),
                 Forms\Components\TextInput::make('eventTags')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('status')

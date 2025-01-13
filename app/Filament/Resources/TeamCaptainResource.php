@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\AwardResultsResource\Pages;
-use App\Filament\Resources\AwardResultsResource\RelationManagers;
-use App\Models\AwardResults;
+use App\Filament\Resources\TeamCaptainResource\Pages;
+use App\Filament\Resources\TeamCaptainResource\RelationManagers;
+use App\Models\TeamCaptain;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class AwardResultsResource extends Resource
+class TeamCaptainResource extends Resource
 {
-    protected static ?string $model = AwardResults::class;
+    protected static ?string $model = TeamCaptain::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,22 +23,12 @@ class AwardResultsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('join_events_id')
+                Forms\Components\TextInput::make('team_member_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\Select::make('award_id')
+                Forms\Components\TextInput::make('teams_id')
                     ->required()
-                    ->relationship('award', 'title')
-                    ->required()
-                    ->searchable()
-                    ->preload(),
-              
-                Forms\Components\Select::make('team_id')
-                    ->label('Team')
-                    ->relationship('team', 'teamName')
-                    ->required()
-                    ->searchable()
-                    ->preload()
+                    ->numeric(),
             ]);
     }
 
@@ -46,13 +36,10 @@ class AwardResultsResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('join_events_id')
+                Tables\Columns\TextColumn::make('team_member_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('award.title')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('team.teamName')
+                Tables\Columns\TextColumn::make('teams_id')
                     ->numeric()
                     ->sortable(),
             ])
@@ -79,9 +66,9 @@ class AwardResultsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAwardResults::route('/'),
-            'create' => Pages\CreateAwardResults::route('/create'),
-            'edit' => Pages\EditAwardResults::route('/{record}/edit'),
+            'index' => Pages\ListTeamCaptains::route('/'),
+            'create' => Pages\CreateTeamCaptain::route('/create'),
+            'edit' => Pages\EditTeamCaptain::route('/{record}/edit'),
         ];
     }
 }

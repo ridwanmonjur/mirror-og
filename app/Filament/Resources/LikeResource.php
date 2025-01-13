@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\AwardResultsResource\Pages;
-use App\Filament\Resources\AwardResultsResource\RelationManagers;
-use App\Models\AwardResults;
+use App\Filament\Resources\LikeResource\Pages;
+use App\Filament\Resources\LikeResource\RelationManagers;
+use App\Models\Like;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class AwardResultsResource extends Resource
+class LikeResource extends Resource
 {
-    protected static ?string $model = AwardResults::class;
+    protected static ?string $model = Like::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,22 +23,12 @@ class AwardResultsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('join_events_id')
+                Forms\Components\TextInput::make('user_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\Select::make('award_id')
+                Forms\Components\TextInput::make('event_id')
                     ->required()
-                    ->relationship('award', 'title')
-                    ->required()
-                    ->searchable()
-                    ->preload(),
-              
-                Forms\Components\Select::make('team_id')
-                    ->label('Team')
-                    ->relationship('team', 'teamName')
-                    ->required()
-                    ->searchable()
-                    ->preload()
+                    ->numeric(),
             ]);
     }
 
@@ -46,15 +36,20 @@ class AwardResultsResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('join_events_id')
+                Tables\Columns\TextColumn::make('user_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('award.title')
+                Tables\Columns\TextColumn::make('event_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('team.teamName')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
@@ -79,9 +74,9 @@ class AwardResultsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAwardResults::route('/'),
-            'create' => Pages\CreateAwardResults::route('/create'),
-            'edit' => Pages\EditAwardResults::route('/{record}/edit'),
+            'index' => Pages\ListLikes::route('/'),
+            'create' => Pages\CreateLike::route('/create'),
+            'edit' => Pages\EditLike::route('/{record}/edit'),
         ];
     }
 }

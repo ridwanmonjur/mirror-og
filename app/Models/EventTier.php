@@ -13,4 +13,11 @@ class EventTier extends Model
     protected $fillable = ['eventTier', 'tierIcon', 'tierTeamSlot', 'tierPrizePool', 'tierEntryFee'];
 
     protected $table = 'event_tier';
+    public $timestamps = false;  // Add this line
+
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

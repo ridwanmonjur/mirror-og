@@ -15,9 +15,15 @@ class ActivityLogs extends Model
         'object_id', 'object_type', 'log', 
     ];
 
+    
     protected $table = 'activity_logs';
 
     public function subject(): MorphTo
+    {
+        return $this->morphTo();
+    }
+
+    public function object(): MorphTo
     {
         return $this->morphTo();
     }
