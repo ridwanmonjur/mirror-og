@@ -14,14 +14,21 @@ class EventInvitation extends Model
 
     protected $table = 'event_invitations';
 
+    protected $fillabe = ['organizer_user_id', 'participant_user_id', 'team_id', 'event_id'];
+
     public function organizer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'organizer_id');
+        return $this->belongsTo(User::class, 'organizer_user_id');
+    }
+
+    public function participant(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'participant_user_id');
     }
 
     public function team(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'team_id');
+        return $this->belongsTo(Team::class, 'team_id');
     }
 
     public function event(): BelongsTo

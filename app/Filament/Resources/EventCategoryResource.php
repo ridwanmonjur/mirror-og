@@ -25,8 +25,8 @@ class EventCategoryResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('gameTitle')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('gameIcon')
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('gameIcon')
+                    ->image(),
                 Forms\Components\TextInput::make('eventDefinitions')
                     ->maxLength(255),
                 Forms\Components\Select::make('user_id')

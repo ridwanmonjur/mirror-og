@@ -26,15 +26,15 @@ class EventTierResource extends Resource
                 Forms\Components\TextInput::make('eventTier')
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('tierIcon')
-                    ->maxLength(255),
+                    ->image(),
                 Forms\Components\TextInput::make('tierTeamSlot')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('tierPrizePool')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('tierEntryFee')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('user_id')
-                    ->numeric(),
+                Forms\Components\Select::make('user_id')
+                    ->relationship('user', 'name'),
             ]);
     }
 
@@ -52,7 +52,7 @@ class EventTierResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tierEntryFee')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
             ])

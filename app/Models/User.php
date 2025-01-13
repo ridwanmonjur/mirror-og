@@ -24,7 +24,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel($panel): bool
     {
-        return true;
+        return $this->role == 'ADMIN';
     }
 
     public $timestamps = false;

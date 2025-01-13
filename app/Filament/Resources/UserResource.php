@@ -47,7 +47,7 @@ class UserResource extends Resource
                 // Forms\Components\TextInput::make('google_id')
                     // ->maxLength(255),
                 Forms\Components\FileUpload::make('userBanner')
-                    ->maxLength(255),
+                    ->image(),
                 // Forms\Components\TextInput::make('steam_id')
                 //     ->maxLength(255),
                 Forms\Components\TextInput::make('stripe_customer_id')

@@ -6,7 +6,11 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationBuilder;
+use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
+use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -24,11 +28,83 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
+            
+            ->navigation(function (NavigationBuilder $builder): NavigationBuilder {
+                return $builder
+                    ->item(
+                        NavigationItem::make('Dashboard')
+                            ->icon('heroicon-o-home')
+                            ->activeIcon('heroicon-s-home')
+                            ->isActiveWhen(fn (): bool => request()->routeIs('filament.admin.pages.dashboard'))
+                            ->url(fn (): string => Dashboard::getUrl())
+                    )
+                    ->groups([
+                        NavigationGroup::make('User')
+                        ->items([
+                            ...\App\Filament\Resources\UserResource::getNavigationItems(),
+                            ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
+                            ...\App\Filament\Resources\ParticipantResource::getNavigationItems(),
+                            ...\App\Filament\Resources\OrganizerResource::getNavigationItems(),
+                            ...\App\Filament\Resources\UserProfileResource::getNavigationItems(),
+                            ...\App\Filament\Resources\UserDiscountResource::getNavigationItems(),
+                        ]),
+                        NavigationGroup::make('Team')
+                        ->items([
+                            ...\App\Filament\Resources\TeamResource::getNavigationItems(),
+                            ...\App\Filament\Resources\TeamProfileResource::getNavigationItems(),
+                            ...\App\Filament\Resources\TeamCaptainResource::getNavigationItems(),
+                            ...\App\Filament\Resources\TeamMemberResource::getNavigationItems(),
+                            ...\App\Filament\Resources\RosterMemberResource::getNavigationItems(),
+                        ]),
+                        NavigationGroup::make('Event Results')
+                            ->items([
+                                ...\App\Filament\Resources\EventDetailResource::getNavigationItems(),
+                                ...\App\Filament\Resources\AchievementsResource::getNavigationItems(),
+                                ...\App\Filament\Resources\AwardResultsResource::getNavigationItems(),
+                                // ...\App\Filament\Resources\EventJoinResultsResource::getNavigationItems(),
+                                ...\App\Filament\Resources\MatchesResource::getNavigationItems(),
+                            ])
+                            ->collapsible(false),
+                        
+                        NavigationGroup::make('Event Join & Organize')
+                            ->items([
+                                ...\App\Filament\Resources\JoinEventResource::getNavigationItems(),
+                                ...\App\Filament\Resources\ParticipantPaymentResource::getNavigationItems(),
+                                ...\App\Filament\Resources\PaymentTransactionResource::getNavigationItems(),
+                                ...\App\Filament\Resources\PaymentIntentResource::getNavigationItems(),
+                                ...\App\Filament\Resources\DiscountResource::getNavigationItems(),
+                            ]),
+         
+                        NavigationGroup::make('Event Setup')
+                            ->items([
+                                ...\App\Filament\Resources\EventTypeResource::getNavigationItems(),
+                                ...\App\Filament\Resources\EventTierResource::getNavigationItems(),
+                                ...\App\Filament\Resources\EventCategoryResource::getNavigationItems(),
+                                ...\App\Filament\Resources\AchievementsResource::getNavigationItems(),
+                                ...\App\Filament\Resources\AwardResource::getNavigationItems(),
+                                ...\App\Filament\Resources\DiscountResource::getNavigationItems(),
+                                ...\App\Filament\Resources\EventSignupResource::getNavigationItems(),
+                                ...\App\Filament\Resources\EventTierSignupResource::getNavigationItems(),
+                            ]),
+         
+                   
+                        NavigationGroup::make(label: 'Social')
+                            ->items([
+                                ...\App\Filament\Resources\BlocksResource::getNavigationItems(),
+                                ...\App\Filament\Resources\ReportResource::getNavigationItems(),
+                                ...\App\Filament\Resources\FriendResource::getNavigationItems(),
+                                ...\App\Filament\Resources\LikeResource::getNavigationItems(),
+                                ...\App\Filament\Resources\TeamFollowResource::getNavigationItems(),
+                                ...\App\Filament\Resources\OrganizerFollowResource::getNavigationItems(),
+                                ...\App\Filament\Resources\StarsResource::getNavigationItems(),
+                            ]),
+                    ]);
+            })
             ->id('admin')
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#43A4D7'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -38,8 +114,11 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                // Widgets\FilamentInfoWidget::class,
             ])
+            
+            ->sidebarFullyCollapsibleOnDesktop()
+            ->maxContentWidth('full')
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

@@ -23,16 +23,17 @@
 @endphp
 
 
-<div class="ms-3 d-flex flex-column justify-content-between position-relative  popover-parent rounded">
+<div class="ms-3 d-flex user-select-none flex-column justify-content-between position-relative  popover-parent rounded">
     <div class="mx-auto text-center cursor-pointer popover-button">
         <div class="pie animate no-round" style="{{ $styles }}">{{ $percent }}%</div>
         <p> Total Entry Fee: <u>RM {{ $total }} </u></p>
         <span>Paid: <u class="text-success">RM {{ $exisitngSum }}</u>
             <span>Pending: <u style="color: red;">RM {{ $pedning }} </u> <span></p>
     </div>
-    <div class="popover-content border border-1 d-none cursor-pointer z-999" style="background: white;">
-        <div class="border border-1 py-4 px-3" style="background: white; width: min-content;">
-            <table class="responsive table table-borderless member-table align-start px-3 mx-3 popover-display2"    >
+    <div class="popover-content border-dark border-2 d-none cursor-pointer z-999" style="background: white;">
+        <div class="border border-2 border-secondary py-4 px-3" style="background: white; width: min-content;">
+            <h5 class="ps-3 text-primary pb-2">Contribution of each member</h5>
+            <table class="responsive table table-borderless table-sm align-start px-3 mx-3 popover-display2"    >
                 <thead>
                     <tr>
                         <th class="pb-2"></th>
@@ -49,12 +50,12 @@
                             $individualContributionTotal += $memberContribution;
                         @endphp
                         <tr style="border-collapse: seperate !important; border-spacing: 0 1em !important;">
-                            <td class="ps-3 pe-0 ">
+                            <td class="ps-3 pe-0 " style="width: 55px; ">
                                 <a href="{{route('public.participant.view', ['id' => $member2->user->id])}}" class="text-right">
-                                    <svg class="mt-1" xmlns="http://www.w3.org/2000/svg" width="18" height="19" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
-                                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
-                                    </svg>
+                                   <svg class="mt-1" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+</svg>
                                 </a>
                             </td> 
                             <td class="pe-3 " style="width: 200px; ">
@@ -74,7 +75,7 @@
                            
                         </tr>
                     @endforeach
-                   <tr class="mt-3" style="border-collapse: seperate !important; border-spacing: 0 1em !important;">
+                   <tr class="mt-3  border-secondary border-top " style="border-collapse: seperate !important; border-spacing: 0 1em !important;">
                             <td class="pe-3"></td>
                             <td class="pe-3 pb-2">
                                Total paid

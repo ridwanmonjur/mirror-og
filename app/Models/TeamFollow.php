@@ -18,6 +18,11 @@ class TeamFollow extends Model
         'team_id',
     ];
 
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class, 'team_id', 'id');
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

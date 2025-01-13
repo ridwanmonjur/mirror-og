@@ -19,6 +19,12 @@ class RosterMember extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class, 'team_id', 'id');
+    }
+
+
     public static function userJoinEventRoster(int| string $joinEventId, Collection $teamMembers, int|string $teamId, int|string $userId): bool
     {
         $data = [];

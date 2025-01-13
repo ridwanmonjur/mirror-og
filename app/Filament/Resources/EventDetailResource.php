@@ -34,7 +34,7 @@ class EventDetailResource extends Resource
                 Forms\Components\TextInput::make('eventDescription')
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('eventBanner')
-                    ->maxLength(255),
+                    ->image(),
                 Forms\Components\TextInput::make('eventTags')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('status')
@@ -50,12 +50,12 @@ class EventDetailResource extends Resource
                 Forms\Components\Select::make('user_id')
                     ->relationship('user', 'name')
                     ->required(),
-                Forms\Components\TextInput::make('event_type_id')
-                    ->numeric(),
+                Forms\Components\Select::make('event_type_id')
+                    ->relationship('type', 'eventType'),
                 Forms\Components\Select::make('event_tier_id')
-                    ->relationship('eventTier', 'id'),
-                Forms\Components\TextInput::make('event_category_id')
-                    ->numeric(),
+                    ->relationship('eventTier', 'eventTier'),
+                Forms\Components\Select::make('event_category_id')
+                    ->relationship('game', 'gameTitle'),
                 Forms\Components\TextInput::make('payment_transaction_id')
                     ->numeric(),
                 Forms\Components\Toggle::make('willNotify')
@@ -107,13 +107,13 @@ class EventDetailResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('event_type_id')
+                Tables\Columns\TextColumn::make('type.eventType')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('eventTier.id')
+                Tables\Columns\TextColumn::make('eventTier.eventTier')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('event_category_id')
+                Tables\Columns\TextColumn::make('game.gameTitle')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('payment_transaction_id')

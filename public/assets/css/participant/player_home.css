@@ -84,7 +84,9 @@ main {
 
 .hero img {
     height: 40vh;
-    max-width: 70vw;
+    width: min(80%, 600px);
+    object-position: center;
+    object-fit: cover;
 }
 
 .hero h1 {
@@ -385,6 +387,7 @@ footer {
 @media (max-width: 560px) {
     main {
         background-size: auto 100vh;
+        background-position: bottom !important;
     }
 
     .hero img {
@@ -525,3 +528,4 @@ footer {
 .easylogic-colorpicker .color-list {
     display: none !important;
 }
+

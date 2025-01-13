@@ -2,7 +2,7 @@
     <div class="tournament-bracket__round  tournament-bracket__round--gold">
         <div class="tournament-bracket__list tournament-bracket__joined-list  tournament-bracket__joined-odd-list">
             <div class="tournament-bracket__item tournament">
-                <div class="tournament-bracket__match  middle-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} tournament"
+                <div class="tournament-bracket__match user-select-none middle-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} tournament"
                     tabindex="0" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
                     data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}"
                 >

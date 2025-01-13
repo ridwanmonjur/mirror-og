@@ -6,15 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Event extends Model
+class UserDiscount extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'status', 'venue'];
 
-    protected $table = 'events';
+    protected $table = 'user_discounts';
+    protected $fillable = [
+        'amount',
+        'user_id'
+    ];
 
+
+    /**
+     * Get the user that owns the discount
+     */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
+
 }

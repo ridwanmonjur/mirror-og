@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TeamProfile extends Model
 {
@@ -12,6 +13,11 @@ class TeamProfile extends Model
     public $timestamps = false;
 
     protected $table = 'team_profile';
+
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class, 'team_id', 'id');
+    }
 
     protected $fillable = ['frameColor', 'backgroundColor', 'backgroundGradient', 'fontColor', 'follower_count', 'team_id'];
 

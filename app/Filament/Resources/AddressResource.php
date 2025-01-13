@@ -38,8 +38,12 @@ class AddressResource extends Resource
                 Forms\Components\TextInput::make('country')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('user_id')
-                    ->numeric(),
+                Forms\Components\Select::make('user_id')
+                    ->label('User')
+                    ->relationship('user', 'name')
+                    ->required()
+                    ->searchable()
+                    ->preload()
             ]);
     }
 
@@ -57,7 +61,7 @@ class AddressResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('country')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
             ])

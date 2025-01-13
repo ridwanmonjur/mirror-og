@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -11,6 +12,18 @@ class AwardResults extends Model
 {
     use HasFactory;
     protected $table = 'awards_results';
+    public $fillable = ['join_events_id', 'awards_id', 'team_id'];
+
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class, 'team_id', 'id');
+    }
+
+    public function award(): BelongsTo
+    {
+        return $this->belongsTo(Award::class, 'award_id', 'id');
+    }
+  
 
     public static function getTeamAwardResults(string|int $id): Collection
     {

@@ -26,12 +26,19 @@ class AwardResultsResource extends Resource
                 Forms\Components\TextInput::make('join_events_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('award_id')
+                Forms\Components\Select::make('award_id')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('team_id')
+                    ->relationship('award', 'title')
                     ->required()
-                    ->numeric(),
+                    ->searchable()
+                    ->preload(),
+              
+                Forms\Components\Select::make('team_id')
+                    ->label('Team')
+                    ->relationship('team', 'teamName')
+                    ->required()
+                    ->searchable()
+                    ->preload()
             ]);
     }
 
@@ -42,10 +49,10 @@ class AwardResultsResource extends Resource
                 Tables\Columns\TextColumn::make('join_events_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('award_id')
+                Tables\Columns\TextColumn::make('award.title')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('team_id')
+                Tables\Columns\TextColumn::make('team.teamName')
                     ->numeric()
                     ->sortable(),
             ])
