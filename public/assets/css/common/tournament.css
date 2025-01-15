@@ -89,7 +89,9 @@ input, select {
 .tournament-bracket__box {
     display: flex;
     border: 1px solid var(--border2-color); 
-    justify-content: space-between;
+    border-collapse: collapse !important; 
+    margin-bottom: -1px;
+    justify-content: space-between !important;
     align-items: center;
 }
 
