@@ -227,7 +227,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
             } catch (error) {
                 // Handle errors (you might want to show a notification to the user)
                 console.error('Operation failed:', error);
-                window.toastError('Failed to process your request. Please try again later.');
+                window.toastError(error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.');
             }
         },
 
@@ -291,7 +291,6 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
 
                 const { status: newStatus, property: inputPropertyName, swalText, swalAction } = actionMap[action] || {};
 
-                console.log({swalAction})
 
                 const result = await window.Swal.fire({
                     title: 'Are you sure?',
@@ -358,7 +357,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
             } catch (error) {
                 // Handle errors (you might want to show a notification to the user)
                 console.error('Operation failed:', error);
-                window.toastError('Failed to process your request. Please try again later.');
+                window.toastError(error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.');
             }
         },
 
@@ -369,6 +368,10 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
             // const status = button.dataset.status;
             const route = button.dataset.route;
             const inputId = button.dataset.inputs ;
+            if (inputId == loggedUserId) {
+                window.toastError("Cannot block yourself");
+                return;
+            }
         
             try {
                 let data = await makeRequest(route, 'POST', JSON.stringify({}));
@@ -390,7 +393,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
 
                 // Handle errors (you might want to show a notification to the user)
                 console.error('Operation failed:', error);
-                window.toastError('Failed to process your request. Please try again later.');
+                window.toastError(error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.');
             }
         },
 
@@ -477,6 +480,9 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
         },
 
         triggerReportSelection(event) {
+            if (!loggedUserId) {
+                window.toastError('Please login first!');
+            }
             let button = event.currentTarget;
             const {userId, userName, userBanner} = button.dataset;
             window.dispatchEvent(new CustomEvent('report-selected', {
@@ -512,7 +518,7 @@ async function makeRequest(url, method, data) {
 
         if (!response.ok) {
             if (response.status == 401) {
-                window.toastError("Unauthorized! Please login first!");
+                throw new Error("Unauthorized! Please login first!");
             }
             throw new Error(`HTTP error! status: ${response.status}`);
         }

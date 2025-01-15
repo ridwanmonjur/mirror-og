@@ -75,11 +75,16 @@ class UpdateOrganizersRequest extends FormRequest
         ];
     }
 
+    private function isEmptyOrNotSet($array, $key): bool 
+{
+    return !isset($array[$key]) || empty($array[$key]);
+}
+
     protected function prepareForValidation()
     {
-        if (empty($this->address['city']|| trim($this->address['city']) === '') && 
-            empty($this->address['country'] || trim($this->address['country']) === '') && 
-            empty($this->address['addressLine1']|| trim($this->address['addressLine1']) === '')) {
+        if (    $this->isEmptyOrNotSet($this->address, 'city') &&
+        $this->isEmptyOrNotSet($this->address, 'country') &&
+        $this->isEmptyOrNotSet($this->address, 'addressLine1')) {
             $this->request->remove('address');
         }
 

@@ -20,14 +20,12 @@
             @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
                 <ul class="achievement-list my-0 py-2 px-4 z-99">
                     <li class="py-2">
-                        <small>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="me-2" fill="green"
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" class="me-2" fill="green"
                                 class="bi bi-broadcast" viewBox="0 0 16 16">
                                 <path
                                     d="M3.05 3.05a7 7 0 0 0 0 9.9.5.5 0 0 1-.707.707 8 8 0 0 1 0-11.314.5.5 0 0 1 .707.707m2.122 2.122a4 4 0 0 0 0 5.656.5.5 0 1 1-.708.708 5 5 0 0 1 0-7.072.5.5 0 0 1 .708.708m5.656-.708a.5.5 0 0 1 .708 0 5 5 0 0 1 0 7.072.5.5 0 1 1-.708-.708 4 4 0 0 0 0-5.656.5.5 0 0 1 0-.708m2.122-2.12a.5.5 0 0 1 .707 0 8 8 0 0 1 0 11.313.5.5 0 0 1-.707-.707 7 7 0 0 0 0-9.9.5.5 0 0 1 0-.707zM10 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0" />
                             </svg>
                             {{ $joinEvent->status }} 
-                        </small>
                     </li>
                 </ul>
             @else
@@ -319,14 +317,14 @@
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
                 <div class="col-12 col-xl-6  my-1 px-0">
-                    <a class="d-flex justify-content-start align-items-center"
+                    <a class="d-flex w-100 justify-content-start align-items-center"
                         href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img {!! trustedBladeHandleImageFailureBanner() !!}
                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
                             class="object-fit-cover me-2" width="35px" height="40px"
                              style="object-position:center;"    
                         >
-                        <span class="text-truncate text-start"> {{ $joinEvent->eventDetails->eventName }}
+                        <span class="text-truncate  d-inline-block w-85 pe-2 text-start"> {{ $joinEvent->eventDetails->eventName }}
                         </span>
                     </a>
                 </div>
@@ -340,8 +338,8 @@
                         width="45" height="45" 
                         class="me-2 object-fit-cover rounded-circle2 random-color-circle"
                     >
-                    <div class="d-inline-block text-start me-1">
-                        <span class="text-truncate h-auto ">{{ $joinEvent->eventDetails->user->name }}</span>
+                    <div class="text-start d-inline-flex flex-column justify-content-center ms-2 w-100">
+                        <small class="d-inline-block my-0 text-truncate w-85">{{ $joinEvent->user->name }}</small>
                         <small
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
                             class="d-block p-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">
