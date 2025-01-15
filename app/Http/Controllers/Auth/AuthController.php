@@ -78,6 +78,8 @@ class AuthController extends Controller
             'username' => 'bail|required',
             'email' => 'bail|required|email',
             'password' => 'bail|required|min:6|max:24',
+            'companyName' => 'sometimes',
+            'companyDescription' => 'sometimes',
         ];
         
         extract($this->authService->determineUserRole($request));
@@ -90,18 +92,17 @@ class AuthController extends Controller
         try {
 
             if ($role === 'organizer') {
-                $this->authService->createUser($validatedData, $role);
-
+                $user = $this->authService->createUser($validatedData, $role);
                 $organizer = new Organizer([
                     'user_id' => $user->id,
-                    'companyDescription' => $validatedData['companyDescription'],
-                    'companyName' => $validatedData['companyName'],
+                    'companyDescription' => $validatedData['companyDescription'] ?? '',
+                    'companyName' => $validatedData['companyName'] ?? '',
                 ]);
 
                 $organizer->save();
             } elseif ($role === 'participant') {
 
-                $this->authService->createUser($validatedData, $role);
+                $user = $this->authService->createUser($validatedData, $role);
                 $participant = new Participant([
                     'user_id' => $user->id,
                 ]);
@@ -109,7 +110,7 @@ class AuthController extends Controller
                 $participant->save();
             }
 
-            Mail::to($user->email)->queue(new VerifyUserMail($user, $token));
+            Mail::to($user->email)->queue(new VerifyUserMail($user, $user->email_verified_token));
 
             DB::commit();
 
