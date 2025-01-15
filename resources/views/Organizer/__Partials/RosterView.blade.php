@@ -63,7 +63,7 @@
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
                 <div class="col-12 col-xl-6 d-flex justify-content-start d my-1 px-0">
-                    <a class="d-flex justify-content-start align-items-center"
+                    <a class="d-flex w-100 justify-content-start align-items-center"
                         href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
 
                         <img 
@@ -72,7 +72,7 @@
                             class="object-fit-cover me-1 " width="35px" height="40px"
                             style="object-position: center;"    
                         >
-                        <span class="text-truncate text-start"> {{ $joinEvent->eventName }} </span>
+                        <span class="text-truncate d-inline-block w-85 text-start pe-2"> {{ $joinEvent->eventName }} </span>
                     </a>
                 </div>
                 <div onclick="goToUrl(event, this)"
@@ -82,8 +82,8 @@
                         {!! trustedBladeHandleImageFailureBanner() !!}
                         src="{{ bladeImageNull($joinEvent->user->userBanner) }}" width="35" height="35"
                         class="object-fit-cover random-color-circle rounded-circle2" >
-                    <div class="text-start  ms-1">
-                        <span class="text-truncate h-auto w-100">{{ $joinEvent->user->name }}</span>
+                    <div class="text-start d-inline-flex flex-column justify-content-center ms-2 w-100">
+                        <small class="d-inline-block my-0 text-truncate w-85">{{ $joinEvent->user->name }}</small>
                         <small
                             data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id] : 0 }} "
                             class="d-inline-block {{ 'followCounts' . $joinEvent->user_id }}">

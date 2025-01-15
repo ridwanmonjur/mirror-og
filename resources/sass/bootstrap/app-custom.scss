@@ -621,13 +621,8 @@ h5 {
     }
 
 
-    .text-truncate-2-lines {
-        -webkit-line-clamp: 2;
-        width: min(100%, 160px) !important;
-        height: 50px;
-        overflow:hidden;
-        display: block;
-        text-overflow: ellipsis;
+    .w-85 {
+        width: 85% !important;
     }
    
     .grid-4-columns {

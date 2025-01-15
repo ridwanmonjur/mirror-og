@@ -69,14 +69,14 @@
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
                 <div class="col-12 col-xl-6  my-1 px-0">
-                    <a class="d-flex h-100 align-items-center align-items-center justify-content-start" href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
+                    <a class="d-flex w-100 h-100 align-items-center align-items-center justify-content-start" href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img {!! trustedBladeHandleImageFailureBanner() !!}
                             style="object-position: center;"
 
                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
                             class="object-fit-cover me-2" width="35px" height="40px"
                         >
-                        <span class="text-truncate text-start"> {{ $joinEvent->eventDetails->eventName }}
+                        <span class="text-truncate text-start pe-2 d-inline-block w-85"> {{ $joinEvent->eventDetails->eventName }}
                         </span>
                     </a>
                 </div>
@@ -87,11 +87,10 @@
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
                         width="45"
                         height="45" 
-                        class="me-2 rounded-circle2 random-color-circle"
+                        class="me-1 rounded-circle2 random-color-circle"
                     >
-                    <div class="d-inline-block text-start me-1">
-                        <span
-                            class="text-truncate h-auto ">{{ $joinEvent->eventDetails?->user?->name }}</span>
+                      <div class="text-start d-inline-flex flex-column justify-content-center ms-1 w-100">
+                        <small class="d-inline-block my-0 text-truncate w-85">{{ $joinEvent->user->name }}</small>
                         <small
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
                             class="d-block p-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">

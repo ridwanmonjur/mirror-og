@@ -1,7 +1,7 @@
 import tippy from 'tippy.js';
 import { DateTime } from "luxon";
 
-window.addPopover = function (parent, child, trigger="click") {
+window.addPopover = function (parent, child, trigger="click", options = {}) {
     if (!parent) {
         return;
     }
@@ -25,18 +25,9 @@ window.addPopover = function (parent, child, trigger="click") {
             theme: 'light',
             zIndex: 9999,
             appendTo: document.body,
-            // onMouseLeave: (instance, event) => {
-            //     // Only hide if we're not moving to another tooltip
-            //     const relatedTarget = event.relatedTarget;
-            //     const isMovingToTippy = relatedTarget && (
-            //         relatedTarget.classList.contains('popover-button') ||
-            //         relatedTarget.closest('.popover-button')
-            //     );
-                
-            //     if (!isMovingToTippy) {
-            //         instance.hide();
-            //     }
-            // }
+            ...options,
+
+            
         });
     }
 

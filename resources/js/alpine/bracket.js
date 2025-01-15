@@ -106,7 +106,9 @@ parentElements?.forEach(parent => {
   const contentElement = parent.querySelector(".popover-content");
   const parentElement = parent.querySelector(".popover-button");
   if (contentElement) {
-    window.addPopover(parentElement, contentElement, 'mouseenter');
+    window.addPopover(parentElement, contentElement, 'mouseenter', {
+      interactive: false
+    });
   }
 });
 
@@ -122,7 +124,9 @@ function addAllTippy() {
       if (triggerParentsPositionIds && Array.isArray(triggerParentsPositionIds)) {
         let triggerClassName = '.popover-middle-content.' + triggerParentsPositionIds.join(".");
         let contentElement = document.querySelector(triggerClassName);
-        window.addPopover(trigger, contentElement, 'mouseenter');
+        window.addPopover(trigger, contentElement, 'mouseenter', {
+          interactive: false
+        });
       }
     })
   });
@@ -134,7 +138,9 @@ function addTippyToClass(classAndPositionList) {
     triggers.forEach((trigger) => {
       let triggerClassName = '.popover-middle-content.' + classX[0];
       let contentElement = document.querySelector(triggerClassName);
-      window.addPopover(trigger, contentElement, 'mouseenter');
+      window.addPopover(trigger, contentElement, 'mouseenter', {
+        interactive: false
+      });
     });
   }
 }

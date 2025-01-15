@@ -192,7 +192,7 @@ class AuthController extends Controller
     {
         Auth::logout();
 
-        return redirect('/');
+        return redirect('/home');
     }
 
     public function participantSignIn(Request $request)
