@@ -5,14 +5,11 @@
     @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="page-component" content="bracket">
     <title>View Event</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/viewEvent.css') }}">
     @include('__CommonPartials.HeadIcon')
-    @vite(['resources/js/libraries/tippy.js',  'resources/js/alpine/bracket.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/libraries/lightgallery.js', 'resources/js/libraries/motion.js', 'resources/sass/libraries/lightgallery.scss'])
-     <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/common/event-status.css') }}">
-    <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
+    @vite([ 'resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 @php
@@ -483,6 +480,5 @@
         </div>
     </main>
     <script src="{{ asset('/assets/js/participant/ViewEvent.js') }}"></script>
-    <script src="{{ asset('/assets/js/shared/tournament.js') }}"></script>
    
 </html>

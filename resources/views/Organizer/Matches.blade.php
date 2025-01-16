@@ -6,10 +6,8 @@
    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tournament Matches</title>
-    <link rel="stylesheet" href="{{ asset('/assets/css/common/tournament.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/common/dynamic-select.css') }}">
-    @vite(['resources/js/libraries/tippy.js', 'resources/sass/libraries/lightgallery.scss', 'resources/js/libraries/lightgallery.js', 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/bracket.js'])
-    <script src="{{ asset('/assets/js/dynamicSelect.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('/assets/css/common/viewEvent.css') }}">
+    @vite([ 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/bracket.js'])
     @include('__CommonPartials.HeadIcon')
     <style>
     </style>
@@ -33,7 +31,7 @@
             @include('Organizer.__ManageEventPartials.BracketUpdateList')
         </div>
         
-        <script src="{{ asset('/assets/js/shared/tournament.js') }}"></script>
+        <script src="{{ asset('/assets/js/shared/ViewEvent.js') }}"></script>
     </main>
 </body>
 </html>

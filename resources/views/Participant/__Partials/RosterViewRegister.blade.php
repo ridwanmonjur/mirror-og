@@ -401,4 +401,3 @@
 </div>
 
 
-<script src="{{ asset('/assets/js/shared/RosterView.js') }}"></script>

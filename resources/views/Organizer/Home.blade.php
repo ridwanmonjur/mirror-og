@@ -9,9 +9,7 @@
     <title>Organizer Home Page</title>
     @include('__CommonPartials.HeadIcon')
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/home.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/common/event-status.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>

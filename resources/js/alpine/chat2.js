@@ -20,7 +20,7 @@ const db = initializeFirestore(app, {
     localCache: memoryLocalCache(),
 });
 
-let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
 const chatInput = document.querySelector(".chat-input input");
 

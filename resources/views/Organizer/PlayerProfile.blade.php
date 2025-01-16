@@ -6,21 +6,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizer Profile Page</title>
+    @include('__CommonPartials.HeadIcon')
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <meta name="page-component" content="organizer">
+
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/css/intlTelInput.css">
-    @include('__CommonPartials.HeadIcon')
-    @vite(['resources/sass/app.scss', 
-        'resources/js/app.js', 
-        'resources/js/alpine/organizer.js', 
-        'resources/js/libraries/lightgallery.js', 
-        'resources/js/libraries/motion.js', 
-        'resources/sass/libraries/lightgallery.scss',   
-        'resources/js/libraries/colorpicker.js',
-        'resources/sass/libraries/colorpicker.scss',
-         'resources/js/libraries/file-edit.js',
-        'resources/sass/libraries/file-edit.scss',
-    ])
+
 </head>
 @php
     use Carbon\Carbon;
@@ -586,8 +578,6 @@
     @include('__CommonPartials.Cropper')
 
 </body>
-<script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/js/intlTelInput.min.js"></script>
 <script src="{{ asset('/assets/js/organizer/PlayerProfile.js') }}"></script>
 
  

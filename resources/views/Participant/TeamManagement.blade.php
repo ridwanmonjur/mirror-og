@@ -191,7 +191,6 @@
             @endif
         </div>
     </main>
-    <script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
     <script src="{{ asset('/assets/js/participant/TeamManagement.js') }}"></script>
   
 </body>

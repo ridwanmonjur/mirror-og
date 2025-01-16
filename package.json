@@ -24,6 +24,7 @@
         "cropperjs": "^1.6.2",
         "firebase": "^10.12.3",
         "flatpickr": "^4.6.13",
+        "intl-tel-input": "^25.2.1",
         "litepicker": "^2.0.12",
         "luxon": "^3.5.0",
         "petite-vue": "^0.4.1",

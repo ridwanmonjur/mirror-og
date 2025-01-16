@@ -1,8 +1,5 @@
 const input = document.querySelector("#phone");
-window.intlTelInput(input, {
-    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/js/utils.js",
-});
-const iti = window.intlTelInput.getInstance(input);
+
 const storage = document.querySelector('.profile-storage');
 const styles = {
     backgroundStyles: storage.dataset.backgroundStyles,
@@ -266,22 +263,11 @@ imageUpload?.addEventListener("change", async function (e) {
         console.error('There was a problem with the file upload:', error);
     }
 });
-async function readFileAsBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = function (event) {
-            const base64Content = event.target.result.split(';base64,')[1];
-            resolve(base64Content);
-        };
-        reader.onerror = function (error) {
-            reject(error);
-        };
-        reader.readAsDataURL(file);
-    });
-}
+
 function reddirectToLoginWithIntened(route) {
     route = encodeURIComponent(route);
     const loginRoute = document.getElementById('routeContainer').dataset.loginRoute;
     url = `${loginRoute}?url=${route}`;
     window.location.href = url;
 }
+

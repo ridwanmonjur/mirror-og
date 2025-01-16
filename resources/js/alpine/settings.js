@@ -18,7 +18,7 @@ function setErrorCurrentPassword (errorMessage) {
 }
 
 
-let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
 let userProfile = JSON.parse(document.getElementById('initialUserProfile').value);
 function AccountComponent() {

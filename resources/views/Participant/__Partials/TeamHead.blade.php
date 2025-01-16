@@ -1,15 +1,9 @@
 <head>
+    <meta name="page-component" content="teamhead">
+
     @vite([
         'resources/sass/app.scss',
         'resources/js/app.js',
-        'resources/js/alpine/teamhead.js',
-        'resources/js/libraries/lightgallery.js',
-        'resources/js/libraries/motion.js',
-        'resources/sass/libraries/lightgallery.scss',
-        'resources/js/libraries/colorpicker.js',
-        'resources/sass/libraries/colorpicker.scss',
-        'resources/js/libraries/file-edit.js',
-        'resources/sass/libraries/file-edit.scss',
     ])
 </head>
 @php
@@ -60,6 +54,7 @@
     @endphp
 @endauth
 <main class="main1"
+    
     id="backgroundBanner" class="member-section px-2 py-2"
     
 >

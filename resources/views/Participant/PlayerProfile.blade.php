@@ -4,6 +4,8 @@
 <head>
     @include('googletagmanager::head')
     <meta charset="UTF-8">
+    <meta name="page-component" content="participant">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
@@ -13,16 +15,7 @@
     @vite([
         'resources/sass/app.scss', 
         'resources/js/app.js', 
-        'resources/js/alpine/participant.js', 
-        'resources/js/libraries/lightgallery.js',
-        'resources/js/libraries/motion.js',
-        'resources/sass/libraries/lightgallery.scss',   
-        'resources/js/libraries/file-edit.js',
-        'resources/sass/libraries/file-edit.scss',
-        'resources/js/libraries/colorpicker.js',
-        'resources/sass/libraries/colorpicker.scss',
     ])
-    <link rel="stylesheet" href="{{ asset('/assets/css/chat/inpage-message.css') }}">
 
 </head>
 @php
@@ -64,7 +57,6 @@
         data-logged-user-id="{{ $loggedUserId }}"
         data-logged-user-role="{{ $loggedUserRole }}"
         data-user-banner-url="{{ route('participant.userBanner.action', ['id' => $userProfile->id]) }}"
-        data-asset-carousel-js="{{ asset('/assets/js/participant/carousel.js') }}"
         class="d-none laravel-data-storage"
     ></div>
     <main >
@@ -613,7 +605,6 @@
             @endif
             </div>
         </div>
-        <script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
         <script src="{{ asset('/assets/js/participant/Profile.js') }}"></script>
         @if ($isUserSame)
 
