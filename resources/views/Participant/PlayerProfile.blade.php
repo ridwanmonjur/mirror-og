@@ -606,10 +606,7 @@
             </div>
         </div>
         <script src="{{ asset('/assets/js/participant/Profile.js') }}"></script>
-        @if ($isUserSame)
-
-            <script src="{{ asset('/assets/js/participant/IsUserSame.js') }}"></script>
-        @endif
+        
     </main>
 
 </body>

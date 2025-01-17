@@ -271,3 +271,29 @@ function reddirectToLoginWithIntened(route) {
     window.location.href = url;
 }
 
+
+
+async function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            const base64Content = event.target.result.split(';base64,')[1];
+            resolve(base64Content);
+        };
+
+        reader.onerror = function (error) {
+            reject(error);
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
+function uploadImageToBanner(event) {
+    var file = event.target.files[0];
+    if (file) {
+        var cachedImage = URL.createObjectURL(file);
+        backgroundBanner.style.backgroundImage = `url(${cachedImage})`;
+    }
+}

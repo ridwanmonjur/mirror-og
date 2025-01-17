@@ -1,3 +1,153 @@
+@property --p{
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+  }
+  
+  .pie {
+    --p:20;
+    --b:12px;
+    --c:darkred;
+    --w:150px;
+    
+    width:var(--w);
+    aspect-ratio:1;
+    position:relative;
+    display:inline-grid;
+    margin:5px;
+    place-content:center;
+    font-size:25px;
+    font-weight:bold;
+  }
+  .pie:before,
+  .pie:after {
+    content:"";
+    position:absolute;
+    border-radius:50%;
+  }
+  .pie:before {
+    inset:0;
+    background:
+      radial-gradient(farthest-side,var(--c) 98%,#0000) top/var(--b) var(--b) no-repeat,
+      conic-gradient(var(--c) calc(var(--p)*1%),#0000 0);
+    -webkit-mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
+            mask:radial-gradient(farthest-side,#0000 calc(99% - var(--b)),#000 calc(100% - var(--b)));
+  }
+  .pie:after {
+    inset:calc(50% - var(--b)/2);
+    background:var(--c);
+    transform:rotate(calc(var(--p)*3.6deg)) translateY(calc(50% - var(--w)/2));
+  }
+  .animate {
+    animation:p 1s .5s both;
+  }
+  .no-round:before {
+    background-size:0 0,auto;
+  }
+  .no-round:after {
+    content:none;
+  }
+  @keyframes p {
+    from{--p:0}
+  }
+  
+  body {
+    background:#f2f2f2;
+  }
+
+  
+.border-Turtle {
+    border: 2px solid #8CCD39 !important;
+}
+
+.border-Starfish {
+    border: 2px solid #CE3C39 !important;
+}
+
+.border-Dolphin{
+    border: 2px solid #43A4D7 !important;
+}
+
+.z-99 {
+    position: relative;
+    z-index: 99;
+}
+
+.z-999 {
+    position: relative;
+    z-index: 999;
+}
+
+.captain-crown {
+    transform: translateY(-5px) rotate(-45deg);
+}
+
+@keyframes flicker {
+    0% { 
+        transform: scale(1.55);
+        border: 2px solid #43A4D7;
+        opacity: 1;
+    }
+    25% {
+        transform: scale(1.05);
+        border: 2px solid #3590c0;
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.55);
+        border: 2px solid #43A4D7;
+        opacity: 1;
+    }
+    75% {
+        transform: scale(1.45);
+        border: 2px solid #3590c0;
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.55);
+        border: 2px solid #43A4D7;
+        opacity: 1;
+    }
+}
+
+.captain-crown:hover {
+    transform: scale(1.55);
+    border: 2px solid #43A4D7;
+    animation: flicker 1s ease-in-out infinite;
+    animation-timing-function: ease-in-out;
+}
+
+.border-red {
+    border: 2px solid red;
+}
+
+.border-green {
+    border: 2px solid green;
+}
+
+.bg-translucent {
+    background: rgb(210, 204, 204, 0.7);
+}
+
+.progress--empty {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    order: 0;
+    cursor: pointer;
+}
+
+.popover-display2 {
+    width: 320px;
+}
+
+
+@media screen and (min-width: 992px) {
+    .popover-display2 {
+        width: 450px !important;
+    }
+}
+
 .button-design-removed{
     background-color: transparent;
     border-width: 0px !important;

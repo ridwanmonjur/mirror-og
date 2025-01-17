@@ -487,26 +487,7 @@ async function onFollowSubmit(event) {
     }
 }
 
-(function applyRandomColorsAndShapes() {
-    const circles = document.querySelectorAll('.random-color-circle');
 
-    circles.forEach(circle => {
-        const randomColor = getRandomColor();
-        circle.style.borderColor = randomColor;
-        circle.style.borderWidth = '2px';
-        circle.style.borderStyle = 'solid';
-        circle.style.borderRadius = '50%';
-    });
-})();
-
-function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
 
 class DynamicSelect {
 
@@ -743,3 +724,82 @@ document.querySelectorAll('[data-dynamic-select]').forEach(select => {
 });
 
 */
+let searchEndpointInputValue = null; 
+let ENDPOINT = null;
+const searchEndpointInput = document.getElementById('searchEndpointInput');
+if (searchEndpointInput) {
+    searchEndpointInputValue = searchEndpointInput.value;
+    document.getElementById('search-bar')?.addEventListener(
+        "keydown",
+        debounce((e) => {
+            goToSearchPage();
+        }, 1000)
+    );
+    
+    document.getElementById('search-bar-mobile')?.addEventListener(
+        "keydown",
+        debounce((e) => {
+            goToSearchPage();
+        }, 1000)
+    );
+
+} else {
+    const landingEndpointInput = document.getElementById('landingEndpointInput')?.value;
+
+    ENDPOINT = landingEndpointInput;
+    var page = 1;
+    var search = null;
+
+    document.getElementById('search-bar')?.addEventListener(
+        "keydown",
+        debounce((e) => {
+            searchPart(e);
+        }, 1000)
+    );
+
+    document.getElementById('search-bar-mobile')?.addEventListener(
+        "keydown",
+        debounce((e) => {
+            searchPart(e);
+        }, 1000)
+    );
+}
+
+function goToSearchPage() {
+    let ENDPOINT = searchEndpointInputValue;
+    let page = 1;
+    let search = null;
+    let searchBar = document.querySelector('input#search-bar');
+    if (searchBar.style.display != 'none') {
+        search = searchBar.value;
+    } else {
+        searchBar = document.querySelector('input#search-bar-mobile');
+        search = searchBar.value;
+    }
+    if (!search || String(search).trim() == "") {
+        search = null;
+        ENDPOINT += "?page=" + page;
+    } else {
+        ENDPOINT += "?search=" + search + "&page=" + page;
+    }
+    window.location = ENDPOINT;
+}
+
+function searchPart(e) {
+    page = 1;
+    let noMoreDataElement = document.querySelector('.no-more-data');
+    noMoreDataElement.classList.add('d-none');
+    document.querySelector('.scrolling-pagination').innerHTML = '';
+    search = e.target.value;
+    ENDPOINT = landingEndpointInput;
+    if (!search || String(search).trim() == "") {
+        search = null;
+        ENDPOINT += "?page=" + page;
+        infinteLoadMore(null, ENDPOINT);
+    } else {
+        ENDPOINT = landingEndpointInput;
+        ENDPOINT += "?search=" + e.target.value + "&page=" + page;
+        window.location.href = ENDPOINT;
+    }
+}
+

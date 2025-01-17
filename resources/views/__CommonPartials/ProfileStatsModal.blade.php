@@ -507,7 +507,7 @@
                             
                         </div>
                        <template x-if="!reports?.[0]">
-                             <div class="card mt-3 mb-5">
+                             <div class="card mt-3 p-5 mb-5">
                                 No reports available.
                              </div>
                         </template>

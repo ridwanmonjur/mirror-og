@@ -331,7 +331,6 @@
         </div>
     </main>
 </body>
-<script src="{{ asset('/assets/js/shared/BackgroundModal.js') }}"></script>
 
 
 </html>
