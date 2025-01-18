@@ -76,7 +76,7 @@
             <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant?->getRegionDetails()) }}">
             <input type="hidden" id="initialUserData" value="{{json_encode($userProfile?->only(["id", "name", "profile"]))}}">
             <input type="hidden" id="initialParticipantData" value="{{json_encode($userProfile->participant)}}">
-                <div class="d-flex justify-content-end py-0 my-0 mb-2 flex-wrap">
+                <div class="d-flex justify-content-end py-0 my-0 mb-2 mx-3 flex-wrap">
                     @if ($isUserSame)
                     <input type="file" id="backgroundInput" class="d-none"> 
                     <button 
@@ -416,7 +416,6 @@
                             <p>Win Streak: {{ $streak }}</p>
                         </div>
                         <div @class([
-                            "d-none-until-hover",
                             "col-6",
                             "col-12" => isset($awardList[2])
                         ])>

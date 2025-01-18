@@ -2,7 +2,6 @@
 
 <head>
     <meta name="page-component" content="settings">
-
     @include('googletagmanager::head')
     <link rel="stylesheet" href="{{ asset('/assets/css/common/settings.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])

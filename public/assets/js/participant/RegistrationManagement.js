@@ -501,9 +501,6 @@ function updateInput(input) {
 
 function keydown(input) {
     let joinEventId = input.dataset.joineventid;
-    console.log({joinEventId, input});
-    console.log({joinEventId, input});
-    console.log({joinEventId, input});
     if (event.key === "Backspace" || event.key === "Delete") { 
         event.preventDefault();
 
@@ -513,6 +510,10 @@ function keydown(input) {
     if (event.key.length === 1 && !/\d/.test(event.key)) {
         event.preventDefault();
     }
+}
+
+function triggerResetClick(event) {
+    document.querySelector(`#currencyResetInput[data-joinEventId='${event.target.dataset.joineventid}']`)?.click();
 }
 
 function moveCursorToEnd(input) {

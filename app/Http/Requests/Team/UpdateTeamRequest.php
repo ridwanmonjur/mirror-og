@@ -24,7 +24,7 @@ class UpdateTeamRequest extends FormRequest
         return [
             'id' => 'required|numeric',
             'teamName' => 'required|string',
-            'teamDescription' => 'required|string',
+            'teamDescription' => 'sometimes',
             'country' => 'nullable',
             'country_name' => 'nullable|string',
             'country_flag' => 'nullable|string',
@@ -41,8 +41,6 @@ class UpdateTeamRequest extends FormRequest
             'id.numeric' => 'The ID must be a number.',
             'teamName.required' => 'The team name is required.',
             'teamName.string' => 'The team name must be a string.',
-            'teamDescription.required' => 'The team description is required.',
-            'teamDescription.string' => 'The team description must be a string.',
             'country.required' => 'The country field is required.',
             'country.string' => 'The country must be a string.',
         ];

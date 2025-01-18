@@ -1,4 +1,4 @@
-var ENDPOINT = document.getElementById('endpoint_route').value;
+var ENDPOINT_URL = document.getElementById('endpoint_route').value;
 var page = 1;
 var search = null;
 
@@ -12,16 +12,16 @@ window.addEventListener(
 
         if (scrollTop + windowHeight >= documentHeight - 200) {
             page++;
-            ENDPOINT = document.getElementById('endpoint_route').value;
+            ENDPOINT_URL = document.getElementById('endpoint_route').value;
 
             if (!search || String(search).trim() == "") {
                 search = null;
-                ENDPOINT += "?page=" + page;
+                ENDPOINT_URL += "?page=" + page;
             } else {
-                ENDPOINT += "?search=" + search + "&page=" + page;
+                ENDPOINT_URL += "?search=" + search + "&page=" + page;
             }
 
-            infinteLoadMore(null, ENDPOINT);
+            infinteLoadMore(null, ENDPOINT_URL);
         }
     }, 300)
 );

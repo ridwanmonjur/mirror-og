@@ -478,18 +478,28 @@ class ParticipantTeamController extends Controller
         ));
     }
 
-    private function validateAndSaveTeam($request, $team, $user_id)
-    {
-        $request->validate([
-            'teamName' => 'required|string|max:25',
-            'teamDescription' => 'required',
-        ]);
+    private function validateAndSaveTeam($request, $team, $user_id) 
+    {     
+            $customMessages = [
+                'teamName.required' => 'Please give your team a name',
+                'teamName.max' => 'Team name cannot exceed 25 characters',
+                'teamName.string' => 'Team name must be text',
+                'teamDescription.required' => 'Please add a description for your team',
+                'teamDescription.max' => 'Team description must be less than 150 characters'
+            ];
 
-        $team->teamName = $request->input('teamName');
-        $team->teamDescription = $request->input('teamDescription');
-        $team->creator_id = $user_id;
-        $team->save();
+            $request->validate([
+                'teamName' => 'required|string|max:25',
+                'teamDescription' => 'required|max:150',
+            ], $customMessages);
+            
+            $team->teamName = $request->input('teamName');
+            $team->teamDescription = $request->input('teamDescription');
+            $team->creator_id = $user_id;
+            $team->save();
+            
+            return $team;
 
-        return $team;
+       
     }
 }

@@ -89,3 +89,5 @@
     </div>
 </nav>
 <script src="{{ asset('/assets/js/shared/jsUtils.js') }}"></script>
+
+{{-- <script src="{{ Vite::asset('public/assets/js/shared/jsUtils.js') }}"></script> --}}

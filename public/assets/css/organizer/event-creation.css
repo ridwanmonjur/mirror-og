@@ -974,6 +974,10 @@ color: #43A4D7; */
     margin-left: -40px;
 }
 
+.time-line-box-success .swiper-slide__left .timestamp {
+    margin-left: 0px !important;
+}
+
 .time-line-box .swiper-slide__right .timestamp{
     align-items: end !important;
     margin-left: 40px;

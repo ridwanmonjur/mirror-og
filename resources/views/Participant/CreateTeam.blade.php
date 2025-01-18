@@ -8,20 +8,17 @@
     <title>Team formation</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamCreate.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.3.0/tagify.scss">
     @include('__CommonPartials.HeadIcon')
 
 </head>
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.NavbarGoToSearchPage')
     <main>
+        @include('__CommonPartials.NavbarGoToSearchPage')
+
         <div class="text-center" id="step-0">
-            <div class="welcome">
-                <u></u>
-                <p class="create-online-esports"> </p>
-                <br>
+            <div class="d-flex align-items-center justify-content-center ">
                 <div class="text-center" id="step-0">
                     <div class="welcome">
                         <u>
@@ -37,22 +34,25 @@
                                 <div class="text-red">
                                     <ul>
                                         @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
+                                            <li><u>{{ $error }}</u></li>
                                         @endforeach
                                     </ul>
                                 </div>
                             @endif
                             @if (session()->has('errorMessage'))
                                 <div class="text-red">
-                                    {{ session()->get('errorMessage') }}
+                                    <u>{{ session()->get('errorMessage') }}</u>
                                 </div>
                             @endif
 
                             <div class="d-flex flex-column align-items-center justify-content-center">
                                 <input type="text" value="" name="teamName" id="teamName"
-                                    placeholder="Team name">
+                                    placeholder="Team name"
+                                    value="{{ old('teamName') }}"
+                                >
                                 <input type="text" style="height: 100px;" value="" name="teamDescription"
                                     id="teamDescription" placeholder="Write your team description..."
+                                    value="{{ old('teamDescription') }}"
                                 >
                                 <br> <br>
                                 <input type="submit" onclick="" value="Create">
@@ -63,6 +63,7 @@
                     </div>
                 </div>
             </div>
+        </div>
     </main>
 
 

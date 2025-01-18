@@ -123,6 +123,15 @@ function changeFilterSortUI(event) {
         return;
     }
 
+    if (name =="membersCount")  {
+        let memberCountDiv = document.querySelector('[data-form-parent="membersCount"]');
+        if (value=="0") {
+            memberCountDiv.classList.add('d-none');
+        } else {
+            memberCountDiv.classList.remove('d-none');
+        }
+    }
+
     if (name ===  "sortKeys") {
         let sortTypeElement = document.getElementById("sortType");
         let sortIconList = document.querySelector(".sort-icon-list");
@@ -241,9 +250,6 @@ function sortTeams(arr, sortKey, sortOrder) {
 }
 
 async function fetchTeams(event = null) {
-    let route;
-    let bodyHtml = '';
-
     let formData = new FormData(newTeamsForm);
     let sortedTeams = sortTeams(teamListServerValue, formData.get("sortKeys"), formData.get("sortType"));
     filteredSortedTeams = [];

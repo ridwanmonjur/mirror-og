@@ -393,12 +393,18 @@ function AccountComponent() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+let appName = document.querySelector('#app');
+
+
+window.onload = () => {
     createApp({
         AccountComponent,
-       
     }).mount('#app');
-});
+
+    requestAnimationFrame(() => {
+        appName.style.opacity = '1';
+    });
+};
 
 
 document.addEventListener('DOMContentLoaded', function() {

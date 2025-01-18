@@ -17,7 +17,7 @@
     <input type="hidden" id="eventUrl" value="{{ route('participant.event.view', $id) }}">
     <main class="d-flex justify-content-center flex-row">
         <div class="wrapper-height ">
-            <div class="wrapper grid-2-at-screen mx-auto mx-2">
+            <div class="wrapper grid-2-at-screen mx-auto mx-2 user-select-none ">
                 <div>
 
                     <header><u>Select Team to Register</u></header>
@@ -33,7 +33,7 @@
                                 </svg>
                             </span>
                         </button>
-                        <div class="dropdown-content" id="teamList" style="z-index: 999;">
+                        <div class="px-3 dropdown-content" id="teamList" style="z-index: 999;">
                             <input type="text" id="teamSearch" oninput="filterTeams()"
                                 placeholder="Search for teams...">
                             <div>
@@ -47,33 +47,39 @@
                                     <div class="px-0 py-0 mx-0 my-2 cursor-pointer"
                                         onclick="selectOption(this, '{{ addslashes($item->teamName) }}', '{{ $item->id }}')">
                                         <img src="{{ '/storage' . '/' . $item->teamBanner }}" width="35px"
-                                            height="35px" class="rounded-circle border border-secondary object-fit-cover"
+                                            height="35px" class="rounded-circle  me-2 border border-primary object-fit-cover"
                                             onerror="this.onerror=null;this.src='/assets/images/404.png';">
                                         <a class="d-inline" data-team-id="{{ $item->id }}">{{ $item->teamName }}
                                         </a>
                                     </div>
                                 @endforeach
-                            </div>
-                        </div>
-                        @if ($count <= 5)
-                            <form id="createTeam"
-                                action="{{ route('participant.event.createTeam.redirect', ['id' => $id]) }}"
-                                method="POST">
-                                @csrf
-                                <div>
-                                    <br>
-                                    <p>You have {{ $count }} teams. You can be part of maximum 5 teams!</p>
-                                    @if ($count < 5)
-                                        <p class="text-success"> You can still create {{ 5 - $count }} teams.</p>
-                                        <button class="btn btn-link text-secondary px-0" type="submit">
-                                            Create Another Team
+                                @if ($count < 5)
+                                    <form id="createTeam"
+                                        action="{{ route('participant.event.createTeam.redirect', ['id' => $id]) }}"
+                                        method="POST"
+                                    >
+                                         @csrf
+                                        <button class="btn  text-primary px-0" type="submit">
+                                            <u>Create Another Team</u>
                                         </button>
-                                    @else
-                                        <p class="text-red"> You cannot create more teams.</p>
-                                    @endif
-                                </div>
-                            </form>
-                        @endif
+                                    </form>
+                                    
+                                @endif
+                            </div>
+                            <div class="mt-2 mb-2 d-flex justify-content-center">
+                                <button class="btn btn-primary text-light btn-sm rounded-pill px-2" onclick="toggleDropdown()"> Close</button>
+                            </div>
+
+                        </div>
+                            
+                            <div>
+                                <br>
+                                <p>You are a member of {{ $count }} teams. </p> 
+                                <p class="text-primary">You can be part of maximum 5 teams!</p>
+                                @if ($count > 5)
+                                    <p class="text-red"> You cannot create more teams.</p>
+                                @endif
+                            </div>
                     </div>
                 </div>
 

@@ -1,5 +1,5 @@
-var ENDPOINT_OG = document.getElementById('endpoint_route').value;
-var ENDPOINT = ENDPOINT_OG;
+var ENDPOINT_URL_OG = document.getElementById('endpoint_route').value;
+var ENDPOINT_URL = ENDPOINT_URL_OG;
 var page = 1;
 let fetchedPage = 1;
 var search = null;
@@ -9,16 +9,16 @@ window.addEventListener(
     debounce(() => {
 
         page++;
-        ENDPOINT = ENDPOINT_OG;
+        ENDPOINT_URL = ENDPOINT_URL_OG;
 
         if (!search || String(search).trim() == "") {
             search = null;
-            ENDPOINT += "?page=" + page;
+            ENDPOINT_URL += "?page=" + page;
         } else {
-            ENDPOINT += "?search=" + search + "&page=" + page;
+            ENDPOINT_URL += "?search=" + search + "&page=" + page;
         }
 
-        infinteLoadMore(null, ENDPOINT
+        infinteLoadMore(null, ENDPOINT_URL
             // , ()=> {
             // window.motion.animateCard('event', [
             //     'cover', 'frame1', 'league_name', 'fs-7'

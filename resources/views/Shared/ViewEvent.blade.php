@@ -17,6 +17,7 @@
     $status = $event->statusResolved();
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
     $tier = $event->tier ? $event->tier?->eventTier : null;
+    $type = $event->type ? $event->type?->eventType : null;
     $eventTierLower = bladeEventTowerLowerClass($tier);
     $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
     extract($dateArray);
@@ -253,7 +254,6 @@
                                         </button>
                                     @else
                                         <button 
-
                                             onclick="toastWarningAboutRole(this, 'Participants can join only!');"
                                             type="button" class="oceans-gaming-default-button "
                                         >
@@ -264,70 +264,68 @@
                             @endif
                         </form>
 
-                            <div class="pt-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            <div class="pt-2 pb-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="svg-fix feather feather-user">
+                                    stroke-linecap="round" stroke-linejoin="round" class="me-2 feather feather-user">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                &nbsp;
                                 @if ($event->tier)
-                                    <span style="position: relative; top: 5px;"> RM
-                                        {{ $event->tier?->tierPrizePool ?? 'No Prize' }} Prize Pool</span>
+                                    <span > RM
+                                        {{ $event->tier?->tierPrizePool ?? 'No Prize' }} Prize Pool
+                                    </span>
                                 @else
                                     <span>Tier Prize Pool: Not available</span>
                                 @endif
                             </div>
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            <div class="pb-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round"
-                                    class="feather feather-dollar-sign svg-fix">
+                                    class="feather feather-dollar-sign me-2">
                                     <line x1="12" y1="1" x2="12" y2="23"></line>
                                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                 </svg>
-                                &nbsp;
                                 @if ($event->tier)
-                                    <span style="position: relative; top: 5px;">RM
-                                        {{ $event->tier?->tierEntryFee ?? 'Free' }} Entry Fees</span>
+                                    <span >RM
+                                        {{ $event->tier?->tierEntryFee ?? 'Free' }} Entry Fees
+                                    </span>
                                 @else
                                     <span>Tier Entry Fee: Not available</span>
                                 @endif
                             </div>
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            <div class="pb-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="svg-fix feather feather-map-pin">
+                                    stroke-linecap="round" stroke-linejoin="round" class="me-2 feather feather-map-pin">
                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                     <circle cx="12" cy="10" r="3"></circle>
                                 </svg>
-                                &nbsp;
-                                <span style="position: relative; top: 5px;">{{ $event->venue ?? 'SEA' }}</span>
+                                <span >{{ $event->venue ?? 'SEA' }}</span>
                             </div>
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            <div class="pb-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="svg-fix feather feather-bar-chart-2">
-                                    <line x1="18" y1="20" x2="18" y2="10"></line>
-                                    <line x1="12" y1="20" x2="12" y2="4"></line>
-                                    <line x1="6" y1="20" x2="6" y2="14"></line>
-                                </svg>
-                                &nbsp;
-                                <span style="position: relative; top: 5px;">{{ $event->join_events_count }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}</span>
-                            </div>
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="svg-fix feather feather-info">
+                                    stroke-linecap="round" stroke-linejoin="round" class="me-2 feather feather-info">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <line x1="12" y1="16" x2="12" y2="12"></line>
                                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                 </svg>
-                                &nbsp;
-                                <span style="position: relative; top: 5px;">{{ $tier ?? 'Choose event type' }}</span>
+                                <span >{{ $type ?? 'Choose event type' }}</span>
                             </div>
+                            <div class="pb-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class=" feather feather-bar-chart-2 me-2">
+                                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                                </svg>
+                                <span >{{ $event->join_events_count }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}</span>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>

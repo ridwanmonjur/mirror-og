@@ -42,7 +42,7 @@
             <br>
             <br><br>
     </form>
-    <script src="{{ asset('/assets/js/organizer/signup.js') }}"></script>
+    <script src="{{ asset('/assets/js/organizer/signin.js') }}"></script>
 
 @endsection
 

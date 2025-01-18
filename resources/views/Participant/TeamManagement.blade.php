@@ -85,7 +85,6 @@
                             <p>Win Streak: {{ $streak }}</p>
                         </div>
                         <div @class([
-                            "d-none-until-hover",
                             "col-6",
                             "col-12" => isset($awardList[2])
                         ])>

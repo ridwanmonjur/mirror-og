@@ -144,7 +144,8 @@ class EventMatchService {
             'followersCount' => OrganizerFollow::getFollowersCount($event->user_id),
             'likesCount' => Like::getLikesCount($event->id),
             'user' => $user,
-            'existingJoint' => $existingJoint
+            'existingJoint' => $existingJoint,
+            'maxRosterSize' => config("constants.ROSTER_SIZE")  
         ];
 
         if ($user) {
