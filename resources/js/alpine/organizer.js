@@ -2,12 +2,10 @@ import Alpine from "alpinejs";
 import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
 import { alpineProfileData, openModal, reportFormData } from "../custom/followers";
+import intlTelInput from 'intl-tel-input';
+import utilsScript from "intl-tel-input/utils";
 
-const input = document.querySelector("#phone");
-window.intlTelInput(input, {
-    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@22.0.2/build/js/utils.js",
-});
-const iti = window.intlTelInput.getInstance(input);
+
 const storage = document.querySelector('.profile-storage');
 const styles = {
     backgroundStyles: storage.dataset.backgroundStyles,
@@ -17,8 +15,22 @@ const styles = {
 let initialUserProfile = JSON.parse(document.getElementById('initialUserProfile').value);
 let initialOrganizer = JSON.parse(document.getElementById('initialOrganizer').value);
 let initialAddress = JSON.parse(document.getElementById('initialAddress').value);
+console.log({number222: initialUserProfile.mobile_no})
+const input = document.querySelector("#phone");
+let iti = intlTelInput(input, { 
+    loadUtils: () => import("intl-tel-input/utils"),
+});
+console.log({input, utilsScript, intlTelInput, iti})
+input.addEventListener('input', () => {
+    console.log({
+        inputValue: input.value,
+        itiValue: iti.getNumber(),
+        isValid: iti.isValidNumber()
+    });
+});
 
-if (initialUserProfile?.mobile_no) iti.setNumber(initialUserProfile.mobile_no);
+if (initialUserProfile?.mobile_no) 
+    iti.setNumber(initialUserProfile.mobile_no);
 
 const myOffcanvas = document.getElementById('profileDrawer');
 
@@ -94,8 +106,7 @@ Alpine.data('alpineDataComponent', function () {
                     this.errorMessage = data.message;
                 }
             } catch (error) {
-                this.errorMessage = error.message;
-                console.error({ error });
+                this.errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
             }
         },
         init() {

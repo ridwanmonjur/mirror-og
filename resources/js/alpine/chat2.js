@@ -20,7 +20,7 @@ const db = initializeFirestore(app, {
     localCache: memoryLocalCache(),
 });
 
-let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
 const chatInput = document.querySelector(".chat-input input");
 
@@ -629,9 +629,10 @@ async function makeRequest(url, method, data) {
     }
 }
 
-  
+let appName = document.querySelector('#app');
 
-document.addEventListener('DOMContentLoaded', () => {
+
+window.onload = () => {
     createApp({
         RoomComponent,
         ChatListComponent,
@@ -639,7 +640,11 @@ document.addEventListener('DOMContentLoaded', () => {
         DateDividerComponent,
         ReportBlockComponent
     }).mount('#app');
-});
+
+    requestAnimationFrame(() => {
+        appName.style.opacity = '1';
+    });
+};
 
 
 document.addEventListener('keydown', function(event) {

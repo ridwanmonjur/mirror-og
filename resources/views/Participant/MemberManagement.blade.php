@@ -8,7 +8,6 @@
     <title>Team Member Management</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/manage_team.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/participant/timeline.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @include('__CommonPartials.HeadIcon')
 </head>

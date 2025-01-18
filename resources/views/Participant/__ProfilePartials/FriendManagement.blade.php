@@ -159,7 +159,7 @@
         <a href="{{route('user.message.view', ['userId' => $userProfile->id] )}}">
             <button 
                 x-on:click="startMessage" 
-                type="button" class="btn btn-light rounded-pill border-dark text-dark px-2 py-2 ms-2 mt-1"
+                type="button" class="btn btn-light rounded-pill border-dark text-dark px-2 py-2 ms-2 mt-1 me-4"
             >
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-chat-dots me-1" viewBox="0 0 16 16">
                     <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>

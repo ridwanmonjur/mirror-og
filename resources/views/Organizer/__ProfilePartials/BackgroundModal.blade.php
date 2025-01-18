@@ -213,4 +213,3 @@
 
     </div>
 </div>
-<script src="{{ asset('/assets/js/shared/BackgroundModal.js') }}"></script>

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 
 class UpdateOrganizersRequest extends FormRequest
 {
@@ -38,10 +39,10 @@ class UpdateOrganizersRequest extends FormRequest
             'organizer.type' => 'nullable|string',
             'organizer.companyName' => 'nullable|string|max:255',
             'organizer.companyDescription' => 'nullable|string|max:1000',
-            'organizer.website_link' => 'nullable|url',
-            'organizer.instagram_link' => 'nullable|url',
-            'organizer.facebook_link' => 'nullable|url',
-            'organizer.twitter_link' => 'nullable|url',
+            'organizer.website_link' => 'nullable|string',
+            'organizer.instagram_link' => 'nullable|string',
+            'organizer.facebook_link' => 'nullable|string',
+            'organizer.twitter_link' => 'nullable|string',
         ];
     }
 
@@ -68,10 +69,10 @@ class UpdateOrganizersRequest extends FormRequest
             'organizer.companyName.max' => 'Company Name must not exceed 255 characters.',
             'organizer.companyDescription.string' => 'Company Description must be a string.',
             'organizer.companyDescription.max' => 'Company Description must not exceed 1000 characters.',
-            'organizer.website_link.url' => 'Website Link must be a valid URL.',
-            'organizer.instagram_link.url' => 'Instagram Link must be a valid URL.',
-            'organizer.facebook_link.url' => 'Facebook Link must be a valid URL.',
-            'organizer.twitter_link.url' => 'Twitter Link must be a valid URL.',
+            'organizer.website_link.string' => 'Website Link must be a valid URL.',
+            'organizer.instagram_link.string' => 'Instagram Link must be a valid URL.',
+            'organizer.facebook_link.string' => 'Facebook Link must be a valid URL.',
+            'organizer.twitter_link.string' => 'Twitter Link must be a valid URL.',
         ];
     }
 
@@ -92,12 +93,50 @@ class UpdateOrganizersRequest extends FormRequest
             $organizerData = $this->organizer;
             $links = ['website_link', 'instagram_link', 'facebook_link', 'twitter_link'];
             
+            $socialDomains = [
+                'instagram_link' => 'instagram.com',
+                'facebook_link' => 'facebook.com',
+                'twitter_link' => ['twitter.com', 'x.com']
+            ];
+        
             foreach ($links as $link) {
-                if (empty($organizerData[$link]) || trim($organizerData[$link]) === '') {
+                $url = rtrim(trim($organizerData[$link]), '/');
+                if (empty($url)) {
                     $organizerData[$link] = null;
+                    continue;
                 }
+            
+                $isValidStructure = fn($url) => preg_match('/^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}/', parse_url($url, PHP_URL_HOST) ?? '');
+                $normalizeUrl = fn($url) => rtrim($url, '/');
+                $getDomain = fn($url) => strtolower(parse_url($url, PHP_URL_HOST) ?? '');
+            
+                if (!filter_var($url, FILTER_VALIDATE_URL) || !$isValidStructure($url)) {
+                    $modifiedUrl = 'https://' . preg_replace('#^(https?://)?(www\.)?#', '', $url);
+                    
+                    if (filter_var($modifiedUrl, FILTER_VALIDATE_URL) && $isValidStructure($modifiedUrl)) {
+                        $url = $modifiedUrl;
+                    } else {
+                        throw ValidationException::withMessages([
+                            "organizer.{$link}.string" => ["The url '{$url}' is invalid. Please enter a valid URL."]
+                        ]);
+                    }
+                }
+        
+                // Check for specific social media domains
+                if (isset($socialDomains[$link])) {
+                    $domain = preg_replace('/^www\./', '', $getDomain($url));
+                    $expectedDomains = (array)$socialDomains[$link];
+                    
+                    if (!in_array($domain, $expectedDomains)) {
+                        throw ValidationException::withMessages([
+                            "organizer.{$link}.string" => ["Please provide a valid domain '$socialDomains[$link]' for your link, '$url'."]
+                        ]);
+                    }
+                }
+            
+                $organizerData[$link] = $normalizeUrl($url);
             }
-    
+        
             $this->request->set(
                 'organizer', $organizerData
             );

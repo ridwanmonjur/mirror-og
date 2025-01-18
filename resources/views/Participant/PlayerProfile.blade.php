@@ -4,6 +4,8 @@
 <head>
     @include('googletagmanager::head')
     <meta charset="UTF-8">
+    <meta name="page-component" content="participant">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
@@ -13,16 +15,7 @@
     @vite([
         'resources/sass/app.scss', 
         'resources/js/app.js', 
-        'resources/js/alpine/participant.js', 
-        'resources/js/libraries/lightgallery.js',
-        'resources/js/libraries/motion.js',
-        'resources/sass/libraries/lightgallery.scss',   
-        'resources/js/libraries/file-edit.js',
-        'resources/sass/libraries/file-edit.scss',
-        'resources/js/libraries/colorpicker.js',
-        'resources/sass/libraries/colorpicker.scss',
     ])
-    <link rel="stylesheet" href="{{ asset('/assets/css/chat/inpage-message.css') }}">
 
 </head>
 @php
@@ -64,7 +57,6 @@
         data-logged-user-id="{{ $loggedUserId }}"
         data-logged-user-role="{{ $loggedUserRole }}"
         data-user-banner-url="{{ route('participant.userBanner.action', ['id' => $userProfile->id]) }}"
-        data-asset-carousel-js="{{ asset('/assets/js/participant/carousel.js') }}"
         class="d-none laravel-data-storage"
     ></div>
     <main >
@@ -84,7 +76,7 @@
             <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant?->getRegionDetails()) }}">
             <input type="hidden" id="initialUserData" value="{{json_encode($userProfile?->only(["id", "name", "profile"]))}}">
             <input type="hidden" id="initialParticipantData" value="{{json_encode($userProfile->participant)}}">
-                <div class="d-flex justify-content-end py-0 my-0 mb-2 flex-wrap">
+                <div class="d-flex justify-content-end py-0 my-0 mb-2 mx-3 flex-wrap">
                     @if ($isUserSame)
                     <input type="file" id="backgroundInput" class="d-none"> 
                     <button 
@@ -424,7 +416,6 @@
                             <p>Win Streak: {{ $streak }}</p>
                         </div>
                         <div @class([
-                            "d-none-until-hover",
                             "col-6",
                             "col-12" => isset($awardList[2])
                         ])>
@@ -613,12 +604,8 @@
             @endif
             </div>
         </div>
-        <script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
         <script src="{{ asset('/assets/js/participant/Profile.js') }}"></script>
-        @if ($isUserSame)
-
-            <script src="{{ asset('/assets/js/participant/IsUserSame.js') }}"></script>
-        @endif
+        
     </main>
 
 </body>

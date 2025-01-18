@@ -9,8 +9,8 @@ import { getAuth, signInWithCustomToken, onAuthStateChanged } from "firebase/aut
 import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
-let csrfToken3 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-const eventId = document.getElementById('eventId').value;
+let csrfToken3 = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+const eventId = document.getElementById('eventId')?.value;
 
 window.updateReportDispute = async (reportId, team1Id, team2Id) => {
   const reportRef = doc(db, `event/${eventId}/match_status`, reportId);
@@ -251,7 +251,7 @@ getAllMatchStatusesData();
 
 let bodyHeight22 = document.body.offsetHeight;
 let bracketList = document.getElementById('bracket-list');
-let bracketListHeight = bracketList.getBoundingClientRect().height;
+let bracketListHeight = bracketList?.getBoundingClientRect()?.height;
 let main2 = document.querySelector('main');
 if (main2) {
   main2.style.transition = "height 0.5s ease-in-out";

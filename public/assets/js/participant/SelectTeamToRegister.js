@@ -19,7 +19,7 @@ function filterTeams() {
 
         if (teamName.includes(input)) {
             teamDivs[i].style.display = "block";
-            teamLogo.style.display = "block";
+            teamLogo.style.display = "inline-block";
         } else {
             teamDivs[i].style.display = "none";
             teamLogo.style.display = "none";

@@ -3,8 +3,8 @@ import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
 import { alpineProfileData, openModal, reportFormData } from "../custom/followers";
 
-let userData = JSON.parse(document.getElementById('initialUserData').value);
-let participantData = JSON.parse(document.getElementById('initialParticipantData').value);
+let userData = JSON.parse(document.getElementById('initialUserData')?.value);
+let participantData = JSON.parse(document.getElementById('initialParticipantData')?.value);
 
 
 const myOffcanvas = document.getElementById('profileDrawer');
@@ -115,7 +115,7 @@ Alpine.data('profileDataComponent', () => {
                     this.errorMessage = data.message;
                 }
             } catch (error) {
-                this.errorMessage = error.message;
+                this.errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
                 console.error({ error });
             }
         },

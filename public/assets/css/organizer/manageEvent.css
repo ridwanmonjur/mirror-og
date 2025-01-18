@@ -110,6 +110,7 @@ input[type="submit"],
     justify-content: space-between;
     text-decoration: underline;
     width: 100%;
+    max-width: ;
 }
 
 .flexbox-centered-space {

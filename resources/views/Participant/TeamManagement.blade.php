@@ -85,7 +85,6 @@
                             <p>Win Streak: {{ $streak }}</p>
                         </div>
                         <div @class([
-                            "d-none-until-hover",
                             "col-6",
                             "col-12" => isset($awardList[2])
                         ])>
@@ -191,7 +190,6 @@
             @endif
         </div>
     </main>
-    <script src="{{ asset('/assets/js/participant/carousel.js') }}"></script>
     <script src="{{ asset('/assets/js/participant/TeamManagement.js') }}"></script>
   
 </body>

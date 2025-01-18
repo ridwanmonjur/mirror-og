@@ -7,11 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Management</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/common/pie-chart.css') }}">
-    <link rel="stylesheet" href="{{ asset('/assets/css/participant/timeline.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/registerManage.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/manage_team.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/libraries/tippy.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @include('__CommonPartials.HeadIcon')
 </head>
 <body
@@ -92,7 +90,7 @@
             @else
             {{-- IS REDURECT CHANGE--}}
            
-            <div class="event-carousel-styles mx-5 px-5">
+            <div class="event-carousel-styles  px-5">
                 @foreach ($joinEvents as $joinEvent)
                        
                     @include('Participant.__Partials.RosterViewRegister', ['isRegistrationView' => false])
@@ -111,7 +109,7 @@
                     @if (!isset($invitedEvents[0]))
                         <p class="tab-size text-start mx-auto">No events available</p>
                     @else
-                        <div class="event-carousel-styles mx-5 px-5">
+                        <div class="event-carousel-styles px-5">
                             @foreach ($invitedEvents as $key => $joinEvent)
                                 @include('Participant.__Partials.RosterViewRegister', ['isRegistrationView' => false])
                                 @include('Participant.__Partials.PieChart', ['isInvited' => true])

@@ -97,7 +97,7 @@ Alpine.data('alpineDataComponent', () => ({
                 this.errorMessage = data.message;
             }
         } catch (error) {
-            this.errorMessage = error.message;
+            this.errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
             console.error({ error });
         }
     },

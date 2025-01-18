@@ -15,7 +15,7 @@
     data-roster-captain-id="{{$joinEvent->captain?->team_member_id}}"
     data-follow-counts="{{$followCounts[$joinEvent->eventDetails->user_id]}}"
 >
-    <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
+    <div class="position-absolute d-flex w-100 justify-content-center" style="top: -40px; ">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
             @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
                 <ul class="achievement-list my-0 py-2 px-4 z-99">
@@ -401,4 +401,3 @@
 </div>
 
 
-<script src="{{ asset('/assets/js/shared/RosterView.js') }}"></script>

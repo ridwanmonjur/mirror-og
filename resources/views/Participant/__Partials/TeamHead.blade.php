@@ -1,15 +1,9 @@
 <head>
+    <meta name="page-component" content="teamhead">
+
     @vite([
         'resources/sass/app.scss',
         'resources/js/app.js',
-        'resources/js/alpine/teamhead.js',
-        'resources/js/libraries/lightgallery.js',
-        'resources/js/libraries/motion.js',
-        'resources/sass/libraries/lightgallery.scss',
-        'resources/js/libraries/colorpicker.js',
-        'resources/sass/libraries/colorpicker.scss',
-        'resources/js/libraries/file-edit.js',
-        'resources/sass/libraries/file-edit.scss',
     ])
 </head>
 @php
@@ -60,6 +54,7 @@
     @endphp
 @endauth
 <main class="main1"
+    
     id="backgroundBanner" class="member-section px-2 py-2"
     
 >
@@ -387,9 +382,9 @@
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                     </svg>
                 </div>
-                <div class="my-3">
-                    <span class="ms-2" x-cloak x-show="!isEditMode">{{$selectTeam->teamDescription}}</span>
-                    <span class="ms-2 mt-2 fs-5"x-show="!isEditMode">{{$selectTeam->country_flag}}</span>
+                <div class="my-3" x-cloak x-show="!isEditMode">
+                    <span class="ms-2" >{{$selectTeam->teamDescription}}</span>
+                    <span class="ms-2 mt-2 fs-5">{{$selectTeam->country_flag}}</span>
 
                 </div>
             @else

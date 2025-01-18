@@ -1,5 +1,146 @@
+let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+function cancelEvent(event) {
+    let svgElement = event.target.closest('svg');
+    if (!svgElement) return;
+    let eventUrl = svgElement.dataset.url;
+
+    Swal.fire({
+        title: "Are you sure you want to cancel this event?",
+        text: "You won't be able to un-cancel your canceling if you go forward with this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#43A4D7",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancel this event!",
+        confirmButtonText: "Oops, no..."
+    })
+        .then((result) => {
+            if (result.isDismissed) {
+                fetch(eventUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Content-Type': 'application/json',
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: 'Cancelled!',
+                                text: 'Event has been cancelled.',
+                                icon: 'success',
+                                confirmButtonColor: "#43A4D7",
+                            });
+                            location.reload();
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Failed to cancel the event.',
+                                icon: 'error',
+                                confirmButtonColor: "#43A4D7",
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Something went wrong!',
+                            icon: 'error',
+                            confirmButtonColor: "#43A4D7",
+                        });
+                    });
+            }
+        });
+}
+// ManageEventFetchProcessor
+class FetchVariables {
+    constructor(formId = null, formKeys = []) {
+        this.sortType = 'asc';
+        this.sortKey = '';
+        this.filter = {};
+        this.search = null;
+        this.fetchedPage = 1;
+        this.currentPage = 1;
+        this.formId = formId;
+        this.formKeys = formKeys;
+    }
+
+    visualize() {
+        console.log({
+            filter: this.getFilter(),
+            search: this.search,
+            sortKey: this.sortKey,
+            sortType: this.sortType,
+            fetchedPage: this.fetchedPage                
+        });
+    }
+
+    getSortType() {
+        return this.sortType;
+    }
+
+    getSortKey() {
+        return this.sortKey;
+    }
+
+    getFilter() {
+        let form = document.getElementById(this.formId);
+        console.log({form})
+        let formData = new FormData(form);
+        console.log({formData, keys: [...formData.keys()]})
+
+        let filterValues = {};
+        for (let key of this.formKeys) {
+            filterValues[key] = formData.getAll(key);
+        }
+
+        return filterValues;
+    }
+
+    getFetchedPage() {
+        return this.fetchedPage;
+    }
+
+    getCurrentPage() {
+        return this.currentPage;
+    }
+
+    getSearch() {
+        return this.search;
+    }
+
+    setSortKey(value) {
+        this.sortKey = value;
+    }
+
+    setFilter(value) {
+        this.filter = value;
+    }
+
+    setFilterDate(date1, date2) {
+    }
+
+    setSearch(value) {
+        this.search = value;
+    }
+
+    setSortType(value) {
+        this.sortType = value;
+    }
+
+    setFetchedPage(value) {
+        this.fetchedPage = value;
+    }
+
+    setCurrentPage(value) {
+        this.currentPage = value;
+    }
+}
+
 const appData = document.getElementById('app-data');
-const ENDPOINT_OG = appData.dataset.endpoint;
+const ENDPOINT_URL_OG = appData.dataset.endpoint;
 const userId = Number(appData.dataset.userId);
 const eventIndexUrl = appData.dataset.eventIndexUrl;
 const eventCreateUrl = appData.dataset.eventCreateUrl;
@@ -23,13 +164,13 @@ function addTippy() {
 }
 
 
-function infinteLoadMoreByPost(ENDPOINT, body) {
+function infinteLoadMoreByPost(ENDPOINT_URL, body) {
     let noMoreDataElement = document.querySelector('.no-more-data');
     let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
     let hasClass = noMoreDataElement.classList.contains('d-none');
     
     if (hasClass) {
-        fetch(ENDPOINT, {
+        fetch(ENDPOINT_URL, {
             method: 'post',
             headers: {
                 'Accept': 'text/html',
@@ -66,14 +207,14 @@ function infinteLoadMoreByPost(ENDPOINT, body) {
 }
 
 
-function loadByPost(ENDPOINT, body) {
+function loadByPost(ENDPOINT_URL, body) {
     let noMoreDataElement = document.querySelector('.no-more-data');
     let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
     let hasClass = noMoreDataElement.classList.contains('d-none');
     
     if (hasClass) { }
     
-    fetch(ENDPOINT, {
+    fetch(ENDPOINT_URL, {
         method: 'post',
         headers: {
             'Accept': 'text/html',
@@ -181,7 +322,7 @@ function fetchSearchSortFiter() {
 
     let params = new URLSearchParams(window.location.search);
 
-    ENDPOINT = ENDPOINT_OG;
+    ENDPOINT_URL = ENDPOINT_URL_OG;
 
     let body = {
         page: params.get('page') ?? 1,
@@ -194,7 +335,7 @@ function fetchSearchSortFiter() {
         status: params.get('status')
     }
 
-    loadByPost(ENDPOINT, body);     
+    loadByPost(ENDPOINT_URL, body);     
 }
 
 function setFilterForFetch(event, title) {
@@ -302,11 +443,11 @@ const copyUrlFunction2 = (copyUrl) => {
     });
 }
 
-var ENDPOINT;
+var ENDPOINT_URL;
 
 let params = new URLSearchParams(window.location.search);
 
-ENDPOINT = `/organizer/event/?page=${params.get('page')}&status=${params.get('status')}`; 
+ENDPOINT_URL = `/organizer/event/?page=${params.get('page')}&status=${params.get('status')}`; 
 
 
 function handleSearch() {
@@ -324,7 +465,7 @@ function handleSearch() {
 
     let params = new URLSearchParams(window.location.search);
 
-    ENDPOINT = ENDPOINT_OG;
+    ENDPOINT_URL = ENDPOINT_URL_OG;
     fetchVariables.setSearch(inputValue)
 
     let body = {
@@ -338,7 +479,7 @@ function handleSearch() {
         search: inputValue
     }
 
-    loadByPost(ENDPOINT, body);
+    loadByPost(ENDPOINT_URL, body);
 }
 
 function resetUrl() {
@@ -391,7 +532,7 @@ window.addEventListener(
 
             fetchVariables.setFetchedPage(fetchVariables.getCurrentPage());
             
-            ENDPOINT = ENDPOINT_OG;
+            ENDPOINT_URL = ENDPOINT_URL_OG;
 
             body = {
                 filter: fetchVariables.getFilter(),
@@ -404,7 +545,7 @@ window.addEventListener(
                 page: fetchVariables.getCurrentPage()
             }
             try{
-                infinteLoadMoreByPost(ENDPOINT, body)
+                infinteLoadMoreByPost(ENDPOINT_URL, body)
             } catch {
                 fetchVariables.setFetchedPage(fetchVariables.getCurrentPage()-1);
             };

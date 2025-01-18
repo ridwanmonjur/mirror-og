@@ -89,8 +89,5 @@
     </div>
 </nav>
 <script src="{{ asset('/assets/js/shared/jsUtils.js') }}"></script>
-@if (isset($search))
-    <script src="{{ asset('/assets/js/shared/navbarSearchResults.js') }}"></script>
-@else
-    <script src="{{ asset('/assets/js/shared/navbarGoToSearch.js') }}"></script>
-@endif
+
+{{-- <script src="{{ Vite::asset('public/assets/js/shared/jsUtils.js') }}"></script> --}}

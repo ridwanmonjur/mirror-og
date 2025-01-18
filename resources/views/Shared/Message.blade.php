@@ -2,8 +2,10 @@
 
 <head>
     @include('googletagmanager::head')
+    <meta name="page-component" content="chat2">
+
     <link rel="stylesheet" href="{{ asset('/assets/css/chat/fullpage.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/chat2.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @include('__CommonPartials.HeadIcon')
 </head>
 
@@ -301,7 +303,7 @@
 
                                 </div>
                                 <div v-if="!reports?.[0]">
-                                    <div class="card mt-3 mb-5">
+                                    <div class="card mt-3 p-5 mb-5">
                                         No reports available.
                                     </div>
                                 </div>
@@ -441,7 +443,6 @@
         </div>
     </div>
 </body>
-<script src="{{ asset('/assets/js/shared/BackgroundModal.js') }}"></script>
 {{-- <script src="{{ asset('/assets/js/shared/chat.js') }}"></script> --}}
 
 </html>

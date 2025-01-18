@@ -90,11 +90,7 @@
             </div>
 
             <div class="no-more-data d-none mb-3" style="margin-top: 50px;" ></div>
-
             
-            <script src="{{ asset('/assets/js/organizer/ManageEventP1.js') }}"></script>
-
-         
             <div id="app-data"
                 data-endpoint="{{ route('event.search.view') }}"
                 data-user-id="{{ $user->id }}"
@@ -102,7 +98,6 @@
                 data-event-create-url="{{ route('event.create') }}">
             </div>
 
-            <script src="{{ asset('/assets/js/organizer/FetchVariables.js') }}"></script>
             <script src="https://cdn.jsdelivr.net/npm/litepicker@2.0/dist/litepicker.min.js"></script>
             <script src="{{ asset('/assets/js/organizer/ManageEvent.js') }}"></script>
         </div>

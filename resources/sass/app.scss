@@ -1,10 +1,86 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Poppins:wght@300;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Nunito:wght@300;500;600&display=swap');
+// resources/sass/_fonts.scss
+
+// Poppins Font Face Declarations
+@font-face {
+  font-family: 'Poppins';
+  src: url('https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLDz8Z1xlFQ.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLGT9Z1xlFQ.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLEj6Z1xlFQ.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+// Nunito Font Face Declarations
+@font-face {
+  font-family: 'Nunito';
+  src: url('https://fonts.gstatic.com/s/nunito/v25/XRXV3I6Li01BKofIO-aBXso.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('https://fonts.gstatic.com/s/nunito/v25/XRXV3I6Li01BKofINeaBXso.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('https://fonts.gstatic.com/s/nunito/v25/XRXV3I6Li01BKofINeaBXso.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+// Font Utility Classes
+.font-poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+.font-nunito {
+  font-family: 'Nunito', sans-serif;
+}
+
 @import 'variables';
 @import './bootstrap/bootstrap.css';
+@import './bootstrap/event-status.scss';
+@import './bootstrap/dynamic-select.scss';
 @import 'tippy.js/dist/tippy.css';
 @import 'tippy.js/themes/light.css';
+@import 'litepicker/dist/css/litepicker.css';
+@import 'flatpickr/dist/flatpickr.css';
+@import '@yaireo/tagify/dist/tagify.css';
+@import  'cropperjs/dist/cropper.css';
+@import '@easylogic/colorpicker/dist/colorpicker.css';
+@import 'intl-tel-input/build/css/intlTelInput.css';
+img.fslightbox-source{
+  min-height: 50vh !important;
+  max-height: 80vh !important;
+  object-fit: cover;
+  width: auto !important;
+  max-width: 80vw !important;
+}
+
+
 
 .special-font-signinin {
   letter-spacing: 0.1em;

@@ -5,9 +5,6 @@ window.Popper = Popper
 import * as bootstrap from 'bootstrap'
 window.bootstrap = bootstrap;
 
-
-
-
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-right',
@@ -118,8 +115,92 @@ window.loadMessage = () => {
 window.Toast = Toast;
 window.Swal = Swal;
 
-document.querySelectorAll('.modal').forEach(modal => {
-    modal.addEventListener('hidden.bs.modal', function() {
-        document.body.style.paddingRight = '0';
-    });
+// document.querySelectorAll('.modal').forEach(modal => {
+//     modal.addEventListener('hidden.bs.modal', function() {
+//         document.body.style.paddingRight = '0';
+//     });
+// });
+
+import './libraries/lightgallery';
+import './libraries/lightpicker';
+import './libraries/motion';
+import './libraries/tagify';
+import './libraries/tippy';
+import './libraries/file-edit';
+import './libraries/colorpicker';
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // Check for page-specific component in meta tag
+    const pageMeta = document.querySelector('meta[name="page-component"]');
+    const pageName = pageMeta?.getAttribute('content');
+
+    if (pageName ) {
+        try {
+            await import (`./alpine/${pageName}.js`);
+            // Register the component with Alpine using the page name
+            // Alpine.data(pageName, module.default);
+        } catch (error) {
+            console.error(`Failed to load component for ${pageName}:`, error);
+        }
+    }
+
+    (function applyRandomColorsAndShapes() {
+        const circles = document.querySelectorAll('.random-color-circle');
+    
+        circles.forEach(circle => {
+            const randomColor = getRandomColor();
+            circle.style.borderColor = randomColor;
+            circle.style.borderWidth = '2px';
+            circle.style.borderStyle = 'solid';
+            circle.style.borderRadius = '50%';
+        });
+    })();
+    
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+
+    function applyRandomColorsAndShapes() {
+        const circles = document.querySelectorAll('.random-bg-circle');
+        circles.forEach(circle => {
+        if (!circle.style.backgroundColor) {
+            const randomColor = getRandomColorBg();
+            circle.style.backgroundColor = randomColor;
+        }
+        });
+    }
+    
+    function getRandomColorBg() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+    
+    applyRandomColorsAndShapes();
+    
+    function applyRandomBorderColor() {
+        const circles = document.querySelectorAll('.random-border-circle');
+    
+        circles.forEach(circle => {
+            const randomColor = getRandomColor();
+            circle.style.borderColor = randomColor;
+            circle.style.borderWidth = '2px';
+            circle.style.borderStyle = 'solid';
+            circle.style.borderRadius = '50%';
+        });
+    };
+    
+    applyRandomBorderColor();
+
+    // Start Alpine
+    // Alpine.start();
 });

@@ -8,7 +8,6 @@ let {
     backgroundStyles,
     fontStyles,
     userBannerUrl,
-    assetCarouselJs
 } = document.querySelector('.laravel-data-storage').dataset;
 
 var backgroundBanner = document.getElementById("backgroundBanner")
@@ -169,4 +168,12 @@ window.addEventListener('resize', debounce((e) => {
 
 function redirectToProfilePage(userId) {
     window.location.href = publicProfileUrl.replace(':id', userId);
+}
+
+function uploadImageToBanner(event) {
+    var file = event.target.files[0];
+    if (file) {
+        var cachedImage = URL.createObjectURL(file);
+        backgroundBanner.style.backgroundImage = `url(${cachedImage})`;
+    }
 }
