@@ -6,11 +6,12 @@
    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tournament Matches</title>
-    <link rel="stylesheet" href="{{ asset('/assets/css/common/viewEvent.css') }}">
+    <meta name="page-component" content="bracket">
+
     @vite([ 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/bracket.js'])
     @include('__CommonPartials.HeadIcon')
-    <style>
-    </style>
+    <link rel="stylesheet" href="{{ asset('/assets/css/participant/viewEvent.css') }}">
+
 </head>
 
 @php
@@ -19,9 +20,9 @@
 
 <body>
     @include('googletagmanager::body')
+        @include('__CommonPartials.NavbarGoToSearchPage')
  
     <main x-data="alpineDataComponent">
-        @include('__CommonPartials.NavbarGoToSearchPage')
         <input type="hidden" id="eventId" value="{{$event->id}}">
         <input type="hidden" id="previousValues" value="{{json_encode($previousValues)}}">
         <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
@@ -31,7 +32,7 @@
             @include('Organizer.__ManageEventPartials.BracketUpdateList')
         </div>
         
-        <script src="{{ asset('/assets/js/shared/ViewEvent.js') }}"></script>
+        <script src="{{ asset('/assets/js/participant/ViewEvent.js') }}"></script>
     </main>
 </body>
 </html>

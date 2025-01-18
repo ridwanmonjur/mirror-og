@@ -78,7 +78,7 @@ async function submitLikesForm() {
     }
 }
 
-document.getElementById('followForm').addEventListener('submit', async function(event) {
+document.getElementById('followForm')?.addEventListener('submit', async function(event) {
     event.preventDefault();
     let followCount = document.getElementById('followCount');
     let followButton = document.getElementById('followButton');
