@@ -393,16 +393,25 @@ function AccountComponent() {
     }
 }
 
-let appName = document.querySelector('#app');
-window.onload = () => {
+function addOnLoad2(newFunction) {
+    const oldOnLoad = window.onload;
+    if (typeof window.onload !== 'function') {
+        window.onload = newFunction;
+    } else {
+        window.onload = () => {
+            if (oldOnLoad) {
+                oldOnLoad();
+            }
+            newFunction();
+        };
+    }
+}
+addOnLoad2 (() => {
     createApp({
         AccountComponent,
     }).mount('#app');
 
-    requestAnimationFrame(() => {
-        appName.style.opacity = '1';
-    });
-};
+});
 
 
 document.addEventListener('DOMContentLoaded', function() {

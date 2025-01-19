@@ -629,8 +629,21 @@ async function makeRequest(url, method, data) {
     }
 }
 
-let appName = document.querySelector('#app');
-window.onload = () => {
+function addOnLoad2(newFunction) {
+    const oldOnLoad = window.onload;
+    if (typeof window.onload !== 'function') {
+        window.onload = newFunction;
+    } else {
+        window.onload = () => {
+            if (oldOnLoad) {
+                oldOnLoad();
+            }
+            newFunction();
+        };
+    }
+}
+
+addOnLoad2 (() => {
     createApp({
         RoomComponent,
         ChatListComponent,
@@ -638,11 +651,7 @@ window.onload = () => {
         DateDividerComponent,
         ReportBlockComponent
     }).mount('#app');
-
-    requestAnimationFrame(() => {
-        appName.style.opacity = '1';
-    });
-};
+});
 
 
 document.addEventListener('keydown', function(event) {
