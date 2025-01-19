@@ -76,43 +76,43 @@ class UpdateOrganizersRequest extends FormRequest
         ];
     }
 
-    private function isEmptyOrNotSet($array, $key): bool 
+    private function isEmptyOrNotSet($array, $key): bool
 {
     return !isset($array[$key]) || empty($array[$key]);
 }
 
     protected function prepareForValidation()
     {
-        if (    $this->isEmptyOrNotSet($this->address, 'city') &&
+        if ($this->isEmptyOrNotSet($this->address, 'city') &&
         $this->isEmptyOrNotSet($this->address, 'country') &&
         $this->isEmptyOrNotSet($this->address, 'addressLine1')) {
             $this->request->remove('address');
         }
 
         if ($this->input('organizer')) {
-            $organizerData = $this->organizer;
+            $organizerData = [...$this->organizer];
             $links = ['website_link', 'instagram_link', 'facebook_link', 'twitter_link'];
-            
+
             $socialDomains = [
                 'instagram_link' => 'instagram.com',
                 'facebook_link' => 'facebook.com',
                 'twitter_link' => ['twitter.com', 'x.com']
             ];
-        
+
             foreach ($links as $link) {
                 $url = rtrim(trim($organizerData[$link]), '/');
                 if (empty($url)) {
                     $organizerData[$link] = null;
                     continue;
                 }
-            
+
                 $isValidStructure = fn($url) => preg_match('/^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}/', parse_url($url, PHP_URL_HOST) ?? '');
                 $normalizeUrl = fn($url) => rtrim($url, '/');
                 $getDomain = fn($url) => strtolower(parse_url($url, PHP_URL_HOST) ?? '');
-            
+
                 if (!filter_var($url, FILTER_VALIDATE_URL) || !$isValidStructure($url)) {
                     $modifiedUrl = 'https://' . preg_replace('#^(https?://)?(www\.)?#', '', $url);
-                    
+
                     if (filter_var($modifiedUrl, FILTER_VALIDATE_URL) && $isValidStructure($modifiedUrl)) {
                         $url = $modifiedUrl;
                     } else {
@@ -121,25 +121,25 @@ class UpdateOrganizersRequest extends FormRequest
                         ]);
                     }
                 }
-        
+
                 // Check for specific social media domains
                 if (isset($socialDomains[$link])) {
                     $domain = preg_replace('/^www\./', '', $getDomain($url));
                     $expectedDomains = (array)$socialDomains[$link];
-                    
+
                     if (!in_array($domain, $expectedDomains)) {
                         throw ValidationException::withMessages([
                             "organizer.{$link}.string" => ["Please provide a valid domain '$socialDomains[$link]' for your link, '$url'."]
                         ]);
                     }
                 }
-            
+
                 $organizerData[$link] = $normalizeUrl($url);
             }
-        
-            $this->request->set(
-                'organizer', $organizerData
-            );
+
+            // dd($this->organizer, $organizerData);
+            $this->merge(['organizer' => $organizerData]);
+
         }
 
     }
