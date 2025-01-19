@@ -148,7 +148,6 @@ main {
 .tab-button:active {
     box-shadow: 0px 0px 1px 1px black;    /* Thin border-like shadow */
     border-bottom: 0px solid #000;
-
 }
 
 .recent-events {
@@ -525,4 +524,8 @@ img.fslightbox-source{
    aspect-ratio: 1/1;
 }
 
-
+@media screen and (min-width: 992px) {
+    .tab-button:active {
+        box-shadow: 0px 0px 0px 0px black;    /* Thin border-like shadow */
+    }
+}

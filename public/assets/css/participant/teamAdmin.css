@@ -652,6 +652,9 @@ img.fslightbox-source{
 }
 
 @media screen and (min-width: 992px) {
+    .tab-button:active {
+        box-shadow: 0px 0px 0px 0px black;    /* Thin border-like shadow */
+    }
    
     .main1 { 
         min-height: 40vh;
