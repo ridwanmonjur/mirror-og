@@ -5,8 +5,16 @@
 }
 
 #app {
-    opacity: 0;
-    transition: opacity 2s ease;
+    animation: fadeIn 2s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 body {

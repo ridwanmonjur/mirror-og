@@ -537,14 +537,16 @@
                                     </a>
                                 </td>
                                 <td class="d-flex align-items-center colored-cell">
-                                    <img
-                                        class="rounded-circle d-inline-block object-fit-cover me-3"
-                                        src="{{ '/storage' . '/'. $team->teamBanner }}"
-                                        {!! trustedBladeHandleImageFailure() !!} 
-                                        height="40"
-                                        width="40"
-                                    > 
-                                    <span>{{$team->teamName}}</span>
+                                    <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
+                                        <img
+                                            class="rounded-circle d-inline-block object-fit-cover me-3"
+                                            src="{{ '/storage' . '/'. $team->teamBanner }}"
+                                            {!! trustedBladeHandleImageFailure() !!} 
+                                            height="40"
+                                            width="40"
+                                        > 
+                                        <span>{{$team->teamName}}</span>
+                                    </a>
                                 </td>
                                 <td style="font-size: 1.5rem;" class="colored-cell">{{$team->country_flag ? $team->country_flag : '-'}}</td>
                                 <td class="colored-cell">{{$team->members_count}}/5</td>
@@ -584,14 +586,16 @@
                                     </a>
                                 </td>
                                 <td class="d-flex align-items-center colored-cell">
-                                    <img
-                                        class="rounded-circle d-inline-block object-fit-cover me-3"
-                                        src="{{ '/storage' . '/'. $team->teamBanner }}"
-                                        {!! trustedBladeHandleImageFailure() !!} 
-                                        height="40"
-                                        width="40"
-                                    > 
-                                    <span>{{$team->teamName}}</span>
+                                    <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
+                                        <img
+                                            class="rounded-circle d-inline-block object-fit-cover me-3"
+                                            src="{{ '/storage' . '/'. $team->teamBanner }}"
+                                            {!! trustedBladeHandleImageFailure() !!} 
+                                            height="40"
+                                            width="40"
+                                        > 
+                                        <span>{{$team->teamName}}</span>
+                                    </a>
                                 </td>
                                 <td style="font-size: 1.5rem;" class="colored-cell">{{$team->country_flag ? $team->country_flag : '-'}}</td>
                                 <td class="colored-cell">{{$team->members_count}}/5</td>

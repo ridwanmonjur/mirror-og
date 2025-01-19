@@ -394,8 +394,6 @@ function AccountComponent() {
 }
 
 let appName = document.querySelector('#app');
-
-
 window.onload = () => {
     createApp({
         AccountComponent,
