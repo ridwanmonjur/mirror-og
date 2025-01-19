@@ -388,14 +388,17 @@
                                                 </a>
                                             </td>
                                             <td class="d-flex align-items-center colored-cell">
-                                                <img
-                                                    class="rounded-circle d-inline-block object-fit-cover me-3"
-                                                    src="{{ '/storage' . '/'. $team?->teamBanner }}"
-                                                    {!! trustedBladeHandleImageFailure() !!} 
-                                                    height="40"
-                                                    width="40"
-                                                > 
-                                                <span>{{$team->teamName}}</span>
+                                                <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
+
+                                                    <img
+                                                        class="rounded-circle d-inline-block object-fit-cover me-3"
+                                                        src="{{ '/storage' . '/'. $team?->teamBanner }}"
+                                                        {!! trustedBladeHandleImageFailure() !!} 
+                                                        height="40"
+                                                        width="40"
+                                                    > 
+                                                    <span>{{$team->teamName}}</span>
+                                                </a>
                                             </td>
                                             <td class="colored-cell text-start">{{$team->teamDescription}}</td>
                                             <td style="font-size: 1.5rem;" class="colored-cell">{{$team->country_flag ? $team->country_flag : '-'}}</td>
@@ -444,7 +447,7 @@
                                                 </svg>
                                             </td>
                                             
-                                            <td class="colored-cell px-2 text-start">
+                                            <td class="colored-cell px-2 text-start" onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});">
                                                 <img
                                                     class="rounded-circle d-inline-block object-fit-cover me-3"
                                                     src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"

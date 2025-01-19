@@ -630,8 +630,6 @@ async function makeRequest(url, method, data) {
 }
 
 let appName = document.querySelector('#app');
-
-
 window.onload = () => {
     createApp({
         RoomComponent,
