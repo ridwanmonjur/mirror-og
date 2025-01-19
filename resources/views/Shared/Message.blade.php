@@ -153,7 +153,7 @@
                         </div>
 
                         <div class="message-content w-75">
-                            <span v-text="message.text"></span>
+                            <span style="white-space: pre-wrap !important;" v-text="message.text"></span>
                             <span class="timestamp"
                                 v-text="humanReadableChatTimeFormat(message.createdAtDate)"></span>
                         </div>
@@ -161,7 +161,7 @@
                 </template>
             </div>
             <div class="chat-input">
-                <input type="text" placeholder="Type a message...">
+                <textarea placeholder="Enter your message here..."></textarea>
                 <button id="sendMessageBtn" v-on:click="sendMessage">
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                         class="bi bi-telegram" viewBox="0 0 16 16">

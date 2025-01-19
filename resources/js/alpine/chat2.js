@@ -22,7 +22,7 @@ const db = initializeFirestore(app, {
 
 let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-const chatInput = document.querySelector(".chat-input input");
+const chatInput = document.querySelector(".chat-input textarea");
 
 const fetchFirebaseUsersInputRoute = document.querySelector("#fetchFirebaseUsersInput");
 const viewUserProfileInput = document.querySelector("#viewUserProfile");
@@ -651,11 +651,31 @@ addOnLoad2 (() => {
         DateDividerComponent,
         ReportBlockComponent
     }).mount('#app');
+    let appName = document.getElementById('app');
+    requestAnimationFrame(() => {
+        appName.style.opacity = '1';
+    });
 });
-
+    
 
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
+        if (event.shiftKey ) {
+            event.preventDefault();
+            const cursorPosition = chatInput.selectionStart;
+            const currentValue = chatInput.value;
+            
+            chatInput.value = 
+                currentValue.substring(0, cursorPosition) + 
+                '\n' + 
+                currentValue.substring(cursorPosition);
+            
+            chatInput.selectionStart = cursorPosition + 1;
+            chatInput.selectionEnd = cursorPosition + 1;
+            chatInput.scrollTop = chatInput.scrollHeight;
+
+            return;
+        }
         document.getElementById('sendMessageBtn').click();
     }
 });

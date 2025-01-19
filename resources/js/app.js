@@ -128,21 +128,20 @@ import './libraries/tagify';
 import './libraries/tippy';
 import './libraries/file-edit';
 import './libraries/colorpicker';
+const pageMeta = document.querySelector('meta[name="page-component"]');
+const pageName = pageMeta?.getAttribute('content');
+
+if (pageName ) {
+    try {
+        import (`./alpine/${pageName}.js`);
+    } catch (error) {
+        console.error(`Failed to load component for ${pageName}:`, error);
+    }
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Check for page-specific component in meta tag
-    const pageMeta = document.querySelector('meta[name="page-component"]');
-    const pageName = pageMeta?.getAttribute('content');
-
-    if (pageName ) {
-        try {
-            await import (`./alpine/${pageName}.js`);
-            // Register the component with Alpine using the page name
-            // Alpine.data(pageName, module.default);
-        } catch (error) {
-            console.error(`Failed to load component for ${pageName}:`, error);
-        }
-    }
+    
 
     (function applyRandomColorsAndShapes() {
         const circles = document.querySelectorAll('.random-color-circle');
