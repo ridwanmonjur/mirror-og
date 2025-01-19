@@ -7,7 +7,8 @@ export default defineConfig({
             input: [
                 'resources/sass/app.scss',
                 'resources/js/app.js',
-
+                'resources/js/alpine/settings.js',
+                'resources/js/alpine/chat2.js',
             ],
             refresh: true,
         }),

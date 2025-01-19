@@ -2,10 +2,10 @@
 
 <head>
     @include('googletagmanager::head')
-    <meta name="page-component" content="chat2">
+    {{-- <meta name="page-component" content="chat2"> --}}
 
     <link rel="stylesheet" href="{{ asset('/assets/css/chat/fullpage.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/chat2.js'])
     @include('__CommonPartials.HeadIcon')
 </head>
 

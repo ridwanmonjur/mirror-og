@@ -25,6 +25,14 @@ main {
     display: block;
 }
 
+a {
+    text-decoration: none; 
+  }
+  
+a.custom-link:hover {
+    color: #43a4d7 !important;
+    font-size: large;
+}
 
 @media screen and (min-width: 600px) {
     .swiper-container {
