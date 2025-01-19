@@ -410,7 +410,10 @@ addOnLoad2 (() => {
     createApp({
         AccountComponent,
     }).mount('#app');
-
+    let appName = document.getElementById('app');
+    requestAnimationFrame(() => {
+        appName.style.opacity = '1';
+    });
 });
 
 
