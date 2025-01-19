@@ -54,10 +54,16 @@
                                 <input type="text" value="" name="teamName" id="teamName"
                                     placeholder="Team name"
                                     value="{{ old('teamName') }}"
+                                    maxlength="25"
+                                    required
+                                    oninput="if(this.value.length > 25) { toastError('Team name cannot exceed 25 characters'); this.value = this.value.substring(0, 25); }"
                                 >
                                 <input type="text" style="height: 100px;" value="" name="teamDescription"
                                     id="teamDescription" placeholder="Write your team description..."
                                     value="{{ old('teamDescription') }}"
+                                    maxlength="150"
+                                    required
+                                    oninput="if(this.value.length > 150) { toastError('Team description cannot exceed 150 characters'); this.value = this.value.substring(0, 150); }"
                                 >
                                 <br> <br>
                                 <input type="submit" onclick="" value="Create & Register">
