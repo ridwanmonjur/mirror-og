@@ -1,8 +1,7 @@
-<div class="row px-5 mb-2" id="payment-discount-view">
-    <div class="d-none d-lg-block px-3">
-    </div>
-    <div class="col-12 col-xl-8 px-3">
-        <h5 class="my-0">Payment Method</h5>
+<div class="d-flex pt-2 justify-content-center row mb-2" id="payment-discount-view">
+    
+    <div class="mt-3 px-0 mx-0 col-12 col-lg-4">
+        <h5 class="my-0 ms-2">Address</h5>
         @if (session('errorCheckout'))
             <div class="text-red my-2">
                 {{ session('errorCheckout') }}
@@ -10,12 +9,11 @@
         @endif
         {{-- <br> --}}
 
-        <div id="payment-element-view">
+        <div id="payment-element-view" class="user-select-none">
             {{-- <div class="text-center" onclick="changeScreen();"> Close </div> --}}
             <div id="cardLogoId" class="payment-element-children-view">
-                <form method="POST" onsubmit="finalizeStripeCardPayment(event);">
+                <form id="stripe-payment-form" method="POST" onsubmit="finalizeStripeCardPayment(event);">
                     <input type="hidden" name="user_id" value="{{ $event->userId }}" />
-                    <br>
                     <div id="spinner-element" class="d-flex justify-content-center mt-5">
                         <div class="spinner-border text-primary" role="status">
                             <br><br>
@@ -23,21 +21,18 @@
                             <span class="visually-hidden text-center ">Loading...</span>
                         </div>
                     </div>
-                    <div class="row w-100">
-                        <div class="col-12 col-lg-6">
+                    <div class="row mx-0 px-0 w-100 mt-2">
+                        {{-- <div class="col-12 col-lg-6"> --}}
                             <div id="address-element" class="my-2"> </div>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <div id="card-element" class="my-2"> </div>
+                        {{-- </div> --}}
+                        {{-- <div class="col-12 col-lg-6">
+                           
                             <div class="d-none d-lg-block">
 
                                 <br><br><br><br> <br><br>
                             </div>
-                            <div class="d-flex justify-content-center my-3 d-none" id="submit-button-element">
-                                <button class="oceans-gaming-default-button" type="submit"> Submit </button>
-                               
-                            </div>
-                        </div>
+                            
+                        </div> --}}
                     </div>
                 </form>
             </div>
@@ -47,7 +42,7 @@
                 <div id="express-apple-checkout-element"> </div>
             </div>
         </div>
-        <div class="me-5 pb-2 mb-2 d-none">
+        {{-- <div class="me-5 pb-2 mb-2 d-none">
             <div onclick="toggleArrows(event);"
                 class="cursor-pointer rounded-box px-3 py-2 d-flex justify-content-between" data-bs-toggle="collapse"
                 href="#card-accordion" aria-expanded="false" aria-controls="card-accordion">
@@ -135,22 +130,20 @@
                     @endforeach
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
-    <div class="col-12 col-xl-4" id="payment-summary">
-        <h4>Payment Summary</h4>
-        <br>
-        <div>
+    <div class="mt-3 d-inline-block col-12 col-lg-4  row px-0 mx-0 " id="payment-summary">
+        <h4 class="ms-2">Payment Summary</h4>
+        <div class="mt-3 mx-2">
             <div>Event Categories</div>
             <div class="ms-3">Game: <span id="paymentType">{{ $event->game?->gameTitle }}</span></div>
             <div class="ms-3">Type: <span id="paymentType">{{ $event->type?->eventType }}</span></div>
             <div class="ms-3">Tier: <span id="paymentTier">{{ $event->tier?->eventTier }}</span></div>
             <div class="ms-3">Region: <span id="paymentTier">South East Asia (SEA)</span></div>
-            <br>
             @php
 
             @endphp
-            <div class=" d-flex justify-content-between w-75">
+            <div class="mt-2 d-flex justify-content-between w-75">
                 <span>Subtotal</span>
                 <span id="subtotal">RM
                     <span class="transform-number"> {{ $fee['entryFee'] }} </span>
@@ -160,8 +153,7 @@
                 <span>Event Creation Fee Rate</span>
                 <span id="paymentRate">20%</span>
             </div>
-            <br>
-            <div class=" d-flex justify-content-between w-75">
+            <div class="mt-2 d-flex justify-content-between w-75">
                 <h5> TOTAL </h5>
                 <h5 id="paymentTotal">RM
                     @if ($fee['discountFee'] > 0)
@@ -173,14 +165,12 @@
                     @endif
                 </h5>
             </div>
-            <br>
             <div>Promo Code</div>
-            <form method="GET">
-                <div class="form-group w-75 d-flex">
-                    <input type="text" name="coupon" class="px-3 py-0"
+            <form method="GET" class="row mx-0 px-0 mb-1">
+                <div class="form-group mb-0 px-0 mx-0">
+                    <input type="text" name="coupon" class="mb-2 px-3 w-75" style="padding-top: 6px; padding-bottom: 6px;"
                         value="{{ app()->request->coupon ? app()->request->coupon : '' }}">
-                    <div class="d-inline-block px-2"></div>
-                    <button class="oceans-gaming-default-button" style="background-color: #95ADBD;">
+                    <button class="ms-2 oceans-gaming-default-button ps-3" style="background-color: #95ADBD;">
                         <span> Apply </span>
                     </button>
                 </div>
@@ -204,7 +194,7 @@
                     </div>
                 </button>
             </div> --}}
-            <div class="d-flex justify-content-center w-75">
+            {{-- <div class="d-flex justify-content-center w-75">
                 <button type="submit"
                     class="oceans-gaming-default-button-base oceans-gaming-transparent-button px-2 py-2 mt-2">
                     <a href="{{ route('event.show', $event->id) }}" class="submit-texts d-block"> Cancel </a>
@@ -212,7 +202,20 @@
                         <span class="sr-only">Loading...</span>
                     </div>
                 </button>
+            </div> --}}
+             <div id="card-element" class="mb-2 w-100 "> </div>
+             <div class="d-flex justify-content-center w-100  my-3 d-none" id="submit-button-element" style="width: 100px;">
+                <button form="stripe-payment-form" class="oceans-gaming-default-button" type="submit"> Submit </button>
+                <button type="button"
+                    class="ms-3 oceans-gaming-default-button oceans-gaming-transparent-button px-2 py-2 " style="width: 100px;">
+                    <a href="{{ route('event.show', $event->id) }}" class=" submit-texts d-block"> 
+                        Cancel 
+                    </a>
+                </button>
+        </div> 
             </div>
         </div>
+    </div>
+    <div class="d-none d-lg-block px-3 col-12 col-lg-2">
     </div>
 </div>
