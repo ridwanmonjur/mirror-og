@@ -157,8 +157,12 @@
                             {{$userProfile->name}}
                         </h5>
                         <div class="my-2"> 
-                            <span class="me-2"> </span>
-                            <span class="me-3" x-text="organizer.industry"> </span>
+                            <template x-if="organizer.industry && organizer.industry!= '">
+                                <span>
+                                    <span class="me-2"> </span>
+                                    <span class="me-3" x-text="organizer.industry"> </span>
+                                </span>
+                            </template>
                             <span class="me-1"> 
                                 🙋‍♂️
                             </span>
@@ -452,7 +456,7 @@
                     <p x-text="organizer.companyDescription">  </p>
                         
                     <p class="mt-2"> 
-                        <template x-if="organizer.industry">
+                        <template x-if="organizer.industry && organizer.industry!= '">
                             <span class="me-5" x-text="organizer.industry"></span>
                         </template>
                         <template x-if="organizer.type">
