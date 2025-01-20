@@ -70,19 +70,12 @@
                                 width="120" height="90">
                         </div>
                         <a data-fslightbox="lightbox" href="{{ $eventBannerImg }}">
-
                             <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover;"
-                                @class([' rounded-banner height-image ms-0', 'rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
+                                @class([' rounded-banner height-image ms-0 ', ' rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
                                 alt="" data-fslightbox="lightbox"
                             >
                         </a>
-                        @if ($event->eventBanner)
-                        @else
-                            <h5>
-                                Please enter a banner image.
-                            </h5>
-                            <br><br>
-                        @endif
+                       
                     </div>
                 </div>
                 <div class="grid-container-two-columns-at-desktop">
