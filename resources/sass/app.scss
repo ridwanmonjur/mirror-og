@@ -257,23 +257,5 @@ button:active:after {
   opacity: 0.7;
 }
 
-::-webkit-scrollbar {
-  width: 10px; 
-}
-
-::-webkit-scrollbar-track {
-  background: transparent; 
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.15);  
-  border-radius: 5px; 
-  border: 2px solid transparent; 
-  background-clip: content-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.6);  
-}
 
 /*! purgecss end ignore */

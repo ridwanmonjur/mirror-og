@@ -99,6 +99,7 @@ class SocialService {
 
                 // Handle activity logs for status changes
                 if ($status === 'left') {
+                    $friend?->deleteOrFail();
                     ActivityLogs::findActivityLog([
                         'subject_type' => User::class,
                         'subject_id' => [$user->id, $updateUser->id],

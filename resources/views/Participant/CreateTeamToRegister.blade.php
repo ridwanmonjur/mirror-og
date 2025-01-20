@@ -17,14 +17,12 @@
     <main>
         <input type="hidden" id="event_view_route" value="{{ route('participant.event.view', $id) }}">
         <div class="text-center h-100" id="step-0">
-            <div class="d-flex align-items-center justify-content-center w-100 h-100">
+            <div class="d-flex align-items-center justify-content-center w-100 h-75">
                 
                 <div class="text-center" id="step-0">
                     <div >
-                        <u>
-                            <h5>Create & Register Your Team</h5>
-                        </u>
-                        <br>
+                        <br><br>
+                            <h3>Create & Register Your Team</h3>
                         <p class="create-online-esports">
                             What will your team be called?
                         </p>
@@ -58,20 +56,19 @@
                                     required
                                     oninput="if(this.value.length > 25) { toastError('Team name cannot exceed 25 characters'); this.value = this.value.substring(0, 25); }"
                                 >
-                                <input type="text" style="height: 100px;" value="" name="teamDescription"
+                                {{-- <input type="text" style="height: 100px;" value="" name="teamDescription"
                                     id="teamDescription" placeholder="Write your team description..."
                                     value="{{ old('teamDescription') }}"
                                     maxlength="150"
                                     required
                                     oninput="if(this.value.length > 150) { toastError('Team description cannot exceed 150 characters'); this.value = this.value.substring(0, 150); }"
-                                >
+                                > --}}
                                 <br> <br>
                                 <input type="submit" onclick="" value="Create & Register">
 
                             </div>
                         </form>
                     </div>
-                    <br><br>
                 </div>
             </div>
         </div>

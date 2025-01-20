@@ -461,6 +461,8 @@ function updateInput(input) {
     let ogTotal = Number(input.dataset.totalAmount);
     let pending = Number(input.dataset.pendingAmount);
     let modalId = input.dataset.modalId;
+    let joinEventId = input.dataset.joineventid;
+
     let minimumRMValue = getData('paymentLower');
 
     if (!(registrationPaymentModalMap.hasOwnProperty(modalId))) {
@@ -489,7 +491,7 @@ function updateInput(input) {
     
     input.value = newValue;
     if (newValue > Number(minimumRMValue)) {
-        let paymentProceedButton = document.getElementById('paymentProceedButton');
+        let paymentProceedButton = document.querySelector(`#paymentProceedButton[data-joineventid='${joinEventId}']`);
         if (paymentProceedButton.classList.contains('btn-secondary')) {
             paymentProceedButton.classList.remove('btn-secondary');
             paymentProceedButton.classList.add('btn-primary');

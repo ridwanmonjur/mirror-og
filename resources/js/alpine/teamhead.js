@@ -28,8 +28,14 @@ Alpine.data('alpineDataComponent', () => ({
     errorMessage: errorInput?.value,
     changeFlagEmoji() {
         let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == this.country);
-        this.country_name = countryX?.name.en;
-        this.country_flag = countryX?.emoji_flag;
+        if (countryX) {
+            this.country_name = countryX?.name.en;
+            this.country_flag = countryX?.emoji_flag;
+        } else {
+            this.country_name = null;
+            this.country_flag = null;
+        }
+      
     },
     async fetchCountries() {
         if (this.isCountriesFetched) return;
@@ -41,7 +47,7 @@ Alpine.data('alpineDataComponent', () => ({
                 this.countries = data.data;
 
                 const choices2 = document.getElementById('select2-country3');
-                let countriesHtml = "<option value=''>Choose a country</option>";
+                let countriesHtml = "<option value=''>Do not display</option>";
 
                 data?.data.forEach((value) => {
                     countriesHtml += `

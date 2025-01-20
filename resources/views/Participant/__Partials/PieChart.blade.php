@@ -340,6 +340,7 @@
                                 <button 
                                     type="submit"
                                     id="paymentProceedButton"
+                                    data-joinEventId="{{ $joinEvent->id }}" 
                                     class="mt-2 btn rounded-pill text-white py-2 px-3 btn-secondary">Proceed to payment
                                     </button>
                                 <br>

@@ -352,7 +352,7 @@
                         placeholder = "Enter your company industry..."
                         class="form-control form-select border-secondary player-profile__input d-inline" 
                     >
-                        <option></option>
+                        <option value="">Do not display</option>
                         @foreach([
                             "💻 Technology",
                             "⚕️ Healthcare",
