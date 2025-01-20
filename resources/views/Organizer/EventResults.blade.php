@@ -124,7 +124,7 @@
                                                     </svg>
                                                 </td>
                                                 
-                                                <td class="coloured-cell px-2 text-start" style="width: 30%;" onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});">
+                                                <td class="coloured-cell px-2 text-start   cursor-pointer  " style="width: 30%;" onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});">
                                                     <img
                                                         class="rounded-circle d-inline-block object-fit-cover me-3"
                                                         src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"
@@ -264,7 +264,7 @@
                                                                 d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
                                                         </svg>
                                                     </td>
-                                                    <td class="coloured-cell px-2 text-start"
+                                                    <td class="coloured-cell px-2   cursor-pointer  text-start"
                                                         onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
                                                     >
                                                         <img
@@ -431,7 +431,7 @@
                                     <tbody class="accepted-member-table text-start">
                                         @foreach ($achievementsAndTeamList as $key => $joinEventAndTeam)
                                                 <tr class="st py-3">
-                                                    <td class="colorless-col text-lg-start text-center ">
+                                                    <td class="colorless-col text-lg-start text-center   cursor-pointer  ">
                                                         <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
                                                             class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
                                                             width="20" height="20" fill="currentColor"
@@ -441,7 +441,7 @@
                                                                 d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
                                                         </svg>
                                                     </td>
-                                                    <td class="coloured-cell px-2 text-start " onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});">
+                                                    <td class="coloured-cell px-2 text-start   cursor-pointer " onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});">
                                                         <img
                                                         class="rounded-circle d-inline-block object-fit-cover me-3"
                                                         src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"

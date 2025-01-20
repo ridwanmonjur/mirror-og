@@ -1,7 +1,11 @@
 @php
     $random_int = rand(0, 999);
+    $isRoleParticipant = isset($user) && $user?->role == "PARTICIPANT";
 @endphp
-<div class="position-relative opacity-parent-until-hover d-block">
+<div @class(["position-relative ", 
+        "opacity-parent-until-hover" => $isRoleParticipant, 
+        "d-block"
+    ])>
     <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
             @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
@@ -41,7 +45,11 @@
             ])
                 style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;">
-            <div class="invisible-until-hover mt-2 ms-4 position-absolute" style="top: 20px;"
+            <div @class([
+                'invisible-until-hover '  => $isRoleParticipant, 
+                'd-none '  => !$isRoleParticipant, 
+                "mt-2 ms-4 position-absolute"
+            ]) style="top: 20px;"
                 style="width: 100%; background-color: red;">
 
                 @if (!isset($joinEvent->roster[0]))

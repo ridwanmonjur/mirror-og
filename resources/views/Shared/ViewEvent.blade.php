@@ -447,7 +447,7 @@
                                                 </svg>
                                             </td>
                                             
-                                            <td class="colored-cell px-2 text-start" onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});">
+                                            <td class="colored-cell  cursor-pointer px-2 text-start" onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});">
                                                 <img
                                                     class="rounded-circle d-inline-block object-fit-cover me-3"
                                                     src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"

@@ -1,7 +1,7 @@
 @php
     $random_int = rand(0, 999);
 @endphp
-<div class="position-relative opacity-parent-until-hover d-block">
+<div class="position-relative d-block ">
 
     <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
         @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
@@ -29,7 +29,7 @@
     </div>
 
     <div @class([
-        'event mx-auto event-width cursor-pointer visible-until-hover-parent',
+        'event mx-auto event-width cursor-pointer',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
     ]) style="margin-bottom : 0;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
@@ -41,24 +41,7 @@
             ])
                 style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventBanner }}" width="100%" height="80%;">
-            <div class="invisible-until-hover mt-4 ms-4 position-absolute " style="top: 20px;"
-                style="width: 100%; background-color: red;">
-
-                @if (!isset($joinEvent->roster[0]))
-                    <span>Empty roster</span>
-                @else
-                    <ul data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
-                        onclick="goToUrl(event, this)" class="d-flex flex-column align-items-start justify-content-start">
-                        @foreach ($joinEvent->roster as $roster)
-                            <li class="list-unstyled"    
-                            >
-                                <img class="rounded-circle object-fit-cover random-color-circle me-2" width="35" height="35" src="{{$roster->user->userBanner}}" {!!trustedBladeHandleImageFailureBanner()!!}>
-                                <span>{{ $roster->user->name }}</span>
-                            </li>
-                        @endforeach
-                    </ul>
-                @endif
-            </div>
+           
         </a>
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">

@@ -1553,3 +1553,78 @@ body{
     from { opacity: 0; padding-right: 50px; }
     to { opacity: 1; padding-right: 0px; }
 }
+
+.bg-transparent {
+    background: red !important;
+}
+.grid-5-columns, .grid-4-columns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: space-between;
+}
+
+.border-2px {
+    border-width: 3px !important;
+    border-color: rgb(16, 81, 16);
+}
+
+.check-tick {
+    top: 10px; 
+    left: 90%; 
+    color: white;  
+    background-color: #179317; 
+    font-size: 0.625rem;
+}
+
+@media screen and (min-width: 400px) {
+    .grid-5-columns, .grid-4-columns {
+        grid-template-columns: repeat(3, 1fr);    
+    }
+ }
+
+@media screen and (min-width: 800px) {
+    .grid-5-columns {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .grid-4-columns {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+ }
+
+ #payment-discount-view input{
+    padding: 3px;
+ }
+
+
+ /* .border-0 {
+    outline: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+} */
+
+.accordion-button {
+    border: 1px solid black !important;
+    padding: 10px !important;
+}
+
+.accordion-item.show:first-child {
+    border-radius: 40px 40px 0 0 !important;
+}
+
+
+.accordion-item.show:last-child {
+    border-radius: 0 0 40px 40px  !important;
+}
+
+
+#card-element, #address-element, .accordion-item {max-width: 450px;}
+
+@media (min-width: 640px) {
+    .StripeElement .FormGrid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+  }

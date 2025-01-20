@@ -348,7 +348,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
                     this.connections = this.connections.map((user)=> {
                         return user.id == inputId ? {
                             ...user,
-                            logged_friendship_status: newStatus,
+                            logged_friendship_status: newStatus != 'left' ? newStatus: null,
                             logged_friendship_actor: loggedUserId 
                         } : user;
                     })

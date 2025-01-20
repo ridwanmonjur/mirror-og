@@ -484,17 +484,17 @@ class ParticipantTeamController extends Controller
                 'teamName.required' => 'Please give your team a name',
                 'teamName.max' => 'Team name cannot exceed 25 characters',
                 'teamName.string' => 'Team name must be text',
-                'teamDescription.required' => 'Please add a description for your team',
-                'teamDescription.max' => 'Team description must be less than 150 characters'
+                // 'teamDescription.required' => 'Please add a description for your team',
+                // 'teamDescription.max' => 'Team description must be less than 150 characters'
             ];
 
             $request->validate([
                 'teamName' => 'required|string|max:25',
-                'teamDescription' => 'required|max:150',
+                // 'teamDescription' => 'required|max:150',
             ], $customMessages);
             
             $team->teamName = $request->input('teamName');
-            $team->teamDescription = $request->input('teamDescription');
+            // $team->teamDescription = $request->input('teamDescription');
             $team->creator_id = $user_id;
             $team->save();
             

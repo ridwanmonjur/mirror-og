@@ -59,7 +59,7 @@
     
 >
 
-    <div class="team-head-storage d-none user-select-none "
+    <div class="team-head-storage d-none  "
         data-success-join="{{session('successJoin')}}"
         data-error-join="{{session('errorJoin')}}"
         data-route-signin="{{ route('participant.signin.view') }}"
@@ -141,7 +141,7 @@
             </label>
         </div>
         <div>
-            <div :class="{'team-info user-select-none ': !isEditMode, '': true}">
+            <div :class="{'team-info  ': !isEditMode, '': true}">
                 @if ($isCreator)
                     <div x-cloak x-show.important="isEditMode">
                         <input type="file" id="image-upload" accept="image/*" style="display: none;">
@@ -382,18 +382,21 @@
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                     </svg>
                 </div>
-                <div class="my-3" x-cloak x-show="!isEditMode">
-                    <span class="ms-2" >{{$selectTeam->teamDescription}}</span>
-                    <span class="ms-2 mt-2 fs-5">{{$selectTeam->country_flag}}</span>
-
-                </div>
+                @if ($selectTeam->teamDescription != '' || $selectTeam->country_flag != '')
+                    <div class="my-3" x-cloak x-show="!isEditMode">
+                        <span class="ms-2" >{{$selectTeam->teamDescription}}</span>
+                        <span class="ms-2 mt-2 fs-5">{{$selectTeam->country_flag}}</span>
+                    </div>
+                @endif
             @else
-                <p class="my-0 py-0">
-                    <span class="d-inline">{{$selectTeam->teamDescription}}</span>
-                    <span class="d-inline ms-2 fs-5">{{$selectTeam->country_flag}}</span>
-                </p>
+                @if ($selectTeam->teamDescription != '' || $selectTeam->country_flag != '')
+                    <p class="my-0 py-0">
+                        <span class="d-inline">{{$selectTeam->teamDescription}}</span>
+                        <span class="d-inline ms-2 fs-5">{{$selectTeam->country_flag}}</span>
+                    </p>
+                 @endif
             @endif
-            <div x-cloak x-show="!isEditMode" class="row w-75-lg-60 py-2 mb-2 user-select-none ">
+            <div x-cloak x-show="!isEditMode" class="row w-75-lg-60 py-2 mb-2  ">
                 <div class="col-12 col-lg-4 text-center mx-auto"> 
                     <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                         width="25px" height="25px" viewBox="0 0 96.979 96.979" xml:space="preserve" class="me-2"

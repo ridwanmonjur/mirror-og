@@ -41,8 +41,22 @@ Alpine.data('profileDataComponent', () => {
         isCountriesFetched: false,
         changeFlagEmoji() {
             let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == this.participant.region);
-            this.participant.region_name = countryX?.name.en;
-            this.participant.region_flag = countryX?.emoji_flag;
+            console.log({
+                countryX, region: this.participant.region
+            })
+            console.log({
+                countryX, region: this.participant.region
+            })
+            console.log({
+                countryX, region: this.participant.region
+            })
+            if (countryX) {
+                this.participant.region_name = countryX.name.en;
+                this.participant.region_flag = countryX.emoji_flag;
+            } else {
+                this.participant.region_name = null;
+                this.participant.region_flag = null;
+            }
         },
        
         restoreAfterEditMode() {
@@ -62,7 +76,7 @@ Alpine.data('profileDataComponent', () => {
                     this.countries = data.data;
                     const choices2 = document.getElementById('select2-country3');
 
-                    let countriesHtml = "<option value=''>Choose a country</option>";
+                    let countriesHtml = "<option value=''>Do not display</option>";
                     data?.data.forEach((value) => {
                         countriesHtml += `
                         <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
@@ -71,7 +85,6 @@ Alpine.data('profileDataComponent', () => {
                     if (choices2) {
                         choices2.innerHTML = countriesHtml;
                         choices2.selected = this.participant.region;
-
                     }
                 } else {
                     this.errorMessage = "Failed to get data!";
@@ -109,7 +122,7 @@ Alpine.data('profileDataComponent', () => {
 
                     localStorage.setItem('success', true);
                     localStorage.setItem('message', data.message);
-                    window.location.replace(currentUrl);
+                    window.location.reload();
 
                 } else {
                     this.errorMessage = data.message;

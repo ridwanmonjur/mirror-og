@@ -17,10 +17,11 @@
     <main>
         @include('__CommonPartials.NavbarGoToSearchPage')
 
-        <div class="text-center" id="step-0">
-            <div class="d-flex align-items-center justify-content-center ">
-                <div class="text-center" id="step-0">
+        <div class="text-center" id="step-0" >
+            <div class="d-flex align-items-center justify-content-center " >
+                <div class="text-center" id="step-0" >
                     <div class="welcome">
+                        <br><br>
                         <u>
                             <h2>Create Your Team</h2>
                         </u>
@@ -28,6 +29,7 @@
                         <p class="create-online-esports">
                             What will your team be called?
                         </p>
+                        <br><br><br>
                         <form action="{{ url('/participant/team/create') }}" method="POST">
                             @csrf
                             @if ($errors->any())
@@ -54,15 +56,15 @@
                                     oninput="if(this.value.length > 25) { toastError('Team name cannot exceed 25 characters'); this.value = this.value.substring(0, 25); }"
 
                                 >
-                                <input type="text" style="height: 100px;" value="" name="teamDescription"
+                                {{-- <input type="text" style="height: 100px;" value="" name="teamDescription"
                                     id="teamDescription" placeholder="Write your team description..."
                                     value="{{ old('teamDescription') }}"
                                     maxlength="150"
                                     required
                                     oninput="if(this.value.length > 150) { toastError('Team description cannot exceed 150 characters'); this.value = this.value.substring(0, 150); }"
 
-                                >
-                                <br> <br>
+                                {{-- > --}}
+                                <br> <br> 
                                 <input type="submit" onclick="" value="Create">
 
                             </div>

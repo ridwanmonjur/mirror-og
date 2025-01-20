@@ -6,7 +6,7 @@
     $rosterUserIds = [];
     $votes = ['totalCount' => 0, 'stayCount' => 0, 'leaveCount' => 0];
 @endphp
-<div class="position-relative opacity-parent-until-hover d-block" 
+<div class="position-relative opacity-parent-until-hover d-block " 
     id="reg-member-id-{{$joinEvent->id}}"
     data-members-value="{{json_encode($joinEvent->members)}}"
     data-event-details="{{json_encode(
@@ -15,7 +15,7 @@
     data-roster-captain-id="{{$joinEvent->captain?->team_member_id}}"
     data-follow-counts="{{$followCounts[$joinEvent->eventDetails->user_id]}}"
 >
-    <div class="position-absolute d-flex w-100 justify-content-center" style="top: -40px; ">
+    <div class="position-absolute d-flex w-100 justify-content-center " style="top: -40px; ">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
             @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
                 <ul class="achievement-list my-0 py-2 px-4 z-99">
@@ -43,7 +43,7 @@
     </div>
 
     <div @class([
-        'event w-100 mx-auto event-width cursor-pointer visible-until-hover-parent',
+        'event w-100 mx-auto event-width cursor-pointer visible-until-hover-parent  ',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
     ]) style="margin-bottom : 0; ">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
@@ -54,11 +54,11 @@
                 style="border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 270px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;"
                 >
-            <div class="pt-3 mt-2 position-absolute" 
+            <div class="pt-3 mt-2 position-absolute custom-scrollbar " 
                 style="width: 100%; 
                     {{-- background-color: red;  --}}
                     top: 0px; 
-                    overflow-y: scroll; 
+                    overflow-y: auto; 
                     overflow-x: hidden;
                     height: 250px;
                 ">

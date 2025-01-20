@@ -56,7 +56,7 @@ class PaymentProcessor {
 
 let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const hiddenElement = document.getElementById('hidden-variables');
-    const hiddenVars = {
+    const hiddenVars = hiddenElement? {
         finalFee: hiddenElement.dataset.feeFinal,
         userEmail: hiddenElement.dataset.userEmail,
         userName: hiddenElement.dataset.userName,
@@ -66,7 +66,7 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
         stripeReturnUrl: hiddenElement.dataset.stripeReturnUrl,
         stripeIntentUrl: hiddenElement.dataset.stripeIntentUrl
 
-    };
+    } : {};
 
     document.querySelectorAll('.transform-number').forEach((element) => {
         let text = element.textContent;
@@ -196,6 +196,10 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
             const json = await response.json();
             let spinner = document.getElementById('spinner-element');
             spinner?.remove();
+            setTimeout(() => {
+                let paymentContainer = document.getElementById('card-element');
+                paymentContainer.classList.remove('d-none');
+            }, 1000); 
             const clientSecret = json.data.client_secret;
             elements = stripe.elements({
                 clientSecret,
@@ -276,15 +280,15 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
 
     let stripe = Stripe(hiddenVars['stripeKey'])
     const appearance = {
-        theme: 'flat',
+
+        theme: 'stripe',
         variables: {
             colorText: '#30313d',
             colorDanger: '#df1b41',
-            fontFamily: 'Ideal Sans, system-ui, sans-serif',
             borderRadius: '0px',
             colorPrimary: 'black',
-            colorBackground: '#ffffff',
-            borderRadius: '20px'
+            colorBackground: 'transparent',
+            borderRadius: '20px',
         },
         rules: {
             '.Input, .Block': {
@@ -295,7 +299,12 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
         }
     };
     let paymentElementOptions = {
-        type: 'accordion',
+        type: 'tab',
+        style: {
+            base: {
+              backgroundColor: 'transparent',
+            }
+        },
     };
     let addressElementOptions = {
         mode: 'billing',
@@ -303,6 +312,34 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
         fields: {
             phone: 'always',
         },
+        defaultValues: {
+            address: {
+              state: 'Kuala Lumpur',
+              country: 'MY',
+            },
+          },
     };
 
     initializeStripeCardPayment();
+
+    const paymentAccordion = document.getElementById('paymentAccordion');
+
+    paymentAccordion.addEventListener('shown.bs.collapse', function(e) {
+        // Get the clicked accordion button
+        const clickedButton = e.target;
+        
+        // Check which accordion item was clicked by its ID
+        if (clickedButton.id === 'paymentCollapse') {
+            // If payment section (2nd accordion), scroll to bottom
+            window.scrollTo({
+                top: document.documentElement.scrollHeight,
+                behavior: 'smooth'
+            });
+        } else if (clickedButton.id === 'addressCollapse') {
+            // If address section (1st accordion), scroll to top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    });

@@ -107,10 +107,6 @@ class OrganizerController extends Controller
     private function viewProfile(Request $request, $logged_user_id, $userProfile, $isOwnProfile = true)
     {
         try {
-            [
-                'teamList' => $teamList,
-                'teamIdList' => $teamIdList,
-            ] = Team::getUserTeamList($userProfile->id);
 
             $followersCount = OrganizerFollow::where('organizer_user_id', $userProfile->id)->count();
             $joinEvents = EventDetail::where('user_id', $userProfile->id)
