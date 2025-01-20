@@ -1,7 +1,7 @@
 <div class="row px-5 mb-2" id="payment-discount-view">
     <div class="d-none d-lg-block px-3">
     </div>
-    <div class="col-12 col-xl-6 px-3">
+    <div class="col-12 col-xl-8 px-3">
         <h5 class="my-0">Payment Method</h5>
         @if (session('errorCheckout'))
             <div class="text-red my-2">
@@ -16,57 +16,26 @@
                 <form method="POST" onsubmit="finalizeStripeCardPayment(event);">
                     <input type="hidden" name="user_id" value="{{ $event->userId }}" />
                     <br>
-
-                    <div class="row w-100 mx-0 px-0">
-                        <div class="accordion accordion-flush mx-0 px-0 bg-transparent " id="paymentAccordion">
-                            <!-- Payment Section -->
-                            <div class="accordion-item bg-transparent   ">
-                                <h2 class="accordion-header" id="paymentHeader">
-                                    <h3 class="accordion-button bg-transparent  accordion-button  mb-0 rounded-pill  
-                                        zcollapsed 
-                                         bg-transparent collapsed"
-                                        type="button" data-bs-toggle="collapse" data-bs-target="#paymentCollapse">
-                                        Payment Details <span class="text-danger ms-1">*</span>
-                                    </h3>
-                                </h2>
-                                <div id="paymentCollapse" class="accordion-collapse bg-transparent border-0 collapse show"
-                                    data-bs-parent="#paymentAccordion">
-                                    <div class="accordion-body my-0 border-0 mx-0 px-0">
-                                        <div id="spinner-element" class="d-flex justify-content-center my-5">
-                                            <div class="spinner-border text-primary" role="status">
-                                                <span class="visually-hidden text-center ">Loading...</span>
-
-                                            </div>
-                                        </div>
-                                        <div id="card-element" class="my-0 mx-0 px-0 border-0 bg-transparent  d-none form-control"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Address Section -->
-                            <div class="accordion-item accordion-flush bg-transparent">
-                                <h2 class="accordion-header bg-transparent" id="addressHeader">
-                                    <h3 class="accordion-button  bg-transparent
-                                        accordion-button  rounded-pill  
-                                        zcollapsed 
-                                         bg-transparent
-                                        collapsed"
-                                        type="button" data-bs-toggle="collapse" data-bs-target="#addressCollapse">
-                                        Shipping Address <span class="text-danger ms-1">*</span>
-                                    </h3>
-                                </h2>
-                                <div id="addressCollapse" class="accordion-collapse collapse "
-                                    data-bs-parent="#paymentAccordion">
-                                    <div class="accordion-body">
-                                        <div id="address-element" class="my-2"></div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div id="spinner-element" class="d-flex justify-content-center mt-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <br><br>
+                            <br><br>
+                            <span class="visually-hidden text-center ">Loading...</span>
                         </div>
-                        <div class="col-12">
+                    </div>
+                    <div class="row w-100">
+                        <div class="col-12 col-lg-6">
+                            <div id="address-element" class="my-2"> </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div id="card-element" class="my-2"> </div>
+                            <div class="d-none d-lg-block">
+
+                                <br><br><br><br> <br><br>
+                            </div>
                             <div class="d-flex justify-content-center my-3 d-none" id="submit-button-element">
                                 <button class="oceans-gaming-default-button" type="submit"> Submit </button>
-
+                               
                             </div>
                         </div>
                     </div>
@@ -168,7 +137,7 @@
             </div>
         </div>
     </div>
-    <div class="col-12 col-xl-6" id="payment-summary">
+    <div class="col-12 col-xl-4" id="payment-summary">
         <h4>Payment Summary</h4>
         <br>
         <div>
