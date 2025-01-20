@@ -15,11 +15,15 @@
             data-stripe-intent-url="{{ route('stripe.stripeCardIntentCreate') }}"
             data-stripe-return-url="{{ route('organizer.checkout.transition', ['id' => $event->id]) }}">
         </div>
-        <br><br><br>
+        <br>
         @include('Organizer.__CheckoutPartials.CheckoutPaymentOptions', ['event' => $event])
-        <br><br>
     </main>
 
     @include('Organizer.__CheckoutPartials.CheckoutScripts', ['fee' => $fee, 'event' => $event])
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="{{ asset('/assets/js/organizer/event_creation/event_create.js') }}"></script>
+
+    <script src="{{ asset('/assets/js/organizer/CheckoutScripts.js') }}"></script>
     
+
 </body>

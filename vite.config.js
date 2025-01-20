@@ -36,7 +36,11 @@ export default defineConfig({
             // },
             output: {
                 manualChunks(id) {
-                    if (id.includes('intl-tel-input') || id.includes('sweetalert2') || id.includes('bootstrap') || id.includes('colorpicker')) {
+                    if (id.includes('intl-tel-input') || id.includes('stripe') || id.includes('colorpicker')) {
+                        return 'extra-ui';
+                    }
+
+                    if (id.includes('sweetalert2') || id.includes('bootstrap') ) {
                         return 'core-ui';
                     }
                     if (id.includes('firebase')) {
