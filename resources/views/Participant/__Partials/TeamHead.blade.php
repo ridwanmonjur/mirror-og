@@ -405,7 +405,7 @@
                     </svg>
                     <span>{{$acceptedTeamMemberCount}}/{{$leftPlusAcceptedTeamMemberCount}} Members </span>
                 </div>
-                <div onclick="openModal('followers')" class="position-relative col-12 col-lg-4 text-center mx-auto cursor-pointer"
+                <div onclick="openModal('followers')" class="user-select-none position-relative col-12 col-lg-4 text-center mx-auto cursor-pointer"
                     style="z-index: 998 !important; "
                 > 
                     <span class="me-2"> 🙋‍♂️ </span>

@@ -61,8 +61,6 @@ class ParticipantTeamController extends Controller
             ])->first();
         // dd($selectTeam);
         if ($selectTeam) {
-            $awardList = $selectTeam->getAwardListByTeam();
-            $achievementList = $selectTeam->getAchievementListByTeam();
             $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
             $joinEvents = JoinEvent::getJoinEventsForTeamWithEventsRosterResults($selectTeam->id);
             $totalEventsCount = $joinEvents->count();
@@ -71,11 +69,8 @@ class ParticipantTeamController extends Controller
 
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
             $followCounts = OrganizerFollow::getFollowCounts($userIds);
-            if ($user_id) {
-                $isFollowing = OrganizerFollow::getIsFollowing($user_id, $userIds);
-            } else {
-                $isFollowing = [];
-            }
+            $isFollowing = $user_id ? 
+                OrganizerFollow::getIsFollowing($user_id, $userIds): [];
 
             $joinEventsHistory = $joinEventsActive = $values = [];
             ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
@@ -96,8 +91,6 @@ class ParticipantTeamController extends Controller
                     'totalEventsCount',
                     'wins',
                     'streak',
-                    'awardList',
-                    'achievementList'
                 )
             );
         }

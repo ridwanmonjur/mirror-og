@@ -162,12 +162,10 @@ class ParticipantController extends Controller
             ] = Team::getUserTeamList($userProfile->id);
             $pastTeam = Team::getUserPastTeamList($userProfile->id);
 
-            $awardList = Team::getAwardListByTeamIdList($teamIdList);
-            $achievementList = Team::getAchievementListByTeamIdList($teamIdList);
             $joinEvents = JoinEvent::getJoinEventsForTeamListWithEventsRosterResults($teamIdList);
             $totalEventsCount = $joinEvents->count();
             ['wins' => $wins, 'streak' => $streak] =
-                JoinEvent::getJoinEventsWinCountForTeamList($teamIdList);
+                JoinEvent::getPlayerJoinEventsWinCountForTeamList($teamIdList,  $userProfile->id);
 
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
             $followCounts = OrganizerFollow::getFollowCounts($userIds);
@@ -199,8 +197,6 @@ class ParticipantController extends Controller
                     'totalEventsCount',
                     'wins',
                     'streak',
-                    'awardList',
-                    'achievementList',
                     'pastTeam',
                     'friend',
                     'isFollowingParticipant'

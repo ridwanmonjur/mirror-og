@@ -8,7 +8,6 @@
     <title>Tournament Matches</title>
     <meta name="page-component" content="bracket">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/viewEvent.css') }}">
-
     @vite([ 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/bracket.js'])
     @include('__CommonPartials.HeadIcon')
 

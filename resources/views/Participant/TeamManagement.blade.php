@@ -71,58 +71,22 @@
                 @endif
             </div>
 
-            <div class="row px-4">
+            <div class="row px-4 mt-4">
                 <div class="showcase col-12 col-lg-6">
                     <div><b>Showcase</b></div>
                     <br>
                     <div class="showcase-box d-none-until-hover-parent row">
-                        <div @class([
-                            "col-6",
-                            "col-12" => isset($awardList[2])
-                        ])>
+                        <div class="col-12">
                             <p>Events Joined: {{ $totalEventsCount }}</p>
                             <p>Wins: {{ $wins }}</p>
                             <p>Win Streak: {{ $streak }}</p>
-                        </div>
-                        <div @class([
-                            "col-6",
-                            "col-12" => isset($awardList[2])
-                        ])>
-                            <div class="d-flex justify-content-between">
-                                @foreach ($awardList as $award)
-                                    <div>
-                                        <img src="{{ '/' . 'storage/' . $award->awards_image }} " width="100" height="100" alt="Trophy" class="me-2">
-                                    </div>
-                                @endforeach
-                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="achievements col-12 col-lg-6">
-                    <div><b>Achievements</b></div><br>
-                    @if (!isset($achievementList[0]))
-                        <ul class="achievement-list mt-4">
-                            <p>No achievements available</p>
-                        </ul>
-                    @else
-                        <ul class="achievement-list">
-                            @foreach ($achievementList as $achievement)
-                                <li>
-                                    <span class="additional-text d-flex justify-content-between">
-                                        <span>
-                                        {{ $achievement->title }} ({{ \Carbon\Carbon::parse($achievement->created_at)->format('Y') }})
-                                        </span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                        <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
-                                        </svg>
-                                    </span><br>
-                                    <span class="ps-2"> {{ $achievement->description }} </span>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
+                    <div class="ms-2"><b>Positions</b></div><br>
+                    
                     </ul>
                 </div>
             </div>
