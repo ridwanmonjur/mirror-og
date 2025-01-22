@@ -8,6 +8,7 @@ use App\Http\Requests\User\LikeRequest;
 use App\Http\Requests\User\UpdateParticipantsRequest;
 use App\Models\ActivityLogs;
 use App\Models\EventInvitation;
+use App\Models\EventJoinResults;
 use App\Models\Friend;
 use App\Models\JoinEvent;
 use App\Models\Like;
@@ -183,6 +184,7 @@ class ParticipantController extends Controller
                 = JoinEvent::processEvents($joinEvents, $isFollowingOrganizerList);
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
+            $joinEventAndTeamList = EventJoinResults::getEventJoinListResults($joinEventIds);
 
             return view(
                 'Participant.PlayerProfile',
@@ -197,6 +199,7 @@ class ParticipantController extends Controller
                     'totalEventsCount',
                     'wins',
                     'streak',
+                    'joinEventAndTeamList',
                     'pastTeam',
                     'friend',
                     'isFollowingParticipant'

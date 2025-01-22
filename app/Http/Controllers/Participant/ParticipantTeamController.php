@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Team\UpdateTeamRequest;
+use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\OrganizerFollow;
 use App\Models\Team;
@@ -78,6 +79,7 @@ class ParticipantTeamController extends Controller
             // dd($joinEvents, $activeEvents, $historyEvents);
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
+            $joinEventAndTeamList = EventJoinResults::getEventJoinListResults($joinEventIds);
 
             return view(
                 'Participant.TeamManagement',
@@ -88,6 +90,7 @@ class ParticipantTeamController extends Controller
                     'joinEventsHistory',
                     'joinEventsActive',
                     'followCounts',
+                    'joinEventAndTeamList',
                     'totalEventsCount',
                     'wins',
                     'streak',

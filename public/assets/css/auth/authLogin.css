@@ -98,7 +98,6 @@ form input::placeholder {
     color: #bfbfbf;
 }
 
-input:-webkit-autofill:placeholder {}
 
 input:-webkit-autofill {
     transition: background-color 5000s ease-in-out 0s;

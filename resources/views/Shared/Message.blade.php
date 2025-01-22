@@ -31,7 +31,7 @@
                     </svg>
                 </button>
             </div>
-            <div class="room-list user-select-none ">
+            <div class="room-list user-select-none custom-scrollbar">
                 <div v-for="(room, key) in oldRooms" v-bind:key="room.id" v-bind:data-identity-for-read="room.id"
                     v-on:click="setCurrentRoom(key)"
                     v-bind:class="{'chat-item': true, 'bg-primary' : currentRoomObj?.id == room?.id }">
@@ -75,14 +75,14 @@
         <div id="chat-component" v-scope="ChatListComponent()"
             class="chat-container position-relative col-12 d-flex col-lg-7 col-xl-8 m-0 p-0" style="overflow: hidden;">
             <div class="chat-header w-100">
-                <h2 class="chat-user-name my-0">
+                <h2 class="chat-user-name py-0 my-0">
                     <span v-show="currentRoomObj?.otherRoomMember?.name != null">
                         <img v-if="currentRoomObj?.otherRoomMember?.userBanner != null" {!! trustedBladeHandleImageFailure() !!}
-                            v-bind:src="'/storage/' + currentRoomObj?.otherRoomMember?.userBanner" width="50"
-                            height="50" class="object-fit-cover rounded-circle me-3">
+                            v-bind:src="'/storage/' + currentRoomObj?.otherRoomMember?.userBanner" width="40"
+                            height="40" class="object-fit-cover rounded-circle me-3">
                         <span v-else
                             class="avatar d-inline-flex justify-content-center align-items-center rounded-circle me-3"
-                            style="width: 50px; height: 50px;"
+                            style="width: 40px; height: 40px;"
                             v-text="currentRoomObj?.otherRoomMember?.name ? currentRoomObj.otherRoomMember?.name?.charAt(0)?.toUpperCase(): '-'">
                         </span>
                     </span>

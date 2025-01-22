@@ -408,7 +408,11 @@
                 <div onclick="openModal('followers')" class="user-select-none position-relative col-12 col-lg-4 text-center mx-auto cursor-pointer"
                     style="z-index: 998 !important; "
                 > 
-                    <span class="me-2"> 🙋‍♂️ </span>
+                    <span class="me-2"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                        </svg>
+                    </span>
                     <span data-follower-stats="{{ is_null($selectTeam?->profile?->follower_count) ? 0 : $selectTeam->profile->follower_count}}" >{{ is_null($selectTeam?->profile?->follower_count) ? 0 . ' Followers'  : $selectTeam->profile->follower_count. ' Follower'. bladePluralPrefix($selectTeam->profile->follower_count) }} </span>
                 </div>
                 <div class="col-12 col-lg-4 text-center mx-auto"> 

@@ -21,7 +21,7 @@ class EventMatchService {
     }
 
     public function generateBrackets(EventDetail $event, 
-        bool $isOrganizer, 
+        bool $willFixBracketsAsOrganizer, 
         JoinEvent $existingJoint = null,
     ): array {
        
@@ -67,17 +67,17 @@ class EventMatchService {
             $tournamentTypeFinal = $valuesMap[$tournamentType];
             $bracketList = $this->bracketDataService->produceBrackets(
                 $matchesUpperCount, 
-                $isOrganizer,
+                $willFixBracketsAsOrganizer,
                 $USER_ENUMS
             )[$tournamentTypeFinal];
             // dd($bracketList);
             $bracketList = $event->matches->reduce(function ($bracketList, $match) use (
                     $existingJoint, 
-                    $isOrganizer,
+                    $willFixBracketsAsOrganizer,
                     $USER_ENUMS,
                 ) {
                 $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
-                $user_level = $isOrganizer ? $USER_ENUMS['IS_ORGANIZER'] : null;
+                $user_level = $willFixBracketsAsOrganizer ? $USER_ENUMS['IS_ORGANIZER'] : null;
                 
                 if ($existingJoint) {
                     if ($match->team1_id === $existingJoint->team_id) { $user_level = $USER_ENUMS['IS_TEAM1']; }

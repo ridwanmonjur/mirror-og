@@ -10,7 +10,9 @@ body {
     justify-content: center;
     align-items: center;
     height: min-content;
-    background-image: url('/assets/images/chat/signinbg.png');
+    /* background-image: url('/assets/images/chat/signinbg.png'); */
+    background: #a5c0d4 !important;
+
     background-attachment: fixed;
     background-repeat: no-repeat;
 }

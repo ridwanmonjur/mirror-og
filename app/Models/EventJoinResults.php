@@ -35,4 +35,25 @@ class EventJoinResults extends Model
                 'event_join_results.position',
             )->get();
     }
+
+    public static function getEventJoinListResults(array $idList): Collection
+    {
+        return DB::table('join_events')
+            ->whereIn('join_events.id',  $idList)
+            ->join('event_details', 'join_events.event_details_id', '=', 'event_details.id')
+            // ->where('join_status', 'confirmed')
+            ->leftJoin('teams', 'join_events.team_id', '=', 'teams.id')
+            ->leftJoin('event_join_results', 'join_events.id', '=', 'event_join_results.join_events_id')
+            ->whereNotNull('event_join_results.position')
+            ->select(
+                'join_events.join_status',
+                'join_events.id as id1',
+                'join_events.event_details_id',
+                'join_events.team_id',
+                'teams.*',
+                'event_details.id',
+                'event_details.eventName',
+                'event_join_results.position',
+            )->get();
+    }
 }
