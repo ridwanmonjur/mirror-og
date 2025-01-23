@@ -310,14 +310,17 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
         mode: 'billing',
         blockPoBox: true,
         fields: {
-            phone: 'always',
+            phone: 'never',
         },
         defaultValues: {
             address: {
               state: 'Kuala Lumpur',
+              line1: '',
+              line2: '',
+              postal_code: '',
               country: 'MY',
             },
-          },
+        },
     };
 
     initializeStripeCardPayment();
