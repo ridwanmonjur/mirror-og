@@ -3,23 +3,8 @@
 
 // Poppins Font Face Declarations
 
-@keyframes fade {
-  0% {
-    opacity: 0;
-  }
+@view-transition { navigation: auto; } 
 
-  95% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-body {
-  // animation: fade 0.2s linear forwards;
-}
 
 .nav-link:hover {
   color: #43A4D7 !important;
@@ -36,7 +21,7 @@ body {
 @font-face {
   font-family: 'Poppins';
   src: url('https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLGT9Z1xlFQ.woff2') format('woff2');
-  font-weight: 500;
+  font-weight: 400;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
@@ -61,7 +46,7 @@ body {
 @font-face {
   font-family: 'Nunito';
   src: url('https://fonts.gstatic.com/s/nunito/v25/XRXV3I6Li01BKofINeaBXso.woff2') format('woff2');
-  font-weight: 500;
+  font-weight: 400;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
@@ -268,6 +253,11 @@ button:after {
   transform: scale(10, 10);
   opacity: 0;
   transition: transform .5s, opacity 1s
+}
+
+u {
+  font-weight: 600 !important;
+  text-decoration: none !important;
 }
 
 button:active:after {

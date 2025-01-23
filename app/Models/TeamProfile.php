@@ -25,15 +25,13 @@ class TeamProfile extends Model
     {
         $backgroundStyles = $fontStyles = $frameStyles = '';
 
+        $backgroundStyles = "background-color: #e5e7eb;"; // Default gray
+
         if (isset($this->backgroundBanner)) {
             $backgroundStyles = "background-image: url('/storage/{$this->backgroundBanner}');";
-        }
-
-        if (isset($this->backgroundColor)) {
+        } elseif (isset($this->backgroundColor)) {
             $backgroundStyles = "background-color: {$this->backgroundColor};";
-        }
-
-        if (isset($this->backgroundGradient)) {
+        } elseif (isset($this->backgroundGradient)) {
             $backgroundStyles = "background-image: {$this->backgroundGradient};";
         }
 
