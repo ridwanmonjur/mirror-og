@@ -9,6 +9,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/alpine/settings.js',
                 'resources/js/alpine/chat2.js',
+                'resources/js/alpine/teamhead2.js',
             ],
             refresh: true,
         }),

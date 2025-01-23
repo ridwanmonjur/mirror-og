@@ -561,9 +561,6 @@ function ReportBlockComponent () {
         },
 
         toggleWillShowReports() {
-            console.log("zzzzz");
-            console.log("zzzzz");
-            console.log("zzzzz");
             this.willShowReports = !this.willShowReports;
         },
 
@@ -583,23 +580,12 @@ function ReportBlockComponent () {
         },
 
         mounted() {
-            console.log("zzzz");
-            console.log("zzzz");
-            console.log("zzzz");
             window.addEventListener('report-selected', async (event) => {
-                console.log("zzzz");
-                console.log("zzzz");
-                console.log("tttt");
-                console.log("tttt");
                 let element = document.getElementById('reportUserModal')
                 let modal = new window.bootstrap.Modal(element);
                 modal.show();
                 this.user = event.detail;
                 await this.fetchReports();
-                console.log({user: this.user});
-                console.log({user: this.user});
-                console.log({user: this.user});
-                console.log({user: this.user});
             });
         }
     }
