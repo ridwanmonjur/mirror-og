@@ -382,11 +382,11 @@
                 @if (!isset($joinEvents[0]))
                     <p>No events available!</p>
                 @else
-                    <button class="carousel-button position-absolute z-999" style="top: 100px; left: 20px;"
+                    <button class="carousel-button position-absolute " style=" left: 20px;"
                         onclick="carouselWork(-2)">
                         &lt;
                     </button>
-                    <button class="carousel-button position-absolute z-999" style="top: 100px; right: 20px;"
+                    <button class="carousel-button position-absolute " style="right: 30px;"
                         onclick="carouselWork(2)">
                         &gt;
                     </button>
@@ -396,7 +396,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Participant.__Partials.RosterView',  ['isRegistrationView' => false])
+                            @include('Participant.__Partials.RosterView')
                         @endforeach
                     </div>
                 @endif
@@ -499,7 +499,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
+                        @include('Participant.__Partials.RosterView')
                         <br><br>
                     @endforeach
                 </div>
@@ -515,7 +515,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
-                        @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
+                        @include('Participant.__Partials.RosterView')
                         <br><br>
                     @endforeach
                 </div>

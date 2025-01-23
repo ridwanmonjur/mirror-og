@@ -274,15 +274,15 @@
                 @if (!isset($joinEvents[0]))
                     <p>No events available!</p>
                 @else
-                    <button @class(["carousel-button position-absolute z-999",
+                    <button @class(["carousel-button position-absolute",
                        "carousel-button-disabled"  => empty($joinEvents[2])
-                    ]) style="top: 100px; left: 20px;"
+                    ]) style="left: 20px;"
                         onclick="carouselWork(-2)">
                         &lt;
                     </button>
-                    <button @class(["carousel-button position-absolute z-999",
+                    <button @class(["carousel-button position-absolute",
                        "carousel-button-disabled"  => empty($joinEvents[2])
-                    ]) style="top: 100px; right: 20px;"
+                    ]) style="right: 30px;"
                         onclick="carouselWork(2)">
                         &gt;
                     </button>
@@ -292,7 +292,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Organizer.__Partials.RosterView',  ['isRegistrationView' => false])
+                            @include('Organizer.__Partials.RosterView')
                         @endforeach
                     </div>
                  
@@ -313,7 +313,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                            @include('Organizer.__Partials.RosterView', ['isRegistrationView' => false])
+                        @include('Organizer.__Partials.RosterView')
                         <br><br>
                     @endforeach
                 </div>
@@ -329,7 +329,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)                        
-                            @include('Organizer.__Partials.RosterView', ['isRegistrationView' => false])
+                        @include('Organizer.__Partials.RosterView')
                         <br><br>
                     @endforeach
                 </div>
