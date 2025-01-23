@@ -56,8 +56,9 @@
                     @foreach ($contactOptions as $key => $option)
                         <div @class([
                                 "col-md-6 col-lg-4 mb-3 mx-0 mx-lg-3"
-                             
-                            ]) >
+                            ]) 
+                            style="view-transition-name: contact-{{ $key }};" 
+                            >
                             <div class="bg-white shadow p-4 mx-auto text-center h-100"
                                 style="border-radius: 30px; max-width: min(80%, 400px;)">
                                 <h2 class="fs-3 pt-4 pb-3 mb-3">
@@ -69,6 +70,7 @@
                                     {!! $option['description'] !!}
                                 </p>
                                 <a href="mailto:{{ $option['email'] }}"
+                                    style="view-transition-name: link-{{ $key }}"
                                     class="btn mt-2 mb-4 {{ $option['btnClass'] }} text-white rounded-pill px-4 py-2">
                                     {{ $option['email'] }}
                                 </a>

@@ -1,8 +1,9 @@
 @include('Auth.Layout.HeadTag')
 
 @section('signUpbody')
-
-<img class="mt-4 mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
+<a href="{{route('public.landing.view')}}">
+    <img class="mt-4 mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
+</a>
 <header><u>Forgotten Password?</u></header>
 <br>
 <p> Enter your email to reset your password</p>

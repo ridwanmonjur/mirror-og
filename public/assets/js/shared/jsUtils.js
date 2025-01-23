@@ -155,7 +155,6 @@ function openTab(evt, activeName, specialElementHeightId = null) {
     
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.opacity = "0";
         tabcontent[i].style.display = "none";
 
     }
@@ -171,20 +170,7 @@ function openTab(evt, activeName, specialElementHeightId = null) {
     activeElement.style.display = "block";
     evt.currentTarget.className += " active";
     
-    activeElement.style.transition = "opacity 0.5s ease-in-out";
-    setTimeout(() => {
-        activeElement.style.opacity = "1";
-    }, 10);
-    
-    if (specialElementHeightId) {
-        let bracketList = document.getElementById(specialElementHeightId);
-        let bracketListHeight = bracketList.getBoundingClientRect().height;
-        let main = document.querySelector('main');
-        if (main) {
-            main.style.transition = "height 0.5s ease-in-out";
-            main.style.height = bodyHeight3 + bracketListHeight + 'px';
-        }
-    }
+   
 }
 
 function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
@@ -192,17 +178,12 @@ function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
     const tabContents = document.querySelectorAll(`.tab-content.${extraClassNameToFilter}`);
     tabContents.forEach(content => {
         content.classList.add("d-none");
-        content.style.opacity = "0";
     });
 
     const selectedTab = document.getElementById(tabName);
     if (selectedTab) {
         selectedTab.classList.remove('d-none');
         
-        setTimeout(() => {
-            selectedTab.style.transition = "opacity 0.5s ease-in-out";
-            selectedTab.style.opacity = "1";
-        }, 10);
     }
 
     const tabButtons = document.querySelectorAll(`.tab-button-active.${extraClassNameToFilter}`);

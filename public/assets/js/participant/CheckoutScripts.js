@@ -352,6 +352,15 @@ class PaymentProcessor {
         fields: {
             phone: 'never',
         },
+        defaultValues: {
+            address: {
+              state: 'Kuala Lumpur',
+              line1: '',
+              line2: '',
+              postal_code: '',
+              country: 'MY',
+            },
+        },
     };
 
     initializeStripeCardPayment();

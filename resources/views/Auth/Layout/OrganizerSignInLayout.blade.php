@@ -9,7 +9,9 @@
     class="d-none"
 >
 </div>
-<img class="mt-4 mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
+<a href="{{route('public.landing.view')}}">
+    <img class="mt-4 mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
+</a>
 <h5 class="mt-2 mb-0">Sign in to your <span class="text-primary">organizer account</span></h5>
 <form 
     autocomplete="off" 

@@ -150,12 +150,13 @@ a.custom-link:hover {
 
 }
 
-.tab-button:hover, .tab-button-active {
+.tab-button:hover, .tab-button-active, .tab-button:active {
     border-bottom: 2px solid #000;
 }
-.tab-button:active {
-    box-shadow: 0px 0px 1px 1px black;    /* Thin border-like shadow */
-    border-bottom: 0px solid #000;
+
+.tab-button:after {
+    animation: none !important;
+    transition: none !important;
 }
 
 .recent-events {

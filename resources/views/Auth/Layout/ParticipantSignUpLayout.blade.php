@@ -2,7 +2,9 @@
 
 
 @section('signUpbody')
-    <img class="mt-4  mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
+    <a href="{{route('public.landing.view')}}">
+        <img class="mt-4  mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
+    </a>
     <h5 class="px-2">Create a <span class="text-primary">participant account</span></h5>
     <form autocomplete="off" readonly name="signup-form" id="signup-form" method="post"
         action="{{ route('participant.signup.action') }}"

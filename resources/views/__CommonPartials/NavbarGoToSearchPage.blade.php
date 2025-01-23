@@ -72,7 +72,7 @@
         @endauth
     </div>
 </nav>
-<nav class="mobile-navbar d-centered-at-mobile d-none py-3" id="mobile-navbar">
+<nav class="mobile-navbar d-centered-at-mobile align-items-center d-none py-3" id="mobile-navbar">
     <div class="search-bar search-bar-mobile ">
         <input
             type="text" name="search" id="search-bar-mobile"

@@ -15,6 +15,8 @@
     type="font/woff2" 
     crossorigin
 >
+<meta name="view-transition" content="same-origin" />
+
 <link rel="icon" type="image/svg+xml" href="{{ asset('assets/images/favicon/favicon.svg') }}">
 <link rel="shortcut icon" href="{{ asset('assets/images/favicon/favicon.ico') }}">
 <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/favicon/apple-touch-icon.png') }}">
