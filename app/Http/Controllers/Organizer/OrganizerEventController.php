@@ -183,7 +183,7 @@ class OrganizerEventController extends Controller
     
             $bracketData = $this->eventMatchService->generateBrackets(
                 $event,
-                $user->id === $event->user_id, 
+                false, 
                 $existingJoint,
             );
 

@@ -17,22 +17,20 @@
     @include('__CommonPartials.NavbarGoToSearchPage')
     <br>
     <main>
-        <h5> Your Teams 
-        <a href="{{route('participant.team.create')}}" 
-            class="d-inline-flex ms-4 px-3 text-light btn-pill btn btn-primary btn-sm"
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
-                class="mt-1 me-2"
-                viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-            </svg>
-           
-            Create Team
-        </a>
-
-
-        </h5> <br>
+        <div class="d-flex justify-content-between mb-2">
+            <h5> Your Teams  </h5>
+            <a href="{{route('participant.team.create')}}" 
+                class="d-inline-flex ms-4 py-2 rounded-pill px-4 text-light btn btn-primary btn-sm"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+                    class="mt-1 me-2"
+                    viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                </svg>
+                Create Team
+            </a>
+        </div>
         <form id="newTeamsForm">
             <div>
                 <input type="hidden" id="request_view_route" value="{{ route('participant.request.view') }}">
@@ -42,7 +40,7 @@
                 <input type="hidden" id="userIdServer" value="{{ $user->id }}">
                 <input type="hidden" name="sortKeys" id="sortKeys" value="">
                 <input type="hidden" name="sortType" id="sortType" value="">
-                <input name="search" style="width: min(90vw, 450px); font-size: 1rem;" class="rounded-pill px-4 form-control d-inline-block me-3 cursor-pointer" type="text" placeholder="Search for player name/ email">
+                <input name="search" style="width: min(90vw, 450px); font-size: 1rem;" class="rounded-pill mb-2 px-4 form-control d-inline-block me-3 cursor-pointer" type="text" placeholder="Search for player name/ email">
                 <button type="button" class="btn btn-primary text-light px-2 border-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -246,7 +244,7 @@
                     <small class="me-4">Filter/ Sort: </small>
                     <span class="">
                         <small data-form-parent="default-filter" class="me-2">
-                            <small class="btn btn-secondary text-light rounded-pill px-2 py-0">
+                            <small class="btn btn-secondary text-light d-none rounded-pill px-2 py-0">
                                 Default
                             </small>
                         </small>

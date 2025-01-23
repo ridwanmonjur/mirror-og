@@ -9,7 +9,6 @@
     @include('__CommonPartials.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <meta name="page-component" content="organizer">
-
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
 
@@ -164,7 +163,9 @@
                                 </span>
                             </template>
                             <span class="me-1"> 
-                                🙋‍♂️
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                                </svg>
                             </span>
                             <span class="d-inline p-0 m-0" style="display: inline !important;">
                                 <span data-follower-stats="{{$followersCount}}" class="cursor-pointer d-inline ps-0"  onclick="openModal('followers')">

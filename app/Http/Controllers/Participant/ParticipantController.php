@@ -8,6 +8,7 @@ use App\Http\Requests\User\LikeRequest;
 use App\Http\Requests\User\UpdateParticipantsRequest;
 use App\Models\ActivityLogs;
 use App\Models\EventInvitation;
+use App\Models\EventJoinResults;
 use App\Models\Friend;
 use App\Models\JoinEvent;
 use App\Models\Like;
@@ -162,12 +163,10 @@ class ParticipantController extends Controller
             ] = Team::getUserTeamList($userProfile->id);
             $pastTeam = Team::getUserPastTeamList($userProfile->id);
 
-            $awardList = Team::getAwardListByTeamIdList($teamIdList);
-            $achievementList = Team::getAchievementListByTeamIdList($teamIdList);
             $joinEvents = JoinEvent::getJoinEventsForTeamListWithEventsRosterResults($teamIdList);
             $totalEventsCount = $joinEvents->count();
             ['wins' => $wins, 'streak' => $streak] =
-                JoinEvent::getJoinEventsWinCountForTeamList($teamIdList);
+                JoinEvent::getPlayerJoinEventsWinCountForTeamList($teamIdList,  $userProfile->id);
 
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
             $followCounts = OrganizerFollow::getFollowCounts($userIds);
@@ -185,6 +184,7 @@ class ParticipantController extends Controller
                 = JoinEvent::processEvents($joinEvents, $isFollowingOrganizerList);
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
+            $joinEventAndTeamList = EventJoinResults::getEventJoinListResults($joinEventIds);
 
             return view(
                 'Participant.PlayerProfile',
@@ -199,8 +199,7 @@ class ParticipantController extends Controller
                     'totalEventsCount',
                     'wins',
                     'streak',
-                    'awardList',
-                    'achievementList',
+                    'joinEventAndTeamList',
                     'pastTeam',
                     'friend',
                     'isFollowingParticipant'

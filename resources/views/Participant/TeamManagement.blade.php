@@ -71,59 +71,73 @@
                 @endif
             </div>
 
-            <div class="row px-4">
+            <div class="row px-4 mt-4">
                 <div class="showcase col-12 col-lg-6">
                     <div><b>Showcase</b></div>
                     <br>
                     <div class="showcase-box d-none-until-hover-parent row">
-                        <div @class([
-                            "col-6",
-                            "col-12" => isset($awardList[2])
-                        ])>
+                        <div class="col-12">
                             <p>Events Joined: {{ $totalEventsCount }}</p>
                             <p>Wins: {{ $wins }}</p>
                             <p>Win Streak: {{ $streak }}</p>
-                        </div>
-                        <div @class([
-                            "col-6",
-                            "col-12" => isset($awardList[2])
-                        ])>
-                            <div class="d-flex justify-content-between">
-                                @foreach ($awardList as $award)
-                                    <div>
-                                        <img src="{{ '/' . 'storage/' . $award->awards_image }} " width="100" height="100" alt="Trophy" class="me-2">
-                                    </div>
-                                @endforeach
-                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="achievements col-12 col-lg-6">
-                    <div><b>Achievements</b></div><br>
-                    @if (!isset($achievementList[0]))
-                        <ul class="achievement-list mt-4">
-                            <p>No achievements available</p>
-                        </ul>
-                    @else
-                        <ul class="achievement-list">
-                            @foreach ($achievementList as $achievement)
-                                <li>
-                                    <span class="additional-text d-flex justify-content-between">
-                                        <span>
-                                        {{ $achievement->title }} ({{ \Carbon\Carbon::parse($achievement->created_at)->format('Y') }})
-                                        </span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                        <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
-                                        </svg>
-                                    </span><br>
-                                    <span class="ps-2"> {{ $achievement->description }} </span>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-                    </ul>
+                    <div class="ms-2"><b>Positions</b></div><br>
+                    
+                    <table class="mx-auto member-table responsive" style="margin-left: 5px;">
+                        @if (isset($joinEventAndTeamList[0]))
+                            <thead class="accepted-member-table text-start">
+                                <th></th>
+                                <th class="text-start">
+                                    Team Name
+                                </th>
+                                    <th class="text-start" >
+                                    Team Position
+                                </th>
+                                <th class="text-start" >
+                                    Join Status
+                                </th>
+                            </thead>
+                            <tbody class="accepted-member-table text-start">
+                                @foreach ($joinEventAndTeamList as $key => $joinEventAndTeam)
+                                    <tr class="st">
+                                        <td class="colorless-col text-start px-0">
+                                            <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
+                                                class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
+                                                width="20" height="20" fill="currentColor"
+                                                class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                                                <path
+                                                    d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                                            </svg>
+                                        </td>
+                                        
+                                        <td class="coloured-cell px-2 text-start   cursor-pointer  " style="width: 30%;" onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});">
+                                            <img
+                                                class="rounded-circle d-inline-block object-fit-cover me-3"
+                                                src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"
+                                                {!! trustedBladeHandleImageFailure() !!} 
+                                                height="40"
+                                                width="40"
+                                            > 
+                                            {{ $joinEventAndTeam->teamName }}
+                                        </td>
+                                            <td class="coloured-cell text-start px-2 ">
+                                            {{ $joinEventAndTeam->position ? $joinEventAndTeam->position : '-' }}
+                                        </td>
+                                        <td class="coloured-cell text-start px-2 ">
+                                            {{ $joinEventAndTeam->eventName }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        @else
+                            <p class="ms-2 text-start">  No positions yet.</p>
+                        @endif
+                    </table>
                 </div>
             </div>
         </div>

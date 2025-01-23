@@ -58,7 +58,8 @@ class JoinEvent extends Model
         return $this->hasMany(EventJoinResults::class, 'join_events_id', 'id');
     }
 
-    public function captain(): BelongsTo {
+    public function captain(): BelongsTo 
+    {
         return $this->belongsTo(RosterMember::class, 'roster_captain_id', 'id');
     }
 
@@ -67,16 +68,13 @@ class JoinEvent extends Model
         return $this->hasMany(ParticipantPayment::class, 'join_events_id', 'id');
     }
 
-    public static function getJoinEventsForTeam(int|string $team_id): Builder
-    {
-        return self::where('team_id', $team_id)
-            ->with('user');
-    }
+  
 
     public static function getJoinEventsForTeamWithEventsRosterResults(int|string $team_id): Collection
     {
         return self::where('team_id', $team_id)
-            ->with(['eventDetails',  'user', 'results', 'roster' => function ($q) {
+            ->where('join_status', '<>', 'canceled')
+            ->with(['eventDetails',  'user', 'roster' => function ($q) {
                 $q->with('user');
             }, 'eventDetails.tier', 'eventDetails.game', 'eventDetails.user',
             ])
@@ -85,33 +83,30 @@ class JoinEvent extends Model
 
     public static function getJoinEventsForTeamListWithEventsRosterResults(array $teamIdList= []): Collection
     {
+
         return self::whereIn('team_id', $teamIdList)
-            ->with(['eventDetails',  'user', 'results', 'roster' => function ($q) {
+            ->where('join_status', '<>', 'canceled')
+            ->with(['eventDetails',  'user', 'roster' => function ($q) {
                 $q->with('user');
             }, 'eventDetails.tier', 'eventDetails.game', 'eventDetails.user',
             ])
             ->get();
     }
 
-    public static function getJoinEventsCountForTeam(int| string $team_id): int
-    {
-        return self::where('team_id', $team_id)
-            ->count();
-    }
-
+ 
     public static function getJoinEventsWinCountForTeam(int| string $team_id): array
     {
         $joins = DB::table('event_join_results')
             ->whereIn('join_events_id', function ($q) use ($team_id) {
                 $q->select('id')
                     ->from('join_events')
+                    ->where('join_status', '<>', 'canceled')
                     ->where('team_id', $team_id);
-            })
+                }
+            )
             ->get();
 
-        $sumPositionOne = 0;
-        $streak = 0;
-        $maxStreak = 0;
+        $sumPositionOne = $streak = $maxStreak = 0;
 
         foreach ($joins as $join) {
             if ($join->position === 1) {
@@ -127,19 +122,20 @@ class JoinEvent extends Model
         return ['wins' => $sumPositionOne, 'streak' => $streak];
     }
 
-    public static function getJoinEventsWinCountForTeamList(array $teamIdList = []): array
+    public static function getPlayerJoinEventsWinCountForTeamList(array $teamIdList = [], $userProfileId): array
     {
         $joins = DB::table('event_join_results')
-            ->whereIn('join_events_id', function ($q) use ($teamIdList) {
-                $q->select('id')
-                    ->from('join_events')
-                    ->whereIn('team_id', $teamIdList);
-            })
-            ->get();
+        ->whereIn('join_events_id', function ($q) use ($teamIdList, $userProfileId) {
+            $q->select('join_events.id')
+                ->from('join_events')
+                ->where('join_status', '<>', 'canceled')
+                ->join('roster_members', 'join_events.id', '=', 'roster_members.join_events_id')
+                ->where('roster_members.user_id', $userProfileId)
+                ->whereIn('join_events.team_id', $teamIdList);
+        })
+        ->get();
 
-        $sumPositionOne = 0;
-        $streak = 0;
-        $maxStreak = 0;
+        $sumPositionOne = $streak = $maxStreak = 0;
 
         foreach ($joins as $join) {
             if ($join->position === 1) {
@@ -155,11 +151,6 @@ class JoinEvent extends Model
         return ['wins' => $sumPositionOne, 'streak' => $streak];
     }
 
-    public static function getJoinEventsByTeamIdList($teamIdList): Builder
-    {
-        return self::whereIn('team_id', $teamIdList)
-            ->with('user');
-    }
 
     public static function saveJoinEvent(array $data): JoinEvent
     {
@@ -217,22 +208,21 @@ class JoinEvent extends Model
         [$joinIds, $joinEventOrganizerIds] = $fixJoinEvents($joinEvents);
         [$invitedIds, $invitedEventOrganizerIds] = $fixJoinEvents($invitedEvents);
         $eventIds = [...$joinIds, ...$invitedIds];
-
        
-            $groupedPaymentsByEvent = ParticipantPayment::select('join_events_id', DB::raw('SUM(payment_amount) as total_payment_amount'))
-                ->whereIn('join_events_id', $eventIds)
-                ->groupBy('join_events_id')
-                ->get()
-                ->pluck('total_payment_amount', 'join_events_id');
+        $groupedPaymentsByEvent = ParticipantPayment::select('join_events_id', DB::raw('SUM(payment_amount) as total_payment_amount'))
+            ->whereIn('join_events_id', $eventIds)
+            ->groupBy('join_events_id')
+            ->get()
+            ->pluck('total_payment_amount', 'join_events_id');
 
-            $groupedPaymentsByEventAndTeamMember = ParticipantPayment::select('join_events_id', 'team_members_id', DB::raw('SUM(payment_amount) as total_payment_amount'))
-                ->whereIn('join_events_id', $eventIds)
-                ->groupBy('join_events_id', 'team_members_id')
-                ->get()
-                ->groupBy('join_events_id')
-                ->map(function ($group) {
-                    return $group->pluck('total_payment_amount', 'team_members_id');
-                });
+        $groupedPaymentsByEventAndTeamMember = ParticipantPayment::select('join_events_id', 'team_members_id', DB::raw('SUM(payment_amount) as total_payment_amount'))
+            ->whereIn('join_events_id', $eventIds)
+            ->groupBy('join_events_id', 'team_members_id')
+            ->get()
+            ->groupBy('join_events_id')
+            ->map(function ($group) {
+                return $group->pluck('total_payment_amount', 'team_members_id');
+            });
 
         return [
             $joinEventOrganizerIds, $joinEvents, $invitedEventOrganizerIds,
@@ -319,10 +309,6 @@ class JoinEvent extends Model
             $this->vote_ongoing = false;
             $this->join_status = "canceled";
         }
-
-        // dd($totalVoteCount, $leaveVoteCount, $stayVoteCount, $leaveRatio, $stayRatio);
-
-
 
         return [$leaveRatio, $stayRatio];
     }

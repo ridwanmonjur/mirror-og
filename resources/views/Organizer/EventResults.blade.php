@@ -77,14 +77,14 @@
                             <button id="PositionBtn" class="tab-button py-2  outer-tab tab-button-active"
                                 onclick="showTab(event, 'Position', 'outer-tab')">Position
                             </button>
-                            <button id="AwardsBtn" class="tab-button py-2  outer-tab"
+                            {{-- <button id="AwardsBtn" class="tab-button py-2  outer-tab"
                                 onclick="showTab(event, 'Awards', 'outer-tab')">
                                 Awards
                             </button>
                             <button id="AchievementsBtn" class="tab-button py-2  outer-tab"
                                 onclick="showTab(event, 'Achievements', 'outer-tab')">
                                 Achievements
-                            </button>
+                            </button> --}}
                         </div>
                         <br>
                         <div class="tab-content pb-4 tab-size outer-tab mx-auto" id="Position">
@@ -213,7 +213,7 @@
                                 @endif
                             </table>
                         </div>
-                        <div class="tab-content tab-size outer-tab d-none mx-auto" id="Awards">
+                        {{-- <div class="tab-content tab-size outer-tab d-none mx-auto" id="Awards">
                             <div class="mx-auto member-table d-flex justify-content-center">
                                 <button data-bs-toggle="modal" data-bs-target="{{ '#award' . '-modal' }}"
                                     class="oceans-gaming-default-button">
@@ -535,7 +535,7 @@
                                     </div>
                                 </tbody>
                             </table>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

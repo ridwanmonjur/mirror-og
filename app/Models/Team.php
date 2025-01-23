@@ -151,6 +151,9 @@ class Team extends Model
         $teamList = self::whereHas('members', function ($query) use ($user_id, $status) {
             $query->where('user_id', $user_id)->where('status', $status);
         })
+            ->whereHas('roster', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            })
             ->with(['members' => function ($query) {
                 $query->where('status', 'accepted');
                 },
@@ -168,6 +171,8 @@ class Team extends Model
             'teamIdList' => $teamIdList,
         ];
     }
+
+    
 
     public static function getUserPastTeamList($user_id)
     {
@@ -295,7 +300,7 @@ class Team extends Model
                             $q->select('id');
                         },
                         ]);
-                },
+                    },
                 ]
             )->first();
                 

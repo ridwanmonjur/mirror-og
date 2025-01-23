@@ -661,6 +661,8 @@ document.addEventListener('keydown', function(event) {
 
             return;
         }
+        event.preventDefault();
         document.getElementById('sendMessageBtn').click();
     }
+
 });

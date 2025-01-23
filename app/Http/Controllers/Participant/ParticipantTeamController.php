@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Team\UpdateTeamRequest;
+use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\OrganizerFollow;
 use App\Models\Team;
@@ -61,8 +62,6 @@ class ParticipantTeamController extends Controller
             ])->first();
         // dd($selectTeam);
         if ($selectTeam) {
-            $awardList = $selectTeam->getAwardListByTeam();
-            $achievementList = $selectTeam->getAchievementListByTeam();
             $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
             $joinEvents = JoinEvent::getJoinEventsForTeamWithEventsRosterResults($selectTeam->id);
             $totalEventsCount = $joinEvents->count();
@@ -71,11 +70,8 @@ class ParticipantTeamController extends Controller
 
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
             $followCounts = OrganizerFollow::getFollowCounts($userIds);
-            if ($user_id) {
-                $isFollowing = OrganizerFollow::getIsFollowing($user_id, $userIds);
-            } else {
-                $isFollowing = [];
-            }
+            $isFollowing = $user_id ? 
+                OrganizerFollow::getIsFollowing($user_id, $userIds): [];
 
             $joinEventsHistory = $joinEventsActive = $values = [];
             ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
@@ -83,6 +79,7 @@ class ParticipantTeamController extends Controller
             // dd($joinEvents, $activeEvents, $historyEvents);
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
+            $joinEventAndTeamList = EventJoinResults::getEventJoinListResults($joinEventIds);
 
             return view(
                 'Participant.TeamManagement',
@@ -93,11 +90,10 @@ class ParticipantTeamController extends Controller
                     'joinEventsHistory',
                     'joinEventsActive',
                     'followCounts',
+                    'joinEventAndTeamList',
                     'totalEventsCount',
                     'wins',
                     'streak',
-                    'awardList',
-                    'achievementList'
                 )
             );
         }

@@ -176,12 +176,12 @@
                 </div>
             </form>
             @if (session('errorMessageCoupon'))
-                <div class="text-red">
+                <div class="text-red mb-2">
                     {{ session('errorMessageCoupon') }}
                 </div>
             @endif
             @if (session('successMessageCoupon'))
-                <div class="text-success">
+                <div class="text-success mb-2">
                     {{ session('successMessageCoupon') }}
                 </div>
             @endif
