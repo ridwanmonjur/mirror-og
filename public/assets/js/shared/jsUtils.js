@@ -170,7 +170,15 @@ function openTab(evt, activeName, specialElementHeightId = null) {
     activeElement.style.display = "block";
     evt.currentTarget.className += " active";
     
-   
+    if (specialElementHeightId) {
+        let bracketList = document.getElementById(specialElementHeightId);
+        let bracketListHeight = bracketList.getBoundingClientRect().height;
+        let main = document.querySelector('main');
+        if (main) {
+            main.style.transition = "height 0.5s ease-in-out";
+            main.style.height = bodyHeight3 + bracketListHeight + 'px';
+        }
+    }
 }
 
 function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
