@@ -191,7 +191,11 @@ a.custom-link:hover {
     border: none;
     border-radius: 50px;
     cursor: pointer;
+    position: absolute;
+    top: 100px; 
+    z-index: 100;
 }
+
 
 .carousel-button-disabled {
     opacity: 0.35;

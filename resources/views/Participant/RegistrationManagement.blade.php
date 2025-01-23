@@ -93,7 +93,7 @@
             <div class="event-carousel-styles  px-5">
                 @foreach ($joinEvents as $joinEvent)
                        
-                    @include('Participant.__Partials.RosterViewRegister', ['isRegistrationView' => false])
+                    @include('Participant.__Partials.RosterViewRegister')
                     @include('Participant.__Partials.PieChart', ['isInvited' => false])
                 @endforeach
             </div>
@@ -111,7 +111,7 @@
                     @else
                         <div class="event-carousel-styles px-5">
                             @foreach ($invitedEvents as $key => $joinEvent)
-                                @include('Participant.__Partials.RosterViewRegister', ['isRegistrationView' => false])
+                                @include('Participant.__Partials.RosterViewRegister')
                                 @include('Participant.__Partials.PieChart', ['isInvited' => true])
                             @endforeach
                         </div>

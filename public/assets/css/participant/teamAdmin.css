@@ -254,16 +254,6 @@ img.fslightbox-source{
     grid-template-columns: 1fr;
 }
 
-.carousel-buttons {
-    text-align: center;
-    background-color: #43A4D7;
-    color: #FFFFFF;
-    padding: 5px 10px;
-    font-size: 0.875rem;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-bottom: 10px;
-}
 
 .carousel-button {
     text-align: center;
@@ -273,6 +263,9 @@ img.fslightbox-source{
     border: none;
     border-radius: 50px;
     cursor: pointer;
+    position: absolute;
+    top: 100px; 
+    z-index: 100;
 }
 
 .carousel-button-disabled {

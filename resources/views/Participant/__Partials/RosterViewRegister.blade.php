@@ -339,7 +339,7 @@
                         class="me-2 object-fit-cover rounded-circle2 random-color-circle"
                     >
                     <div class="text-start d-inline-flex flex-column justify-content-center ms-2 w-100">
-                        <small class="d-inline-block my-0 text-truncate w-85">{{ $joinEvent->user->name }}</small>
+                        <small class="d-inline-block my-0 text-truncate w-85">{{ $joinEvent->eventDetails->user->name }}</small>
                         <small
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
                             class="d-block p-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">

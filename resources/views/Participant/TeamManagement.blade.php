@@ -46,15 +46,15 @@
                 @if (!isset($joinEvents[0]))
                     <p>No events available!</p>
                 @else
-                    <button @class(["carousel-button position-absolute z-999",
+                    <button @class(["carousel-button position-absolute ",
                        "carousel-button-disabled"  => empty($joinEvents[2])
-                    ]) style="top: 100px; left: 20px;"
+                    ]) style="left: 20px;"
                         onclick="carouselWork(-2)">
                         &lt;
                     </button>
-                    <button @class(["carousel-button position-absolute z-999",
+                    <button @class(["carousel-button position-absolute ",
                        "carousel-button-disabled"  => empty($joinEvents[2])
-                    ]) style="top: 100px; right: 20px;"
+                    ]) style="right: 30px;"
                         onclick="carouselWork(2)">
                         &gt;
                     </button>
@@ -64,7 +64,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Participant.__Partials.RosterView',  ['isRegistrationView' => false])
+                            @include('Participant.__Partials.RosterView')
                         @endforeach
                     </div>
                  
@@ -164,7 +164,7 @@
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">
-                            @include('Participant.__Partials.RosterView', ['isRegistrationView' => false])
+                            @include('Participant.__Partials.RosterView')
                             
                         </div>
                         <br><br>
@@ -184,7 +184,7 @@
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">
-                            @include('Participant.__Partials.RosterView',  ['isRegistrationView' => false])
+                            @include('Participant.__Partials.RosterView')
                             @if (isset($user) && $selectTeam->creator_id == $user->id)
                                 <a
                                     href="{{ route('participant.register.manage', ['id' => $joinEvent->eventDetails->id, 'teamId' => $selectTeam->id]) }}"
