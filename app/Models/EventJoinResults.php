@@ -47,12 +47,14 @@ class EventJoinResults extends Model
             ->whereNotNull('event_join_results.position')
             ->select(
                 'join_events.join_status',
-                'join_events.id as id1',
-                'join_events.event_details_id',
+                'join_events.id as join_id',
+                'join_events.event_details_id as event_id',
                 'join_events.team_id',
                 'teams.*',
+                'teams.id as team_id',
                 'event_details.id',
                 'event_details.eventName',
+                'event_details.eventBanner',
                 'event_join_results.position',
             )->get();
     }

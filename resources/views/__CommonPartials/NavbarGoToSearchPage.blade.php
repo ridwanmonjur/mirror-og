@@ -46,7 +46,7 @@
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
     </div>
-    <div class="nav-buttons">
+    <div class="nav-buttons me-3">
         @guest
            <div class="dropdown" data-reference="parent" data-bs-auto-close="outside" data-bs-offset="-80,-80">
             <a href="#" role="button" class="btn dropdown-toggle px-3   " id="dropdownMenuGuest" data-bs-toggle="dropdown"
