@@ -3,23 +3,8 @@
 
 // Poppins Font Face Declarations
 
-@keyframes fade {
-  0% {
-    opacity: 0;
-  }
+@view-transition { navigation: auto; } 
 
-  95% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-body {
-  // animation: fade 0.2s linear forwards;
-}
 
 .nav-link:hover {
   color: #43A4D7 !important;
