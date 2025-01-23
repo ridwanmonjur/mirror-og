@@ -19,10 +19,12 @@ function checkValidity(inpObj, inputID) {
     class="fas fa-exclamation-circle form_icon__error"></i><span>${customErrorMessage}</span>`;
         inpObj.classList.add("input__error");
         fieldErrorMesage.classList.remove("d-none");
+        fieldErrorMesage.style.opacity = "1";
     } else {
         inpObj.classList.remove("input__error");
         fieldErrorMesage.innerHTML = "";
         fieldErrorMesage.classList.add("d-none");
+        fieldErrorMesage.style.opacity = "0";
     }
 }
 

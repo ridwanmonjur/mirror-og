@@ -15,15 +15,14 @@
 <body
     @style(["min-height: 100vh;" => $isRedirect])
 >
+        @include('__CommonPartials.NavbarGoToSearchPage')
     @include('googletagmanager::body')
-
-    @include('__CommonPartials.NavbarGoToSearchPage')
     <main 
         @style(["height: 95vh" => $isRedirect])
-     class="main2"
-     >
-    <div id="blade-data" style="display: none;"
-        
+        class="main2"
+    >
+
+    <div id="blade-data" style="display: none;"    
         data-approve-url="{{ route('participant.roster.approve') }}"
         data-disapprove-url="{{ route('participant.roster.disapprove') }}"
         data-user-id="{{ $user->id }}"

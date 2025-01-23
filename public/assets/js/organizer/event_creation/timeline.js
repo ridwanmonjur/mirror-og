@@ -412,8 +412,8 @@ function goToNextScreen(nextId, nextTimeline) {
         
         if (id === nextId) {
             element.classList.remove("d-none");
-            if (slideIdIndex %2) element.classList.add('fadeIn')
-            else element.classList.add('fadeOut');
+            // if (slideIdIndex %2) element.classList.add('fadeIn')
+            // else element.classList.add('fadeOut');
         } else {
             element.classList.add("d-none");
         }

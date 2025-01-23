@@ -3,13 +3,14 @@
 <head>
     @include('googletagmanager::head')
     {{-- <meta name="page-component" content="chat2"> --}}
+    @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/chat2.js'])
 
     <link rel="stylesheet" href="{{ asset('/assets/css/chat/fullpage.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/chat2.js'])
     @include('__CommonPartials.HeadIcon')
 </head>
 
 <body>
+    @include('__CommonPartials.NavbarGoToSearchPage')
     @include('googletagmanager::body')
     <div id="app" class="app-container row">
         <input type="hidden" id="fetchFirebaseUsersInput" value="{{ route('user.firebase.readAll') }}">
@@ -18,8 +19,8 @@
         <input type="hidden" id="loggedUserProfile" value="{{ json_encode($user) }}">
         <div class="sidebar col-12 col-lg-5 col-xl-4 m-0 p-0" @vue:mounted="mounted" id="room-component"
             v-scope="RoomComponent()">
-            <div class="sidebar-header">
-                <h2 id="initDB" class="my-0">Chat List</h2>
+            <div class="sidebar-header align-middle">
+                <h5 id="initDB" class="my-0">Chat List</h5>
                 {{-- TODO --}}
                 <button v-on:click="fetchProspectiveChatters(null);" class="add-chat" data-bs-toggle="modal"
                     data-bs-target="#other-users-component">
@@ -42,7 +43,7 @@
                         v-text="room?.otherRoomMember?.name ? room.otherRoomMember.name?.charAt(0)?.toUpperCase(): room?.otherRoomMember?.email[0]?.toUpperCase()">
                     </div>
                     <div class="chat-info">
-                        <div>
+                        <div v-if="room?.otherRoomMember && room?.otherRoomMember?.name">
                             <h3 class="d-inline user-select-none" v-text="room?.otherRoomMember?.name"></h3>
                             <small v-bind:class="{'text-white fw-bold' : currentRoomObj?.id == room?.id }"
                                 class="text-red" v-if="room?.otherRoomMember.i_blocked_them">

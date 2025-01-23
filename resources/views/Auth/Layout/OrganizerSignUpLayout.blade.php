@@ -1,8 +1,8 @@
 @include('Auth.Layout.HeadTag')
-
 @section('signUpbody')
-
-<img class="mt-2  mb-1 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
+<a href="{{route('public.landing.view')}}">
+    <img class="mt-2  mb-1 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
+</a>
 <h5 class="mt-2 mb-0">Create an <span class="text-primary">organizer account</span></h5>
 <form 
     autocomplete="off" 
@@ -31,7 +31,7 @@
         </label>
     </div>
 
-    <div class="field">
+    {{-- <div class="field">
         <label for="companyName" class="placeholder-moves-up-container">
             <input  autocomplete="off" type="text" name="companyName" id="companyName"  class="input-area" oninput="movePlaceholderUp(this)">
             <span class="placeholder-moves-up">Company Name</span>
@@ -45,7 +45,7 @@
             <span class="placeholder-moves-up">Company Description</span>
             <div class="field-error-message d-none"></div>
         </label>
-    </div>
+    </div> --}}
 
     <div class="field password">
         <label for="password" class="placeholder-moves-up-container">

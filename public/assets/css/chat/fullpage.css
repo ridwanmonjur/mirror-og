@@ -4,23 +4,24 @@
     box-sizing: border-box;
 }
 
+.navbar {
+    display: fixed!;
+    background-color: #90abc4;
+}
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: min-content;
     /* background-image: url('/assets/images/chat/signinbg.png'); */
-    background: #a5c0d4 !important;
-
+    background: #90abc4 !important;
+    overflow: auto !important;
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
 
 .app-container {
+    margin: auto;
     padding-top: 10px;
     padding-bottom: 10px;
-    width: 95%;
     height: auto;
     background: none;
     /* Slight transparency */
@@ -52,11 +53,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 1.25rem;
+    align-items: center;
+    padding: 17px;
     background-color: black;
     /* More transparent black */
     color: white;
-    border-radius: 20px 20px 0 0;
+    border-radius: 0px 0px 0 0;
     /* Rounded corners at the top left */
 }
 
@@ -134,7 +136,7 @@ body {
     background: transparent;
     background-size: cover;
     background-position: center;
-    border-radius: 20px;
+    border-radius: 0px;
     /* Rounded corners on the right side */
 }
 
@@ -142,8 +144,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid #ddd;
+    padding: 15px;
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
     border-radius: 0 20px 0 0;
@@ -295,11 +296,14 @@ textarea::placeholder {
     }
 
     .sidebar-header {
+        border-radius: 20px 20px 0 0;
+
         background-color: rgba(0, 0, 0, 0.5);
     }
     
     body {
         height: 100vh;
+        overflow: hidden;
     }
 
     .chat-container {
