@@ -457,7 +457,7 @@
                     <p x-text="organizer.companyDescription">  </p>
                         
                     <p class="mt-2"> 
-                        <template x-if="organizer.industry && organizer.industry!= '">
+                        <template x-if="organizer.industry && organizer.industry!= ''">
                             <span class="me-5" x-text="organizer.industry"></span>
                         </template>
                         <template x-if="organizer.type">
