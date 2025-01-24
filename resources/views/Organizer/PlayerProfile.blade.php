@@ -156,7 +156,7 @@
                             {{$userProfile->name}}
                         </h5>
                         <div class="my-2"> 
-                            <template x-if="organizer.industry && organizer.industry!= '">
+                            <template x-if="organizer.industry && organizer.industry!= ''">
                                 <span>
                                     <span class="me-2"> </span>
                                     <span class="me-3" x-text="organizer.industry"> </span>
