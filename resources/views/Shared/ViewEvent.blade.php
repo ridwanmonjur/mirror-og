@@ -39,9 +39,10 @@
         <br class="d-none-at-desktop">
         <div class="pt-2">
             <header>
-                <u>
                     <h5 class="text-start ms-5">
+                     <u>
                         View your events
+                        </u>
                     </h5>
                 </u>
             </header>
