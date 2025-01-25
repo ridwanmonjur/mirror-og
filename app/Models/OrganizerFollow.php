@@ -67,7 +67,7 @@ class OrganizerFollow extends Model
             ->exists();
     }
 
-    public static function getOrganizerFollowersPaginate($userId, $loggedUserId, $perPage, $page = 1, $search = null)
+    public static function getFollowersPaginate($userId, $loggedUserId, $perPage, $page = 1, $search = null)
     {
         $select = [
             'users.id',
@@ -101,9 +101,8 @@ class OrganizerFollow extends Model
             })
             ->leftJoin('blocks', function($join) use ($loggedUserId) {
                 $join->on('blocks.blocked_user_id', '=', 'users.id')
-                    ->where('blocks.user_id', $loggedUserId);
+                     ->where('blocks.user_id', '=', $loggedUserId);
             })
-            ->selectRaw('EXISTS(SELECT 1 FROM reports WHERE reporter_id = ? AND reported_user_id = users.id) as logged_block_status', [$loggedUserId])
             ->leftJoin('organizer_follows as og_follows', function($join) use ($loggedUserId) {
                 $join->on('og_follows.organizer_user_id', '=', 'users.id')
                     ->where('og_follows.participant_user_id', $loggedUserId);

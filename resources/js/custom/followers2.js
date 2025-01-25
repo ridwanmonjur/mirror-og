@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 
-function reportFormData ()  {
-    return () => ({
+function ReportFormData ()  {
+    return {
         willShowReports: true,
         reports: [],
         errors: {},
@@ -105,13 +105,11 @@ function reportFormData ()  {
                 console.log({user: this.user});
             });
         },
-
-        
-    });
+    }
 };
 
-function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRole) {
-    return () => ({
+function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRole) {
+    return {
         connections: [],
         page: null,
         next_page: null,
@@ -377,7 +375,10 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
                 let data = await makeRequest(route, 'POST', JSON.stringify({}));
      
                
-
+                console.log({data})
+                console.log({data})
+                console.log({data})
+                console.log({data})
                 if (!('is_blocked' in data)) {
                     return;
                 }
@@ -501,7 +502,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
 
         },
 
-    });
+    };
 }
 
 async function makeRequest(url, method, data) {
@@ -542,8 +543,115 @@ const openModal = (type) => {
     window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
 }
 
+function ReportBlockComponent () {
+    return {
+        willShowReports: true,
+        reports: [],
+        errors: {},
+        loading: false,
+        user: null,
+        reasons: [
+            'Inappropriate Content',
+            'Harassment',
+            'Fake Account',
+            'Hate Speech',
+            'Other'
+        ],
+        formData: {
+            reason: '',
+            description: ''
+        },
+        errors: {},
+        loading: false,
+
+        async fetchReports() {
+            try {
+              const response = await fetch('/api/user/' + this.user.id + '/reports');
+              if (!response.ok) throw new Error('Failed to fetch reports');
+              let { reports } = await response.json();
+              this.reports = reports;
+              this.willShowReports = true;
+            } catch (error) {
+              console.error('Error:', error);
+              this.reports = [];
+            }
+        },
+
+        async submitReport(event) {
+            event.preventDefault();
+            this.loading = true;
+            this.errors = {};
+
+            try {
+                const response = await fetch(`/api/user/${this.user.id}/report`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify(this.formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    if (response.status === 422) {
+                        this.errors = data.errors;
+                        return;
+                    }
+                    throw new Error(data.message || 'An error occurred');
+                }
+
+                // Success
+                this.reset();
+                this.fetchReports();
+                window.Toast.fire({
+                    'icon': 'success',
+                    'text': 'Report submitted successfully'
+                });
+            } catch (error) {
+                console.error('Error submitting report:', error);
+                window.toastError('Failed to submit report. Please try again.');
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        toggleWillShowReports() {
+            this.willShowReports = !this.willShowReports;
+        },
+
+        reset() {
+            this.showForm = false;
+            this.formData = {
+                reason: '',
+                description: ''
+            };
+            this.errors = {};
+        },
+
+        formatDate(date) {
+            return  DateTime
+                .fromISO(date)
+                .toRelative();
+        },
+
+        mounted() {
+            window.addEventListener('report-selected', async (event) => {
+                let element = document.getElementById('reportUserModal')
+                let modal = new window.bootstrap.Modal(element);
+                modal.show();
+                this.user = event.detail;
+                await this.fetchReports();
+            });
+        }
+    }
+}
+
+
 export {
-    alpineProfileData,
+    ProfileData,
     openModal,
-    reportFormData
+    ReportFormData,
+    ReportBlockComponent
 };

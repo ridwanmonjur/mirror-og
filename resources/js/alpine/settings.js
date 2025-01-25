@@ -263,10 +263,6 @@ function AccountComponent() {
                                 });
         
                                 data = await data.json();
-                                console.log({data});
-                                console.log({data});
-                                console.log({data});
-                                console.log({data});
                                 if (!data || !data.success) {
                                     setErrorCurrentPassword("This password is incorrect!");
                                     return false;

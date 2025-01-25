@@ -132,7 +132,7 @@ class SocialController extends Controller
 
             $followers = null;
             if ($role === "ORGANIZER") {
-                $followers = OrganizerFollow::getOrganizerFollowersPaginate($id, $loggedUserId, $perPage, $page, $search);
+                $followers = OrganizerFollow::getFollowersPaginate($id, $loggedUserId, $perPage, $page, $search);
             } elseif ($role === "PARTICIPANT") {
                 $followers = ParticipantFollow::getFollowersPaginate($id, $loggedUserId, $perPage, $page, $search);
             } else {

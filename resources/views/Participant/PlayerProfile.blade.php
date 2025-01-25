@@ -4,19 +4,16 @@
 <head>
     @include('googletagmanager::head')
     <meta charset="UTF-8">
-    <meta name="page-component" content="participant">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     @include('__CommonPartials.HeadIcon')
-
     @vite([
         'resources/sass/app.scss', 
         'resources/js/app.js', 
+        'resources/js/alpine/participant2.js'
     ])
-
 </head>
 @php
     use Carbon\Carbon;
@@ -59,13 +56,13 @@
         data-user-banner-url="{{ route('participant.userBanner.action', ['id' => $userProfile->id]) }}"
         class="d-none laravel-data-storage"
     ></div>
-    <main >
+    <main id="app" >
         @include('Participant.__ProfilePartials.BackgroundModal')
 
         @include('Participant.__ProfilePartials.Forms')
         <div id="backgroundBanner" class="member-section px-2 pt-2"
-          
-            x-data="profileDataComponent"
+            @vue:mount="init"
+            v-scope="ParticipantData()"
         >
             @if($isOwnProfile) 
                 <input type="hidden" id="userBannerInput" value="{{ $userProfile->userBanner }}">
@@ -82,35 +79,35 @@
                     <button 
                         data-bs-toggle="offcanvas"
                         data-bs-target="#profileDrawer"
-                        x-on:click="isEditMode=false"
-                        x-cloak
-                        x-show="!isEditMode"
+                        v-on:click="isEditMode=false"
+                        v-cloak
+                        v-show="!isEditMode"
                         {{-- onclick="document.getElementById('backgroundInput').click();" --}}
                         class="btn btn-secondary text-light rounded-pill py-2 me-3 fs-7"
                     > 
                         Change Background
                     </button>
                     <button 
-                        x-cloak
-                        x-show="!isEditMode"
-                        x-on:click="reset(); isEditMode = true;"
+                        v-cloak
+                        v-show="!isEditMode"
+                        v-on:click="reset(); isEditMode = true;"
                         class="oceans-gaming-default-button oceans-gaming-primary-button px-3 py-2 fs-7"> 
                         Edit Profile
                     </button>
                     <a 
-                        x-cloak
-                        x-show="isEditMode"
-                        x-on:click="submitEditProfile(event)"
+                        v-cloak
+                        v-show="isEditMode"
+                        v-on:click="submitEditProfile(event)"
                         data-url="{{route('participant.profile.update')}}"
                         class="oceans-gaming-default-button oceans-gaming-transparent-button btn simple-button cursor-pointer px-3 py-2 me-3 fs-7"> 
                         Save
                     </a>
                     {{-- Close icon --}}
                     <svg 
-                        x-cloak
+                        v-cloak
                         style="top: 10px; color: black;"
-                        x-show="isEditMode"
-                        x-on:click="restoreAfterEditMode()"
+                        v-show="isEditMode"
+                        v-on:click="restoreAfterEditMode()"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle cursor-pointer align-middle position-relative" viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -139,7 +136,7 @@
                                         </button>
                                     </a>    
                                     @if ($isUserSame)
-                                        <button x-cloak x-show="isEditMode"  id="upload-button2" class="btn btn-sm p-0" aria-hidden="true">
+                                        <button v-cloak v-show="isEditMode"  id="upload-button2" class="btn btn-sm p-0" aria-hidden="true">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
@@ -153,17 +150,17 @@
                     </div>
                 </div>
                 <div class="member-details user-select-none ">
-                        <div x-show="errorMessage != null && isEditMode" class="text-red" x-text="errorMessage"> </div>
-                        <div x-cloak x-show="isEditMode" style="color: black;">
+                        <div v-show="errorMessage != null && isEditMode" class="text-red" v-text="errorMessage"> </div>
+                        <div v-cloak v-show="isEditMode" style="color: black;">
                             <input 
                                 placeholder = "Enter your nickname..."
                                 style="width: 250px;"
                                 autocomplete="off"
                                 autocomplete="nope"
                                 class="form-control border-secondary player-profile__input d-inline" 
-                                x-model="participant.nickname" 
+                                v-model="participant.nickname" 
                             > 
-                            <input type="file" id="image-upload" accept="image/*" x-cloak x-show="isEditMode" class="d-none">
+                            <input type="file" id="image-upload" accept="image/*" v-cloak v-show="isEditMode" class="d-none">
                             <br>
                             <span class="d-inline-flex justify-content-between align-items-center">
                                 <input
@@ -173,7 +170,7 @@
                                     autocomplete="off"
                                     autocomplete="nope"
                                     class="form-control border-secondary player-profile__input d-inline me-3" 
-                                    x-model="user.name" 
+                                    v-model="user.name" 
                                 > 
                                 <input 
                                     placeholder="Birthday"
@@ -182,21 +179,21 @@
                                     default="1999-05-05"
                                     id="birthdate"
                                     class="form-control border-secondary player-profile__input d-inline me-2" 
-                                    x-model="participant.birthday" 
+                                    v-model="participant.birthday" 
                                 >
-                                <template x-if="!participant.isAgeVisible">
+                                <template v-if="!participant.isAgeVisible">
                                     {{-- Eye invisible icon --}}
                                     <svg 
-                                        x-on:click="participant.isAgeVisible = true"
+                                        v-on:click="participant.isAgeVisible = true"
                                         xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-slash-fill cursor-pointer" viewBox="0 0 16 16">
                                     <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
                                     <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
                                     </svg>
                                 </template>
-                                <template x-if="participant.isAgeVisible">
+                                <template v-if="participant.isAgeVisible">
                                     {{-- Eye visible --}}
                                     <svg  
-                                        x-on:click="participant.isAgeVisible = false" 
+                                        v-on:click="participant.isAgeVisible = false" 
                                         xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill cursor-pointer" viewBox="0 0 16 16">
                                     <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
                                     <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
@@ -211,7 +208,7 @@
                                     autocomplete="off"
                                     autocomplete="nope"
                                     class="form-control border-secondary player-profile__input d-inline me-3" 
-                                    x-model="participant.bio" 
+                                    v-model="participant.bio" 
                                 > 
                             <br> <br>
                             <div class="w-100 d-flex justify-content-start align-items-center flex-wrap">
@@ -221,8 +218,8 @@
                                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
-                                    <template x-if="countries">
-                                        <select x-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;" class="d-inline form-select"  data-placeholder="Select a country" x-model="participant.region"> 
+                                    <template v-if="countries">
+                                        <select v-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;" class="d-inline form-select"  data-placeholder="Select a country" v-model="participant.region"> 
                                     </template>
                                 </span>
                                 <span class="me-3">
@@ -238,7 +235,7 @@
                                         autocomplete="off"
                                         autocomplete="nope"
                                         class="form-control border-secondary player-profile__input d-inline" 
-                                        x-model="participant.domain"
+                                        v-model="participant.domain"
                                     > 
                                 </span>
                                 <br> <br> <br> 
@@ -255,7 +252,7 @@
                             <br>
                             <br>
                         </div>
-                    <div x-cloak x-show="!isEditMode" class="ms-2">
+                    <div v-cloak v-show="!isEditMode" class="ms-2">
                         <br>
                         @if($userProfile->participant?->nickname)           
                             <div class="d-flex justify-content-start align-items-center flex-wrap">
@@ -339,25 +336,34 @@
                             </span>
                         </div>
                         <div class="mt-4 my-2 text-wrap">
-                            <div x-data="profileStatsData" class="mt-4">
+                            <div @vue:mounted="init"
+                                v-scope="ProfileCount(
+                                '{{$userProfile->id}}', '{{$userProfile->role}}'
+                            )" class="mt-4">
                                 <!-- Tabs -->
-                                <div x-cloak x-show="!loading">
+                                <div  v-if="!loading">
                                     <div class="" style="color: inherit !important;">
-                                        <span x-bind:data-follower-stats="count['followers']" class=" cursor-pointer user-select-none ps-0 me-4" x-on:click="openModal('followers')">
-                                            <span x-text="count['followers']  ?? '0'"> </span> Follower<span x-text="count['followers'] > 1 || count['followers'] === 0 ? 's' : ''"></span>  
+                                        <span v-bind:data-follower-stats="count['followers']" class=" cursor-pointer user-select-none ps-0 me-4" v-on:click="openModal('followers')">
+                                            <span v-text="count['followers']  ?? '0'"> </span> Follower<span v-text="count['followers'] > 1 || count['followers'] === 0 ? 's' : ''"></span>  
                                         </span>
-                                        <span x-bind:data-following-stats="count['following']" class=" cursor-pointer user-select-none ps-0 me-4" x-on:click="openModal('following')">
-                                            <span x-text="count['following'] ?? '0'"> </span>
+                                        <span v-bind:data-following-stats="count['following']" class=" cursor-pointer user-select-none ps-0 me-4" v-on:click="openModal('following')">
+                                            <span v-text="count['following'] ?? '0'"> </span>
                                             Following
                                         </span>
-                                        <span x-bind:data-friends-stats="count['friends']" class="cursor-pointer user-select-none ps-0 me-4" x-on:click="openModal('friends')">
-                                            <span x-text="count['friends'] ?? '0'"> </span>
-                                            Friend<span x-text="count['friends'] > 1 || count['friends'] === 0? 's' : ''"></span>  
+                                        <span v-bind:data-friends-stats="count['friends']" class="cursor-pointer user-select-none ps-0 me-4" v-on:click="openModal('friends')">
+                                            <span v-text="count['friends'] ?? '0'"> </span>
+                                            Friend<span v-text="count['friends'] > 1 || count['friends'] === 0? 's' : ''"></span>  
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                            @include('__CommonPartials.ProfileStatsModal')
+                            @include('__CommonPartials.ProfileStatsModal2', [
+                                'propsTeamOrUserId' => $userProfile->id,
+                                'propsUserId' => $loggedUserId,
+                                'propsIsUserSame' => $isUserSame ? 1: 0, 
+                                'propsRole' => "PARTICIPANT", 
+                                'propsUserRole' => $loggedUserRole
+                            ])
                         </div>
                         <br><br>
 
@@ -623,9 +629,7 @@
             </div>
         </div>
         <script src="{{ asset('/assets/js/participant/Profile.js') }}"></script>
-        
     </main>
-
 </body>
 @include('__CommonPartials.Cropper')
 
