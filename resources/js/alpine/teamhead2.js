@@ -1,4 +1,3 @@
-import Alpine from "alpinejs";
 import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
 import { ProfileData, openModal, ReportFormData } from "../custom/followers2";
@@ -36,19 +35,19 @@ function TeamHead() {
             if (this.isCountriesFetched) return;
             try {
                 const data = await storeFetchDataInLocalStorage('/countries');
-                console.log({data});
-                console.log({data});
-                console.log({data});
-                console.log({data});
+               
+               
+               
+               
                 if (data?.data) {
                     this.isCountriesFetched = true;
                     this.countries = data.data;
 
                     const choices2 = document.getElementById('select2-country3');
-                    console.log({choices2});
-                    console.log({choices2});
-                    console.log({choices2});
-                    console.log({choices2});
+                   
+                   
+                   
+                   
                     let countriesHtml = "<option value=''>Do not display</option>";
 
                     data?.data.forEach((value) => {
@@ -152,6 +151,7 @@ window.formatDateMySqlLuxon = (mysqlDate, mysqlTime) => {
 let role = "TEAM";
 const storage = document.querySelector('.team-head-storage');
 const { loggedUserId, loggedUserRole } = storage.dataset;
+
 // Alpine.data('profileData', alpineProfileData(teamData.id, loggedUserId, false, role, loggedUserRole));
 // Alpine.data('reportData', reportFormData());
 
@@ -165,11 +165,12 @@ window.onpageshow = function(event) {
 document.addEventListener('DOMContentLoaded', () => {
     createApp({
         TeamHead,
-        ProfileData,
-        ReportFormData
     }).mount('.teamhead');
 
-  
+    createApp({
+        ProfileData,
+        ReportFormData
+    }).mount('#connectionModal');
 });
 
 // Alpine.start();

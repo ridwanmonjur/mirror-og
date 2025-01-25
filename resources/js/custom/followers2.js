@@ -374,8 +374,11 @@ function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRol
             try {
                 let data = await makeRequest(route, 'POST', JSON.stringify({}));
      
-                console.log({data});
-
+               
+                console.log({data})
+                console.log({data})
+                console.log({data})
+                console.log({data})
                 if (!('is_blocked' in data)) {
                     return;
                 }
@@ -644,6 +647,7 @@ function ReportBlockComponent () {
         }
     }
 }
+
 
 export {
     ProfileData,

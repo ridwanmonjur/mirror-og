@@ -52,7 +52,6 @@ class ParticipantFollow extends Model
             $join->on('blocks.blocked_user_id', '=', 'users.id')
                  ->where('blocks.user_id', '=', $loggedUserId);
         })
-        ->selectRaw('EXISTS(SELECT 1 FROM reports WHERE reporter_id = ? AND reported_user_id = users.id) as logged_report_status', [$loggedUserId])
         ->leftJoin('organizer_follows as og_follows', function($join) use ($loggedUserId) {
             $join->on('og_follows.organizer_user_id', '=', 'users.id')
                 ->where('og_follows.participant_user_id', '=', $loggedUserId)

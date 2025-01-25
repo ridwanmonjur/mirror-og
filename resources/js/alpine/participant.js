@@ -41,15 +41,6 @@ Alpine.data('profileDataComponent', () => {
         isCountriesFetched: false,
         changeFlagEmoji() {
             let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == this.participant.region);
-            console.log({
-                countryX, region: this.participant.region
-            })
-            console.log({
-                countryX, region: this.participant.region
-            })
-            console.log({
-                countryX, region: this.participant.region
-            })
             if (countryX) {
                 this.participant.region_name = countryX.name.en;
                 this.participant.region_flag = countryX.emoji_flag;

@@ -7,10 +7,12 @@
 </head>
 @php
     if (isset($user)) {
+        $userId = $user->id;
         $role = $user->role;
         $teamMember = $selectTeam->findTeamMemberByUserId($user->id);
         $isUserFollowingTeam = $selectTeam->findTeamFollowerByUserId($user->id);
     } else {
+        $userId = null;
         $role = $teamMember = null;
         $isUserFollowingTeam = false;
     }
@@ -55,7 +57,8 @@
 <main class="main1 teamhead"
     v-scope="TeamHead()"
     @vue:mounted="init"
-    id="backgroundBanner" class="member-section px-2 py-2"
+    id="backgroundBanner" 
+    class="member-section px-2 py-2"
 >
 
     <div class="team-head-storage d-none  "
@@ -439,7 +442,13 @@
        
     </div>
 </main>
-@include('__CommonPartials.ProfileStatsModal2')
+@include('__CommonPartials.ProfileStatsModal2', [
+   'propsTeamOrUserId' => $selectTeam->id,
+   'propsUserId' => $userId,
+   'propsIsUserSame' => 0, 
+   'propsRole' => "TEAM", 
+   'propsUserRole' => $role
+])
 @include('Participant.__Partials.BackgroundModal')
 <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
 <script src="{{ asset('/assets/js/participant/TeamHead.js') }}"></script>
