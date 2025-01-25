@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 
-function reportFormData ()  {
-    return () => ({
+function ReportFormData ()  {
+    return {
         willShowReports: true,
         reports: [],
         errors: {},
@@ -105,13 +105,11 @@ function reportFormData ()  {
                 console.log({user: this.user});
             });
         },
-
-        
-    });
+    }
 };
 
-function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRole) {
-    return () => ({
+function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRole) {
+    return {
         connections: [],
         page: null,
         next_page: null,
@@ -377,7 +375,10 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
                 let data = await makeRequest(route, 'POST', JSON.stringify({}));
      
                
-
+                console.log({data})
+                console.log({data})
+                console.log({data})
+                console.log({data})
                 if (!('is_blocked' in data)) {
                     return;
                 }
@@ -501,7 +502,7 @@ function alpineProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedU
 
         },
 
-    });
+    };
 }
 
 async function makeRequest(url, method, data) {
@@ -542,8 +543,10 @@ const openModal = (type) => {
     window.bootstrap.Modal.getOrCreateInstance(modalElement).show();
 }
 
+
+
 export {
-    alpineProfileData,
+    ProfileData,
     openModal,
-    reportFormData
+    ReportFormData,
 };

@@ -25,7 +25,6 @@ class UserProfile extends Model
     {
         $backgroundStyles = $fontStyles = $frameStyles = '';
         $backgroundStyles = "background-color: #e5e7eb;"; // Default gray
-
         if (isset($this->backgroundBanner)) {
             $backgroundStyles = "background-image: url('/storage/{$this->backgroundBanner}');";
         } elseif (isset($this->backgroundColor)) {

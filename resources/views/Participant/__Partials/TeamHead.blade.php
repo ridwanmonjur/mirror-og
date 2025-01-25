@@ -2,7 +2,7 @@
     @vite([
         'resources/sass/app.scss',
         'resources/js/app.js',
-        'resources/js/alpine/teamhead2.js',
+        'resources/js/alpine/teamhead.js',
     ])
 </head>
 @php
@@ -25,6 +25,9 @@
         'fontStyles' => $fontStyles,
         'frameStyles' => $frameStyles
     ] = $selectTeam->profile?->generateStyles();
+    if (!$backgroundStyles) {
+        $backgroundStyles = "background-color: #e5e7eb;"; // Default gray
+    }
 @endphp
 @guest
     @php
@@ -442,7 +445,7 @@
        
     </div>
 </main>
-@include('__CommonPartials.ProfileStatsModal2', [
+@include('__CommonPartials.ProfileStatsModal', [
    'propsTeamOrUserId' => $selectTeam->id,
    'propsUserId' => $userId,
    'propsIsUserSame' => 0, 

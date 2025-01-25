@@ -12,7 +12,7 @@
     @vite([
         'resources/sass/app.scss', 
         'resources/js/app.js', 
-        'resources/js/alpine/participant2.js'
+        'resources/js/alpine/participant.js'
     ])
 </head>
 @php
@@ -25,6 +25,9 @@
         'fontStyles' => $fontStyles, 
         'frameStyles' => $frameStyles
     ] = $userProfile->profile?->generateStyles();
+    if (!$backgroundStyles) {
+        $backgroundStyles = "background-color: #e5e7eb;"; // Default gray
+    }
 
     $activityNames = ['new', 'recent', 'older'];
 @endphp
@@ -61,7 +64,7 @@
 
         @include('Participant.__ProfilePartials.Forms')
         <div id="backgroundBanner" class="member-section px-2 pt-2"
-            @vue:mount="init"
+            @vue:mounted="init"
             v-scope="ParticipantData()"
         >
             @if($isOwnProfile) 
@@ -357,7 +360,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @include('__CommonPartials.ProfileStatsModal2', [
+                            @include('__CommonPartials.ProfileStatsModal', [
                                 'propsTeamOrUserId' => $userProfile->id,
                                 'propsUserId' => $loggedUserId,
                                 'propsIsUserSame' => $isUserSame ? 1: 0, 

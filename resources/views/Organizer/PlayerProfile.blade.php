@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizer Profile Page</title>
     @include('__CommonPartials.HeadIcon')
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/organizer2.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/organizer.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
 </head>
@@ -20,6 +20,9 @@
         'frameStyles' => $frameStyles
     ] = $userProfile->profile?->generateStyles();
     $loggedUserId = $loggedUserRole = null;
+    if (!$backgroundStyles) {
+        $backgroundStyles = "background-color: #e5e7eb;"; // Default gray
+    }
 @endphp
 @auth
     @php
@@ -175,7 +178,7 @@
                                     </span>
                                 </span>
                             </span>
-                            @include('__CommonPartials.ProfileStatsModal2', [
+                            @include('__CommonPartials.ProfileStatsModal', [
                                 'propsTeamOrUserId' => $userProfile->id,
                                 'propsUserId' => $loggedUserId,
                                 'propsIsUserSame' => $isUserSame ? 1: 0, 
