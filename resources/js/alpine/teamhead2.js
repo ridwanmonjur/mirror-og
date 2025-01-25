@@ -164,7 +164,9 @@ window.onpageshow = function(event) {
 
 document.addEventListener('DOMContentLoaded', () => {
     createApp({
-        TeamHead
+        TeamHead,
+        ProfileData,
+        ReportFormData
     }).mount('.teamhead');
 
   

@@ -439,10 +439,8 @@
        
     </div>
 </main>
-@include('__CommonPartials.ProfileStatsModal')
+@include('__CommonPartials.ProfileStatsModal2')
 @include('Participant.__Partials.BackgroundModal')
 <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
-
 <script src="{{ asset('/assets/js/participant/TeamHead.js') }}"></script>
-
 @include('__CommonPartials.Cropper')
