@@ -373,7 +373,7 @@
                                         what we
                                         can do to help.</i> </p>
 
-                                <form v-on:submit="submitReport(event)">
+                                <form v-on:submit.prevent="submitReport(event)">
                                     <div class="mb-3">
                                         <p class="form-label  d-block">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"

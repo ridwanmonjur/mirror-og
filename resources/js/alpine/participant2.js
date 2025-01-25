@@ -1,7 +1,8 @@
 import Alpine from "alpinejs";
 import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
-import { alpineProfileData, openModal, reportFormData } from "../custom/followers";
+import { ProfileData, openModal, ReportFormData } from "../custom/followers2";
+import { createApp } from "petite-vue";
 
 let userData = JSON.parse(document.getElementById('initialUserData')?.value);
 let participantData = JSON.parse(document.getElementById('initialParticipantData')?.value);
@@ -24,7 +25,7 @@ const {
 
 console.log({loggedUserId});
 
-Alpine.data('profileDataComponent', () => {
+function ParticipantData ()  {
     return {
         select2: null,
         isEditMode: false,
@@ -40,7 +41,7 @@ Alpine.data('profileDataComponent', () => {
         errorMessage: errorInput?.value,
         isCountriesFetched: false,
         changeFlagEmoji() {
-            let countryX = Alpine.raw(this.countries || []).find(elem => elem.id == this.participant.region);
+            let countryX = (this.countries || []).find(elem => elem.id == this.participant.region);
             if (countryX) {
                 this.participant.region_name = countryX.name.en;
                 this.participant.region_flag = countryX.emoji_flag;
@@ -98,8 +99,8 @@ Alpine.data('profileDataComponent', () => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        participant: Alpine.raw(this.participant),
-                        user: Alpine.raw(this.user)
+                        participant: this.participant,
+                        user: this.user
                     }),
                 });
                 const data = await response.json();
@@ -145,10 +146,10 @@ Alpine.data('profileDataComponent', () => {
         }
 
     }
-});
+}
 
-function createActivityLogsData(userId, duration) {
-    return () => ({  
+function ActivityLogs(userId, duration) {
+    return {  
         items: [],
         hasMore: true,
         page: 1,
@@ -179,17 +180,16 @@ function createActivityLogsData(userId, duration) {
                 .fromISO(date)
                 .toRelative();
         }
-    });
+    }
 }
 
-const activityTypes = JSON.parse(document.getElementById('activity_input')?.value || "[]");
 
 // activityTypes.forEach(type => {
 //     Alpine.data(`${type}Activities`, createActivityLogsData(userId, type));
 // });
 
-function alpineProfileStatsData(userId, role) {
-    return () => ({
+function ProfileCount(userId, role) {
+    return {
         count: {},
         loading: true,
         
@@ -211,19 +211,33 @@ function alpineProfileStatsData(userId, role) {
         openModal(type) {
             openModal(type);
         },
-    });
+    };
 }
 
 let role = "PARTICIPANT";
-Alpine.data('profileData', alpineProfileData(userId, loggedUserId, userId == loggedUserId, role, loggedUserRole));
-Alpine.data('profileStatsData', alpineProfileStatsData( userId,  role));
-window.onpageshow = function(event) {
-    if (event.persisted) {
-        window.location.reload();
-    }
-};
 
-Alpine.data('reportData', reportFormData());
+document.addEventListener('DOMContentLoaded', () => {
+    createApp({
+        ParticipantData,
+        ProfileData,
+        ReportFormData,
+        ProfileCount,
+        ActivityLogs
+    }).mount('#app');
+
+    // createApp({
+        
+    // }).mount('#connectionModal');
+});
+// Alpine.data('profileData', alpineProfileData(userId, loggedUserId, userId == loggedUserId, role, loggedUserRole));
+// Alpine.data('profileStatsData', alpineProfileStatsData( userId,  role));
+// window.onpageshow = function(event) {
+//     if (event.persisted) {
+//         window.location.reload();
+//     }
+// };
+
+// Alpine.data('reportData', reportFormData());
 
 
-Alpine.start();
+// Alpine.start();
