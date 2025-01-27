@@ -26,7 +26,7 @@
         'frameStyles' => $frameStyles
     ] = $userProfile->profile?->generateStyles();
     if (!$backgroundStyles) {
-        $backgroundStyles = "background-color: #e5e7eb;"; // Default gray
+        $backgroundStyles = "background-color: #fffdfb;"; // Default gray
     }
 
     $activityNames = ['new', 'recent', 'older'];
@@ -362,7 +362,7 @@
                             </div>
                             @include('__CommonPartials.ProfileStatsModal', [
                                 'propsTeamOrUserId' => $userProfile->id,
-                                'propsUserId' => $loggedUserId,
+                                'propsUserId' => $loggedUserId ?? '0',
                                 'propsIsUserSame' => $isUserSame ? 1: 0, 
                                 'propsRole' => "PARTICIPANT", 
                                 'propsUserRole' => $loggedUserRole

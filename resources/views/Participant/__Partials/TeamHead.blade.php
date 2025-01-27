@@ -12,8 +12,7 @@
         $teamMember = $selectTeam->findTeamMemberByUserId($user->id);
         $isUserFollowingTeam = $selectTeam->findTeamFollowerByUserId($user->id);
     } else {
-        $userId = null;
-        $role = $teamMember = null;
+        $userId = $role = $teamMember = null;
         $isUserFollowingTeam = false;
     }
 
@@ -26,7 +25,7 @@
         'frameStyles' => $frameStyles
     ] = $selectTeam->profile?->generateStyles();
     if (!$backgroundStyles) {
-        $backgroundStyles = "background-color: #e5e7eb;"; // Default gray
+        $backgroundStyles = "background-color: #fffdfb;"; // Default gray
     }
 @endphp
 @guest
@@ -447,7 +446,7 @@
 </main>
 @include('__CommonPartials.ProfileStatsModal', [
    'propsTeamOrUserId' => $selectTeam->id,
-   'propsUserId' => $userId,
+   'propsUserId' => $userId ?? 0,
    'propsIsUserSame' => 0, 
    'propsRole' => "TEAM", 
    'propsUserRole' => $role

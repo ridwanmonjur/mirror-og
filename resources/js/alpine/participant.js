@@ -129,18 +129,6 @@ function ParticipantData ()  {
             var banner = document.getElementById('backgroundBanner');
             banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
 
-
-            // this.$watch('participant.birthday', value => {
-            //     const today = new Date();
-            //     const birthDate = new Date(value);
-            //     this.participant.age = today.getFullYear() - birthDate.getFullYear();
-            //     const monthDifference = today.getMonth() - birthDate.getMonth();
-
-            //     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-            //         this.participant.age--;
-            //     }
-            // });
-
             this.fetchCountries();
 
         }

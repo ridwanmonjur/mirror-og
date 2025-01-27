@@ -91,7 +91,6 @@
         <button type="button" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to organizer</button>
     </a>
 </div>
-<script src="{{ asset('/assets/js/participant/signin.js') }}"></script>
 
 @endsection
 

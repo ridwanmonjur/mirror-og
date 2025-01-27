@@ -15,12 +15,12 @@
 <h5 class="mt-2 mb-0">Sign in to your <span class="text-primary">organizer account</span></h5>
 <form 
     autocomplete="off" 
-    readonly 
+    formnovalidate
     name="organizer-signin-form" 
     id="organizer-signin-form" 
     method="post" 
     action="{{route('organizer.signin.action')}}"
-    onsubmit="submitForm(event);"
+    onsubmit="return submitForm(event);"
 >
     @csrf
     <div class="flash-message">
@@ -57,7 +57,7 @@
         </div>
         <a href="{{ route('user.forget.view') }}">Forgot password?</a>
     </div>
-    <input type="submit" value="Sign in">
+    <button type="submit">Sign in</button>
 
     <div class="sign-txt">By continuing, you agree to Driftwood's <a href="#">Terms of Use</a>. Read our <a
             href="#">Privacy Policy</a>.</div>
@@ -85,7 +85,6 @@
         <button type="button" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to participant</button>
     </a>
 </div>
-<script src="{{ asset('/assets/js/organizer/signin.js') }}"></script>
 
 @endsection
 

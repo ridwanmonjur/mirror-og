@@ -72,4 +72,3 @@
 @endsection
 
 @include('Auth.Layout.SignUpBodyTag')
-<script src="{{ asset('/assets/js/participant/signin.js') }}"></script>
