@@ -1,7 +1,7 @@
 <body>
     @include('googletagmanager::body')
     <main>
-        <div class="wrapper">
+        <div class="wrapper py-4">
 
             @yield('signInbody')
 

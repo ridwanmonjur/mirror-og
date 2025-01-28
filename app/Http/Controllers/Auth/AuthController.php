@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Services\AuthService;
+use Exception;
+use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -50,8 +52,6 @@ class AuthController extends Controller
         return $this->authService->handleUserRedirection($finduser, $error, $role);
     }
 
-    
-
     // Steam login
     public function redirectToSteam(Request $request)
     {
@@ -75,11 +75,10 @@ class AuthController extends Controller
     {
         $validatedData = [];
         $validationRules = [
-            'username' => 'bail|required',
+            'username' => 'bail|required|min:3|unique:users',
             'email' => 'bail|required|email',
             'password' => 'bail|required|min:6|max:24',
-            'companyName' => 'sometimes',
-            'companyDescription' => 'sometimes',
+            'confirmPassword' => 'bail|required|min:6|max:24|same:password',
         ];
         
         extract($this->authService->determineUserRole($request));
@@ -135,7 +134,7 @@ class AuthController extends Controller
             return redirect()
                 ->route($redirectErrorRoute)
                 ->with('error', 'An error occurred while processing your request.');
-        } catch (\Throwable $th) {
+        }   catch (\Throwable $th) {
             DB::rollBack();
 
             return redirect()
@@ -155,13 +154,13 @@ class AuthController extends Controller
                 'password' => 'bail|required|min:6|max:24',
             ]);
 
-            if (Auth::attempt($validatedData)) {
+            if (Auth::attempt($validatedData, $request->has('remember-me'))) {
                 $user = User::where('email', $request->email)->first();
                 if (! $user->email_verified_at) {
+                    Auth::logout();
                     return response()->json([
                         'success' => false,
-                        'error' => 'Email not verified. Please verify email first!',
-                        'errorEmail' => $request->email,
+                        'message' => 'Email not verified. Please verify email first!',
                     ]);
                 }
 
@@ -182,10 +181,22 @@ class AuthController extends Controller
             throw new ErrorException('The email or password you entered is incorrect!');
         } catch (QueryException $e) {
             Log::error($e->getMessage());
-
             return response()->json(['success' => false, 'message' => 'An error occurred while processing your request.'], 422);
-        } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'message' => $th->getMessage()], 422);
+        } catch (ValidationException $e) {
+            $errors = $e->validator->errors();
+            
+            $errorArray = [];
+            foreach ($errors->messages() as $field => $messages) {
+                $errorArray['validation'][$field] = $messages[0];
+            }
+            
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'errors' => $errorArray
+            ], 422);
+        }   catch (Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
         }
     }
 
