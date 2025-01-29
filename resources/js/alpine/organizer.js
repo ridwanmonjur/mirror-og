@@ -1,9 +1,8 @@
-import Alpine from "alpinejs";
-import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
-import { alpineProfileData, openModal, reportFormData } from "../custom/followers";
 import intlTelInput from 'intl-tel-input';
 import utilsScript from "intl-tel-input/utils";
+import { ProfileData, openModal, ReportFormData } from "../custom/followers";
+import { createApp } from "petite-vue";
 
 
 const storage = document.querySelector('.profile-storage');
@@ -42,8 +41,8 @@ initOffCanvasListeners();
 
 
 
-Alpine.data('alpineDataComponent', function () {
-    return ({
+function OrganizerData() {
+    return {
         isEditMode: false,
         userProfile: { ...initialUserProfile },
         organizer: { ...initialOrganizer },
@@ -85,9 +84,9 @@ Alpine.data('alpineDataComponent', function () {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        address: Alpine.raw(this.address),
-                        userProfile: Alpine.raw(this.userProfile),
-                        organizer: Alpine.raw(this.organizer)
+                        address: this.address,
+                        userProfile: this.userProfile,
+                        organizer: this.organizer
                     }),
                 });
 
@@ -120,14 +119,8 @@ Alpine.data('alpineDataComponent', function () {
 
         },
 
-    })
-})
-
-const {loggedUserId, loggedUserRole} = document.querySelector('#routeContainer').dataset;
-
-Alpine.data('profileData', alpineProfileData(initialUserProfile.id, loggedUserId, false, "ORGANIZER", loggedUserRole));
-Alpine.data('reportData', reportFormData());
-
+    }
+}
 
 window.openModal = openModal;
 window.onpageshow = function(event) {
@@ -136,4 +129,11 @@ window.onpageshow = function(event) {
     }
 };
 
-Alpine.start();
+document.addEventListener('DOMContentLoaded', () => {
+    createApp({
+        OrganizerData,
+        ProfileData,
+        ReportFormData
+    }).mount('#app');
+
+});

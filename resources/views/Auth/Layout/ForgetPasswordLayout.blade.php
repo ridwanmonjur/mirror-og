@@ -15,13 +15,13 @@
    <div class="field">
         <label for="email" class="placeholder-moves-up-container">
             <input  autocomplete="off" type="email" name="email" id="email" required="true" class="input-area" oninput="movePlaceholderUp(this)">
-            <span class="placeholder-moves-up">Email Address</span>
+            <span class="placeholder-moves-up">Email address</span>
             <div class="field-error-message d-none"></div>
         </label>
     </div>
+    <br>
     <div class="field">
         <input id="submit" type="submit" value="Forgot Password" class="oceans-gaming-default-button oceans-gaming-green-button">
-    <br>
     <br><br>
 </form>
 

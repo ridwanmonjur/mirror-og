@@ -64,7 +64,7 @@
                                 >
                                 <div class="ms-2">
                                     <small class="d-block py-0 my-0">
-                                        {{ $event?->user?->name ?? 'N/A' }}
+                                        {{ $event?->user?->name ?? 'Name Pending' }}
                                     </small>
                                     <small>
                                         Description: {{ $event->eventDescription }}

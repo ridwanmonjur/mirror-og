@@ -29,7 +29,7 @@
 
                 @foreach ($upperBracketRounds as $stage => $roundClass)
                     @if (isset($bracketList['upperBracket'][$stage]))
-                        <div class="tournament-bracket__round mb-2 tournament-bracket__round--{{ $roundClass }}">
+                        <div class="tournament-bracket__round mb-2 tournament-bracket__round--{{ $stage }}">
                             <div class="tournament-bracket__list">
                                 @foreach ($bracketList['upperBracket'][$stage] as $order => $bracket)
                                     <x-brackets.bracket-middle-item :bracket="$bracket" :stageName="'upperBracket'" :innerStageName="$stage"
@@ -65,7 +65,7 @@
 
             @foreach ($rounds as $stage => $listClass)
                 @if (isset($bracketList['lowerBracket'][$stage]))
-                    <div class="tournament-bracket__round tournament-bracket__round--semifinals">
+                    <div class="tournament-bracket__round tournament-bracket__round--{{ $stage }}">
                         <div class="tournament-bracket__list {{ $listClass }}">
                             @foreach ($bracketList['lowerBracket'][$stage] as $order => $bracket)
                                 <x-brackets.bracket-middle-item :bracket="$bracket" :stageName="'lowerBracket'" :innerStageName="$stage"
@@ -103,7 +103,6 @@
             </div>
         </div>
 
-        <br><br><br>
     @else
         <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
         <p class="mmt-2"> Bracket is not set </p>

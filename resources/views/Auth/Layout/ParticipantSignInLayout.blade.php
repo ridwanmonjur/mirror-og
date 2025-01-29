@@ -10,16 +10,17 @@
 >
 </div>
 <a href="{{route('public.landing.view')}}">
-    <img class="mt-4 motion-logo mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
+    <img class="my-0 motion-logo mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
 </a>
-<h5 class="px-2">Sign in to your <span class="text-primary">participant account</span></h5>
+<h5 class="px-2 my-0">Sign in to your <span class="text-primary">participant account</span></h5>
 <form 
     autocomplete="off" 
     readonly 
+    novalidate
     name="signin-form" 
     id="signin-form" 
     method="post" 
-    onsubmit="submitForm(event);"
+    onsubmit="submitSignInUpForm(event);"
     action="{{route('participant.signin.action', 
         [
             'intended' => request()->get('intended'),
@@ -39,27 +40,15 @@
         @endif
         @include('__CommonPartials.Flash')
     </div>
-    <div class="field">
-        <label for="email" class="placeholder-moves-up-container">
-            <input autocomplete="off" type="email" name="email" id="email" required="true" class="input-area" oninput="movePlaceholderUp(this)">
-            <span class="placeholder-moves-up">Email</span>
-            <div class="field-error-message d-none" id="email-error"></div>
-        </label>
-    </div>
 
-    <div class="field password">
-        <label for="password" class="placeholder-moves-up-container">
-            <input autocomplete="new-password" type="password" name="password" id="password" minlength="6" maxlength="24" required="true"
-                class="input-area" oninput="movePlaceholderUp(this)">
-            <span class="placeholder-moves-up">Password</span>
-            <i class="fa fa-eye" id="togglePassword" onclick="togglePassword('password', 'togglePassword')" style="cursor: pointer; margin-top: 10px"></i>
-            <div class="field-error-message d-none" id="password-error"></div>
-        </label>
-    </div>
-    <div class="pass-txt mb-2">
-        <div class="remember-checkbox">
-            <input autocomplete="off" type="checkbox" class="form-check-input" name="" id="">
-            <label class="text-checkbox">Remember me</label>
+    @include('Auth.Layout.__Signin')
+
+    <div class="pass-txt mb-2 d-flex justify-content-between">
+        <div class="form-check">
+            <label class="form-check-label" for="remember-me">
+                <input type="checkbox" class="form-check-input" name="remember-me" checked>
+                Remember me
+            </label>
         </div>
         <a href="{{ route('user.forget.view') }}">Forgot password?</a>
     </div>
@@ -91,7 +80,6 @@
         <button type="button" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to organizer</button>
     </a>
 </div>
-<script src="{{ asset('/assets/js/participant/signin.js') }}"></script>
 
 @endsection
 

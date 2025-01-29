@@ -67,7 +67,7 @@ class OrganizerFollow extends Model
             ->exists();
     }
 
-    public static function getOrganizerFollowersPaginate($userId, $loggedUserId, $perPage, $page = 1, $search = null)
+    public static function getFollowersPaginate($userId, $loggedUserId, $perPage, $page = 1, $search = null)
     {
         $select = [
             'users.id',
@@ -91,6 +91,8 @@ class OrganizerFollow extends Model
                 'logged_user_friends.id as friend_id',
                 'logged_user_friends.status as logged_friendship_status',
                 'logged_user_friends.actor_id as logged_friendship_actor',
+                DB::raw('og_follows.id as og_follow_status'),
+                DB::raw('p_follows.id as p_follow_status'),
                 DB::raw('COALESCE ( og_follows.id, p_follows.id ) as logged_follow_status'),
                 'blocks.id as logged_block_status',
                 
@@ -101,9 +103,8 @@ class OrganizerFollow extends Model
             })
             ->leftJoin('blocks', function($join) use ($loggedUserId) {
                 $join->on('blocks.blocked_user_id', '=', 'users.id')
-                    ->where('blocks.user_id', $loggedUserId);
+                     ->where('blocks.user_id', '=', $loggedUserId);
             })
-            ->selectRaw('EXISTS(SELECT 1 FROM reports WHERE reporter_id = ? AND reported_user_id = users.id) as logged_block_status', [$loggedUserId])
             ->leftJoin('organizer_follows as og_follows', function($join) use ($loggedUserId) {
                 $join->on('og_follows.organizer_user_id', '=', 'users.id')
                     ->where('og_follows.participant_user_id', $loggedUserId);

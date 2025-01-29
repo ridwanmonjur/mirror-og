@@ -1,29 +1,35 @@
 
-<div x-data="{{ $duration . 'Activities'}}" 
+<div 
+    {{-- x-data="{{ $duration . 'Activities'}}"  --}}
+    v-scope="ActivityLogs(
+        {{$userProfile->id}},
+        '{{$duration}}'
+    )"
+    @vue:mounted="init"
     class="activity-logs"
 >
-    <template x-if="items && items[0]">
+    <template v-if="items && items[0]">
         <div class="mt-2">
-            <template x-for="item in items" :key="item.id">
+            <template v-for="item in items" :key="item.id">
                 <div class="tab-size mb-3 mx-auto">
-                    <span class="me-1" x-html="item.log"></span>
+                    <span class="me-1" v-html="item.log"></span>
                     <span style="color: #565656;" 
-                          x-text="formatDate(item.created_at)">
+                          v-text="formatDate(item.created_at)">
                     </span>
                 </div>
             </template>
         </div>
     </template>
 
-    <template x-if="items && !items[0]">
+    <template v-if="items && !items[0]">
         <div class="tab-size mt-2">
-            No <span x-text="duration"></span> activities
+            No <span v-text="duration"></span> activities
         </div>
     </template>
 
-    <template x-if="hasMore">
+    <template v-if="hasMore">
         <div class="text-center mt-2">
-            <button x-on:click="loadMore" 
+            <button v-on:click="loadMore" 
                     class="btn btn-link btn-sm text-primary">
                 Load More
             </button>

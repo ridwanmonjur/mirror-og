@@ -8,7 +8,10 @@ export default defineConfig({
                 'resources/sass/app.scss',
                 'resources/js/app.js',
                 'resources/js/alpine/settings.js',
-                'resources/js/alpine/chat2.js',
+                'resources/js/alpine/chat.js',
+                'resources/js/alpine/teamhead.js',
+                'resources/js/alpine/organizer.js',
+                'resources/js/alpine/participant.js'
             ],
             refresh: true,
         }),
@@ -27,7 +30,7 @@ export default defineConfig({
             // input: {
             //     app: 'resources/js/app.js',
             //     styles: 'resources/sass/app.scss',
-                // chat: 'resources/js/alpine/chat2.js',
+                // chat: 'resources/js/alpine/chat.js',
                 // bracket: 'resources/js/alpine/bracket.js',
                 // organizer: 'resources/js/alpine/organizer.js',
                 // participant: 'resources/js/alpine/participant.js',

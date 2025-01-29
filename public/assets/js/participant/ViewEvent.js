@@ -144,13 +144,13 @@ document.getElementById('followForm')?.addEventListener('submit', async function
 // }, { once: true });
 
 let previousValues = JSON.parse(document.getElementById('previousValues')?.value);
+const eventId = document.getElementById('eventId')?.value;
 
 var bracketItemList = document.querySelectorAll('.codeCANcode.tournament-bracket__item');
 bracketItemList.forEach(item => {
     item.classList.add('special-item-right');
 });
 
-const eventId = document.getElementById('eventId')?.value;
 
 var bracketteamList = document.querySelectorAll('.codeCANcode.tournament-bracket__match');
 bracketItemList.forEach(item => {
@@ -462,7 +462,7 @@ submitBtnElement?.addEventListener('click', function(event) {
                             this.src='/assets/images/404.png';
                         };
 
-                        img.className = 'popover-button position-absolute d-none-when-hover object-fit-cover me-2';
+                        img.className = 'popover-button position-absolute w-100 h-100 d-none-when-hover object-fit-cover me-2';
                         img.alt = 'Team View';
                         img.style.zIndex = '99';
                         img.addEventListener('click', reportModalShow);

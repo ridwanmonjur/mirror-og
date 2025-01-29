@@ -3,9 +3,9 @@
 <head>
     @include('googletagmanager::head')
     {{-- <meta name="page-component" content="chat2"> --}}
-    @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/chat2.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/chat.js'])
 
-    <link rel="stylesheet" href="{{ asset('/assets/css/chat/fullpage.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/common/fullpage.css') }}">
     @include('__CommonPartials.HeadIcon')
 </head>
 
@@ -373,7 +373,7 @@
                                         what we
                                         can do to help.</i> </p>
 
-                                <form v-on:submit="submitReport(event)">
+                                <form v-on:submit.prevent="submitReport(event)">
                                     <div class="mb-3">
                                         <p class="form-label  d-block">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"

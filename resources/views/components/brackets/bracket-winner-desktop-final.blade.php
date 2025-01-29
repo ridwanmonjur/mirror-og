@@ -20,7 +20,7 @@
     @if ($teamId1)
         <img src="{{ bladeImageNull($teamBanner1) }}" width="40" height="33"
             onerror="this.src='{{ asset('assets/images/404.png') }}';"
-            class="cursor-pointer position-absolute  object-fit-cover me-2" alt="Team View"
+            class="cursor-pointer position-absolute w-100 h-100 object-fit-cover me-2" alt="Team View"
             style="z-index: 99;"
             data-position="{{$position1}}" 
             onclick="reportModalShow(event);" 

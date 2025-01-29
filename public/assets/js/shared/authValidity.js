@@ -1,32 +1,4 @@
-// Client validation
-function checkValidity(inpObj, inputID) {
-    const input = document.querySelector(`#${inputID}`);
-    const spanMesage = document.querySelector(`#${inputID} ~ span.placeholder-moves-up`);
-    const fieldErrorMesage = document.querySelector(`#${inputID} ~ .field-error-message`);
-    const customErrorMessages = {
-        email: "Email address is invalid.",
-    };
 
-    if (input.value.trim() == "") {
-        spanMesage.style.top = "20px";
-    } else {
-        spanMesage.style.top = "0px";
-    }
-
-    if (!inpObj.checkValidity()) {
-        const customErrorMessage = customErrorMessages[inputID] || inpObj.validationMessage;
-        fieldErrorMesage.innerHTML = `<i
-    class="fas fa-exclamation-circle form_icon__error"></i><span>${customErrorMessage}</span>`;
-        inpObj.classList.add("input__error");
-        fieldErrorMesage.classList.remove("d-none");
-        fieldErrorMesage.style.opacity = "1";
-    } else {
-        inpObj.classList.remove("input__error");
-        fieldErrorMesage.innerHTML = "";
-        fieldErrorMesage.classList.add("d-none");
-        fieldErrorMesage.style.opacity = "0";
-    }
-}
 
 const querySelector = ".wrapper input";
 
@@ -34,23 +6,17 @@ window.onload = () => {
     document.querySelector('.wrapper').focus();
     document.querySelectorAll(querySelector).forEach(inpObj => {
         const id = inpObj?.id;
-        console.log({inpObj, id})
         if (id) {
-            const spanMesage = document.querySelector(`#${id} ~ span.placeholder-moves-up`);
-
-            if (inpObj.value.trim() === "") {
-                console.log({inpObj, id})
-                if (spanMesage) spanMesage.style.top = "20px";
-            } else {
-                if (spanMesage) spanMesage.style.top = "0px";
-            }
+            inpObj.addEventListener("click", () => {
+                const spanMesage = document.querySelector(`#${id} ~ span.placeholder-moves-up`);
+                spanMesage.style.top = "0px";
+            });
 
             inpObj.addEventListener("blur", () => {
-                checkValidity(inpObj, id);
+                const spanMesage = document.querySelector(`#${id} ~ span.placeholder-moves-up`);
+                if (inpObj.value == "") spanMesage.style.top = "20px";
             });
-        } else {
-            console.warn("Input element without ID found:", inpObj);
-        }
+        } 
     });
 }
 
@@ -67,15 +33,79 @@ function movePlaceholderUp(input) {
 }
 
 // Toggle password
-function togglePassword(fieldId, buttonId) {
-    var passwordField = document.getElementById(fieldId);
-    var toggleButton = document.getElementById(buttonId);
-
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        toggleButton.className = 'fa fa-eye-slash';
+function togglePassword(id) {
+    const passwordInput = document.getElementById(id);
+    let parent = passwordInput.parentElement;
+    const eyeIcon = parent.querySelector('.eye-icon');
+    const eyeOffIcon = parent.querySelector('.eye-off-icon');
+    
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      eyeIcon.classList.add('d-none');
+      eyeOffIcon.classList.remove('d-none');
     } else {
-        passwordField.type = 'password';
-        toggleButton.className = 'fa fa-eye';
+      passwordInput.type = 'password';
+      eyeIcon.classList.remove('d-none');
+      eyeOffIcon.classList.add('d-none');
     }
 }
+
+
+function submitSignInUpForm(event) {
+    event.preventDefault(); 
+
+    document.querySelector('.flash-message').innerHTML = '';
+    const formData = new FormData(event.target);
+
+    fetch( event.target.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json',
+        }
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.route;
+        } else {
+            document.querySelectorAll('.field-error-message').forEach(element => {
+                element.classList.add('d-none');
+                element.innerHTML = '';
+            });
+            
+            document.querySelector('.flash-message').innerHTML = `<div class="text-red">${data.message}</div>`;
+            const validationErrors = data.errors?.validation ?? null;
+            if (validationErrors) {
+               
+                Object.keys(validationErrors).forEach(field => {
+                    const errorElement = document.getElementById(`${field}-error`);
+                    if (errorElement) {
+                        errorElement.innerHTML = 
+                            `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>${validationErrors[field]}`;                        errorElement.classList.remove('d-none');
+                    }
+                });
+            }
+
+        }
+    })
+    .catch(error => {
+        document.querySelector('.flash-message').innerHTML = `<div class="text-red">An error occurred during form submission. Please try again later</div>`;
+    });
+
+    return false;
+}
+
+function redirectToGoogle() {
+    const routes = document.getElementById('routeConfig');
+    window.location.href = routes.dataset.googleLogin;
+}
+
+function redirectToSteam() {
+    const routes = document.getElementById('routeConfig');
+    window.location.href = routes.dataset.steamLogin;
+}
+
+

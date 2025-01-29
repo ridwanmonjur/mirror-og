@@ -9,7 +9,7 @@
 
 <div
     class="tournament-bracket__box popover-parent position-relative {{ $position }} tournament bg-light"
-    style="width: 32px; height: 28px;"
+    style="width: 35px; height: 28px;"
 >
     <div class="popover-content d-none" style="opacity: 1; z-index: 999 !important;">
         <div class="popover-box row justify-content-start px-2 py-4" style="min-width: 400px; background: white !important;">
@@ -45,12 +45,11 @@
         </div>
     </div>
     @if ($teamId)
-        <img src="{{ bladeImageNull($teamBanner) }}" width="100%" height="25"
+        <img src="{{ bladeImageNull($teamBanner) }}" width="100%" height="100%"
             onerror="this.src='{{ asset('assets/images/404.png') }}';"
-            class="{{ 'popover-button position-absolute d-none-when-hover object-fit-cover me-2 ' 
+            class="{{ 'popover-button position-absolute z-99 d-none-when-hover object-fit-cover me-2 ' 
                     . 'data-position-'. $position }}" 
             alt="Team View"
-            style="z-index: 99;"
             data-position="{{$position}}"
             onclick="reportModalShow(event);" 
         >

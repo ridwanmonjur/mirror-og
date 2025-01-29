@@ -28,6 +28,13 @@
 
 @if ($errors->any())
 <div>
-    <strong>{{ $errors->first() }} </strong>
+    <strong>
+
+    <strong>
+        Please check these fields: 
+        @foreach($errors->all() as $error)
+            {{ str_replace('The ', '', str_replace(' field is required.', '', $error)) }}{{ !$loop->last ? ($loop->index == count($errors->all()) - 2 ? ' and ' : ', ') : '.' }}
+        @endforeach
+    </strong>
 </div>
 @endif

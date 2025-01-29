@@ -69,6 +69,8 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+            'remember_for' => 43200, // 30 days in minutes
+
         ],
 
         // 'users' => [

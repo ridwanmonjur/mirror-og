@@ -355,7 +355,7 @@
 
                 <div id="Teams" class="tabcontent">
                     <h5 class="my-0"><u>Teams</u></h5>
-                     <div style="width: 90%;">
+                     <div >
                         @if (isset($teamList[0]))
                             <br>
                             <table id="current-teams" class="member-table responsive ">
@@ -370,7 +370,7 @@
                                 <tbody>
                                     @foreach($teamList as $team)
                                         <tr class="st">
-                                            <td style="width: 60px !important;" class="py-0 px-0 mx-0"> 
+                                            <td class="py-0 px-0 mx-0"> 
                                                 <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
                                                     <svg class="gear-icon-btn"
                                                         xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -394,8 +394,11 @@
                                                     <span>{{$team->teamName}}</span>
                                                 </a>
                                             </td>
-                                            <td class="colored-cell text-start">{{$team->teamDescription}}</td>
-                                            <td style="font-size: 1.5rem;" class="colored-cell">{{$team->country_flag ? $team->country_flag : '-'}}</td>
+                                            <td style="font-size: 1.5rem;" class="colored-cell text-center">
+                                                {!! $team->country_flag ? $team->country_flag : '-' !!}
+                                            </td>
+                                            <td class="colored-cell text-center pe-3">{{$team->createdAtHumaReadable()}}</td>
+
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -415,14 +418,14 @@
                                     <tr>
                                         <th></th>
                                     
-                                        <th class="text-start">
+                                        <th >
                                             Team Name
                                         </th>
                                         
-                                        <th class="text-start" style="width: 150px;">
+                                        <th>
                                             Team Created
                                         </th>
-                                        <th class="text-start" style="width: 120px;">
+                                        <th >
                                             Team Position
                                         </th>
                                     </tr>
@@ -456,7 +459,7 @@
                                                 {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
                                             </td>
                                             <td class="colored-cell text-start px-2">
-                                                {{ $joinEventAndTeam->position ? $joinEventAndTeam->position : 'N/A' }}
+                                                {{ $joinEventAndTeam->position ? $joinEventAndTeam->position : 'TBD' }}
                                                 &nbsp;&nbsp;
                                             </td>
                                            

@@ -10,17 +10,17 @@
 >
 </div>
 <a href="{{route('public.landing.view')}}">
-    <img class="mt-4 mb-2 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
+    <img class="my-0 motion-logo mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
 </a>
-<h5 class="mt-2 mb-0">Sign in to your <span class="text-primary">organizer account</span></h5>
+<h5 class="mx-0 my-0">Sign in to your <span class="text-primary">organizer account</span></h5>
 <form 
     autocomplete="off" 
-    readonly 
+    novalidate
     name="organizer-signin-form" 
     id="organizer-signin-form" 
     method="post" 
     action="{{route('organizer.signin.action')}}"
-    onsubmit="submitForm(event);"
+    onsubmit="return submitSignInUpForm(event);"
 >
     @csrf
     <div class="flash-message">
@@ -33,31 +33,20 @@
         &nbsp;to resend verification email.
         @endif
     </div>
-    <div class="field">
-        <label for="email" class="placeholder-moves-up-container">
-            <input autocomplete="off" type="email" name="email" id="email" required="true" class="input-area" oninput="movePlaceholderUp(this)">
-            <span class="placeholder-moves-up">Email</span>
-            <div class="field-error-message d-none"></div>
-        </label>
-    </div>
+    
+    @include('Auth.Layout.__Signin')
 
-    <div class="field password">
-        <label for="password" class="placeholder-moves-up-container">
-            <input autocomplete="new-password" type="password" name="password" id="password" minlength="6" maxlength="24" required="true"
-                class="input-area" oninput="movePlaceholderUp(this)">
-            <span class="placeholder-moves-up">Password</span>
-            <i class="fa fa-eye" id="togglePassword" onclick="togglePassword('password', 'togglePassword');" style="cursor: pointer; margin-top: 10px"></i>
-            <div class="field-error-message d-none"></div>
-        </label>
-    </div>
-    <div class="pass-txt mb-2">
-        <div class="remember-checkbox">
-            <input type="checkbox" class="form-check-input" name="" id="">
-            <label class="text-checkbox">Remember me</label>
+    <div class="pass-txt mb-2 d-flex justify-content-between">
+        <div class="form-group form-check">
+            <label class="form-check-label" for="remember-me2" >
+            
+            Remember me</label>
+            <input type="checkbox" class="form-check-input" checked name="remember-me" id="remember-me2">
+
         </div>
         <a href="{{ route('user.forget.view') }}">Forgot password?</a>
     </div>
-    <input type="submit" value="Sign in">
+    <input type="submit" value="Sign in">   
 
     <div class="sign-txt">By continuing, you agree to Driftwood's <a href="#">Terms of Use</a>. Read our <a
             href="#">Privacy Policy</a>.</div>
@@ -85,7 +74,6 @@
         <button type="button" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to participant</button>
     </a>
 </div>
-<script src="{{ asset('/assets/js/organizer/signin.js') }}"></script>
 
 @endsection
 

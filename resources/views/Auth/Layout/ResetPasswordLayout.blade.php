@@ -31,7 +31,7 @@
             <label for="password" class="placeholder-moves-up-container">
                 <input autocomplete="new-password" type="password" name="confirmPassword" id="confirmPassword"
                     minlength="6" maxlength="24" required="true" class="input-area" oninput="movePlaceholderUp(this)">
-                <span class="placeholder-moves-up">Confirm Password</span>
+                <span class="placeholder-moves-up">Confirm password</span>
                 <i class="fa fa-eye" id="toggleConfirmPassword"
                     onclick="togglePassword('confirmPassword', 'toggleConfirmPassword');"
                     style="cursor: pointer; margin-top: 10px"></i>
@@ -44,7 +44,6 @@
             <br>
             <br><br>
     </form>
-    <script src="{{ asset('/assets/js/organizer/signin.js') }}"></script>
 
 @endsection
 

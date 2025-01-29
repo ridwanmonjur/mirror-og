@@ -20,8 +20,7 @@
     @if ($teamId1)
         <img src="{{ bladeImageNull($teamBanner1) }}" width="40" height="33"
             onerror="this.src='{{ asset('assets/images/404.png') }}';"
-            class="cursor-pointer position-absolute  object-fit-cover me-2" alt="Team View"
-            style="z-index: 99;"
+            class="cursor-pointer position-absolute w-100 h-100 z-99 object-fit-cover me-2" alt="Team View"
             data-position="{{$position1}}" 
             onclick="reportModalShow(event);" 
         >
@@ -48,15 +47,13 @@
     @if ($teamId2)
         <img src="{{ bladeImageNull($teamBanner2) }}" width="40" height="33"
             onerror="this.src='{{ asset('assets/images/404.png') }}';"
-            class="cursor-pointer position-absolute d-none-when-hover object-fit-cover me-2" alt="Team View"
-            style="z-index: 99;"
+            class="cursor-pointer position-absolute z-99 w-100 h-100 d-none-when-hover object-fit-cover me-2" alt="Team View"
             data-position="{{$position2}}" 
             onclick="reportModalShow(event);" 
         >
         
     @else 
-        <small class="cursor-pointer ms-1 py-2 position-absolute replace_me_with_image" 
-            style="z-index: 99;"
+        <small class="cursor-pointer ms-1 py-2 position-absolute z-99 replace_me_with_image" 
             data-position="{{$position2}}" 
             onclick="reportModalShow(event);" 
         >{{$position2}}</small>
