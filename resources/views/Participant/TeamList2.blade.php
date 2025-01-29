@@ -22,7 +22,7 @@
         <div class="d-flex justify-content-between mb-2">
             <h5> Your Teams  </h5>
             <a href="{{route('participant.team.create')}}" 
-                class="d-inline-flex ms-4 py-2 rounded-pill px-4 text-light btn btn-primary btn-sm"
+                class="d-inline-flex ms-4 py-2 rounded-pill px-4 text-light btn btn-primary me-2"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
                     class="mt-1 me-2"

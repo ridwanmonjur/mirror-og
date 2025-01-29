@@ -129,7 +129,7 @@ input[type="submit"],
     .grid-3-columns  {
         /* max-width: 1200px; */
         gap: 20px !important;
-        margin: auto 10%;
+        margin: auto 5%;
     }
   
 
