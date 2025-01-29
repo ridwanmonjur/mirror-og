@@ -70,6 +70,31 @@
                                 <button class="ps-0 pe-3 py-2 button-design-removed" type="button"
                                     id="dropdownFilterSort" data-bs-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
+                                    <span>Esports Title</span>
+                                    <span class="dropbtn-arrow">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </span>
+                                </button>
+                                <div onclick="event.stopPropagation();" class="dropdown-menu px-0 py-1"
+                                    aria-labelledby="dropdownFilterSort">
+                                    @foreach ([['title' => 'Dota 2', 'value' => 'Dota 2']] as $esportsGame)
+                                        <div class="px-3 py-1" style="width: 200px;">
+                                            <input type="checkbox" name="esports_title" class="form-check-input me-2" checked value="{{ $esportsGame['value'] }}">
+                                            <label for="esports_title">{{ $esportsGame['title'] }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="dropdown me-3">
+
+                                <button class="ps-0 pe-3 py-2 button-design-removed" type="button"
+                                    id="dropdownFilterSort" data-bs-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
                                     <span>Region </span>
                                     <span class="dropbtn-arrow">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -154,7 +179,7 @@
                                             Reset 
                                         </button>
                                 </div>
-                            </div>
+                            </div> 
 
 
                             <div class="dropdown me-3">
@@ -220,10 +245,10 @@
                                 <label class="me-3 cursor-pointer" for="recent">Recent</label>
                             </div>
                            
-                            <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1"
+                            {{-- <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1"
                                 onclick="setSortForFetch('region');">
                                 <label class="me-3 cursor-pointer" for="region">Region</label>
-                            </div>
+                            </div> --}}
                             <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1"
                                 onclick="setSortForFetch('name');">
                                 <label class="me-3 cursor-pointer" for="name">Name</label>
@@ -256,6 +281,8 @@
                             </small>
                         </small>
                         <small data-form-parent="created_at" class="me-2">
+                        </small>
+                        <small data-form-parent="esports_title" class="me-2">
                         </small>
                         <small data-form-parent="region" class="me-2">
                         </small>
