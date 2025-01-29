@@ -60,6 +60,7 @@
     v-scope="TeamHead()"
     @vue:mounted="init"
     id="backgroundBanner" 
+    v-cloak
     class="member-section px-2 py-2"
 >
 
@@ -93,7 +94,7 @@
                     @csrf
                     <button
                         type="submit"
-                        v-cloak v-if="!isEditMode"
+                         v-if="!isEditMode"
                         @class(["
                             btn rounded-pill py-2 px-4 fs-7 mt-2",
                             'btn-primary text-light' => !$isUserFollowingTeam,
@@ -105,10 +106,10 @@
                 </form>
                 @if ($isCreator)
                     <button
-                        v-cloak v-if="isEditMode"
+                         v-if="isEditMode"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#profileDrawer"
-                        v-cloak
+                        
                         {{-- onclick="document.getElementById('backgroundInput').click();" --}}
                         class="btn btn-secondary text-light rounded-pill py-2 fs-7 mt-2"
                     >
@@ -117,7 +118,7 @@
                 @endif
             </div>
 
-        <div :class="{'upload-container': true, }" v-cloak>
+        <div :class="{'upload-container': true, }" >
             <label class="upload-label">
                 <div class="circle-container mt-3">
                     <div class="uploaded-image motion-logo "
@@ -132,7 +133,7 @@
                             </button>
                         </a>
                         @if ($isCreator)
-                            <button v-cloak v-show="isEditMode"  id="upload-button2" class="btn btn-sm" aria-hidden="true">
+                            <button  v-show="isEditMode"  id="upload-button2" class="btn btn-sm" aria-hidden="true">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
@@ -146,10 +147,10 @@
         <div>
             <div :class="{'team-info  ': !isEditMode, '': true}">
                 @if ($isCreator)
-                    <div  v-cloak v-show="isEditMode">
+                    <div   v-show="isEditMode">
                         <input type="file" id="image-upload" accept="image/*" style="display: none;">
                         <br>
-                        <div v-cloak v-show="errorMessage != null" class="text-red" v-text="errorMessage"> </div>
+                        <div  v-show="errorMessage != null" class="text-red" v-text="errorMessage"> </div>
                         <div>
                             <input
                                 placeholder="Enter your team name..."
@@ -173,7 +174,7 @@
                     </div>
 
                 @endif
-                    <h3   v-cloak v-if="!isEditMode" style="{{$fontStyles}}" class="team-name ms-0 me-2 mt-2 py-0" id="team-name">
+                    <h3    v-if="!isEditMode" style="{{$fontStyles}}" class="team-name ms-0 me-2 mt-2 py-0" id="team-name">
                         {{$selectTeam->teamName}}
                     </h3>
 
@@ -182,7 +183,7 @@
                     <div class="dropdown" data-bs-auto-close="outside">
                         <button
                             
-                            v-cloak v-if="!isEditMode"
+                             v-if="!isEditMode"
                             class="gear-icon-btn me-2 position-relative z-99" style="top: 10px;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="{{$selectTeam->profile?->fontColor}}" class="bi bi-gear-fill" viewBox="0 0 16 16">
                                 <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
@@ -226,7 +227,7 @@
                         @if ($isCreator)
                             <button
                                 
-                                v-cloak v-if="!isEditMode"
+                                 v-if="!isEditMode"
                                 v-on:click="reset(); isEditMode = true;"
                                 class="gear-icon-btn me-2 position-relative"
                                 style="top: 10px;" type="button" id="editModalBtn"
@@ -241,7 +242,7 @@
                         @if ($status == "accepted_me" || $status == "accepted_team")
                             <button
                                 
-                                v-cloak v-if="!isEditMode"
+                                 v-if="!isEditMode"
                                 style="top: 7px; background-color: transparent; "
                                 class="me-2 badge  btn bg-primary text-white  px-2 position-relative"
                             >
@@ -254,7 +255,7 @@
                         @elseif ($status == "left_team")
                             <button
                                 
-                                v-cloak v-if="!isEditMode"
+                                 v-if="!isEditMode"
                                 style="top: 10px; background-color: #299e29; "
                                 class="me-2 badge  btn  text-white px-2 position-relative"
                             >
@@ -267,7 +268,7 @@
                         @elseif ($status == "left_me" )
                             <button
                                 
-                                v-cloak v-if="!isEditMode"
+                                 v-if="!isEditMode"
                                 style="top: 10px; background-color: #299e29; "
                                 class="me-2 badge  btn  text-white px-2 position-relative"
                             >
@@ -288,14 +289,14 @@
                 @endauth
                 @if ($role == "PARTICIPANT")
                     @if (is_null($status))
-                        <form v-cloak v-if="!isEditMode"  class="d-inline-block pt-1 px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
+                        <form  v-if="!isEditMode"  class="d-inline-block pt-1 px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
                             @csrf()
                             <button style="font-size: 0.875rem;" class="btn btn-primary bg-white btn-sm btn-link" type="submit">
                                 <span> Join Team </span>
                             </button>
                         </form>
                     @elseif ($status == "pending_me")
-                        <div v-cloak v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
+                        <div  v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
                             <button style="font-size: 0.875rem;" class="btn btn-primary bg-white btn-sm btn-link" type="button">
                                 <span> Requested, wait please... </span>
                             </button>
@@ -310,10 +311,10 @@
                                 </svg>
                             </button>
                         </div>
-                        {{-- <span  v-cloak v-if="!isEditMode"  class="d-inline-block mt-2 ps-2 ms-0 me-2 pt-2 badge rounded-pill border form-color d-inline"></span> --}}
+                        {{-- <span   v-if="!isEditMode"  class="d-inline-block mt-2 ps-2 ms-0 me-2 pt-2 badge rounded-pill border form-color d-inline"></span> --}}
 
                     @elseif ($status == "pending_team" )
-                        <div v-cloak v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
+                        <div  v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
                             <button onclick="approveMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn btn-success bg-white btn-sm btn-link me-1" type="button">
                                 <span class="text-success"> Yes, join team </span>
                             </button>
@@ -321,9 +322,9 @@
                                 <span class="text-red">Reject</span>
                             </button>
                         </div>
-                        {{-- <span  v-cloak v-if="!isEditMode"  class="d-inline-block mt-2 ps-2 ms-0 me-2 pt-2 badge rounded-pill border form-color d-inline"></span> --}}
+                        {{-- <span   v-if="!isEditMode"  class="d-inline-block mt-2 ps-2 ms-0 me-2 pt-2 badge rounded-pill border form-color d-inline"></span> --}}
                     @elseif ($status == "rejected_me" )
-                        <div v-cloak v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
+                        <div  v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
                             <button
                                 class="me-2 btn btn-sm text-red bg-white py-1 px-2"
                                 style="border: 1px solid red; pointer-events: none;"
@@ -339,7 +340,7 @@
                             </button>
                         </div>
                     @elseif ($status == "rejected_team" )
-                        <div v-cloak v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
+                        <div  v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
                             <button
                                 disabled
                                 style="pointer-events: none; border: none;"
@@ -361,7 +362,7 @@
                 <div
                     class="d-flex justify-content-center align-items-center"
                     
-                    v-cloak v-if="isEditMode"
+                     v-if="isEditMode"
                 >
                     <input
                         placeholder="Enter your team description..."
@@ -386,7 +387,7 @@
                     </svg>
                 </div>
                 @if ($selectTeam->teamDescription != '' || $selectTeam->country_flag != '')
-                    <div class="my-3"  v-cloak v-if="!isEditMode">
+                    <div class="my-3"   v-if="!isEditMode">
                         <span class="ms-2" >{{$selectTeam->teamDescription}}</span>
                         <span class="ms-2 mt-2 fs-5">{{$selectTeam->country_flag}}</span>
                     </div>
@@ -399,7 +400,7 @@
                     </p>
                  @endif
             @endif
-            <div  v-cloak v-show="!isEditMode" class="row w-75-lg-60 py-2 mb-2  ">
+            <div   v-show="!isEditMode" class="row w-75-lg-60 py-2 mb-2  ">
                 <div class="col-12 col-lg-4 text-center mx-auto"> 
                     <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                         width="25px" height="25px" viewBox="0 0 96.979 96.979" xml:space="preserve" class="me-2"
@@ -429,7 +430,7 @@
             </div>
             @if ($status == "accepted_me" || $status == "accepted_team")
                 <div  class="position-absolute d-flex w-100 justify-content-end py-0 my-0 mt-2" style="bottom: 20px;">
-                    <button  v-cloak v-if="!isEditMode" class="bg-red px-3 btn rounded-pill btn-sm py-2 text-white "
+                    <button   v-if="!isEditMode" class="bg-red px-3 btn rounded-pill btn-sm py-2 text-white "
                         onclick="disapproveMember({{ $teamMember->id }})"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-box-arrow-in-right me-1" viewBox="0 0 16 16">

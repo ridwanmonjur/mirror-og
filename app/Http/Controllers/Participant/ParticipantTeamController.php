@@ -43,7 +43,7 @@ class ParticipantTeamController extends Controller
             ], 'sucess' => true,
             ], 200);
         }
-        return view('Participant.TeamList', compact('teamList', 'count', 'membersCount'));
+        return view('Participant.TeamList2', compact('teamList', 'count', 'membersCount'));
     }
 
     public function teamManagement(Request $request, $id)

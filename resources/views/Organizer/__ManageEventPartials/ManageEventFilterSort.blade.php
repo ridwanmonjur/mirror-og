@@ -2,7 +2,7 @@
 
 <input type="hidden" id="startDate" name="date[]" value=""> 
 <input type="hidden" id="endDate" name="date[]" value="">
-<div class="d-flex justify-content-start w-70s align-items-center flex-wrap">
+<div class="d-flex justify-content-start align-items-center flex-wrap">
     <div class="cursor-pointer me-3 d-inline-block"
         onclick="openElementById('close-option'); openElementById('filter-option');  closeElementById('sort-option');">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-filter"

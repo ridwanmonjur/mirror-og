@@ -75,6 +75,12 @@ input[type="submit"],
     font-size: larger;
 }
 
+
+    .grid-3-columns > a {
+        margin: auto !important;
+    }
+
+
 @media screen and (min-width: 600px) {
     .swiper-container {
         display: block;
@@ -119,8 +125,22 @@ input[type="submit"],
     .search-bar svg {
         left: 20px;
     }
-    .wrapper {
-        width: 100%;
+
+    .grid-3-columns  {
+        /* max-width: 1200px; */
+        gap: 20px !important;
+        margin: auto 10%;
+    }
+  
+
+    .grid-3-columns > a {
+        margin: 0;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    .grid-3-columns  {
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
@@ -208,5 +228,6 @@ input[type="submit"],
     max-width: 80vw;
     background-color: #FFFBFB;
     width: min(90vw, 300px);
-    margin-top: 20px;
+    margin: 10px;
 }
+

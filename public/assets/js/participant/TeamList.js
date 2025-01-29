@@ -374,16 +374,17 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
         `;
     } else {
         for (let team of teamListServerValue) {
+           
             team['membersCount'] = membersCountServerValue[team?.id] ?? 0;
             html += `
-                <a style="cursor:pointer;" class="mx-auto" href="/participant/team/${team?.id}/manage">
+                <a style="cursor:pointer;"  href="/participant/team/${team?.id}/manage">
                     <div class="wrapper">
                         <div class="team-section">
                             <div class="upload-container text-center">
                                 <div class="circle-container" style="cursor: pointer;">
                                     <img
                                         onerror="this.onerror=null;this.src='/assets/images/404.png';"
-                                        id="uploaded-image" class="uploaded-image object-fit-cover"
+                                        id="uploaded-image" class="uploaded-image border-dark object-fit-cover"
                                         src="${team?.teamBanner ? '/storage' + '/' + team?.teamBanner : '/assets/images/animations/empty-exclamation.gif' }"
                                     >
                                     </label>

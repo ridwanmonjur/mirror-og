@@ -89,10 +89,10 @@
                                     @endphp
                                     <li onclick="goToUrl(event, this)"
                                         data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
-                                        class="d-none-until-hover-parent list-unstyled members-hover"
+                                        class="d-none-until-hover-parent my-1  list-unstyled members-hover"
                                     >
                                        
-                                        <img class="rounded-circle object-fit-cover random-color-circle me-2 mb-1" width="25"
+                                        <img class="rounded-circle object-fit-cover random-color-circle me-2" width="25"
                                             height="25" 
                                             src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
 
@@ -147,10 +147,12 @@
                                         <li 
                                             data-join-event-id="{{ $joinEvent->id }}"
                                             onclick="addRosterMembers(event);"
-                                            class="members-hover z-99 list-unstyled"
+                                            class="members-hover my-1 z-99 list-unstyled d-flex flex-column justify-content-center"
                                         >
+                                        {{-- Plus icon --}}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"  viewBox="0 0 16 16"
-                                                class="rounded-circle random-color-circle gear-icon-btn me-2 mb-1 d-flex align-items-center justify-content-center"
+                                                class="rounded-circle position-relative random-color-circle gear-icon-btn py-0 my-0 me-2"
+                                                style="top: 0.5px;"
                                             >
                                             <path  stroke="gray" stroke-width="0.65" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
                                             </svg>
@@ -198,7 +200,7 @@
                                                         data-join-status="{{$joinEvent->join_status}}"
                                                         data-registration-status="{{$joinEvent->regStatus}}"
                                                         onclick="submitConfirmCancelForm(event)" 
-                                                        class="mt-2 btn btn-sm text-light bg-red me-2 rounded-pill"
+                                                        class="btn btn-sm text-light bg-red me-2 rounded-pill"
                                                     >
                                                         Leave Event
                                                     </button> 
