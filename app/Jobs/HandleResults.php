@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Models\ActivityLogs;
-use App\Models\Notifications;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,6 +13,27 @@ use Illuminate\Support\Facades\Log;
 
 class ChangePositionStrategy
 {
+
+    public function ordinalPrefix($number)
+    {
+        $number = intval($number);
+
+        if ($number % 100 >= 11 && $number % 100 <= 13) {
+            return $number.'th';
+        }
+
+        switch ($number % 10) {
+            case 1:
+                return $number.'st';
+            case 2:
+                return $number.'nd';
+            case 3:
+                return $number.'rd';
+            default:
+                return $number.'th';
+        }
+    }
+
     public function handle($parameters)
     {
         try {
@@ -23,13 +43,12 @@ class ChangePositionStrategy
             ] = $parameters;
 
             $emojiMap = [1 => '🥇 (1st position)', 2 => '🥈 (2nd position)'];
-            $positionString = intval(bladeOrdinalPrefix($parameters['position']));
+            $positionString = intval($this->ordinalPrefix($parameters['position']));
             if (isset($emojiMap[$parameters['position']])) {
                 $positionString = $emojiMap[$parameters['position']];
             }
 
             $foundLogs = ActivityLogs::findActivityLog($parameters)->get();
-            $foundNotifications = Notifications::findNotifications($parameters)->get();
             $notificationLog = <<<HTML
                 <span>
                     <span class="notification-gray"> You achieved 
@@ -79,15 +98,6 @@ class ChangePositionStrategy
                 ],
             ];
 
-            if (isset($foundNotifications[0])) {
-                foreach ($foundNotifications as $foundNotification) {
-                    $foundNotification->update([
-                        'data' => $parameters['data'],
-                    ]);
-                }
-            } else {
-                Notifications::createNotifications($parameters);
-            }
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
@@ -156,7 +166,6 @@ class AddAwardStrategy
                 ],
             ];
 
-            Notifications::createNotifications($parameters);
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
@@ -228,7 +237,6 @@ class AddAchievementStrategy
                 ],
             ];
 
-            Notifications::createNotifications($parameters);
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
@@ -241,7 +249,6 @@ class DeleteAwardStrategy
     {
         try {
             ActivityLogs::findActivityLog($parameters)->delete();
-            Notifications::findNotifications($parameters)->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
@@ -254,7 +261,6 @@ class DeleteAchievementStrategy
     {
         try {
             ActivityLogs::findActivityLog($parameters)->delete();
-            Notifications::findNotifications($parameters)->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }

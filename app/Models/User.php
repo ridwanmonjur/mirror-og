@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Filament\Models\Contracts\FilamentUser;
-use Filament\Tables\Columns\Layout\Panel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,14 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 
 // use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
 
     public function canAccessPanel($panel): bool
     {
@@ -128,10 +126,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsToMany(User::class, 'blocks', 'user_id', 'blocked_user_id')
             ->withTimestamps();
     }
-
-   
-
-  
 
     public function hasStarred(User $user): bool
     {

@@ -120,7 +120,7 @@
                     @include('Participant.__ProfilePartials.FriendManagement')
                 @endif
             </div>
-            <div class="d-flex justify-content-center align-items-start flex-wrap">
+            <div class="d-flex justify-content-center align-items-center flex-wrap">
                 <div class="member-image align-middle">
                     <div class="upload-container  motion-logo">
                         <label class="upload-label">
@@ -252,8 +252,6 @@
                                 </span>
                                 
                             </div>
-                            <br>
-                            <br>
                         </div>
                     <div v-cloak v-show="!isEditMode" class="ms-2">
                         <br>
@@ -455,8 +453,8 @@
                                                 {{ $joinEventAndTeam->teamName }}
                                             </a>
                                         </td>
-                                        <td class="coloured-cell text-start px-2 ">
-                                            {{ $joinEventAndTeam->position ? $joinEventAndTeam->position : '-' }}
+                                        <td class="coloured-cell text-start text-lg-center ps-2 pe-4">
+                                            {{ $joinEventAndTeam->position ? bladeOrdinalPrefix($joinEventAndTeam->position) : '-' }}
                                         </td>
                                         <td class="coloured-cell text-start px-2 ">
                                             <a href="{{ route('public.event.view', $joinEventAndTeam->event_id) }}" >
@@ -518,7 +516,7 @@
             <br>
             @if (!isset($joinEventsHistory[0]))
                 <p class="tab-size">
-                    This profile have no past events
+                    This profile has no past events
                 </p>
             @else
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
@@ -571,7 +569,7 @@
                                         <span>{{$team->teamName}}</span>
                                     </a>
                                 </td>
-                                <td style="width: 105px;font-size: 1.5rem;" class="colored-cell">{{$team->country_flag ? $team->country_flag : '-'}}</td>
+                                <td style="width: 105px;font-size: 1.5rem;" class="colored-cell text-start text-lg-center">{{$team->country_flag ? $team->country_flag : '-'}}</td>
                                 <td  style="width: 105px;" class="colored-cell">{{$team->members_count}}/5</td>
                             </tr>
                         @endforeach
@@ -620,7 +618,7 @@
                                         <span>{{$team->teamName}}</span>
                                     </a>
                                 </td>
-                                <td style="width: 105px; font-size: 1.5rem;" class="colored-cell">{{$team->country_flag ? $team->country_flag : '-'}}</td>
+                                <td style="width: 105px; font-size: 1.5rem;" class="colored-cell text-start text-lg-center">{{$team->country_flag ? $team->country_flag : '-'}}</td>
                                 <td style="width: 105px;" class="colored-cell">{{$team->members_count}}/5</td>
                             </tr>
                         @endforeach

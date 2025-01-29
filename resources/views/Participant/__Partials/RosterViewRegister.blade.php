@@ -48,8 +48,7 @@
     ]) style="margin-bottom : 0; ">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
             <img {!! trustedBladeHandleImageFailureBanner() !!} @class([
-                'opacity-until-hover object-fit-cover ',
-                'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
+                'opacity-until-hover object-fit-cover border-0 ',
             ])
                 style="border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 270px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;"
@@ -199,7 +198,7 @@
                                                         data-join-status="{{$joinEvent->join_status}}"
                                                         data-registration-status="{{$joinEvent->regStatus}}"
                                                         onclick="submitConfirmCancelForm(event)" 
-                                                        class="mt-2 btn btn-sm text-light bg-red rounded-pill"
+                                                        class="mt-2 btn btn-sm text-light bg-red me-2 rounded-pill"
                                                     >
                                                         Leave Event
                                                     </button> 
@@ -317,7 +316,7 @@
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
                 <div class="col-12 col-xl-6  my-1 px-0">
-                    <a class="d-flex w-100 justify-content-start align-items-center"
+                    <a class="d-flex w-100 h-100 justify-content-start align-items-center"
                         href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img {!! trustedBladeHandleImageFailureBanner() !!}
                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
@@ -330,7 +329,7 @@
                 </div>
                 <div onclick="goToUrl(event, this)"
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id]) }}"
-                    class="col-6 col-xl-4 d-flex justify-content-start mx-0 mt-1 px-0">
+                    class="col-6 col-xl-4 d-flex justify-content-start align-items-center mx-0 mt-1 px-0">
                     <img {!! trustedBladeHandleImageFailureBanner() !!} 
                        
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
@@ -351,7 +350,7 @@
                 <form onclick="event.stopPropagation(); " onsubmit="onFollowSubmit(event)"
                     id="{{ 'followForm' . $joinEvent->id . $random_int }}"
                     data-join-event-user ="{{ $joinEvent->eventDetails?->user_id }}" method="POST"
-                    class="col-6 col-xl-2 px-0 justify-content-end text-end" action="{{ route('participant.organizer.follow') }}">
+                    class="col-6 col-xl-2 px-0 h-100 justify-content-end text-end" action="{{ route('participant.organizer.follow') }}">
                     @csrf
                     @guest
                         <input type="hidden" name="user_id" value="">

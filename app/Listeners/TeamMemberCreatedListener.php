@@ -3,9 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\TeamMemberCreated;
-use App\Models\Notifications;
-use App\Models\TeamMember;
-use App\Models\User;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
@@ -65,36 +62,7 @@ class TeamMemberCreatedListener implements ShouldQueue
                     }
                     break;
             }
-            if ($teamCreatorNotification) {
-                Notifications::create([
-                    'data' => json_encode([
-                        'data' => $teamCreatorNotification['text'],
-                        'subject' => $teamCreatorNotification['subject'],
-                        'links' => $links,
-                    ]),
-                    'id' => uuid_create(),
-                    'type' => Notifications::class,
-                    'notifiable_id' => $event->teamMember->team->creator_id,
-                    'notifiable_type' => User::class,
-                    'object_id' => $event->teamMember->id,
-                    'object_type' => TeamMember::class,
-                ]);
-            }
-            if ($userNotification) {
-                Notifications::create([
-                    'data' => json_encode([
-                        'data' => $userNotification['text'],
-                        'subject' => $userNotification['subject'],
-                        'links' => $links,
-                    ]),
-                    'id' => uuid_create(),
-                    'type' => Notifications::class,
-                    'notifiable_id' => $userId,
-                    'notifiable_type' => User::class,
-                    'object_id' => $event->teamMember->id,
-                    'object_type' => TeamMember::class,
-                ]);
-            }
+           
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }

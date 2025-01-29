@@ -104,9 +104,9 @@ function fillStepPaymentValues() {
         eventTotal = eventSubTotal + eventFee;
         
         if (eventTier == null || eventType == null || eventSubTotal == -1) {
-            getElementByIdAndSetInnerHTML('paymentType', "N/A");
-            getElementByIdAndSetInnerHTML('paymentTier', "N/A");
-            getElementByIdAndSetInnerHTML('paymentTotal', "N/A");
+            getElementByIdAndSetInnerHTML('paymentType', "Not available");
+            getElementByIdAndSetInnerHTML('paymentTier', "Not available");
+            getElementByIdAndSetInnerHTML('paymentTotal', "Not available");
 
             if (!paymentMethodCondition.classList.contains("d-none")) {
                 paymentMethodCondition.classList.add("d-none");

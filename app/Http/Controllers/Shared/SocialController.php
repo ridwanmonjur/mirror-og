@@ -212,13 +212,21 @@ class SocialController extends Controller
             ->select('id')
             ->first();
 
+        if ($authenticatedUser->id == $user->id) {
+
+            return response()->json([
+                'message' => "Can't report yourself",
+                'is_blocked' => "False"
+            ], 404);
+        }  
+
         $validated = $request->validate([
             'reason' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000'
         ]);
 
         $report = Report::create([
-            'reporter_id' => auth()->id(),
+            'reporter_id' => $authenticatedUser->id,
             'reported_user_id' => $user->id,
             'reason' => $validated['reason'],
             'description' => $validated['description'] ?? null,

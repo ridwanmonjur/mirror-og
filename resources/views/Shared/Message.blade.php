@@ -12,12 +12,13 @@
 <body>
     @include('__CommonPartials.NavbarGoToSearchPage')
     @include('googletagmanager::body')
+    <main>
     <div id="app" class="app-container row">
         <input type="hidden" id="fetchFirebaseUsersInput" value="{{ route('user.firebase.readAll') }}">
         <input type="hidden" id="viewUserProfile"
             value="{{ json_encode($userProfile?->only(['id', 'name', 'mobile_no'])) }}">
         <input type="hidden" id="loggedUserProfile" value="{{ json_encode($user) }}">
-        <div class="sidebar col-12 col-lg-5 col-xl-4 m-0 p-0" @vue:mounted="mounted" id="room-component"
+        <div class="sidebar col-12  col-xl-4 m-0 p-0" @vue:mounted="mounted" id="room-component"
             v-scope="RoomComponent()">
             <div class="sidebar-header align-middle">
                 <h5 id="initDB" class="my-0">Chat List</h5>
@@ -74,7 +75,7 @@
             </div>
         </div>
         <div id="chat-component" v-scope="ChatListComponent()"
-            class="chat-container position-relative col-12 d-flex col-lg-7 col-xl-8 m-0 p-0" style="overflow: hidden;">
+            class="chat-container position-relative col-12 d-flex  col-xl-8 m-0 p-0" style="overflow: hidden;">
             <div class="chat-header w-100">
                 <h2 class="chat-user-name py-0 my-0">
                     <span v-show="currentRoomObj?.otherRoomMember?.name != null">
@@ -181,7 +182,7 @@
                     </div>
                     <div class="modal-body py-4 pv-3">
                         <div class="row">
-                            <div class="col-12 col-lg-9">
+                            <div class="col-12 col-xl-9">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">
@@ -443,6 +444,7 @@
             </div>
         </div>
     </div>
+    </main>
 </body>
 {{-- <script src="{{ asset('/assets/js/shared/chat.js') }}"></script> --}}
 

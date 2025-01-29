@@ -21,7 +21,7 @@ class OrganizerFollowRequest extends FormRequest
             
         $user = $this->attributes->get('user');
         return $user->role === 'PARTICIPANT' 
-            && $this->organizer_id !== $user->id;
+            && $this->organizer_id != $user->id;
     }
 
     /**

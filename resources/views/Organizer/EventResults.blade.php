@@ -134,8 +134,8 @@
                                                     > 
                                                     {{ $joinEventAndTeam->teamName }}
                                                 </td>
-                                                   <td class="coloured-cell text-start px-2 ">
-                                                    {{ $joinEventAndTeam->position ? $joinEventAndTeam->position : '-' }}
+                                                   <td class="coloured-cell text-center px-2 ">
+                                                    {{ $joinEventAndTeam->position ? bladeOrdinalPrefix($joinEventAndTeam->position) : '-' }}
                                                 </td>
                                                 </td>
                                                    <td class="coloured-cell text-start px-2 ">

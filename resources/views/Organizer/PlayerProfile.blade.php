@@ -334,7 +334,7 @@
             <br>
             @if (!isset($joinEventsHistory[0]))
                 <p class="tab-size">
-                    This profile have no past events
+                    This profile has no past events
                 </p>
             @else
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">

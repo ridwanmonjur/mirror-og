@@ -461,7 +461,7 @@
                         @else
                         Launch type: {{ $event->sub_action_private }}
                         <br>
-                        Launch time chosen: {{ $event->sub_action_public_time }} {{ $event->sub_action_public_date ?? 'N/A' }}
+                        Launch time chosen: {{ $event->sub_action_public_time }} {{ $event->sub_action_public_date ?? 'Not available' }}
                         @endif
                     </p>
                 </div>

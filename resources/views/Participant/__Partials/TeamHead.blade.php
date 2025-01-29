@@ -277,7 +277,7 @@
                                 </svg>
                                 <span> Your previous team </span>
                             </button>
-                                <button  class="btn btn-primary bg-light badge btn-link position-relative py-2"
+                                <button  class="btn btn-primary bg-white badge btn-link position-relative py-2"
                                     type="button" style="top: 10px;" onclick="approveMember({{$teamMember->id}})"
                                 >
                                     <span class="text-primary"> Rejoin team! </span>
@@ -290,13 +290,13 @@
                     @if (is_null($status))
                         <form v-cloak v-if="!isEditMode"  class="d-inline-block pt-1 px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
                             @csrf()
-                            <button style="font-size: 0.875rem;" class="btn btn-primary bg-light btn-sm btn-link" type="submit">
+                            <button style="font-size: 0.875rem;" class="btn btn-primary bg-white btn-sm btn-link" type="submit">
                                 <span> Join Team </span>
                             </button>
                         </form>
                     @elseif ($status == "pending_me")
                         <div v-cloak v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
-                            <button style="font-size: 0.875rem;" class="btn btn-primary bg-light btn-sm btn-link" type="button">
+                            <button style="font-size: 0.875rem;" class="btn btn-primary bg-white btn-sm btn-link" type="button">
                                 <span> Requested, wait please... </span>
                             </button>
                             <button class="gear-icon-btn mt-0 ms-1"
@@ -314,10 +314,10 @@
 
                     @elseif ($status == "pending_team" )
                         <div v-cloak v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
-                            <button onclick="approveMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn btn-success bg-light btn-sm btn-link me-1" type="button">
+                            <button onclick="approveMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn btn-success bg-white btn-sm btn-link me-1" type="button">
                                 <span class="text-success"> Yes, join team </span>
                             </button>
-                            <button onclick="rejectMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn border border-danger bg-light btn-sm  btn-link" type="button">
+                            <button onclick="rejectMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn border border-danger bg-white btn-sm  btn-link" type="button">
                                 <span class="text-red">Reject</span>
                             </button>
                         </div>
@@ -325,7 +325,7 @@
                     @elseif ($status == "rejected_me" )
                         <div v-cloak v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
                             <button
-                                class="me-2 btn btn-sm text-red bg-light py-1 px-2"
+                                class="me-2 btn btn-sm text-red bg-white py-1 px-2"
                                 style="border: 1px solid red; pointer-events: none;"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
@@ -334,7 +334,7 @@
                                 </svg>
                                 <span> Rejected team</span>
                             </button>
-                            <button onclick="approveMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn border border-success bg-light btn-sm " type="button">
+                            <button onclick="approveMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn border border-success bg-white btn-sm " type="button">
                                 <span class="text-success">Change decision</span>
                             </button>
                         </div>
@@ -343,7 +343,7 @@
                             <button
                                 disabled
                                 style="pointer-events: none; border: none;"
-                                class="me-2 btn-sm bg-light text-red py-1 px-2"
+                                class="me-2 btn-sm bg-white text-red py-1 px-2"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
