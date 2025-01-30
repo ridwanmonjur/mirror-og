@@ -7,7 +7,6 @@ use App\Http\Requests\User\FriendRequest;
 use App\Http\Requests\User\FriendUpdateRequest;
 use App\Http\Requests\User\LikeRequest;
 use App\Http\Requests\User\OrganizerFollowRequest;
-use App\Http\Requests\User\UpdateParticipantsRequest;
 use App\Jobs\HandleFollows;
 use App\Models\ActivityLogs;
 use App\Models\EventInvitation;

@@ -709,17 +709,49 @@ class Team extends Model
 
     public function uploadTeamBanner($request)
     {
-        $file = $request->file('file');
-        $fileNameInitial = 'teamBanner-'.time().'.'.$file->getClientOriginalExtension();
-        $fileName = "images/team/{$fileNameInitial}";
-        $file->storeAs('images/team/', $fileNameInitial);
-        $this->teamBanner = $fileName;
-        $this->save();
+       $oldBanner = $this->teamBanner;
+       $newBannerPath = null;
+       
+       try {
+            $requestData = json_decode($request->getContent(), true);
+            if (!isset($requestData['file'])) {
+                return null;
+            }
 
-        return $fileName;
+            $fileData = $requestData['file'];
+            $fileContent = base64_decode($fileData['content']);
+            
+            $fileNameInitial = 'teamBanner-'.time().'.'.pathinfo($fileData['filename'], PATHINFO_EXTENSION);
+            $fileName = "images/team/{$fileNameInitial}";
+            $storagePath = storage_path('app/public/'.$fileName);
+            
+            if (!file_exists(dirname($storagePath))) {
+                mkdir(dirname($storagePath), 0755, true);
+            }
+
+            if (file_put_contents($storagePath, $fileContent) === false) {
+                throw new \Exception('Failed to save file');
+            }
+
+            $newBannerPath = $fileName;
+        
+            $this->teamBanner = $fileName;
+            $this->save();
+            $this->destroyTeanBanner($oldBanner);
+            return $fileName;
+    
+       } catch (\Exception $e) {
+            if ($newBannerPath && file_exists(storage_path('app/public/'.$newBannerPath))) {
+                unlink(storage_path('app/public/'.$newBannerPath));
+            }
+            
+            $this->teamBanner = $oldBanner;
+            $this->save();
+            throw $e; 
+       }
     }
 
-    public static function destroyTeanBanner($fileName)
+    public function destroyTeanBanner($fileName)
     {
         if ($fileName) {
             $fileNameInitial = str_replace('images/team/', '', $fileName);

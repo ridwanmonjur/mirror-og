@@ -28,27 +28,7 @@ class UserController extends Controller
         $this->settingsService = $settingsService;
     }
 
-    public function replaceBanner(Request $request)
-    {
-        try {
-            $request->validate([
-                'file' => 'required|array',
-                'file.filename' => 'required|string',
-                'file.type' => 'required|string',
-                'file.size' => 'required|numeric',
-                'file.content' => 'required|string',
-            ]);
-
-            $user = $request->attributes->get('user');
-            $oldBanner = $user->userBanner;
-            $fileName = $user->uploadUserBanner($request);
-            $user->destroyUserBanner($oldBanner);
-
-            return response()->json(['success' => true, 'message' => 'Succeeded', 'data' => compact('fileName')], 201);
-        } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
-    }
+    
 
     public function replaceBackground(BannerUpdateRequest $request)
     {

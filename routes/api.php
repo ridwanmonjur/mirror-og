@@ -59,7 +59,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/user/firebase', [ChatController::class, 'getFirebaseUsers'])->name('user.firebase.readAll');
         Route::post('/user/settings', [UserController::class, 'changeSettings'])->name('user.settings.action');
 
-        Route::post('/user/{id}/banner', [UserController::class, 'replaceBanner'])->name('participant.userBanner.action');
         Route::post('/user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
         Route::post('/user/{id}/star', [SocialController::class, 'toggleStar'])->name('users.star.action');
         Route::post('/user/{id}/block', [SocialController::class, 'toggleBlock'])->name('users.block.action');

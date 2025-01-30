@@ -311,7 +311,7 @@ img.fslightbox-source{
 .team-info {
     display: flex;
     justify-content: space-around;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .showcase,
@@ -325,6 +325,8 @@ img.fslightbox-source{
     border: solid #1e3744;
     border-radius: 1px;
     padding: 15px;
+    max-width: 100%;
+
 }
 
 .trophy {
@@ -697,7 +699,7 @@ img.fslightbox-source{
 
 }
 
-svg {
+#backgroundBanner svg {
     top: 0px !important;
 }
 

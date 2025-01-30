@@ -41,7 +41,6 @@
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main 
         id="app"
-        v-cloak
         v-scope="OrganizerData()"
         @vue:mounted="init"
     >
@@ -57,7 +56,6 @@
         <div class="profile-storage d-none"
             data-route-signin="{{ route('participant.signin.view') }}"
             data-route-profile="{{ route('public.participant.view', ['id' => ':id']) }}"
-            data-user-banner-url="{{ route('participant.userBanner.action', ['id' => $userProfile->id]) }}"
             data-route-background-api="{{ route('user.userBackgroundApi.action', ['id' => $userProfile->id]) }}"
             data-background-styles="<?php echo $backgroundStyles; ?>"
             data-font-styles="<?php echo $fontStyles; ?>"
@@ -67,7 +65,7 @@
         <input type="hidden" id="initialOrganizer" value="{{json_encode($userProfile->organizer)}}">
         <input type="hidden" id="initialAddress" value="{{json_encode($userProfile->address)}}">
         {{-- <form action="{{route('organizer.profile.update')}}" method="POST">  --}}
-        <div>
+        <div >
             <div id="backgroundBanner" class="member-section px-2 pt-2"
                
             > 
@@ -75,7 +73,7 @@
                     <button 
                      data-bs-toggle="offcanvas"
                         data-bs-target="#profileDrawer"
-                        
+                        v-cloak
                         v-show="isEditMode"
                         {{-- onclick="document.getElementById('backgroundInput').click();" --}}
                         class="btn btn-secondary text-light rounded-pill py-2 me-3 fs-7"
@@ -84,10 +82,10 @@
                     </button>
                 </div>
                 <br>
-                <div class="member-image">
+                <div v-cloak class="member-image">
                     <div class="upload-container align-items-center">
                         <label  class="upload-label">
-                            <div class="circle-container motion-logo">
+                            <div v-cloak class="circle-container motion-logo">
                                 <div  class="uploaded-image"
                                     style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }}  ); background-size: cover; 
                                         z-index: 99; background-repeat: no-repeat; background-position: center; {{$frameStyles}}"
@@ -120,7 +118,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="member-details mx-auto text-center">
+                <div v-cloak class="member-details mx-auto text-center">
                     <div  v-show="isEditMode" class="pb-3">
                         <div v-show="errorMessage != null" class="text-red" v-text="errorMessage"> </div>
                         <input 

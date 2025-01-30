@@ -7,7 +7,6 @@ let {
     publicProfileUrl,
     backgroundStyles,
     fontStyles,
-    userBannerUrl,
 } = document.querySelector('.laravel-data-storage').dataset;
 
 var backgroundBanner = document.getElementById("backgroundBanner")

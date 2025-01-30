@@ -21,7 +21,6 @@ const {
     backgroundStyles,
     fontStyles,
     loggedUserId,
-    userBannerUrl,
 } = document.querySelector('.laravel-data-storage').dataset;
 
 console.log({loggedUserId});
@@ -93,46 +92,16 @@ function ParticipantData ()  {
             this.participant.age = Number(this.participant.age);
 
             let file = imageUpload.files[0];
-            
+            let fileFetch = null;
             if (file) {
-                try {
-                    const fileContent = await readFileAsBase64(imageUpload.files[0]);
+                const fileContent = await readFileAsBase64(file);
 
-                    const fileFetch = await fetch(userBannerUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-type': 'application/json',
-                            'Accept': 'application/json',
-                            'credentials': 'include',
-                        },
-                        body: JSON.stringify({
-                            file: {
-                                filename: file.name,
-                                type: file.type,
-                                size: file.size,
-                                content: fileContent
-                            }
-                        }),
-                    });
-
-                    const responseData = await fileFetch.json();
-                    if (responseData.success) {
-                        uploadedImageList[0].style.backgroundImage = `url(${responseData.data.fileName})`;
-                        uploadedImageList[1].style.backgroundImage = `url(${responseData.data.fileName})`;
-                    } else {
-                        
-                        console.error('Error updating member status:', responseData.message);
-                    }
-                } catch (error) {
-                    let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
-                    Swal.fire({
-                        text: errorMessage,
-                        icon: 'error',
-                        confirmButtonColor: '#43a4d7'
-                    })
-                    
-                    return;
-                }
+                fileFetch = {
+                    filename: file.name,
+                    type: file.type,
+                    size: file.size  / (1024 * 1024),
+                    content: fileContent
+                };
             }
 
             try {
@@ -145,7 +114,8 @@ function ParticipantData ()  {
                     },
                     body: JSON.stringify({
                         participant: this.participant,
-                        user: this.user
+                        user: this.user,
+                        ...(fileFetch && { file: fileFetch })
                     }),
                 });
                 const data = await response.json();
@@ -166,11 +136,6 @@ function ParticipantData ()  {
                 }
             } catch (error) {
                 let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
-                if (file) {
-                    localStorage.setItem('vueerror', this.errorMessage);
-                    window.location.reload();
-                    return;
-                }
 
                 this.errorMessage = errorMessage;
 
@@ -181,17 +146,6 @@ function ParticipantData ()  {
             var banner = document.getElementById('backgroundBanner');
             banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
             this.fetchCountries();
-            let error = localStorage.getItem('vueerror');
-            if (error) {
-                Swal.fire({
-                    text: "Uploaded the image but cannot change your data!!",
-                    icon: 'error'
-                })
-
-                this.errorMessage = error;
-            }
-
-            localStorage.removeItem('vueerror');
         }
 
     }

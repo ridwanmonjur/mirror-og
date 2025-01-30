@@ -91,7 +91,8 @@
                                                            v-text="user.email">
                                                         </p>
                                                         <div class="mt-2"> 
-                                                            <div v-cloak v-show="loggedUserRole != 'ORGANIZER' && user.role != 'ORGANIZER'">
+                                                            <div v-cloak >
+                                                            <template v-show="loggedUserRole != 'ORGANIZER' && user.role != 'ORGANIZER'">
                                                                 <template v-if="user.logged_friendship_status == 'accepted'">
                                                                     <div class="d-inline mx-0 px-0">
                                                                         <button v-cloak
@@ -287,6 +288,7 @@
                                                                         </template>
                                                                     </div>
                                                                 </template>
+                                                            </template>
 
                                                                 <button v-cloak v-if="!user.logged_follow_status"
                                                                     type="button"

@@ -7,7 +7,6 @@ const styles = {
 };
 
 const routes = {
-    userBannerUrl: storage.dataset.userBannerUrl,
     routeBackgroundApi: storage.dataset.routeBackgroundApi
 };
 

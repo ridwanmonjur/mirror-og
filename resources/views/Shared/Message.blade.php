@@ -19,7 +19,7 @@
             value="{{ json_encode($userProfile?->only(['id', 'name', 'mobile_no'])) }}">
         <input type="hidden" id="loggedUserProfile" value="{{ json_encode($user) }}">
         <div class="sidebar col-12  col-xl-4 m-0 p-0" @vue:mounted="mounted" id="room-component"
-            v-scope="RoomComponent()">
+            v-scope="RoomComponent()" v-cloak>
             <div class="sidebar-header align-middle">
                 <h5 id="initDB" class="my-0">Chat List</h5>
                 {{-- TODO --}}
@@ -33,7 +33,7 @@
                     </svg>
                 </button>
             </div>
-            <div class="room-list user-select-none custom-scrollbar">
+            <div v-cloak class="room-list user-select-none custom-scrollbar">
                 <div v-for="(room, key) in oldRooms" v-bind:key="room.id" v-bind:data-identity-for-read="room.id"
                     v-on:click="setCurrentRoom(key)"
                     v-bind:class="{'chat-item': true, 'bg-primary' : currentRoomObj?.id == room?.id }">

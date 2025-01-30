@@ -10,11 +10,8 @@ myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
 })
 
 initOffCanvasListeners();
-const storage = document.querySelector('.team-head-storage');
 
-const { routeTeamBanner } = storage.dataset;
 let imageUpload = document.getElementById("image-upload");
-let uploadedImageList = document.getElementsByClassName("uploaded-image");
 
 function TeamHead() {
     return {
@@ -69,40 +66,18 @@ function TeamHead() {
             
             event.preventDefault();
             let file = imageUpload.files[0];
-            
+            let fileFetch = null;
             if (file) {
-                try {
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    const fileFetch = await fetch(routeTeamBanner, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken77,
-                        },
-                        body: formData
-                    });
+                const fileContent = await readFileAsBase64(file);
 
-                    const responseData = await fileFetch.json();
-                    if (responseData.success) {
-                        uploadedImageList[0].style.backgroundImage = `url(/storage/${responseData.data.fileName})`;
-                        uploadedImageList[1].style.backgroundImage = `url(/storage/${responseData.data.fileName})`;
-                    } else {
-                        Swal.fire({
-                            text: responseData.message,
-                            icon: 'error'
-                        });
-                    }
-                } catch (error) {
-                    let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
-                    Swal.fire({
-                        text: errorMessage,
-                        icon: 'error',
-                        confirmButtonColor: '#43a4d7'
-                    })
-                    
-                    return;
-                }
+                fileFetch = {
+                    filename: file.name,
+                    type: file.type,
+                    size: file.size  / (1024 * 1024),
+                    content: fileContent
+                };
             }
+
 
             try {
                 const url = event.target.dataset.url;
@@ -119,7 +94,8 @@ function TeamHead() {
                         teamDescription: this.teamDescription,
                         country: this.country,
                         country_flag: this.country_flag,
-                        country_name: this.country_name
+                        country_name: this.country_name,
+                        ...(fileFetch && { file: fileFetch })
                     }),
                 });
 
@@ -139,11 +115,6 @@ function TeamHead() {
                 }
             } catch (error) {
                 let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
-                if (file) {
-                    localStorage.setItem('vueerror', this.errorMessage);
-                    window.location.reload();
-                    return;
-                }
 
                 this.errorMessage = errorMessage;
             }
@@ -168,18 +139,7 @@ function TeamHead() {
                     element.style.border = `1px solid ${teamData.profile.borderColor}`;
                 }
             });
-
-            let error = localStorage.getItem('vueerror');
-            if (error) {
-                Swal.fire({
-                    text: "Uploaded the image but cannot change your data!!",
-                    icon: 'error'
-                })
-
-                this.errorMessage = error;
-            }
-
-            localStorage.removeItem('vueerror');
+           
         }
     }
 }

@@ -42,7 +42,7 @@
                 <input type="hidden" id="userIdServer" value="{{ $user->id }}">
                 <input type="hidden" name="sortKeys" id="sortKeys" value="">
                 <input type="hidden" name="sortType" id="sortType" value="">
-                <input name="search" style="width: min(90vw, 450px); font-size: 1rem;" class="rounded-pill mb-2 px-4 form-control d-inline-block me-3 cursor-pointer" type="text" placeholder="Search for player name/ email">
+                <input name="search" style="width: min(90vw, 550px); font-size: 1rem;" class="rounded-pill mb-2 px-4 form-control d-inline-block me-3 cursor-pointer" type="text" placeholder="Search for player name/ email">
                 <button type="button" class="btn btn-primary text-light px-2 border-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

@@ -3,7 +3,6 @@ const storage = document.querySelector('.team-head-storage');
 const routes = {
     signin: storage.dataset.routeSignin,
     profile: storage.dataset.routeProfile,
-    teamBanner: storage.dataset.routeTeamBanner,
     backgroundApi: storage.dataset.routeBackgroundApi
 };
 

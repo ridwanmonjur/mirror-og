@@ -56,7 +56,6 @@
         data-is-user-same="{{ $isUserSame }}"
         data-logged-user-id="{{ $loggedUserId }}"
         data-logged-user-role="{{ $loggedUserRole }}"
-        data-user-banner-url="{{ route('participant.userBanner.action', ['id' => $userProfile->id]) }}"
         class="d-none laravel-data-storage"
     ></div>
     <main id="app" >
@@ -65,7 +64,6 @@
         @include('Participant.__ProfilePartials.Forms')
         <div id="backgroundBanner" class="member-section px-2 pt-2"
             @vue:mounted="init"
-            v-cloak
             v-scope="ParticipantData()"
         >
             @if($isOwnProfile) 
@@ -79,25 +77,29 @@
             <input type="hidden" id="initialParticipantData" value="{{json_encode($userProfile->participant)}}">
                 <div class="d-flex justify-content-end align-items-center py-0 my-0 mb-2 mx-3 flex-wrap">
                     @if ($isUserSame)
-                    <input type="file" id="backgroundInput" class="d-none"> 
+                    <input type="file" 
+                        id="backgroundInput" 
+                        accept=".png, .jpg, .jpeg, image/png, image/jpeg" 
+                        class="d-none"
+                    > 
                     <button 
                         data-bs-toggle="offcanvas"
                         data-bs-target="#profileDrawer"
                         v-on:click="isEditMode=false"
-                        v-show="!isEditMode"
+                        v-cloak v-show="!isEditMode"
                         {{-- onclick="document.getElementById('backgroundInput').click();" --}}
                         class="btn btn-secondary text-light rounded-pill py-2 me-3 fs-7"
                     > 
                         Change Background
                     </button>
                     <button 
-                        v-show="!isEditMode"
+                        v-cloak v-show="!isEditMode"
                         v-on:click="reset(); isEditMode = true;"
                         class="oceans-gaming-default-button oceans-gaming-primary-button px-3 py-2 fs-7"> 
                         Edit Profile
                     </button>
                     <a 
-                        v-show="isEditMode"
+                        v-cloak v-show="isEditMode"
                         v-on:click="submitEditProfile(event)"
                         data-url="{{route('participant.profile.update')}}"
                         class="oceans-gaming-default-button oceans-gaming-transparent-button btn simple-button cursor-pointer px-3 py-2 me-3 fs-7"> 
@@ -105,8 +107,7 @@
                     </a>
                     {{-- Close icon --}}
                     <svg 
-                        
-                        style="top: 10px; color: black;"
+                        v-cloak
                         v-if="isEditMode"
                         v-on:click="restoreAfterEditMode()"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle cursor-pointer align-middle " viewBox="0 0 16 16">
@@ -118,7 +119,7 @@
                     @include('Participant.__ProfilePartials.FriendManagement')
                 @endif
             </div>
-            <div class="d-flex justify-content-center align-items-center flex-wrap">
+            <div  class="d-flex justify-content-center align-items-center flex-wrap">
                 <div class="member-image align-middle">
                     <div class="upload-container  motion-logo">
                         <label class="upload-label">
@@ -137,7 +138,7 @@
                                         </button>
                                     </a>    
                                     @if ($isUserSame)
-                                        <button  v-show="isEditMode"  id="upload-button2" class="btn btn-sm p-0" aria-hidden="true">
+                                        <button  v-cloak v-show="isEditMode"  id="upload-button2" class="btn btn-sm p-0" aria-hidden="true">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
@@ -151,8 +152,8 @@
                     </div>
                 </div>
                 <div class="member-details user-select-none ">
-                        <div v-show="errorMessage != null && isEditMode" class="text-red" v-text="errorMessage"> </div>
-                        <div  v-show="isEditMode" style="color: black;">
+                        <div v-cloak v-show="errorMessage != null && isEditMode" class="text-red" v-text="errorMessage"> </div>
+                        <div  v-cloak v-show="isEditMode" style="color: black;">
                             <input 
                                 placeholder = "Enter your nickname..."
                                 style="width: 250px;"
@@ -165,7 +166,7 @@
                                 type="file" 
                                 id="image-upload" 
                                 accept=".png, .jpg, .jpeg, image/png, image/jpeg"  
-                                v-show="isEditMode" 
+                                v-cloak v-show="isEditMode" 
                                 class="d-none"
                             >
                             <br>
@@ -256,7 +257,7 @@
                                 
                             </div>
                         </div>
-                    <div  v-show="!isEditMode" class="ms-2">
+                    <div  v-cloak v-show="!isEditMode" class="ms-2">
                         <br>
                         @if($userProfile->participant?->nickname)           
                             <div class="d-flex justify-content-start align-items-center flex-wrap">
@@ -413,7 +414,7 @@
             </div>
 
             <div class="row px-4 mt-4">
-                <div class="showcase col-12 col-lg-6">
+                <div class="showcase col-12 col-xl-6">
                     <div><b>Showcase</b></div>
                     <br>
                     <div class="showcase-box d-none-until-hover-parent row">
@@ -426,8 +427,8 @@
                     </div>
                 </div>
 
-                <div class="achievements  col-12 col-lg-6">
-                    <div class="ms-2"><b>Positions</b></div><br>
+                <div class="achievements  col-12 col-xl-6">
+                    <div class="ms-2"><u>Positions</u></div><br>
                     <table class="mx-auto member-table responsive" style="margin-left: 5px;">
                         @if (isset($joinEventAndTeamList[0]))
                             <thead class="accepted-member-table text-start">
@@ -444,31 +445,32 @@
                             <tbody class="accepted-member-table text-start">
                                 @foreach ($joinEventAndTeamList as $key => $joinEventAndTeam)
                                     <tr class="st">
-                                        <td class="coloured-cell px-2 text-start   cursor-pointer  " style="width: 30%;" onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});">
+                                        <td class="coloured-cell px-2 text-start   cursor-pointer  " style="min-width: 40%;" onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});">
                                             <a href="{{ route('public.team.view', $joinEventAndTeam->team_id) }}" >
                                                 <img
-                                                    class="rounded-circle d-inline-block object-fit-cover me-3"
+                                                    class="rounded-circle d-inline-block object-fit-cover float-start me-3"
                                                     src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"
                                                     {!! trustedBladeHandleImageFailure() !!} 
                                                     height="40"
                                                     width="40"
                                                 > 
-                                                {{ $joinEventAndTeam->teamName }}
+                                                <span class="d-inline-block align-middle py-2  text-truncate ">{{ $joinEventAndTeam->teamName }}</span>
+
                                             </a>
                                         </td>
-                                        <td class="coloured-cell text-start text-lg-center ps-2 pe-4">
+                                        <td class="coloured-cell text-start text-lg-center ps-2 pe-5" >
                                             {{ $joinEventAndTeam->position ? bladeOrdinalPrefix($joinEventAndTeam->position) : '-' }}
                                         </td>
-                                        <td class="coloured-cell text-start px-2 ">
+                                        <td class="coloured-cell text-start px-2  align-middle">
                                             <a href="{{ route('public.event.view', $joinEventAndTeam->event_id) }}" >
                                                 <img
-                                                    class="rounded-circle d-inline-block object-fit-cover me-3"
+                                                    class="rounded-circle d-inline-block object-fit-cover float-start  me-3"
                                                     src="{{ '/storage' . '/'. $joinEventAndTeam->eventBanner }}"
                                                     {!! trustedBladeHandleImageFailure() !!} 
                                                     height="40"
                                                     width="40"
                                                 > 
-                                                {{ $joinEventAndTeam->eventName }}
+                                                <span class="d-inline-block align-middle py-2  text-truncate ">{{ $joinEventAndTeam->eventName }}</span>
                                             </a>
 
                                         </td>

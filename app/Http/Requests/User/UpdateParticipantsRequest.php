@@ -35,6 +35,11 @@ class UpdateParticipantsRequest extends FormRequest
             'participant.isAgeVisible' => 'nullable|boolean',
             'participant.games_data' => 'nullable|string',
             'participant.domain' => ['nullable', 'regex:/^(?:[-A-Za-z0-9]+\.)+[A-Za-z]{2,6}$/'],
+            'file' => 'sometimes|array|nullable',
+            'file.filename' => 'string',
+            'file.type' => 'string',
+            'file.size' => 'numeric|max:3',
+            'file.content' => 'string',
         ];
     }
 
@@ -56,6 +61,8 @@ class UpdateParticipantsRequest extends FormRequest
             'participant.nickname.max' => 'The nickname may not be greater than 255 characters.',
             'participant.region.array' => 'The region must be a json string.',
             'participant.domain.regex' => 'The domain format is invalid. It must be a valid domain name.',
+            'file.size' => 'The file is too large, over 3 MB in size'
+          
         ];
     }
 

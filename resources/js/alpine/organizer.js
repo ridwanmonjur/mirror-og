@@ -11,7 +11,6 @@ const storage = document.querySelector('.profile-storage');
 const styles = {
     backgroundStyles: storage.dataset.backgroundStyles,
     fontStyles: storage.dataset.fontStyles,
-    userBannerUrl: storage.dataset.userBannerUrl,
 };
 
 const imageUpload = document.getElementById("image-upload");
@@ -97,45 +96,18 @@ function OrganizerData() {
             }
 
             let file = imageUpload.files[0];
-            try {    
-                if (file) {
-                    const fileContent = await readFileAsBase64(imageUpload.files[0]);
+            let fileFetch = null;
+            if (file) {
+                const fileContent = await readFileAsBase64(file);
 
-                    const fileFetch = await fetch(styles.userBannerUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-type': 'application/json',
-                            'Accept': 'application/json',
-                            'credentials': 'include',
-                        },
-                        body: JSON.stringify({
-                            file: {
-                                filename: file.name,
-                                type: file.type,
-                                size: file.size,
-                                content: fileContent
-                            }
-                        }),
-                    });
-
-                    const responseData = await fileFetch.json();
-                    if (responseData.success) {
-                        uploadedImageList[0].style.backgroundImage = `url(${responseData.data.fileName})`;
-                        uploadedImageList[1].style.backgroundImage = `url(${responseData.data.fileName})`;
-                    } else {
-                        console.error('Error updating member status:', responseData.message);
-                    }
-                }
-            } catch (error) {
-                let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
-                Swal.fire({
-                    text: errorMessage,
-                    icon: 'error',
-                    confirmButtonColor: '#43a4d7'
-                })
-                
-                return;
+                fileFetch = {
+                    filename: file.name,
+                    type: file.type,
+                    size: file.size  / (1024 * 1024),
+                    content: fileContent
+                };
             }
+        
 
             try {  
                 const url = event.target.dataset.url;
@@ -149,7 +121,8 @@ function OrganizerData() {
                     body: JSON.stringify({
                         address: this.address,
                         userProfile: this.userProfile,
-                        organizer: this.organizer
+                        organizer: this.organizer,
+                        ...(fileFetch && { file: fileFetch })
                     }),
                 });
 
@@ -169,11 +142,6 @@ function OrganizerData() {
                 }
             } catch (error) {
                 let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
-                if (file) {
-                    localStorage.setItem('vueerror', this.errorMessage);
-                    window.location.reload();
-                    return;
-                }
 
                 this.errorMessage = errorMessage;
             }
@@ -187,17 +155,6 @@ function OrganizerData() {
                 element.style.cssText += fontStyles;
             });
 
-            let error = localStorage.getItem('vueerror');
-            if (error) {
-                Swal.fire({
-                    text: "Uploaded the image but cannot change your data!!",
-                    icon: 'error'
-                })
-
-                this.errorMessage = error;
-            }
-
-            localStorage.removeItem('vueerror');
         },
 
     }
