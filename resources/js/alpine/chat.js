@@ -360,14 +360,10 @@ function ChatListComponent() {
             const button = e.currentTarget;
             if (!button) return;
 
-            const status = button.dataset.status;
             const route = button.dataset.route;
-            const inputId = button.dataset.inputs ;
         
             try {
-                let data = await makeRequest(route, 'POST', JSON.stringify({}));
-     
-               
+                let data = await makeRequest(route, 'POST', JSON.stringify({}));           
 
                 if (!('is_blocked' in data)) {
                     return;
