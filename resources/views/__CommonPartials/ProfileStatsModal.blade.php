@@ -91,8 +91,7 @@
                                                            v-text="user.email">
                                                         </p>
                                                         <div class="mt-2"> 
-                                                            <div v-cloak >
-                                                            <template v-show="loggedUserRole != 'ORGANIZER' && user.role != 'ORGANIZER'">
+                                                            <div v-cloak class="p-0 ms-0 my-0 me-2 d-inline-block" v-if="loggedUserRole != 'ORGANIZER' && user.role != 'ORGANIZER'">
                                                                 <template v-if="user.logged_friendship_status == 'accepted'">
                                                                     <div class="d-inline mx-0 px-0">
                                                                         <button v-cloak
@@ -132,7 +131,7 @@
                                                                 <template v-if="!user.logged_friendship_status">
                                                                     <div class="d-inline mx-0 px-0">
                                                                         <button v-cloak
-                                                                            class="btn btn-primary btn-sm px-3 text-light rounded-pill me-2 mb-1"
+                                                                            class="btn btn-primary btn-sm px-3 text-light rounded-pill  mb-1"
                                                                             data-action="friend-request"
                                                                             v-on:click="friendRequest(event)"
                                                                             v-bind:data-route="'/participant/friends'"
@@ -152,7 +151,7 @@
                                                                         <template v-if="user.logged_friendship_status == 'pending'">
                                                                             <div class="d-inline mx-0 px-0">
                                                                                 <button v-cloak
-                                                                                    class="btn bg-primary border-primary text-white btn-sm px-3  rounded-pill me-1 mb-1"
+                                                                                    class="btn bg-primary border-primary text-white btn-sm px-3  rounded-pill me-2 mb-1"
                                                                                     data-action="acceptt-pending-request"
                                                                                     v-on:click="friendRequest(event)" 
                                                                                     type="button"
@@ -166,7 +165,7 @@
                                                                                     Accept request
                                                                                 </button>
                                                                                 <button v-cloak
-                                                                                    class="btn bg-red text-white btn-sm px-3  rounded-pill me-2 mb-1"
+                                                                                    class="btn bg-red text-white btn-sm px-3  rounded-pill  mb-1"
                                                                                     data-action="reject-request"
                                                                                     v-on:click="friendRequest(event)" 
                                                                                     type="button"
@@ -183,7 +182,7 @@
                                                                         </template>
                                                                         <button v-cloak
                                                                             v-show="user.logged_friendship_status == 'rejected'"
-                                                                            class="btn border-danger  btn-sm px-3 text-red rounded-pill me-2 mb-1"
+                                                                            class="btn border-danger  btn-sm px-3 text-red rounded-pill  mb-1"
                                                                             style="pointer-events: none;"
                                                                             type="button"
                                                                         >
@@ -195,7 +194,7 @@
                                                                         </button>
                                                                         <button v-cloak
                                                                             v-show="user.logged_friendship_status == 'left'"
-                                                                            class="btn border-primary  btn-sm px-3 text- rounded-pill me-2 mb-1"
+                                                                            class="btn border-primary  btn-sm px-3 text- rounded-pill  mb-1"
                                                                             style="pointer-events: none;"
                                                                             type="button"
                                                                         >
@@ -214,7 +213,7 @@
                                                                             <div class="d-inline mx-0 px-0">
                                                                                 <button v-cloak
                                                                                     v-show="user.logged_friendship_status == 'pending'"
-                                                                                    class="btn btn-sm px-3 text-red rounded-pill me-1 mb-1"
+                                                                                    class="btn btn-sm px-3 text-red rounded-pill  mb-1"
                                                                                     type="button"
                                                                                     v-bind:data-route="'/participant/friends'"
                                                                                     v-bind:data-inputs="user.id"
@@ -238,7 +237,7 @@
                                                                         <template v-if="user.logged_friendship_status == 'left'">
                                                                             <div class="d-inline mx-0 px-0">
                                                                                 <button v-cloak
-                                                                                    class="btn border-primary  btn-sm px-3 text- rounded-pill me-2 mb-1"
+                                                                                    class="btn border-primary  btn-sm px-3 text- rounded-pill  mb-1"
                                                                                     type="button"
                                                                                     style="pointer-events: none;"
                                                                                 >
@@ -272,7 +271,7 @@
                                                                                     Rejected User
                                                                                 </button>
                                                                                 <button v-cloak
-                                                                                    class="btn bg-primary border-primary text-white btn-sm px-3  rounded-pill me-1 mb-1"
+                                                                                    class="btn bg-primary border-primary text-white btn-sm px-3  rounded-pill  mb-1"
                                                                                     data-action="acceptt-left-request"
                                                                                     v-on:click="friendRequest(event)" 
                                                                                     type="button"
@@ -288,8 +287,9 @@
                                                                         </template>
                                                                     </div>
                                                                 </template>
-                                                            </template>
+                                                            </div>
 
+                                                            <div class="d-inline-block p-0 m-0 me-2">
                                                                 <button v-cloak v-if="!user.logged_follow_status"
                                                                     type="button"
                                                                     class="btn btn-primary btn-sm px-3 text-light rounded-pill mb-1"
@@ -322,20 +322,7 @@
                                                                         </svg>Following
                                                                 </button>
                                                             </div>
-                                                            <div v-cloak v-if="loggedUserRole == 'ORGANIZER' || user.role == 'ORGANIZER'" class="d-inline">
-                                                                 <a v-bind:href="`/view/${user?.role?.toLowerCase()}/${user.id}`">
-                                                                    <button v-cloak type="button"
-                                                                        class="btn border-primary btn-sm px-3 me-2 text-primary rounded-pill mb-1"
-                                                                    >
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye me-1" viewBox="0 0 16 16">
-                                                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
-                                                                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
-                                                                        </svg>
-                                                                        View user
-                                                                    </button>
-                                                                </a>
-                                                            </div>
-                                                            <div v-cloak v-if="user.logged_block_status" class="d-inline">
+                                                            <div v-cloak v-if="user.logged_block_status" class="d-inline m-0 p-0">
                                                                  <a v-bind:href="`/view/${user?.role?.toLowerCase()}/${user.id}`">
                                                                     <button  type="button"
                                                                         class="btn border-danger btn-sm px-3 text-red me-2 rounded-pill mb-1"

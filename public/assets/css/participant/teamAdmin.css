@@ -703,6 +703,9 @@ img.fslightbox-source{
     top: 0px !important;
 }
 
+#connectionModal svg {
+    top: -3px !important;
+}
 @media screen and (min-width: 1100px) {
     .event-carousel-styles {
         grid-template-columns: 1fr 1fr;
