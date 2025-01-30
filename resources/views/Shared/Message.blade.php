@@ -18,7 +18,7 @@
         <input type="hidden" id="viewUserProfile"
             value="{{ json_encode($userProfile?->only(['id', 'name', 'mobile_no'])) }}">
         <input type="hidden" id="loggedUserProfile" value="{{ json_encode($user) }}">
-        <div class="sidebar col-12  col-xl-4 m-0 p-0" @vue:mounted="mounted" id="room-component"
+        <div class="sidebar col-12  col-lg-4 m-0 p-0" @vue:mounted="mounted" id="room-component"
             v-scope="RoomComponent()" v-cloak>
             <div class="sidebar-header align-middle">
                 <h5 id="initDB" class="my-0">Chat List</h5>
@@ -74,8 +74,8 @@
                 </div>
             </div>
         </div>
-        <div id="chat-component" v-scope="ChatListComponent()"
-            class="chat-container position-relative col-12 d-flex  col-xl-8 m-0 p-0" style="overflow: hidden;">
+        <div v-cloak id="chat-component" v-scope="ChatListComponent()"
+            class="chat-container position-relative col-12 d-flex  col-lg-8 m-0 p-0" style="overflow: hidden;">
             <div class="chat-header w-100">
                 <h2 class="chat-user-name py-0 my-0">
                     <span v-show="currentRoomObj?.otherRoomMember?.name != null">
@@ -145,7 +145,7 @@
                     </div>
                     <div :class="message.className">
                         <img v-if="message.sender?.userBanner" :src="`/storage/${message.sender.userBanner}`"
-                            v-on:error="$el.src = '/assets/images/404.png'" height="50" width="50"
+                            v-on:error="$el.src = '/assets/images/404.png'" height="40" width="40"
                             class="object-fit-cover rounded-circle me-2">
 
                         <div v-else class="avatar me-2"
@@ -182,7 +182,7 @@
                     </div>
                     <div class="modal-body py-4 pv-3">
                         <div class="row">
-                            <div class="col-12 col-xl-9">
+                            <div class="col-12 col-lg-9">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">

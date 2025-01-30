@@ -91,6 +91,31 @@
                                 </div>
                             </div>
                             <div class="dropdown me-3">
+                                <button class="ps-0 pe-3 py-2 button-design-removed" type="button"
+                                    id="dropdownFilterSort" data-bs-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <span>Region</span>
+                                    <span class="dropbtn-arrow">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </span>
+                                </button>
+                                <div onclick="event.stopPropagation();" class="dropdown-menu px-0 py-1"
+                                    aria-labelledby="dropdownFilterSort">
+                                    @foreach ([['title' => 'South East Asia (SEA)', 'value' => 'SEA']] as $region2)
+                                        <div class="px-3 py-1" style="width: 200px;">
+                                            <input type="checkbox" name="region2" class="form-check-input me-2" checked value="{{ $region2['value'] }}">
+                                            <label for="region2">{{ $region2['title'] }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="dropdown d-none me-3">
 
                                 <button class="ps-0 pe-3 py-2 button-design-removed" type="button"
                                     id="dropdownFilterSort" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -145,7 +170,7 @@
                                     aria-labelledby="dropdownFilterSort">
                                     @foreach ([['title' => 'Public (free to apply)', 'value' => 'public'], ['title' => 'Private', 'value' => 'Private (cannot apply)'] ] as $status)
                                         <div class="px-3 py-1" style="width: 200px;">
-                                            <input type="checkbox" name="status" class="form-check-input" value="{{ $status['value'] }}">
+                                            <input type="checkbox" name="status" class="form-check-input" checked value="{{ $status['value'] }}">
                                             <label for="status">{{ $status['title'] }}</label>
                                         </div>
                                     @endforeach
@@ -169,7 +194,7 @@
                                 <div style="min-width: 250px;" onclick="event.stopPropagation();" class="dropdown-menu px-3 py-1"
                                     aria-labelledby="dropdownFilterSort">
                                         <p class="mb-1">Choose the minimumn number of members in team</p>
-                                        <input type="range" class="form-range" name="membersCount" min="0" defaultValue="0" value="0" max="10" step="1" id="customRange3">
+                                        <input type="range" class="form-range" name="membersCount" min="0" defaultValue="0" value="0" max="5" step="1" id="customRange3">
                                          <button type="button"
                                             class="my-2 rounded-pill btn btn-sm btn-primary text-light"
                                             id="membersCountResetButton"
@@ -283,6 +308,8 @@
                         <small data-form-parent="created_at" class="me-2">
                         </small>
                         <small data-form-parent="esports_title" class="me-2">
+                        </small>
+                         <small data-form-parent="region2" class="me-2">
                         </small>
                         <small data-form-parent="region" class="me-2">
                         </small>

@@ -6,7 +6,7 @@ function goToScreen() {
 // Elements
 let newTeamsForm = document.getElementById('newTeamsForm');
 let filteredSortedTeams = [];
-let newTeamsFormKeys = ['sortKeys', 'created_at', 'region', 'status', 'membersCount', 'esports_title'];
+let newTeamsFormKeys = ['sortKeys', 'created_at', 'region', 'region2', 'status', 'membersCount', 'esports_title'];
 let sortKeysInput = document.getElementById("sortKeys");
 
 let teamListServer = document.getElementById('teamListServer');
@@ -256,7 +256,8 @@ async function fetchTeams(event = null) {
     for (let sortedTeam of sortedTeams) {
         let isToBeAdded = true;
         let nameFilter = String(formData.get('search')).toLowerCase().trim();
-        let regionFilter = formData.get('region');
+        // let regionFilter = formData.get('region');
+        let regionFilter2 = formData.get('region2');
         let esportsTitleFilter = formData.get('esports_title');
         let createdAtFilter = formData.get('created_at');
         let statusListFilter = formData.getAll('status');
@@ -269,10 +270,18 @@ async function fetchTeams(event = null) {
             isToBeAdded = isToBeAdded && false;
         }
 
-        if (regionFilter != "" && regionFilter != "SEA") {
+        console.log({
+            regionFilter2, esportsTitleFilter
+        })
+
+
+        if (regionFilter2 != "SEA") {
             isToBeAdded = isToBeAdded && false;
         }
 
+        if (esportsTitleFilter != "Dota 2") {
+            isToBeAdded = isToBeAdded && false;
+        }
 
         if (membersCountFilter != "" && sortedTeam?.membersCount < membersCountFilter) {
             isToBeAdded = isToBeAdded && false;
@@ -290,9 +299,6 @@ async function fetchTeams(event = null) {
         isToBeAdded = isArrayStatusFilter && isToBeAdded;
 
    
-        let isArrayEsportsTitleFilter = esportsTitleFilter == null 
-            || (esportsTitleFilter[0] && esportsTitleFilter == "Dota 2");
-        isToBeAdded = isArrayEsportsTitleFilter && isToBeAdded;
 
         if (createdAtFilter != "" && new Date(sortedTeam?.created_at) < new Date(createdAtFilter)) {
             isToBeAdded = isToBeAdded && false;
@@ -301,6 +307,8 @@ async function fetchTeams(event = null) {
         if (isToBeAdded) {
             filteredSortedTeams.push(sortedTeam);
         }
+
+        console.log(filteredSortedTeams);    
     }
 
     paintScreen(filteredSortedTeams, membersCountServerValue, countServerValue);
