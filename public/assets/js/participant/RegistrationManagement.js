@@ -689,6 +689,7 @@ addOnLoad(()=> {
           rosterItems.forEach(item => {
             item.style.border = 'none';
             item.style.borderRadius = '';
+            item.style.zIndex = '99 !important';
             if (item.classList.contains('d-none-until-hover-parent2')) {
                 item.classList.add('d-none-until-hover-parent');
             }

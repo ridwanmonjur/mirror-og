@@ -339,7 +339,7 @@ async function fetchMembers(event = null) {
                 <td class="coloured-cell px-0">
                     <span>${member?.status} ${member?.updated_at ? window.formatDateLuxon(member.updated_at): ''} </span>
                 </td>
-                <td class="flag-cell coloured-cell px-3 fs-4">
+                <td class="flag-cell coloured-cell px-3 text-start text-lg-center fs-4">
                     <span>${member?.user?.participant?.region_flag ? member?.user?.participant?.region_flag : '-'} </span>
                 </td>
             </tr>

@@ -1,68 +1,12 @@
-@php
-    $perpage = 4;
-    $notificationList = $user->notifications()?->cursorPaginate($perpage);
-    $nextCursor = $notificationList?->nextCursor();
-    $countUnread = $user->unreadNotifications->count();
-@endphp
-
-<div class="ms-2 dropdown" data-reference="parent" data-bs-offset="-80,-80">
-    {{-- <a href="#" role="button" class="btn position-relative" id="dropdownMenuLinkNotification"
-        data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt="">
-        @if ($countUnread != 0)
-            <span style="top: -20px;" id="countUnread" data-notification-count="{{ $countUnread }}"
-                class="badge text-light bg-primary">{{ $countUnread }}</span>
-        @endif
-    </a> --}}
-
-    @if (isset($notificationList[0]))
-        <div class="dropdown-menu border rounded  py-0" data-bs-auto-close="outside"
-            style="position: absolute; left: -300px; font-size: 14px; border-radius: 20px; width: 250px; max-height: 60vh; overflow-y: scroll;"
-            aria-labelledby="dropdownMenuLinkNotification">
-            <div class="position-relative">
-                <div class="pt-2 pb-1 d-flex justify-content-between">
-                    <a href="" class="btn btn-link"> </a>
-                    <a role="button" onclick="setAllNotificationsRead(event);" class="btn btn-link">
-                        <u>
-                            {{-- All checks --}}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                                class="bi bi-check-all" viewBox="0 0 16 16">
-                                <path
-                                    d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 1 0-1.091-1.028L9.477 9.417l-.485-.486z" />
-                            </svg>
-                            <span> Mark all as read </span>
-                        </u>
-                    </a>
-                </div>
-                @php
-
-                @endphp
-                <div class="notifications-list-container ">
-                    @include('__CommonPartials.__Navbar.Notifications')
-                </div>
-                @if ($nextCursor)
-                    <div class="d-flex pagination justify-content-center mx-auto">
-                        <button class="btn btn-link text-light btn-sm" id="load-more"
-                            data-url="{{ route('user.notifications.more', ['id' => $user->id]) }}"
-                            data-cursor="{{ $nextCursor ? $nextCursor->encode() : '' }}"> <u>Load More </u></button>
-                    </div>
-                    <br>
-                @else
-                    <br>
-                @endif
-            </div>
-        </div>
-    @else
-        <div class="dropdown-menu  border rounded  text-center py-navbar mb-1"
-            style="position: absolute; left: -300px; width: 300px;" data-bs-auto-close="outside"
-            aria-labelledby="dropdownMenuLinkNotification">
-            <p class="pt-3 align-middle me-4" style="font-weight: 400;">
-                You have no notifications!
-            </p>
-        </div>
-    @endif
-</div>
-
+@if ($user->role == 'PARTICIPANT' )
+        <a href="{{ url('/participant/request/') }}" role="button" class="btn p-0 me-3" 
+            aria-haspopup="true" aria-expanded="true"
+        >
+            <img width="46px" height="42px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt=""
+                class="" style="object-position: center;"
+            >
+        </a>
+@endif
 <div class="dropdown" data-reference="parent" data-bs-auto-close="outside" data-bs-offset="-80,-80">
     <a href="#" role="button" class="btn m-0 p-0" id="dropdownMenuLinkSignedIn" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
@@ -85,7 +29,7 @@
         aria-labelledby="dropdownMenuLinkSignedIn">
         <div class="border-secondary border-1 border-bottom text-center mb-0 px-2">
             <a class="py-0" href="{{ route(strtolower($user->role) . '.profile.view') }}">
-                <div class="py-navbar d-flex justify-content-start ps-2">
+                <div class="py-navbar d-flex justify-content-start align-items-center py-2 ps-2">
                     @if ($user->userBanner)
                         <img class="object-fit-cover rounded-circle me-2 border border-primary"
                             src="{{bladeImageNull($user->userBanner)}}" width="45" height="45">
@@ -95,15 +39,15 @@
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </span>
                     @endif
-                    <span style="text-overflow: ellipsis; overflow: hidden; " class="text-start hover-bigger align ms-2">
-                        <small> {{ $user->name }}</small> <br>
-                        <small> {{ $user->email }}</small>
+                    <span class="text-start hover-bigger align-middle ms-2">
+                        <small class="d-inline-block text-truncate"> {{ $user->name }}</small> <br>
+                        <small class="d-inline-block text-truncate"> {{ $user->email }}</small>
                         {{-- <small> N__Edit put the profile link </small> --}}
                     </span>
                 </div>
             </a>
         </div>
-        @if ($user->role == 'ORGANIZER' || $user->role == 'ADMIN')
+        @if ($user->role == 'ORGANIZER')
             <a class="dropdown-item py-navbar  ps-4 align-middle " href="{{ route('organizer.profile.view') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                     class="bi bi-person-circle me-3" viewBox="0 0 16 16">
@@ -128,14 +72,16 @@
                 </svg>
                 Manage
             </a>
+            
             <a class="dropdown-item  py-navbar my-0 border-secondary border-1 border-bottom  ps-4 align-middle " href="{{ route('user.settings.view') }}">
                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="rgb(18,18,18)" class="bi bi-gear-fill me-3" viewBox="0 0 16 16">
                     <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"></path>
                 </svg>
                 <span>Settings</span>
             </a>
+           
         @endif
-        @if ($user->role == 'PARTICIPANT' || $user->role == 'ADMIN')
+        @if ($user->role == 'PARTICIPANT' )
             <a class="dropdown-item py-navbar my-0  ps-4 align-middle " href="{{ route('participant.profile.view') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                     class="bi bi-person-circle me-3" viewBox="0 0 16 16">
@@ -147,8 +93,8 @@
             </a>
             <a class="dropdown-item  py-navbar my-0  ps-4 align-middle " href="{{ url('/participant/team/list/') }}">
                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trophy me-3" viewBox="0 0 16 16">
-  <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935M3.504 1q.01.775.056 1.469c.13 2.028.457 3.546.87 4.667C5.294 9.48 6.484 10 7 10a.5.5 0 0 1 .5.5v2.61a1 1 0 0 1-.757.97l-1.426.356a.5.5 0 0 0-.179.085L4.5 15h7l-.638-.479a.5.5 0 0 0-.18-.085l-1.425-.356a1 1 0 0 1-.757-.97V10.5A.5.5 0 0 1 9 10c.516 0 1.706-.52 2.57-2.864.413-1.12.74-2.64.87-4.667q.045-.694.056-1.469z"/>
-</svg>
+                <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935M3.504 1q.01.775.056 1.469c.13 2.028.457 3.546.87 4.667C5.294 9.48 6.484 10 7 10a.5.5 0 0 1 .5.5v2.61a1 1 0 0 1-.757.97l-1.426.356a.5.5 0 0 0-.179.085L4.5 15h7l-.638-.479a.5.5 0 0 0-.18-.085l-1.425-.356a1 1 0 0 1-.757-.97V10.5A.5.5 0 0 1 9 10c.516 0 1.706-.52 2.57-2.864.413-1.12.74-2.64.87-4.667q.045-.694.056-1.469z"/>
+                </svg>
                 <span>Team List</span>
             </a>
             <a class="dropdown-item  py-navbar my-0  ps-4 align-middle " href="{{ route('user.settings.view') }}">
@@ -157,13 +103,14 @@
                 </svg>
                 <span>Settings</span>
             </a>
-            <a class="dropdown-item border-secondary border-1 border-bottom py-navbar my-0  ps-4 align-middle " href="{{ url('/participant/request/') }}">
-               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-rolodex me-3" viewBox="0 0 16 16">
-                <path d="M8 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
-                <path d="M1 1a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h.5a.5.5 0 0 0 .5-.5.5.5 0 0 1 1 0 .5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5.5.5 0 0 1 1 0 .5.5 0 0 0 .5.5h.5a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H6.707L6 1.293A1 1 0 0 0 5.293 1zm0 1h4.293L6 2.707A1 1 0 0 0 6.707 3H15v10h-.085a1.5 1.5 0 0 0-2.4-.63C11.885 11.223 10.554 10 8 10c-2.555 0-3.886 1.224-4.514 2.37a1.5 1.5 0 0 0-2.4.63H1z"/>
+             <a class=" dropdown-item border-secondary border-1 border-bottom py-navbar my-0  ps-4 align-middle  " href="{{ route('public.contact.view') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-rolodex me-3" viewBox="0 0 16 16">
+                    <path d="M8 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                    <path d="M1 1a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h.5a.5.5 0 0 0 .5-.5.5.5 0 0 1 1 0 .5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5.5.5 0 0 1 1 0 .5.5 0 0 0 .5.5h.5a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H6.707L6 1.293A1 1 0 0 0 5.293 1zm0 1h4.293L6 2.707A1 1 0 0 0 6.707 3H15v10h-.085a1.5 1.5 0 0 0-2.4-.63C11.885 11.223 10.554 10 8 10c-2.555 0-3.886 1.224-4.514 2.37a1.5 1.5 0 0 0-2.4.63H1z"/>
                 </svg>
-                <span>Requests</span>
+                <span>Contact</span>
             </a>
+            
         @endif
         <a class="dropdown-item py-navbar my-0  ps-4 align-middle " href="{{ route('logout.action') }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="inherit"

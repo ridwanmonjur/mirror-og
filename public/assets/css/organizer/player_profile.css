@@ -226,6 +226,7 @@ a.custom-link:hover {
     border: solid #1e3744;
     border-radius: 1px;
     padding: 15px;
+    max-width: 90%;
 }
 
 .showcase-column {

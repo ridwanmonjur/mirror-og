@@ -7,7 +7,6 @@ const styles = {
 };
 
 const routes = {
-    userBannerUrl: storage.dataset.userBannerUrl,
     routeBackgroundApi: storage.dataset.routeBackgroundApi
 };
 
@@ -210,6 +209,7 @@ window.onload = () => {
             })
         }
     );
+    
     window.loadMessage();
 
     // document.querySelectorAll('.animation-container').forEach(element => {
@@ -228,39 +228,23 @@ uploadButton2?.addEventListener("click", function () {
     imageUpload.value = "";
     imageUpload.click();
 });
+
 imageUpload?.addEventListener("change", async function (e) {
     const file = e.target.files[0];
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!validTypes.includes(file.type)) {
+        toastError("Please select only PNG or JPG/JPEG images!");
+        imageUpload.value = ""; 
+        return;
+    }
+
     try {
-        const fileContent = await readFileAsBase64(file);
-        const response = await fetch(routes.userBannerUrl, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Content-type': 'application/json',
-                'Accept': 'application/json',
-                'credentials': 'include',
-            },
-            body: JSON.stringify({
-                file: {
-                    filename: file.name,
-                    type: file.type,
-                    size: file.size,
-                    content: fileContent
-                }
-            }),
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            uploadedImageList[0].style.backgroundImage = `url(${data.data.fileName})`;
-            uploadedImageList[1].style.backgroundImage = `url(${data.data.fileName})`;
-            window.location.reload();
-        } else {
-            console.error('Error updating member status:', data.message);
-        }
+        const fileUrl = URL.createObjectURL(file);
+        uploadedImageList[0].style.backgroundImage = `url(${fileUrl})`;
+        uploadedImageList[1].style.backgroundImage = `url(${fileUrl})`;
     } catch (error) {
-        console.error('There was a problem with the file upload:', error);
+        imageUpload.value = "";
+        console.error('Error displaying image:', error);
     }
 });
 
@@ -270,8 +254,6 @@ function reddirectToLoginWithIntened(route) {
     url = `${loginRoute}?url=${route}`;
     window.location.href = url;
 }
-
-
 
 async function readFileAsBase64(file) {
     return new Promise((resolve, reject) => {

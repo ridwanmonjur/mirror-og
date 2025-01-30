@@ -446,8 +446,7 @@ function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRol
                 const data = await response.json();
                 console.log(data);
                 if (tab in data.connections)  {
-                    console.log(data.connections)
-                    if (this.page && this.page !== 1) {
+                    if (this.page && this.page == 1) {
                         let newTab = this.page;
                         newTab++;
                         this.page = newTab;

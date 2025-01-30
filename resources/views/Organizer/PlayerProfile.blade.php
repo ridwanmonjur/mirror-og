@@ -41,7 +41,6 @@
     @include('__CommonPartials.NavbarGoToSearchPage')
     <main 
         id="app"
-        v-cloak
         v-scope="OrganizerData()"
         @vue:mounted="init"
     >
@@ -57,7 +56,6 @@
         <div class="profile-storage d-none"
             data-route-signin="{{ route('participant.signin.view') }}"
             data-route-profile="{{ route('public.participant.view', ['id' => ':id']) }}"
-            data-user-banner-url="{{ route('participant.userBanner.action', ['id' => $userProfile->id]) }}"
             data-route-background-api="{{ route('user.userBackgroundApi.action', ['id' => $userProfile->id]) }}"
             data-background-styles="<?php echo $backgroundStyles; ?>"
             data-font-styles="<?php echo $fontStyles; ?>"
@@ -67,7 +65,7 @@
         <input type="hidden" id="initialOrganizer" value="{{json_encode($userProfile->organizer)}}">
         <input type="hidden" id="initialAddress" value="{{json_encode($userProfile->address)}}">
         {{-- <form action="{{route('organizer.profile.update')}}" method="POST">  --}}
-        <div>
+        <div >
             <div id="backgroundBanner" class="member-section px-2 pt-2"
                
             > 
@@ -75,7 +73,7 @@
                     <button 
                      data-bs-toggle="offcanvas"
                         data-bs-target="#profileDrawer"
-                        
+                        v-cloak
                         v-show="isEditMode"
                         {{-- onclick="document.getElementById('backgroundInput').click();" --}}
                         class="btn btn-secondary text-light rounded-pill py-2 me-3 fs-7"
@@ -84,10 +82,10 @@
                     </button>
                 </div>
                 <br>
-                <div class="member-image">
+                <div v-cloak class="member-image">
                     <div class="upload-container align-items-center">
                         <label  class="upload-label">
-                            <div class="circle-container motion-logo">
+                            <div v-cloak class="circle-container motion-logo">
                                 <div  class="uploaded-image"
                                     style="background-image: url({{ '/storage' . '/'. $userProfile->userBanner }}  ); background-size: cover; 
                                         z-index: 99; background-repeat: no-repeat; background-position: center; {{$frameStyles}}"
@@ -102,7 +100,7 @@
                                         </button>
                                     </a>    
                                     @if ($isUserSame)
-                                        <button  v-show="isEditMode" id="upload-button2" class="btn btn-sm p-0" aria-hidden="true">
+                                        <button  v-if="isEditMode" id="upload-button2" class="btn btn-sm text-white p-0 z-99" aria-hidden="true">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
@@ -113,11 +111,14 @@
                             </div>
                         </label>
                         @if ($isUserSame)
-                            <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                            <input type="file" id="image-upload"   
+                                accept=".png, .jpg, .jpeg, image/png, image/jpeg" 
+                                style="display: none;"
+                            >
                         @endif
                     </div>
                 </div>
-                <div class="member-details mx-auto text-center">
+                <div v-cloak class="member-details mx-auto text-center">
                     <div  v-show="isEditMode" class="pb-3">
                         <div v-show="errorMessage != null" class="text-red" v-text="errorMessage"> </div>
                         <input 
@@ -334,7 +335,7 @@
             <br>
             @if (!isset($joinEventsHistory[0]))
                 <p class="tab-size">
-                    This profile have no past events
+                    This profile has no past events
                 </p>
             @else
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">

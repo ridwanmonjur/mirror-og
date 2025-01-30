@@ -36,7 +36,7 @@ window.addPopover = function (parent, child, trigger="click", options = {}) {
 }
 
 window.formatDateLuxon = (date) => {
-    if (!date) return 'N/A';
+    if (!date) return 'Not available';
     return  DateTime
         .fromISO(date)
         .toRelative();

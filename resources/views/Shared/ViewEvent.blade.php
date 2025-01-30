@@ -348,12 +348,10 @@
                 </div>
 
                 <div id="Bracket" class="tabcontent">
-
                     @include('Participant.__Partials.BracketReport')
-
                 </div>
 
-                <div id="Teams" class="tabcontent">
+                <div id="Teams" class="tabcontent" style="width: 90%;">
                     <h5 class="my-0"><u>Teams</u></h5>
                      <div >
                         @if (isset($teamList[0]))
@@ -394,10 +392,10 @@
                                                     <span>{{$team->teamName}}</span>
                                                 </a>
                                             </td>
-                                            <td style="font-size: 1.5rem;" class="colored-cell text-center">
+                                            <td style="font-size: 1.5rem;" class="colored-cell text-start text-lg-center">
                                                 {!! $team->country_flag ? $team->country_flag : '-' !!}
                                             </td>
-                                            <td class="colored-cell text-center pe-3">{{$team->createdAtHumaReadable()}}</td>
+                                            <td class="colored-cell text-start text-lg-center pe-3">{{$team->createdAtHumaReadable()}}</td>
 
                                         </tr>
                                     @endforeach
@@ -408,7 +406,7 @@
                         @endif
                     </div>
                 </div>
-                <div id="Result" class="tabcontent">
+                <div id="Result" class="tabcontent" style="width: 90%;">
                     <h5 class="mb-3"><u>Result</u></h5>
                     <div class="tab-content pb-4 tab-size outer-tab mx-auto" id="current-positions">
                         <table class="mx-auto member-table responsive" style="margin-left: 5px;">
@@ -455,11 +453,11 @@
                                                 {{ $joinEventAndTeam->teamName }}
                                             </td>
                                             
-                                            <td class="colored-cell px-2 text-start">
+                                            <td class="colored-cell px-3 text-start">
                                                 {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
                                             </td>
                                             <td class="colored-cell text-start px-2">
-                                                {{ $joinEventAndTeam->position ? $joinEventAndTeam->position : 'TBD' }}
+                                                {{ $joinEventAndTeam->position ? bladeOrdinalPrefix($joinEventAndTeam->position) : 'TBD' }}
                                                 &nbsp;&nbsp;
                                             </td>
                                            

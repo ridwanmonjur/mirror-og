@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Filament\Models\Contracts\FilamentUser;
-use Filament\Tables\Columns\Layout\Panel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,14 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 
 // use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
 
     public function canAccessPanel($panel): bool
     {
@@ -129,10 +127,6 @@ class User extends Authenticatable implements FilamentUser
             ->withTimestamps();
     }
 
-   
-
-  
-
     public function hasStarred(User $user): bool
     {
         return $this->stars()->where('starred_user_id', $user->id)->exists();
@@ -219,21 +213,50 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function uploadUserBanner(Request $request): ?string
-    {
+{
+    $oldBanner = $this->userBanner;
+    $newBannerPath = null;
+    
+    try {
         $requestData = json_decode($request->getContent(), true);
-        $fileData = $requestData['file'];
+        if (!isset($requestData['file'])) {
+            return null;
+        }
 
+        $fileData = $requestData['file'];
         $fileContent = base64_decode($fileData['content']);
-        $fileNameInitial = 'userBackground-'.time().'.'.pathinfo($fileData['filename'], PATHINFO_EXTENSION);
+        
+        $fileNameInitial = 'userBanner-'.time().'.'.pathinfo($fileData['filename'], PATHINFO_EXTENSION);
         $fileName = "images/user/{$fileNameInitial}";
         $storagePath = storage_path('app/public/'.$fileName);
-        file_put_contents($storagePath, $fileContent);
+        
+        if (!file_exists(dirname($storagePath))) {
+            mkdir(dirname($storagePath), 0755, true);
+        }
 
+        if (file_put_contents($storagePath, $fileContent) === false) {
+            throw new \Exception('Failed to save file');
+        }
+
+        $newBannerPath = $fileName;
+        
         $this->userBanner = $fileName;
         $this->save();
 
+        $this->destroyUserBanner($oldBanner);
+
         return asset('storage/'.$fileName);
+
+    } catch (\Exception $e) {
+        if ($newBannerPath && file_exists(storage_path('app/public/'.$newBannerPath))) {
+            unlink(storage_path('app/public/'.$newBannerPath));
+        }
+        
+        $this->userBanner = $oldBanner;
+        $this->save();
+        throw $e; 
     }
+}
 
     public function uploadBackgroundBanner(Request $request, UserProfile | TeamProfile $profile): ?string
     {

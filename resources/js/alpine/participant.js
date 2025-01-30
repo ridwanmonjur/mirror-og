@@ -3,10 +3,11 @@ import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
 import { ProfileData, openModal, ReportFormData } from "../custom/followers";
 import { createApp } from "petite-vue";
+import Swal from "sweetalert2";
 
 let userData = JSON.parse(document.getElementById('initialUserData')?.value);
 let participantData = JSON.parse(document.getElementById('initialParticipantData')?.value);
-
+const imageUpload = document.getElementById("image-upload");
 
 const myOffcanvas = document.getElementById('profileDrawer');
 myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
@@ -20,7 +21,6 @@ const {
     backgroundStyles,
     fontStyles,
     loggedUserId,
-    loggedUserRole
 } = document.querySelector('.laravel-data-storage').dataset;
 
 console.log({loggedUserId});
@@ -87,10 +87,24 @@ function ParticipantData ()  {
         },
       
         async submitEditProfile(event) {
+            event.preventDefault();
+            const url = event.target.dataset.url;
+            this.participant.age = Number(this.participant.age);
+
+            let file = imageUpload.files[0];
+            let fileFetch = null;
+            if (file) {
+                const fileContent = await readFileAsBase64(file);
+
+                fileFetch = {
+                    filename: file.name,
+                    type: file.type,
+                    size: file.size  / (1024 * 1024),
+                    content: fileContent
+                };
+            }
+
             try {
-                event.preventDefault();
-                const url = event.target.dataset.url;
-                this.participant.age = Number(this.participant.age);
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -100,7 +114,8 @@ function ParticipantData ()  {
                     },
                     body: JSON.stringify({
                         participant: this.participant,
-                        user: this.user
+                        user: this.user,
+                        ...(fileFetch && { file: fileFetch })
                     }),
                 });
                 const data = await response.json();
@@ -117,20 +132,20 @@ function ParticipantData ()  {
                     window.location.reload();
 
                 } else {
-                    this.errorMessage = data.message;
+                    throw new Error(data.message);
                 }
             } catch (error) {
-                this.errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
-                console.error({ error });
+                let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
+
+                this.errorMessage = errorMessage;
+
             }
         },
 
         init() {
             var banner = document.getElementById('backgroundBanner');
             banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-
             this.fetchCountries();
-
         }
 
     }
@@ -211,6 +226,25 @@ document.addEventListener('DOMContentLoaded', () => {
         
     // }).mount('#connectionModal');
 });
+
+async function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            const base64Content = event.target.result.split(';base64,')[1];
+            resolve(base64Content);
+        };
+
+        reader.onerror = function (error) {
+            reject(error);
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
+
 // Alpine.data('profileData', alpineProfileData(userId, loggedUserId, userId == loggedUserId, role, loggedUserRole));
 // Alpine.data('profileStatsData', alpineProfileStatsData( userId,  role));
 // window.onpageshow = function(event) {

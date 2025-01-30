@@ -7,7 +7,6 @@ let {
     publicProfileUrl,
     backgroundStyles,
     fontStyles,
-    userBannerUrl,
 } = document.querySelector('.laravel-data-storage').dataset;
 
 var backgroundBanner = document.getElementById("backgroundBanner")
@@ -169,11 +168,27 @@ window.addEventListener('resize', debounce((e) => {
 function redirectToProfilePage(userId) {
     window.location.href = publicProfileUrl.replace(':id', userId);
 }
+const imageUpload = document.getElementById("image-upload");
+const uploadedImageList = document.getElementsByClassName("uploaded-image");
+let uploadButton2 = document.getElementById("upload-button2");
+uploadButton2?.addEventListener("click", function () {
+    imageUpload.value = "";
+    imageUpload.click();
+});
 
+imageUpload?.addEventListener("change", uploadImageToBanner);
 function uploadImageToBanner(event) {
     var file = event.target.files[0];
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!validTypes.includes(file.type)) {
+        toastError("Please select only PNG or JPG/JPEG images!");
+        imageUpload.value = ""; 
+        return;
+    }
+    
     if (file) {
-        var cachedImage = URL.createObjectURL(file);
-        backgroundBanner.style.backgroundImage = `url(${cachedImage})`;
+        var fileUrl = URL.createObjectURL(file);
+        uploadedImageList[0].style.backgroundImage = `url(${fileUrl})`;
+        uploadedImageList[1].style.backgroundImage = `url(${fileUrl})`;
     }
 }

@@ -29,15 +29,14 @@
     </div>
 
     <div @class([
-        'event mx-auto event-width cursor-pointer',
+        'event  mx-auto event-width cursor-pointer',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
     ]) style="margin-bottom : 0;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
             <img 
                 {!! trustedBladeHandleImageFailureBanner() !!}
                 @class([
-                'opacity-until-hover object-fit-cover me-1',
-                'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
+                'opacity-until-hover object-fit-cover me-1 border-0',
             ])
                 style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventBanner }}" width="100%" height="80%;">

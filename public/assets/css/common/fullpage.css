@@ -6,7 +6,6 @@
 
 .navbar {
     display: fixed!;
-    background-color: #90abc4;
 }
 
 body {
@@ -18,10 +17,10 @@ body {
     background-repeat: no-repeat;
 }
 
+
+
 .app-container {
     margin: auto;
-    padding-top: 10px;
-    padding-bottom: 10px;
     height: auto;
     background: none;
     /* Slight transparency */
@@ -277,15 +276,16 @@ textarea::placeholder {
     }
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 1200px) {
     .message-content {
         max-width: 80%;
     }
 
     .app-container {
         background: rgba(255, 255, 255, 0.9);
-        width: 90%;
-        height: 90%;
+        width: 75%;
+        height: 75%;
+        margin-top: 8vh;
         padding-top: 0px;
         padding-bottom: 0px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);

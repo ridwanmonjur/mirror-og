@@ -89,6 +89,8 @@ class OrganizerController extends Controller
                 $organizer->save();
             });
 
+            $user->uploadUserBanner($request);
+
             return response()->json(
                 [
                         'message' => 'User profile updated successfully',

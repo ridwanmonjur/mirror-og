@@ -23,11 +23,16 @@ class UpdateTeamRequest extends FormRequest
     {
         return [
             'id' => 'required|numeric',
-            'teamName' => 'required|string',
-            'teamDescription' => 'sometimes',
+            'teamName' => 'required|string|max:25',
+            'teamDescription' => 'sometimes|max:150',
             'country' => 'nullable',
             'country_name' => 'nullable|string',
             'country_flag' => 'nullable|string',
+            'file' => 'sometimes|array|nullable',
+            'file.filename' => 'string',
+            'file.type' => 'string',
+            'file.size' => 'numeric|max:3',
+            'file.content' => 'string',
         ];
     }
 
@@ -43,6 +48,11 @@ class UpdateTeamRequest extends FormRequest
             'teamName.string' => 'The team name must be a string.',
             'country.required' => 'The country field is required.',
             'country.string' => 'The country must be a string.',
+            'teamName.max' => 'Team name cannot exceed 25 characters',
+            'teamDescription.required' => 'Please add a description for your team',
+            'teamDescription.max' => 'Team description must be less than 150 characters',
+            'file.size' => 'The file is too large, over 3 MB in size'
+
         ];
     }
 }

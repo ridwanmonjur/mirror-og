@@ -168,6 +168,9 @@ class SocialService {
         $user = $request->attributes->get('user');
         $userId = $user->id;
         $participantId = $request->participant_id;
+        if ($userId == $participantId) {
+            throw new \ErrorException("A participant cannot follow himself!");
+        }
         $existingFollow = ParticipantFollow::checkFollow($user->id, $participantId);
         
         if ($existingFollow) {
