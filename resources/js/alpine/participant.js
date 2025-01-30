@@ -3,10 +3,11 @@ import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
 import { ProfileData, openModal, ReportFormData } from "../custom/followers";
 import { createApp } from "petite-vue";
+import Swal from "sweetalert2";
 
 let userData = JSON.parse(document.getElementById('initialUserData')?.value);
 let participantData = JSON.parse(document.getElementById('initialParticipantData')?.value);
-
+const imageUpload = document.getElementById("image-upload");
 
 const myOffcanvas = document.getElementById('profileDrawer');
 myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
@@ -20,7 +21,7 @@ const {
     backgroundStyles,
     fontStyles,
     loggedUserId,
-    loggedUserRole
+    userBannerUrl,
 } = document.querySelector('.laravel-data-storage').dataset;
 
 console.log({loggedUserId});
@@ -87,10 +88,54 @@ function ParticipantData ()  {
         },
       
         async submitEditProfile(event) {
+            event.preventDefault();
+            const url = event.target.dataset.url;
+            this.participant.age = Number(this.participant.age);
+
+            let file = imageUpload.files[0];
+            
+            if (file) {
+                try {
+                    const fileContent = await readFileAsBase64(imageUpload.files[0]);
+
+                    const fileFetch = await fetch(userBannerUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json',
+                            'Accept': 'application/json',
+                            'credentials': 'include',
+                        },
+                        body: JSON.stringify({
+                            file: {
+                                filename: file.name,
+                                type: file.type,
+                                size: file.size,
+                                content: fileContent
+                            }
+                        }),
+                    });
+
+                    const responseData = await fileFetch.json();
+                    if (responseData.success) {
+                        uploadedImageList[0].style.backgroundImage = `url(${responseData.data.fileName})`;
+                        uploadedImageList[1].style.backgroundImage = `url(${responseData.data.fileName})`;
+                    } else {
+                        
+                        console.error('Error updating member status:', responseData.message);
+                    }
+                } catch (error) {
+                    let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
+                    Swal.fire({
+                        text: errorMessage,
+                        icon: 'error',
+                        confirmButtonColor: '#43a4d7'
+                    })
+                    
+                    return;
+                }
+            }
+
             try {
-                event.preventDefault();
-                const url = event.target.dataset.url;
-                this.participant.age = Number(this.participant.age);
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -117,20 +162,36 @@ function ParticipantData ()  {
                     window.location.reload();
 
                 } else {
-                    this.errorMessage = data.message;
+                    throw new Error(data.message);
                 }
             } catch (error) {
-                this.errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
-                console.error({ error });
+                let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
+                if (file) {
+                    localStorage.setItem('vueerror', this.errorMessage);
+                    window.location.reload();
+                    return;
+                }
+
+                this.errorMessage = errorMessage;
+
             }
         },
 
         init() {
             var banner = document.getElementById('backgroundBanner');
             banner.style.cssText += `${backgroundStyles} ${fontStyles}`;
-
             this.fetchCountries();
+            let error = localStorage.getItem('vueerror');
+            if (error) {
+                Swal.fire({
+                    text: "Uploaded the image but cannot change your data!!",
+                    icon: 'error'
+                })
 
+                this.errorMessage = error;
+            }
+
+            localStorage.removeItem('vueerror');
         }
 
     }
@@ -211,6 +272,25 @@ document.addEventListener('DOMContentLoaded', () => {
         
     // }).mount('#connectionModal');
 });
+
+async function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            const base64Content = event.target.result.split(';base64,')[1];
+            resolve(base64Content);
+        };
+
+        reader.onerror = function (error) {
+            reject(error);
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
+
 // Alpine.data('profileData', alpineProfileData(userId, loggedUserId, userId == loggedUserId, role, loggedUserRole));
 // Alpine.data('profileStatsData', alpineProfileStatsData( userId,  role));
 // window.onpageshow = function(event) {

@@ -200,29 +200,21 @@ uploadButton2?.addEventListener("click", function () {
 
 imageUpload?.addEventListener("change", async function (e) {
     const file = e.target.files[0];
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!validTypes.includes(file.type)) {
+        toastError("Please select only PNG or JPG/JPEG images!");
+        imageUpload.value = ""; 
+        return;
+    }
 
     if (file) {
-        const formData = new FormData();
-        formData.append('file', file);
         try {
-            const response = await fetch(routes.teamBanner, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken77,
-                },
-                body: formData,
-            });
+            const fileUrl = URL.createObjectURL(file);
 
-            const data = await response.json();
-            console.log({ data })
-            if (data.success) {
-                uploadedImageList[0].style.backgroundImage = `url(/storage/${data.data.fileName})`;
-                uploadedImageList[1].style.backgroundImage = `url(/storage/${data.data.fileName})`;
-                window.location.reload();
-            } else {
-                console.error('Error updating member status:', data.message);
-            }
+            uploadedImageList[0].style.backgroundImage = `url(${fileUrl})`;
+            uploadedImageList[1].style.backgroundImage = `url(${fileUrl})`;
         } catch (error) {
+            toastError("Failed to upload this file!")
             console.error('Error approving member:', error);
         }
     }

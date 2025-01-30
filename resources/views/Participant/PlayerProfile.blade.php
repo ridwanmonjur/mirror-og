@@ -65,6 +65,7 @@
         @include('Participant.__ProfilePartials.Forms')
         <div id="backgroundBanner" class="member-section px-2 pt-2"
             @vue:mounted="init"
+            v-cloak
             v-scope="ParticipantData()"
         >
             @if($isOwnProfile) 
@@ -76,14 +77,13 @@
             <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant?->getRegionDetails()) }}">
             <input type="hidden" id="initialUserData" value="{{json_encode($userProfile?->only(["id", "name", "profile"]))}}">
             <input type="hidden" id="initialParticipantData" value="{{json_encode($userProfile->participant)}}">
-                <div class="d-flex justify-content-end py-0 my-0 mb-2 mx-3 flex-wrap">
+                <div class="d-flex justify-content-end align-items-center py-0 my-0 mb-2 mx-3 flex-wrap">
                     @if ($isUserSame)
                     <input type="file" id="backgroundInput" class="d-none"> 
                     <button 
                         data-bs-toggle="offcanvas"
                         data-bs-target="#profileDrawer"
                         v-on:click="isEditMode=false"
-                        v-cloak
                         v-show="!isEditMode"
                         {{-- onclick="document.getElementById('backgroundInput').click();" --}}
                         class="btn btn-secondary text-light rounded-pill py-2 me-3 fs-7"
@@ -91,14 +91,12 @@
                         Change Background
                     </button>
                     <button 
-                        v-cloak
                         v-show="!isEditMode"
                         v-on:click="reset(); isEditMode = true;"
                         class="oceans-gaming-default-button oceans-gaming-primary-button px-3 py-2 fs-7"> 
                         Edit Profile
                     </button>
                     <a 
-                        v-cloak
                         v-show="isEditMode"
                         v-on:click="submitEditProfile(event)"
                         data-url="{{route('participant.profile.update')}}"
@@ -107,11 +105,11 @@
                     </a>
                     {{-- Close icon --}}
                     <svg 
-                        v-cloak
+                        
                         style="top: 10px; color: black;"
-                        v-show="isEditMode"
+                        v-if="isEditMode"
                         v-on:click="restoreAfterEditMode()"
-                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle cursor-pointer align-middle position-relative" viewBox="0 0 16 16">
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle cursor-pointer align-middle " viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                     </svg>
@@ -139,7 +137,7 @@
                                         </button>
                                     </a>    
                                     @if ($isUserSame)
-                                        <button v-cloak v-show="isEditMode"  id="upload-button2" class="btn btn-sm p-0" aria-hidden="true">
+                                        <button  v-show="isEditMode"  id="upload-button2" class="btn btn-sm p-0" aria-hidden="true">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
@@ -154,7 +152,7 @@
                 </div>
                 <div class="member-details user-select-none ">
                         <div v-show="errorMessage != null && isEditMode" class="text-red" v-text="errorMessage"> </div>
-                        <div v-cloak v-show="isEditMode" style="color: black;">
+                        <div  v-show="isEditMode" style="color: black;">
                             <input 
                                 placeholder = "Enter your nickname..."
                                 style="width: 250px;"
@@ -163,7 +161,13 @@
                                 class="form-control border-secondary player-profile__input d-inline" 
                                 v-model="participant.nickname" 
                             > 
-                            <input type="file" id="image-upload" accept="image/*" v-cloak v-show="isEditMode" class="d-none">
+                            <input 
+                                type="file" 
+                                id="image-upload" 
+                                accept=".png, .jpg, .jpeg, image/png, image/jpeg"  
+                                v-show="isEditMode" 
+                                class="d-none"
+                            >
                             <br>
                             <span class="d-inline-flex justify-content-between align-items-center">
                                 <input
@@ -213,7 +217,6 @@
                                     class="form-control border-secondary player-profile__input d-inline me-3" 
                                     v-model="participant.bio" 
                                 > 
-                            <br> <br>
                             <div class="w-100 d-flex justify-content-start align-items-center flex-wrap">
                                 <span class="me-3 d-flex justify-content-center align-items-center">
                                     <svg
@@ -253,7 +256,7 @@
                                 
                             </div>
                         </div>
-                    <div v-cloak v-show="!isEditMode" class="ms-2">
+                    <div  v-show="!isEditMode" class="ms-2">
                         <br>
                         @if($userProfile->participant?->nickname)           
                             <div class="d-flex justify-content-start align-items-center flex-wrap">

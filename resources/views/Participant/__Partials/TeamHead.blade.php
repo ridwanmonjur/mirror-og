@@ -148,7 +148,12 @@
             <div :class="{'team-info  ': !isEditMode, '': true}">
                 @if ($isCreator)
                     <div   v-show="isEditMode">
-                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                        <input 
+                            type="file" 
+                            id="image-upload" 
+                            accept=".png, .jpg, .jpeg, image/png, image/jpeg"  
+                            style="display: none;"
+                        >
                         <br>
                         <div  v-show="errorMessage != null" class="text-red" v-text="errorMessage"> </div>
                         <div>

@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
 import { ProfileData, openModal, ReportFormData } from "../custom/followers";
 import { createApp } from "petite-vue";
+import Swal from "sweetalert2";
 
 const myOffcanvas = document.getElementById('profileDrawer');
 myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
@@ -9,6 +10,11 @@ myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
 })
 
 initOffCanvasListeners();
+const storage = document.querySelector('.team-head-storage');
+
+const { routeTeamBanner } = storage.dataset;
+let imageUpload = document.getElementById("image-upload");
+let uploadedImageList = document.getElementsByClassName("uploaded-image");
 
 function TeamHead() {
     return {
@@ -36,18 +42,10 @@ function TeamHead() {
             try {
                 const data = await storeFetchDataInLocalStorage('/countries');
                
-               
-               
-               
                 if (data?.data) {
                     this.isCountriesFetched = true;
                     this.countries = data.data;
-
                     const choices2 = document.getElementById('select2-country3');
-                   
-                   
-                   
-                   
                     let countriesHtml = "<option value=''>Do not display</option>";
 
                     data?.data.forEach((value) => {
@@ -68,8 +66,45 @@ function TeamHead() {
             }
         },
         async submitEditProfile(event) {
+            
+            event.preventDefault();
+            let file = imageUpload.files[0];
+            
+            if (file) {
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    const fileFetch = await fetch(routeTeamBanner, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken77,
+                        },
+                        body: formData
+                    });
+
+                    const responseData = await fileFetch.json();
+                    if (responseData.success) {
+                        uploadedImageList[0].style.backgroundImage = `url(/storage/${responseData.data.fileName})`;
+                        uploadedImageList[1].style.backgroundImage = `url(/storage/${responseData.data.fileName})`;
+                    } else {
+                        Swal.fire({
+                            text: responseData.message,
+                            icon: 'error'
+                        });
+                    }
+                } catch (error) {
+                    let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
+                    Swal.fire({
+                        text: errorMessage,
+                        icon: 'error',
+                        confirmButtonColor: '#43a4d7'
+                    })
+                    
+                    return;
+                }
+            }
+
             try {
-                event.preventDefault();
                 const url = event.target.dataset.url;
                 const response = await fetch(url, {
                     method: 'POST',
@@ -100,11 +135,17 @@ function TeamHead() {
                     localStorage.setItem('message', data.message);
                     window.location.replace(currentUrl);
                 } else {
-                    this.errorMessage = data.message;
+                    throw new Error(data.message);
                 }
             } catch (error) {
-                this.errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
-                console.error({ error });
+                let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
+                if (file) {
+                    localStorage.setItem('vueerror', this.errorMessage);
+                    window.location.reload();
+                    return;
+                }
+
+                this.errorMessage = errorMessage;
             }
         },
         reset() {
@@ -128,6 +169,17 @@ function TeamHead() {
                 }
             });
 
+            let error = localStorage.getItem('vueerror');
+            if (error) {
+                Swal.fire({
+                    text: "Uploaded the image but cannot change your data!!",
+                    icon: 'error'
+                })
+
+                this.errorMessage = error;
+            }
+
+            localStorage.removeItem('vueerror');
         }
     }
 }
@@ -148,9 +200,6 @@ window.formatDateMySqlLuxon = (mysqlDate, mysqlTime) => {
     return `${formattedDate} at ${formattedTime}`;
 }
 
-let role = "TEAM";
-const storage = document.querySelector('.team-head-storage');
-const { loggedUserId, loggedUserRole } = storage.dataset;
 
 // Alpine.data('profileData', alpineProfileData(teamData.id, loggedUserId, false, role, loggedUserRole));
 // Alpine.data('reportData', reportFormData());

@@ -697,6 +697,10 @@ img.fslightbox-source{
 
 }
 
+svg {
+    top: 0px !important;
+}
+
 @media screen and (min-width: 1100px) {
     .event-carousel-styles {
         grid-template-columns: 1fr 1fr;
