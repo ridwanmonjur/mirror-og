@@ -25,7 +25,7 @@
                         <u>
                             <h2>Create Your Team</h2>
                         </u>
-                        <br><br><br>
+                        <br><br>
                         <p class="create-online-esports">
                             What will your team be called?
                         </p>

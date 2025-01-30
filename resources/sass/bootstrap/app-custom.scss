@@ -69,20 +69,25 @@ svg{
     border-width: 3px !important;
 }
 
+.rounded-box-no-tier {
+    border-color: rgb(180, 180, 180) !important;
+}
+
+
 .rounded-box-turtle {
-    border-color: #8CCD39;
+    border-color: #8CCD39 !important;
 }
 
 .rounded-box-dolphin {
-    border-color: #43A4D7;
+    border-color: #43A4D7 !important;
 }
 
 .rounded-box-starfish {
-    border-color: #F25D7B;
+    border-color: #F25D7B !important;
 }
 
 .rounded-box-mermaid {
-    border-color: #2E4B59;
+    border-color: #2E4B59 !important;
 }
 
 html {
@@ -308,6 +313,10 @@ button#submit,
 
 .bg-red {
     background-color: red;
+}
+
+.bg-white{
+    background: white;
 }
 
 .text-red:hover {

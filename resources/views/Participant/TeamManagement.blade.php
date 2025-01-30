@@ -116,13 +116,13 @@
                                                 {{ $joinEventAndTeam->teamName }}
                                             </a>
                                         </td>
-                                        <td class="coloured-cell text-start px-2 ">
-                                            {{ $joinEventAndTeam->position ? $joinEventAndTeam->position : '-' }}
+                                        <td class="coloured-cell text-start text-lg-center ps-2 pe-4 ">
+                                            {{ $joinEventAndTeam->position ? bladeOrdinalPrefix($joinEventAndTeam->position) : '-' }}
                                         </td>
                                         <td class="coloured-cell text-start px-2 ">
                                             <a href="{{ route('public.event.view', $joinEventAndTeam->event_id) }}" >
                                                 <img
-                                                    class="rounded-circle d-inline-block object-fit-cover me-3"
+                                                    class="rounded-circle d-inline-block object-fit-cover me-1"
                                                     src="{{ '/storage' . '/'. $joinEventAndTeam->eventBanner }}"
                                                     {!! trustedBladeHandleImageFailure() !!} 
                                                     height="40"

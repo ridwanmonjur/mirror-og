@@ -484,7 +484,7 @@ submitBtnElement?.addEventListener('click', function(event) {
                     let currentImg = popoverImgs[index];
                     let currentTitle = popoverTitles[index];
                     if (currentImg) currentImg.src = `/storage/${banner}`;
-                    if (currentTitle) currentTitle.innerText = team?.teamName ?? 'N/A';
+                    if (currentTitle) currentTitle.innerText = team?.teamName ?? 'Not available';
 
                     const rosterContainer = bracketBoxList[index]?.querySelector('.popover-box .roster-container');
                     if (rosterContainer && roster) {

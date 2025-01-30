@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,9 +8,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Teams</title>
+        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/manageEvent.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamList.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @include('__CommonPartials.HeadIcon')
 </head>
 
@@ -20,7 +22,7 @@
         <div class="d-flex justify-content-between mb-2">
             <h5> Your Teams  </h5>
             <a href="{{route('participant.team.create')}}" 
-                class="d-inline-flex ms-4 py-2 rounded-pill px-4 text-light btn btn-primary btn-sm"
+                class="d-inline-flex ms-4 py-2 rounded-pill px-4 text-light btn btn-primary me-2"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
                     class="mt-1 me-2"
@@ -40,7 +42,7 @@
                 <input type="hidden" id="userIdServer" value="{{ $user->id }}">
                 <input type="hidden" name="sortKeys" id="sortKeys" value="">
                 <input type="hidden" name="sortType" id="sortType" value="">
-                <input name="search" style="width: min(90vw, 450px); font-size: 1rem;" class="rounded-pill mb-2 px-4 form-control d-inline-block me-3 cursor-pointer" type="text" placeholder="Search for player name/ email">
+                <input name="search" style="width: min(90vw, 550px); font-size: 1rem;" class="rounded-pill mb-2 px-4 form-control d-inline-block me-3 cursor-pointer" type="text" placeholder="Search for player name/ email">
                 <button type="button" class="btn btn-primary text-light px-2 border-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -52,7 +54,7 @@
                 </button>
 
             </div>
-            <div class="d-flex justify-content-between  w-70s align-items-center flex-wrap mt-2">
+            <div class="d-inline-flex justify-content-between align-items-center flex-wrap mt-2">
                 <div>
                     <div class="cursor-pointer me-5 d-inline-block"
                         onclick="openElementById('close-option'); openElementById('filter-option');  closeElementById('sort-option');">
@@ -65,33 +67,31 @@
                     <div id="filter-option" class="mx-0 px-0 mb-2 ms-3 d-inline-block">
                         <div class="d-flex justify-content-start">
                             <div class="dropdown me-3">
-                                <button class="ps-0 pe-3 py-1 py-2 button-design-removed" type="button"
-                                    id="dropdownFilterType" data-bs-toggle="dropdown" aria-haspopup="true"
+                                <button class="ps-0 pe-3 py-2 button-design-removed" type="button"
+                                    id="dropdownFilterSort" data-bs-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                    <span>Created </span>
+                                    <span>Esports Title</span>
                                     <span class="dropbtn-arrow">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                             class="feather feather-chevron-down">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </span>
                                 </button>
-                                <div onclick="event.stopPropagation();" class="dropdown-menu px-3"
+                                <div onclick="event.stopPropagation();" class="dropdown-menu px-0 py-1"
                                     aria-labelledby="dropdownFilterSort">
-                                    <p class="mb-1">Choose a date to filter team by creation time</p>
-                                    <input type="date" class="form-control" name="created_at">
-                                    <button id="created_atResetButton" type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light"
-                                        onclick="
-                                        resetInput('created_at');
-                                    ">
-                                        Reset
-                                    </button>
+                                    @foreach ([['title' => 'Dota 2', 'value' => 'Dota 2']] as $esportsGame)
+                                        <div class="px-3 py-1" style="width: 200px;">
+                                            <input type="checkbox" name="esports_title" class="form-check-input me-2" checked value="{{ $esportsGame['value'] }}">
+                                            <label for="esports_title">{{ $esportsGame['title'] }}</label>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
-
                             <div class="dropdown me-3">
+
                                 <button class="ps-0 pe-3 py-2 button-design-removed" type="button"
                                     id="dropdownFilterSort" data-bs-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -125,7 +125,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="dropdown me-3">
+                           
+                            
+                             <div class="dropdown me-3">
                                 <button class="ps-0 pe-3 py-2 button-design-removed" type="button"
                                     id="dropdownFilterSort" data-bs-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -149,7 +151,8 @@
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="dropdown me-3" style="min-width: 250px;">
+
+                            <div class="dropdown me-3" >
                                 <button class="ps-0 pe-3 py-2 button-design-removed" type="button"
                                     id="dropdownFilterSort" data-bs-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -163,7 +166,7 @@
                                         </svg>
                                     </span>
                                 </button>
-                                <div onclick="event.stopPropagation();" class="dropdown-menu px-3 py-1"
+                                <div style="min-width: 250px;" onclick="event.stopPropagation();" class="dropdown-menu px-3 py-1"
                                     aria-labelledby="dropdownFilterSort">
                                         <p class="mb-1">Choose the minimumn number of members in team</p>
                                         <input type="range" class="form-range" name="membersCount" min="0" defaultValue="0" value="0" max="10" step="1" id="customRange3">
@@ -175,6 +178,34 @@
                                             ">
                                             Reset 
                                         </button>
+                                </div>
+                            </div> 
+
+
+                            <div class="dropdown me-3">
+                                <button class="ps-0 pe-3 py-1 py-2 button-design-removed" type="button"
+                                    id="dropdownFilterType" data-bs-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <span>Date Joined </span>
+                                    <span class="dropbtn-arrow">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-chevron-down">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </span>
+                                </button>
+                                <div style="min-width: 250px;" onclick="event.stopPropagation();" class="dropdown-menu px-3"
+                                    aria-labelledby="dropdownFilterSort">
+                                    <p class="mb-1">Choose a date to filter team by creation time</p>
+                                    <input type="date" class="form-control" name="created_at">
+                                    <button id="created_atResetButton" type="button" class="my-2 rounded-pill btn btn-sm btn-primary text-light"
+                                        onclick="
+                                        resetInput('created_at');
+                                    ">
+                                        Reset
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -213,14 +244,11 @@
                                 onclick="setSortForFetch('recent');">
                                 <label class="me-3 cursor-pointer" for="recent">Recent</label>
                             </div>
-                            <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1"
-                                onclick="setSortForFetch('created_at');">
-                                <label class="me-3 cursor-pointer" for="created_at">Created</label>
-                            </div>
-                            <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1"
+                           
+                            {{-- <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1"
                                 onclick="setSortForFetch('region');">
                                 <label class="me-3 cursor-pointer" for="region">Region</label>
-                            </div>
+                            </div> --}}
                             <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1"
                                 onclick="setSortForFetch('name');">
                                 <label class="me-3 cursor-pointer" for="name">Name</label>
@@ -228,6 +256,10 @@
                             <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1"
                                 onclick="setSortForFetch('membersCount');">
                                 <label class="me-3 cursor-pointer" for="name">Members</label>
+                            </div>
+                             <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1"
+                                onclick="setSortForFetch('created_at');">
+                                <label class="me-3 cursor-pointer" for="created_at">Date Joined</label>
                             </div>
                             <div class="d-block min-w-150px hover-bigger ps-3 py-1" onclick="resetInput('sortKeys');">
                                 <button id="sortKeysResetButton" type="button" class="rounded-pill btn btn-sm btn-primary text-light">
@@ -241,7 +273,7 @@
 
             <div id="filter-search-results" class="pb-2">
                 <span class="me-5 " >
-                    <small class="me-4">Filter/ Sort: </small>
+                    <small class="me-4"></small>
                     <span class="">
                         <small data-form-parent="default-filter" class="me-2">
                             <small class="btn btn-secondary text-light d-none rounded-pill px-2 py-0">
@@ -249,6 +281,8 @@
                             </small>
                         </small>
                         <small data-form-parent="created_at" class="me-2">
+                        </small>
+                        <small data-form-parent="esports_title" class="me-2">
                         </small>
                         <small data-form-parent="region" class="me-2">
                         </small>

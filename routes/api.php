@@ -15,7 +15,6 @@ use App\Http\Controllers\Shared\FirebaseController;
 use App\Http\Controllers\Shared\SocialController;
 use App\Http\Controllers\Shared\StripeController;
 use App\Http\Controllers\User\ChatController;
-use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\User\UserController;
 use App\Models\ImageVideo;
 use Illuminate\Http\Request;
@@ -57,14 +56,10 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/user/likes', [ParticipantEventController::class, 'likeEvent'])->name('participant.events.like');
         Route::post('/user/participants', [ParticipantController::class, 'searchParticipant'])->name('user.teams.index');
-        Route::put('/user/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('user.notifications.read');
-        Route::put('/user/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('user.notifications.readAll');
         Route::post('/user/firebase', [ChatController::class, 'getFirebaseUsers'])->name('user.firebase.readAll');
         Route::post('/user/settings', [UserController::class, 'changeSettings'])->name('user.settings.action');
 
-        Route::post('/user/{id}/banner', [UserController::class, 'replaceBanner'])->name('participant.userBanner.action');
         Route::post('/user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
-        Route::post('/user/{id}/notifications', [NotificationController::class, 'getMoreNotifications'])->name('user.notifications.more');
         Route::post('/user/{id}/star', [SocialController::class, 'toggleStar'])->name('users.star.action');
         Route::post('/user/{id}/block', [SocialController::class, 'toggleBlock'])->name('users.block.action');
         Route::post('/user/{id}/report', [SocialController::class, 'report'])->name('users.report.action');
@@ -103,8 +98,6 @@ Route::group(['prefix' => 'organizer'], function () {
             Route::post('/event/{id}/awards', [OrganizerEventResultsController::class, 'storeAward'])->name('event.awards.store');
             Route::delete('/event/{id}/awards/{awardId}', [OrganizerEventResultsController::class, 'destroyAward'])->name('event.awards.destroy');
             Route::post('/event/{id}/achievements', [OrganizerEventResultsController::class, 'storeAchievements'])->name('event.achievements.store');
-            Route::put('notifications/{id}/read', [AuthController::class, 'markAsRead'])->name('organizer.notifications.read');
-            Route::put('notifications/read', [AuthController::class, 'markAllAsRead'])->name('organizer.notifications.readAll');
             Route::post('/profile', [OrganizerController::class, 'editProfile'])->name('organizer.profile.update');
         });
     });

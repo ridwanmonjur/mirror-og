@@ -40,8 +40,7 @@
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
             <img {!! trustedBladeHandleImageFailureBanner() !!}
                 @class([
-                'opacity-until-hover',
-                'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
+                'opacity-until-hover border-0 ',
             ])
                 style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;">

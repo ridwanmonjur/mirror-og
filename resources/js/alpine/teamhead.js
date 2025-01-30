@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
 import { ProfileData, openModal, ReportFormData } from "../custom/followers";
 import { createApp } from "petite-vue";
+import Swal from "sweetalert2";
 
 const myOffcanvas = document.getElementById('profileDrawer');
 myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
@@ -9,6 +10,8 @@ myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
 })
 
 initOffCanvasListeners();
+
+let imageUpload = document.getElementById("image-upload");
 
 function TeamHead() {
     return {
@@ -36,18 +39,10 @@ function TeamHead() {
             try {
                 const data = await storeFetchDataInLocalStorage('/countries');
                
-               
-               
-               
                 if (data?.data) {
                     this.isCountriesFetched = true;
                     this.countries = data.data;
-
                     const choices2 = document.getElementById('select2-country3');
-                   
-                   
-                   
-                   
                     let countriesHtml = "<option value=''>Do not display</option>";
 
                     data?.data.forEach((value) => {
@@ -68,8 +63,23 @@ function TeamHead() {
             }
         },
         async submitEditProfile(event) {
+            
+            event.preventDefault();
+            let file = imageUpload.files[0];
+            let fileFetch = null;
+            if (file) {
+                const fileContent = await readFileAsBase64(file);
+
+                fileFetch = {
+                    filename: file.name,
+                    type: file.type,
+                    size: file.size  / (1024 * 1024),
+                    content: fileContent
+                };
+            }
+
+
             try {
-                event.preventDefault();
                 const url = event.target.dataset.url;
                 const response = await fetch(url, {
                     method: 'POST',
@@ -84,7 +94,8 @@ function TeamHead() {
                         teamDescription: this.teamDescription,
                         country: this.country,
                         country_flag: this.country_flag,
-                        country_name: this.country_name
+                        country_name: this.country_name,
+                        ...(fileFetch && { file: fileFetch })
                     }),
                 });
 
@@ -100,11 +111,12 @@ function TeamHead() {
                     localStorage.setItem('message', data.message);
                     window.location.replace(currentUrl);
                 } else {
-                    this.errorMessage = data.message;
+                    throw new Error(data.message);
                 }
             } catch (error) {
-                this.errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
-                console.error({ error });
+                let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
+
+                this.errorMessage = errorMessage;
             }
         },
         reset() {
@@ -127,14 +139,14 @@ function TeamHead() {
                     element.style.border = `1px solid ${teamData.profile.borderColor}`;
                 }
             });
-
+           
         }
     }
 }
 
 
 window.formatDateLuxon = (date) => {
-    if (!date) return 'N/A';
+    if (!date) return 'Not available';
     return  DateTime
         .fromISO(date)
         .toRelative();
@@ -148,9 +160,6 @@ window.formatDateMySqlLuxon = (mysqlDate, mysqlTime) => {
     return `${formattedDate} at ${formattedTime}`;
 }
 
-let role = "TEAM";
-const storage = document.querySelector('.team-head-storage');
-const { loggedUserId, loggedUserRole } = storage.dataset;
 
 // Alpine.data('profileData', alpineProfileData(teamData.id, loggedUserId, false, role, loggedUserRole));
 // Alpine.data('reportData', reportFormData());

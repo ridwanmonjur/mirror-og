@@ -8,7 +8,12 @@
 
 @section('content')
     <header>
-        @include('__CommonPartials.NavbarBeta')
+        @auth
+            @include('__CommonPartials.NavbarGoToSearchPage')
+        @endauth
+        @guest
+            @include('__CommonPartials.NavbarBeta')
+        @endguest
     </header>
     <!-- Contact & About Us Boxes and Social Media Data-->
     @php

@@ -30,7 +30,7 @@ class UpdateOrganizersRequest extends FormRequest
             'address.city' => 'nullable|required_with:address.addressLine1,address.country|string',
             'address.country' => 'nullable|required_with:address.addressLine1,address.city|string',
             'address.user_id' => 'nullable',
-            'userProfile.name' => 'required|string',
+            'userProfile.name' => 'required|string|max:100',
             'userProfile.demo_email' => 'nullable|email',
             'userProfile.id' => 'required',
             'userProfile.mobile_no' => 'nullable|string',
@@ -38,11 +38,16 @@ class UpdateOrganizersRequest extends FormRequest
             'organizer.industry' => 'nullable|string',
             'organizer.type' => 'nullable|string',
             'organizer.companyName' => 'nullable|string|max:255',
-            'organizer.companyDescription' => 'nullable|string|max:1000',
+            'organizer.companyDescription' => 'nullable|string|max:255',
             'organizer.website_link' => 'nullable|string',
             'organizer.instagram_link' => 'nullable|string',
             'organizer.facebook_link' => 'nullable|string',
             'organizer.twitter_link' => 'nullable|string',
+            'file' => 'sometimes|array|nullable',
+            'file.filename' => 'string',
+            'file.type' => 'string',
+            'file.size' => 'numeric|max:3',
+            'file.content' => 'string',
         ];
     }
 
@@ -73,6 +78,9 @@ class UpdateOrganizersRequest extends FormRequest
             'organizer.instagram_link.string' => 'Instagram Link must be a valid URL.',
             'organizer.facebook_link.string' => 'Facebook Link must be a valid URL.',
             'organizer.twitter_link.string' => 'Twitter Link must be a valid URL.',
+            'file.size' => 'The file is too large, over 3 MB in size',
+            
+
         ];
     }
 

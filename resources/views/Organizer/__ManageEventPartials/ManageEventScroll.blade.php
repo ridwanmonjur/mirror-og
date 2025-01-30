@@ -64,7 +64,7 @@
                                 @endif
                             @endforeach
                         @else
-                            <span>Missing count</span>
+                            <span>Missing</span>
                         @endif
                     </button>
                 </div>

@@ -3,13 +3,33 @@ import intlTelInput from 'intl-tel-input';
 import utilsScript from "intl-tel-input/utils";
 import { ProfileData, openModal, ReportFormData } from "../custom/followers";
 import { createApp } from "petite-vue";
+import Swal from "sweetalert2";
 
+let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 const storage = document.querySelector('.profile-storage');
 const styles = {
     backgroundStyles: storage.dataset.backgroundStyles,
-    fontStyles: storage.dataset.fontStyles
+    fontStyles: storage.dataset.fontStyles,
 };
+
+const imageUpload = document.getElementById("image-upload");
+async function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            const base64Content = event.target.result.split(';base64,')[1];
+            resolve(base64Content);
+        };
+
+        reader.onerror = function (error) {
+            reject(error);
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
 
 let initialUserProfile = JSON.parse(document.getElementById('initialUserProfile').value);
 let initialOrganizer = JSON.parse(document.getElementById('initialOrganizer').value);
@@ -60,21 +80,36 @@ function OrganizerData() {
             this.address = { ...initialAddress };
         },
         async submitEditProfile(event) {
-            try {
-                this.errorMessage = null;
-                event.preventDefault();
-                this.userProfile.mobile_no = iti.getNumber();
-                console.log({ number: iti.getNumber() });
+            
+            this.errorMessage = null;
+            event.preventDefault();
+            this.userProfile.mobile_no = iti.getNumber();
+            console.log({ number: iti.getNumber() });
 
-                if (!iti.isValidNumber()) {
-                    if (document.getElementById("phone").value.trim() == "") {
-                        this.userProfile.mobile_no = null;
-                    } else {
-                        this.errorMessage = 'Valid phone number with country code is not chosen!'
-                        return;
-                    }
+            if (!iti.isValidNumber()) {
+                if (document.getElementById("phone").value.trim() == "") {
+                    this.userProfile.mobile_no = null;
+                } else {
+                    this.errorMessage = 'Valid phone number with country code is not chosen!'
+                    return;
                 }
+            }
 
+            let file = imageUpload.files[0];
+            let fileFetch = null;
+            if (file) {
+                const fileContent = await readFileAsBase64(file);
+
+                fileFetch = {
+                    filename: file.name,
+                    type: file.type,
+                    size: file.size  / (1024 * 1024),
+                    content: fileContent
+                };
+            }
+        
+
+            try {  
                 const url = event.target.dataset.url;
                 const response = await fetch(url, {
                     method: 'POST',
@@ -86,7 +121,8 @@ function OrganizerData() {
                     body: JSON.stringify({
                         address: this.address,
                         userProfile: this.userProfile,
-                        organizer: this.organizer
+                        organizer: this.organizer,
+                        ...(fileFetch && { file: fileFetch })
                     }),
                 });
 
@@ -102,10 +138,12 @@ function OrganizerData() {
                     localStorage.setItem('message', data.message);
                     window.location.replace(currentUrl);
                 } else {
-                    this.errorMessage = data.message;
+                    throw new Error(data.message);
                 }
             } catch (error) {
-                this.errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
+                let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
+
+                this.errorMessage = errorMessage;
             }
         },
         init() {

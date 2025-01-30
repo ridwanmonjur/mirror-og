@@ -6,7 +6,7 @@ function goToScreen() {
 // Elements
 let newTeamsForm = document.getElementById('newTeamsForm');
 let filteredSortedTeams = [];
-let newTeamsFormKeys = ['sortKeys', 'created_at', 'region', 'status', 'membersCount'];
+let newTeamsFormKeys = ['sortKeys', 'created_at', 'region', 'status', 'membersCount', 'esports_title'];
 let sortKeysInput = document.getElementById("sortKeys");
 
 let teamListServer = document.getElementById('teamListServer');
@@ -43,7 +43,6 @@ function sortByProperty(arr, propertyPath, ascending = true) {
         }
     });
 }
-
 
 function formatStringUpper(str) {
     return str
@@ -258,36 +257,42 @@ async function fetchTeams(event = null) {
         let isToBeAdded = true;
         let nameFilter = String(formData.get('search')).toLowerCase().trim();
         let regionFilter = formData.get('region');
+        let esportsTitleFilter = formData.get('esports_title');
         let createdAtFilter = formData.get('created_at');
         let statusListFilter = formData.getAll('status');
         let membersCountFilter = formData.getAll('membersCount');
 
         
         if (nameFilter != "" && !(
-                String(sortedTeam?.teamName).includes(nameFilter) 
-            )) {
+            String(sortedTeam?.teamName).includes(nameFilter) 
+        )) {
             isToBeAdded = isToBeAdded && false;
         }
 
-        if (regionFilter != "" && sortedTeam?.country != regionFilter) {
+        if (regionFilter != "" && regionFilter != "SEA") {
             isToBeAdded = isToBeAdded && false;
         }
+
 
         if (membersCountFilter != "" && sortedTeam?.membersCount < membersCountFilter) {
             isToBeAdded = isToBeAdded && false;
         }
 
-        let isArrayFilter = statusListFilter && statusListFilter[0] == null;
+        let isArrayStatusFilter = statusListFilter && statusListFilter[0] == null;
         for (let statusItemFilter of statusListFilter) {
             let isItemGood = statusItemFilter === "private" && sortedTeam?.membersCount >= 5
                 || statusItemFilter === "public" && sortedTeam?.membersCount < 5;
 
             if (isItemGood) {
-                isArrayFilter = true || isArrayFilter;
+                isArrayStatusFilter = true || isArrayFilter;
             }
         }
+        isToBeAdded = isArrayStatusFilter && isToBeAdded;
 
-        isToBeAdded = isArrayFilter && isToBeAdded;
+   
+        let isArrayEsportsTitleFilter = esportsTitleFilter == null 
+            || (esportsTitleFilter[0] && esportsTitleFilter == "Dota 2");
+        isToBeAdded = isArrayEsportsTitleFilter && isToBeAdded;
 
         if (createdAtFilter != "" && new Date(sortedTeam?.created_at) < new Date(createdAtFilter)) {
             isToBeAdded = isToBeAdded && false;
@@ -374,16 +379,17 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
         `;
     } else {
         for (let team of teamListServerValue) {
+           
             team['membersCount'] = membersCountServerValue[team?.id] ?? 0;
             html += `
-                <a style="cursor:pointer;" class="mx-auto" href="/participant/team/${team?.id}/manage">
+                <a style="cursor:pointer;"  href="/participant/team/${team?.id}/manage">
                     <div class="wrapper">
                         <div class="team-section">
                             <div class="upload-container text-center">
                                 <div class="circle-container" style="cursor: pointer;">
                                     <img
                                         onerror="this.onerror=null;this.src='/assets/images/404.png';"
-                                        id="uploaded-image" class="uploaded-image object-fit-cover"
+                                        id="uploaded-image" class="uploaded-image border-dark object-fit-cover"
                                         src="${team?.teamBanner ? '/storage' + '/' + team?.teamBanner : '/assets/images/animations/empty-exclamation.gif' }"
                                     >
                                     </label>

@@ -43,7 +43,7 @@ class ParticipantTeamController extends Controller
             ], 'sucess' => true,
             ], 200);
         }
-        return view('Participant.TeamList', compact('teamList', 'count', 'membersCount'));
+        return view('Participant.TeamList2', compact('teamList', 'count', 'membersCount'));
     }
 
     public function teamManagement(Request $request, $id)
@@ -187,6 +187,7 @@ class ParticipantTeamController extends Controller
     public function editTeam(UpdateTeamRequest $request)
     {
         try {
+
             $validatedData = $request->validated();
             $team = Team::findOrFail($request['id']);
             $team->update($validatedData);
@@ -437,24 +438,7 @@ class ParticipantTeamController extends Controller
         }
     }
 
-    public function replaceBanner(Request $request, $id)
-    {
-        try {
-            $request->validate([
-                'file' => 'required|file',
-            ]);
-
-            $team = Team::findOrFail($id);
-            $oldBanner = $team->teamBanner;
-            $fileName = $team->uploadTeamBanner($request);
-            Team::destroyTeanBanner($oldBanner);
-
-            return response()->json(['success' => true, 'message' => 'Succeeded', 'data' => compact('fileName')], 201);
-        } catch (Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
-    }
-
+  
     protected function handleTeamManagement($selectTeam, $eventId, $request, $page, $redirect = false)
     {
         $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();

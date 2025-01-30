@@ -55,6 +55,7 @@
                         <div class="input-group">
                             <input type="file" class="form-control"
                                 id="changeBackgroundBanner" name="backgroundBanner" 
+                                accept=".png, .jpg, .jpeg, image/png, image/jpeg" 
                                 aria-describedby="inputGroupFileAddon03" aria-label="Upload"
                                 style="font-size: 0.9375rem;"
                             >

@@ -139,6 +139,8 @@ class ParticipantController extends Controller
         $participant->update($validatedData['participant']);
         $user = User::findOrFail($validatedData['user']['id']);
         $user->update($validatedData['user']);
+        $user->uploadUserBanner($request);
+       
         if (isset($participant->region)) {
             $region = Country::select('emoji_flag', 'name', 'id')
                 ->findOrFail($participant->region);
