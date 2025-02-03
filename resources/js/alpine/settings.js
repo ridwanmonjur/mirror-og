@@ -387,29 +387,33 @@ function AccountComponent() {
         },
         init () {
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('methods_limit')) {
+            function scrollToElement(elementId) {
+                console.log(`Attempting to scroll to ${elementId}`);
                 
-                const element = document.getElementById('nestedHeading2');
-                if (element) {
-                    const elementPosition = element.getBoundingClientRect().top;
+                setTimeout(() => {
+                    const element = document.getElementById(elementId);
                     
-                    window.scrollTo({
-                        bottom: elementPosition,
-                        behavior: 'smooth'
-                    });
-                }
+                    if (element) {
+                        const elementPosition = element.getBoundingClientRect();
+                        
+                        window.scrollTo({
+                            top: elementPosition.bottom,
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        console.error(`Element ${elementId} not found`);
+                    }
+                }, 500);
             }
-    
-            if (urlParams.has('page_next')) {
-                const element = document.getElementById('nestedHeading3');
-                if (element) {
-                    const elementPosition = element.getBoundingClientRect().top;
-                    
-                    window.scrollTo({
-                        bottom: elementPosition,
-                        behavior: 'smooth'
-                    });
-                }
+            
+            if (urlParams.has('methods_limit')) {
+                console.log('methods_limit parameter found');
+                scrollToElement('nestedCollapse2');
+            }
+            
+            if (urlParams.has('history_limit')) {
+                console.log('history_limit parameter found');
+                scrollToElement('nestedCollapse3');
             }
         }
 

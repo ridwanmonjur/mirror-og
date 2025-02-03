@@ -9,9 +9,10 @@
 </head>
 @php
     use Carbon\Carbon;
-    $isShowNextAccordion = $page_next || $limit_methods != 10;
-    $isShowFirstInnerAccordion = $page_next;
-    $isShowSecondInnerAccordion = $page_next;
+    $isShowFirstInnerAccordion = $limit_methods != 10;
+    $isShowSecondInnerAccordion = $limit_history != 10;
+    $isShowNextAccordion = $isShowSecondInnerAccordion || $isShowFirstInnerAccordion;
+
   
 @endphp
 
@@ -144,7 +145,7 @@
                                             </div>
                                         </h3>
                                         <div id="nestedCollapse2"
-                                            class="accordion-collapse collapse {{ $page_next ? '' : 'show' }}"
+                                            class="accordion-collapse collapse {{ $isShowSecondInnerAccordion ? '' : 'show' }}"
                                             aria-labelledby="nestedHeading2" data-bs-parent="#nestedAccordion2">
                                             <div class="accordion-body border-0 py-0 px-0">
                                                 @if ($paymentMethods->first() != null)
@@ -247,7 +248,7 @@
                                             </div>
                                         </h3>
                                         <div id="nestedCollapse3"
-                                            class="accordion-collapse collapse border-bottom border-1 "
+                                            class="accordion-collapse collapse {{ $isShowSecondInnerAccordion ? 'show' : '' }} border-bottom border-1 "
                                             aria-labelledby="nestedHeading3" data-bs-parent="#nestedAccordion3">
                                             <div class="accordion-body border-0 py-0 px-0">
                                                 @if ($paymentHistory->first() != null)
@@ -307,45 +308,14 @@
 
                                                             @if ($hasMoreHistory)
                                                                 <div
-                                                                    class="d-flex justify-content-start ps-2 mt-1 mb-3">
-
-
-                                                                    @if ($page_history - 1 >= 1)
-                                                                        <form method="GET" action=""
-                                                                            class="me-3">
-                                                                            @csrf
-                                                                            <input type="hidden" name="history_page"
-                                                                                value="{{ $page_history - 1 }}">
-                                                                            <input type="hidden" name="page_next"
-                                                                                value="{{ null }}">
-                                                                            <button type="submit"
-                                                                                class="btn btn-primary btn-sm btn-sm-size text-light px-3 mt-1 rounded-pill"><b>
-                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                        width="16" height="16"
-                                                                                        fill="currentColor"
-                                                                                        class="bi bi-arrow-left"
-                                                                                        viewBox="0 0 16 16">
-                                                                                        <path fill-rule="evenodd"
-                                                                                            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
-                                                                                    </svg> First Page
-                                                                                </b></button>
-                                                                        </form>
-                                                                    @endif
-                                                                    <p
-                                                                        class="py-0 mt-0 d-inline mb-2 mt-2 me-3 text-success">
-                                                                      
-
+                                                                    class="d-flex justify-content-start ps-3 mt-1 mb-3">
                                                                     <form method="GET" action="">
                                                                         @csrf
-                                                                        <input type="hidden" name="history_page"
-                                                                            value="{{ $page_history + 1 }}">
-                                                                        <input type="hidden" name="page_next"
-                                                                            value="{{ $paymentHistory->next_page }}">
+                                                                        <input type="hidden" name="history_limit"
+                                                                            value="{{ $limit_history + 10 }}">
                                                                         <button type="submit"
-                                                                            class="btn btn-primary btn-sm btn-sm-size text-light px-3 mt-1 rounded-pill"><b>
-                                                                                
-
-                                                                                Load more</b></button>
+                                                                            class="btn btn-primary btn-sm text-light px-3  rounded-pill"><b>Load
+                                                                                More</b></button>
                                                                     </form>
                                                                 </div>
                                                             @endif
