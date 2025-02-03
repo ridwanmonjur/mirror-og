@@ -556,13 +556,18 @@ function resetInput(button) {
     putAmount(button.dataset.modalId, 0.00, Number(button.dataset.totalAmount), Number(button.dataset.pendingAmount), Number(button.dataset.existingAmount));
 }
 
+const colors2 = [
+    '#234B5C',  // Rich navy blue
+    '#8B4513',  // Saddle brown
+    '#2E5D2E',  // Deep forest green
+    '#4B2E84',  // Royal purple
+    '#324165',  // Deep slate blue
+    '#8B3A3A'   // Deep red
+];
+
 function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+    const randomIndex = Math.floor(Math.random() * 6);
+    return colors2[randomIndex];
 }
 
 

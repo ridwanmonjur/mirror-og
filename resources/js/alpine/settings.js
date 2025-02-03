@@ -384,9 +384,37 @@ function AccountComponent() {
                     text: error.message
                 });
             }
+        },
+        init () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('methods_limit')) {
+                
+                const element = document.getElementById('nestedHeading2');
+                if (element) {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    
+                    window.scrollTo({
+                        bottom: elementPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+    
+            if (urlParams.has('page_next')) {
+                const element = document.getElementById('nestedHeading3');
+                if (element) {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    
+                    window.scrollTo({
+                        bottom: elementPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
         }
 
     }
+   
 }
 
 
@@ -399,37 +427,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('methods_limit')) {
-        document.querySelector('[data-bs-target="#collapseTwo"]')?.click();
-        
-        document.querySelector('[data-bs-target="#nestedCollapse2"]')?.click();
-        
-        const element = document.getElementById('nestedHeading2');
-        if (element) {
-            const elementPosition = element.getBoundingClientRect().top;
-            
-            window.scrollTo({
-                bottom: elementPosition,
-                behavior: 'smooth'
-            });
-        }
-    }
-
-    if (urlParams.has('page_next')) {
-        document.querySelector('[data-bs-target="#collapseTwo"]')?.click();
-        
-        document.querySelector('[data-bs-target="#nestedCollapse3"]')?.click();
-        
-        const element = document.getElementById('nestedHeading3');
-        if (element) {
-            const elementPosition = element.getBoundingClientRect().top;
-            
-            window.scrollTo({
-                bottom: elementPosition,
-                behavior: 'smooth'
-            });
-        }
-    }
-});

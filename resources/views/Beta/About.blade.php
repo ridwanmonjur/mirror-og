@@ -1,14 +1,24 @@
 @extends('layout.app')
 
 @section('title', 'Driftwood - About Us')
-
+@section('body-class', 'about')
 @push('styles')
-    <link href="{{ asset('/assets/css/open/About.css') }}" rel="stylesheet">
+    <link 
+        rel="preload" 
+        href="https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" 
+        as="font" 
+        type="font/woff2" 
+        crossorigin
+    >
 @endpush
-
 @section('content')
     <header>
-        @include('__CommonPartials.NavbarBeta')
+        @auth
+            @include('__CommonPartials.NavbarGoToSearchPage')
+        @endauth
+        @guest
+            @include('__CommonPartials.NavbarBeta')
+        @endguest
     </header>
     <main style="padding: 5vh 10vw ;">
         {{-- Para 1 --}}

@@ -20,7 +20,7 @@
         $routeLogo = route('public.landing.view');
     }
 @endphp
-<nav class="navbar px-3 py-3 py-lg-2">
+<nav class="navbar px-3 py-1">
     <a href="{{ route('public.closedBeta.view') }}">
         <img width="150" height="30" src="{{ asset('/assets/images/driftwood logo.png') }}" alt="">
     </a>
