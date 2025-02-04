@@ -231,13 +231,13 @@
             </div>
         </div>
         <div class="tab-size">
-            <table class="member-table responsive " id="member-table-body">
+            <div class="member-table responsive " id="member-table-body">
                 <input id="membersJson" type="hidden" value="{{json_encode($selectTeam->members)}}">
                 <input id="captainJson" type="hidden" value="{{json_encode($captain)}}">
-                <tbody>
+                <div class="team-body">
                         
-                </tbody>
-            </table>
+                </div>
+            </div>
         </div>
     @else
         <div class="tab-size">
@@ -247,4 +247,3 @@
     </form>
 </div>
 
-<script src="{{ asset('/assets/js/participant/TeamManagementMemberView.js') }}"></script>

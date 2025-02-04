@@ -397,7 +397,7 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                                 <div class="circle-container" style="cursor: pointer;">
                                     <img
                                         onerror="this.onerror=null;this.src='/assets/images/404.png';"
-                                        id="uploaded-image" class="uploaded-image border-dark object-fit-cover"
+                                        id="uploaded-image" class="uploaded-image border-secondary object-fit-cover"
                                         src="${team?.teamBanner ? '/storage' + '/' + team?.teamBanner : '/assets/images/animations/empty-exclamation.gif' }"
                                     >
                                     </label>

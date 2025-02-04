@@ -266,7 +266,6 @@ function sortMembers(arr, sortKey, sortOrder) {
 }
 
 async function fetchMembers(event = null) {
-    let route;
     let bodyHtml = '';
 
     let formData = new FormData(newMembersForm);
@@ -309,44 +308,52 @@ async function fetchMembers(event = null) {
     
     for (member of filteredSortedMembers) {
         bodyHtml+=`
-            <tr class="st px-0">
-                <td class="colorless-col">
-                    <svg 
-                        onclick="redirectToProfilePage('${member.user_id}');"
-                        class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg" width="20"
-                        height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                        <path
-                            d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                    </svg>
-                </td>
-                <td class="colored-cell px-2" onclick="redirectToProfilePage('${member.user_id}');">
-                    <div class="player-info">
-                            <div class="${!captainJson || member.id != captainJson?.team_member_id && 'd-none'} player-image">
-                            </div>
-                            <img 
-                                width="45" height="45" 
-                                src="/storage/${member?.user?.userBanner}"
-                                class="mx-2 random-color-circle object-fit-cover rounded-circle"
+        <div class="card border-2 mb-2 bg-white hover-shadow-sm position-relative">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-12 col-lg-8 d-flex align-items-center gap-3">
+                        <div class="position-relative">
+                            
+                            <img src="/storage/${member?.user?.userBanner}" 
                                 onerror="this.error=null;this.src='/assets/images/404.png';"
-                            >
-                        <span>${member?.user?.name}</span>
+                                class="rounded-circle object-fit-cover border border-primary"
+                                style="width: 48px; height: 48px;">
+                        </div>
+                        <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-1 text-truncate py-0">
+                                <span class="d-inline-block ${!captainJson || member.id != captainJson?.team_member_id && 'd-none'}">
+                                    <img 
+                                        class="z-99 rounded-pill me-2 captain-crown"
+                                        height="20" 
+                                        width="20" 
+                                        src="/assets/images/participants/crown-straight.png"
+                                    >
+                                </span>
+                                ${member?.user?.name}
+                                <span class="fs-4 ms-3">${member?.user?.participant?.region_flag }</span>
+                            </h6>
+                            <div class="text-muted text-truncate">${member?.user?.email}</div>
+                        </div>
                     </div>
-                </td>
-                <td class="colored-cell px-3">
-                    <span>${member?.user?.email}</span>
-                </td>
-                <td class="colored-cell px-0">
-                    <span>${member?.status} ${member?.updated_at ? window.formatDateLuxon(member.updated_at): ''} </span>
-                </td>
-                <td class="flag-cell colored-cell px-3 text-start text-lg-center fs-4">
-                    <span>${member?.user?.participant?.region_flag ? member?.user?.participant?.region_flag : '-'} </span>
-                </td>
-            </tr>
+        
+                    <div class="col-12 col-lg-4 d-flex justify-content-end align-items-center gap-3">
+                       
+                        <a onclick="redirectToProfilePage('${member.user_id}');" 
+                        class="text-decoration-none text-body-secondary cursor-pointer">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
         `;
     }
 
-    let tbodyElement = document.querySelector('#member-table-body tbody');
+    let tbodyElement = document.querySelector('#member-table-body div.team-body');
     tbodyElement.innerHTML = bodyHtml;  
 };
 

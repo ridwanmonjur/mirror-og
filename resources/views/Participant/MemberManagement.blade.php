@@ -35,8 +35,6 @@
 
         
         @include('Participant.__Partials.TeamHead') 
-        <br>
-
 
         @include('Participant.__MemberManagementPartials.MemberManagement')
         @if ($isRedirect)
