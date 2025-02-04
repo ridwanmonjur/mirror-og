@@ -27,6 +27,8 @@
 
 img.fslightbox-source{
     aspect-ratio: 1/1;
+    max-height: 80%;
+
  }
  
 

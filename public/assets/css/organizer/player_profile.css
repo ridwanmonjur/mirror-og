@@ -528,6 +528,7 @@ a.custom-link:hover {
 
 img.fslightbox-source{
    aspect-ratio: 1/1;
+   max-height: 80%;
 }
 
 @media screen and (min-width: 992px) {
