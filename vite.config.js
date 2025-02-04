@@ -5,6 +5,8 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
+                'resources/sass/betaapp.scss',
+                'resources/js/betaapp.js',
                 'resources/sass/app.scss',
                 'resources/js/app.js',
                 'resources/js/alpine/settings.js',

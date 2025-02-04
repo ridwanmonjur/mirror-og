@@ -75,10 +75,8 @@ class UserController extends Controller
         $user = $request->attributes->get('user');
         $user->is_null_password = empty($user->password);
         $limit_methods = $request->input('methods_limit', 10); // 10
-        $limit_history = 30; // 100
-        $page_history = intval($request->input('history_page', 1)); // 100
-        $page_next = $request->input('page_next'); // 100
-        $count_history = $limit_history * $page_history;
+        $limit_history = $request->input('history_limit', 10); // 100
+
 
         $paramsMethods = [
             'customer' => $user->stripe_customer_id,
@@ -91,15 +89,13 @@ class UserController extends Controller
             'limit' => $limit_history + 1,
         ];
 
-        if ($page_next != null) {
-            $paramsHisotry['page'] = $page_next;
-        }
+     
 
         if ($user->stripe_customer_id) {
             $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
             $paymentHistory = $this->stripeClient->searchStripePaymenst($paramsHisotry);
             $hasMorePayments = array_key_exists($limit_methods, $paymentMethods->data);
-            $hasMoreHistory = $paymentHistory->has_more ;
+            $hasMoreHistory = array_key_exists($limit_history, $paymentHistory->data); 
         } else {
             $paymentMethods = new Collection();
             $paymentHistory = new Collection();
@@ -108,10 +104,10 @@ class UserController extends Controller
     
         $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
         return view('Shared.Settings', 
-            compact('user', 'paymentMethods', 'paymentHistory', 'limit_methods', 
-            'limit_history', 'count_history', 'page_history', 'hasMorePayments', 'settingsAction', 'hasMoreHistory'
-        ))
-            ->with('hasMoreHistory', );
+            compact('user', 'paymentMethods', 'paymentHistory', 'settingsAction',
+            'limit_methods', 'limit_history', 'hasMorePayments',  'hasMoreHistory', 
+            
+    ));
     }
 
     public function changeSettings(UpdateSettingsRequest $request): JsonResponse

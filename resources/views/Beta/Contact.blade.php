@@ -1,9 +1,15 @@
 @extends('layout.app')
 
 @section('title', 'Driftwood - Contact Us')
-
+@section('body-class', 'contact')
 @push('styles')
-    <link href="{{ asset('/assets/css/open/Contact.css') }}" rel="stylesheet">
+    <link 
+        rel="preload" 
+        href="https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" 
+        as="font" 
+        type="font/woff2" 
+        crossorigin
+    >
 @endpush
 
 @section('content')

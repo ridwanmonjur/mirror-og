@@ -657,7 +657,7 @@ async function fetchMembers(event = null) {
                                 d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
                         </svg>
                     </td>
-                    <td class="coloured-cell px-1   cursor-pointer  " onclick="redirectToProfilePage(${user.id});">
+                    <td class="colored-cell px-1   cursor-pointer  " onclick="redirectToProfilePage(${user.id});">
                         <div class="player-info">
                             <img 
                                 onerror="this.onerror=null;this.src='/assets/images/404.png';"
@@ -668,10 +668,10 @@ async function fetchMembers(event = null) {
                             <span>${user.name}</span>
                         </div>
                     </td>
-                    <td class="flag-cell coloured-cell text-start text-lg-center px-3 fs-4">
+                    <td class="flag-cell colored-cell text-start text-lg-center px-3 fs-4">
                         <span>${user?.participant?.region_flag? user.participant.region_flag: '-'}</span>
                     </td>
-                     <td class="coloured-cell px-3">
+                     <td class="colored-cell px-3">
                         ${user.is_in_team ?
                             'Team status ' + user.members[0].status
                         :
