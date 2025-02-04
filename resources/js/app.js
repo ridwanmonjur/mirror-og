@@ -142,14 +142,6 @@ if (pageName ) {
 document.addEventListener('DOMContentLoaded', async () => {
     // Check for page-specific component in meta tag
     
-    const colors = [
-        '#234B5C',  // Rich navy blue
-        '#8B4513',  // Saddle brown
-        '#2E5D2E',  // Deep forest green
-        '#4B2E84',  // Royal purple
-        '#324165',  // Deep slate blue
-        '#8B3A3A'   // Deep red
-    ];
 
     (function applyRandomColorsAndShapes() {
         const circles = document.querySelectorAll('.random-color-circle');
@@ -164,8 +156,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     })();
     
     function getRandomColor() {
-        const randomIndex = Math.floor(Math.random() * 6);
-        return colors[randomIndex];
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
     }
 
 
@@ -180,8 +176,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     function getRandomColorBg() {
-        const randomIndex = Math.floor(Math.random() * 6);
-        return colors[randomIndex];
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
     }
     
     applyRandomColorsAndShapes();

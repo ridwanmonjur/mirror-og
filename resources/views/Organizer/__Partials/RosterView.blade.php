@@ -97,8 +97,8 @@
                     @auth
                         @if ($user->role == 'PARTICIPANT')
                             <button type="submit" class="{{ 'followButton' . $joinEvent->user_id }}" class="mx-auto mt-2 "
-                                style="background-color: {{ $userProfile?->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $userProfile?->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
-                                {{ $userProfile?->isFollowing ? 'Following' : 'Follow' }}
+                                style="background-color: {{ $userProfile->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $userProfile->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
+                                {{ $userProfile->isFollowing ? 'Following' : 'Follow' }}
                             </button>
                         @else
                             <button type="button" onclick="toastWarningAboutRole(this, 'Participants can follow only!');"

@@ -7,7 +7,7 @@
             d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
     </svg>
 </td>
-<td class="colored-cell px-3" onclick="redirectToProfilePage({{ $member->user_id }});">
+<td class="coloured-cell px-3" onclick="redirectToProfilePage({{ $member->user_id }});">
     <div onclick="deleteCaptain({{ $member->id }}, {{ $selectTeam->id }})"
         class="player-info cursor-pointer"
     >
@@ -22,9 +22,9 @@
         <span>{{ $member->user->name }}</span>
     </div>
 </td>
-<td class="flag-cell colored-cell px-3">
+<td class="flag-cell coloured-cell px-3">
     <span>{{ $member->user->email }}</span>
 </td>
-<td class="flag-cell colored-cell px-3 fs-4">
+<td class="flag-cell coloured-cell px-3 fs-4">
     <span>{{ $member?->user?->participant?->region_flag ? $member->user->participant->region_flag :  '-' }} </span>
 </td>

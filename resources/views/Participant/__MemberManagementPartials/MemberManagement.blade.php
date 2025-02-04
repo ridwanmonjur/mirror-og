@@ -31,7 +31,7 @@
                     @foreach ($teamMembersProcessed['accepted']['members'] as $member)
                         <tr class="st invisible-until-hover-parent" id="tr-{{ $member->id }}">
                             @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
-                            <td class="colored-cell px-3">
+                            <td class="coloured-cell px-3">
                                 Accepted {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
                             <td>
@@ -62,7 +62,7 @@
                     @foreach ($teamMembersProcessed['left']['members'] as $member)
                         <tr class="st" id="tr-{{ $member->id }}">
                             @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
-                            <td class="colored-cell px-3">
+                            <td class="coloured-cell px-3">
                                 {{ $member->actor == 'team' ? 'Removed' : 'Left' }} {{ is_null($member->updated_at) ? '' : Carbon::parse($member->updated_at)->diffForHumans() }}
                             </td>
                             <td>
@@ -100,7 +100,7 @@
                         @foreach ($teamMembersProcessed['pending']['members'] as $member)
                             <tr class="st" id="tr-{{ $member->id }}">
                                 @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
-                                <td class="colored-cell px-3">
+                                <td class="coloured-cell px-3">
                                     @if ($member->actor == "user")
                                         Player requested to join
                                     @else
@@ -144,7 +144,7 @@
                         @foreach ($teamMembersProcessed['rejected']['members'] as $member)
                             <tr class="st" id="tr-{{ $member->id }}">
                                 @include('Participant.__MemberManagementPartials.MemberManagementColumns', ['member' => $member])
-                                <td class="colored-cell px-3">
+                                <td class="coloured-cell px-3">
                                     @if ($member->actor == "user")
                                         Player rejected the request
                                     @else

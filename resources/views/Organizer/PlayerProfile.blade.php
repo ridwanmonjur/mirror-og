@@ -227,8 +227,8 @@
                                         @if ($user->role == 'PARTICIPANT')
                                             <button type="submit" id="followButton"
                                                 @class(["rounded px-3 py-2 ", 'followButton'. $userProfile->id])
-                                                style="background-color: {{ $user && $userProfile?->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $userProfile?->isFollowing ? 'black' : 'white' }}; border: none;">
-                                                {{ $user && $userProfile?->isFollowing ? 'Following' : 'Follow' }}
+                                                style="background-color: {{ $user && $userProfile->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $user && $userProfile->isFollowing ? 'black' : 'white' }}; border: none;">
+                                                {{ $user && $userProfile->isFollowing ? 'Following' : 'Follow' }}
                                             </button>
                                         @else
                                             <button type="button"
@@ -264,19 +264,19 @@
             <div class="showcase tab-size showcase-box showcase-column pt-4 grid-4-columns text-center" style="width: min(800px,  80%);">
                 <div> 
                     <h3> {{$lastYearEventsCount}} </h3>
-                    <p class="mx-2"> Events Organized in Last Year </p>
+                    <p> Events Organized in Last Year </p>
                 </div>
                  <div> 
                     <h3> {{$beforeLastYearEventsCount + $lastYearEventsCount}} </h3>
-                    <p class="mx-2"> Events Organized Across All Time </p>
+                    <p> Events Organized Across All Time </p>
                 </div>
                  <div> 
                     <h3> {{$teamsCount}} </h3>
-                    <p class="mx-2"> Teams Registered Across All Time </p>
+                    <p> Teams Registered Across All Time </p>
                 </div>
                  <div> 
                     <h3> {{$tierPrizeCount}} </h3>
-                    <p class="mx-2"> Total Prize Pool Across All Time </p>
+                    <p> Total Prize Pool Across All Time </p>
                 </div>
             </div>
             <br><br>

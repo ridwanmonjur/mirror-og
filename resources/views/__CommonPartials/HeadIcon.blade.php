@@ -8,7 +8,13 @@
     type="font/woff2" 
     crossorigin
 >
-
+<link 
+    rel="preload" 
+    href="https://fonts.gstatic.com/s/nunito/v25/XRXV3I6Li01BKofINeaBXso.woff2" 
+    as="font" 
+    type="font/woff2" 
+    crossorigin
+>
 <meta name="view-transition" content="same-origin" />
 
 <link rel="icon" type="image/svg+xml" href="{{ asset('assets/images/favicon/favicon.svg') }}">
