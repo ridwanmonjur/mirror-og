@@ -355,7 +355,7 @@
                     <h5 class="my-0"><u>Teams</u></h5>
                     <div class="pb-5" id="current-teams" >
                         @if (isset($teamList[0]))
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-{{ isset($teamList[2]) ? '3' : '2' }} g-4 ps-5 pt-0 mt-1">
+                             <div class="row row-cols-1 row-cols-md-2  g-4 ps-5 pt-0 mt-1">
                                 @foreach($teamList as $team)
                                     <div class="col">
                                         <div class="card h-100 border-0" style="transition: transform 0.2s; cursor: pointer;" 
@@ -374,7 +374,7 @@
                                                             alt="{{ $team->teamName }}"
                                                         >
                                                         <div>
-                                                            <h5 class="card-title mb-0">{{ $team->teamName }}</h5>
+                                                            <p class="card-title d-inline-block text-truncate my-0 py-0 mb-0"><u>{{ $team->teamName }}</u></p>
                                                             <div class="text-muted">
                                                                 <span class="me-2">{{$team->createdAtHumaReadable()}}</span>
                                                                 @if ($team->country_flag)
