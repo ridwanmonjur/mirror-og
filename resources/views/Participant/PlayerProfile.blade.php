@@ -446,7 +446,9 @@
             </div>
         </div>
 
-        <div class="tab-content pb-4  outer-tab d-none" id="Activity">
+         </div>
+
+        <div class="tab-content pb-4  outer-tab " id="Activity">
             <br>
             <div class="tab-size"><b>New</b></div>
             @include('Participant.__ProfilePartials.ActivityLogs', ['duration' => $activityNames[0]])
