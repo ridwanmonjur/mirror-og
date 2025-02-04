@@ -92,6 +92,27 @@ img.fslightbox-source{
 
 
 
+.search-bar {
+    position: relative;
+}
+
+.search-bar input {
+    border-radius: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 90px;
+    width: 450px;
+    max-width: 80vw;
+    /* caret-color: #43A4D7;
+    color: #43A4D7; */
+}
+
+.search-bar svg {
+    position: absolute;
+    top: 12px;
+}
+
+
 .welcome {
     margin-top: 40px;
     margin-bottom: 80px;
@@ -345,7 +366,7 @@ img.fslightbox-source{
     text-align: left;
 }
 
-.colored-cell {
+.coloured-cell {
     background-color: #cccaca;
     vertical-align: middle;
 }
@@ -642,12 +663,21 @@ img.fslightbox-source{
         display: flex;
         justify-content: space-between;
     }
-    
+    .search-bar {
+        display: block;
+    }
+    .search-bar input {
+        padding-left: 60px;
+    }
+  
+  
     .menu-toggle {
         display: none;
     }
     
-  
+    .search-bar svg {
+        left: 20px;
+    }
     .swiper-slide {
         text-indent: 0px;
         font-size: 1rem;

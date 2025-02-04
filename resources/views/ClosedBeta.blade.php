@@ -1,25 +1,14 @@
 @extends('layout.app')
 
 @section('title', 'Driftwood - Community Esports')
-@section('body-class', '')
+
 @push('styles')
-    <link 
-        rel="preload" 
-        href="https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" 
-        as="font" 
-        type="font/woff2" 
-        crossorigin
-    >
+    <link href="{{ asset('/assets/css/open/ClosedBeta.css') }}" rel="stylesheet">
 @endpush
 
 @section('content')
     <header>
-          @auth
-            @include('__CommonPartials.NavbarGoToSearchPage')
-        @endauth
-        @guest
-            @include('__CommonPartials.NavbarBeta')
-        @endguest
+        @include('__CommonPartials.NavbarBeta')
     </header>
 
     <!-- Main Content -->

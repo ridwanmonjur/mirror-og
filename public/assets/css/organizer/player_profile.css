@@ -452,6 +452,14 @@ a.custom-link:hover {
     color: darkred;
 }
 
+tr:nth-child(odd) .colored-cell {
+    background-color: #d9d9d9;
+}
+
+tr:nth-child(even) .colored-cell {
+    background-color: #cccaca;
+
+}
 
 
 .nd {

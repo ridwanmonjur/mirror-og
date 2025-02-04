@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @include('__CommonPartials.HeadIcon')
-    @vite(['resources/sass/betaapp.scss', 'resources/js/betaapp.js'])    
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
     <title>@yield('title', 'Driftwood')</title>
     @stack('styles')
     
 
 </head>
-<body class="@yield('body-class')">
+<body class="">
     @include('googletagmanager::body')
     @yield('content')
     @stack('scripts')

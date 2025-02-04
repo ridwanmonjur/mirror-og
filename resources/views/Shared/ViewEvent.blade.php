@@ -342,7 +342,7 @@
                         onclick="openTab(event, 'Result', 'current-positions'); ">Result</button>
                 </div>
                 <br>
-                <div id="Overview" class="tabcontent" style="display: block;width: 90%;">
+                <div id="Overview" class="tabcontent" style="display: block;">
                     <h5><u>About this event</u></h5>
                     <p>{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                 </div>

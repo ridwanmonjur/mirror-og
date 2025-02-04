@@ -21,3 +21,10 @@ main::before {
 }
 
 
+tr:nth-child(odd) .colored-cell {
+    background-color: #d0cfcf;
+}
+
+tr:nth-child(even) .colored-cell {
+    background-color: #bdb9b9;
+}

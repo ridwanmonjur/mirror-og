@@ -22,6 +22,7 @@
     @include('googletagmanager::body')
     @include('__CommonPartials.NavbarGoToSearchPage')
     @include('Participant.__Partials.TeamHead')
+
     <main class="main2">
         <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
         <input type="hidden" id="profile_route" value="{{ route('public.participant.view', ['id' => ':id']) }}">
@@ -70,34 +71,74 @@
                 @endif
             </div>
 
-            <div class="row px-4 mt-5">
+            <div class="row px-4 mt-4">
                 <div class="showcase col-12 col-lg-6">
-                    <div class="text-center"><b>Showcase</b></div>
+                    <div><b>Showcase</b></div>
                     <br>
-                      
-                    <div class="card border-2 border-dark py-0 my-0 mx-auto py-4" style=" width: 90%;">
-                        <div class="card-body row py-2 d-flex justify-content-center flex-wrap text-center mx-auto py-0 px-0 " 
-                            style="padding-top: 30px;padding-bottom: 30px;width: 90%;"
-                        >
-                            <div class="col-12 col-xl-4"> 
-                                <h3 class="py-0 my-0"> {{ $totalEventsCount }} </h3>
-                                <p class="mx-2 py-2 my-0"> Events Joined By Team </p>
-                            </div>
-                            <div class="col-12 col-xl-4"> 
-                                <h3 class="py-0 my-0"> {{$wins}} </h3>
-                                <p class="mx-2 py-2 my-0"> Tournament Wins By Team </p>
-                            </div>
-                            <div class="col-12 col-xl-4"> 
-                                <h3 class="py-0 my-0"> {{$streak}} </h3>
-                                <p class="mx-2 py-2 my-0"> Team Current Win Streak </p>
-                            </div>
+                    <div class="showcase-box d-none-until-hover-parent row">
+                        <div class="col-12">
+                            <p>Events Joined: {{ $totalEventsCount }}</p>
+                            <p>Wins: {{ $wins }}</p>
+                            <p>Win Streak: {{ $streak }}</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="achievements col-12 col-lg-6">
-                    <div class="ms-2 text-center"><b>Positions</b></div><br>
-                    @include('__CommonPartials.PositionBadge')
+                    <div class="ms-2"><b>Positions</b></div><br>
+                    
+                    <table class="mx-auto member-table responsive" style="margin-left: 5px;">
+                        @if (isset($joinEventAndTeamList[0]))
+                            <thead class="accepted-member-table text-start">
+                                <th></th>
+                                <th class="text-start">
+                                    Team Name
+                                </th>
+                                    <th class="text-start" >
+                                    Team Position
+                                </th>
+                                <th class="text-start" >
+                                    Join Status
+                                </th>
+                            </thead>
+                            <tbody class="accepted-member-table text-start">
+                                @foreach ($joinEventAndTeamList as $key => $joinEventAndTeam)
+                                    <tr class="st">
+                                        <td class="coloured-cell px-2 text-start   cursor-pointer  " style="width: 30%;" onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});">
+                                            <a href="{{ route('public.team.view', $joinEventAndTeam->team_id) }}" >
+                                                <img
+                                                    class="rounded-circle d-inline-block object-fit-cover me-3"
+                                                    src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"
+                                                    {!! trustedBladeHandleImageFailure() !!} 
+                                                    height="40"
+                                                    width="40"
+                                                > 
+                                                {{ $joinEventAndTeam->teamName }}
+                                            </a>
+                                        </td>
+                                        <td class="coloured-cell text-start text-lg-center ps-2 pe-4 ">
+                                            {{ $joinEventAndTeam->position ? bladeOrdinalPrefix($joinEventAndTeam->position) : '-' }}
+                                        </td>
+                                        <td class="coloured-cell text-start px-2 ">
+                                            <a href="{{ route('public.event.view', $joinEventAndTeam->event_id) }}" >
+                                                <img
+                                                    class="rounded-circle d-inline-block object-fit-cover me-1"
+                                                    src="{{ '/storage' . '/'. $joinEventAndTeam->eventBanner }}"
+                                                    {!! trustedBladeHandleImageFailure() !!} 
+                                                    height="40"
+                                                    width="40"
+                                                > 
+                                                {{ $joinEventAndTeam->eventName }}
+                                            </a>
+
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        @else
+                            <p class="ms-2 text-start">  No positions yet.</p>
+                        @endif
+                    </table>
                 </div>
             </div>
         </div>

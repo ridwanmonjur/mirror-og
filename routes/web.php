@@ -24,9 +24,9 @@ use Illuminate\Support\Facades\Route;
 // Home
 Route::redirect('/', '/closedbeta', 301);
 Route::get('/home', [MiscController::class, 'showLandingPage'])->name('public.landing.view');
-Route::view('/closedbeta', 'Beta.ClosedBeta')->name('public.closedBeta.view');
-Route::view('/about', 'Beta.About')->name('public.about.view');
-Route::view('/contact', 'Beta.Contact')->name('public.contact.view');
+Route::view('/closedbeta', 'ClosedBeta')->name('public.closedBeta.view');
+Route::view('/about', 'About')->name('public.about.view');
+Route::view('/contact', 'Contact')->name('public.contact.view');
 
 // Forget, reset password
 Route::view('/forget-password', 'Auth.ForgetPassword')->name('user.forget.view');
