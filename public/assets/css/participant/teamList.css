@@ -25,25 +25,8 @@ main {
     display: block;
 }
 
-.search-bar {
-    position: relative;
-}
 
-.search-bar input {
-    border-radius: 30px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 90px;
-    width: 450px;
-    max-width: 80vw;
-    /* caret-color: #43A4D7;
-    color: #43A4D7; */
-}
 
-.search-bar svg {
-    position: absolute;
-    top: 12px;
-}
 
 input[type="submit"],
 .oceans-gaming-default-button {
@@ -106,11 +89,7 @@ input[type="submit"],
         display: flex;
         justify-content: space-between;
     }
-    .search-bar {
-        display: block;
-    }
-    .search-bar input {
-        padding-left: 60px;
+    padding-left: 60px;
     }
    
     .d-none-at-mobile {
@@ -122,9 +101,7 @@ input[type="submit"],
     .d-centered-at-mobile {
         display: none;
     }
-    .search-bar svg {
-        left: 20px;
-    }
+  
 
     .grid-3-columns  {
         /* max-width: 1200px; */

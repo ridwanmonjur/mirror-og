@@ -22,7 +22,7 @@
 @endphp
 <input type="hidden" id="searchEndpointInput" value="{{ route('public.search.view') }}">
 <input type="hidden" id="landingEndpointInput" value="{{ route('public.landing.view') }}">
-<nav class="navbar justify-content-between user-select-none px-3 py-3 py-lg-2">
+<nav class="navbar justify-content-between align-items-center user-select-none px-3 py-2">
     <a href="{{ $routeLogo }}">
         <img width="150" height="30" src="{{ asset('/assets/images/driftwood logo.png') }}" alt="">
     </a>

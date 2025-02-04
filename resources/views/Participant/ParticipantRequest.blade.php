@@ -142,15 +142,15 @@
                                                 d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
                                         </svg>
                                     </td>
-                                    <td class="coloured-cell   cursor-pointer  px-3" onclick="redirectToTeamPage({{ $teamAndMember->team_id }});" >
+                                    <td class="colored-cell   cursor-pointer  px-3" onclick="redirectToTeamPage({{ $teamAndMember->team_id }});" >
                                         <div class="player-info">
                                             <span>{{ $teamAndMember->teamName }}</span>
                                         </div>
                                     </td>
-                                    <td class="coloured-cell px-3">
+                                    <td class="colored-cell px-3">
                                         {{ $teamAndMember->teamDescription }}
                                     </td>
-                                    <td class="coloured-cell px-3">
+                                    <td class="colored-cell px-3">
                                         Sent
                                         {{ is_null($teamAndMember->updated_at) ? '' : Carbon::parse($teamAndMember->updated_at)->diffForHumans() }}
                                     </td>
@@ -190,7 +190,7 @@
             <div class="mt-3 pt-3">
                 @if (isset($invitedEventsList[0]))
                     @foreach ($invitedEventsList as $invitation)
-                        <div class="d-block position-relative text-left coloured-cell mx-auto py-3 px-3 mx-3 mb-5 w-75"
+                        <div class="d-block position-relative text-left colored-cell mx-auto py-3 px-3 mx-3 mb-5 w-75"
                             id="div-{{ $invitation->id }}">
                             <div class="position-absolute d-flex justify-content-center w-100" style="top: -30px">
                                 <img src="{{ bladeImageNull($invitation->event?->tier?->tierIcon) }}" height="60"

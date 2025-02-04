@@ -1,10 +1,9 @@
 @extends('layout.app')
 
 @section('title', 'Driftwood - About Us')
+@section('body-class', '')
 
-@push('styles')
-    <link href="{{ asset('/assets/css/open/About.css') }}" rel="stylesheet">
-@endpush
+
 
 @section('content')
     <header>
