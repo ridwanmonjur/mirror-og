@@ -8,7 +8,8 @@
 
 
 img.fslightbox-source{
-    aspect-ratio: 12/3 !important;
+    aspect-ratio: 1/1 !important;
+    max-height: 80%;
 }
 
 
@@ -346,6 +347,12 @@ input[type="submit"]:active {
 }
 
 @media screen and (min-width: 992px) {
+
+    img.fslightbox-source{
+        aspect-ratio: 12/3 !important;
+        max-height: 80%;
+}
+
     .height-image {
         height: 35vh;
     }

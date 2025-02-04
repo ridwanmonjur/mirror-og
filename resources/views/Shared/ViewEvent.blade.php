@@ -342,7 +342,7 @@
                         onclick="openTab(event, 'Result', 'current-positions'); ">Result</button>
                 </div>
                 <br>
-                <div id="Overview" class="tabcontent" style="display: block;width: 90%;">
+                <div id="Overview" class="tabcontent" style="display: block; width: 90%;">
                     <h5><u>About this event</u></h5>
                     <p>{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                 </div>
@@ -353,123 +353,186 @@
 
                 <div id="Teams" class="tabcontent" style="width: 90%;">
                     <h5 class="my-0"><u>Teams</u></h5>
-                     <div >
+                    <div class="pb-5" id="current-teams" >
                         @if (isset($teamList[0]))
-                            <br>
-                            <table id="current-teams" class="member-table responsive ">
-                                <thead>
-                                    <tr>
-                                        <th> </th>
-                                        <th>Team name</th>
-                                        <th>Description</th>
-                                        <th>Region</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($teamList as $team)
-                                        <tr class="st">
-                                            <td class="py-0 px-0 mx-0"> 
-                                                <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
-                                                    <svg class="gear-icon-btn"
-                                                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                                        class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                                                        <path
-                                                            d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                                                    </svg>
-                                                </a>
-                                            </td>
-                                            <td class="d-flex align-items-center colored-cell">
-                                                <a href="{{route('public.team.view', ['id' => $team->id])}}"> 
-
-                                                    <img
-                                                        class="rounded-circle d-inline-block object-fit-cover me-3"
-                                                        src="{{ '/storage' . '/'. $team?->teamBanner }}"
-                                                        {!! trustedBladeHandleImageFailure() !!} 
-                                                        height="40"
-                                                        width="40"
-                                                    > 
-                                                    <span>{{$team->teamName}}</span>
-                                                </a>
-                                            </td>
-                                            <td style="font-size: 1.5rem;" class="colored-cell text-start text-lg-center">
-                                                {!! $team->country_flag ? $team->country_flag : '-' !!}
-                                            </td>
-                                            <td class="colored-cell text-start text-lg-center pe-3">{{$team->createdAtHumaReadable()}}</td>
-
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-{{ isset($teamList[2]) ? '3' : '2' }} g-4 ps-5 pt-0 mt-1">
+                                @foreach($teamList as $team)
+                                    <div class="col">
+                                        <div class="card h-100 border-0" style="transition: transform 0.2s; cursor: pointer;" 
+                                            onmouseover="this.style.transform='translateY(-2px)'" 
+                                            onmouseout="this.style.transform='translateY(0)'">
+                                            <div class="card-body border-2">
+                                                <div class="d-flex align-items-center justify-content-between my-2">
+                                                    <div class="d-flex align-items-center flex-grow-1">
+                                                        <img 
+                                                            src="{{ '/storage' . '/'. $team->teamBanner }}"
+                                                            {!! trustedBladeHandleImageFailure() !!}
+                                                            class="border border-secondary rounded-circle me-3"
+                                                            style="object-fit: cover;"
+                                                            width="50"
+                                                            height="50"
+                                                            alt="{{ $team->teamName }}"
+                                                        >
+                                                        <div>
+                                                            <h5 class="card-title mb-0">{{ $team->teamName }}</h5>
+                                                            <div class="text-muted">
+                                                                <span class="me-2">{{$team->createdAtHumaReadable()}}</span>
+                                                                @if ($team->country_flag)
+                                                                    <span class="me-2" style="font-size: 1.5rem;">{{ $team->country_flag }}</span>
+                                                                @else 
+                                                                    <span style="font-size: 1.5rem;"></span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <a href="{{ route('public.team.view', ['id' => $team->id]) }}" 
+                                                    class="btn btn-link border-primary btn-sm rounded-circle position-relative" 
+                                                    style="z-index: 3;">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                                            class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                                                        </svg>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <a href="{{ route('public.team.view', ['id' => $team->id]) }}" 
+                                            class="position-absolute top-0 start-0 w-100 h-100"></a>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                         @else
-                            <div class="pt-3" style="width: 90%;">No current teams</div>
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body text-center py-5">
+                                    <p class="mb-0">No teams</p>
+                                </div>
+                            </div>
                         @endif
                     </div>
                 </div>
+                @php
+                    if (!function_exists('getMedalSvg')) {
+
+                        function getMedalSvg($position)
+                        {
+                            // Default SVG for positions beyond 5
+                            $defaultSvg =
+                                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 32" width="36" height="32">
+                            <circle cx="18" cy="16" r="14" fill="#1E90FF"/>
+                            <circle cx="18" cy="16" r="13" fill="#1E90FF" stroke="#0066CC" stroke-width="0.8"/>
+                            <path d="M8,24 L5,28 L8,32 L18,29 L28,32 L31,28 L28,24" fill="#0066CC"/>
+                            <text x="18" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="white">' .
+                                'P' .
+                                '</text>
+                            <path d="M15,16 Q18,12 21,16" fill="none" stroke="#FFFFFF" stroke-width="0.5" opacity="0.4"/>
+                        </svg>';
+
+                            // Array of medal colors and properties
+                            $medals = [
+                                1 => ['fill' => '#FFD700', 'stroke' => '#DAA520', 'color' => 'black'],
+                                2 => ['fill' => '#C0C0C0', 'stroke' => '#808080', 'color' => 'white'],
+                                3 => ['fill' => '#CD7F32', 'stroke' => '#8B4513', 'color' => 'white'],
+                                4 => ['fill' => '#9933FF', 'stroke' => '#6600CC', 'color' => 'white'],
+                                5 => ['fill' => '#009933', 'stroke' => '#006622', 'color' => 'white'],
+                            ];
+
+                            // Return default for positions beyond 5
+                            if (!isset($medals[$position])) {
+                                return $defaultSvg;
+                            }
+
+                            // Generate medal SVG with position number
+                            return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 32" width="36" height="32">
+                            <circle cx="18" cy="16" r="14" fill="' .
+                                $medals[$position]['fill'] .
+                                '"/>
+                            <circle cx="18" cy="16" r="13" fill="' .
+                                $medals[$position]['fill'] .
+                                '" stroke="' .
+                                $medals[$position]['stroke'] .
+                                '" stroke-width="0.8"/>
+                            <path d="M8,24 L5,28 L8,32 L18,29 L28,32 L31,28 L28,24" fill="' .
+                                $medals[$position]['stroke'] .
+                                '"/>
+                            <text x="18" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="' .
+                                $medals[$position]['color'] .
+                                '">' .
+                                $position .
+                                '</text>
+                            <path d="M15,16 Q18,12 21,16" fill="none" stroke="#FFFFFF" stroke-width="0.5" opacity="0.4"/>
+                        </svg>';
+                        }
+                    }
+                @endphp
                 <div id="Result" class="tabcontent" style="width: 90%;">
                     <h5 class="mb-3"><u>Result</u></h5>
                     <div class="tab-content pb-4 tab-size outer-tab mx-auto" id="current-positions">
-                        <table class="mx-auto member-table responsive" style="margin-left: 5px;">
-                            
+                        <div class="card border-0 py-0 my-0 mx-auto" style="background: none; width: 90%;">
                             @if (isset($joinEventAndTeamList[0]))
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                    
-                                        <th >
-                                            Team Name
-                                        </th>
-                                        
-                                        <th>
-                                            Team Created
-                                        </th>
-                                        <th >
-                                            Team Position
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="accepted-member-table text-start">
-                                    @foreach ($joinEventAndTeamList as $key => $joinEventAndTeam)
-                                        <tr class="st">
-                                            <td class="colorless-col px-0">
-                                                <svg onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});"
-                                                    class="gear-icon-btn" xmlns="http://www.w3.org/2000/svg"
-                                                    width="20" height="20" fill="currentColor"
-                                                    class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                                                    <path
-                                                        d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                                                </svg>
-                                            </td>
-                                            
-                                            <td class="colored-cell  cursor-pointer px-2 text-start" onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});">
-                                                <img
-                                                    class="rounded-circle d-inline-block object-fit-cover me-3"
-                                                    src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"
-                                                    {!! trustedBladeHandleImageFailure() !!} 
-                                                    height="40"
-                                                    width="40"
-                                                > 
-                                                {{ $joinEventAndTeam->teamName }}
-                                            </td>
-                                            
-                                            <td class="colored-cell px-3 text-start">
-                                                {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
-                                            </td>
-                                            <td class="colored-cell text-start px-2">
-                                                {{ $joinEventAndTeam->position ? bladeOrdinalPrefix($joinEventAndTeam->position) : 'TBD' }}
-                                                &nbsp;&nbsp;
-                                            </td>
-                                           
-                                        </tr>
-                                        
+                                <div class="d-flex flex-column gap-3">
+                                    @foreach ($joinEventAndTeamList as $joinEventAndTeam)
+                                        <div class="card border-2 bg-white hover-shadow-sm position-relative">
+                                            <div class="card-body">
+                                                <div class="row align-items-center">
+                                                    <div class="col-12 col-lg-10 my-1 d-flex align-items-center gap-3">
+                                                        <div class="position-relative">
+                                                            <img src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}" 
+                                                                {!! trustedBladeHandleImageFailure() !!}
+                                                                class="rounded-circle object-fit-cover border border-primary"
+                                                                style="width: 48px; height: 48px;" 
+                                                                alt="Team banner">
+                                                        </div>
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="mb-1 text-truncate py-0">{{ $joinEventAndTeam->teamName }} <span class="ms-2" style="font-size: 1.5rem;">{{$joinEventAndTeam->country_flag}}</span></h6>
+                                                            
+                                                            <div class="text-body-secondary text-muted text-truncate">
+                                                                <span>
+                                                                    {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
+                                                                </span>
+                                                            
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-lg-2 my-1 d-flex justify-content-start align-items-center gap-3">
+                                                        @if ($joinEventAndTeam->position)
+                                                            <div class="d-flex align-items-center text-body-secondary small">
+                                                                <span class="me-2">{!! getMedalSvg($joinEventAndTeam->position) !!}</span>
+                                                                {{ bladeOrdinalPrefix($joinEventAndTeam->position) }}
+                                                            </div>
+                                                        @else
+                                                            <span class="text-body-secondary small">TBD</span>
+                                                        @endif
+                                                        <a onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});" 
+                                                        class="text-decoration-none text-body-secondary cursor-pointer">
+                                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2"
+                                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                                            </svg>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endforeach
-                                </tbody>
+                                </div>
                             @else
-                                <p class="text-center mt-5">  No teams joined yet.</p>
+                                <div class="card border bg-white">
+                                    <div class="card-body text-start py-4">
+                                        <svg class="ms-4" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <p class="d-inline text-body-secondary mb-0">No teams joined yet.</p>
+                                    </div>
+                                </div>
                             @endif
-                        </table>
+                        </div>
                     </div>
+
                 </div>
             </div>
             <div></div>

@@ -54,7 +54,7 @@
                             class="object-fit-cover me-1 " width="35px" height="40px"
                             style="object-position: center;"    
                         >
-                        <span class="text-truncate d-inline-block w-85 text-start pe-2"> {{ $joinEvent->eventName }} </span>
+                        <span class="text-truncate d-inline-block w-75 text-start pe-2"> {{ $joinEvent->eventName }} </span>
                     </a>
                 </div>
                 <div onclick="goToUrl(event, this)"
@@ -63,9 +63,9 @@
                     <img 
                         {!! trustedBladeHandleImageFailureBanner() !!}
                         src="{{ bladeImageNull($joinEvent->user->userBanner) }}" width="35" height="35"
-                        class="object-fit-cover random-color-circle rounded-circle2" >
-                    <div class="text-start d-inline-flex flex-column justify-content-center ms-2 w-100">
-                        <small class="d-inline-block my-0 text-truncate w-85">{{ $joinEvent->user->name }}</small>
+                        class="me-2 object-fit-cover random-color-circle rounded-circle2" >
+                    <div class="text-start d-inline-flex flex-column justify-content-center w-75">
+                        <small class="d-inline-block my-0 text-truncate w-75">{{ $joinEvent->user->name }}</small>
                         <small
                             data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id] : 0 }} "
                             class="d-inline-block {{ 'followCounts' . $joinEvent->user_id }}">
@@ -74,7 +74,7 @@
                         </small>
                     </div>
                 </div>
-                <form id="{{ 'followForm' . $joinEvent->id . $random_int }}" method="POST" class="col-6 followFormProfile col-xl-2 justify-content-end text-end px-0"
+                <form id="{{ 'followForm' . $joinEvent->id . $random_int }}" method="POST" class="col-6 followFormProfile col-xl-2 my-2 justify-content-end text-end px-0"
                     action="{{ route('participant.organizer.follow') }}">
                     @csrf
                     @guest
@@ -89,20 +89,20 @@
                     @guest
                         <button type="button"
                             onclick="reddirectToLoginWithIntened('{{ route('public.organizer.view', ['id' => $joinEvent->user_id]) }}')"
-                            class="mx-auto mt-2  {{ 'followButton' . $joinEvent->user_id }}"
+                            class="mx-auto  {{ 'followButton' . $joinEvent->user_id }}"
                             style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                             Follow
                         </button>
                     @endguest
                     @auth
                         @if ($user->role == 'PARTICIPANT')
-                            <button type="submit" class="{{ 'followButton' . $joinEvent->user_id }}" class="mx-auto mt-2 "
+                            <button type="submit" class="{{ 'followButton' . $joinEvent->user_id }}" class="mx-auto "
                                 style="background-color: {{ $userProfile?->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $userProfile?->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                                 {{ $userProfile?->isFollowing ? 'Following' : 'Follow' }}
                             </button>
                         @else
                             <button type="button" onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
-                                class="mx-auto mt-2 {{ 'followButton' . $joinEvent->user_id }}"
+                                class="mx-auto {{ 'followButton' . $joinEvent->user_id }}"
                                 style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                                 Follow
                             </button>
