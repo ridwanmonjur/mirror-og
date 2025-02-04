@@ -49,14 +49,13 @@
     </svg>';
     }
 @endphp
-<div class="card border-0 py-0 my-0 " style="background: none; width: 90%;">
-    <div class="card-body border-2 border-dark py-0 px-0 " style="background: none;">
+<div class="card border-0 py-0 my-0 mx-auto" style="background: none; width: 90%;">
         <!-- Header -->
         <!-- Event List -->
         @if (isset($joinEventAndTeamList[0]))
             <div class="d-flex flex-column gap-3">
                 @foreach ($joinEventAndTeamList as $event)
-                    <div class="card border bg-white hover-shadow-sm position-relative">
+                    <div class="card border-2 bg-white hover-shadow-sm position-relative">
                         <div class="card-body  ">
                             <div class="row align-items-center">
                                 <!-- Left side with image and event details -->
@@ -105,7 +104,6 @@
                         </div>
                     </div>
                 @endforeach
-            </div>
         @else
             <div class="card border bg-white">
                 <div class="card-body  text-start py-4">
