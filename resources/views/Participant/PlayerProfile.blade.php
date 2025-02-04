@@ -419,7 +419,7 @@
                     <div class="text-center"><b>Showcase</b></div>
                     <br>
                       
-                    <div class="card border-2 border-dark py-0 my-0 mx-auto py-4" style=" width: 90%;">
+                    <div class="card border-2 py-0 my-0 mx-auto py-4" style=" width: 90%;">
                         <div class="card-body row py-2 d-flex justify-content-center flex-wrap text-center mx-auto py-0 px-0 " 
                             style="padding-top: 30px;padding-bottom: 30px;width: 90%;"
                         >
@@ -445,10 +445,11 @@
                 </div>
             </div>
         </div>
+        </div>
+        
 
-         </div>
 
-        <div class="tab-content pb-4  outer-tab " id="Activity">
+        <div class="tab-content pb-4 d-none outer-tab " id="Activity">
             <br>
             <div class="tab-size"><b>New</b></div>
             @include('Participant.__ProfilePartials.ActivityLogs', ['duration' => $activityNames[0]])
