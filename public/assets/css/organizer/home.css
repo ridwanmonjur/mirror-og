@@ -76,20 +76,7 @@ a {
     align-items: center;
 }
 
-.search-bar input {
-    border-radius: 30px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 90px;
-    width: 450px;
-    max-width: 80vw;
-    /* caret-color: #43A4D7;
-    color: #43A4D7; */
-}
-.search-bar svg {
-    position: absolute;
-    top: 12px;
-}
+
 
 
 .search-form input[type="text"] {

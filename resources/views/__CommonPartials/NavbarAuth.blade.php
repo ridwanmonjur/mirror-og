@@ -2,8 +2,8 @@
         <a href="{{ url('/participant/request/') }}" role="button" class="btn p-0 me-3" 
             aria-haspopup="true" aria-expanded="true"
         >
-            <img width="46px" height="42px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt=""
-                class="" style="object-position: center;"
+            <img width="42px" height="38px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt=""
+                 style="object-position: center;"
             >
         </a>
 @endif
@@ -13,9 +13,9 @@
         @if($user->userBanner)
             <img
                 class="object-fit-cover rounded-circle me-2 border border-primary" 
-                src="{{ bladeImageNull($user->userBanner)}}" width="45" height="45">
+                src="{{ bladeImageNull($user->userBanner)}}" width="38" height="38">
         @else 
-            <span style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
+            <span style="display: inline-block; height: 38px; width: 38px;"
                 class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle">
                 {{ strtoupper(substr($user->name, 0, 1)) }}
             </span>

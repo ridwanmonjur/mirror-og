@@ -46,26 +46,6 @@ img.larger-hover:hover{
     margin-left: 30px;
 }
 
-.search-bar {
-    position: relative;
-}
-
-.search-bar input {
-    border-radius: 30px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 90px;
-    width: 450px;
-    max-width: 80vw;
-    /* caret-color: #43A4D7;
-    color: #43A4D7; */
-
-}
-
-.search-bar svg {
-    position: absolute;
-    top: 12px;
-}
 
 
 input[type="submit"],
@@ -270,14 +250,6 @@ input[type="submit"]:active {
         justify-content: space-between;
     }
 
-    .search-bar {
-        display: block;
-    }
-
-    .search-bar input {
-        padding-left: 60px;
-    }
-
    
 
     .d-none-at-mobile {
@@ -292,10 +264,7 @@ input[type="submit"]:active {
         display: none;
     }
 
-    .search-bar svg {
-        left: 20px;
-    }
-
+ 
     .grid-container {
         padding: 5% 2%;
         grid-gap: 10px;
@@ -305,9 +274,7 @@ input[type="submit"]:active {
 }
 
 @media screen and (min-width: 1200px) {
-    .search-bar input {
-        width: 600px;
-    }
+  
 
     main {
         padding: 20px 60px;
