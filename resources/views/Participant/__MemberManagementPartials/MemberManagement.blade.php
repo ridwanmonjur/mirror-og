@@ -177,7 +177,7 @@
             <p>Add new members to your team</p>
         </div>
     @endif
-    <form id="newMembersForm">
+    <form id="newMembersForm" class="mt-4">
          <input type="hidden" name="sortKeys" id="sortKeys" value="">
         <input type="hidden" name="sortType" id="sortType" value="">
         <div class="tab-size d-flex justify-content-between align-items-center flex-wrap tab-size mt-0">
@@ -400,7 +400,7 @@
         <input type="hidden" id ="membersUrl" value="{{route('user.teams.index', ['type' => 'team'])}}">
     </form>
 
-    <section class="featured-events scrolling-pagination tab-size">
+    <section class="featured-events scrolling-pagination mt-2 tab-size">
         <table class="member-table responsive " id="member-table-body">
             <tbody>
             </tbody>

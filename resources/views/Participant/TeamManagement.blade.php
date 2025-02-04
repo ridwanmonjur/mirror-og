@@ -117,7 +117,6 @@
                 <p class="text-center">
                     Team {{ $selectTeam->teamName }} has no active rosters
                 </p>
-                <br><br><br>
             @else
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $joinCount }} roster{{ bladePluralPrefix($joinCount) }}</p>
@@ -137,7 +136,6 @@
             <br><br>
             @if (!isset($joinEventsHistory[0]))
                 <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history </p>
-                <br> <br><br> 
             @else
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $historyCount }} roster{{ bladePluralPrefix($historyCount) }}</p>
@@ -164,6 +162,7 @@
             @endif
         </div>
     </main>
-    <script src="{{ asset('/assets/js/participant/TeamManagement.js') }}"></script>
+    {{-- <script src="{{ asset('/assets/js/participant/TeamManagement.js') }}"></script> --}}
+    <script src="{{ asset('/assets/js/participant/TeamManagementMemberView.js') }}"></script>
   
 </body>

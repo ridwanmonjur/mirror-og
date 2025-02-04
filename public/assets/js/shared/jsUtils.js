@@ -172,6 +172,7 @@ function openTab(evt, activeName, specialElementHeightId = null) {
     
     if (specialElementHeightId) {
         let bracketList = document.getElementById(specialElementHeightId);
+        if (!bracketList) return;
         let bracketListHeight = bracketList.getBoundingClientRect().height;
         let main = document.querySelector('main');
         if (main) {

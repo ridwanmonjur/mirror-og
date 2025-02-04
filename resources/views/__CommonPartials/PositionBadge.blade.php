@@ -1,4 +1,6 @@
 @php
+ if (!function_exists('getMedalSvg')) {
+
     function getMedalSvg($position)
     {
         // Default SVG for positions beyond 5
@@ -48,6 +50,7 @@
         <path d="M15,16 Q18,12 21,16" fill="none" stroke="#FFFFFF" stroke-width="0.5" opacity="0.4"/>
     </svg>';
     }
+ }
 @endphp
 <div class="card border-0 py-0 my-0 mx-auto" style="background: none; width: 90%;">
         <!-- Header -->
