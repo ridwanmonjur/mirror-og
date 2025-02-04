@@ -75,7 +75,7 @@
         </a>
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
-                <div class="col-12 col-xl-6 d-flex justify-content-start d my-1 px-0">
+                <div class="col-6 col-xl-6 d-flex justify-content-start d my-1 px-0">
                     <a class="d-flex w-100 justify-content-start align-items-center"
                         href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
 
@@ -90,7 +90,7 @@
                 </div>
                 <div onclick="goToUrl(event, this)"
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->user->id]) }}"
-                    class="col-6 col-xl-4 d-flex justify-content-start align-items-center px-0 mx-0 mt-1">
+                    class="col-6 col-xl-4 d-flex justify-content-end align-items-center px-0 mx-0 mt-1">
                     <img 
                         {!! trustedBladeHandleImageFailureBanner() !!}
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
@@ -110,7 +110,7 @@
                     id="{{ 'followForm' . $joinEvent->id . $random_int }}"
                     data-join-event-user ="{{ $joinEvent->eventDetails?->user_id }}"
                     method="POST" 
-                    class="col-6 followFormProfile col-xl-2 justify-content-end text-end px-0"
+                    class="col-6 d-none d-xl-flex followFormProfile col-xl-2 my-2 justify-content-end text-end px-0"
                     action="{{ route('participant.organizer.follow') }}">
                     @csrf
                     @guest

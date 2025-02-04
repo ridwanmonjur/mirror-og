@@ -317,7 +317,7 @@
         </a>
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
-                <div class="col-12 col-xl-6  my-1 px-0">
+                <div class="col-6 col-xl-6  my-1 px-0">
                     <a class="d-flex w-100 h-100 justify-content-start align-items-center"
                         href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img {!! trustedBladeHandleImageFailureBanner() !!}
@@ -352,7 +352,7 @@
                 <form onclick="event.stopPropagation(); " onsubmit="onFollowSubmit(event)"
                     id="{{ 'followForm' . $joinEvent->id . $random_int }}"
                     data-join-event-user ="{{ $joinEvent->eventDetails?->user_id }}" method="POST"
-                    class="col-6 col-xl-2 px-0 h-100 justify-content-end text-end" action="{{ route('participant.organizer.follow') }}">
+                    class="col-6 d-none d-xl-flex col-xl-2 my-2 px-0 h-100 justify-content-end text-end" action="{{ route('participant.organizer.follow') }}">
                     @csrf
                     @guest
                         <input type="hidden" name="user_id" value="">
