@@ -374,7 +374,7 @@
                                                             alt="{{ $team->teamName }}"
                                                         >
                                                         <div>
-                                                            <p class="card-title d-inline-block text-truncate my-0 py-0 mb-0"><u>{{ $team->teamName }}</u></p>
+                                                            <p class="card-title d-inline-block text-truncate w-50 my-0 py-0 mb-0"><u>{{ $team->teamName }}</u></p>
                                                             <div class="text-muted">
                                                                 <span class="me-2">{{$team->createdAtHumaReadable()}}</span>
                                                                 @if ($team->country_flag)
