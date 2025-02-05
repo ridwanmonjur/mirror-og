@@ -106,6 +106,8 @@ function bladeImageNull($eventBanner)
     return $eventBannerImg;
 }
 
+
+
 function trustedBladeHandleImageFailure()
 {
     $imgFailure = asset('assets/images/404.png');

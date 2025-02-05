@@ -98,6 +98,7 @@
             "rm -rf node_modules"
         ],
         "build": [
+            "nvm use 22",
             "rm -rf node_modules",
             "rm -rf vendor",
             "rm -f .env",
