@@ -3,7 +3,6 @@
 @include('__CommonPartials.NavbarGoToSearchPage')
 
     <main>
-        <input type="hidden" id="home_view_route" value="{{ route('participant.home.view') }}">
         <br><br><br><br>
         <div class="text-center" >
             <div >
@@ -17,12 +16,11 @@
                 @endif
             </div>
             <br><br><br><br>
-            <button onclick="goToHomeScreen();" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: black; border: 1px solid black;">
+            <a href="{{ route('participant.home.view') }}" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: black; border: 1px solid black; text-decoration: none; display: inline-block;">
                 Go to home page
-            </button>
+            </a>
 
         </div>
-        <script src="{{ asset('/assets/js/participant/EventNotFound.js') }}"></script>
         
 
     </main>

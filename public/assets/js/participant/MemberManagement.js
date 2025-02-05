@@ -14,8 +14,6 @@ actionMap = {
 dialogForMember = new DialogForMember();
 
 
-
-
 function loadTab() {
     let pageValue = localStorage.getItem('page');
 

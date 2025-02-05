@@ -129,7 +129,10 @@ table.responsive td img {
 }
 
 @media screen and (max-width: 1000px) {
-  
+  .position-lg-absolute {
+    position: static;
+  }
+
   table.responsive {
     border: 0;
   }
@@ -267,16 +270,15 @@ button:active:after {
   opacity: 0.7;
 }
 
-tr:nth-child(odd) .colored-cell {
+
+tr .colored-cell {
   background-color: #d9d9d9;
-}
-
-tr:nth-child(even) .colored-cell {
-  background-color: #bfbebe;
 
 }
 
-
+.position-lg-absolute {
+  position: absolute;
+}
 
 
 

@@ -502,7 +502,7 @@
             <div class="tab-size"><b>Current Teams</b></div>
             <div class="tab-size pt-4">
             @if (isset($teamList[0]))
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <div class="row row-cols-1 row-cols-lg-2 g-4">
                     @foreach($teamList as $team)
                         <div class="col">
                             <div class="card h-100 border-0 " style="transition: transform 0.2s; cursor: pointer;" 
@@ -530,7 +530,7 @@
                                             </div>
                                         </div>
                                         <a href="{{ route('public.team.view', ['id' => $team->id]) }}" 
-                                        class="btn btn-link border-primary btn-sm rounded-circle position-relative" 
+                                        class="btn gear-icon-btn border-primary btn-sm rounded-circle position-relative" 
                                         style="z-index: 3;">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                 class="bi bi-eye-fill" viewBox="0 0 16 16">
@@ -558,7 +558,7 @@
             <div class="tab-size"><b>Past Teams</b></div>
             <div class="tab-size pt-4">
             @if (isset($pastTeam[0]))
-                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <div class="row row-cols-1 row-cols-lg-2 g-4">
                     @foreach($pastTeam as $team)
                         <div class="col">
                             <div class="card h-100 border-0 " style="transition: transform 0.2s; cursor: pointer;" 
@@ -586,7 +586,7 @@
                                             </div>
                                         </div>
                                         <a href="{{ route('public.team.view', ['id' => $team->id]) }}" 
-                                        class="btn btn-link border-primary btn-sm rounded-circle position-relative" 
+                                        class="btn gear-icon-btn border-primary btn-sm rounded-circle position-relative" 
                                         style="z-index: 3;">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                 class="bi bi-eye-fill" viewBox="0 0 16 16">

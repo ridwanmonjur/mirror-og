@@ -309,9 +309,9 @@ async function fetchMembers(event = null) {
     for (member of filteredSortedMembers) {
         bodyHtml+=`
         <div class="card border-2 mb-2 bg-white hover-shadow-sm position-relative">
-            <div class="card-body">
+            <div class="card-body cursor-pointer" onclick="redirectToProfilePage('${member.user_id}');" >
                 <div class="row align-items-center">
-                    <div class="col-12 col-lg-8 d-flex align-items-center gap-3">
+                    <div class="col-11 col-lg-11 d-flex align-items-center gap-3">
                         <div class="position-relative">
                             
                             <img src="/storage/${member?.user?.userBanner}" 
@@ -320,8 +320,8 @@ async function fetchMembers(event = null) {
                                 style="width: 48px; height: 48px;">
                         </div>
                         <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-1 text-truncate py-0">
-                                <span class="d-inline-block ${!captainJson || member.id != captainJson?.team_member_id && 'd-none'}">
+                            <h6 class="mb-1 text-truncate py-1">
+                                <span class="ms-2 d-inline-block ${!captainJson || member.id != captainJson?.team_member_id && 'd-none'}">
                                     <img 
                                         class="z-99 rounded-pill me-2 captain-crown"
                                         height="20" 
@@ -332,13 +332,13 @@ async function fetchMembers(event = null) {
                                 ${member?.user?.name}
                                 <span class="fs-4 ms-3">${member?.user?.participant?.region_flag }</span>
                             </h6>
-                            <div class="text-muted text-truncate">${member?.user?.email}</div>
-                        </div>
+                            <td class="text-secondary">${window.formatDateLuxon(member.created_at)}</td>
+                            </div>
                     </div>
         
-                    <div class="col-12 col-lg-4 d-flex justify-content-end align-items-center gap-3">
+                    <div class="col-1 col-lg-1 d-flex align-items-center gap-3">
                        
-                        <a onclick="redirectToProfilePage('${member.user_id}');" 
+                        <a 
                         class="text-decoration-none text-body-secondary cursor-pointer">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -362,3 +362,44 @@ addOnLoad(()=> {
 
 })
 fetchCountries();
+
+function reddirectToLoginWithIntened(route) {
+    route = encodeURIComponent(route);
+    let url = document.getElementById('signin_url')?.value;
+    url+= `?url=${route}`;
+    window.location.href = url;
+}
+
+carouselWork();
+window.addEventListener('resize', debounce((e) => {
+    carouselWork();
+}, 250));
+
+const searchInputs = document.querySelectorAll('.search_box input');
+const memberTables = document.querySelectorAll('.member-table');
+
+searchInputs.forEach((searchInput, index) => {
+    searchInput.addEventListener("input", function() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const memberRows = memberTables[index].querySelectorAll('tbody tr');
+
+        memberRows.forEach(row => {
+            const playerName = row.querySelector('.player-info span')
+                .textContent.toLowerCase();
+
+            if (playerName.includes(searchTerm)) {
+                row.style.display = 'table-row';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+
+window.onbeforeunload = function(){window.location.reload();}
+
+function redirectToProfilePage(userId) {
+    let route = document.getElementById('profile_route').value;
+    route = route.replace(':id', userId);
+    window.location.href = route;
+}
