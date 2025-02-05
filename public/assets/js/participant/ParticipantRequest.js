@@ -16,6 +16,8 @@ function loadTab() {
     let teamName = urlParams.get('teamName');
     let pageValue = urlParams.get('page');
 
+    if (!tab || tabValue)
+
     if (tabValue) {
         document.getElementById(tabValue).click();
     }
