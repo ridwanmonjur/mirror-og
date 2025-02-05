@@ -70,4 +70,13 @@ window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => {
 
 window.Toast = Toast;
 window.Swal = Swal;
+const pageMeta = document.querySelector('meta[name="page-component"]');
+const pageName = pageMeta?.getAttribute('content');
 
+if (pageName ) {
+    try {
+        import (`./alpine/${pageName}.js`);
+    } catch (error) {
+        console.error(`Failed to load component for ${pageName}:`, error);
+    }
+}

@@ -2,8 +2,8 @@
 
 <head>
     @include('googletagmanager::head')
-    {{-- <meta name="page-component" content="chat2"> --}}
-    @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/chat.js'])
+    <meta name="page-component" content="chat2">
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/common/fullpage.css') }}">
     @include('__CommonPartials.HeadIcon')
 </head>

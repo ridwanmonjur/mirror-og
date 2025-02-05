@@ -153,11 +153,11 @@
                             style="display: none;"
                         >
                         <div  v-show="errorMessage != null" class="text-red" v-text="errorMessage"> </div>
-                        <div class="d-flex flex-row justify-content-center">
+                        <div class="d-flex flex-row flex-wrap justify-content-center">
                             <input
                                 placeholder="Enter your team name..."
                                 style="width: 200px;"
-                                class="form-control border-secondary player-profile__input d-inline me-4 d-inline"
+                                class="form-control border-secondary mb-2 player-profile__input d-inline me-4 d-inline"
                                 v-model="teamName"
                                 autocomplete="off"
                                 autocomplete="nope"
@@ -165,7 +165,7 @@
                             >
                             <span  style="color: black !important;">
                                 <svg
-                                    class="me-2 "
+                                    class="me-2 mb-2"
                                     xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                                     <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                 </svg>
@@ -368,7 +368,7 @@
                 >
                     <input
                         placeholder="Enter your team description..."
-                        class="form-control border-secondary player-profile__input d-inline py-2 me-5"
+                        class="form-control border-secondary player-profile__input d-inline py-2 me-3"
                         v-model="teamDescription"
                         autocomplete="off"
                         autocomplete="nope"

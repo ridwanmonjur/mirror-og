@@ -37,17 +37,8 @@
         @include('Participant.__Partials.TeamHead') 
 
         @include('Participant.__MemberManagementPartials.MemberManagement')
-        @if ($isRedirect)
-            <div class="d-flex box-width back-next mb-5">
-                <button onclick="goBackScreens()" type="button"
-                    class="btn border-dark rounded-pill py-2 px-4"> Back </button>
-                <button onclick="goNextScreens()" type="button" 
-                    class="btn btn-primary text-light rounded-pill py-2 px-4"
-                    onclick=""> Next &gt; </button>
-            </div>
-        @else 
-            <br><br><br><br><br><br>
-        @endif
+       
+        <br><br> <br><br><br><br><br><br>
     </main>
     
     <script src="{{ asset('/assets/js/participant/MemberManagement.js') }}"></script>

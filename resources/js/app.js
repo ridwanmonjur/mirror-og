@@ -70,21 +70,7 @@ window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => {
 window.loadMessage = () => {
     let success = localStorage.getItem('success');
     let error = localStorage.getItem('error');
-    let tab = localStorage.getItem('tab');
     let message = localStorage.getItem('message');
-
-    if (tab) {
-        let tabElement = document.getElementById(tab);
-        if (tabElement) {
-            tabElement.click();
-            window.scrollTo(
-                {
-                    bottom: tabElement.getBoundingClientRect().bottom,
-                    behavior: 'smooth' 
-                }
-            )
-        }
-    }
 
     if (success === 'true' && message) {
         Swal.fire({
@@ -108,7 +94,6 @@ window.loadMessage = () => {
     localStorage.removeItem('success');
     localStorage.removeItem('error');
     localStorage.removeItem('message');
-    localStorage.removeItem('tab');
 }
 
 

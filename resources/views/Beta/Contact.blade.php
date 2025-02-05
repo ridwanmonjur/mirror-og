@@ -107,6 +107,3 @@
     </main>
 @endsection
 
-@push('scripts')
-    <script src="{{ asset('/assets/js/open/Contact.js') }}"></script>
-@endpush

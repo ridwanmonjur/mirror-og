@@ -10,7 +10,6 @@ function generateHeaders() {
 let dialogForMember = new DialogForMember();
 
 function loadTab() {
-    let currentUrl = window.location.href;
     let urlParams = new URLSearchParams(window.location.search);
     let tabValue = urlParams.get('tab');
     let successValue = urlParams.get('success');
