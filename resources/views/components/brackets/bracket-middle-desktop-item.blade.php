@@ -18,7 +18,7 @@
     style="width: 35px; height: 28px;"
 >
     @if ($teamId1)
-        <img src="{{ bladeImageNull($teamBanner1) }}" 
+        <img src="{{ asset('storage/'.$teamBanner1) }}" 
             onerror="this.src='{{ asset('assets/images/404q.png') }}';"
             class="cursor-pointer position-absolute w-100 h-100 object-fit-cover z-99 me-2" alt="Team View"
             data-position="{{$position1}}" 
@@ -45,7 +45,7 @@
     style="width: 35px; height: 28px;"
 >
     @if ($teamId2)
-        <img src="{{ bladeImageNull($teamBanner2) }}" 
+        <img src="{{ asset('storage/'.$teamBanner2) }}" 
             onerror="this.src='{{ asset('assets/images/404q.png') }}';"
             class="cursor-pointer position-absolute w-100 h-100 z-99 d-none-when-hover object-fit-cover me-2" alt="Team View"
             data-position="{{$position2}}" 
