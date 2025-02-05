@@ -1214,8 +1214,7 @@ function addRosterMembers(event) {
                             >
                             <span>${member.user.name || ''}</span>
                         </td>
-                        <td >${member.user.email || ''}</td>
-                        <td >${window.formatDateLuxon(member.created_at)}</td>
+                        <td class="text-muted">${window.formatDateLuxon(member.created_at)}</td>
                         <td> 
                                     
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 

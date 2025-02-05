@@ -10,12 +10,13 @@ function generateHeaders() {
 let dialogForMember = new DialogForMember();
 
 function loadTab() {
-    let currentUrl = window.location.href;
     let urlParams = new URLSearchParams(window.location.search);
     let tabValue = urlParams.get('tab');
     let successValue = urlParams.get('success');
     let teamName = urlParams.get('teamName');
     let pageValue = urlParams.get('page');
+
+    if (!tab || tabValue)
 
     if (tabValue) {
         document.getElementById(tabValue).click();

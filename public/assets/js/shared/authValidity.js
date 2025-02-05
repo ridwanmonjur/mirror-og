@@ -25,10 +25,8 @@ function movePlaceholderUp(input) {
     const placeholder = label.querySelector('.placeholder-moves-up');
     if (input.value !== '') {
         placeholder.style.top = '0px';
-        placeholder.style.fontSize = '12px';
     } else {
         placeholder.style.top = '';
-        placeholder.style.fontSize = '';
     }
 }
 

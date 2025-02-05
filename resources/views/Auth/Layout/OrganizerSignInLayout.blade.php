@@ -60,10 +60,7 @@
         <img class="image-login" src="{{ asset('/assets/images/auth/google.svg') }}" alt="">
         <p>Continue with Google</p>
     </button>
-    <button class="btn-login btn-steam" onclick="redirectToSteam();">
-        <img class="image-login" src="{{ asset('/assets/images/auth/steam.svg') }}" alt="">
-        <p>Continue with Steam</p>
-    </button>
+   
 </form>
 
 <div class="section-bottom">

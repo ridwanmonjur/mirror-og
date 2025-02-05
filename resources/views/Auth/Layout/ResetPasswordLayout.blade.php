@@ -46,7 +46,7 @@
                 <input autocomplete="new-password" type="password" name="confirmPassword" id="confirmPassword"
                     minlength="6" maxlength="24" required="true" class="input-area" oninput="movePlaceholderUp(this)">
                 <span class="placeholder-moves-up">Confirm password</span>
-                   <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                   <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">
             <!-- Show Password Icon -->
             <svg xmlns="http://www.w3.org/2000/svg" class="eye-icon" width="20" height="20" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

@@ -14,14 +14,31 @@ actionMap = {
 dialogForMember = new DialogForMember();
 
 
-
-
 function loadTab() {
     let pageValue = localStorage.getItem('page');
+    let tab = localStorage.getItem('tab');
 
     if (Number(pageValue)) {
         document.getElementById('NewMembersBtn').click();
     }
+
+    if (!tab || tab == '') {
+        tab = 'CurrentMembersBtn';
+    }
+
+    let tabElement = document.getElementById(tab);
+    if (tabElement) {
+        tabElement.click();
+        window.scrollTo(
+            {
+                bottom: tabElement.getBoundingClientRect().bottom,
+                behavior: 'smooth' 
+            }
+        )
+    }
+
+    localStorage.removeItem('tab');
+    localStorage.removeItem('page');
 }
 
 function generateHeaders() {

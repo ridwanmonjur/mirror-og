@@ -4,7 +4,7 @@
 @endphp
 
 <div class="tabs">
-    <button id="CurrentMembersBtn" class="tab-button inner-tab tab-button-active"
+    <button id="CurrentMembersBtn" class="tab-button inner-tab"
         onclick="showTab(event, 'CurrentMembers', 'inner-tab')">Current Members
     </button>
     <button id="PendingMembersBtn" class="tab-button inner-tab" onclick="showTab(event, 'PendingMembers', 'inner-tab')">
@@ -15,7 +15,7 @@
     </button>
 </div>
 <br>
-<div class="tab-content pb-4 inner-tab" id="CurrentMembers">
+<div class="tab-content pb-4 d-none inner-tab" id="CurrentMembers">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
         {{ $teamMembersProcessed['accepted']['count'] }} present member{{bladePluralPrefix($teamMembersProcessed['accepted']['count'])}}
         and {{ $teamMembersProcessed['left']['count'] }} past member{{bladePluralPrefix($teamMembersProcessed['left']['count'])}}

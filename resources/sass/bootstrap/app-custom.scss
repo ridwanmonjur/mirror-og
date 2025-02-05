@@ -100,7 +100,6 @@ body {
     margin: 0 !important;
     overflow-y: scroll !important;
     overflow-x: hidden !important; /* Move overflow here instead */
-    overflow-y: scroll !important;
     padding-right: 0 !important; /* Prevent Bootstrap modal padding */
 }
 
@@ -180,7 +179,7 @@ body.modal-open,
     left: 0;
     right: 0;
     padding-top: 12px;
-    padding-bottom: 12px;
+    padding-bottom: 12x;
     transition: all 0.3s ease-in-out;
     padding-left: 0;
 }
@@ -553,6 +552,11 @@ h5 {
 
 
 @media screen and (min-width: 1000px) {
+    .navbar { 
+        padding-top: 4px;
+        padding-bottom: 4px;
+    }
+
     html, body {
         font-size: 16px;
     }

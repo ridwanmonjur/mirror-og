@@ -134,6 +134,7 @@ main {
     padding: 2rem 0 1rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: 1fr; 
     justify-content: center;
 }
 
@@ -210,6 +211,14 @@ main {
 
 #smaller {
     font-size: smaller;
+}
+
+.text-truncate-event-title {
+    max-width: 35ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
 }
 
 
@@ -385,6 +394,10 @@ footer {
 /* Mobile styles */
 
 @media (max-width: 560px) {
+    .text-truncate-event-title {
+        max-width: 30ch;
+    }
+
     main {
         background-size: auto 100vh;
         background-position: bottom !important;

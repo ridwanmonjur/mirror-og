@@ -47,7 +47,7 @@
         <br><br>
         
         
-        <script type="module" src="{{ asset('/assets/js/open/Landing.js') }}"></script>
+        <script type="module" src="{{ asset('/assets/js/shared/Landing.js') }}"></script>
 
     </main>
 </body>

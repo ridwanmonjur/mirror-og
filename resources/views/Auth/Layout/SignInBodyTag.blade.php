@@ -1,4 +1,4 @@
-<body>
+<body style="overflow-y: auto !important;">
     @include('googletagmanager::body')
     <main>
         <div class="wrapper py-4">

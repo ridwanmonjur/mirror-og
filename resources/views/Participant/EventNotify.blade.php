@@ -14,11 +14,6 @@
 <body>
     @include('googletagmanager::body')
     @include('__CommonPartials.NavbarGoToSearchPage')
-    <input type="hidden" id="register_route"
-        value="{{ route('participant.register.manage', ['id' => $selectTeam->id]) }}">
-    <input type="hidden" id="event_view_route" value="{{ route('public.event.view', ['id' => $id]) }}">
-
-    {{-- Hidden urls --}}
     
     <a class="d-none" id="manageRegistrationUrl"
         href="{{ route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $id]) }}"> </a>
@@ -46,19 +41,19 @@
                         </div>
                     </form>
                     <div class="text-center">
-                        <input onclick="goToViewEvent()" type="submit" class="choose-payment-method" value="Done">
+                        <a href="{{ route('public.event.view', ['id' => $id]) }}" class="choose-payment-method">Done</a>                    
                     </div>
                     <div class="text-center">
-                        <button onclick="goToRegistrationScreen()"
-                            class="oceans-gaming-default-button oceans-gaming-transparent-button"> See Registration
-                            Status </button>
+                        <a href="{{ route('participant.register.manage', ['id' => $selectTeam->id]) }}" 
+                        class="oceans-gaming-default-button oceans-gaming-transparent-button">
+                            See Registration Status
+                        </a>
                     </div>
                     <br><br>
                 </div>
             </div>
         </div>
     </main>
-    <script src="{{ asset('/assets/js/participant/EventNotify.js') }}"></script>
 
 
 </body>

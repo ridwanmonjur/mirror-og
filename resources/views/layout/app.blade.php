@@ -5,7 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @include('__CommonPartials.HeadIcon')
-    @vite(['resources/sass/betaapp.scss', 'resources/js/betaapp.js'])    
+    @guest
+        @vite(['resources/sass/betaapp.scss', 'resources/js/betaapp.js'])    
+    @endguest
+    @auth
+        @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
+    @endauth
     <title>@yield('title', 'Driftwood')</title>
     @stack('styles')
     

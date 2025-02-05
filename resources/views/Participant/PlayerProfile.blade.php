@@ -170,10 +170,10 @@
                                 class="d-none"
                             >
                             <br>
-                            <span class="d-inline-flex justify-content-between align-items-center">
+                            <span class="d-inline-flex flex-wrap justify-content-start align-items-center">
                                 <input
                                     placeholder = "Your name"
-                                    style="width: 200px;"
+                                    style="width: min(200px, 60vw);"
                                     type="text"
                                     autocomplete="off"
                                     autocomplete="nope"
@@ -183,7 +183,7 @@
                                 <input 
                                     placeholder="Birthday"
                                     type="date"
-                                    style="width: 150px;"
+                                    style="width: min(150px, 60vw);"
                                     default="1999-05-05"
                                     id="birthdate"
                                     class="form-control border-secondary player-profile__input d-inline me-2" 
@@ -198,7 +198,7 @@
                                     <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
                                     </svg>
                                 </template>
-                                <template v-if="participant.isAgeVisible">
+                                <template v-else>
                                     {{-- Eye visible --}}
                                     <svg  
                                         v-on:click="participant.isAgeVisible = false" 
@@ -211,11 +211,11 @@
                             <br>
                                  <input
                                     placeholder = "Write a description"
-                                    style="width: 370px;"
+                                    style="width: min(80vw, 370px);"
                                     type="text"
                                     autocomplete="off"
                                     autocomplete="nope"
-                                    class="form-control border-secondary player-profile__input d-inline me-3" 
+                                    class="mb-2 form-control border-secondary player-profile__input d-inline me-3" 
                                     v-model="participant.bio" 
                                 > 
                             <div class="w-100 d-flex justify-content-start align-items-center flex-wrap">
@@ -237,7 +237,7 @@
                                         <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
                                     </svg>
                                     <input 
-                                        style="width: 150px;"
+                                        style="width: min(180px, 60vw);"
                                         placeholder = "Enter your domain..."
                                         autocomplete="off"
                                         autocomplete="nope"
@@ -502,7 +502,7 @@
             <div class="tab-size"><b>Current Teams</b></div>
             <div class="tab-size pt-4">
             @if (isset($teamList[0]))
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <div class="row row-cols-1 row-cols-lg-2 g-4">
                     @foreach($teamList as $team)
                         <div class="col">
                             <div class="card h-100 border-0 " style="transition: transform 0.2s; cursor: pointer;" 
@@ -530,7 +530,7 @@
                                             </div>
                                         </div>
                                         <a href="{{ route('public.team.view', ['id' => $team->id]) }}" 
-                                        class="btn btn-link border-primary btn-sm rounded-circle position-relative" 
+                                        class="btn gear-icon-btn border-primary btn-sm rounded-circle position-relative" 
                                         style="z-index: 3;">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                 class="bi bi-eye-fill" viewBox="0 0 16 16">
@@ -558,7 +558,7 @@
             <div class="tab-size"><b>Past Teams</b></div>
             <div class="tab-size pt-4">
             @if (isset($pastTeam[0]))
-                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <div class="row row-cols-1 row-cols-lg-2 g-4">
                     @foreach($pastTeam as $team)
                         <div class="col">
                             <div class="card h-100 border-0 " style="transition: transform 0.2s; cursor: pointer;" 
@@ -586,7 +586,7 @@
                                             </div>
                                         </div>
                                         <a href="{{ route('public.team.view', ['id' => $team->id]) }}" 
-                                        class="btn btn-link border-primary btn-sm rounded-circle position-relative" 
+                                        class="btn gear-icon-btn border-primary btn-sm rounded-circle position-relative" 
                                         style="z-index: 3;">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                 class="bi bi-eye-fill" viewBox="0 0 16 16">
