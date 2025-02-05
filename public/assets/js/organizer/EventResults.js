@@ -17,7 +17,7 @@ function loadBearerCompleteHeader() {
     };
 }
  
-window.onload = () => { window.loadMessage(); }
+window.onload = () => { window.loadMessage(); loadTab(); }
 
 function reloadUrl(currentUrl, message, tab) {
     if (currentUrl.includes('?')) {
@@ -28,6 +28,27 @@ function reloadUrl(currentUrl, message, tab) {
     localStorage.setItem('message', message);
     localStorage.setItem('tab', tab);
     window.location.replace(currentUrl);
+}
+
+function loadTab() {
+    let main = document.querySelector('main');
+    main.classList.remove("d-none");
+    let tab = localStorage.getItem('tab');
+
+    if (!tab || tab == '') {
+        tab = 'PositionBtn';
+    }
+
+    let tabElement = document.getElementById(tab);
+    if (tabElement) {
+        tabElement.click();
+        window.scrollTo(
+            {
+                bottom: tabElement.getBoundingClientRect().bottom,
+                behavior: 'smooth' 
+            }
+        )
+    }
 }
 
 function takeYesAction() {

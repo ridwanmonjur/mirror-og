@@ -66,14 +66,19 @@
                 </button>
             </div>
             <div class="league_name mt-4 mb-2">
-                <p class="{{ 'ms-0 mb-0 p-0 ' . 'Color-' . $event->tier->eventTier }}"><b>{{ $event->eventName }}</b></p>
+                <p class="{{ 'text-truncate-event-title  ms-0 mb-0 p-0 ' . 'Color-' . $event->tier->eventTier }}"><b>{{ $event->eventName }}</b></p>
+                <br>
                 <small class=" px-0 ms-0 pb-2 fw-lighter">
                     <span class="px-0 text-start">
-                        <span class="d-inline">{{ $event->user->name  }}</span>
+                        <span class="d-inline text-truncate-event-title ">{{ $event->user->name  }}</span>
                     </span>
                     <span class="px-0 text-start d-block d-lg-inline">
-                        <span class="ms-1 me-1 d-inline">▪️</span>
-                        <i>{{ $event->user->follows_count }} followers</i>
+                        <span class="ms-1 me-1 d-inline">
+                            <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
+                            <circle cx="2" cy="2" r="2" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        <span>{{ $event->user->follows_count }} followers</span>
                     </span>
                 </small>
             </div>
@@ -123,7 +128,9 @@
                         ' text-secondary' => $isEnded
                     ])>
                         <span> {{$formattedStartDate}} </span>
-                        <span> <span class="ms-3 me-2">▪️ </span>{{$formattedStartTime}} </span>
+                        <span> <span class="ms-3 me-2"><svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
+                        <circle cx="2" cy="2" r="2" fill="currentColor"/>
+                        </svg> </span>{{$formattedStartTime}} </span>
                     </h5>
                     @if ($willShowStartsInCountDown) 
                         <div class="text-center">

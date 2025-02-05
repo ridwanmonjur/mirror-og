@@ -2,9 +2,9 @@
     <div>
         <img :src="report.teams[report.realWinners[reportUI.matchNumber]]?.banner ? 
             '/storage/' + report.teams[report.realWinners[reportUI.matchNumber]].banner : 
-            '/assets/images/404.png'
+            '/assets/images/.png'
             " alt="Team Banner"
-            width="60" height="60" onerror="this.src='{{ asset('assets/images/404.png') }}';"
+            width="60" height="60" onerror="this.src='{{ asset('assets/images/.png') }}';"
             class="ms-0 border border-3 border-primary popover-content-img rounded-circle object-fit-cover">
     </div>
     <p class="mt-2 d-block">

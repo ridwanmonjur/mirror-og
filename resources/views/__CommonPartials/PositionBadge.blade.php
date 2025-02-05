@@ -62,30 +62,33 @@
                         <div class="card-body  ">
                             <div class="row align-items-center">
                                 <!-- Left side with image and event details -->
-                                <div class="col-12 col-lg-8 d-flex align-items-center gap-3">
+                                <div class="col-12 col-lg-9 d-flex align-items-center gap-3">
                                     <div class="position-relative">
                                         <img src="{{ '/storage' . '/' . $event->eventBanner }}" {!! trustedBladeHandleImageFailure() !!}
                                             class="rounded-circle object-fit-cover border border-primary"
                                             style="width: 48px; height: 48px;" alt="Event banner">
 
                                     </div>
-                                    <div class="d-flex flex-column justify-content-center">
-                                        <h6 class="mb-1 text-truncate py-0">{{ $event->eventName }}</h6>
-                                        <div class="text-body-secondary  text-truncate ">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16"
-                                                fill="currentColor" class="bi me-1 bi-person-circle"
-                                                viewBox="0 0 16 16">
-                                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                                                <path fill-rule="evenodd"
-                                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                                            </svg>
-                                            {{ $event->teamName }}
-                                        </div>
+                                    <div class="d-flex flex-column justify-content-center my-2">
+                                        <a href="{{ route('public.event.view', $event->id) }}">
+
+                                            <h6 class="mb-1 text-truncate py-0">{{ $event->eventName }}</h6>
+                                            <div class="text-body-secondary py-1 text-truncate ">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16"
+                                                    fill="currentColor" class="bi me-1 bi-person-circle"
+                                                    viewBox="0 0 16 16">
+                                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                                    <path fill-rule="evenodd"
+                                                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                                                </svg>
+                                                {{ $event->teamName }}
+                                            </div>
+                                        </a>
                                     </div>
                                 </div>
 
                                 <!-- Right side with position and chevron -->
-                                <div class="col-12 col-lg-4 d-flex justify-content-end align-items-center gap-3">
+                                <div class="col-12 col-lg-3 d-flex justify-content-start my-2 align-items-center gap-3">
                                     @if ($event->position)
                                         <div class="d-flex align-items-center text-body-secondary small">
                                             <span class="me-2">{!! getMedalSvg($event->position) !!} </span>

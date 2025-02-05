@@ -3,6 +3,7 @@
 @section('title', 'Driftwood - Community Esports')
 @section('body-class', '')
 @push('styles')
+    <meta name="page-component" value="beta">
     <link 
         rel="preload" 
         href="https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" 
@@ -94,7 +95,3 @@
        
     </main>
 @endsection
-
-@push('scripts')
-    <script src="{{ asset('/assets/js/open/ClosedBeta.js') }}"></script>
-@endpush

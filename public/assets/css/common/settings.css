@@ -81,6 +81,7 @@ main {
 
     .d-grid {
         grid-template-columns: 10fr 2fr;
+        grid-auto-rows: 1fr; 
     }
 
     main {

@@ -48,6 +48,3 @@
     </main>
 @endsection
 
-@push('scripts')
-    <script src="{{ asset('/assets/js/open/About.js') }}"></script>
-@endpush

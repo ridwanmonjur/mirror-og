@@ -347,7 +347,7 @@
                     <p>{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                 </div>
 
-                <div id="Bracket" class="tabcontent">
+                <div id="Bracket" class="tabcontent" style="width: 90%;">
                     @include('Participant.__Partials.BracketReport')
                 </div>
 
@@ -355,26 +355,26 @@
                     <h5 class="my-0"><u>Teams</u></h5>
                     <div class="pb-5" id="current-teams" >
                         @if (isset($teamList[0]))
-                             <div class="row row-cols-1 row-cols-md-2  g-4 ps-5 pt-0 mt-1">
+                             <div class="row row-cols-1 row-cols-xl-2  g-4  pt-0 mt-1">
                                 @foreach($teamList as $team)
                                     <div class="col">
                                         <div class="card h-100 border-0" style="transition: transform 0.2s; cursor: pointer;" 
                                             onmouseover="this.style.transform='translateY(-2px)'" 
                                             onmouseout="this.style.transform='translateY(0)'">
-                                            <div class="card-body border-2">
-                                                <div class="d-flex align-items-center justify-content-between my-2">
-                                                    <div class="d-flex align-items-center flex-grow-1">
+                                            <div class="card-body border border-2">
+                                                <div class="row py-2">
+                                                    <div class="col-10 d-flex justify-content-start">
                                                         <img 
                                                             src="{{ '/storage' . '/'. $team->teamBanner }}"
                                                             {!! trustedBladeHandleImageFailure() !!}
-                                                            class="border border-secondary rounded-circle me-3"
+                                                            class="border border-secondary  rounded-circle me-3"
                                                             style="object-fit: cover;"
                                                             width="50"
                                                             height="50"
                                                             alt="{{ $team->teamName }}"
                                                         >
                                                         <div>
-                                                            <p class="card-title d-inline-block text-truncate w-75 my-0 py-0 mb-0"><u>{{ $team->teamName }}</u></p>
+                                                            <p class="card-title text-truncate-card d-inline-block text-truncate my-0 py-0 mb-0"><u>{{ $team->teamName }}</u></p>
                                                             <div class="text-muted">
                                                                 <span class="me-2">{{$team->createdAtHumaReadable()}}</span>
                                                                 @if ($team->country_flag)
@@ -385,15 +385,19 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <a href="{{ route('public.team.view', ['id' => $team->id]) }}" 
-                                                    class="btn btn-link border-primary btn-sm rounded-circle position-relative" 
-                                                    style="z-index: 3;">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                                            class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-                                                        </svg>
-                                                    </a>
+                                                    <div class="col-2 ">
+                                                        <a href="{{ route('public.team.view', ['id' => $team->id]) }}" 
+                                                            class="btn btn-link position-relative " 
+                                                            style="z-index: 3;"
+                                                        >
+                                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2"
+                                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                                            </svg>
+                                                        </a>
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                             <a href="{{ route('public.team.view', ['id' => $team->id]) }}" 
@@ -413,7 +417,6 @@
                 </div>
                 @php
                     if (!function_exists('getMedalSvg')) {
-
                         function getMedalSvg($position)
                         {
                             // Default SVG for positions beyond 5
@@ -468,7 +471,7 @@
                 <div id="Result" class="tabcontent" style="width: 90%;">
                     <h5 class="mb-3"><u>Result</u></h5>
                     <div class="tab-content pb-4 tab-size outer-tab mx-auto" id="current-positions">
-                        <div class="card border-0 py-0 my-0 mx-auto" style="background: none; width: 90%;">
+                        <div class="card border-0 py-0 my-0 mx-auto" style="background: none;">
                             @if (isset($joinEventAndTeamList[0]))
                                 <div class="d-flex flex-column gap-3">
                                     @foreach ($joinEventAndTeamList as $joinEventAndTeam)
@@ -483,8 +486,8 @@
                                                                 style="width: 48px; height: 48px;" 
                                                                 alt="Team banner">
                                                         </div>
-                                                        <div class="d-flex flex-column justify-content-center">
-                                                            <h6 class="mb-1 text-truncate py-0">{{ $joinEventAndTeam->teamName }} <span class="ms-2" style="font-size: 1.5rem;">{{$joinEventAndTeam->country_flag}}</span></h6>
+                                                        <div class="d-inline-flex text-truncate flex-column justify-content-center">
+                                                            <h6 class="mb-1 text-truncate-card text-truncate py-0">{{ $joinEventAndTeam->teamName }} <span class="ms-2" style="font-size: 1.5rem;">{{$joinEventAndTeam->country_flag}}</span></h6>
                                                             
                                                             <div class="text-body-secondary text-muted text-truncate">
                                                                 <span>
@@ -495,24 +498,23 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-12 col-lg-2 my-1 d-flex justify-content-start align-items-center gap-3">
+                                                    <div class="col-12 col-lg-2 my-1 d-flex justify-content-start align-items-center gap-1">
                                                         @if ($joinEventAndTeam->position)
                                                             <div class="d-flex align-items-center text-body-secondary small">
-                                                                <span class="me-2">{!! getMedalSvg($joinEventAndTeam->position) !!}</span>
+                                                                <span class="me-1">{!! getMedalSvg($joinEventAndTeam->position) !!}</span>
                                                                 {{ bladeOrdinalPrefix($joinEventAndTeam->position) }}
                                                             </div>
                                                         @else
                                                             <span class="text-body-secondary small">TBD</span>
                                                         @endif
-                                                        <a onclick="redirectToTeamPage({{ $joinEventAndTeam->team_id }});" 
-                                                        class="text-decoration-none text-body-secondary cursor-pointer">
+ 
                                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                                                                 xmlns="http://www.w3.org/2000/svg">
                                                                 <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2"
                                                                     stroke-linecap="round" stroke-linejoin="round" />
                                                             </svg>
-                                                        </a>
                                                     </div>
+                                                    <a class="position-absolute top-0 start-0 w-100 h-100" href="{{ route('public.team.view', ['id' => $team->id]) }}"></a>
                                                 </div>
                                             </div>
                                         </div>
