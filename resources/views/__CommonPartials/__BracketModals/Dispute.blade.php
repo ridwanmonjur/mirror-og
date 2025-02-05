@@ -46,7 +46,7 @@
                                         <div>
                                             <img :src="report.teams[0] && report.teams[0].banner? '/storage/' + report.teams[0].banner : '/assets/images/.png'" alt="Team Banner"
                                                 width="50" height="50"
-                                                onerror="this.src='{{ asset('assets/images/.png') }}';"
+                                                onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover">
                                         </div>
                                         <p class="mt-1 mb-2 py-0" x-text="report.teams[0]?.name"></p>
@@ -62,7 +62,7 @@
                                         <div>
                                             <img :src="report.teams[1] && report.teams[1].banner? '/storage/' + report.teams[1].banner :'/assets/images/.png'" alt="Team Banner"
                                                 width="50" height="50"
-                                                onerror="this.src='{{ asset('assets/images/.png') }}';"
+                                                onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover">
                                         </div>
                                         <p class="mt-1 mb-2 py-0" x-text="report.teams[1]?.name"></p>
@@ -187,7 +187,7 @@
                                         <p class="my-0"> Disputing Team </p>
                                         <img :src="'/storage/' + report.teams[dispute[reportUI.matchNumber].dispute_teamNumber]?.banner"
                                             alt="Team Banner" width="50" height="50"
-                                            onerror="this.src='{{ asset('assets/images/.png') }}';"
+                                            onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                             class="mb-1 border border-2 popover-content-img rounded-circle object-fit-cover">
                                         <p class="text-primary">
                                             <span
@@ -245,7 +245,7 @@
                                             <p class="my-0"> Responding Team </p>
                                             <img :src="'/storage/' + report.teams[dispute[reportUI.matchNumber].response_teamNumber]?.banner"
                                                 alt="Team Banner" width="50" height="50"
-                                                onerror="this.src='{{ asset('assets/images/.png') }}';"
+                                                onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="mb-1 border border-2 popover-content-img rounded-circle object-fit-cover"
                                             >
                                             <p class="text-primary">
@@ -442,14 +442,14 @@
                                                             <button type="button" x-on:click="decideResolution(event, 0)" :disabled="getDisabled()"
                                                                 class="selectedButton selectedDisputeResolveButton ps-0 btn mb-2 mt-2 rounded-pill mx-auto py-0 border border-dark text-start">
                                                                 <img :src="'/storage/' + report.teams[0]?.banner" alt="Team Banner" width="35" height="35"
-                                                                    onerror="this.src='{{ asset('assets/images/.png') }}';"
+                                                                    onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                                     class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
                                                                 <small class="ms-2 py-0" x-text="report.teams[0]?.name"></small>
                                                             </button>
                                                             <button type="button" x-on:click="decideResolution(event, 1)" :disabled="getDisabled()"
                                                                 class="selectedButton selectedDisputeResolveButton ps-0 btn  rounded-pill mx-auto py-0 mt-2 border border-dark text-start">
                                                                 <img :src="'/storage/' + report.teams[1]?.banner" alt="Team Banner" width="35" height="35"
-                                                                    onerror="this.src='{{ asset('assets/images/.png') }}';"
+                                                                    onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                                     class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
                                                                 <small class="ms-2 py-0" x-text="report.teams[1]?.name"></small>
                                                             </button>
@@ -476,7 +476,7 @@
                                             <div class="mt-2">
                                                 <div>
                                                     <img :src="'/storage/' + report.teams[report.realWinners[reportUI.matchNumber]]?.banner" alt="Team Banner"
-                                                        width="60" height="60" onerror="this.src='{{ asset('assets/images/.png') }}';"
+                                                        width="60" height="60" onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                         class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
                                                 </div>
                                                 <div class="mt-2 mb-2 d-block">
