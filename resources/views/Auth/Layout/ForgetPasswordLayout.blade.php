@@ -14,7 +14,7 @@
     </div>
    <div class="field">
         <label for="email" class="placeholder-moves-up-container">
-            <input  autocomplete="off" type="email" name="email" id="email" required="true" class="input-area" oninput="movePlaceholderUp(this)">
+            <input  autocomplete="off" type="email" name="email" id="email" required="true" class="input-area" >
             <span class="placeholder-moves-up">Email address</span>
             <div class="field-error-message d-none"></div>
         </label>

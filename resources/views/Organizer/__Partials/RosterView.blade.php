@@ -34,17 +34,18 @@
     ]) style="margin-bottom : 0;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
             <img 
+                id="eventBanner"
                 {!! trustedBladeHandleImageFailureBanner() !!}
                 @class([
-                'opacity-until-hover object-fit-cover me-1 border-0',
+                'opacity-until-hover w-100 h-100 object-fit-cover me-1 border-0',
             ])
                 style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
-                src="{{ '/storage' . '/' . $joinEvent->eventBanner }}" width="100%" height="80%;">
+                src="{{ '/storage' . '/' . $joinEvent->eventBanner }}" >
            
         </a>
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
-                <div class="col-12 col-xl-6 d-flex justify-content-start d my-1 px-0">
+                <div class="col-6 col-xl-6 d-flex justify-content-start d my-1 px-0">
                     <a class="d-flex w-100 justify-content-start align-items-center"
                         href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
 
@@ -63,7 +64,7 @@
                     <img 
                         {!! trustedBladeHandleImageFailureBanner() !!}
                         src="{{ bladeImageNull($joinEvent->user->userBanner) }}" width="35" height="35"
-                        class="me-2 object-fit-cover random-color-circle rounded-circle2" >
+                        class="me-2 object-fit-cover rounded-circle rounded-circle2" >
                     <div class="text-start d-inline-flex flex-column justify-content-center w-75">
                         <small class="d-inline-block my-0 text-truncate w-75">{{ $joinEvent->user->name }}</small>
                         <small
@@ -74,7 +75,7 @@
                         </small>
                     </div>
                 </div>
-                <form id="{{ 'followForm' . $joinEvent->id . $random_int }}" method="POST" class="col-6 followFormProfile col-xl-2 my-2 justify-content-end text-end px-0"
+                <form id="{{ 'followForm' . $joinEvent->id . $random_int }}" method="POST" class="d-none d-xl-flex col-6 followFormProfile col-xl-2 my-2 justify-content-end text-end px-0"
                     action="{{ route('participant.organizer.follow') }}">
                     @csrf
                     @guest

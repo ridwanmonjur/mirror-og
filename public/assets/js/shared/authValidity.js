@@ -10,24 +10,32 @@ window.onload = () => {
             inpObj.addEventListener("click", () => {
                 const spanMesage = document.querySelector(`#${id} ~ span.placeholder-moves-up`);
                 spanMesage.style.top = "0px";
+                spanMesage.style.fontSize = '12px';
             });
 
             inpObj.addEventListener("blur", () => {
                 const spanMesage = document.querySelector(`#${id} ~ span.placeholder-moves-up`);
-                if (inpObj.value == "") spanMesage.style.top = "20px";
+                if (inpObj.value == "") { 
+                    spanMesage.style.top = "20px";
+                    spanMesage.style.fontSize = '1rem';
+                }
+
+            });
+
+
+            inpObj.addEventListener("input", () => {
+                const label = inpObj.parentElement;
+                const placeholder = label.querySelector('.placeholder-moves-up');
+                if (inpObj.value !== '') {
+                    placeholder.style.fontSize = '12px';
+                    placeholder.style.top = '0px';
+                } else {
+                    placeholder.style.top = '';
+                    placeholder.style.fontSize = '';
+                }
             });
         } 
     });
-}
-
-function movePlaceholderUp(input) {
-    const label = input.parentElement;
-    const placeholder = label.querySelector('.placeholder-moves-up');
-    if (input.value !== '') {
-        placeholder.style.top = '0px';
-    } else {
-        placeholder.style.top = '';
-    }
 }
 
 // Toggle password

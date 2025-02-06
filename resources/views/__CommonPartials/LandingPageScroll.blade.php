@@ -68,7 +68,7 @@
             <div class="league_name mt-4 mb-2">
                 <p class="{{ 'text-truncate-event-title  ms-0 mb-0 p-0 ' . 'Color-' . $event->tier->eventTier }}"><b>{{ $event->eventName }}</b></p>
                 <br>
-                <small class=" px-0 ms-0 pb-2 fw-lighter">
+                <small class=" px-0 ms-0 pb-2 ">
                     <span class="px-0 text-start">
                         <span class="d-inline text-truncate-event-title ">{{ $event->user->name  }}</span>
                     </span>
