@@ -79,7 +79,7 @@
                                            <div class="position-relative">
                                                <div class="d-flex align-items-start">
                                                    <a v-bind:href="`/view/${user?.role?.toLowerCase()}/${user.id}`">
-                                                       <img v-bind:="'/storage/' + user?.userBanner"
+                                                       <img v-bind:src="'/storage/' + user?.userBanner"
                                                            class="rounded-circle object-fit-cover border border-secondary me-2"
                                                            width="70" height="70"
                                                            onerror="this.src='/assets/images/404.png';">
@@ -547,7 +547,7 @@
                                 </div>
 
                                 <h5 class="my-0 d-inline-block pt-0 pb-3 text-primary text-start">
-                                    <img v-bind:="'/storage/' + user?.userBanner"
+                                    <img v-bind:src="'/storage/' + user?.userBanner"
                                         class="rounded-circle object-fit-cover border border-primary me-2"
                                         width="35" height="35" onerror="this.src='/assets/images/404.png';">
 

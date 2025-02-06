@@ -15,7 +15,7 @@
                         <div class="col-12 col-lg-4">
                             <div>
                                 <img 
-                                    v-bind:="'/storage/' + report.teams[0].banner"  
+                                    v-bind:src="'/storage/' + report.teams[0].banner"  
                                     alt="Team Banner" width="100"
                                     height="100" onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                     class="border border-4 popover-content-img rounded-circle object-fit-cover"
@@ -38,7 +38,7 @@
                         <div class="col-12 col-lg-4">
                             <div>
                                 <img 
-                                    v-bind:="'/storage/' + report.teams[1].banner" 
+                                    v-bind:src="'/storage/' + report.teams[1].banner" 
                                     alt="Team Banner" width="100"
                                     height="100" onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                     class="border border-4 popover-content-img rounded-circle object-fit-cover"

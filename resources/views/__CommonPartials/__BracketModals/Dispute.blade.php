@@ -44,7 +44,7 @@
                                 <div class="row px-0 w-75 mx-auto">
                                     <div class="col-12  text-center col-lg-4">
                                         <div>
-                                            <img v-bind:="report.teams[0] && report.teams[0].banner? '/storage/' + report.teams[0].banner : '/assets/images/.png'" alt="Team Banner"
+                                            <img v-bind:src="report.teams[0] && report.teams[0].banner? '/storage/' + report.teams[0].banner : '/assets/images/.png'" alt="Team Banner"
                                                 width="50" height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover">
@@ -60,7 +60,7 @@
                                     </div>
                                     <div class="col-12 col-lg-4  text-center">
                                         <div>
-                                            <img v-bind:="report.teams[1] && report.teams[1].banner? '/storage/' + report.teams[1].banner :'/assets/images/.png'" alt="Team Banner"
+                                            <img v-bind:src="report.teams[1] && report.teams[1].banner? '/storage/' + report.teams[1].banner :'/assets/images/.png'" alt="Team Banner"
                                                 width="50" height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover">
@@ -220,7 +220,7 @@
                                                             
                                                             <template v-else>
                                                                 <video controls class="prview-item">
-                                                                    <source v-bind:="'/storage/' + imgVideo" type="video/mp4">
+                                                                    <source v-bind:src="'/storage/' + imgVideo" type="video/mp4">
                                                                     Your browser does not support the video tag.
                                                                 </video>
                                                             </template>
@@ -279,7 +279,7 @@
                                                                 
                                                                 <template v-else>
                                                                     <video controls class="prview-item">
-                                                                        <source v-bind:="'/storage/' + imgVideo" type="video/mp4">
+                                                                        <source v-bind:src="'/storage/' + imgVideo" type="video/mp4">
                                                                         Your browser does not support the video tag.
                                                                     </video>
                                                                 </template>
