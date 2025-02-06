@@ -39,17 +39,18 @@
     ]) style="margin-bottom : 0;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
             <img {!! trustedBladeHandleImageFailureBanner() !!}
+                id="eventBanner"
                 @class([
-                'opacity-until-hover border-0 ',
+                'opacity-until-hover border-0 w-100 h-100',
             ])
-                style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
-                src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;">
+                style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; "
+                src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}">
             <div @class([
                 'invisible-until-hover '  => $isRoleParticipant, 
                 'd-none '  => !$isRoleParticipant, 
                 "mt-2 ms-4 position-absolute"
             ]) style="top: 20px;"
-                style="width: 100%; background-color: red;">
+                >
 
                 @if (!isset($joinEvent->roster[0]))
                     <span>Empty roster</span>

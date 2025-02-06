@@ -34,12 +34,13 @@
     ]) style="margin-bottom : 0;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
             <img 
+                id="eventBanner"
                 {!! trustedBladeHandleImageFailureBanner() !!}
                 @class([
-                'opacity-until-hover object-fit-cover me-1 border-0',
+                'opacity-until-hover w-100 h-100 object-fit-cover me-1 border-0',
             ])
                 style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
-                src="{{ '/storage' . '/' . $joinEvent->eventBanner }}" width="100%" height="80%;">
+                src="{{ '/storage' . '/' . $joinEvent->eventBanner }}" >
            
         </a>
         <div class="frame1 p-0 mx-0 mb-0">

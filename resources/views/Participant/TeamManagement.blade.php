@@ -53,7 +53,7 @@
                     </button>
                     <button @class(["carousel-button position-absolute ",
                        "carousel-button-disabled"  => empty($joinEvents[2])
-                    ]) style="right: 30px;"
+                    ]) style="right: 10px;"
                         onclick="carouselWork(2)">
                         &gt;
                     </button>

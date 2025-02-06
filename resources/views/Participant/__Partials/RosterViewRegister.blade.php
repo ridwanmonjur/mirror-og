@@ -43,12 +43,14 @@
     </div>
 
     <div @class([
-        'event w-100 mx-auto event-width cursor-pointer visible-until-hover-parent  ',
+        'event  mx-auto event-width cursor-pointer visible-until-hover-parent  ',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
     ]) style="margin-bottom : 0; ">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
-            <img {!! trustedBladeHandleImageFailureBanner() !!} @class([
-                'opacity-until-hover object-fit-cover border-0 ',
+            <img 
+                id="eventBanner"
+                {!! trustedBladeHandleImageFailureBanner() !!} @class([
+                'opacity-until-hover object-fit-cover border-0 w-100 h-100 ',
             ])
                 style="border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 270px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;"
