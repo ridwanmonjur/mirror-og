@@ -5,9 +5,8 @@ import {
 } from "firebase/firestore";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { getAuth, signInWithCustomToken, onAuthStateChanged } from "firebase/auth";
+import { createApp, reactive } from "petite-vue";
 
-import Alpine from 'alpinejs';
-window.Alpine = Alpine;
 
 let csrfToken3 = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 const eventId = document.getElementById('eventId')?.value;
@@ -259,9 +258,12 @@ if (main2) {
 }
 
 
-Alpine.data('alpineDataComponent', function () {
-
-  const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums').value);
+function BracketData() {
+  console.log("uuuu");
+  console.log("uuuu");
+  console.log("uuuu");
+  console.log("uuuu");
+  const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums' ?? '[]').value);
   const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
   let initialData = {
     firebaseUser: null,
@@ -314,6 +316,7 @@ Alpine.data('alpineDataComponent', function () {
       null
     ],
   };
+  
   return {
     ...initialData,
     userLevelEnums,
@@ -642,6 +645,11 @@ Alpine.data('alpineDataComponent', function () {
       });
     },
     async init() {
+      console.log("zzzzzzzzzzzz");
+      console.log("zzzzzzzzzzzz");
+      console.log("zzzzzzzzzzzz");
+      console.log("zzzzzzzzzzzz");
+      console.log("zzzzzzzzzzzz");
       if (hiddenUserId) {
       
         const { user, claims } = await initializeFirebaseAuth();
@@ -1013,12 +1021,12 @@ Alpine.data('alpineDataComponent', function () {
         }
       });
     }
-  }
+  };
 
-});
+}
 
-const createUploaderData = (uploaderId) => {
-  return () => ({
+function UploadData (uploaderId) {
+  return {
     inputFiles: [],
     init() {
       this.id = uploaderId;
@@ -1152,14 +1160,10 @@ const createUploaderData = (uploaderId) => {
       return Array.from(this.$refs.uploadArea.querySelectorAll('.preview-item img'))
         .map(img => img.src);
     }
-  });
-};
+  };
+}
 
-const uploaderTypes = ['type1', 'type2'];
-
-uploaderTypes.forEach(type => {
-  Alpine.data(type, createUploaderData(type));
-});
+// const uploaderTypes = ['type1', 'type2'];
 
 
 const validateDisputeCreation = async (data) => {
@@ -1196,6 +1200,15 @@ const validateDisputeCreation = async (data) => {
   return errors;
 };
 
-
-Alpine.start();
+window.onload = () => {
+  console.log('rrrrrrr');
+  console.log('rrrrrrr');
+  console.log('rrrrrrr');
+  console.log('rrrrrrr');
+  createApp({
+    BracketData,
+    UploadData,
+  }).mount('#Bracket');
+}
+// Alpine.start();
 

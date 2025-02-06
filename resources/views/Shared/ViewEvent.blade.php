@@ -347,7 +347,8 @@
                     <p>{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                 </div>
 
-                <div id="Bracket" class="tabcontent" style="width: 90%;">
+                <div id="Bracket" @vue:mounted="init" v-scope="BracketData()"
+                     class="tabcontent" style="width: 90%;">
                     @include('Participant.__Partials.BracketReport')
                 </div>
 
